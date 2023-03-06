@@ -336,6 +336,19 @@ class Items_model extends MY_Model
         return $query->result_array();
     }
 
+    public function getLocationByCompanyId()
+    {
+        $COMPANY_ID = logged('company_id');
+        $role_id = intval(logged('role'));
+        $this->db->select('*');
+        $this->db->from($this->table_has_location);
+        if( $role_id !== 1 && $role_id !== 2 ){
+            $this->db->where('company_id', $COMPANY_ID);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function getBundleContents($id)
     {
         $this->db->where('company_id', logged('company_id'));
@@ -488,6 +501,12 @@ class Items_model extends MY_Model
         $this->db->where('id', $locationId);
         $query = $this->db->get($this->table_has_location);
         return $query->row();
+    }
+    public function deleteLocation($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete($this->table_has_location);
+        return $delete ? true : false;
     }
     
     public function updateLocationQty($locationId, $itemId, $newQty)

@@ -31,7 +31,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($estimates)?></h2>
+                                            <h2 id="total_this_year"><?=count($open_estimates)?></h2>
                                             <span>ESTIMATES</span>
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year">0</h2>
+                                            <h2 id="total_this_year"><?=count($unbilledActs)?></h2>
                                             <span>UNBILLED ACTIVITY</span>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($InvOverdue)?></h2>
+                                            <h2 id="total_this_year"><?=count($overdue_invoices)?></h2>
                                             <span>OVERDUE</span>
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($OpenInvoices)?></h2>
+                                            <h2 id="total_this_year"><?=count($open_invoices)?></h2>
                                             <span>OPEN INVOICES</span>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=count($getAllInvPaid)?></h2>
+                                    <h2 id="total_this_year"><?=count($recent_payments)?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
                             </div>
@@ -389,6 +389,119 @@
                             <td><?=$transaction['total']?></td>
                             <td><?=$transaction['last_delivered']?></td>
                             <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'sales-receipts' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['method']?></td>
+                            <td><?=$transaction['source']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['due_date']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'credit-memos' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'unbilled-income' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['charges']?></td>
+                            <td><?=$transaction['time']?></td>
+                            <td><?=$transaction['expenses']?></td>
+                            <td><?=$transaction['credits']?></td>
+                            <td><?=$transaction['unbilled_amount']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'recently-paid' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['method']?></td>
+                            <td><?=$transaction['source']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['due_date']?></td>
+                            <td><?=$transaction['aging']?></td>
+                            <td><?=$transaction['balance']?></td>
+                            <td><?=$transaction['total']?></td>
+                            <td><?=$transaction['last_delivered']?></td>
+                            <td><?=$transaction['email']?></td>
+                            <td><?=$transaction['latest_payment']?></td>
+                            <td><?=$transaction['attachments']?></td>
+                            <td><?=$transaction['status']?></td>
+                            <td><?=$transaction['po_number']?></td>
+                            <td><?=$transaction['sales_rep']?></td>
+                            <td><?=$transaction['manage']?></td>
+                        </tr>
+                        <?php break;
+                        case 'money-received' : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['no']?></td>
+                            <td><?=$transaction['customer']?></td>
+                            <td><?=$transaction['memo']?></td>
+                            <td><?=$transaction['total']?></td>
                             <td><?=$transaction['attachments']?></td>
                             <td><?=$transaction['status']?></td>
                             <td><?=$transaction['po_number']?></td>

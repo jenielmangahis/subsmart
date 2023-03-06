@@ -1,6 +1,23 @@
 const currUrl = window.location.href;
 const urlSplit = currUrl.split('/');
 
+$("#transactions-table").nsmPagination({
+    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+});
+
+$('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
+    var count = $(this).html();
+    $('.dropdown-menu#table-rows a.dropdown-item.active').removeClass('active');
+    $(this).addClass('active');
+
+    $(this).parent().parent().prev().find('span').html(count);
+    $('.dropdown-menu#table-rows').prev().dropdown('toggle');
+
+    $("#transactions-table").nsmPagination({
+        itemsPerPage: parseInt(count)
+    });
+});
+
 $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
     var chk = $(this);
     var dataName = $(this).next().text();
@@ -718,6 +735,10 @@ $('#filter-type').on('change', function() {
     }
 });
 
+$(document).on('change', '#filter-from, #filter-to', function() {
+    $('#filter-date').val('custom');
+});
+
 $(document).on('change', '#filter-date', function() {
     switch($(this).val()) {
         case 'last-365-days' :
@@ -728,8 +749,8 @@ $(document).on('change', '#filter-date', function() {
             var to_date = '';
         break;
         case 'custom' :
-            var from_date = $('#payBillsModal #from').val();
-            var to_date = $('#payBillsModal #to').val();
+            var from_date = $('#filter-from').val();
+            var to_date = $('#filter-to').val();
         break;
         case 'today' :
             var date = new Date();
@@ -862,7 +883,6 @@ $('.nsm-counter').on('click', function() {
 
     if($(this).hasClass('selected')) {
         $('#filter-type').val('all-transactions').trigger('change');
-
         $(this).removeClass('selected');
 
         if(id === 'open-invoices') {
@@ -887,6 +907,9 @@ $('.nsm-counter').on('click', function() {
                 $('.nsm-counter#overdue-invoices').addClass('co-selected');
             break;
         }
+
+        $('#filter-date').val('last-365-days').trigger('change');
+        $('#filter-customer').html('<option value="all">All</option>').trigger('change');
 
         $(this).addClass('selected');
     }
