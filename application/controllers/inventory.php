@@ -50,18 +50,20 @@ class Inventory extends MY_Controller
         $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
         $role_id = intval(logged('role'));
         if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
+            /*if( $role_id == 1 || $role_id == 2 ){
                 $comp_id = 0;
-            }
+            }*/
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
-            if( $role_id == 1 || $role_id == 2 ){
+            /*if( $role_id == 1 || $role_id == 2 ){
                 $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
-            }
+            }*/
+
+            $arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type)); 
             $items = $this->items_model->getByWhere($arg);
         }
         $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
