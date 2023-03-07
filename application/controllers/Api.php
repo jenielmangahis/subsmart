@@ -430,4 +430,143 @@ class Api extends MYF_Controller
         echo json_encode($result);
         exit;   
     }
+
+    public function fetchCompanyMultiAccountList()
+    {
+        $this->load->model('CompanyMultiAccount_model');
+
+        $is_success = 0;
+        $msg  = 'Cannot find company';
+        $data = array();
+
+        $post  = $this->input->post();        
+        if( $post['company_id'] > 0 ){
+            $conditions[]  = ['field' => 'company_multi_accounts.status', 'value' => $this->CompanyMultiAccount_model->statusVerified()];
+            $multiAccounts = $this->CompanyMultiAccount_model->apiGetByAllByCompanyParentId($post['company_id'], $conditions);
+            if( $multiAccounts ){
+                $data = $multiAccounts; 
+                $msg  = '';
+                $is_success = 1;
+            }else{
+                $msg = 'Empty record';
+            }
+        }
+
+        $return = ['msg' => $msg, 'is_valid' => $is_success, 'data' => $data];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function resendActivationLink()
+    {
+        $this->load->model('CompanyMultiAccount_model');
+
+        $is_success = 0;
+        $msg  = 'Cannot find company';
+
+        $post = $this->input->post();
+        $data = array();
+
+        $multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkUserId($post['company_id'], $post['user_id']);
+        if( $multiAccount ){
+            if( $multiAccount->status == $this->CompanyMultiAccount_model->statusNotVerified() ){
+                $isSent = $this->sendMultiAccountActivationEmail($multiAccount->hash_id, $multiAccount->user_email);
+                if( $isSent == 1 ){
+                    $is_success = 1;
+                    $msg = '';
+                }else{
+                    $msg = 'Cannot send email. Please contact system administrator.';
+                }   
+            }else{
+                $msg = 'Account already verified. Cannot resend activation email.';
+            }
+        }
+
+        $return = ['msg' => $msg, 'is_valid' => $is_success];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function createCompanyMultiAccount()
+    {
+        $this->load->helper(array('hashids_helper'));
+
+        $this->load->model('Users_model');
+        $this->load->model('CompanyMultiAccount_model');
+        $this->load->model('Business_model');
+
+        $is_success = 0;
+        $msg = '';
+        $email = '';
+
+        $post = $this->input->post();
+        $company_id = $post['company_id'];
+
+        $login_data = ['username' => $post['multi_email'], 'password' => $post['multi_password']];
+        $isValid = $this->Users_model->attempt($login_data);
+        if( $isValid == 'valid' ){          
+            //Create data
+            $user = $this->Users_model->getUserByEmail($post['multi_email']);    
+            if( $user->company_id != $company_id ){
+                //Check if company id already in the list. Can only accept 1 company user 
+                $isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
+                if( $isExists ){
+                    $msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
+                }else{
+                    if( $user->status == 1 ){
+                        $data_multi = [
+                            'parent_company_id' => $company_id,
+                            'link_company_id' => $user->company_id,
+                            'link_user_id' => $user->id,
+                            'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
+                            'created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $lastId  = $this->CompanyMultiAccount_model->create($data_multi);
+                        $hash_id = hashids_encrypt($lastId, '', 15);
+                        $this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
+
+                        //Send activation link
+                        $is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
+
+                        $email = $user->email;
+                        $is_success = 1;
+                    }else{
+                        $msg = 'Email <b>' . $post['multi_email'] . '</b> is currently inactive. Cannot login email.';
+                    }                   
+                }
+            }else{
+                $business = $this->Business_model->getByCompanyId($company_id);
+                $msg = 'Email <b>' . $post['multi_email'] . '</b> belongs to current logged company <b>'.$business->business_name.'</b>. Cannot link company data.';
+            }   
+        }else{
+            $msg = 'Invalid email / password';
+        }
+
+        $return = ['msg' => $msg, 'is_valid' => $is_success];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function deleteCompanyMultiAccount()
+    {
+        $this->load->model('CompanyMultiAccount_model');
+
+        $is_success = 0;
+        $msg  = 'Cannot find data';
+
+        $post = $this->input->post();
+        $post['company_id'] = 1;
+        $post['hash_id'] = 'AGAD23462';
+        $multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndHashId($post['company_id'], $post['hash_id']);
+        if( $multiAccount ){
+            $this->CompanyMultiAccount_model->delete($multiAccount->id);
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['msg' => $msg, 'is_valid' => $is_success];
+        echo json_encode($return);
+        exit;
+    }
 }
