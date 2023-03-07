@@ -569,4 +569,28 @@ class Api extends MYF_Controller
         echo json_encode($return);
         exit;
     }
+
+    public function sendMultiAccountActivationEmail($hash_id, $recipient_email)
+    {
+        $is_sent = 1;
+
+        $subject = "nSmarTrac: Multi Account Activation";
+        
+        $activation_link = base_url('activate_multi_account/'.$hash_id);
+        $msg  = "<p>To activate your multi account click the link below.</p><br />";
+        $msg .= "<a href='".$activation_link."'>Activate Multi Account</a>";
+        $msg .= "<br /><br />From <br />nSmartrac Team";
+
+        $mail = email__getInstance(['subject' => $subject]);
+        $mail->FromName = 'nSmarTrac';
+        $mail->addAddress($recipient_email, $recipient_email);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $msg;
+        if (!$mail->Send()) {
+            $is_sent = 0;
+        }
+
+        return $is_sent;
+    }
 }
