@@ -400,6 +400,31 @@ function addJSONResponseHeader() {
     header("Content-Type: application/json");
 }
 
+if (!function_exists('getLocation')){
+    function getLocation($id){
+        $comp_id = logged('company_id');
+        $CI = &get_instance();
+        $CI->load->model('general_model');
+
+        $getLocation = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'item_id' => $id
+            ),
+            'table' => 'items_has_storage_loc',
+            'select' => 'id,name'
+        );
+
+        $location = $CI->general_model->get_data_with_param($getLocation);
+        // if($option == 'value'){
+        //     return $location->id;
+        // }else{
+        //     return $location->name;
+        // }
+        return $location;
+    }
+}
+
 function csvHeaderToMap($start , $end){
     $headers = array (
         'Status',

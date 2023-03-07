@@ -736,7 +736,7 @@ $('#filter-type').on('change', function() {
 });
 
 $(document).on('change', '#filter-from, #filter-to', function() {
-    $('#filter-date').val('custom');
+    $('#filter-date').val('custom').trigger('change');
 });
 
 $(document).on('change', '#filter-date', function() {
@@ -1086,4 +1086,584 @@ $('#new-bundle-estimate').on('click', function() {
 
         $('#bundle-estimate-modal').modal('show');
     });
+});
+
+$("#btn_print_all_sales_transactions").on("click", function() {
+    $("#all_sales_transactions_table_print").printThis();
+});
+
+$(document).on('click', '#transactions-table .view-edit-time-charge', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/time-activity/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#singleTimeModal';
+        initModalFields('singleTimeModal', data);
+
+        $('#singleTimeModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-billable-expense', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/billable-expense/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#billableExpenseModal';
+        initModalFields('billableExpenseModal', data);
+
+        $('#billableExpenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-invoice', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/invoice/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal', data);
+
+        $('#invoiceModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-estimate', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/estimate/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        if($('#modal-container #standard-estimate-modal').length > 0) {
+            modalName = '#standard-estimate-modal';
+        }
+
+        if($('#modal-container #options-estimate-modal').length > 0) {
+            modalName = '#options-estimate-modal';
+        }
+
+        if($('#modal-container #bundle-estimate-modal').length > 0) {
+            modalName = '#bundle-estimate-modal';
+        }
+
+        initModalFields(modalName.replace('#', ''), data);
+        CKEDITOR.replace('estimate-terms-and-conditions');
+        CKEDITOR.replace('estimate-message-to-customer');
+        CKEDITOR.replace('estimate-instructions');
+
+        $(modalName).modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-credit-memo', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/credit-memo/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#creditMemoModal';
+        initModalFields('creditMemoModal', data);
+
+        $('#creditMemoModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-sales-receipt', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/sales-receipt/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#salesReceiptModal';
+        initModalFields('salesReceiptModal', data);
+
+        $('#salesReceiptModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-refund-receipt', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/refund-receipt/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#refundReceiptModal';
+        initModalFields('refundReceiptModal', data);
+
+        $('#refundReceiptModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-delayed-credit', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/delayed-credit/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#delayedCreditModal';
+        initModalFields('delayedCreditModal', data);
+
+        $('#delayedCreditModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-delayed-charge', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/delayed-charge/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#delayedChargeModal';
+        initModalFields('delayedChargeModal', data);
+
+        $('#delayedChargeModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-payment', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: 'Receive Payment'
+    };
+
+    $.get('/accounting/view-transaction/receive-payment/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#receivePaymentModal';
+        initModalFields('receivePaymentModal', data);
+
+        loadPaymentInvoices(data);
+        loadPaymentCredits(data);
+
+        $('#receivePaymentModal').modal('show');
+    });
+});
+
+$('#transactions-table .copy-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get(`/accounting/copy-transaction/${transactionType}/${id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#modal-container form .modal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+
+        modalName = '#'+$('#modal-container form .modal').attr('id');
+        initModalFields($('#modal-container form .modal').attr('id'), data);
+
+        $(modalName).modal('show');
+    });
+});
+
+$('#transactions-table .delete-invoice').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Delete Invoice',
+        text: 'Are you sure you want to delete this invoice?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/delete-transaction/invoice/${id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#transactions-table .void-invoice').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Invoice',
+        text: 'Are you sure you want to void this invoice?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/invoice/'+id, function(res) {
+                location.reload();
+            });
+        }
+    });
+});
+
+$('#transactions-table .void-credit-memo').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Credit Memo',
+        text: 'Are you sure you want to void this credit memo?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/credit-memo/'+id, function(res) {
+                location.reload();
+            });
+        }
+    });
+});
+
+$('#transactions-table .delete-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Delete Sales Receipt',
+        text: 'Are you sure you want to delete this sales-receipt?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/delete-transaction/sales-receipt/${id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#transactions-table .void-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Void Sales Receipt',
+        text: 'Are you sure you want to void this sales-receipt?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get('/accounting/void-transaction/sales-receipt/'+id, function(res) {
+                location.reload();
+            });
+        }
+    });
+});
+
+$('#transactions-table .create-invoice').on('click', function (e) {
+    e.preventDefault();
+
+    var id = $(this).closest('tr').find('.select-one').val();
+    var type = $(this).closest('tr').find('td:nth-child(3)').text().trim();
+    
+    $.get(`/accounting/customers/create-invoice/${type.toLowerCase().replaceAll(' ', '-')}/${id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#invoiceModal';
+        initModalFields('invoiceModal');
+
+        $('#invoiceModal #customer').trigger('change');
+        $('#invoiceModal input[name="quantity[]"]:first-child').trigger('change');
+
+        $(modalName).modal('show');
+    });
+});
+
+$('#transactions-table .send-estimate').on("click", function(e) {
+    e.preventDefault();
+    let id = customerId;
+    let est_id = $(this).closest('tr').find('.select-one').val();
+
+    Swal.fire({
+        title: 'Sending of Estimate',
+        text: "Send this to customer?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url+"estimate/sendEstimateToAcs",
+                data: {
+                    id: id,
+                    est_id: est_id
+                },
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Good job!',
+                        text: "Successfully sent to Customer!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Something went wrong, please try again later.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                },
+
+            });
+        }
+    });
+});
+
+$(document).on('click', '#transactions-table .update-estimate-status', function(e) {
+    e.preventDefault();
+    var estimateId = $(this).closest('tr').find('.select-one').val();
+    var url = `/accounting/customers/update-estimate-status/${estimateId}`;
+
+    $('#update-status-modal #update-estimate-status-form').attr('action', url).attr('method', 'post');
+    $('#update-status-modal #status').val($(this).closest('tr').find('td:nth-child(16)').text().trim()).trigger('change');
+
+    $('#update-status-modal').modal('show');
+});
+
+$('#update-status-modal').on('hidden.bs.modal', function() {
+    $('#update-status-modal #update-estimate-status-form').removeAttr('action').removeAttr('method');
+    $('#update-status-modal #status').val('Draft').trigger('change');
+});
+
+$('#update-status-modal #status').select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $('#update-status-modal')
+});
+
+$('#update-status-modal #status').on('change', function() {
+    if($(this).val() === 'Accepted') {
+        $(this).closest('.row').parent().append(`<div class="row grid-mb">
+            <div class="col-12">
+                <label for="accepted-date">Accepted Date</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control" value="" id="accepted-date" name="accepted_date">
+                </div>
+            </div>
+        </div>`);
+
+        $('#update-status-modal #accepted-date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+    } else {
+        $('#update-status-modal #accepted-date').closest('.row').remove();
+    }
 });

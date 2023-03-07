@@ -348,6 +348,15 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+    public function getLocationById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_has_location);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 
     public function getBundleContents($id)
     {
@@ -514,6 +523,12 @@ class Items_model extends MY_Model
         $this->db->where('item_id', $itemId);
         $this->db->where('id', $locationId);
         return $this->db->update($this->table_has_location, ["qty" => $newQty]);
+    }
+
+    public function updateLocation($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update($this->table_has_location, $data);
     }
 
     public function getCompanyItemById($company_id, $item_id)

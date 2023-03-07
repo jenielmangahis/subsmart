@@ -912,6 +912,19 @@ class Inventory extends MY_Controller
 
         echo json_encode($result);
     }
+    function editItemLocation() {
+        postAllowed();
+        $id = $this->input->post('id');
+        $comp_id = logged('company_id');
+        $data = array(
+            'qty' => $this->input->post('qty'),
+            'name' => $this->input->post('name'),
+            'item_id' => $this->input->post('item_id'),
+        );
+        $this->items_model->updateLocation($id, $data);
+
+        echo json_encode(["message" => "success"]);
+    }
 
     function getItemLocations() {
         postAllowed();
@@ -1212,8 +1225,14 @@ class Inventory extends MY_Controller
         $this->page_data['page']->title = 'Location';
 		$this->page_data['page']->parent = 'Tools';
 
-        print_r($this->page_data['item_list'] );
         $this->load->view('v2/pages/inventory/location/add', $this->page_data);
+    }
+    public function editInventoryLocation($id) 
+    {
+        $this->page_data['page']->title = 'Location';
+		$this->page_data['page']->parent = 'Tools';
+        $this->page_data['location'] = $this->items_model->getLocationById($id);
+        $this->load->view('v2/pages/inventory/location/edit', $this->page_data);
     }
     public function selectItems()
     {

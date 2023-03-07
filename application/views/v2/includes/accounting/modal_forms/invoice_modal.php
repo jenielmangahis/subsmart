@@ -79,7 +79,7 @@
                                                     <?php endforeach; ?>
                                                     <?php else : ?>
                                                     <tr class="linked-transaction-row">
-                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac->transaction->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type === 'Estimate' || $linkedTransac->type === 'Billexp Charge' ? $linkedTransac->type : 'Delayed '.$linkedTransac->type))?>"><?=$linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' ? 'Delayed ' : ''?><?=$linkedTransac->type?></a></td>
+                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$linkedTransac->transaction->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac->type === 'Estimate' || $linkedTransac->type === 'Billexp Charge' || $linkedTransac->type === 'Time Charge' ? $linkedTransac->type : 'Delayed '.$linkedTransac->type))?>"><?=$linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' && $linkedTransac->type !== 'Time Charge' ? 'Delayed ' : ''?><?=$linkedTransac->type?></a></td>
                                                         <td>
                                                             <?php switch($linkedTransac->type) {
                                                                 case 'Estimate' :
@@ -94,6 +94,9 @@
                                                                 case 'Billexp Charge' :
                                                                     echo date("m/d/Y", strtotime($linkedTransac->transaction->date));
                                                                 break;
+                                                                case 'Time Charge' :
+                                                                    echo date("m/d/Y", strtotime($linkedTransac->transaction->date));
+                                                                break;
                                                             } ?>
                                                         </td>
                                                         <td>
@@ -102,6 +105,14 @@
                                                                 $transacAmount = $linkedTransac->transaction->grand_total;
                                                             } else if($linkedTransac->type === 'Billexp Charge') {
                                                                 $transacAmount = $linkedTransac->transaction->amount;
+                                                            } else if($linkedTransac->type === 'Time Charge') {
+                                                                $price = floatval(str_replace(',', '', $linkedTransac->transaction->hourly_rate));
+
+                                                                $hours = substr($linkedTransac->transaction->time, 0, -3);
+                                                                $time = explode(':', $hours);
+                                                                $hr = $time[0] + ($time[1] / 60);
+
+                                                                $transacAmount = $hr * $price;
                                                             } else {
                                                                 $transacAmount = $linkedTransac->transaction->total_amount;
                                                             }
@@ -123,7 +134,7 @@
                                         <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac['type']))?>-<?=$linkedTransac['transaction']->id?>" name="linked_transaction[]">
                                     <?php endforeach; ?>
                                     <?php else : ?>
-                                        <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' ? 'Delayed '.$linkedTransac->type : $linkedTransac->type))?>-<?=$linkedTransac->transaction->id?>" name="linked_transaction[]">
+                                        <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac->type !== 'Estimate' && $linkedTransac->type !== 'Billexp Charge' && $linkedTransac->type !== 'Time Charge' ? 'Delayed '.$linkedTransac->type : $linkedTransac->type))?>-<?=$linkedTransac->transaction->id?>" name="linked_transaction[]">
                                     <?php endif; ?>
                                 </div>
                                 <?php endif; ?>
@@ -410,12 +421,23 @@
                                                                                         case 'delayed_charge' :
                                                                                             echo date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date));
                                                                                         break;
+                                                                                        case 'time_charge' :
+                                                                                            echo date("m/d/Y", strtotime($item->linked_transac->date));
+                                                                                        break;
                                                                                     } ?>
                                                                                 </td>
                                                                                 <td>
                                                                                     <?php
                                                                                     if($item->linked_transaction_type === 'estimate') {
                                                                                         $transacAmount = $item->linked_transac->grand_total;
+                                                                                    } else if($item->linked_transaction_type === 'time_charge') {
+                                                                                        $price = floatval(str_replace(',', '', $item->linked_transac->hourly_rate));
+                        
+                                                                                        $hours = substr($item->linked_transac->time, 0, -3);
+                                                                                        $time = explode(':', $hours);
+                                                                                        $hr = $time[0] + ($time[1] / 60);
+                        
+                                                                                        $transacAmount = $hr * $price;
                                                                                     } else {
                                                                                         $transacAmount = $item->linked_transac->total_amount;
                                                                                     }

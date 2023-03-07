@@ -381,6 +381,9 @@
                                                                     case 'Credit' :
                                                                         $tranType = 'delayed-credit';
                                                                     break;
+                                                                    case 'Billable Expense Charge' :
+                                                                        $tranType = 'billable-expense';
+                                                                    break;
                                                                 }
                                                                 echo '<tr>
                                                                     <td>
