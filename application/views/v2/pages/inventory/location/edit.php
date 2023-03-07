@@ -37,7 +37,7 @@ add_css(array(
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Add New Inventory Location</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Edit Inventory Location</span>
                                             </div>
                                         </span>
                                     </div>
@@ -48,20 +48,21 @@ add_css(array(
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item Name</strong>
-                                            <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required/>
+                                            <input type="text" class="form-control" maxlength="25" value="<?php echo $location->name?>" placeholder="Maximum 25 characters only" name="name" id="title" required/>
+                                            <input type="text" value="<?php echo $location->id?>" name="id" hidden/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Quantity</strong>
-                                            <input type="number" class="form-control " name="qty" id="qty" />
+                                            <input type="number" class="form-control " name="qty" id="qty" value="<?php echo $location->qty?>" />
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item</strong>
                                             <select id="customer_id" name="item_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                                <option value="11746">Test</option>
+                                                <option value="111">Test</option>
                                             </select>
                                             </div>
                                     </div>
@@ -86,26 +87,6 @@ add_css(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script>
-    // window.onload = function() { // same as window.addEventListener('load', (event) => {
-    //     console.log('onload');
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "<?= base_url() ?>inventory/selectItems",
-    //         success: function(data)
-    //         {
-    //             //console.log(data);
-    //             var template_data = JSON.parse(data).data;
-    //             var toAppend = '';
-    //             $.each(template_data,function(i,o){
-    //                 //console.log(cust_id);
-    //                 toAppend += '<option value='+o.id+'>'+o.title+'</option>';
-    //             });
-    //             $('#customer_id').append(toAppend);
-    //             //console.log(template_data);
-    //             console.log(data);
-    //         }
-    //     });
-    // };
     $(function(){
         $('#customer_id').select2({
             ajax: {
@@ -156,7 +137,7 @@ $("#inventory_form").submit(function(e) {
     var url = form.attr('action');
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>/inventory/addNewItemLocation",
+        url: "<?= base_url() ?>inventory/editItemLocation",
         data: form.serialize(), // serializes the form's elements.
         // success: function(data) {
         //     console.log(data);
@@ -165,10 +146,10 @@ $("#inventory_form").submit(function(e) {
     Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: 'Item was added successfully!',
+        text: 'Item was updated successfully!',
     }).then((result) => {
         // if (result.isConfirmed) {
-            window.location.href = "<?= base_url()?>/inventory/location";
+            window.location.href = "<?= base_url()?>inventory/location";
         // }
     });
 });

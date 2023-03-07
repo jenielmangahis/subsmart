@@ -55,4 +55,22 @@ class Accounting_single_time_activity_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_company_time_charges($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('status !=', 0);
+        $this->db->where('billable', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_customer_time_charges($customerId)
+    {
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('status !=', 0);
+        $this->db->where('billable', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

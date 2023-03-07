@@ -1798,10 +1798,10 @@ class Accounting_modals extends MY_Controller
                 'name_key' => $name[0],
                 'name_id' => $name[1],
                 'customer_id' => $data['customer'],
-                'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
-                'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
-                'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? floatval(str_replace(',', '', $data['hourly_rate'])) : null,
-                'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
+                'service_id' => $timesheetSettings->service === "1" || is_null($timesheetSettings) ? $data['service'] : null,
+                'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) || is_null($timesheetSettings) && isset($data['billable']) ? 1 : 0,
+                'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) || is_null($timesheetSettings) && isset($data['billable']) ? floatval(str_replace(',', '', $data['hourly_rate'])) : null,
+                'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) || is_null($timesheetSettings) && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
                 'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
                 'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
                 'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
@@ -8942,6 +8942,7 @@ class Accounting_modals extends MY_Controller
                 $charges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($id, logged('company_id'));
                 $estimates = $this->estimate_model->get_customer_estimates($id, logged('company_id'));
                 $billableExpenses = $this->accounting_customers_model->get_customer_billable_expenses($id);
+                $timeCharges = $this->accounting_single_time_activity_model->get_customer_time_charges($id);
             break;
         }
 
@@ -9176,6 +9177,36 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        if(isset($timeCharges) && count($timeCharges)) {
+            foreach($timeCharges as $timeCharge)
+            {
+                $price = floatval(str_replace(',', '', $timeCharge->hourly_rate));
+
+                $hours = substr($timeCharge->time, 0, -3);
+                $time = explode(':', $hours);
+                $hr = $time[0] + ($time[1] / 60);
+
+                $total = $hr * $price;
+
+                $balance = '$'.number_format(floatval($total), 2, '.', ',');
+                $total = '$'.number_format(floatval($total), 2, '.', ',');
+
+                if($timeCharge->status === '1') {
+                    $transactions[] = [
+                        'type' => 'Billable time',
+                        'data_type' => 'time-charge',
+                        'id' => $timeCharge->id,
+                        'number' => '',
+                        'date' => date("m/d/Y", strtotime($timeCharge->date)),
+                        'formatted_date' => date("F j", strtotime($timeCharge->date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance),
+                        'amount' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
         echo json_encode($transactions);
     }
 
@@ -9240,98 +9271,131 @@ class Accounting_modals extends MY_Controller
                     break;
                 }
             break;
+            case 'time-charge' :
+                $type = 'Billable time';
+                $transaction = $this->accounting_single_time_activity_model->get_by_id($transactionId);
+            break;
         }
 
         $return = [
             'details' => $transaction
         ];
 
-        if($transactionType === 'purchase-order' || $transactionType === 'bill') {
-            $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
-            $items = $this->expenses_model->get_transaction_items($transactionId, $type);
+        switch($transactionType) {
+            case 'purchase-order' :
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
+                $items = $this->expenses_model->get_transaction_items($transactionId, $type);
 
-            foreach ($categories as $index => $category) {
-                $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
-                $customerName = $customer->first_name . ' ' . $customer->last_name;
+                foreach ($categories as $index => $category) {
+                    $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
 
-                $categories[$index]->expense_account = $this->chart_of_accounts_model->getById($category->expense_account_id)->name;
-                $categories[$index]->customer_name = $customerName;
-            }
+                    $categories[$index]->expense_account = $this->chart_of_accounts_model->getById($category->expense_account_id)->name;
+                    $categories[$index]->customer_name = $customerName;
+                }
 
-            foreach ($items as $index => $item) {
-                $details = $this->items_model->getItemById($item->item_id);
-                $locations = $this->items_model->getLocationByItemId($item->item_id);
+                foreach ($items as $index => $item) {
+                    $details = $this->items_model->getItemById($item->item_id);
+                    $locations = $this->items_model->getLocationByItemId($item->item_id);
 
-                $items[$index]->details = $details[0];
-                $items[$index]->locations = $locations;
-            }
+                    $items[$index]->details = $details[0];
+                    $items[$index]->locations = $locations;
+                }
 
-            $return['categories'] = $categories;
-            $return['items'] = $items;
-        } else if($transactionType === 'estimate') {
-            switch($transaction->estimate_type) {
-                case 'Standard' :
-                    $items = $this->estimate_model->getItemlistByID($transactionId);
-
-                    foreach($items as $key => $item) {
-                        $items[$key]->cost = $item->costing;
-                        $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
-                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->items_id);
-                    }
-                break;
-                case 'Option' :
-                    $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
-                    $transaction->grand_total = ((float)$transaction->option1_total) + ((float)$transaction->option2_total);
+                $return['categories'] = $categories;
+                $return['items'] = $items;
+            break;
+            case 'bill' :
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
+                $items = $this->expenses_model->get_transaction_items($transactionId, $type);
     
-                    $items = [];
-                    $index = 0;
-                    foreach($itemsOption1 as $key => $item) {
-                        $items[] = $item;
-                        $items[$index]->cost = $item->costing;
-                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
-                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
-                        $index++;
-                    }
-
-                    $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($transactionId);
+                foreach ($categories as $index => $category) {
+                    $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
     
-                    foreach($itemsOption2 as $key => $item) {
-                        $items[] = $item;
-                        $items[$index]->cost = $item->costing;
-                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
-                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
-                        $index++;
-                    }
-                break;
-                case 'Bundle' :
-                    $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
-                    $transaction->grand_total = ((float)$transaction->bundle1_total) + ((float)$transaction->bundle2_total);
-
-                    $items = [];
-                    $index = 0;
-                    foreach($itemsBundle1 as $key => $item) {
-                        $items[] = $item;
-                        $items[$index]->cost = $item->costing;
-                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
-                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
-                        $index++;
-                    }
-
-                    $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($transactionId);
+                    $categories[$index]->expense_account = $this->chart_of_accounts_model->getById($category->expense_account_id)->name;
+                    $categories[$index]->customer_name = $customerName;
+                }
     
-                    foreach($itemsBundle2 as $key => $item) {
-                        $items[] = $item;
-                        $items[$index]->cost = $item->costing;
-                        $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
-                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
-                        $index++;
-                    }
-                break;
-            }
-
-            $return['items'] = $items;
-        } else {
-            if($transactionType !== 'billable-expense') {
+                foreach ($items as $index => $item) {
+                    $details = $this->items_model->getItemById($item->item_id);
+                    $locations = $this->items_model->getLocationByItemId($item->item_id);
+    
+                    $items[$index]->details = $details[0];
+                    $items[$index]->locations = $locations;
+                }
+    
+                $return['categories'] = $categories;
+                $return['items'] = $items;
+            break;
+            case 'estimate' :
+                switch($transaction->estimate_type) {
+                    case 'Standard' :
+                        $items = $this->estimate_model->getItemlistByID($transactionId);
+    
+                        foreach($items as $key => $item) {
+                            $items[$key]->cost = $item->costing;
+                            $items[$key]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$key]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                        }
+                    break;
+                    case 'Option' :
+                        $itemsOption1 = $this->estimate_model->getItemlistByIDOption1($transactionId);
+                        $transaction->grand_total = ((float)$transaction->option1_total) + ((float)$transaction->option2_total);
+        
+                        $items = [];
+                        $index = 0;
+                        foreach($itemsOption1 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+    
+                        $itemsOption2 = $this->estimate_model->getItemlistByIDOption2($transactionId);
+        
+                        foreach($itemsOption2 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+                    break;
+                    case 'Bundle' :
+                        $itemsBundle1 = $this->estimate_model->getItemlistByIDBundle1($transactionId);
+                        $transaction->grand_total = ((float)$transaction->bundle1_total) + ((float)$transaction->bundle2_total);
+    
+                        $items = [];
+                        $index = 0;
+                        foreach($itemsBundle1 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+    
+                        $itemsBundle2 = $this->estimate_model->getItemlistByIDBundle2($transactionId);
+        
+                        foreach($itemsBundle2 as $key => $item) {
+                            $items[] = $item;
+                            $items[$index]->cost = $item->costing;
+                            $items[$index]->itemDetails = $this->items_model->getItemById($item->items_id)[0];
+                            $items[$index]->locations = $this->items_model->getLocationByItemId($item->items_id);
+                            $index++;
+                        }
+                    break;
+                }
+    
+                $return['items'] = $items;
+            break;
+            case 'billable-expense' :
+                $items = [];
+                $return['items'] = $items;
+            break;
+            case 'delayed-credit' :
                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
 
                 foreach($items as $index => $item) {
@@ -9343,11 +9407,24 @@ class Accounting_modals extends MY_Controller
                         $items[$index]->packageItems = json_decode($item->package_item_details);
                     }
                 }
-            } else {
-                $items = [];
-            }
+                
+                $return['items'] = $items;
+            break;
+            case 'delayed-charge' :
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
 
-            $return['items'] = $items;
+                foreach($items as $index => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$index]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$index]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$index]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$index]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $return['items'] = $items;
+            break;
         }
 
         echo json_encode($return);
@@ -16721,10 +16798,10 @@ class Accounting_modals extends MY_Controller
             'name_key' => $name[0],
             'name_id' => $name[1],
             'customer_id' => $data['customer'],
-            'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
-            'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
-            'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? floatval(str_replace(',', '', $data['hourly_rate'])) : null,
-            'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
+            'service_id' => $timesheetSettings->service === "1" || is_null($timesheetSettings) ? $data['service'] : null,
+            'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) || is_null($timesheetSettings) && isset($data['billable']) ? 1 : 0,
+            'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) || is_null($timesheetSettings) && isset($data['billable']) ? floatval(str_replace(',', '', $data['hourly_rate'])) : null,
+            'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) || is_null($timesheetSettings) && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
             'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
             'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
             'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,

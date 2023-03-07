@@ -379,7 +379,35 @@ class Reports extends MY_Controller {
         }
 // DEPOSIT DETAILS
         $this->page_data['payment_records'] = $this->DepositDetail_model->getPaymentRecord(logged('company_id'));
-        $this->page_data['invoices'] = $this->invoice_model->getPaidInv(getLoggedCompanyID());
+        // $this->page_data['invoices'] = $this->invoice_model->getPaidInv(getLoggedCompanyID());
+        $payments = $this->invoice_model->get_company_payments(logged('company_id'));
+
+        $deposits = [];
+        foreach($payments as $payment)
+        {
+            $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
+            $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $deposits[$payment->payment_date]['invoices'][] = [
+                'invoice_id' => $invoice->id,
+                'customer_name' => $customerName,
+                'payment_method' => $payment->payment_method,
+                'ref_no' => $invoice->invoice_number,
+                'fees' => floatval($payment->invoice_tip),
+                'amount' => floatval($payment->invoice_amount)
+            ];
+        }
+
+        foreach($deposits as $date => $deposit)
+        {
+            $amountCol = array_column($deposit['invoices'], 'amount');
+            $deposits[$date]['total'] = array_sum($amountCol);
+
+            $feesCol = array_column($deposit['invoices'], 'fees');
+            $deposits[$date]['fees'] = array_sum($feesCol);
+        }
+        $this->page_data['deposits'] = $deposits;
+
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 

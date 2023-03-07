@@ -9,7 +9,7 @@ class Job extends MY_Controller
         parent::__construct();
         $this->checkLogin();
         $this->load->helper('google_calendar_helper');
-		$this->page_data['page']->title = 'Jobs';
+        $this->page_data['page']->title = 'Jobs';
         $this->page_data['page']->parent = 'Sales';
         //$this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
@@ -22,7 +22,7 @@ class Job extends MY_Controller
     public function loadStreetView($address = null)
     {
         $this->load->library('wizardlib');
-        $addr = ($address==null?post('address'):$address);
+        $addr = ($address == null ? post('address') : $address);
         return $this->wizardlib->getStreetView($addr);
     }
 
@@ -32,10 +32,10 @@ class Job extends MY_Controller
         $userId = get('user_id');
         $leaderBoardType = get('leader_board_type');
 
-        if( get('job_tag') ){
+        if (get('job_tag')) {
             $tag_id = get('job_tag');
             $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
-        }else{
+        } else {
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
         $this->page_data['jobs'] = $jobs;
@@ -98,12 +98,13 @@ class Job extends MY_Controller
         $this->load->view('v2/pages/job/list', $this->page_data);
     }
 
-    public function new_job1($id=null)
+    public function new_job1($id = null)
     {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
+        
         // get all employees
         $get_login_user = array(
             'where' => array(
@@ -191,7 +192,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-        
+
         $get_company_info = array(
             'where' => array(
                 'company_id' => $comp_id,
@@ -211,7 +212,7 @@ class Job extends MY_Controller
             'select' => 'items.id,title,price,type',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-
+        
         // get estimates
         $get_estimates = array(
             'where' => array(
@@ -242,7 +243,7 @@ class Job extends MY_Controller
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
-        $get_settings= array(
+        $get_settings = array(
             'table' => 'job_tax_rates',
             'select' => '*',
         );
@@ -252,10 +253,10 @@ class Job extends MY_Controller
         $this->page_data['settings'] = unserialize($settings);
 
         $estimate_dp_amount = 0;
-        if (!$id==null) {
+        if (!$id == null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
-            if( $jobs_data->estimate_id > 0 ){
-                $get_estimate_query= array(
+            if ($jobs_data->estimate_id > 0) {
+                $get_estimate_query = array(
                     'where' => array(
                         'id' => $jobs_data->estimate_id
                     ),
@@ -264,15 +265,15 @@ class Job extends MY_Controller
                 );
 
                 $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
-                if( $estimate_data ){
-                    if( $estimate_data->deposit_request == 2 ){
+                if ($estimate_data) {
+                    if ($estimate_data->deposit_request == 2) {
                         $estimate_dp_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
-                    }else{
+                    } else {
                         $estimate_dp_amount = $estimate_data->deposit_amount;
                     }
                 }
             }
-            
+
 
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
@@ -282,17 +283,16 @@ class Job extends MY_Controller
         $default_customer_id = 0;
         $default_customer_name = '';
 
-        if( $this->input->get('cus_id') ){
-            $this->load->model('AcsProfile_model');         
+        if ($this->input->get('cus_id')) {
+            $this->load->model('AcsProfile_model');
             $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
-            if( $customer ){
+            if ($customer) {
                 $default_customer_id = $customer->prof_id;
                 $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
             }
             $default_customer_id = $this->input->get('cus_id');
-
         }
-        
+
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
@@ -317,17 +317,17 @@ class Job extends MY_Controller
         $default_start_time = '';
         $default_user = 0;
         $redirect_calendar = 0;
-        if( $this->input->get('start_date') ){
+        if ($this->input->get('start_date')) {
             $default_start_date = $this->input->get('start_date');
             $redirect_calendar = 1;
         }
 
-        if( $this->input->get('start_time') ){
+        if ($this->input->get('start_time')) {
             $default_start_time = $this->input->get('start_time');
             $redirect_calendar = 1;
         }
 
-        if( $this->input->get('user') ){
+        if ($this->input->get('user')) {
             $default_user = $this->input->get('user');
             $redirect_calendar = 1;
         }
@@ -362,10 +362,11 @@ class Job extends MY_Controller
         exit(json_encode([
             'items1total' => count($items1),
             'items2total' => count($items2),
-            'items1' => $items1, 'items2' => $items2]));
+            'items1' => $items1, 'items2' => $items2
+        ]));
     }
 
-    public function new_job2($id=null)
+    public function new_job2($id = null)
     {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -408,7 +409,7 @@ class Job extends MY_Controller
             'table' => 'users',
             'select' => 'id,FName,LName',
         );
-        
+
         $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
 
         // get all job tags
@@ -443,7 +444,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-        
+
         $get_company_info = array(
             'where' => array(
                 'company_id' => logged('company_id'),
@@ -493,7 +494,7 @@ class Job extends MY_Controller
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
-        $get_settings= array(
+        $get_settings = array(
             'table' => 'job_tax_rates',
             'select' => '*',
         );
@@ -502,7 +503,7 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        if (!$id==null) {
+        if (!$id == null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
@@ -510,15 +511,14 @@ class Job extends MY_Controller
         $default_customer_id = 0;
         $default_customer_name = '';
 
-        if( $this->input->get('cus_id') ){
-            $this->load->model('AcsProfile_model');         
+        if ($this->input->get('cus_id')) {
+            $this->load->model('AcsProfile_model');
             $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
-            if( $customer ){
+            if ($customer) {
                 $default_customer_id = $customer->prof_id;
                 $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
             }
             $default_customer_id = $this->input->get('cus_id');
-
         }
         $this->page_data['title'] = 'Job New';
         $this->page_data['default_customer_id'] = $default_customer_id;
@@ -551,7 +551,7 @@ class Job extends MY_Controller
         $this->load->view('job/job_new', $this->page_data);
     }
 
-    public function work_order_job($id=null)
+    public function work_order_job($id = null)
     {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -649,7 +649,7 @@ class Job extends MY_Controller
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
-        $get_settings= array(
+        $get_settings = array(
             'table' => 'job_tax_rates',
             'select' => '*',
         );
@@ -667,7 +667,7 @@ class Job extends MY_Controller
         $this->page_data['settings'] = unserialize($settings);
 
         $this->load->model('workorder_model');
-        if ($id!=null) {
+        if ($id != null) {
             $this->page_data['jobs_data'] = $this->workorder_model->get_workorder_details($id);
 
             $workorder = $this->page_data['jobs_data'];
@@ -738,9 +738,9 @@ class Job extends MY_Controller
         exit(json_encode(['data' => $items]));
     }
 
-    public function estimate_job($id=null)
+    public function estimate_job($id = null)
     {
-        $this->load->model('AcsProfile_model');        
+        $this->load->model('AcsProfile_model');
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -807,7 +807,7 @@ class Job extends MY_Controller
             'table' => 'job_tags',
             'select' => 'id,name',
         );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);        
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
         $get_job_types = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -862,9 +862,9 @@ class Job extends MY_Controller
             'table' => 'items',
             'select' => 'items.id,title,price,type',
         );
-       $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-     
-        $get_settings= array(
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        $get_settings = array(
             'table' => 'job_tax_rates',
             'select' => '*',
         );
@@ -874,8 +874,8 @@ class Job extends MY_Controller
         $this->page_data['settings'] = unserialize($settings);
 
         $this->load->model('workorder_model');
-        if ($id!=null) {
-            $get_estimate_query= array(
+        if ($id != null) {
+            $get_estimate_query = array(
                 'where' => array(
                     'id' => $id
                 ),
@@ -896,19 +896,19 @@ class Job extends MY_Controller
             $default_customer_name = '';
 
             $customer = $this->AcsProfile_model->getByProfId($jobs_data->customer_id);
-            if( $customer ){
+            if ($customer) {
                 $default_customer_id   = $customer->prof_id;
                 $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
             }
 
             $jobItems  = $this->jobs_model->get_specific_estimate_items($id);
             $estimate_items = array();
-            foreach($jobItems as $ji){
-                if( isset($estimate_items[$ji->id]) ){
+            foreach ($jobItems as $ji) {
+                if (isset($estimate_items[$ji->id])) {
                     $estimate_items[$ji->id]->qty = $estimate_items[$ji->id]->qty + $ji->qty;
-                }else{
+                } else {
                     $estimate_items[$ji->id] = $ji;
-                } 
+                }
             }
 
             $this->page_data['estimate_items'] = $estimate_items;
@@ -917,7 +917,7 @@ class Job extends MY_Controller
             $this->page_data['jobs_data'] = $jobs_data;
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_estimate_items($id);
         }
-        
+
 
         $this->page_data['table'] = 'estimates';
         add_css([
@@ -938,12 +938,12 @@ class Job extends MY_Controller
             'assets/js/esign/libs/pdf.worker.js',
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
-		$this->page_data['page']->title = 'Estimates';
+        $this->page_data['page']->title = 'Estimates';
         $this->page_data['idd'] = $id;
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);
     }
 
-    public function job_preview($id=null)
+    public function job_preview($id = null)
     {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -968,27 +968,27 @@ class Job extends MY_Controller
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
-        if (!$id==null) {
+        if (!$id == null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
         $this->load->view('v2/pages/job/job_preview', $this->page_data);
     }
 
-    public function billing($id=null)
+    public function billing($id = null)
     {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
-        if (!$id==null) {
+        if (!$id == null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
 
             //Deposit Amount
             $deposit_amount = 0;
-            if( $jobs_data->estimate_id > 0 ){
-                $get_estimate_query= array(
+            if ($jobs_data->estimate_id > 0) {
+                $get_estimate_query = array(
                     'where' => array(
                         'id' => $jobs_data->estimate_id
                     ),
@@ -997,17 +997,17 @@ class Job extends MY_Controller
                 );
 
                 $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
-                if( $estimate_data ){
-                    if( $estimate_data->deposit_request == 2 ){
+                if ($estimate_data) {
+                    if ($estimate_data->deposit_request == 2) {
                         $deposit_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
-                    }else{
+                    } else {
                         $deposit_amount = $estimate_data->deposit_amount;
                     }
                 }
             }
 
             $job_total_amount = 0;
-            foreach($jobItems as $item){
+            foreach ($jobItems as $item) {
                 $job_total_amount += (((float) $item->price) * (float) $item->qty);
             }
 
@@ -1031,18 +1031,18 @@ class Job extends MY_Controller
             $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
             $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
-            $this->page_data['jobs_data'] = $jobs_data;            
+            $this->page_data['jobs_data'] = $jobs_data;
             $this->page_data['page']->title = 'Jobs Billing';
             $this->load->view('v2/pages/job/job_billing', $this->page_data);
             //$this->load->view('job/job_billing_v2', $this->page_data);
-        }else{
+        } else {
             redirect('job');
         }
     }
 
     public function update_payment_details()
     {
-        $input   = $this->input->post();        
+        $input   = $this->input->post();
         $updated = 0;
 
         $is_success = 1;
@@ -1057,38 +1057,38 @@ class Job extends MY_Controller
 
             $payment_data = array();
             $payment_data['payment_method'] = $input['pay_method'];
-            $payment_data['amount']         = $input['job_total_amount'];            
-            if ($input['pay_method'] == 'CASH') {                    
+            $payment_data['amount']         = $input['job_total_amount'];
+            if ($input['pay_method'] == 'CASH') {
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
-            }elseif($input['pay_method'] == 'CHECK'){                
+            } elseif ($input['pay_method'] == 'CHECK') {
                 $payment_data['check_number']   = $input['chk_check_number'];
                 $payment_data['routing_number'] = $input['chk_routing_number'];
                 $payment_data['account_number'] = $input['chk_account_number'];
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid'] = 1;
-            }elseif($input['pay_method'] == 'ACH'){
+            } elseif ($input['pay_method'] == 'ACH') {
                 $payment_data['check_number']      = $input['chk_check_number'];
                 $payment_data['routing_number']    = $input['routing_number'];
                 $payment_data['account_number']    = $input['account_number'];
                 $payment_data['ach_date_of_month'] = $input['day_of_month'];
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }elseif($input['pay_method'] == 'VENMO'){
+            } elseif ($input['pay_method'] == 'VENMO') {
                 $payment_data['account_credentials'] = $input['account_credentials'];
                 $payment_data['account_note'] = $input['account_note'];
                 $payment_data['confirmation'] = $input['confirmation'];
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }elseif($input['pay_method'] == 'HOME_OWNER_FINANCING'){
+            } elseif ($input['pay_method'] == 'HOME_OWNER_FINANCING') {
                 $payment_data['account_credentials'] = $input['account_credential'];
                 $payment_data['account_note'] = $input['account_note'];
                 $payment_data['is_document_signed'] = $input['is_document_signed'];
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }elseif($input['pay_method'] == 'CREDIT_CARD'){                
+            } elseif ($input['pay_method'] == 'CREDIT_CARD') {
                 $converge_data = [
                     'company_id' => $job->company_id,
                     'amount' => $input['amount'],
@@ -1100,7 +1100,7 @@ class Job extends MY_Controller
                     'zip' => $input['zip']
                 ];
                 $result = $this->converge_send_sale($converge_data);
-                if( $result['is_success'] == 1 ){
+                if ($result['is_success'] == 1) {
                     $payment_data['credit_number']  = $input['card_number'];
                     $payment_data['credit_expiry']  = $input['card_mmyy'] . '/' . $input['exp_year'];
                     $payment_data['credit_cvc']     = $input['card_cvc'];
@@ -1110,28 +1110,28 @@ class Job extends MY_Controller
                     $payment_data['mail_postcode']  = $input['zip'];
                     $payment_data['is_collected'] = 1;
                     $payment_data['is_paid']      = 1;
-                }else{
+                } else {
                     $is_success = 0;
                     $msg = $result['msg'];
                 }
-            }elseif($input['pay_method'] == 'INVOICING'){
+            } elseif ($input['pay_method'] == 'INVOICING') {
                 $payment_data['invoice_date'] = date('Y-m-d', strtotime($input['invoice_date']));
                 $payment_data['invoice_term'] = $input['invoice_term'];
                 $payment_data['invoice_due_date'] = date('Y-m-d', strtotime($input['invoice_due_date']));
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid'] = 1;
-            }elseif($input['pay_method'] == 'WARRANTY_WORK'){
+            } elseif ($input['pay_method'] == 'WARRANTY_WORK') {
                 $payment_data['account_credentials'] = $input['account_credential'];
                 $payment_data['account_note'] = $input['account_note'];
                 $payment_data['is_document_signed'] = $input['is_document_signed'];
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
-            }else{
+            } else {
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid'] = 1;
             }
 
-            if( $is_success == 1 ){
+            if ($is_success == 1) {
 
                 $payment_data['job_id'] = $input['jobs_id'];
                 $msg = '';
@@ -1141,7 +1141,7 @@ class Job extends MY_Controller
                         'payment_method' => NULL
                     ),
                     'table' => 'job_payments'
-                ); 
+                );
 
                 //$updated =  $this->general->add_($payment_data, 'job_payments');
 
@@ -1150,8 +1150,8 @@ class Job extends MY_Controller
                     $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'job_payments', 'job_id');
                 } else {
                     $updated =  $this->general->add_($payment_data, 'job_payments');
-                } 
-            }            
+                }
+            }
         }
 
         if ($updated) {
@@ -1182,7 +1182,7 @@ class Job extends MY_Controller
 
             $job = $this->jobs_model->get_specific_job($input['jobs_id']);
             $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
-            
+
             $converge_data = [
                 'company_id' => $job->company_id,
                 'amount' => $input['amount'],
@@ -1198,7 +1198,7 @@ class Job extends MY_Controller
                 $payment_data = array();
                 $payment_data['payment_method'] = $input['pay_method'];
                 $payment_data['is_paid'] = 1;
-                // $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
+                    // $payment_data['paid_datetime'] =date("m-d-Y h:i:s");
                 ;
                 $check = array(
                     'where' => array(
@@ -1240,7 +1240,7 @@ class Job extends MY_Controller
 
         $is_success = 0;
         $msg = '';
-        
+
         $comp_id = logged('company_id');
         $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
         if ($convergeCred) {
@@ -1276,7 +1276,7 @@ class Job extends MY_Controller
         return $return;
     }
 
-    public function send_invoice_preview($id=null)
+    public function send_invoice_preview($id = null)
     {
         //$this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -1303,7 +1303,7 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
 
-        if (!$id==null) {
+        if (!$id == null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
@@ -1311,12 +1311,12 @@ class Job extends MY_Controller
     }
 
 
-    public function send_invoice($id=null)
+    public function send_invoice($id = null)
     {
-//        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-//            echo json_encode(['success' => false]);
-//            return;
-//        }
+        //        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        //            echo json_encode(['success' => false]);
+        //            return;
+        //        }
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
         $username = MAIL_USERNAME;
@@ -1361,7 +1361,7 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
 
-        if (!$id==null) {
+        if (!$id == null) {
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
@@ -1466,7 +1466,7 @@ class Job extends MY_Controller
     public function update_jobs_status()
     {
         $input = $this->input->post();
-        
+
         // customer_ad_model
         if ($input) {
             $id = $input['id'];
@@ -1482,7 +1482,7 @@ class Job extends MY_Controller
                 //Log audit trail
 
                 $job = $this->jobs_model->get_specific_job($id);
-                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #'.$job->job_number.' to '.$input['status']);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #' . $job->job_number . ' to ' . $input['status']);
 
                 //SMS Notification
                 createCronAutoSmsNotification($job->company_id, $job->id, 'job', $input['status'], $job->employee_id);
@@ -1507,7 +1507,6 @@ class Job extends MY_Controller
         } else {
             echo "Error";
         }
-
     }
 
     public function ajax_create_job_payment()
@@ -1515,22 +1514,22 @@ class Job extends MY_Controller
         $post = $this->input->post();
         $is_success = 0;
         $msg = 'Cannot update data';
-        
+
         $job = $this->jobs_model->get_specific_job($post['jobid']);
-        if( $job ){
+        if ($job) {
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
             $job_total_amount = 0;
-            foreach($jobItems as $item){
+            foreach ($jobItems as $item) {
                 $job_total_amount += (((float) $item->price) * (float) $item->qty);
             }
 
-            if ($post['payment_method'] == 'PAYPAL') {                    
+            if ($post['payment_method'] == 'PAYPAL') {
                 $payment_data['is_collected'] = isset($input['is_collected']) ? 1 : 0;
                 $payment_data['is_paid'] = 1;
             }
 
             $payment_data['payment_method'] = $post['payment_method'];
-            $payment_data['amount']         = $job_total_amount;  
+            $payment_data['amount']         = $job_total_amount;
             $payment_data['job_id']         = $job->id;
             $msg = '';
             $check = array(
@@ -1539,21 +1538,21 @@ class Job extends MY_Controller
                     'payment_method' => NULL
                 ),
                 'table' => 'job_payments'
-            ); 
+            );
 
             $exist = $this->general->get_data_with_param($check, false);
             if ($exist) {
                 $updated =  $this->general->update_with_key_field($payment_data, $job->id, 'job_payments', 'job_id');
             } else {
                 $updated =  $this->general->add_($payment_data, 'job_payments');
-            } 
+            }
 
             $is_success = 1;
-            $msg = '';   
+            $msg = '';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);       
+        echo json_encode($json_data);
 
         exit;
     }
@@ -1677,7 +1676,7 @@ class Job extends MY_Controller
             ),
         );
         $data = $this->general->get_data_with_param($get_customer);
-        $data_arr = array("data" => $data , "message" => "success");
+        $data_arr = array("data" => $data, "message" => "success");
         echo json_encode($data_arr);
     }
 
@@ -1696,7 +1695,7 @@ class Job extends MY_Controller
 
     public function job_tags()
     {
-		$this->page_data['page']->title = 'Job Tags';
+        $this->page_data['page']->title = 'Job Tags';
         $this->page_data['page']->parent = 'Sales';
 
         $get_job_settings = array(
@@ -1717,7 +1716,7 @@ class Job extends MY_Controller
     public function job_types()
     {
         $this->hasAccessModule(26);
-		$this->page_data['page']->title = 'Job Types';
+        $this->page_data['page']->title = 'Job Types';
         $this->page_data['page']->parent = 'Sales';
 
         $get_job_types = array(
@@ -1791,12 +1790,12 @@ class Job extends MY_Controller
         );
         //Get Job
         $job = $this->jobs_model->get_specific_job($_POST['job_id']);
-        if( $job ){
+        if ($job) {
             if ($this->general->delete_($remove_job)) {
-                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #'.$job->job_number);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #' . $job->job_number);
                 echo '1';
-            }    
-        }        
+            }
+        }
     }
 
     public function add_tag()
@@ -1848,14 +1847,13 @@ class Job extends MY_Controller
             'table' => 'tax_rates',
             'select' => '*',
         );
-        $taxRate = $this->general->get_data_with_param($get_tax_rate,false);
-        if( $taxRate ){
+        $taxRate = $this->general->get_data_with_param($get_tax_rate, false);
+        if ($taxRate) {
             $data = ['name' => $input['tax_name'], 'rate' => $input['tax_rate'], 'is_default' => 0];
-            $this->general->update_with_key_field($data, $input['tid'], 'tax_rates','id');
+            $this->general->update_with_key_field($data, $input['tid'], 'tax_rates', 'id');
 
             $is_success = 1;
-
-        }else{
+        } else {
             $msg = 'Cannot find data';
         }
 
@@ -1868,12 +1866,12 @@ class Job extends MY_Controller
         if (0 < $_FILES['file']['error']) {
             echo 'Error: ' . $_FILES['file']['error'] . '<br>';
         } else {
-            $uniquesavename=time().uniqid(rand());
+            $uniquesavename = time() . uniqid(rand());
             $path = $_FILES['file']['name'];
             $ext = pathinfo($path, PATHINFO_EXTENSION);
-            $destination = 'uploads/jobs/attachment/' .$uniquesavename.'.'.$ext;
+            $destination = 'uploads/jobs/attachment/' . $uniquesavename . '.' . $ext;
             move_uploaded_file($_FILES['file']['tmp_name'], $destination);
-            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/' . $destination;
             //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
             echo $destination;
         }
@@ -1881,15 +1879,15 @@ class Job extends MY_Controller
 
     public function settings()
     {
-		$this->page_data['page']->title = 'Job Settings';
+        $this->page_data['page']->title = 'Job Settings';
         $this->page_data['page']->parent = 'Sales';
 
         $comp_id = logged('company_id');
         //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
         $input = $this->input->post();
-        if($input){
+        if ($input) {
             strtoupper($input['job_num_prefix']);
-            $this->general->update_with_key_field($input, $comp_id, 'job_settings','company_id');
+            $this->general->update_with_key_field($input, $comp_id, 'job_settings', 'company_id');
         }
 
         $get_job_settings = array(
@@ -1900,26 +1898,26 @@ class Job extends MY_Controller
             'select' => '*',
         );
 
-        $job_settings = $this->general->get_data_with_param($get_job_settings,false);
-        if( $job_settings ){
+        $job_settings = $this->general->get_data_with_param($get_job_settings, false);
+        if ($job_settings) {
             $prefix   = $job_settings->job_num_prefix;
             $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
-        }else{
+        } else {
             $prefix   = 'JOB-';
             $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
             $lastId = $this->jobs_model->getlastInsert($comp_id);
-            if( $lastId ){
+            if ($lastId) {
                 $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
             }
         }
 
         $this->page_data['settings_prefix'] = $prefix;
         $this->page_data['settings_next_num'] = $next_num;
-        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
+        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings, false);
 
         $get_job_tax = array(
             'where' => array(
-                'company_id' => $comp_id                
+                'company_id' => $comp_id
             ),
             'or_where' => ['is_default' => 1],
             'table' => 'tax_rates',
@@ -1940,7 +1938,7 @@ class Job extends MY_Controller
             'table' => 'job_tags',
             'select' => '*',
         );
-        $this->page_data['title'] ='Job Time Settings';
+        $this->page_data['title'] = 'Job Time Settings';
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
 
@@ -1956,17 +1954,17 @@ class Job extends MY_Controller
         $input = $this->input->post();
         $comp_id = logged('company_id');
 
-        if( $input['item_name'] == null ){
+        if ($input['item_name'] == null) {
             $is_success = 0;
             $msg = 'Please select an item';
         }
 
-        if( $input['total_amount'] <= 0 ){
+        if ($input['total_amount'] <= 0) {
             $is_success = 0;
             $msg = 'Cannot accept job having 0 amount';
         }
 
-        if( $is_success == 1 ){
+        if ($is_success == 1) {
             $get_job_settings = array(
                 'where' => array(
                     'company_id' => $comp_id
@@ -1984,32 +1982,32 @@ class Job extends MY_Controller
             );
             $isJob = $this->general->get_data_with_param($check_job, false);
 
-            if(!empty($isJob)){
-                $job_number = $isJob->job_number;   
-            }else{
+            if (!empty($isJob)) {
+                $job_number = $isJob->job_number;
+            } else {
                 $job_settings = $this->general->get_data_with_param($get_job_settings);
-                if( $job_settings ){
+                if ($job_settings) {
                     $prefix   = $job_settings[0]->job_num_prefix;
-                    $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
+                    $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
                     //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
-                }else{
+                } else {
                     $prefix = 'JOB-';
                     $lastId = $this->jobs_model->getlastInsert($comp_id);
-                    if( $lastId ){
+                    if ($lastId) {
                         $next_num = $lastId->id + 1;
                         $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-                    }else{
+                    } else {
                         $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-                    }            
+                    }
                 }
 
                 $job_number = $prefix . $next_num;
             }
-            
+
 
             $jobTag = $this->JobTags_model->getById($input['tags']);
             $estimate_id = 0;
-            if( $input['estimate_id'] > 0 ){
+            if ($input['estimate_id'] > 0) {
                 $estimate_id = $input['estimate_id'];
             }
 
@@ -2043,9 +2041,9 @@ class Job extends MY_Controller
                 'end_time' => $input['end_time'],
                 'event_color' => $input['event_color'],
                 'customer_reminder_notification' => $input['customer_reminder_notification'],
-                'priority' => $input['priority'],//$this->input->post('job_priority'),
-                'tags' => $jobTag->name,//$this->input->post('job_priority'),
-                'status' => 'Scheduled',//$this->input->post('job_status'),
+                'priority' => $input['priority'], //$this->input->post('job_priority'),
+                'tags' => $jobTag->name, //$this->input->post('job_priority'),
+                'status' => 'Scheduled', //$this->input->post('job_status'),
                 // 'message' => $input['message'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
@@ -2063,14 +2061,14 @@ class Job extends MY_Controller
                 $jobs_data['message'] = $input['message'];
             }
 
-            if(empty($isJob)){
+            if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
                 //Create hash_id
                 $job_hash_id = hashids_encrypt($jobs_id, '', 15);
                 $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-                
-                customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
+
+                customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
                 //Google Calendar
                 createSyncToCalendar($jobs_id, 'job', $comp_id);
@@ -2078,7 +2076,7 @@ class Job extends MY_Controller
                 // insert data to job items table (items_id, qty, jobs_id)
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
-                    for ($xx=0;$xx<$devices;$xx++) {
+                    for ($xx = 0; $xx < $devices; $xx++) {
                         $job_items_data = array();
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
@@ -2111,18 +2109,18 @@ class Job extends MY_Controller
                     'job_id' => $jobs_id,
                 );
                 $this->general->add_($job_payment_query, 'job_payments');
-                
+
                 // insert data to job settings table
                 $jobs_settings_data = array(
                     'job_num_next' => $job_settings[0]->job_num_next + 1
                 );
                 $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
-            }else{
+            } else {
                 $jobs_id = $isJob->id;
                 // update data to job items table (items_id, qty, jobs_id)
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
-                    for ($xx=0;$xx<$devices;$xx++) {
+                    for ($xx = 0; $xx < $devices; $xx++) {
                         $check_item = array(
                             'where' => array(
                                 'job_id' => $isJob->id,
@@ -2138,12 +2136,11 @@ class Job extends MY_Controller
                         $job_items_data['tax'] = $input['tax'];
                         $where['job_id'] = $isJob->id;
                         $where['items_id'] = $input['item_id'][$xx];
-                        if(empty($isItem)){
+                        if (empty($isItem)) {
                             $job_items_data['items_id'] = $input['item_id'][$xx];
                             $job_items_data['job_id'] = $isJob->id; //from jobs table
                             $this->general->add_($job_items_data, 'job_items');
-
-                        }else{
+                        } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
                         unset($job_items_data);
@@ -2169,7 +2166,7 @@ class Job extends MY_Controller
                     'amount' => $input['total_amount'],
                 );
                 $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
-                
+
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
             }
             if (isset($input['wo_id'])) {
@@ -2205,24 +2202,24 @@ class Job extends MY_Controller
             //SMS Notification
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
 
-            if( $input['employee2_id'] > 0 ){
+            if ($input['employee2_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
             }
-            if( $input['employee3_id'] > 0 ){
+            if ($input['employee3_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
             }
-            if( $input['employee4_id'] > 0 ){
+            if ($input['employee4_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
             }
-            if( $input['employee5_id'] > 0 ){
+            if ($input['employee5_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
             }
-            if( $input['employee6_id'] > 0 ){
+            if ($input['employee6_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
             }
-        } 
-        
-            /*if (!is_null($this->input->get('json', TRUE))) {
+        }
+
+        /*if (!is_null($this->input->get('json', TRUE))) {
                 // Returns json data, when ?json is set on URL query string.
                 header('content-type: application/json');
                 exit(json_encode(['id' => $job_number]));
@@ -2314,9 +2311,9 @@ class Job extends MY_Controller
     public function buy($id)
     {
         // Set variables for paypal form
-        $returnURL = base_url().'paypal/success';
-        $cancelURL = base_url().'paypal/cancel';
-        $notifyURL = base_url().'paypal/ipn';
+        $returnURL = base_url() . 'paypal/success';
+        $cancelURL = base_url() . 'paypal/cancel';
+        $notifyURL = base_url() . 'paypal/ipn';
 
         // Get product data from the database
         $product = $this->invoice_model->getRows($id);
@@ -2427,15 +2424,15 @@ class Job extends MY_Controller
         switch ($get['type']) {
             case "estimate":
                 $this->jobs_model->deleteEstimate($get['id']);
-            break;
+                break;
 
             case "work_order":
                 $this->jobs_model->deleteWorkOrder($get['id']);
-            break;
+                break;
 
             case "invoice":
                 $this->invoice_model->deleteInvoice($get['id']);
-            break;
+                break;
         }
 
         redirect('job/new_job?job_num=' . $get['job_num']);
@@ -2717,7 +2714,7 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Please specify job type name');
             $this->session->set_flashdata('alert_class', 'alert-danger');
 
-            redirect('job/edit_job_type/'.$post['eid']);
+            redirect('job/edit_job_type/' . $post['eid']);
         }
     }
 
@@ -3108,13 +3105,13 @@ class Job extends MY_Controller
         $this->load->model('invoice_model');
 
         $job = $this->jobs_model->get_specific_job($id);
-        if ($job) {            
+        if ($job) {
             //Update hashid
-            if( $job->hash_id == '' ){
+            if ($job->hash_id == '') {
                 $eid      = hashids_encrypt($job->job_unique_id, '', 15);
-                $job_id   = hashids_decrypt($eid, '', 15);                
+                $job_id   = hashids_decrypt($eid, '', 15);
                 $this->jobs_model->update($job->id, ['hash_id' => $eid]);
-            }else{
+            } else {
                 $eid      = $job->hash_id;
                 $job_id   = hashids_decrypt($eid, '', 15);
             }
@@ -3145,38 +3142,38 @@ class Job extends MY_Controller
                     'item_tax' => $ji->tax
                 ];
             }
-            $msg="";
+            $msg = "";
             $subject = "nSmartrac: {$job->job_number} Invoice";
-            $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
-            $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
-            $msg .= "<h1>Your Invoice from ". $company->business_name ."</h1><br />";
+            $img_source = base_url('/uploads/users/business_profile/' . $company->id . '/' . $company->business_image);
+            $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='" . $img_source . "' /><br />";
+            $msg .= "<h1>Your Invoice from " . $company->business_name . "</h1><br />";
             $msg .= "<p>Hi " . $customer->first_name . ",</p>";
             $msg .= "<p>Attached please find invoice <b>#" . $job->job_number . "</b> for your service</p>";
             $msg .= "<p>Thank you,</p><br />";
 
             $msg .= "<table>";
-            $msg .= "<tr><td><b>Invoice Number</b></td><td>: ".$job->job_number."</td></tr>";
-            $msg .= "<tr><td><b>Service Date</b></td><td>: ".date('m/d/Y', strtotime($job->start_date))."</td></tr>";
+            $msg .= "<tr><td><b>Invoice Number</b></td><td>: " . $job->job_number . "</td></tr>";
+            $msg .= "<tr><td><b>Service Date</b></td><td>: " . date('m/d/Y', strtotime($job->start_date)) . "</td></tr>";
             $msg .= "<tr><td colspan='2'><br /></td></tr>";
-            $msg .= "<tr><td><b>Customer Name</b></td><td>: ".$job->first_name.' '.$job->last_name."</td></tr>";
-            $msg .= "<tr><td><b>Service Address</b></td><td>: ".$job->cust_city.' '.$job->cust_state.' '.$job->cust_zip_code."</td></tr>";
+            $msg .= "<tr><td><b>Customer Name</b></td><td>: " . $job->first_name . ' ' . $job->last_name . "</td></tr>";
+            $msg .= "<tr><td><b>Service Address</b></td><td>: " . $job->cust_city . ' ' . $job->cust_state . ' ' . $job->cust_zip_code . "</td></tr>";
             $msg .= "</table>";
-            
+
             $grand_total = 0;
             foreach ($group_items as $type => $items) {
                 $subtotal = 0;
 
-                $msg .= "<h2>".ucfirst($type)."</h2>";
+                $msg .= "<h2>" . ucfirst($type) . "</h2>";
                 $msg .= "<table>";
                 foreach ($items as $i) {
                     $total = $i['item_price'] * $i['item_qty'];
                     $total_tax = $total_tax + $i['tax'];
                     //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
-                    $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total, 2, '.', ',')."</td></tr>";
+                    $msg  .= "<tr><td width='300'>" . $i['item_name'] . "</td><td>" . number_format((float)$total, 2, '.', ',') . "</td></tr>";
                     $subtotal = $subtotal + $total;
                 }
                 $msg .= "<tr><td colspan='2'><hr /></td></tr>";
-                $msg .= "<tr><td width='300'>Subtotal</td><td>".number_format((float)$subtotal, 2, '.', ',')."</td></tr>";
+                $msg .= "<tr><td width='300'>Subtotal</td><td>" . number_format((float)$subtotal, 2, '.', ',') . "</td></tr>";
                 $msg .= "</table>";
 
                 $grand_total += $subtotal;
@@ -3189,9 +3186,9 @@ class Job extends MY_Controller
             $msg .= "<br /><br />";
             $msg .= "<table>";
             //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
-            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$job->total_amount, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>" . number_format((float)$job->total_amount, 2, '.', ',') . "</h2></td></tr>";
             $msg .= "<tr><td colspan='2'><br><br></td></tr>";
-            $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
+            $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='" . $url . "' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";
 
             if ($job->invoice_term != '') {
@@ -3199,16 +3196,16 @@ class Job extends MY_Controller
             } else {
                 $msg .= "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
             }
-            
-            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:".$company->business_phone."'>".$company->business_phone."</a> | <a href='mailto:".$company->business_email."'>".$company->business_email."</a></p>";
-            $msg .= "<a href='".$refer_friend_url."' style='margin-left:156px;'><img src='".$refer_friend."' style='width:122px;' /></a>";
+
+            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:" . $company->business_phone . "'>" . $company->business_phone . "</a> | <a href='mailto:" . $company->business_email . "'>" . $company->business_email . "</a></p>";
+            $msg .= "<a href='" . $refer_friend_url . "' style='margin-left:156px;'><img src='" . $refer_friend . "' style='width:122px;' /></a>";
 
             $msg .= "<br><br><br><br><br>";
-            
+
             $msg .= "<table style='margin-left:48px;'>";
-            $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
+            $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='" . $nsmart_logo . "' /></td></tr>";
             $msg .= "</table>";
-            
+
             $recipient = $customer->email;
             $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
 
@@ -3228,7 +3225,7 @@ class Job extends MY_Controller
                 // START: INCREMENT THE LAST `invoice_number` INSERTED TO CREATE NEW INVOICE NUMBER;
                 $INVOICE_NUMBER_LAST = $this->invoice_model->getlastInsert()[0]->invoice_number;
                 $INVOICE_NUMBER_LAST = str_replace("INV-", "", $INVOICE_NUMBER_LAST);
-                $INVOICE_NUMBER_LAST = "INV-".str_pad($INVOICE_NUMBER_LAST + 1, 9, "0", STR_PAD_LEFT);
+                $INVOICE_NUMBER_LAST = "INV-" . str_pad($INVOICE_NUMBER_LAST + 1, 9, "0", STR_PAD_LEFT);
                 // END: INCREMENT THE LAST `invoice_number` INSERTED TO CREATE NEW INVOICE NUMBER;
                 $JOB_INFO = $this->jobs_model->GET_JOB_INFO($job->id);
                 $JOB_INFO_ARRAY = array(
@@ -3341,9 +3338,9 @@ class Job extends MY_Controller
             'job_num_next' => $post['job_settings_next_number']
         ];
 
-        if( $settings ){
+        if ($settings) {
             $this->jobs_model->updateJobSettingsByCompanyId($cid, $data);
-        }else{
+        } else {
             $this->general->add_($data, 'job_settings');
         }
 
@@ -3404,7 +3401,7 @@ class Job extends MY_Controller
 
     public function apiGetJobTaxRates()
     {
-        $get_settings= [
+        $get_settings = [
             'where' => [
                 'company_id' => logged('company_id')
             ],
@@ -3556,7 +3553,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-        
+
         $get_company_info = array(
             'where' => array(
                 'company_id' => $comp_id,
@@ -3577,7 +3574,7 @@ class Job extends MY_Controller
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 
-        $get_settings= array(
+        $get_settings = array(
             'table' => 'job_tax_rates',
             'select' => '*',
         );
@@ -3596,7 +3593,7 @@ class Job extends MY_Controller
         ]);
 
         $default_start_date = date("Y-m-d");
-        if( $this->input->get('date_selected') ){
+        if ($this->input->get('date_selected')) {
             $default_start_date = $this->input->get('date_selected');
         }
 
@@ -3615,17 +3612,17 @@ class Job extends MY_Controller
         $user_id = logged('id');
         $input   = $this->input->post();
 
-        if( $input['event_color'] == '' ){
+        if ($input['event_color'] == '') {
             $msg = 'Please select event color';
             $is_valid = 0;
         }
 
-        if( $input['customer_id'] == 0 || $input['customer_id'] == '' ){
+        if ($input['customer_id'] == 0 || $input['customer_id'] == '') {
             $msg = 'Please select customer';
             $is_valid = 0;
         }
 
-        if( $is_valid != 0 ){
+        if ($is_valid != 0) {
             $get_job_settings = array(
                 'where' => array(
                     'company_id' => $comp_id
@@ -3635,22 +3632,22 @@ class Job extends MY_Controller
             );
 
             $job_settings = $this->general->get_data_with_param($get_job_settings);
-            if( $job_settings ){
+            if ($job_settings) {
                 $prefix   = $job_settings[0]->job_num_prefix;
-                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);   
-            }else{
+                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+            } else {
                 $prefix = 'JOB-';
                 $lastId = $this->jobs_model->getlastInsert($comp_id);
-                if( $lastId ){
+                if ($lastId) {
                     $next_num = $lastId->id + 1;
                     $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-                }else{
+                } else {
                     $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-                }            
+                }
             }
 
             $job_number = $prefix . $next_num;
-            
+
 
             $jobs_data = array(
                 'job_number' => $job_number,
@@ -3669,9 +3666,9 @@ class Job extends MY_Controller
                 'end_time' => $input['end_time'],
                 'event_color' => $input['event_color'],
                 'customer_reminder_notification' => $input['customer_reminder_notification'],
-                'priority' => $input['priority'],//$this->input->post('job_priority'),
-                'tags' => $input['tags'],//$this->input->post('job_priority'),
-                'status' => 'Scheduled',//$this->input->post('job_status'),
+                'priority' => $input['priority'], //$this->input->post('job_priority'),
+                'tags' => $input['tags'], //$this->input->post('job_priority'),
+                'status' => 'Scheduled', //$this->input->post('job_status'),
                 'message' => $input['job_notes'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
@@ -3687,8 +3684,8 @@ class Job extends MY_Controller
             //Create hash_id
             $job_hash_id = hashids_encrypt($jobs_id, '', 15);
             $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-            
-            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
+
+            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
             //Google Calendar
             createSyncToCalendar($jobs_id, 'job', $comp_id);
@@ -3696,7 +3693,7 @@ class Job extends MY_Controller
             // insert data to job items table (items_id, qty, jobs_id)
             if (isset($input['item_id'])) {
                 $devices = count($input['item_id']);
-                for ($xx=0;$xx<$devices;$xx++) {
+                for ($xx = 0; $xx < $devices; $xx++) {
                     $job_items_data = array();
                     $job_items_data['job_id'] = $jobs_id; //from jobs table
                     $job_items_data['items_id'] = $input['item_id'][$xx];
@@ -3705,7 +3702,7 @@ class Job extends MY_Controller
                     unset($job_items_data);
                 }
             }
-            
+
             // insert data to job settings table
             $jobs_settings_data = array(
                 'job_num_next' => $job_settings[0]->job_num_next + 1
@@ -3715,25 +3712,25 @@ class Job extends MY_Controller
             //SMS Notification
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
 
-            if( $input['employee2_id'] > 0 ){
+            if ($input['employee2_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee2_id'], 0);
             }
-            if( $input['employee3_id'] > 0 ){
+            if ($input['employee3_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee3_id'], 0);
             }
-            if( $input['employee4_id'] > 0 ){
+            if ($input['employee4_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee4_id'], 0);
             }
-            if( $input['employee5_id'] > 0 ){
+            if ($input['employee5_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee5_id'], 0);
             }
-            if( $input['employee6_id'] > 0 ){
+            if ($input['employee6_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
             }
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
-        echo json_encode($json_data);       
+        echo json_encode($json_data);
 
         exit;
     }
@@ -3744,10 +3741,10 @@ class Job extends MY_Controller
         $cid  = logged('company_id');
 
         $is_success = 0;
-        $msg = 'Cannot find data';        
+        $msg = 'Cannot find data';
 
         $job = $this->jobs_model->get_specific_job($post['schedule_id']);
-        if( $job ){ 
+        if ($job) {
 
             $remove_job = array(
                 'where' => array(
@@ -3766,15 +3763,15 @@ class Job extends MY_Controller
                 );
                 $this->general->delete_($remove_job_items);
 
-                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #'.$job->job_number);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #' . $job->job_number);
 
                 $is_success = 1;
                 $msg = '';
-            }    
+            }
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);       
+        echo json_encode($json_data);
 
         exit;
     }
@@ -3788,9 +3785,9 @@ class Job extends MY_Controller
         $this->load->view('v2/pages/job/ajax_load_job_payments', $this->page_data);
     }
 
-    public function edit_job_item($id=null)
+    public function edit_job_item($id = null)
     {
-        $this->load->model('AcsProfile_model'); 
+        $this->load->model('AcsProfile_model');
         $this->load->helper('functions');
 
         add_css([
@@ -3822,8 +3819,8 @@ class Job extends MY_Controller
             'table' => 'users',
             'distinct' => true,
             'select' => 'users.id, users.FName, users.LName'
-        );        
-        $salesRep = $this->general->get_data_with_param($get_sales_rep);    
+        );
+        $salesRep = $this->general->get_data_with_param($get_sales_rep);
 
         $get_employee = array(
             'where' => array(
@@ -3876,19 +3873,19 @@ class Job extends MY_Controller
         $assignedEmployee6 = $this->general->get_data_with_param($get_employee);
 
         $assignedEmployees = array();
-        if( $assignedEmployee2 ){
+        if ($assignedEmployee2) {
             $assignedEmployees[] = $assignedEmployee2[0]->FName . ' ' . $assignedEmployee2[0]->LName;
         }
 
-        if( $assignedEmployee3 ){
+        if ($assignedEmployee3) {
             $assignedEmployees[] = $assignedEmployee3[0]->FName . ' ' . $assignedEmployee3[0]->LName;
         }
 
-        if( $assignedEmployee4 ){
+        if ($assignedEmployee4) {
             $assignedEmployees[] = $assignedEmployee4[0]->FName . ' ' . $assignedEmployee4[0]->LName;
         }
 
-        if( $assignedEmployee5 ){
+        if ($assignedEmployee5) {
             $assignedEmployees[] = $assignedEmployee5[0]->FName . ' ' . $assignedEmployee5[0]->LName;
         }
 
@@ -3903,8 +3900,8 @@ class Job extends MY_Controller
         );
         $items = $this->general->get_data_with_param($get_items);
 
-        if( $jobs_data->estimate_id > 0 ){
-            $get_estimate_query= array(
+        if ($jobs_data->estimate_id > 0) {
+            $get_estimate_query = array(
                 'where' => array(
                     'id' => $jobs_data->estimate_id
                 ),
@@ -3913,10 +3910,10 @@ class Job extends MY_Controller
             );
 
             $estimate_data = $this->general->get_data_with_param($get_estimate_query, false);
-            if( $estimate_data ){
-                if( $estimate_data->deposit_request == 2 ){
+            if ($estimate_data) {
+                if ($estimate_data->deposit_request == 2) {
                     $estimate_dp_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
-                }else{
+                } else {
                     $estimate_dp_amount = $estimate_data->deposit_amount;
                 }
             }
@@ -3924,7 +3921,7 @@ class Job extends MY_Controller
 
 
         $customer = $this->AcsProfile_model->getByProfId($jobs_data->customer_id);
-        if( $customer ){
+        if ($customer) {
             $default_customer_id = $customer->prof_id;
             $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
         }
@@ -3983,6 +3980,32 @@ class Job extends MY_Controller
         }
 
         exit(json_encode(['success' => $_POST]));
+    }
+
+    public function createInvoice($id)
+    {
+        $this->db->where('id', $id);
+        $job = $this->db->get('jobs')->row();
+
+        if (!$job) {
+            return show_404();
+        }
+
+        $this->db->where('prof_id', $job->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $this->page_data['job'] = $job;
+        $this->page_data['customer'] = $customer;
+
+        $this->page_data['page']->title = 'Create Invoice';
+        $this->load->view('v2/pages/job/create_invoice', $this->page_data);
+    }
+
+    public function apiGetJobItems($id)
+    {
+        $items = $this->jobs_model->get_specific_job_items($id);
+        header('content-type: application/json');
+        exit(json_encode(['data' => $items]));
     }
 }
 
