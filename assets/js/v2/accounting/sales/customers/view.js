@@ -759,7 +759,36 @@ $('#reset-button').on('click', function() {
     location.href = url;
 });
 
-$(document).on('click', '#transactions-table .view-edit-billable-expense', function() {
+$(document).on('click', '#transactions-table .view-edit-time-charge', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = {
+        id: id,
+        type: row.find('td:nth-child(3)').text().trim()
+    };
+
+    $.get('/accounting/view-transaction/time-activity/'+id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        modalName = '#singleTimeModal';
+        initModalFields('singleTimeModal', data);
+
+        $('#singleTimeModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-billable-expense', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -786,7 +815,8 @@ $(document).on('click', '#transactions-table .view-edit-billable-expense', funct
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-invoice', function() {
+$(document).on('click', '#transactions-table .view-edit-invoice', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -813,7 +843,8 @@ $(document).on('click', '#transactions-table .view-edit-invoice', function() {
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-estimate', function() {
+$(document).on('click', '#transactions-table .view-edit-estimate', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -854,7 +885,8 @@ $(document).on('click', '#transactions-table .view-edit-estimate', function() {
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-credit-memo', function() {
+$(document).on('click', '#transactions-table .view-edit-credit-memo', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -881,7 +913,8 @@ $(document).on('click', '#transactions-table .view-edit-credit-memo', function()
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-sales-receipt', function() {
+$(document).on('click', '#transactions-table .view-edit-sales-receipt', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -908,7 +941,8 @@ $(document).on('click', '#transactions-table .view-edit-sales-receipt', function
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-refund-receipt', function() {
+$(document).on('click', '#transactions-table .view-edit-refund-receipt', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -935,7 +969,8 @@ $(document).on('click', '#transactions-table .view-edit-refund-receipt', functio
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-delayed-credit', function() {
+$(document).on('click', '#transactions-table .view-edit-delayed-credit', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -962,7 +997,8 @@ $(document).on('click', '#transactions-table .view-edit-delayed-credit', functio
     });
 });
 
-$(document).on('click', '#transactions-table .view-edit-delayed-charge', function() {
+$(document).on('click', '#transactions-table .view-edit-delayed-charge', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -990,6 +1026,7 @@ $(document).on('click', '#transactions-table .view-edit-delayed-charge', functio
 });
 
 $(document).on('click', '#transactions-table .view-edit-payment', function(e) {
+    e.preventDefault();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
@@ -1040,7 +1077,8 @@ $('#update-status-modal #status').on('change', function() {
     }
 });
 
-$(document).on('click', '#transactions-table .update-estimate-status', function() {
+$(document).on('click', '#transactions-table .update-estimate-status', function(e) {
+    e.preventDefault();
     var estimateId = $(this).closest('tr').find('.select-one').val();
     var url = `/accounting/customers/update-estimate-status/${estimateId}`;
 

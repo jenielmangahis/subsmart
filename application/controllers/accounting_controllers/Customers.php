@@ -18,6 +18,7 @@ class Customers extends MY_Controller {
         $this->load->model('IndustryType_model');
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('expenses_model');
+        $this->load->model('accounting_single_time_activity_model');
 
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
@@ -1299,6 +1300,7 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_estimates($transactions, $filters);
                 $transactions = $this->get_payments($transactions, $filters);
                 $transactions = $this->get_billable_expenses($transactions, $filters);
+                $transactions = $this->get_time_charges($transactions, $filters);
             break;
             case 'all-plus-deposits' :
                 $transactions = $this->get_invoices($transactions, $filters);
@@ -2423,6 +2425,76 @@ class Customers extends MY_Controller {
         return $transactions;
     }
 
+    private function get_time_charges($transactions, $filters = [])
+    {
+        $timeCharges = $this->accounting_single_time_activity_model->get_customer_time_charges($filters['customer_id']);
+        $customer = $this->accounting_customers_model->get_by_id($filters['customer_id']);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        foreach($timeCharges as $timeCharge)
+        {
+            if($timeCharge->status === '1') {
+                $manageCol = '<div class="dropdown table-management">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item view-edit-time-charge" href="#">View/Edit</a>
+                        </li>
+                    </ul>
+                </div>';
+            } else {
+                $manageCol = '<div class="dropdown table-management">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item view-edit-billable-expense" href="#">View/Edit</a>
+                        </li>
+                    </ul>
+                </div>';
+            }
+
+            $price = floatval(str_replace(',', '', $timeCharge->hourly_rate));
+
+            $hours = substr($timeCharge->time, 0, -3);
+            $time = explode(':', $hours);
+            $hr = $time[0] + ($time[1] / 60);
+
+            $total = $hr * $price;
+
+            $transactions[] = [
+                'id' => $timeCharge->id,
+                'date' => date("m/d/Y", strtotime($timeCharge->date)),
+                'type' => 'Time Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'method' => '',
+                'source' => '',
+                'memo' => '',
+                'due_date' => date("m/d/Y", strtotime($timeCharge->date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval($total), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => $timeCharge->status === '1' ? 'Open' : 'Closed',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($timeCharge->created_at)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
     private function get_recurring_templates($transactions, $filters = [])
     {
         $invoices = $this->accounting_recurring_transactions_model->get_customer_recurring_invoices($filters['customer_id']);
@@ -3292,6 +3364,35 @@ class Customers extends MY_Controller {
                 $this->page_data['linkedTransac'] = new stdClass();
                 $this->page_data['linkedTransac']->type = 'Billexp Charge';
                 $this->page_data['linkedTransac']->transaction = $billableExpense;
+                $this->page_data['items'] = $items;
+            break;
+            case 'time-charge' :
+                $timeCharge = $this->accounting_single_time_activity_model->get_by_id($transactionId);
+                $price = floatval(str_replace(',', '', $timeCharge->hourly_rate));
+
+                $hours = substr($timeCharge->time, 0, -3);
+                $time = explode(':', $hours);
+                $hr = $time[0] + ($time[1] / 60);
+
+                $total = $hr * $price;
+
+                $items = [];
+                $item = new stdClass();
+                $item->qty = $hr;
+                $item->cost = $timeCharge->hourly_rate;
+                $item->tax = $timeCharge->taxable;
+                $item->total = $total;
+                $item->linked_transaction_type = 'time_charge';
+                $item->linked_transaction_id = $transactionId;
+                $item->linked_transac = $timeCharge;
+                $item->itemDetails = $this->items_model->getItemById($timeCharge->service_id)[0];
+                $items[] = $item;
+
+                $customer = $this->accounting_customers_model->get_by_id($timeCharge->customer_id);
+                $this->page_data['customer'] = $customer;
+                $this->page_data['linkedTransac'] = new stdClass();
+                $this->page_data['linkedTransac']->type = 'Time Charge';
+                $this->page_data['linkedTransac']->transaction = $timeCharge;
                 $this->page_data['items'] = $items;
             break;
         }

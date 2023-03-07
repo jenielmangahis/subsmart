@@ -2403,49 +2403,152 @@
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td data-name="Date">DATE</td>
-                            <td data-name="Type">TYPE</td>
-                            <td data-name="No.">NO.</td>
-                            <td data-name="Customer">CUSTOMER</td>
-                            <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due date">DUE DATE</td>
-                            <td data-name="Aging">AGING</td>
-                            <td data-name="Balance">BALANCE</td>
-                            <td data-name="Total">TOTAL</td>
-                            <td data-name="Last Delivered">LAST DELIVERED</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Status">STATUS</td>
-                            <td data-name="P.O. Number">P.O. NUMBER</td>
-                            <td data-name="Sales Rep">SALES REP</td>
+                            <?php foreach($headers as $header) : ?>
+                            <?=$header?>
+                            <?php endforeach; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if(count($transactions) > 0) : ?>
                             <?php foreach($transactions as $transaction) : ?>
-                            <tr>
-                                <td><?=$transaction['date']?></td>
-                                <td><?=$transaction['type']?></td>
-                                <td><?=$transaction['no']?></td>
-                                <td><?=$transaction['customer']?></td>
-                                <td><?=$transaction['method']?></td>
-                                <td><?=$transaction['source']?></td>
-                                <td><?=$transaction['memo']?></td>
-                                <td><?=$transaction['due_date']?></td>
-                                <td><?=$transaction['aging']?></td>
-                                <td><?=$transaction['balance']?></td>
-                                <td><?=$transaction['total']?></td>
-                                <td><?=$transaction['last_delivered']?></td>
-                                <td><?=$transaction['email']?></td>
-                                <td><?=$transaction['attachments']?></td>
-                                <td><?=$transaction['status']?></td>
-                                <td><?=$transaction['po_number']?></td>
-                                <td><?=$transaction['sales_rep']?></td>
-                            </tr>
+                                <?php switch($type) {
+                                case 'all-invoices' :
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['due_date'].'</td>
+                                        <td>'.$transaction['aging'].'</td>
+                                        <td>'.$transaction['balance'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['last_delivered'].'</td>
+                                        <td>'.$transaction['email'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                                case 'open-invoices' :
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['due_date'].'</td>
+                                        <td>'.$transaction['aging'].'</td>
+                                        <td>'.$transaction['balance'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['last_delivered'].'</td>
+                                        <td>'.$transaction['email'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                                case 'overdue-invoices' :
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['due_date'].'</td>
+                                        <td>'.$transaction['aging'].'</td>
+                                        <td>'.$transaction['balance'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['last_delivered'].'</td>
+                                        <td>'.$transaction['email'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                                case 'recurring-templates' :
+                                    echo '<tr data-recurring="'.$transaction['recurring_id'].'">
+                                        <td>'.$transaction['name'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['txn_type'].'</td>
+                                        <td>'.$transaction['interval'].'</td>
+                                        <td>'.$transaction['previous_date'].'</td>
+                                        <td>'.$transaction['next_date'].'</td>
+                                        <td>'.$transaction['amount'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                                case 'unbilled-income' :
+                                    switch($transaction['type']) {
+                                        case 'Charge' :
+                                            $tranType = 'delayed-charge';
+                                        break;
+                                        case 'Credit' :
+                                            $tranType = 'delayed-credit';
+                                        break;
+                                        case 'Billable Expense Charge' :
+                                            $tranType = 'billable-expense';
+                                        break;
+                                    }
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                    </tr>';
+                                break;
+                                case 'recently-paid' :
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['method'].'</td>
+                                        <td>'.$transaction['source'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['due_date'].'</td>
+                                        <td>'.$transaction['aging'].'</td>
+                                        <td>'.$transaction['balance'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['last_delivered'].'</td>
+                                        <td>'.$transaction['email'].'</td>
+                                        <td>'.$transaction['latest_payment'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                                default :
+                                    echo '<tr>
+                                        <td>'.$transaction['date'].'</td>
+                                        <td>'.$transaction['type'].'</td>
+                                        <td>'.$transaction['no'].'</td>
+                                        <td>'.$transaction['customer'].'</td>
+                                        <td>'.$transaction['method'].'</td>
+                                        <td>'.$transaction['source'].'</td>
+                                        <td>'.$transaction['memo'].'</td>
+                                        <td>'.$transaction['due_date'].'</td>
+                                        <td>'.$transaction['aging'].'</td>
+                                        <td>'.$transaction['balance'].'</td>
+                                        <td>'.$transaction['total'].'</td>
+                                        <td>'.$transaction['last_delivered'].'</td>
+                                        <td>'.$transaction['email'].'</td>
+                                        <td>'.$transaction['attachments'].'</td>
+                                        <td>'.$transaction['status'].'</td>
+                                        <td>'.$transaction['po_number'].'</td>
+                                        <td>'.$transaction['sales_rep'].'</td>
+                                    </tr>';
+                                break;
+                            } ?>
                             <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
@@ -2478,25 +2581,9 @@
                 <table class="w-100" id="customer_transactions_table_print">
                     <thead>
                         <tr>
-                            <td data-name="Date">DATE</td>
-                            <td data-name="Type">TYPE</td>
-                            <td data-name="No.">NO.</td>
-                            <td data-name="Customer">CUSTOMER</td>
-                            <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
-                            <td data-name="Memo">MEMO</td>
-                            <td data-name="Due date">DUE DATE</td>
-                            <td data-name="Aging">AGING</td>
-                            <td data-name="Balance">BALANCE</td>
-                            <td data-name="Total">TOTAL</td>
-                            <td data-name="Last Delivered">LAST DELIVERED</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Status">STATUS</td>
-                            <td data-name="P.O. Number">P.O. NUMBER</td>
-                            <td data-name="Sales Rep">SALES REP</td>
+                            <?php foreach($headers as $header) : ?>
+                            <?=$header?>
+                            <?php endforeach; ?>
                         </tr>
                     </thead>
                     <tbody>

@@ -2098,7 +2098,7 @@ $(function() {
         var price = $(this).parent().parent().find('input[name="item_amount[]"]').val();
         var taxPercentage = $(this).parent().parent().find('input[name="item_tax[]"]').val();
         var discount = $(this).parent().parent().find('input[name="discount[]"]').val();
-        var amount = parseFloat(parseFloat(price) * parseInt(quantity)).toFixed(2);
+        var amount = parseFloat(parseFloat(price) * parseFloat(quantity)).toFixed(2);
         var taxAmount = parseFloat(taxPercentage) * amount / 100;
         var total = parseFloat(parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount)).toFixed(2);
 
@@ -8726,7 +8726,7 @@ $(function() {
         var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
         var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
 
-        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseFloat(quantity === '' ? 0.00 : quantity);
         var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
         var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
 
@@ -8993,7 +8993,7 @@ $(function() {
         var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
         var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
 
-        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseFloat(quantity === '' ? 0.00 : quantity);
         var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
         var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
 
@@ -9031,7 +9031,7 @@ $(function() {
         var taxEl = $(this).closest('tr').find('input[name="item_tax[]"]');
         var tax = taxEl.length > 0 && taxEl.val() !== '' ? taxEl.val() : 0.00;
 
-        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseInt(quantity === '' ? 0.00 : quantity);
+        var amount = parseFloat(amount === '' ? 0.00 : amount) * parseFloat(quantity === '' ? 0.00 : quantity);
         var taxAmount = parseFloat(tax === '' ? 0.00 : tax) * amount / 100;
         var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount === '' ? 0.00 : discount);
 
@@ -11787,7 +11787,7 @@ const initModalFields = (modalName, data = {}) => {
                 }
             }
 
-            if (dropdownFields.includes(type) && $(this).find('option').length < 2) {
+            if (dropdownFields.includes(type)) {
                 $(this).select2({
                     ajax: {
                         url: '/accounting/get-dropdown-choices',

@@ -22,6 +22,7 @@ class All_sales extends MY_Controller {
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('accounting_single_time_activity_model');
 
         $this->page_data['page']->title = 'Sales Transactions';
         $this->page_data['page']->parent = 'Sales';
@@ -108,7 +109,8 @@ class All_sales extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/v2/accounting/sales/all_sales/list.js"
+            "assets/js/v2/accounting/sales/all_sales/list.js",
+            "assets/js/v2/printThis.js",
         ));
 
         if(!empty(get('transaction'))) {
@@ -292,6 +294,7 @@ class All_sales extends MY_Controller {
                 $transactions = $this->get_estimates($transactions, $filters);
                 $transactions = $this->get_payments($transactions, $filters);
                 $transactions = $this->get_billable_expenses($transactions, $filters);
+                $transactions = $this->get_time_charges($transactions, $filters);
             break;
             case 'estimates' :
                 $headers = [
@@ -1708,6 +1711,78 @@ class All_sales extends MY_Controller {
                 'po_number' => '',
                 'sales_rep' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
+                'manage' => $manageCol
+            ];
+        }
+
+        return $transactions;
+    }
+
+    private function get_time_charges($transactions, $filters = [])
+    {
+        $timeCharges = $this->accounting_single_time_activity_model->get_company_time_charges(logged('company_id'));
+
+        foreach($timeCharges as $timeCharge)
+        {
+            $customer = $this->accounting_customers_model->get_by_id($timeCharge->customer_id);
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            if($timeCharge->status === '1') {
+                $manageCol = '<div class="dropdown table-management">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item view-edit-time-charge" href="#">View/Edit</a>
+                        </li>
+                    </ul>
+                </div>';
+            } else {
+                $manageCol = '<div class="dropdown table-management">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item view-edit-time-charge" href="#">View/Edit</a>
+                        </li>
+                    </ul>
+                </div>';
+            }
+
+            $price = floatval(str_replace(',', '', $timeCharge->hourly_rate));
+
+            $hours = substr($timeCharge->time, 0, -3);
+            $time = explode(':', $hours);
+            $hr = $time[0] + ($time[1] / 60);
+
+            $total = $hr * $price;
+
+            $transactions[] = [
+                'id' => $timeCharge->id,
+                'date' => date("m/d/Y", strtotime($timeCharge->date)),
+                'type' => 'Time Charge',
+                'no' => '',
+                'customer' => $customerName,
+                'customer_id' => $timeCharge->customer_id,
+                'method' => '',
+                'source' => '',
+                'memo' => '',
+                'due_date' => date("m/d/Y", strtotime($timeCharge->date)),
+                'aging' => '',
+                'balance' => '0.00',
+                'total' => number_format(floatval($total), 2, '.', ','),
+                'last_delivered' => '',
+                'email' => '',
+                'attachments' => '',
+                'status' => $timeCharge->status === '1' ? 'Open' : 'Closed',
+                'po_number' => '',
+                'sales_rep' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($timeCharge->created_at)),
                 'manage' => $manageCol
             ];
         }

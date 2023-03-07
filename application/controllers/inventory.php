@@ -51,18 +51,20 @@ class Inventory extends MY_Controller
         $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
         $role_id = intval(logged('role'));
         if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
+            /*if( $role_id == 1 || $role_id == 2 ){
                 $comp_id = 0;
-            }
+            }*/
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
-            if( $role_id == 1 || $role_id == 2 ){
+            /*if( $role_id == 1 || $role_id == 2 ){
                 $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
-            }
+            }*/
+
+            $arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type)); 
             $items = $this->items_model->getByWhere($arg);
         }
         $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
@@ -910,6 +912,19 @@ class Inventory extends MY_Controller
 
         echo json_encode($result);
     }
+    function editItemLocation() {
+        postAllowed();
+        $id = $this->input->post('id');
+        $comp_id = logged('company_id');
+        $data = array(
+            'qty' => $this->input->post('qty'),
+            'name' => $this->input->post('name'),
+            'item_id' => $this->input->post('item_id'),
+        );
+        $this->items_model->updateLocation($id, $data);
+
+        echo json_encode(["message" => "success"]);
+    }
 
     function getItemLocations() {
         postAllowed();
@@ -1210,8 +1225,14 @@ class Inventory extends MY_Controller
         $this->page_data['page']->title = 'Location';
 		$this->page_data['page']->parent = 'Tools';
 
-        print_r($this->page_data['item_list'] );
         $this->load->view('v2/pages/inventory/location/add', $this->page_data);
+    }
+    public function editInventoryLocation($id) 
+    {
+        $this->page_data['page']->title = 'Location';
+		$this->page_data['page']->parent = 'Tools';
+        $this->page_data['location'] = $this->items_model->getLocationById($id);
+        $this->load->view('v2/pages/inventory/location/edit', $this->page_data);
     }
     public function selectItems()
     {

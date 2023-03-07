@@ -1017,7 +1017,9 @@ add_css(array(
                                                                     <td ><?= number_format((float)$item->price,2,'.',',');?></td>
                                                                     <td id="device_qty<?= $item->id; ?>"><?= $item->qty; ?></td>
                                                                     <td ><?= number_format((float)$total,2,'.',',');?></td>
-                                                                    <td ><?= $item->location; ?></td>
+                                                                    <td >                               
+                                                                        <button class="nsm-button btn-sm SEE_LOCATION" data-bs-toggle="modal" data-bs-target="#inventory_location_modal" data-id="<?php echo $item[10]; ?>">See Location</button>
+                                                                    </td>
                                                                     <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
                                                                             <span class="fa fa-edit"></span>
                                                                         </a>

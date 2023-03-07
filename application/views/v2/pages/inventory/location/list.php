@@ -90,7 +90,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/edit_item/' . $locations['id'] ); ?>" data-id="<?php echo $item[3]; ?>">Edit</a>
+                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations['id'] ); ?>" data-id="<?php echo $locations['id']  ?>">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations['id']  ?>">Delete</a>
@@ -106,6 +106,7 @@
         </div>
     </div>
 </div>
+
 
 
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>

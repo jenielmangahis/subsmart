@@ -1180,7 +1180,14 @@
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
                                                                         <td><?php echo number_format((float)$total,2,'.',','); ?></td>
-                                                                        <td><?php echo $item->location; ?></td>
+                                                                        <td style="width: 200px">
+                                                                            <select id="location" name="location" class="form-control location"  required>
+                                                                                <option value="">Select Type</option>
+                                                                                    <?php foreach (getLocation($item->id) as $locationItem): ?>
+                                                                                        <option value="<?= $locationItem->id ?></ data-image="<?= $type->icon_marker; ?>"><?= $locationItem->name  ?></option>
+                                                                                    <?php endforeach; ?>
+                                                                            </select>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php } } ?>
                                                                 </tbody>
@@ -1822,6 +1829,9 @@ $(function() {
         });
         $("#priority").select2({
             placeholder: "Choose Priority..."
+        });
+        $(".location").select2({
+            placeholder: "Choose Location"
         });
 
         $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({
