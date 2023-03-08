@@ -295,7 +295,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button export-items">
+                            <button type="button" class="nsm-button export-transactions">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_all_sales_transactions_modal">
@@ -339,7 +339,11 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <?php foreach($headers as $header) : ?>
-                            <?=$header?>
+                            <?php if($header !== 'Attachments') : ?>
+                            <td data-name="<?=$header?>"><?=strtoupper($header)?></td>
+                            <?php else : ?>
+                            <td class="table-icon text-center" data-name="<?=$header?>"><i class="bx bx-paperclip"></i></td>
+                            <?php endif; ?>
                             <?php endforeach; ?>
                             <td data-name="Manage"></td>
                         </tr>
@@ -555,4 +559,7 @@
     </div>
 </div>
 
+<script>
+    const companyName = "<?=$company->business_name?>";
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

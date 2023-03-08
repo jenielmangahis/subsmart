@@ -310,6 +310,11 @@ function TemplateCreate() {
         job_id: job ? job.id : null,
       };
 
+      if (job && !payload.job_id) {
+        const urlParams = new URLSearchParams(window.location.search);
+        payload.job_id = urlParams.get("job_id");
+      }
+
       const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
       const response = await fetch(endpoint, {
         method: "POST",
@@ -550,6 +555,9 @@ function TemplateCreate() {
     let _recipients = recipients.map((r) => {
       if (!workorder && !job) return r;
       if (r.name || r.email) return r;
+      if (!["CLIENT", "CUSTOMER"].includes(r.role_name.toUpperCase())) {
+        return r;
+      }
 
       // for admin, get workorder or job admin
       if (r.role_name.toUpperCase() === "ADMIN") {

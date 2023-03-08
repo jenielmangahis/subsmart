@@ -133,11 +133,6 @@ class All_sales extends MY_Controller {
             $this->page_data['delivery_method'] = get('delivery-method');
         }
 
-        if(!empty(get('delivery-method'))) {
-            $filters['delivery_method'] = get('delivery-method');
-            $this->page_data['delivery_method'] = get('delivery-method');
-        }
-
         if(!empty(get('date'))) {
             if($filters['type'] !== 'unbilled-income') {
                 $filters['start-date'] = date("Y-m-d", strtotime(get('from')));
@@ -193,6 +188,8 @@ class All_sales extends MY_Controller {
         $this->page_data['settingsCols'] = $get['settingsCols'];
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
+        $company = $this->business_model->getByCompanyId(logged('company_id'));
+        $this->page_data['company'] = $company;
         $this->load->view('accounting/sales/all_sales', $this->page_data);
     }
 
@@ -201,23 +198,23 @@ class All_sales extends MY_Controller {
         $transactions = [];
 
         $headers = [
-            '<td data-name="Date">DATE</td>',
-            '<td data-name="Type">TYPE</td>',
-            '<td data-name="No.">NO.</td>',
-            '<td data-name="Customer">CUSTOMER</td>',
-            '<td data-name="Method">METHOD</td>',
-            '<td data-name="Source">SOURCE</td>',
-            '<td data-name="Memo">MEMO</td>',
-            '<td data-name="Due date">DUE DATE</td>',
-            '<td data-name="Aging">AGING</td>',
-            '<td data-name="Balance">BALANCE</td>',
-            '<td data-name="Total">TOTAL</td>',
-            '<td data-name="Last Delivered">LAST DELIVERED</td>',
-            '<td data-name="Email">EMAIL</td>',
-            '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-            '<td data-name="Status">STATUS</td>',
-            '<td data-name="P.O. Number">P.O. NUMBER</td>',
-            '<td data-name="Sales Rep">SALES REP</td>',
+            'Date',
+            'Type',
+            'No.',
+            'Customer',
+            'Method',
+            'Source',
+            'Memo',
+            'Due date',
+            'Aging',
+            'Balance',
+            'Total',
+            'Last Delivered',
+            'Email',
+            'Attachments',
+            'Status',
+            'P.O. Number',
+            'Sales Rep',
         ];
 
         $settingsCols = [
@@ -298,20 +295,20 @@ class All_sales extends MY_Controller {
             break;
             case 'estimates' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Expiration Date">EXPIRATION DATE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td data-name="Accepted Date">ACCEPTED DATE</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Expiration Date',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Accepted Date',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -369,20 +366,20 @@ class All_sales extends MY_Controller {
             break;
             case 'invoices' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due Date">DUE DATE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td data-name="Accepted Date">ACCEPTED DATE</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Due Date',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Accepted Date',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -444,21 +441,21 @@ class All_sales extends MY_Controller {
             break;
             case 'sales-receipts' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Method">METHOD</td>',
-                    '<td data-name="Source">SOURCE</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Method',
+                    'Source',
+                    'Memo',
+                    'Due date',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
         
                 $settingsCols = [
@@ -520,18 +517,18 @@ class All_sales extends MY_Controller {
             break;
             case 'credit-memos' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
         
                 $settingsCols = [
@@ -581,14 +578,14 @@ class All_sales extends MY_Controller {
             break;
             case 'unbilled-income' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Charges">CHARGES</td>',
-                    '<td data-name="Time">TIME</td>',
-                    '<td data-name="Expenses">EXPENSES</td>',
-                    '<td data-name="Credits">CREDITS</td>',
-                    '<td data-name="Unbilled Amount">UNBILLED AMOUNT</td>'
+                    'Date',
+                    'Type',
+                    'Customer',
+                    'Charges',
+                    'Time',
+                    'Expenses',
+                    'Credits',
+                    'Unbilled Amount'
                 ];
         
                 $settingsCols = [
@@ -630,24 +627,24 @@ class All_sales extends MY_Controller {
             break;
             case 'recently-paid' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Method">METHOD</td>',
-                    '<td data-name="Source">SOURCE</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Aging">AGING</td>',
-                    '<td data-name="Balance">BALANCE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td data-name="Latest Payment">LATEST PAYMENT</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Method',
+                    'Source',
+                    'Memo',
+                    'Due date',
+                    'Aging',
+                    'Balance',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Latest Payment',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -721,16 +718,16 @@ class All_sales extends MY_Controller {
             break;
             case 'money-received' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Total',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -772,14 +769,14 @@ class All_sales extends MY_Controller {
             break;
             case 'statements' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Start Date">START DATE</td>',
-                    '<td data-name="End Date">END DATE</td>',
-                    '<td data-name="Statement Type">STATEMENT TYPE</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>'
+                    'Date',
+                    'No.',
+                    'Customer',
+                    'Start Date',
+                    'End Date',
+                    'Statement Type',
+                    'P.O. Number',
+                    'Sales Rep'
                 ];
 
                 $settingsCols = [
@@ -1788,5 +1785,85 @@ class All_sales extends MY_Controller {
         }
 
         return $transactions;
+    }
+
+    public function export()
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $type = $post['type'];
+        $status = $post['status'];
+        $deliveryMethod = $post['delivery_method'];
+        $date = $post['date'];
+        $from = $post['from_date'];
+        $to = $post['to_date'];
+        $customerId = $post['customer'];
+
+        $filters = [
+            'order' => $order
+        ];
+
+        if($type) {
+            $filters['type'] = $type;
+        }
+
+        if($status) {
+            $filters['status'] = $status;
+        }
+
+        if($deliveryMethod) {
+            $filters['delivery_method'] = $deliveryMethod;
+        }
+
+        if($date) {
+            $filters['start-date'] = date("m/d/Y", strtotime($from));
+            $filters['end-date'] = date("m/d/Y", strtotime($to));
+        }
+
+        if($customerId) {
+            $filters['customer_id'] = $customerId;
+        }
+
+        $get = $this->get_transactions($filters);
+
+        $tableHeaders = $get['headers'];
+        $transactions = $get['transactions'];
+
+        $excelHead .= "Type: $type · Status: All statuses · Delivery method: Any · Name: $customer->first_name $customer->last_name";
+        $excelHead .= " · Date: ".ucfirst(str_replace("-", " ", $date));
+
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+
+        $headers = [];
+
+        // $headers[] = "Date";
+        foreach($tableHeaders as $header) {
+            if(in_array($header, $post['fields'])) {
+                $headers[] = $header;
+            }
+        }
+
+        $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+
+        foreach($transactions as $transaction) {
+            $keys = array_keys($transaction);
+
+            foreach($keys as $key) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
+                    unset($transaction[$key]);
+                }
+            }
+            $transaction['total'] = str_replace('$-', '-$', '$'.$transaction['total']);
+            $transaction['balance'] = str_replace('$-', '-$', '$'.$transaction['balance']);
+            $writer->writeSheetRow('Sheet1', $transaction);
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="sales.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }

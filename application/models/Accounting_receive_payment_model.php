@@ -33,6 +33,32 @@ class Accounting_receive_payment_model extends MY_Model
         return $query->result();
     }
 
+    public function getReceivePaymentsByCompACS($company_id)
+    {
+        // $vendor = $this->db->get('accounting_receive_payment');
+        // return $vendor->result();
+        $where = array(
+            'acs_profile.company_id'    => $company_id
+        );
+
+        // $this->db->select('*');
+        // $this->db->from('accounting_receive_payment');
+        // $this->db->where($where);
+        // $this->db->join('acs_profile', 'accounting_receive_payment.customer_id = acs_profile.prof_id');
+        // $this->db->order_by('id', 'DESC');
+        $this->db->select('acs_profile.*','accounting_receive_payment.*','accounting_receive_payment_invoices.*','invoices.*');
+        $this->db->from('acs_profile');
+        $this->db->where($where);
+        $this->db->join('accounting_receive_payment', 'accounting_receive_payment.customer_id = acs_profile.prof_id');
+        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.receive_payment_id = accounting_receive_payment.id');
+        $this->db->join('invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id');
+        // $this->db->order_by('id', 'DESC');
+        $this->db->group_by('acs_profile.id');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function createReceivePayment($data)
     {
         $vendor = $this->db->insert('accounting_receive_payment', $data);

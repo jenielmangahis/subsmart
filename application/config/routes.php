@@ -525,6 +525,7 @@ $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'account
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
 $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
+$route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';
