@@ -60,12 +60,13 @@ class Tickets extends MY_Controller
         $user_id  = getLoggedUserID();
         
         $action = $this->input->post('action');
-        if($action == 'Scheduled') 
+        $status = $this->input->post('ticket_status');
+        /*if($action == 'Scheduled') 
         {
             $status = 'Scheduled';
         }else{
             $status = $this->input->post('ticket_status');
-        }
+        }*/
 
         // implode(",", $this->input->post('assign_tech'));
         $techni = serialize($this->input->post('assign_tech'));

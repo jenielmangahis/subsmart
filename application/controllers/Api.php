@@ -557,7 +557,7 @@ class Api extends MYF_Controller
 
         $post = $this->input->post();
         $multiAccount = $this->CompanyMultiAccount_model->getByParentCompanyIdAndHashId($post['company_id'], $post['hash_id']);
-        if( $multiAccount ){
+        if( $multiAccount ){            
             $this->CompanyMultiAccount_model->delete($multiAccount->id);
             $is_success = 1;
             $msg = '';
