@@ -622,6 +622,18 @@ function Signing(hash) {
         $input.attr("data-name", specs.name);
       }
 
+      if (specs.auto_populate_with && specs.auto_populate_with.length) {
+        if (Array.isArray(window.__esigndata.auto_populate_data)) {
+          const autoPopulateWith = window.__esigndata.auto_populate_data.find(
+            (recipient) => {
+              recipient.id === specs.auto_populate_with;
+            }
+          );
+
+          // TODO: use autoPopulateWith as value
+        }
+      }
+
       let typingTimer;
       let doneTypingInterval = 2500;
       const doneTyping = async (input) => {

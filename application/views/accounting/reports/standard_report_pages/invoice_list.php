@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -382,7 +382,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="report-invoice-list">
                                     <thead>
                                         <tr>
                                             <td data-name="Date">DATE</td>
@@ -395,8 +395,8 @@
                                             <td data-name="Open Balance">OPEN BALANCE</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody id="report-invoice-list-body">
+                                        <!-- <tr>
                                             <td>06/14/2022</td>
                                             <td>Invoice</td>
                                             <td>123</td>
@@ -405,7 +405,23 @@
                                             <td>06/15/2022</td>
                                             <td class="text-right">$22,544.77</td>
                                             <td class="text-right">0.00</td>
-                                        </tr>
+                                        </tr> -->
+                                        <?php 
+                                            foreach($invoices as $invoice)
+                                            { ?>
+                                                
+                                            <tr>
+                                                <td><?php echo $invoice->date_issued; ?></td>
+                                                <td>Invoice</td>
+                                                <td><?php echo $invoice->invoice_number; ?></td>
+                                                <td><?php echo $invoice->first_name.' '.$invoice->last_name; ?></td>
+                                                <td></td>
+                                                <td><?php echo $invoice->due_date; ?></td>
+                                                <td class="text-right">$<?php echo $invoice->grand_total; ?></td>
+                                                <td class="text-right">$<?php echo $invoice->grand_total; ?></td>
+                                            </tr>
+                                            <?php }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

@@ -3147,6 +3147,8 @@ class Customers extends MY_Controller {
 
     public function create_invoice($transactionType, $transactionId)
     {
+        $this->page_data['linkedTransac'] = new stdClass();
+
         switch($transactionType) {
             case 'estimate' :
                 $estimate = $this->estimate_model->getEstimate($transactionId);
@@ -3278,7 +3280,6 @@ class Customers extends MY_Controller {
                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $transactionId);
                 $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
                 $this->page_data['customer'] = $customer;
-                $this->page_data['linkedTransac'] = new stdClass();
                 $this->page_data['linkedTransac']->type = 'Charge';
                 $this->page_data['linkedTransac']->transaction = $delayedCharge;
 
@@ -3361,7 +3362,6 @@ class Customers extends MY_Controller {
 
                 $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
                 $this->page_data['customer'] = $customer;
-                $this->page_data['linkedTransac'] = new stdClass();
                 $this->page_data['linkedTransac']->type = 'Billexp Charge';
                 $this->page_data['linkedTransac']->transaction = $billableExpense;
                 $this->page_data['items'] = $items;
@@ -3390,7 +3390,6 @@ class Customers extends MY_Controller {
 
                 $customer = $this->accounting_customers_model->get_by_id($timeCharge->customer_id);
                 $this->page_data['customer'] = $customer;
-                $this->page_data['linkedTransac'] = new stdClass();
                 $this->page_data['linkedTransac']->type = 'Time Charge';
                 $this->page_data['linkedTransac']->transaction = $timeCharge;
                 $this->page_data['items'] = $items;

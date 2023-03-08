@@ -89,6 +89,35 @@ class DocuSign extends MYF_Controller
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
+        $autoPopulateData = [];
+        foreach ($fields as $field) {
+            if (!$field->specs) {
+                continue;
+            }
+
+            $specs = json_decode($field->specs, true);
+            if (!array_key_exists('auto_populate_with', $specs)) {
+                continue;
+            }
+
+            if (empty($specs['auto_populate_with'])) {
+                continue;
+            }
+
+            // TODO: Get autopopulate data
+
+            // $this->db->where('template_id', $specs['auto_populate_with']);
+            // $currAutoPopulateData = $this->db->get('user_docfile_templates_recipients')->row();
+
+            // if ($currAutoPopulateData) {
+            //     $this->db->where('role', $specs['role']);
+            //     $this->db->where('docfile_id', $documentId);
+            //     $currAutoPopulateData->recipient = $this->db->get('user_docfile_recipients')->row();
+            // }
+
+            // $autoPopulateData[$specs['auto_populate_with']] = $currAutoPopulateData;
+        }
+
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
@@ -99,7 +128,8 @@ class DocuSign extends MYF_Controller
             'job_recipient' => $jobRecipient,
             'co_recipients' => $coRecipientFields,
             'decrypted' => $decrypted,
-            'generated_pdf' => $generatedPDF
+            'generated_pdf' => $generatedPDF,
+            'auto_populate_data' => $autoPopulateData,
         ]);
     }
 
@@ -1530,6 +1560,7 @@ SQL;
     public function getJobCustomer($jobId)
     {
         $job = $this->_getJobCustomer($jobId);
+        $job->id = $jobId;
         $job->employee = $this->getJobEmployee($job);
         $job->admin = $this->getCompanyAdmin();
 

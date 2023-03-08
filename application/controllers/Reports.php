@@ -19,6 +19,7 @@ class Reports extends MY_Controller {
 		$this->page_data['page']->menu = 'reports';	
 		$this->load->model('Estimate_model', 'estimate_model');
 		$this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Accounting_receive_payment_model', 'Accounting_receive_payment_model');
 
         $user_id = getLoggedUserID();
         
@@ -73,7 +74,9 @@ class Reports extends MY_Controller {
         $this->page_data['type'] = $id;           
         $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);           
         $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);    
-        $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));       
+        $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));  
+        // $this->page_data['receivedPayments'] = $this->Accounting_receive_payment_model->getReceivePaymentsByCompACS(logged('company_id'));      
+
         $this->load->view('report/main/popular_reports', $this->page_data);
     }
     public function preview()

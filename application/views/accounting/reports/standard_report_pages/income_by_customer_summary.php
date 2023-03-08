@@ -296,30 +296,50 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
-                                            <td><b>44.99</b></td>
+                                        <?php
+                                        // print_r($payment_records_acs);
+                                        $total = 0;
+                                            foreach($payment_records_acs as $payment)
+                                            { ?>
+                                           
+                                        
+                                        <tr data-toggle="collapse" data-target="#accordion<?php echo $payment->id; ?>" class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i><?php echo $payment->first_name.' '.$payment->last_name; ?></td>
+                                            <td><b>$<?php echo number_format($payment->invoice_amount,2); ?></b></td>
                                             <td></td>
-                                            <td><b>$44.99</b></td>
+                                            <td><b>$<?php echo number_format($payment->invoice_amount,2); ?></b></td>
                                         </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;Test Customer</td>
-                                            <td>44.99</td>
+                                        <tr  class="clickable collapse-row collapse"  id="accordion<?php echo $payment->id; ?>">
+                                            <td>&emsp;<?php echo $payment->first_name.' '.$payment->last_name; ?></td>
+                                            <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
                                             <td></td>
-                                            <td>$44.99</td>
+                                            <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
+                                            <!-- <td>
+                                                <table>
+                                                    <tr>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td> -->
                                         </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
+                                        <?php
+                                            $total += $payment->invoice_amount;
+                                            $total++;
+                                            }
+                                        ?>
+                                        <!-- <tr  class="clickable collapse-row collapse"  id="accordion">
                                             <td>&emsp;<b>Total for Test Customer</b></td>
-                                            <td><b>44.99</b></td>
+                                            <td><b><?php echo $total; ?></b></td>
                                             <td></td>
                                             <td><b>$44.99</b></td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td>TOTAL</td>
-                                            <td><b>$44.99</b></td>
+                                            <td><b>$<?php echo number_format($total,2); ?></b></td>
                                             <td><b>$0.00</b></td>
-                                            <td><b>$44.99</b></td>
+                                            <td><b>$<?php echo number_format($total,2); ?></b></td>
                                         </tr>
+                                        
                                     </tbody>
                                 </table>
                             </div>

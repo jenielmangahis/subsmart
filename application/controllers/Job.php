@@ -340,32 +340,6 @@ class Job extends MY_Controller
         $this->load->view('v2/pages/job/job_new', $this->page_data);
     }
 
-    public function apiGetItems()
-    {
-        $comp_id = logged('company_id');
-        $get_items = array(
-            'where' => array(
-                'items.company_id' => $comp_id,
-                //'is_active' => 1,
-            ),
-            'table' => 'items',
-            'select' => 'items.id,title,price,type,company_id',
-        );
-        $items1 = $this->general->get_data_with_param($get_items);
-
-
-        $this->db->where('company_id', $comp_id);
-        $this->db->select('id,title,price,type,company_id');
-        $items2 = $this->db->get('items')->result();
-
-        header('content-type: application/json');
-        exit(json_encode([
-            'items1total' => count($items1),
-            'items2total' => count($items2),
-            'items1' => $items1, 'items2' => $items2
-        ]));
-    }
-
     public function new_job2($id = null)
     {
         $this->load->helper('functions');
@@ -4004,6 +3978,21 @@ class Job extends MY_Controller
     public function apiGetJobItems($id)
     {
         $items = $this->jobs_model->get_specific_job_items($id);
+        header('content-type: application/json');
+        exit(json_encode(['data' => $items]));
+    }
+
+    public function apiGetItems()
+    {
+        $companyId = logged('company_id');
+        $query = [
+            'where' => [
+                'items.company_id' => $companyId,
+            ],
+            'table' => 'items',
+            'select' => 'items.id,title,price,type',
+        ];
+        $items = $this->general->get_data_with_param($query);
         header('content-type: application/json');
         exit(json_encode(['data' => $items]));
     }

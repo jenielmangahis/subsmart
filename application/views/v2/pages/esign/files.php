@@ -558,9 +558,22 @@ echo put_header_assets();
                     <input type="checkbox" name="requiredText" id="requiredText">
                     <label for="requiredText">Required Field</label>
                 </div>
-                <div>
+                <div class="mb-2">
                     <input type="checkbox" name="readOnlyText" id="readOnlyText">
                     <label for="readOnlyText">Read Only</label>
+                </div>
+
+                <div>
+                    <label for="autoPopulateWith">Auto-populate with</label>
+                    <select class="form-select" name="autoPopulateWith" id="autoPopulateWith">
+                        <option value="" selected>None</option>
+                        <?php foreach ($recipients as $recipient): ?>
+                            <option value="<?=$recipient['id'];?>">
+                                <?=$recipient['name'];?>
+                            </option>
+                        <?php endforeach;?>
+                    </select>
+                    <small class="form-text text-muted" style="line-height: 1.3; display: block;">If the data is associated with this role exists, the input field will be automatically filled in.</small>
                 </div>
 
                 <hr/>
