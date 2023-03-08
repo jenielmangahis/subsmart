@@ -103,7 +103,7 @@ class Job extends MY_Controller
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
-
+        $created_by = array();
         
         // get all employees
         $get_login_user = array(
@@ -274,11 +274,21 @@ class Job extends MY_Controller
                 }
             }
 
-
+            // get all employees
+            $query = array(
+                'where' => array(
+                    'id' => $jobs_data->created_by
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $created_by = $this->general->get_data_with_param($query, false);            
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
 
         }
+
+        $this->page_data['job_created_by'] = $created_by;
 
         $default_customer_id = 0;
         $default_customer_name = '';
@@ -2047,6 +2057,7 @@ class Job extends MY_Controller
                 // 'message' => $input['message'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
+                'created_by' => $input['created_by'],
                 //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
                 'tax_rate' => $input['tax'],

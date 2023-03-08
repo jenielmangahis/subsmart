@@ -748,7 +748,14 @@
                                         <div class="nsm-card-title">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></strong style="font-size: 17px;">
+                                                    <?php 
+                                                        if( !empty($job_created_by) ){
+                                                            $created_by = $job_created_by->FName . ' ' . $job_created_by->LName;
+                                                        }else{
+                                                            $created_by = $logged_in_user->FName . ' ' . $logged_in_user->LName;
+                                                        }
+                                                    ?>
+                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$created_by; ?></strong style="font-size: 17px;">
                                                 </div>
                                                 <div class="col-sm-6">
                                                      <button type="button" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
@@ -1264,7 +1271,7 @@
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
                                             <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
-                                            <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
+                                            <input id="created_by" type="hidden" name="created_by" value="<?= isset($jobs_data) ? $jobs_data->created_by : ''; ?>">
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
