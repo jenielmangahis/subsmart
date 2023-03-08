@@ -1575,7 +1575,7 @@ $('#transactions-table .create-invoice').on('click', function (e) {
 
 $('#transactions-table .send-estimate').on("click", function(e) {
     e.preventDefault();
-    let id = customerId;
+    let id = $(this).attr('acs-id');
     let est_id = $(this).closest('tr').find('.select-one').val();
 
     Swal.fire({
@@ -1666,4 +1666,121 @@ $('#update-status-modal #status').on('change', function() {
     } else {
         $('#update-status-modal #accepted-date').closest('.row').remove();
     }
+});
+
+$('#transactions-table .send-credit-memo').on('click', function(e) {
+    e.preventDefault();
+    var refnumIndex = $('#transactions-table thead tr td[data-name="No."]').index();
+    var emailIndex = $('#transactions-table thead tr td[data-name="Email"]').index();
+    var customerIndex = $('#transactions-table thead tr td[data-name="Customer"]').index();
+
+    var row = $(this).closest('tr');
+    var ref_no = $(row.find('td')[refnumIndex]).text().trim();
+    var id = row.find('.select-one').val();
+    var email = $(row.find('td')[emailIndex]).text().trim();
+    var customerName = $(row.find('td')[customerIndex]).text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Credit Memo #${ref_no} from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.
+
+Have a great day!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/credit-memo/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
+$('#transactions-table .send-sales-receipt').on('click', function(e) {
+    e.preventDefault();
+    var refnumIndex = $('#transactions-table thead tr td[data-name="No."]').index();
+    var emailIndex = $('#transactions-table thead tr td[data-name="Email"]').index();
+    var customerIndex = $('#transactions-table thead tr td[data-name="Customer"]').index();
+
+    var row = $(this).closest('tr');
+    var ref_no = $(row.find('td')[refnumIndex]).text().trim();
+    var id = row.find('.select-one').val();
+    var email = $(row.find('td')[emailIndex]).text().trim();
+    var customerName = $(row.find('td')[customerIndex]).text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Sales Receipt #${ref_no} from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Please review the sales receipt below.
+We appreciate it very much.
+
+Thanks for your business!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/sales-receipt/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
+$('#transactions-table .send-refund-receipt').on('click', function(e) {
+    e.preventDefault();
+    var refnumIndex = $('#transactions-table thead tr td[data-name="No."]').index();
+    var emailIndex = $('#transactions-table thead tr td[data-name="Email"]').index();
+    var customerIndex = $('#transactions-table thead tr td[data-name="Customer"]').index();
+
+    var row = $(this).closest('tr');
+    var ref_no = $(row.find('td')[refnumIndex]).text().trim();
+    var id = row.find('.select-one').val();
+    var email = $(row.find('td')[emailIndex]).text().trim();
+    var customerName = $(row.find('td')[customerIndex]).text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Refund Receipt from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Please find your refund receipt attached to this email.
+
+Thank you.
+
+Have a great day!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/refund-receipt/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
+$('.export-transactions').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/all-sales/export" method="post" id="export-form"></form>`);
+    }
+
+    var fields = $('#transactions-table thead tr td:not(:first-child, :last-child)');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+    // var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    // fields.each(function() {
+    //     $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).next().text().trim()}">`);
+    // });
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="delivery_method" value="${$('#filter-delivery-method').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="date" value="${$('#filter-type').attr('data-applied') === 'unbilled-income' ? $('#filter-as-of').attr('data-applied') : $('#filter-date').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="from" value="${$('#filter-from').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="to" value="${$('#filter-to').attr('data-applied')}">`);
+    $('#export-form').append(`<input type="hidden" name="customer" value="${$('#filter-customer').attr('data-applied')}">`);
+
+    $('#export-form').append(`<input type="hidden" name="column" value="date">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
 });

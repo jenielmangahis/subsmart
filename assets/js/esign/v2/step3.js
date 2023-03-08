@@ -229,6 +229,7 @@ function Step3() {
     const $fieldNameInput = $optionsSidebar.find("#textFieldName");
     const $fieldValueInput = $optionsSidebar.find("#textFieldValue");
     const $fieldValueLabel = $optionsSidebar.find("#textFieldPlaceholder");
+    const $autoPopulateWith = $optionsSidebar.find("#autoPopulateWith");
 
     $fieldId.html("");
     if (event && $(event.target).hasClass("subData--isSubCheckbox")) {
@@ -245,6 +246,7 @@ function Step3() {
     $fieldNameInput.val("");
     $fieldValueInput.val("");
     $fieldValueLabel.val("");
+    $autoPopulateWith.val("");
 
     const fieldTypeWithOptions = ["Checkbox", "Radio"];
     let fieldType = "field";
@@ -340,6 +342,9 @@ function Step3() {
       $(".text #textFieldValue").val(specs.value ? specs.value : "");
       $(".text #textFieldPlaceholder").val(
         specs.placeholder ? specs.placeholder : ""
+      );
+      $("#autoPopulateWith").val(
+        specs.auto_populate_with ? specs.auto_populate_with : ""
       );
     } else if (field_name === "Dropdown") {
       fieldType = "dropdown";
@@ -888,6 +893,7 @@ function Step3() {
         const fieldName = $(".text #textFieldName").val().trim();
         const fieldValue = $(".text #textFieldValue").val().trim();
         const fieldPlaceholder = $(".text #textFieldPlaceholder").val().trim();
+        const autoPopulateWith = $("#autoPopulateWith").val().trim();
 
         specs = {
           is_required: $("#requiredText").is(":checked"),
@@ -895,6 +901,7 @@ function Step3() {
           name: !isEmpty(fieldName) ? fieldName : null,
           value: fieldValue,
           placeholder: fieldPlaceholder,
+          auto_populate_with: autoPopulateWith,
         };
       } else if (fieldType === "dropdown") {
         const $options = $(".dropdown .options__valuesItem input");

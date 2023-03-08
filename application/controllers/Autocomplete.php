@@ -48,11 +48,11 @@ class Autocomplete extends MY_Controller
         $cid    = logged('company_id');
         $customers = $this->AcsProfile_model->getAllByCompanyId($cid, array(), $filter);  
         
-if (strlen($c->phone_h) == 32) {
-    $phone_m = substr($c->phone_h, 0, 12);
-} else if (strlen($c->phone_h) >= 33) {
-    $phone_m = substr($c->phone_h, 20, 32);
-}
+        if (strlen($c->phone_h) == 32) {
+            $phone_m = substr($c->phone_h, 0, 12);
+        } else if (strlen($c->phone_h) >= 33) {
+            $phone_m = substr($c->phone_h, 20, 32);
+        }
 
         $result = array(); 
         foreach($customers as $c){            
