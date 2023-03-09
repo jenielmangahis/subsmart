@@ -121,7 +121,7 @@
                                 <!-- <button type="button" class="nsm-button" id="btn_add_calendar">
                                     <i class='bx bx-fw bx-calendar-plus'></i> Add Calendar
                                 </button> -->
-                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('tickets/addnewTicketApmt') ?>'">
+                                <button type="button" class="nsm-button" onclick="location.href='<?= base_url('customer/addTicket') ?>'">
                                     <i class='bx bx-fw bx-calendar-event'></i> New Service Ticket
                                 </button>
                                 <button type="button" class="nsm-button" id="calendar-tc-off">

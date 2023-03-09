@@ -1,8 +1,10 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
-
+<style>
+.dataTables_filter, .dataTables_length{
+    display: none;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
         <i class="bx bx-note"></i>
@@ -28,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('estimate') ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Tickets" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Tickets" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                         </form>
                     </div>
@@ -56,12 +58,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
 
-                <table class="nsm-table">
+                <table class="nsm-table" id="ticket-list-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
+                            <td class="table-icon"></td>
                             <td data-name="Work Order Number">Ticket No.</td>
                             <td data-name="Date Issued">Date Created</td>
                             <td data-name="Customer">Customer</td>
@@ -73,30 +76,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <tbody>
                         <?php foreach($tickets as $ticket){ ?>
                         <tr>
-                            <td><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
-                            <td><?php echo $ticket->ticket_no; ?></td>
+                            <td style="text-align:center;"><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
+                            <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
+                            <td><b><?php echo $ticket->ticket_no; ?></b></td>
                             <td><?php $originalDate = $ticket->created_at;
                                 $newDate = date("M d, Y", strtotime($originalDate)); echo $newDate; ?></td>
                             <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
                             <td><?php echo $ticket->ticket_status; ?></td>
                             <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
                             <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('tickets/viewDetails/' . $ticket->id) ?>">View</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="<?php echo base_url('tickets/viewDetails/' . $ticket->id) ?>">View</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                         <?php } ?>
@@ -109,10 +113,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <script type="text/javascript">
     $(document).ready(function() {
-        
+        var ticketListTable = $("#ticket-list-table").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        });
+
+        $("#custom-ticket-searchbar").keyup(function() {
+            ticketListTable.search($(this).val()).draw()
+        });
     });
 </script>
-<?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
 <script>
     $(document).on('click', '.delete-ticket', function(){
@@ -149,3 +161,4 @@ defined('BASEPATH') or exit('No direct script access allowed');
             });
         }
 </script>
+<?php include viewPath('v2/includes/footer'); ?>

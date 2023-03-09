@@ -135,13 +135,13 @@ class All_sales extends MY_Controller {
 
         if(!empty(get('date'))) {
             if($filters['type'] !== 'unbilled-income') {
-                $filters['start-date'] = date("Y-m-d", strtotime(get('from')));
-                $filters['end-date'] = date("Y-m-d", strtotime(get('to')));
+                $filters['start-date'] = str_replace('-', '/', get('from'));
+                $filters['end-date'] = str_replace('-', '/', get('to'));
 
-                $this->page_data['from_date'] = date('m/d/Y', strtotime(get('from')));
-                $this->page_data['to_date'] = date('m/d/Y', strtotime(get('to')));
+                $this->page_data['from_date'] = str_replace('-', '/', get('from'));
+                $this->page_data['to_date'] = str_replace('-', '/', get('to'));
             } else {
-                $filters['start-date'] = date("Y-m-d", strtotime(str_replace('-', '/', get('date'))));
+                $filters['start-date'] = str_replace('-', '/', get('date'));
             }
 
             $this->page_data['date'] = get('date');
@@ -371,11 +371,11 @@ class All_sales extends MY_Controller {
                     'No.',
                     'Customer',
                     'Memo',
-                    'Due Date',
+                    'Due date',
+                    'Balance',
                     'Total',
                     'Last Delivered',
                     'Email',
-                    'Accepted Date',
                     'Attachments',
                     'Status',
                     'P.O. Number',
@@ -1795,10 +1795,10 @@ class All_sales extends MY_Controller {
         $columnName = $post['column'];
         $type = $post['type'];
         $status = $post['status'];
-        $deliveryMethod = $post['delivery_method'];
+        $deliveryMethod = $post['delivery-method'];
         $date = $post['date'];
-        $from = $post['from_date'];
-        $to = $post['to_date'];
+        $from = $post['from'];
+        $to = $post['to'];
         $customerId = $post['customer'];
 
         $filters = [
@@ -1818,12 +1818,17 @@ class All_sales extends MY_Controller {
         }
 
         if($date) {
-            $filters['start-date'] = date("m/d/Y", strtotime($from));
-            $filters['end-date'] = date("m/d/Y", strtotime($to));
+            if($type !== 'unbilled-income') {
+                $filters['start-date'] = str_replace('-', '/', $from);
+                $filters['end-date'] = str_replace('-', '/', $to);
+            } else {
+                $filters['start-date'] = str_replace('-', '/', $date);
+            }
         }
 
         if($customerId) {
             $filters['customer_id'] = $customerId;
+            $customer = $this->accounting_customers_model->get_by_id($customerId);
         }
 
         $get = $this->get_transactions($filters);
@@ -1831,15 +1836,17 @@ class All_sales extends MY_Controller {
         $tableHeaders = $get['headers'];
         $transactions = $get['transactions'];
 
-        $excelHead .= "Type: $type · Status: All statuses · Delivery method: Any · Name: $customer->first_name $customer->last_name";
-        $excelHead .= " · Date: ".ucfirst(str_replace("-", " ", $date));
+        $excelHead .= "Type: ".ucfirst(str_replace('-', ' ', $type));
+        $excelHead .= $status ? " · Status: $status" : " · Status: All statuses";
+        $excelHead .= $deliveryMethod ? " · Delivery method: $deliveryMethod" : " · Delivery method: Any";
+        $excelHead .= $customerId ? " · Name: $customer->first_name $customer->last_name" : "";
+        $excelHead .= $type !== 'unbilled-income' ? " · Date: ".ucfirst(str_replace("-", " ", $date)) : " · Date: Last 365 days";
 
         $writer = new XLSXWriter();
         $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
 
         $headers = [];
 
-        // $headers[] = "Date";
         foreach($tableHeaders as $header) {
             if(in_array($header, $post['fields'])) {
                 $headers[] = $header;
@@ -1852,14 +1859,17 @@ class All_sales extends MY_Controller {
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
 
-            foreach($keys as $key) {
-                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
-                    unset($transaction[$key]);
-                }
+            $item = [];
+            foreach($tableHeaders as $tableHeader)
+            {
+                $tableHeader = str_replace('.', '', $tableHeader);
+                $tableHeader = str_replace(' ', '_', $tableHeader);
+                $tableHeader = strtolower($tableHeader);
+
+                $item[] = $transaction[$tableHeader];
             }
-            $transaction['total'] = str_replace('$-', '-$', '$'.$transaction['total']);
-            $transaction['balance'] = str_replace('$-', '-$', '$'.$transaction['balance']);
-            $writer->writeSheetRow('Sheet1', $transaction);
+
+            $writer->writeSheetRow('Sheet1', $item);
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="sales.xlsx"');

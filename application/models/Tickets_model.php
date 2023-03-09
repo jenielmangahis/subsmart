@@ -25,6 +25,7 @@ class Tickets_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id');
 		$this->db->where($where);
+        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

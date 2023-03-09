@@ -109,9 +109,9 @@
                     <div class="col-md-3">
                         <label for="zip"><b>Ticket Status</b></label>
                         <select id="ticket_status" name="ticket_status" class="form-control">
-                            <option value="New">New</option>
+                            <!-- <option value="New">New</option> -->
                             <option value="Draft">Draft</option>
-                            <option value="Scheduled">Scheduled</option>
+                            <option value="Scheduled" selected="">Scheduled</option>
                             <option value="Arrived">Arrived</option>
                             <option value="Started">Started</option>
                             <option value="Approved">Approved</option>

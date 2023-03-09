@@ -253,7 +253,11 @@
                                                             <input class="form-check-input select-all table-select" type="checkbox">
                                                         </td>
                                                         <?php foreach($headers as $header) : ?>
-                                                        <?=$header?>
+                                                        <?php if($header !== 'Attachments') : ?>
+                                                        <td data-name="<?=$header?>"><?=strtoupper($header)?></td>
+                                                        <?php else : ?>
+                                                        <td class="table-icon text-center" data-name="<?=$header?>"><i class="bx bx-paperclip"></i></td>
+                                                        <?php endif; ?>
                                                         <?php endforeach; ?>
                                                         <td data-name="Manage"></td>
                                                     </tr>
@@ -330,6 +334,26 @@
                                                                     <td>'.$transaction['total'].'</td>
                                                                     <td>'.$transaction['last_delivered'].'</td>
                                                                     <td>'.$transaction['email'].'</td>
+                                                                    <td>'.$transaction['attachments'].'</td>
+                                                                    <td>'.$transaction['status'].'</td>
+                                                                    <td>'.$transaction['po_number'].'</td>
+                                                                    <td>'.$transaction['sales_rep'].'</td>
+                                                                    <td>'.$transaction['manage'].'</td>
+                                                                </tr>';
+                                                            break;
+                                                            case 'money-received' :
+                                                                echo '<tr>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input select-one table-select" type="checkbox" value="'.$transaction['id'].'">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>'.$transaction['date'].'</td>
+                                                                    <td>'.$transaction['type'].'</td>
+                                                                    <td>'.$transaction['no'].'</td>
+                                                                    <td>'.$transaction['customer'].'</td>
+                                                                    <td>'.$transaction['memo'].'</td>
+                                                                    <td>'.$transaction['total'].'</td>
                                                                     <td>'.$transaction['attachments'].'</td>
                                                                     <td>'.$transaction['status'].'</td>
                                                                     <td>'.$transaction['po_number'].'</td>

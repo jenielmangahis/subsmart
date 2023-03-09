@@ -331,9 +331,9 @@ a.btn-primary.btn-md {
                                         <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
                                             placeholder="Enter Ticket Status"/> -->
                                         <select id="ticket_status" name="ticket_status" class="form-control">
-                                            <option value="New">New</option>
+                                            <!-- <option value="New">New</option> -->
                                             <option value="Draft">Draft</option>
-                                            <option value="Scheduled">Scheduled</option>
+                                            <option value="Scheduled" selected="">Scheduled</option>
                                             <option value="Arrived">Arrived</option>
                                             <option value="Started">Started</option>
                                             <option value="Approved">Approved</option>
@@ -878,9 +878,10 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button name="action" value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
-                                        <button name="action" value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button>
-                                        <a href="<?php echo url('customer/ticketslist') ?>" class="btn but-red">Cancel this</a>
+                                        <button type="submit" value="Scheduled" class="nsm-button primary" name="action"><i class="bx bx-fw bx-calendar-plus"></i> Schedule</button>
+                                        <!-- <button name="action" value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
+                                        <button name="action" value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button> -->
+                                        <a href="<?php echo url('customer/ticketslist') ?>" class="nsm-button default" style="padding: 9px;">Cancel</a>
                                     </div>
                                 </div>
 
@@ -1068,6 +1069,9 @@ a.btn-primary.btn-md {
 <?php //include viewPath('includes/footer'); ?>
 
 <script>
+    $('#sel-customer_t').select2({         
+        minimumInputLength: 0        
+    });
     $('#appointment-user').select2({
             ajax: {
                 url: base_url + 'autocomplete/_company_users',
