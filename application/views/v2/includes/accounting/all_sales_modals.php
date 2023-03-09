@@ -48,7 +48,11 @@
                     <thead>
                         <tr>
                             <?php foreach($headers as $header) : ?>
-                            <?=$header?>
+                            <?php if($header !== 'Attachments') : ?>
+                            <td data-name="<?=$header?>"><?=strtoupper($header)?></td>
+                            <?php else : ?>
+                            <td class="table-icon text-center" data-name="<?=$header?>"><i class="bx bx-paperclip"></i></td>
+                            <?php endif; ?>
                             <?php endforeach; ?>
                         </tr>
                     </thead>
@@ -231,7 +235,11 @@
                     <thead>
                         <tr>
                             <?php foreach($headers as $header) : ?>
-                            <?=$header?>
+                            <?php if($header !== 'Attachments') : ?>
+                            <td data-name="<?=$header?>"><?=strtoupper($header)?></td>
+                            <?php else : ?>
+                            <td class="table-icon text-center" data-name="<?=$header?>"><i class="bx bx-paperclip"></i></td>
+                            <?php endif; ?>
                             <?php endforeach; ?>
                         </tr>
                     </thead>

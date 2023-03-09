@@ -1215,23 +1215,23 @@ class Customers extends MY_Controller {
         $transactions = [];
 
         $headers = [
-            '<td data-name="Date">DATE</td>',
-            '<td data-name="Type">TYPE</td>',
-            '<td data-name="No.">NO.</td>',
-            '<td data-name="Customer">CUSTOMER</td>',
-            '<td data-name="Method">METHOD</td>',
-            '<td data-name="Source">SOURCE</td>',
-            '<td data-name="Memo">MEMO</td>',
-            '<td data-name="Due date">DUE DATE</td>',
-            '<td data-name="Aging">AGING</td>',
-            '<td data-name="Balance">BALANCE</td>',
-            '<td data-name="Total">TOTAL</td>',
-            '<td data-name="Last Delivered">LAST DELIVERED</td>',
-            '<td data-name="Email">EMAIL</td>',
-            '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-            '<td data-name="Status">STATUS</td>',
-            '<td data-name="P.O. Number">P.O. NUMBER</td>',
-            '<td data-name="Sales Rep">SALES REP</td>',
+            'Date',
+            'Type',
+            'No.',
+            'Customer',
+            'Method',
+            'Source',
+            'Memo',
+            'Due date',
+            'Aging',
+            'Balance',
+            'Total',
+            'Last Delivered',
+            'Email',
+            'Attachments',
+            'Status',
+            'P.O. Number',
+            'Sales Rep',
         ];
 
         $settingsCols = [
@@ -1315,21 +1315,21 @@ class Customers extends MY_Controller {
             break;
             case 'all-invoices' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Aging">AGING</td>',
-                    '<td data-name="Balance">BALANCE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Due date',
+                    'Aging',
+                    'Balance',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
         
                 $settingsCols = [
@@ -1383,21 +1383,21 @@ class Customers extends MY_Controller {
             break;
             case 'open-invoices' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Aging">AGING</td>',
-                    '<td data-name="Balance">BALANCE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Due date',
+                    'Aging',
+                    'Balance',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
         
                 $settingsCols = [
@@ -1452,21 +1452,21 @@ class Customers extends MY_Controller {
             break;
             case 'overdue-invoices' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Aging">AGING</td>',
-                    '<td data-name="Balance">BALANCE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Due date',
+                    'Aging',
+                    'Balance',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
         
                 $settingsCols = [
@@ -1519,21 +1519,147 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_invoices($transactions, $filters);
             break;
             case 'open-estimates' :
+                $headers = [
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Expiration Date',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Accepted Date',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_expiration_date" class="form-check-input">
+                        <label for="chk_expiration_date" class="form-check-label">Expiration Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_acccepted_date" class="form-check-input">
+                        <label for="chk_acccepted_date" class="form-check-label">Accepted Date</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                        <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
+                        <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_estimates($transactions, $filters);
             break;
             case 'credit-memos' :
+                $headers = [
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_last_delivered" class="form-check-input">
+                        <label for="chk_last_delivered" class="form-check-label">Last Delivered</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_email" class="form-check-input">
+                        <label for="chk_email" class="form-check-label">Email</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                        <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
+                        <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
+                    </div>'
+                ];
+
                 $transactions = $this->get_credit_memos($transactions, $filters);
             break;
             case 'unbilled-income' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>'
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Total',
+                    'Attachments',
+                    'Status'
                 ];
 
                 $settingsCols = [
@@ -1567,24 +1693,24 @@ class Customers extends MY_Controller {
             break;
             case 'recently-paid' :
                 $headers = [
-                    '<td data-name="Date">DATE</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="No.">NO.</td>',
-                    '<td data-name="Customer">CUSTOMER</td>',
-                    '<td data-name="Method">METHOD</td>',
-                    '<td data-name="Source">SOURCE</td>',
-                    '<td data-name="Memo">MEMO</td>',
-                    '<td data-name="Due date">DUE DATE</td>',
-                    '<td data-name="Aging">AGING</td>',
-                    '<td data-name="Balance">BALANCE</td>',
-                    '<td data-name="Total">TOTAL</td>',
-                    '<td data-name="Last Delivered">LAST DELIVERED</td>',
-                    '<td data-name="Email">EMAIL</td>',
-                    '<td data-name="Latest Payment">LATEST PAYMENT</td>',
-                    '<td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>',
-                    '<td data-name="Status">STATUS</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Method',
+                    'Source',
+                    'Memo',
+                    'Due date',
+                    'Aging',
+                    'Balance',
+                    'Total',
+                    'Last Delivered',
+                    'Email',
+                    'Latest Payment',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -1649,19 +1775,63 @@ class Customers extends MY_Controller {
                 $transactions = $this->get_recently_paid_invoices($transactions, $filters);
             break;
             case 'money-received' :
+                $headers = [
+                    'Date',
+                    'Type',
+                    'No.',
+                    'Customer',
+                    'Memo',
+                    'Total',
+                    'Attachments',
+                    'Status',
+                    'P.O. Number',
+                    'Sales Rep',
+                ];
+
+                $settingsCols = [
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_customer" class="form-check-input">
+                        <label for="chk_customer" class="form-check-label">Customer</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_memo" class="form-check-input">
+                        <label for="chk_memo" class="form-check-label">Memo</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_status" class="form-check-input">
+                        <label for="chk_status" class="form-check-label">Status</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                        <label for="chk_type" class="form-check-label">Type</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_no" class="form-check-input">
+                        <label for="chk_no" class="form-check-label">No.</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_attachments" class="form-check-input">
+                        <label for="chk_attachments" class="form-check-label">Attachments</label>
+                    </div>',
+                    '<div class="form-check">
+                        <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
+                        <label for="chk_po_number" class="form-check-label">P.O. Number</label>
+                    </div>',
+                ];
+
                 $transactions = $this->get_payments($transactions, $filters);
             break;
             case 'recurring-templates' :
                 $headers = [
-                    '<td data-name="Name">NAME</td>',
-                    '<td data-name="Type">TYPE</td>',
-                    '<td data-name="Txn Type">TXN TYPE</td>',
-                    '<td data-name="Interval">INTERVAL</td>',
-                    '<td data-name="Previous Date">PREVIOUS DATE</td>',
-                    '<td data-name="Next Date">NEXT DATE</td>',
-                    '<td data-name="Amount">AMOUNT</td>',
-                    '<td data-name="P.O. Number">P.O. NUMBER</td>',
-                    '<td data-name="Sales Rep">SALES REP</td>',
+                    'Date',
+                    'Type',
+                    'Txn Type',
+                    'Interval',
+                    'Previous Date',
+                    'Next Date',
+                    'Amount',
+                    'P.O. Number',
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -2977,151 +3147,119 @@ class Customers extends MY_Controller {
             'order' => $order
         ];
 
-        switch ($date) {
-            case 'today':
-                $filters['start-date'] = date("Y-m-d");
-                $filters['end-date'] = date("Y-m-d");
-            break;
-            case 'yesterday':
-                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
-            break;
-            case 'this-week':
-                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
-                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
-            break;
-            case 'this-month':
-                $filters['start-date'] = date("Y-m-01");
-                $filters['end-date'] = date("Y-m-t");
-            break;
-            case 'this-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-                
-                $filters['start-date'] = $quarters[$quarter]['start'];
-                $filters['end-date'] = $quarters[$quarter]['end'];
-            break;
-            case 'this-year':
-                $filters['start-date'] = date("Y-01-01");
-                $filters['end-date'] = date("Y-12-t");
-            break;
-            case 'last-week':
-                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
-                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
-            break;
-            case 'last-month':
-                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
-                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
-            break;
-            case 'last-quarter':
-                $quarters = [
-                    1 => [
-                        'start' => date("01/01/Y"),
-                        'end' => date("03/t/Y")
-                    ],
-                    2 => [
-                        'start' => date("04/01/Y"),
-                        'end' => date("06/t/Y")
-                    ],
-                    3 => [
-                        'start' => date("07/01/Y"),
-                        'end' => date("09/t/Y")
-                    ],
-                    4 => [
-                        'start' => date("10/01/Y"),
-                        'end' => date("12/t/Y")
-                    ]
-                ];
-                $month = date('n');
-                $quarter = ceil($month / 3);
-
-                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
-                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
-            break;
-            case 'last-year':
-                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
-                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
-            break;
-            case 'last-365-days':
-                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                $filters['end-date'] = date("Y-m-d");
-            break;
+        if($type !== 'unbilled-income') {
+            switch ($date) {
+                case 'today':
+                    $filters['start-date'] = date("Y-m-d");
+                    $filters['end-date'] = date("Y-m-d");
+                break;
+                case 'yesterday':
+                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                    $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                break;
+                case 'this-week':
+                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+                break;
+                case 'this-month':
+                    $filters['start-date'] = date("Y-m-01");
+                    $filters['end-date'] = date("Y-m-t");
+                break;
+                case 'this-quarter':
+                    $quarters = [
+                        1 => [
+                            'start' => date("01/01/Y"),
+                            'end' => date("03/t/Y")
+                        ],
+                        2 => [
+                            'start' => date("04/01/Y"),
+                            'end' => date("06/t/Y")
+                        ],
+                        3 => [
+                            'start' => date("07/01/Y"),
+                            'end' => date("09/t/Y")
+                        ],
+                        4 => [
+                            'start' => date("10/01/Y"),
+                            'end' => date("12/t/Y")
+                        ]
+                    ];
+                    $month = date('n');
+                    $quarter = ceil($month / 3);
+                    
+                    $filters['start-date'] = $quarters[$quarter]['start'];
+                    $filters['end-date'] = $quarters[$quarter]['end'];
+                break;
+                case 'this-year':
+                    $filters['start-date'] = date("Y-01-01");
+                    $filters['end-date'] = date("Y-12-t");
+                break;
+                case 'last-week':
+                    $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                    $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+                break;
+                case 'last-month':
+                    $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                    $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+                break;
+                case 'last-quarter':
+                    $quarters = [
+                        1 => [
+                            'start' => date("01/01/Y"),
+                            'end' => date("03/t/Y")
+                        ],
+                        2 => [
+                            'start' => date("04/01/Y"),
+                            'end' => date("06/t/Y")
+                        ],
+                        3 => [
+                            'start' => date("07/01/Y"),
+                            'end' => date("09/t/Y")
+                        ],
+                        4 => [
+                            'start' => date("10/01/Y"),
+                            'end' => date("12/t/Y")
+                        ]
+                    ];
+                    $month = date('n');
+                    $quarter = ceil($month / 3);
+    
+                    $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                    $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+                break;
+                case 'last-year':
+                    $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                    $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+                break;
+                case 'last-365-days':
+                    $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                    $filters['end-date'] = date("Y-m-d");
+                break;
+            }
+        } else {
+            $filters['start-date'] = str_replace('-', '/', $date);
         }
 
-        $transactions = $this->get_transactions($filters);
+        $get = $this->get_transactions($filters);
 
-        $excelHead .= "Type: $type · Status: All statuses · Delivery method: Any · Name: $customer->first_name $customer->last_name";
-        $excelHead .= " · Date: ".ucfirst(str_replace("-", " ", $post['date']));
+        $tableHeaders = $get['headers'];
+        $transactions = $get['transactions'];
+
+        $excelHead .= "Type: ".ucfirst(str_replace('-', ' ', $type));
+        $excelHead .= " · Status: All statuses";
+        $excelHead .= " · Delivery method: Any";
+        $excelHead .= " · Name: $customer->first_name $customer->last_name";
+        $excelHead .= $type !== 'unbilled-income' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : " · Date: All dates";
 
         $writer = new XLSXWriter();
         $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
 
         $headers = [];
 
-        $headers[] = "Date";
-        if(in_array('type', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Type";
-        }
-        if(in_array('no', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "No.";
-        }
-        if(in_array('customer', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Customer";
-        }
-        if(in_array('method', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Method";
-        }
-        if(in_array('source', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Source";
-        }
-        if(in_array('memo', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Memo";
-        }
-        if(in_array('due_date', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Due date";
-        }
-        if(in_array('aging', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Aging";
-        }
-        if(in_array('balance', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Balance";
-        }
-        $headers[] = "Total";
-        if(in_array('last_delivered', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Last Delivered";
-        }
-        if(in_array('email', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Email";
-        }
-        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Attachments";
-        }
-        if(in_array('status', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Status";
-        }
-        if(in_array('po_number', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "P.O. Number";
-        }
-        if(in_array('sales_rep', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Sales Rep";
+        foreach($tableHeaders as $header) {
+            if(in_array($header, $post['fields'])) {
+                $headers[] = $header;
+            }
         }
 
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
@@ -3130,14 +3268,17 @@ class Customers extends MY_Controller {
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
 
-            foreach($keys as $key) {
-                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
-                    unset($transaction[$key]);
-                }
+            $item = [];
+            foreach($tableHeaders as $tableHeader)
+            {
+                $tableHeader = str_replace('.', '', $tableHeader);
+                $tableHeader = str_replace(' ', '_', $tableHeader);
+                $tableHeader = strtolower($tableHeader);
+
+                $item[] = $transaction[$tableHeader];
             }
-            $transaction['total'] = str_replace('$-', '-$', '$'.$transaction['total']);
-            $transaction['balance'] = str_replace('$-', '-$', '$'.$transaction['balance']);
-            $writer->writeSheetRow('Sheet1', $transaction);
+
+            $writer->writeSheetRow('Sheet1', $item);
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="sales.xlsx"');

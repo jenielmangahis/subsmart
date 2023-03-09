@@ -1,5 +1,4 @@
 const currUrl = window.location.href;
-const urlSplit = currUrl.split('/');
 
 $("#transactions-table").nsmPagination({
     itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
@@ -1761,17 +1760,19 @@ $('.export-transactions').on('click', function() {
     fields.each(function() {
         $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
     });
-    // var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
-    // fields.each(function() {
-    //     $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).next().text().trim()}">`);
-    // });
-    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="delivery_method" value="${$('#filter-delivery-method').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="date" value="${$('#filter-type').attr('data-applied') === 'unbilled-income' ? $('#filter-as-of').attr('data-applied') : $('#filter-date').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="from" value="${$('#filter-from').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="to" value="${$('#filter-to').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="customer" value="${$('#filter-customer').attr('data-applied')}">`);
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
 
     $('#export-form').append(`<input type="hidden" name="column" value="date">`);
     $('#export-form').append(`<input type="hidden" name="order" value="desc">`);

@@ -1137,12 +1137,23 @@ $('.export-transactions').on('click', function() {
         $('body').append(`<form action="/accounting/customers/${customerId}/export-transactions" method="post" id="export-form"></form>`);
     }
 
-    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+    var fields = $('#transactions-table thead tr td:not(:first-child, :last-child)');
     fields.each(function() {
-        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('chk_', '')}">`);
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
     });
-    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').attr('data-applied')}">`);
-    $('#export-form').append(`<input type="hidden" name="date" value="${$('#filter-date').attr('data-applied')}">`);
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
 
     $('#export-form').append(`<input type="hidden" name="column" value="date">`);
     $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
