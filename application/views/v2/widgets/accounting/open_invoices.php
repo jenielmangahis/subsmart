@@ -72,10 +72,10 @@ if ($upcomingInvoice) {
 ?>
             <script type="text/javascript">
                 $(document).ready(function() {
-                    //initializeInvoiceChart();
+                    initializeInvoiceChart();
                 });
 
-                /*function initializeInvoiceChart() {
+                function initializeInvoiceChart() {
                     var invoices = $("#invoice_chart");
 
                     new Chart(invoices, {
@@ -119,7 +119,7 @@ if ($upcomingInvoice) {
                             aspectRatio: 1.5
                         }
                     });
-                }*/
+                }
             </script>
 <?php
         }
