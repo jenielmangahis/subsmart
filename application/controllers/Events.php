@@ -643,7 +643,7 @@ class Events extends MY_Controller
 
         $GET_EVENT_SETTINGS = array(
             'where' => array( 'company_id' => $COMPANY_ID ),
-            'table' => 'EVENT_SETTINGS',
+            'table' => 'event_settings',
             'select' => '*',
         );
         $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
