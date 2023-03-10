@@ -1087,7 +1087,16 @@
                                                                         <td><?= $item->type; ?></td>
                                                                         <td><?= $item->points; ?></td>
                                                                         <td><?= $item->qty; ?></td>
-                                                                        <td><?= $item->location; ?></td>
+                                                                        <td style="width: 200px">
+                                                                            <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
+                                                                            <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
+                                                                            <select id="location" name="location[]" class="form-control location" >
+                                                                                <option value="">Select Type</option>
+                                                                                    <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
+                                                                                        <option value="<?= $locationItem->id ?>"><?= $locationItem->name  ?></option>
+                                                                                    <?php endforeach; ?>
+                                                                            </select>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php } } ?>
                                                                 </tbody>
@@ -1725,6 +1734,9 @@ $(function() {
         });
         $("#priority").select2({
             placeholder: "Choose Priority..."
+        });
+        $(".location").select2({
+            placeholder: "Choose Location"
         });
 
         $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({

@@ -526,6 +526,8 @@ $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
 $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
 $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
+$route['accounting/all-sales/print-transactions']['post'] = 'accounting_controllers/all_sales/print_transactions';
+$route['accounting/all-sales/send-transactions']['post'] = 'accounting_controllers/all_sales/send_transactions';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';

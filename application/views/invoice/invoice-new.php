@@ -84,7 +84,7 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
                         <img alt="<?= $company_info->business_name; ?>" src="<?= $company_image; ?>" class="companyimage companyimage-big" />
                     </td>
 
-                    <td style="width: 1%; white-space: nowrap; margin-right: 8px; padding-right: 16px; vertical-align: top;">
+                    <td style="width: 50%; white-space: nowrap; margin-right: 8px; padding-right: 16px; vertical-align: top;">
                         <table>
                             <tr>
                                 <td>

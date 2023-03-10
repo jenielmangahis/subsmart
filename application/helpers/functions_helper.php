@@ -401,7 +401,7 @@ function addJSONResponseHeader() {
 }
 
 if (!function_exists('getLocation')){
-    function getLocation($id){
+    function getLocation($id, $qty){
         $comp_id = logged('company_id');
         $CI = &get_instance();
         $CI->load->model('general_model');
@@ -409,7 +409,8 @@ if (!function_exists('getLocation')){
         $getLocation = array(
             'where' => array(
                 'company_id' => $comp_id,
-                'item_id' => $id
+                'item_id' => $id,
+                'qty >=' => $qty,
             ),
             'table' => 'items_has_storage_loc',
             'select' => 'id,name'
