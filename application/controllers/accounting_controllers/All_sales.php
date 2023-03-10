@@ -1876,4 +1876,180 @@ class All_sales extends MY_Controller {
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
     }
+
+    public function print_transactions()
+    {
+        dd($this->input->post());
+    }
+    
+    public function send_transactions()
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+
+        $post = $this->input->post();
+        $transactions = $post['transactions'];
+
+        $company = $this->business_model->getByCompanyId(logged('company_id'));
+
+        $sent = 0;
+        foreach($transactions as $data)
+        {
+            $explode = explode('-', $data);
+            
+            switch($explode[0]) {
+                case 'invoice' :
+                    $invoice = $this->invoice_model->getinvoice($data[1]);
+                    $customer = $this->accounting_customers_model->getCustomerDetails($invoice->customer_id)[0];
+
+                    $email = empty($invoice->customer_email) ? $customer->email : $invoice->customer_email;
+                    $subject = "New payment request from $company->business_name - invoice $invoice->invoice_number";
+                    $message = "Dear $customer->first_name $customer->last_name,
+
+Here's your invoice! We appreciate your prompt payment.
+
+Thanks for your business!
+$company->business_name";
+                break;
+                case 'estimate' :
+                    $estimate = $this->estimate_model->getEstimate($data[1]);
+                    $customer = $this->accounting_customers_model->getCustomerDetails($estimate->customer_id)[0];
+
+                    $email = empty($estimate->email) ? $customer->email : $estimate->email;
+                    $subject = "Estimate $estimate->estimate_number from $company->business_name";
+                    $message = "Dear $customer->first_name $customer->last_name,
+
+Please review the estimate below. Feel free to contact us if you have any questions.
+We look forward to working with you.
+
+Thanks for your business!
+$company->business_name";
+                break;
+                case 'credit_memo' :
+                    $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($data[1]);
+                    $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $data[1]);
+                    $customer = $this->accounting_customers_model->getCustomerDetails($creditMemo->customer_id)[0];
+
+                    foreach($memoItems as $key => $creditMemoItem) {
+                        $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+                        $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+
+                        $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                        $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $fileName = 'Credit_Memo_'.$creditMemo->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                    $view = "accounting/modals/print_action/print_credit_memo";
+
+                    $pdfData = [
+                        'creditMemo' => $creditMemo,
+                        'memoItems' => $memoItems
+                    ];
+
+                    $email = empty($creditMemo->email) ? $customer->email : $creditMemo->email;
+                    $subject = "Credit Memo $creditMemo->ref_no from $company->business_name";
+                    $message = "Dear $customer->first_name $customer->last_name,
+
+Your credit memo is attached. We have reduced your account balance by the amount shown on the credit memo.
+
+Have a great day!
+$company->business_name";
+                break;
+                case 'sales_receipt' :
+                    $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($data[1]);
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $data[1]);
+                    $customer = $this->accounting_customers_model->getCustomerDetails($salesReceipt->customer_id)[0];
+                    $fileName = 'Sales_Receipt_'.$salesReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+
+                    foreach($receiptItems as $key => $receiptItem) {
+                        $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                        $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+            
+                        $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                        $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $view = "accounting/modals/print_action/print_sales_receipt";
+
+                    $pdfData = [
+                        'salesReceipt' => $salesReceipt,
+                        'receiptItems' => $receiptItems
+                    ];
+
+                    $email = empty($salesReceipt->email) ? $customer->email : $salesReceipt->email;
+                    $subject = "Sales Receipt $salesReceipt->ref_no from $company->business_name";
+                    $message = "Dear $customer->first_name $customer->last_name,
+
+Please review the sales receipt below.
+We appreciate it very much.
+
+Thanks for your business!
+$company->business_name";
+                break;
+                case 'refund' :
+                    $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($data[1]);
+
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $data[1]);
+                    $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+                    foreach($receiptItems as $key => $receiptItem) {
+                        $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                        $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+
+                        $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                        $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $fileName = 'Refund_Receipt_'.$refundReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                    $view = "accounting/modals/print_action/print_refund_receipt";
+
+                    $pdfData = [
+                        'paymentMethod' => $paymentMethod,
+                        'refundReceipt' => $refundReceipt,
+                        'receiptItems' => $receiptItems
+                    ];
+
+                    $email = empty($refundReceipt->email) ? $customer->email : $refundReceipt->email;
+                    $subject = "Refund Receipt from $company->business_name";
+                    $message = "Dear $customer->first_name $customer->last_name,
+
+Please find your refund receipt attached to this email.
+
+Thank you.
+
+Have a great day!
+$company->business_name";
+                break;
+            }
+
+            
+
+            $this->email->clear(true);
+            $this->email->from('nsmartrac@gmail.com');
+            $this->email->to($email);
+            $this->email->subject($subject);
+            $this->email->message($message);
+
+            if($data[0] !== 'invoice' && $data[0] !== 'estimate') {
+                $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+                $this->email->attach(base_url("/assets/pdf/$fileName"));
+            }
+            $this->email->send();
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+
+            $sent++;
+        }
+
+        $count = count($post['transactions']);
+
+        echo json_encode([
+            'success' => true,
+            'message' => "$sent out of $count transactions sent."
+        ]);
+    }
 }

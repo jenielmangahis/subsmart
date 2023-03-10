@@ -47,7 +47,7 @@ add_css(array(
                                     <form id="inventory_form">
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
-                                            <strong>Item Name</strong>
+                                            <strong>Location</strong>
                                             <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required/>
                                         </div>
                                     </div>
@@ -61,7 +61,6 @@ add_css(array(
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item</strong>
                                             <select id="customer_id" name="item_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                                <option value="11746">Test</option>
                                             </select>
                                             </div>
                                     </div>
@@ -128,16 +127,29 @@ add_css(array(
               },
               placeholder: 'Select Item',
               minimumInputLength: 0,
-              templateSelection: formatRepoCustomerSelection
+              templateResult: formatRepoLocation,
+              templateSelection: formatRepoLocationSelection
         });
     })
-    function formatRepoCustomerSelection(repo) {
+    function formatRepoLocationSelection(repo) {
+
             if( repo.id != null ){
                 return repo.title;      
             }else{
                 return repo.text;
             }
           
+        }
+        function formatRepoLocation(repo) {
+          if (repo.loading) {
+            return repo.text;
+          }
+
+          var $container = $(
+            '<div>'+repo.title + '</div>'
+          );
+
+          return $container;
         }
 
 function readURL(input) {

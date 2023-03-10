@@ -5023,3 +5023,23 @@ if(!function_exists('formatInvoiceNumber')) {
         return $number;
     }
 }
+
+
+if (!function_exists('formatJobNumber')) {
+    function formatJobNumber($number) {
+        $formatFunc = function ($prefix, $number) {
+            $numericPart = (int) str_replace($prefix, '', $number);
+            return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+        };
+    
+        if (strpos(strtoupper($number), 'JOB-') === 0) {
+            return $formatFunc('JOB-', $number);
+        }
+    
+        if (strpos(strtoupper($number), 'JOB') === 0) {
+            return $formatFunc('JOB', $number);
+        }
+    
+        return $number;
+    }
+}

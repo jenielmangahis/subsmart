@@ -1187,13 +1187,8 @@
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
                                                                         <td><?php echo number_format((float)$total,2,'.',','); ?></td>
-                                                                        <td style="width: 200px">
-                                                                            <select id="location" name="location" class="form-control location"  required>
-                                                                                <option value="">Select Type</option>
-                                                                                    <?php foreach (getLocation($item->id) as $locationItem): ?>
-                                                                                        <option value="<?= $locationItem->id ?></ data-image="<?= $type->icon_marker; ?>"><?= $locationItem->name  ?></option>
-                                                                                    <?php endforeach; ?>
-                                                                            </select>
+                                                                        <td>
+                                                                            <?php echo $item->location; ?></
                                                                         </td>
                                                                     </tr>
                                                                     <?php } } ?>
@@ -1808,6 +1803,7 @@ $(function() {
     });
 
         function formatRepoCustomerSelection(repo) {
+
             if( repo.first_name != null ){
                 return repo.first_name + ' ' + repo.last_name;      
             }else{
@@ -1817,6 +1813,7 @@ $(function() {
         }
 
         function formatRepoCustomer(repo) {
+
           if (repo.loading) {
             return repo.text;
           }
