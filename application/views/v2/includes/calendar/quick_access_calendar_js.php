@@ -11,6 +11,7 @@ $(function(){
     $('#modal-quick-add-appointment').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-tc-off').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-edit-tc-off').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-add-event').modal({backdrop: 'static', keyboard: false});
 
     $('.btn-quick-access-calendar-schedule').on('click', function(){
         $('#modal-quick-access-calendar-schedule').modal('show');
@@ -78,6 +79,28 @@ $(function(){
              success: function(o)
              {          
                 $("#quick-add-service-ticket-form-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
+    $('#calendar-quick-add-event').on('click', function(){
+        var url = base_url + "event/_quick_add_event_form";
+        var date_selected   = $('#quick-add-date-selected').val();
+        calendar_modal_source = 'quick-add-event';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-event').modal('show');
+
+        showLoader($("#quick-add-event-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-event-form-container").html(o);
              }
           });
         }, 500);
@@ -621,6 +644,46 @@ $(function(){
                 $("#btn-quick-add-tc-off-submit").html('Schedule');
             }, beforeSend: function() {
                 $("#btn-quick-add-tc-off-submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#quick-add-event-form').submit(function(e){
+        e.preventDefault();
+
+        var url  = base_url + 'event/_create_event';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(),
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-add-event').modal('hide');
+                    $('#modal-quick-access-calendar-schedule').modal('show');
+
+                    Swal.fire({
+                        text: 'Event has been added!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadQuickAccessCalendarSchedule();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-event-submit").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-event-submit").html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });

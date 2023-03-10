@@ -42,11 +42,11 @@
                         </div>
                         <div class="col-md-4">
                             <label>Job Location</label>
-                            <input class="form-control" value="<?= $customer->city, " ", $customer->state, " ", $customer->zipcode ?>" readonly>
+                            <input class="form-control" id="job_location" value="<?= $customer->city, " ", $customer->state, " ", $customer->zipcode ?>" readonly>
                         </div>
                         <div class="col-md-4">
                             <label>Job Name</label>
-                            <input class="form-control" value="<?= $customer->first_name, " ", $customer->last_name; ?>" readonly>
+                            <input id="job_name" class="form-control" value="<?= $customer->first_name, " ", $customer->last_name; ?>" readonly>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Job #</label>
-                            <input class="form-control" value="<?= formatJobNumber($job->job_number) ?>" readonly>
+                            <input class="form-control" id="job_number" value="<?= formatJobNumber($job->job_number) ?>" readonly>
                         </div>
                         <div class="col-md-4">
                             <label>Invoice #</label>
@@ -76,7 +76,7 @@
                     <div class="row form-group mb-3">
                         <div class="col-md-4">
                             <label>PO #</label>
-                            <input class="form-control">
+                            <input id="po_number" class="form-control">
                         </div>
                         <div class="col-md-4">
                             <label>Date Issued</label>
@@ -91,7 +91,7 @@
                     <div class="row form-group">
                         <div class="col-md-4">
                             <label>Job Tags</label>
-                            <select id="job_tags" name="tags" class="form-control " required>
+                            <select id="job_tags" name="tags" class="form-control" required>
                                 <?php if (!empty($tags)) : ?>
                                     <?php foreach ($tags as $tag) : ?>
                                         <option <?= ($job->tags == $tag->name) ? 'selected' : '' ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>">
@@ -207,14 +207,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4 form-group">
-                            <select class="form-control">
+                            <select class="form-control" id="deposit-amount-type">
                                 <option value="$" selected="selected">Deposit amount $</option>
                                 <option value="%">Percentage %</option>
                             </select>
                         </div>
                         <div class="col-md-4 form-group">
                             <div class="input-group">
-                                <input type="text" name="deposit_amount" value="0" class="form-control" autocomplete="off">
+                                <input type="text" id="deposit-amount-value" name="deposit_amount" value="0" class="form-control" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -222,15 +222,15 @@
                     <div class="mb-3">
                         <h5>Message to Customer</h5>
                         <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
-                        <textarea cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
+                        <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
                     </div>
                     <div>
                         <h5>Terms &amp; Conditions</h5>
                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                        <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
+                        <textarea name="terms_and_conditions" id="editor1_tc" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
                     </div>
-                </div>
-                <button class="nsm-button primary" type="submit">Save</button>
+                    <br>
+                    <button class="nsm-button primary" type="submit">Save</button>
             </form>
         </div>
     </div>
@@ -281,6 +281,8 @@
         const row = document.importNode(templateContent, true);
 
         if (item) {
+            row.querySelector("tr").setAttribute("data-id", item.id)
+
             row.querySelector(".itemname").value = item.title;
             row.querySelector(".itemquantity").value = item.qty;
             row.querySelector(".itemprice").value = item.price;
@@ -444,9 +446,118 @@
         $jobNavItem.closest("li").addClass("active");
 
         const $form = document.getElementById("createinvoiceform");
-        $form.addEventListener("submit", function(event) {
+        $form.addEventListener("submit", async function(event) {
             event.preventDefault();
-        })
-    });
+
+            const jobLocation = document.getElementById("job_location").value;
+            let ckeditorData = '';
+            if (CKEDITOR.instances.editor1_tc) {
+                ckeditorData = CKEDITOR.instances.editor1_tc.getData();
+            }
+            const payload = {
+                job_id: "<?= $job->id; ?>",
+                customer_id: "<?= $customer->prof_id; ?>",
+                customer_email: "<?= $customer->email; ?>",
+                purchase_order: document.querySelector('#po_number').value,
+                po_number: document.querySelector('#po_number').value,
+                invoice_type: document.querySelector('select[name="invoice_type"]').value,
+                date_issued: document.querySelector('#date-issued').value,
+                due_date: document.querySelector('#due-date').value,
+                job_tags: document.querySelector('#job_tags').value,
+                job_location: jobLocation,
+                jobs_location: jobLocation,
+                shipping_to_address: jobLocation,
+                billing_address: jobLocation,
+                deposit_amount: document.querySelector('[name=deposit_amount]').value,
+                message_to_customer: document.querySelector('[name=message_to_customer]').value,
+                message_on_voice: document.querySelector('[name=message_to_customer]').value,
+                job_number: document.querySelector('#job_number').value,
+                invoice_number: document.querySelector('#invoice_number_display').value,
+                job_name: document.querySelector('#job_name').value,
+                status: "Submitted",
+                total_due: 0.00,
+                sub_total: document.querySelector('#subtotal').textContent.slice(2),
+                balance: document.querySelector('#grandtotal').textContent.slice(2),
+                taxes: document.querySelector('#taxes').textContent.slice(2),
+                adjustment: document.querySelector('#adjustment').textContent.slice(2),
+                grand_total: document.querySelector('#grandtotal').textContent.slice(2),
+                terms_and_conditions: ckeditorData,
+                terms: ckeditorData,
+                items: [],
+                work_order_number: '',
+                deposit_request_type: document.getElementById("deposit-amount-type").value,
+                deposit_request: document.getElementById("deposit-amount-value").value,
+            };
+
+            const itemRows = document.querySelectorAll('#item-table tbody tr.row-item');
+            itemRows.forEach(row => {
+                const itemName = row.querySelector('.itemname').value;
+                const itemType = row.querySelector('.itemtype').value;
+                const itemQuantity = row.querySelector('.itemquantity').value;
+                const itemPrice = row.querySelector('.itemprice').value;
+                const itemDiscount = row.querySelector('.itemdiscount').value;
+                const itemTax = row.querySelector('.itemtax').value;
+                const itemTotal = row.querySelector('.itemtotal').value;
+                const itemId = row.dataset.id;
+
+                payload.items.push({
+                    itemid: itemId,
+                    name: itemName,
+                    type: itemType,
+                    quantity: itemQuantity,
+                    price: itemPrice,
+                    discount: itemDiscount,
+                    tax: itemTax,
+                    cost: itemTotal,
+                    total: itemTotal
+                });
+            })
+
+            const formData = new FormData;
+            Object.entries(payload).forEach(([key, value]) => {
+                if (!Array.isArray(value)) {
+                    formData.append(key, value);
+                    return;
+                }
+            });
+
+            payload.items.forEach((item, index) => {
+                Object.entries(item).forEach(([key, value]) => {
+                    formData.append(`${key}[]`, value);
+                });
+            });
+
+            const $button = document.querySelector("#createinvoiceform button[type=submit]");
+            $button.setAttribute("disabled", true);
+            $button.textContent = "Saving...";
+
+            try {
+                const response = await fetch("/Invoice/addNewInvoice?json=1", {
+                    method: "POST",
+                    body: formData
+                });
+                const jsonData = await response.json();
+                console.log(jsonData);
+
+                await Swal.fire(
+                    'Save Success',
+                    'Invoice has been created successfully',
+                    'success'
+                )
+                window.location.href = `/job/new_job1/${payload.job_id}`;
+            } catch (error) {
+                console.log(error)
+                Swal.fire(
+                    'Save Error',
+                    'Something went wrong saving this invoice',
+                    'error'
+                )
+            } finally {
+                $button.removeAttribute("disabled");
+                $button.textContent = "Save";
+            }
+        });
+
+    })
 </script>
 <script src="<?= base_url("assets/js/jobs/manage.js") ?>"></script>

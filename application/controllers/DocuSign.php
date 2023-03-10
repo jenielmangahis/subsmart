@@ -86,6 +86,18 @@ class DocuSign extends MYF_Controller
             }
         }
 
+        $this->db->select('id');
+        $this->db->where('docfile_id', $documentId);
+        $recipientIds = $this->db->get('user_docfile_recipients')->result_array();
+        $recipientIds = array_map(function ($recipient) {
+            return $recipient['id'];
+        }, $recipientIds);
+
+        $this->db->select('job_id');
+        $this->db->where_in('user_docfile_recipient_id', $recipientIds);
+        $jobId = $this->db->get('user_docfile_job_recipients')->row();
+        $jobId = is_null($jobId) ? null : $jobId->job_id;
+
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
@@ -130,6 +142,8 @@ class DocuSign extends MYF_Controller
             'decrypted' => $decrypted,
             'generated_pdf' => $generatedPDF,
             'auto_populate_data' => $autoPopulateData,
+            'recipient_ids' => $recipientIds,
+            'job_id' =>  $jobId
         ]);
     }
 
@@ -1172,7 +1186,7 @@ SQL;
         $docfileDocumentEntries = [];
         foreach ($templateFiles as $file) {
             $documentPath = $filepath . $file->name;
-            copy(FCPATH . $file->path, $documentPath);
+            copy(str_replace('//', '/', FCPATH . $file->path), $documentPath);
             array_push($docfileDocumentEntries, [
                 'name' => $file->name,
                 'path' => str_replace(FCPATH, '/', $documentPath),
