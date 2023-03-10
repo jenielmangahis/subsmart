@@ -1,5 +1,5 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
