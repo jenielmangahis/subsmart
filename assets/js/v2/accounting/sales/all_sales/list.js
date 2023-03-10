@@ -1874,3 +1874,26 @@ $('#send-transactions').on('click', function(e) {
         }
     });
 });
+
+$('#print-transactions').on('click', function(e) {
+    if($('#print-transactions-form').length < 1) {
+        $('body').append(`<form action="/accounting/all-sales/print-transactions" method="post" id="print-transactions-form" target="_blank"></form>`);
+    }
+
+    $('#transactions-table tbody .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var id = $(this).val();
+        var typeIndex = $('#transactions-table thead tr td[data-name="Type"]').index();
+        var type = $(row.find('td')[typeIndex]).text().trim().toLowerCase();
+
+        $('#print-transactions-form').append(`<input type="hidden" name="transactions[]" value="${type.replaceAll(' ', '_')}-${id}">`);
+    });
+
+    $('#print-transactions-form').submit();
+});
+
+$('#print-transactions-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
+});

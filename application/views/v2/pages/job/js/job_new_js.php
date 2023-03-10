@@ -275,10 +275,66 @@ $("#attachment-file").change(function() {
                       "<td></td>" +
                       "<td></td>" +
                       "<td></td>";
+
+            //device audit
+            markup3 ="<tr>" +
+                "<td>" + title + "</td>" +
+                "<td>" + item_type + "</td>" +
+                "<td></td>" +
+                "<td>" + price + "</td>" +
+                "<td id='device_qty"+idd+"'>"+ qty + "</td>" +
+                "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
+                "<td>" + 
+                "<input hidden name='item_id1[]' value='"+ idd +"'>" +
+                "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
+                "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
+                "</select>" +
+                "</td>";
+
+            
+            tableBody3 = $("#device_audit_append");
+            tableBody3.append(markup3);
+
+
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
             calculate_subtotal();
+            getLoc(idd, qty);
+
         });
+
+        function getLoc(id, qty) {
+            var postData = new FormData();
+                postData.append('id', id);
+                postData.append('qty', qty);
+            var data = {id: id, qty: qty};
+                fetch('<?= base_url('job/getItemLocation') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { locations } = response;
+                    var select = document.querySelector('#location'+id);
+                               
+                    select.innerHTML = '';
+                    // Loop through each location and append a new option element to the select
+                    var options = document.createElement('option');
+                    
+                    options.text = "Select Location";
+                    options.value = "0";
+                    select.appendChild(options);
+
+                    locations.forEach(function(location) {
+                    var option = document.createElement('option');
+                    option.text = location.name;
+                    option.value = location.id;
+                    select.appendChild(option);
+                    }); 
+                    console.log('success');
+                
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
 
         function calculate_subtotal(tax=0, def=false, discount=0){
             var subtotal = 0 ;
@@ -346,6 +402,8 @@ $("#attachment-file").change(function() {
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
+            $('#location_qty'+id).val(qty);
+            getLoc(id, qty);
             calculate_subtotal();
         });
 
@@ -359,6 +417,8 @@ $("#attachment-file").change(function() {
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
+            $('#location_qty'+id).val(qty);
+            getLoc(id, qty);
             calculate_subtotal();
         });
 

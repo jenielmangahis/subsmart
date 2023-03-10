@@ -660,7 +660,7 @@
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between">
                                                 <h6>Select Job Tag</h6>
-                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
+                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>" >
                                                     <span class="bx bx-plus"></span>Manage Job Tags
                                                 </a>
                                             </div>
@@ -769,7 +769,7 @@
                                             <div class="col-md-5">
                                                 <h6>Customer Info</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                                    <option selected value hidden>- Select Customer -</option>
+                                                    <!-- <option selected value hidden>- Select Customer -</option> -->
                                                     <?php if( $default_customer_id > 0 ){ ?>
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
@@ -1139,7 +1139,6 @@
                                                 </div>
                                                 <?php endif; ?>
 
-                                                <?php if (isset($jobs_data) && $jobs_data->status != "Scheduled") { ?>
                                                     <style>
                                                         .table-bordered td, .table-bordered th {
                                                             border: 1px solid #dee2e6 !important;
@@ -1183,13 +1182,25 @@
                                                                         </td> -->
                                                                         <td><?php echo $item->title; ?></td>
                                                                         <td><?php echo $item->type; ?></td>
-                                                                        <td><?php echo $item->points; ?></td>
+                                                                        <td><?php echo $item->id; ?></td>
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
                                                                         <td><?php echo number_format((float)$total,2,'.',','); ?></td>
-                                                                        <td>
-                                                                            <?php echo $item->location; ?></
-                                                                        </td>
+                                                                        <?php if($jobs_data->status == "Scheduled" || !isset($jobs_data)):?>
+                                                                            <td style="width: 200px">
+                                                                                <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
+                                                                                <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
+                                                                                <select id="location" name="location[]" class="form-control location" >
+                                                                                    <option value="">Select Type</option>
+                                                                                        <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
+                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= $locationItem->name  ?></option>
+                                                                                        <?php endforeach; ?>
+                                                                                </select>
+                                                                            </td>
+                                                                        <?php else: ?>
+                                                                            <td><?php 
+                                                                                echo getLocation($item->location, false) ?></td>
+                                                                        <?php endif; ?>
                                                                     </tr>
                                                                     <?php } } ?>
                                                                 </tbody>
@@ -1197,7 +1208,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php } ?>
                                                 <!-- <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right">

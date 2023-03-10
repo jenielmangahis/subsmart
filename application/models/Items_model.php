@@ -351,16 +351,9 @@ class Items_model extends MY_Model
     public function _updateLocationQty($params){
         if(array_key_exists("set", $params)){
             foreach($params['set'] as $key => $val){
-                if( $val != '' ){
-                    $this->db->set($key, $val);    
-                }else{
-                    if( $val == 0 ){
-                        $this->db->set($key, $val);  
-                    }else{
-                        $this->db->set($key); 
-                    }
+                if ($key === 'qty' && is_numeric($val)) {
+                    $this->db->set($key, $key.' - '.$val, false);
                 }
-                
             }
         }
 

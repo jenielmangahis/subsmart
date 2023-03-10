@@ -65,6 +65,7 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Name">Name</td>
+                            <td data-name="Item">Item</td>
                             <td data-name="Quantity">Quantity</td>
                             <td data-name="Initial Quantity">Initial Quantity</td>
                             <td data-name="Manage"></td>
@@ -81,6 +82,7 @@
                                 </div>
                             </td>
                             <td><?php echo $locations['name'] ?></td>
+                            <td><?php echo getItem($locations['item_id']) ?></td>
                             <td><?php echo $locations['qty'] ?></td>
                             <td><?php echo $locations['initial_qty'] ?></td>
                             <td>

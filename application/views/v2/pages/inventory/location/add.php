@@ -61,7 +61,8 @@ add_css(array(
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item</strong>
                                             <select id="customer_id" name="item_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                            </select>
+                                                <option value="2" selected>Test</option>    
+                                        </select>
                                             </div>
                                     </div>
                                         <div class="col-lg-12 mt-2">
