@@ -289,7 +289,7 @@ class Cron_Api extends MYF_Controller {
 
                         $calendar_title = $event->event_number . ' - ' . $tags;
                         $start_time     = date("Y-m-d\TH:i:s", strtotime($event->start_date . ' ' . $event->start_time));
-                        $end_time     = date("Y-m-d\TH:i:s", strtotime($event->end_date . ' ' . $event->end_time));
+                        $end_time       = date("Y-m-d\TH:i:s", strtotime($event->end_date . ' ' . $event->end_time));
                         $event_time = [
                             'start_time' => $start_time,
                             'end_time' => $end_time
@@ -297,16 +297,18 @@ class Cron_Api extends MYF_Controller {
 
                         $attendees = array();
                         if( $event->employee_id != '' ){
-                            $user = $this->Users_model->getUserByID($event->employee_id);
-                            if( $user ){
-                                $attendees[] = ['email' => $user->email];
-                            }
+                            $attendees = json_decode($event->employee_id);
+                            foreach($attendees as $uid){
+                                $user = $this->Users_model->getUserByID($uid);
+                                if( $user ){
+                                    $attendees[] = ['email' => $user->email];
+                                }
+                            }                            
                         }
 
                         $location = $event->event_address;    
 
-                        $description  = "Event Type : ".$event->event_type."\n";
-                        $description .= $event->event_address . "\n";
+                        $description  = "Event Type : ".$event->event_type."\n";                        
                         $description .= "Event Description : ".$event->event_description."\n";
 
                         $is_valid = true;

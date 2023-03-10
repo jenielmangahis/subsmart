@@ -1488,3 +1488,4 @@ $route['job/_quick_delete_job'] = 'Job/ajax_quick_delete_job';
 $route['calendar/_quick_delete_tc_off'] = 'Workcalender/ajax_delete_tcoff';
 $route['calendar/_quick_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
 $route['ticket/_quick_delete_ticket'] = 'Tickets/ajax_quick_delete_ticket';
+$route['event/_quick_view_event'] = 'Events/ajax_quick_view_event';

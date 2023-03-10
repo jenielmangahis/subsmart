@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Notification extends MYF_Controller {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function auto_sms_notification()
     {
@@ -177,6 +177,11 @@ class Cron_Notification extends MYF_Controller {
                 $customer_name = $job->first_name . ' ' . $job->last_name;
                 $customer_email = $job->email;
                 $customer_phone = $job->phone_m;
+
+                $jobCreator = $this->Users_model->getUserByID($job->created_by);
+                if( $jobCreator ){
+                    $creator_name = $jobCreator->FName . ' ' . $jobCreator->LName;
+                }
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
             $estimate = $this->Estimate_model->getById($object_id);

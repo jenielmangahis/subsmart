@@ -133,6 +133,8 @@ class Events extends MY_Controller
     } 
 
     public function event_add($id=null) {
+        $this->load->model('Users_model');
+
 		$this->page_data['page']->title = 'Event Scheduler Tool';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Events';
@@ -234,10 +236,21 @@ class Events extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
+        $attendees   = array();
         $page_action = 'add';
         if(!$id==NULL){
             $page_action = 'edit';
-            $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
+            $event = $this->event_model->get_specific_event($id);
+
+            $a_attendees = json_decode($event->employee_id);
+            foreach($a_attendees as $uid){
+                $user = $this->Users_model->getUserByID($uid);
+                if( $user ){
+                    $attendees[$user->id] = $user->FName . ' ' . $user->LName;
+                }
+            }  
+
+            $this->page_data['jobs_data'] = $event;
             $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
             //print_r($this->page_data['jobs_data_items'] );
         }
@@ -259,10 +272,13 @@ class Events extends MY_Controller
 
         if( $this->input->get('user') ){
             $redirect_calendar = 1;
-            $default_user = $this->input->get('user');
+            $user = $this->Users_model->getUserByID($this->input->get('user'));
+            if( $user ){
+                $attendees[$user->id] = $user->FName . ' ' . $user->LName;
+            }
         }
 
-        $this->page_data['default_user'] = $default_user;
+        $this->page_data['attendees'] = $attendees;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
@@ -632,9 +648,9 @@ class Events extends MY_Controller
         );
         $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
         $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
-
+        $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
         $DATA = array(
-            'employee_id' => $_POST['EMPLOYEE_ID'],
+            'employee_id' => $employee_ids,
             'start_date' => $_POST['FROM_DATE'],
             'start_time' => $_POST['FROM_TIME'],
             'end_date' => $_POST['TO_DATE'],
@@ -646,6 +662,7 @@ class Events extends MY_Controller
             'created_by' => $USER_ID,
             'company_id' => $COMPANY_ID,
             'description' => $_POST['EVENT_DESCRIPTION'],
+            'event_description' => $_POST['EVENT_DESCRIPTION'],
             'status' => "Scheduled",
             'event_address' => $_POST['LOCATION'],
             'event_number' => $EVENT_NUMBER,
@@ -1151,6 +1168,16 @@ class Events extends MY_Controller
 
             return $name;
         }
+    }
+
+    public function ajax_quick_view_event() {
+
+        $post = $this->input->post();
+
+        $event = $this->event_model->getEvent($post['appointment_id']);
+
+        $this->page_data['event'] = $event;
+        $this->load->view('v2/pages/events/ajax_quick_view_event', $this->page_data);
     }
 }
 
