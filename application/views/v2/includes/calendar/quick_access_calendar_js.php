@@ -1,18 +1,17 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script>
 
 var calendar_modal_source = 'upcoming-list';
 $(function(){ 
 
-    /*$('#modal-quick-add-job').modal({backdrop: 'static', keyboard: false});
+    $('#modal-quick-add-job').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-service-ticket').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-appointment').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-add-tc-off').modal({backdrop: 'static', keyboard: false});
     $('#modal-quick-edit-tc-off').modal({backdrop: 'static', keyboard: false});
-    $('#modal-quick-add-event').modal({backdrop: 'static', keyboard: false});*/
+    $('#modal-quick-add-event').modal({backdrop: 'static', keyboard: false});
 
     $('.btn-quick-access-calendar-schedule').on('click', function(){
         $('#modal-quick-access-calendar-schedule').modal('show');
