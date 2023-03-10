@@ -36,7 +36,7 @@ endif;
 ?>
 <script>
 $(function(){
-    //load_sms_messages();
+    load_sms_messages();
     function load_sms_messages(){
         var url = base_url + 'messages/_sms_list';
 
