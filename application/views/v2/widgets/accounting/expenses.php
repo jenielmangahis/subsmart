@@ -35,10 +35,10 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        initializeExpensesChart();
+        //initializeExpensesChart();
     });
 
-    function initializeExpensesChart(){
+    /*function initializeExpensesChart(){
         var estimates = $("#expenses_chart");
 
         new Chart(estimates, {
@@ -79,7 +79,7 @@
             aspectRatio: 1.5,
           }
         });
-      }
+      }*/
 </script>
 
 <?php
