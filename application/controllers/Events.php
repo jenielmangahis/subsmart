@@ -1179,6 +1179,127 @@ class Events extends MY_Controller
         $this->page_data['event'] = $event;
         $this->load->view('v2/pages/events/ajax_quick_view_event', $this->page_data);
     }
+
+    public function ajax_quick_add_event_form(){
+        $this->load->model('Users_model');        
+        $this->load->helper('functions');
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // check if settings has been set
+        $get_event_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'event_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_event_settings);
+        // add default event settings if not set
+        if(empty($event_settings)){
+            $event_settings_data = array(
+                'event_prefix' => 'EVENT',
+                'event_next_num' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'event_settings');
+        }
+
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        // get all job tags
+        $get_job_tags = array(
+            'table' => 'event_tags',
+            'select' => 'id,name,marker_icon',
+        );
+        $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'event_types',
+            'select' => 'id,title,icon_marker',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $default_date = date("Y-m-d", strtotime($this->input->get('date_selected')));
+        $this->page_data['settings'] = unserialize($settings);
+        $this->page_data['default_date']  = $default_date;        
+        $this->load->view('v2/pages/events/action/ajax_quick_add_event_form', $this->page_data);
+    }
+
+    public function ajax_create_event(){
+        $USER_ID = logged('id');
+        $COMPANY_ID = logged('company_id');
+
+        $GET_EVENT_SETTINGS = array(
+            'where' => array( 'company_id' => $COMPANY_ID ),
+            'table' => 'EVENT_SETTINGS',
+            'select' => '*',
+        );
+        $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
+        $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+        $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
+        $DATA = array(
+            'employee_id' => $employee_ids,
+            'start_date' => $_POST['FROM_DATE'],
+            'start_time' => $_POST['FROM_TIME'],
+            'end_date' => $_POST['TO_DATE'],
+            'end_time' => $_POST['TO_TIME'],
+            'event_type' => $_POST['EVENT_TYPE'],
+            'event_color' => $_POST['EVENT_COLOR'],
+            'url_link' => $_POST['URL_LINK'],
+            'customer_reminder_notification' => $_POST['CUSTOMER_REMINDER'],
+            'created_by' => $USER_ID,
+            'company_id' => $COMPANY_ID,
+            'description' => $_POST['EVENT_DESCRIPTION'],
+            'event_description' => $_POST['EVENT_DESCRIPTION'],
+            'status' => "Scheduled",
+            'event_address' => $_POST['LOCATION'],
+            'event_number' => $EVENT_NUMBER,
+            'event_tag' => $_POST['EVENT_TAG'],
+            'notes' => $_POST['PRIVATE_NOTES'],
+            'amount' => 0,
+            'timezone' => $_POST['TIMEZONE'],
+        );
+
+        $EVENT_ID = $this->general->add_return_id($DATA, 'events');
+
+        //SMS Notification
+        createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $_POST['EMPLOYEE_ID']);
+
+        //Google Calendar
+        createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
+   
+        $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
+        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+        customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
+    }
 }
 
 /* End of file Job.php */

@@ -162,18 +162,21 @@
             <div class="modal-body">
                 <input type="hidden" id="quick-add-date-selected" value="" />                
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-job" href="javascript:void(0);"><i class="bx bx-fw bx-message-square-error"></i>Job</a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
                     </div>
-                    <div class="col-6">
-                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class="bx bx-fw bx-calendar-event"></i>Appointment</a>
+                    <!-- <div class="col-12">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-event" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-event'></i>Event</a>
+                    </div> -->
+                    <div class="col-12">
+                        <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class='bx bx-fw bxs-user-pin'></i>Appointment</a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-tc-off" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-week' ></i>Technician Off</a>
-                    </div>
+                    </div>                    
                 </div>
             </div>            
         </div>        
@@ -213,6 +216,26 @@
                     <div style="float:right;">
                         <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary" id="btn-service-ticket-submit">Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-add-event" aria-labelledby="modal-quick-add-event-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Create Event</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="quick-add-event-form-container" style="max-height: 800px; overflow: auto;"></div>
+                <div class="modal-footer" style="display:block;">                    
+                    <div style="float:right;">
+                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-event-submit">Schedule</button>
                     </div>
                 </div>
             </div>
