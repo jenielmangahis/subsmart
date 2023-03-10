@@ -681,7 +681,7 @@ class Events extends MY_Controller
         createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
    
         $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
-        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'EVENT_SETTINGS');
+        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
         customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
 
         // if(isset($input['item_id'])){
