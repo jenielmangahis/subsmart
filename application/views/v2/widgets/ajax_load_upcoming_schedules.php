@@ -124,7 +124,10 @@
                             $schedule_description = $schedule['data']->event_description != '' ? $schedule['data']->event_description : '---';;
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->employee_id;
+                            $attendees = json_decode($schedule['data']->employee_id);
+                            foreach($attendees as $uid){
+                                $assigned_employees[] = $uid;    
+                            }
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'estimate' ){
@@ -344,6 +347,8 @@ $(function(){
             var url = base_url + "job/_quick_view_details";
         }else if( appointment_type == 'ticket' ){
             var url = base_url + "ticket/_quick_view_details";
+        }else if( appointment_type == 'event' ){
+            var url = base_url + "event/_quick_view_event";
         }else{
             var url = base_url + "calendar/_view_appointment";
         }
@@ -363,18 +368,6 @@ $(function(){
              }
           });
         }, 500);       
-    });
-
-    $('#upcoming-schedule-view-more-details').on('click', function(){
-        var appointment_type = $(this).data('type');
-        var appointment_id   = $(this).data('id');
-        if( appointment_type == 'job' ){
-            location.href = base_url + 'job/job_preview/' + appointment_id;
-        }else if( appointment_type == 'ticket' ){
-            location.href = base_url + 'tickets/viewDetails/' + appointment_id;
-        }else{
-            location.href = base_url + 'workcalender';
-        }
     });
 });
 </script>

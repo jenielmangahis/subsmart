@@ -10,6 +10,10 @@ async function initJobType(selector = "#job_type_option") {
     $select.select2("destroy");
   }
 
+  if (!$select.length) {
+    return;
+  }
+
   const template = templateResult("icon_marker");
 
   $($select).select2({
@@ -39,6 +43,10 @@ async function initJobTag(selector = "#job_tags") {
   const $select = $(selector);
   if ($select.hasClass("select2-hidden-accessible")) {
     $select.select2("destroy");
+  }
+
+  if (!$select.length) {
+    return;
   }
 
   const template = templateResult("marker_icon");
@@ -72,6 +80,10 @@ function initTaxRates(selector = "#tax_rate") {
   const $select = $(selector);
   if ($select.hasClass("select2-hidden-accessible")) {
     $select.select2("destroy");
+  }
+
+  if (!$select.length) {
+    return;
   }
 
   $($select).select2({

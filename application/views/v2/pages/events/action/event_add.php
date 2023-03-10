@@ -86,6 +86,28 @@
         float: right;
         margin-top: -25px;
     }
+    .select2-results__option {
+        text-align: left;
+    }
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        text-align: left;
+    }
+    .autocomplete-img{
+      height: 50px;
+      width: 50px;
+    }
+    .autocomplete-left{
+      display: inline-block;
+      width: 65px;
+    }
+    .autocomplete-right{
+        display: inline-block;
+        width: 80%;
+        vertical-align: top;
+    }
+    .clear{
+      clear: both;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
@@ -111,7 +133,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12 mb-3">
+    <!-- <div class="col-lg-12 mb-3">
         <div class="row">
             <div class="col-lg-12">
                 <div class="nsm-card primary">
@@ -136,7 +158,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <form method="POST" name="myform" id="ADD_EVENT_FORM">
         <input type="hidden" id="redirect-calendar" value="<?php echo $redirect_calendar; ?>">
         <div class="col-lg-12 mb-3">
@@ -189,14 +211,11 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <h6>Employee</h6>
-                                        <select required id="employee_id" name="employee_id" class="form-control">
-                                            <option value selected disabled>- Select Employee -</option>
-                                            <?php if(!empty($employees)): ?>
-                                            <?php foreach ($employees as $employee): ?>
-                                            <option <?php echo isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?php echo $employee->id; ?>"><?php echo $employee->LName.','.$employee->FName; ?></option>
-                                            <?php endforeach; ?>
-                                            <?php endif; ?>
+                                        <h6>Attendees</h6>
+                                        <select required id="employee_id" name="employee_id" class="form-control" multiple="multiple">
+                                            <?php foreach($attendees as $uid => $uname){ ?>
+                                                <option value="<?= $uid; ?>" selected=""><?= $uname; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -265,7 +284,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <h6>URL Link</h6>
-                                    <input required type="url" name="link" class="form-control checkDescription URL_LINK" value="<?php echo isset($jobs_data) ? $jobs_data->url_link : 'https://www.'; ?>">
+                                    <input required type="url" name="link" placeholder="https://www.domain.com" class="form-control checkDescription URL_LINK" value="<?php echo isset($jobs_data) ? $jobs_data->url_link : ''; ?>">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -318,7 +337,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row mb-3">
+                            <!-- <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <h6>Event Items Listing</h6>
                                     <table class="table table-bordered table-hover">
@@ -347,7 +366,7 @@
                                     <button class="nsm-button small" type="button" data-bs-toggle="modal" data-bs-target="#ITEM_LIST_MODAL"><i class='bx bx-plus-medical'></i>&nbsp;Add Items</button>
                                 </div>
                             </div>
-                            <hr>
+                            <hr> -->
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="float-end">
@@ -490,7 +509,7 @@ $('#ADD_EVENT_FORM').submit(function (event) {
             title: 'Success',
             text: 'Event was addedd successfully!',
         }).then((result) => {
-            window.location.href = "/events";
+            window.location.href = base_url + "/events";
         });
     });
 });
@@ -502,13 +521,56 @@ $("#start_date").change(function (event) {
 
 
 $(function () {
-    $("#start_time, #end_time, #employee_id, #customer_reminder, #inputState").select2();
+    $("#start_time, #end_time, #customer_reminder, #inputState").select2();
+    $('#employee_id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
 
-$("#event_type_option, #event_tags_option").select2({
-    templateResult: formatState,
-    templateSelection: formatState
-});
+                return {
+                    results: data,
+                };
+            },
+            /*formatResult: function(item) {
+                return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+            },*/
+            cache: true
+        },
+        placeholder: 'Select User',
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
 
+    $("#event_type_option, #event_tags_option").select2({
+        templateResult: formatState,
+        templateSelection: formatState
+    });
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
 function formatState (opt) {
     if (!opt.id) {
         return opt.text;

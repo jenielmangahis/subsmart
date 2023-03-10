@@ -1448,6 +1448,8 @@
                 } else if( appointment_type == 'tc-off' ) {
                     var url = base_url + "calendar/_quick_view_tc_off"; 
                     //$('#upcoming-schedule-view-more-details').hide();                   
+                } else if( appointment_type == 'event' ) {
+                    var url = base_url + "event/_quick_view_event";               
                 }
 
                 $('#modal-quick-access-calendar-schedule').modal('hide');
@@ -2336,6 +2338,8 @@
         } else if( appointment_type == 'tc-off' ) {
             var url = base_url + "calendar/_quick_view_tc_off"; 
             //$('#upcoming-schedule-view-more-details').hide();                   
+        } else if( appointment_type == 'event' ) {
+            var url = base_url + "event/_quick_view_event"; 
         }
 
         $('#modal-quick-access-calendar-schedule').modal('hide');

@@ -76,6 +76,36 @@ function smsTwilio($twilio, $to_number, $message)
     return $result;
 }
 
+function smsVonage($to_number, $sms_message)
+{
+    include_once APPPATH . 'libraries/vonage/vendor/autoload.php';   
+
+    $is_sent = 0;
+    $msg = '';
+
+    try {
+       $basic  = new \Vonage\Client\Credentials\Basic(VONAGE_API_KEY, VONAGE_API_SECRET);
+        $client = new \Vonage\Client($basic);
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($to_number, VONAGE_BRANDING, $sms_message)
+        );
+
+        $message = $response->current();
+
+        if ($message->getStatus() == 0) {
+            $is_sent = 1;        
+        } else {
+            $msg = 'Cannot send sms - ' . $message->getStatus();
+        } 
+    } catch (Exception $e) {
+        $msg = $e->getMessage();
+    }    
+
+    $result = ['is_sent' => $is_sent, 'msg' => $msg];
+
+    return $result;
+}
+
 function cleanMobileNumber($to_number, $extension = '+1')
 {
     $to_number = str_replace("-", "", $to_number);

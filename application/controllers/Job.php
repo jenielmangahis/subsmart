@@ -17,6 +17,7 @@ class Job extends MY_Controller
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('Items_model', 'items_model');
     }
 
     public function loadStreetView($address = null)
@@ -104,7 +105,7 @@ class Job extends MY_Controller
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
-        
+
         // get all employees
         $get_login_user = array(
             'where' => array(
@@ -212,7 +213,7 @@ class Job extends MY_Controller
             'select' => 'items.id,title,price,type',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-        
+
         // get estimates
         $get_estimates = array(
             'where' => array(
@@ -277,7 +278,6 @@ class Job extends MY_Controller
 
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
-
         }
 
         $default_customer_id = 0;
@@ -2048,6 +2048,8 @@ class Job extends MY_Controller
                 createSyncToCalendar($jobs_id, 'job', $comp_id);
 
                 // insert data to job items table (items_id, qty, jobs_id)
+                $location = $input['location'];
+                // 
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
                     for ($xx = 0; $xx < $devices; $xx++) {
@@ -2055,6 +2057,7 @@ class Job extends MY_Controller
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['qty'] = $input['item_qty'][$xx];
+                        $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
                         unset($job_items_data);
                     }
@@ -2077,6 +2080,23 @@ class Job extends MY_Controller
                 );
                 $this->general->add_($jobs_approval_data, 'jobs_approval');
 
+                //subtrac location's qty
+                $item_id = $input['item_id1'];
+                $location_qty = $input['location_qty'];
+                for($x=0; $x<count($item_id); $x++){
+                    $update_location_qty = array(
+                        'set' => array(
+                            'qty' => 'qty - '.$location_qty[$x]
+                        ),
+                        'where' => array(
+                            'item_id' => $item_id[$x],
+                            'id' => $location[$x]
+                        )
+                        );
+                    
+                    $this->items_model->_updateLocationQty($update_location_qty);
+                }
+                
                 // insert data to job payments table
                 $job_payment_query = array(
                     'amount' => $input['total_amount'],
@@ -2202,7 +2222,7 @@ class Job extends MY_Controller
                 exit(json_encode($data_arr));
             }*/
 
-        $return = ['is_success' => $is_success, 'msg' => $msg];
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'location' => $location, 'items_id', $item_id, 'qty'  => $location_qty];
         echo json_encode($return);
     }
 
@@ -3968,12 +3988,32 @@ class Job extends MY_Controller
         $this->db->where('prof_id', $job->customer_id);
         $customer = $this->db->get('acs_profile')->row();
 
+        $companyId = logged('company_id');
+
+        $tagsQuery = [
+            'where' => [
+                'company_id' => $companyId
+            ],
+            'table' => 'job_tags',
+            'select' => 'id,name,marker_icon',
+        ];
+        $this->page_data['tags'] = $this->general->get_data_with_param($tagsQuery);
+
+        $this->load->model('Invoice_model', 'invoice_model');
+        $lastinvoice =  $this->invoice_model->getlastInsert()[0];
+        $invoiceNumberParts = explode('-', $lastinvoice->invoice_number);
+        $nextInvoiceNumber = ((int) $invoiceNumberParts[1]) + 1;
+        $invoiceNumber = formatInvoiceNumber('INV-' . $nextInvoiceNumber);
+
         $this->page_data['job'] = $job;
         $this->page_data['customer'] = $customer;
+        $this->page_data['invoiceNumber'] = $invoiceNumber;
 
         $this->page_data['page']->title = 'Create Invoice';
         $this->load->view('v2/pages/job/create_invoice', $this->page_data);
     }
+
+
 
     public function apiGetJobItems($id)
     {

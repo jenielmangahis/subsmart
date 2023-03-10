@@ -134,7 +134,10 @@
                             $schedule_description = $schedule['data']->event_description != '' ? $schedule['data']->event_description : '---';;
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->employee_id;
+                            $attendees = json_decode($schedule['data']->employee_id);
+                            foreach($attendees as $uid){
+                                $assigned_employees[] = $uid;    
+                            }                            
 
                             $schedule_invoice_amount = 0;
 

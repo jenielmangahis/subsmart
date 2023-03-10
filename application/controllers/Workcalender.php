@@ -113,59 +113,6 @@ class Workcalender extends MY_Controller
         $this->page_data['default_time_to_interval'] = $default_time_to_interval;
         $this->page_data['default_calendar_view'] = $default_calendar_view;
         $this->page_data['default_timezone'] = $default_timezone;
-        
-        if (!empty($events)) {
-            $inc = 0;
-            foreach ($events as $key => $event) {
-                $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
-
-                // label of the event
-                if (!empty($customer)) {
-                    /*if (!empty($calender_settings)) {
-                        $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
-                    } else {
-                        $date = date('a', strtotime($event->start_time));
-                        $date = substr($date, -2, 1);
-                        $title = date('g', strtotime($event->start_time)) . $date;
-                        $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
-                    }*/
-
-                    $date = date('a', strtotime($event->start_time));
-                    $date = substr($date, -2, 1);
-                    $title = date('g', strtotime($event->start_time)) . $date;
-                    $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
-                }
-
-                if ($event->employee_id > 0) {
-                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
-                    $resources_user_events[$inc]['title'] = $event->event_description;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;
-                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
-                    $inc++;
-                } elseif ($event->employee_id == 0) {
-                    foreach ($get_users as $get_user) {
-                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
-                        $resources_user_events[$inc]['title'] = $event->event_description;
-                        $resources_user_events[$inc]['start'] = $start_date_time;
-                        $resources_user_events[$inc]['end'] = $start_date_end;
-                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
-                        $inc++;
-                    }
-                }
-
-                $this->page_data['events'][$key]['eventId'] = $event->id;
-                $this->page_data['events'][$key]['status'] = $event->status;
-                $this->page_data['events'][$key]['title'] = (!empty($customer)) ? $title : '';
-                $this->page_data['events'][$key]['start'] = date('Y-m-d', strtotime($event->start_date));
-                $this->page_data['events'][$key]['end'] = date('Y-m-d', strtotime($event->end_date));
-                $this->page_data['events'][$key]['backgroundColor'] = $event->event_color;
-            }
-        }
 
         $this->load->library('user_agent');
         if ($this->agent->is_mobile()) {
@@ -677,8 +624,6 @@ class Workcalender extends MY_Controller
         $role = logged('role');
         $company_id = logged('company_id');
 
-        $events = $this->event_model->getAllByCompany($company_id);
-
         $settings = $this->CalendarSettings_model->getByCompanyId($company_id);
         if( $settings && $settings->timezone != '' ){
             $user_timezone = $settings->timezone;
@@ -690,58 +635,46 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
+
         //Events
-        foreach ($events as $event) {
-            if ($event->event_description != '') {
-                if ($event->employee_id > 0) {
-                    $starttime = $event->start_date . " " . $event->start_time;
-                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                    $title = $event->start_time . " - " . $event->end_time;
+        $events = $this->event_model->getAllByCompany($company_id);
+        foreach ($events as $event) {                    
+            if ($event->event_description != '') {                
+                $starttime = $event->start_date . " " . $event->start_time;
+                $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                $title = $event->start_time . " - " . $event->end_time;
 
-                    $custom_html = '<div class="calendar-title-header">';
-                        if( $event->event_tag != '' ){
-                            $tags = $event->event_tag;
-                        }else{
-                            $tags = '---';
-                        }
-
-                        if (isset($a_settings['work_order_show_customer'])) {
-                            $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
-                        }
-                    $custom_html .= '</div>';
-
-                    $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                    $gcalendar_btn = '';
-                    if( $google_user_api ){
-                        $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                $custom_html = '<div class="calendar-title-header">';
+                    if( $event->event_tag != '' ){
+                        $tags = $event->event_tag;
+                    }else{
+                        $tags = '---';
                     }
 
-                    $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
-                        $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
-                        $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
-                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
-                        $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
-                    $custom_html .= '</div>';
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span>'. $event->event_number . ' - ' . $tags . '</span></a>';
+                $custom_html .= '</div>';
 
-                    $resourceIds = array();
-                    $resourceIds[] = 'user' . $event->employee_id;
-                    $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['eventType'] = 'events';
-                    $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
-                    $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-                    $resources_user_events[$inc]['title'] = $title;
-                    $resources_user_events[$inc]['customHtml'] = $custom_html;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;                    
-                    $resources_user_events[$inc]['allDay'] = false;
-                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
-                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-
-                    $inc++;
+                //Attendees
+                $attendees   = json_decode($event->employee_id);
+                $resourceIds = array();
+                foreach( $attendees as $eid ){
+                    $resourceIds[] = "user" . $eid;   
                 }
+
+                $resources_user_events[$inc]['eventId'] = $event->id;
+                $resources_user_events[$inc]['eventType'] = 'event';
+                $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
+                $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                $resources_user_events[$inc]['title'] = $title;
+                $resources_user_events[$inc]['customHtml'] = $custom_html;
+                $resources_user_events[$inc]['start'] = $start_date_time;
+                $resources_user_events[$inc]['end'] = $start_date_end;                    
+                $resources_user_events[$inc]['allDay'] = false;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+
+                $inc++;
             }
         }
 
@@ -866,10 +799,10 @@ class Workcalender extends MY_Controller
                 }
                 
                 if( $a->appointment_type_id == 4 ){ //Events                    
-                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->event_name . '</span></a>';
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' : ' . $a->event_name . '</span></a>';
                 }else{  
                     $customer_name = $j->first_name . ' ' . $j->last_name;
-                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . $tags . ' : ' . $a->customer_name . '</span></a>';
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' : ' . $a->customer_name . '</span></a>';
                 }
 
             $custom_html .= '</div>';
@@ -3252,8 +3185,6 @@ class Workcalender extends MY_Controller
         $role = logged('role');
         $company_id = logged('company_id');
 
-        $events = $this->event_model->getAllByCompany($company_id);
-
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
         $a_settings = unserialize($settings[0]->value);
         if ($a_settings) {
@@ -3266,57 +3197,46 @@ class Workcalender extends MY_Controller
         $get_users             = $this->Users_model->getUsers();
         $resources_user_events = array();
         $inc = 0;
+        
         //Events
+        $events = $this->event_model->getAllByCompany($company_id);
         foreach ($events as $event) {
             if ($event->event_description != '') {
-                if ($event->employee_id > 0) {
-                    $starttime = $event->start_date . " " . $event->start_time;
-                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                    $title = $event->start_time . " - " . $event->end_time;
+                $starttime = $event->start_date . " " . $event->start_time;
+                $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                $title = $event->start_time . " - " . $event->end_time;
 
-                    $custom_html = '<div class="calendar-title-header">';
-                        if( $event->event_tag != '' ){
-                            $tags = $event->event_tag;
-                        }else{
-                            $tags = '---';
-                        }
-
-                        if (isset($a_settings['work_order_show_customer'])) {
-                            $custom_html  .= '<a class="calendar-tile-minmax event-min-max-'.$event->id.'" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span style="font-size:16px;font-weight:bold;display:inline-block;">'. $event->event_number . ' - ' . $tags . '</span></a>';
-                        }
-                    $custom_html .= '</div>';
-
-                    $view_btn    = '<a class="calendar-tile-view nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bx-window-open"></i> View</a>';
-
-                    $gcalendar_btn = '';
-                    if( $google_user_api ){
-                        $gcalendar_btn = '<a class="calendar-tile-add-gcalendar nsm-button primary btn-sm" href="javascript:void(0);" data-type="event" data-id="'.$event->id.'"><i class="bx bxl-google"></i> Add to Google Calendar</a>';
+                $custom_html = '<div class="calendar-title-header">';
+                    if( $event->event_tag != '' ){
+                        $tags = $event->event_tag;
+                    }else{
+                        $tags = '---';
                     }
 
-                    $custom_html .= '<div class="calendar-tile-details event-tile-'.$event->id.'">';
-                        $custom_html .= "<small style='font-size:15px;'><i class='bx bxs-location-plus'></i> " . $event->event_address . "</small>";
-                        $custom_html .= "<br /><small style='font-size:15px;display:inline-block;margin-right:5px;height:25px;vertical-align:top;'><i class='bx bxs-user-pin'></i> Tech : </small>";
-                        $custom_html .= '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($event->employee_id).'\'); width: 20px;display:inline-block;"></div>';
-                        $custom_html .= '<br /><small style="font-size:15px;"><i class="bx bx-calendar"></i> ' . $event->start_time . " - " . $event->end_time . "</small>";
-                        $custom_html .= '<br/><br/>' . $view_btn . $gcalendar_btn;
-                    $custom_html .= '</div>';
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="event" data-id="'.$event->id.'" href="javascript:void(0);"><span>'. $event->event_number . ' - ' . $tags . '</span></a>';
+                $custom_html .= '</div>';
 
-                    $resourceIds = array();
-                    $resourceIds[] = 'user' . $event->employee_id;
-                    $resources_user_events[$inc]['eventId'] = $event->id;
-                    $resources_user_events[$inc]['eventType'] = 'events';
-                    $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-                    $resources_user_events[$inc]['title'] = $title;
-                    $resources_user_events[$inc]['customHtml'] = $custom_html;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;                    
-                    $resources_user_events[$inc]['allDay'] = false;
-                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
-                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-
-                    $inc++;
+                //Attendees
+                $attendees   = json_decode($event->employee_id);
+                $resourceIds = array();
+                foreach( $attendees as $eid ){
+                    $resourceIds[] = "user" . $eid;   
                 }
+
+                $resources_user_events[$inc]['eventId'] = $event->id;
+                $resources_user_events[$inc]['eventType'] = 'event';
+                $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
+                $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                $resources_user_events[$inc]['title'] = $title;
+                $resources_user_events[$inc]['customHtml'] = $custom_html;
+                $resources_user_events[$inc]['start'] = $start_date_time;
+                $resources_user_events[$inc]['end'] = $start_date_end;                    
+                $resources_user_events[$inc]['allDay'] = false;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+
+                $inc++;
             }
         }
 

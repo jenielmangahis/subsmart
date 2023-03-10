@@ -1,5 +1,8 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+
 var calendar_modal_source = 'upcoming-list';
 $(function(){ 
 
@@ -331,6 +334,20 @@ $(function(){
         }
     });
 
+    $(document).on('click', '#upcoming-schedule-view-more-details', function(){
+        var appointment_type = $(this).data('type');
+        var appointment_id   = $(this).data('id');
+        if( appointment_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + appointment_id;
+        }else if( appointment_type == 'ticket' ){
+            location.href = base_url + 'tickets/viewDetails/' + appointment_id;
+        }else if( appointment_type == 'event' ){
+            location.href = base_url + 'events/event_preview/' + appointment_id;
+        }else{
+            location.href = base_url + 'workcalender';
+        }
+    });
+
     $(document).on('click', '.quick-calendar-tile', function(){
         var appointment_type = $(this).attr('data-type');
         var appointment_id   = $(this).attr('data-id');
@@ -350,6 +367,9 @@ $(function(){
         }else if( appointment_type == 'tc-off' ){
             var url = base_url + "calendar/_quick_view_tc_off";
             $('#upcoming-schedule-view-more-details').hide();
+        }else if( appointment_type == 'event' ){
+            var url = base_url + "event/_quick_view_event";
+            $('#upcoming-schedule-view-more-details').show();
         }else{
             var url = base_url + "calendar/_view_appointment";
             $('#upcoming-schedule-view-more-details').hide();
@@ -381,6 +401,8 @@ $(function(){
             location.href = base_url + 'job/new_job1/' + schedule_id;
         }else if( schedule_type == 'ticket' ){
             location.href = base_url + 'tickets/editDetails/' + schedule_id;
+        }else if( schedule_type == 'event' ){
+            location.href = base_url + "events/event_add/" + schedule_id;            
         }else if( schedule_type == 'tc-off' ){
             quickEditTcOff(schedule_id);
         }

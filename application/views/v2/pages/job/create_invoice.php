@@ -16,6 +16,11 @@
     .dataTables_filter {
         display: none;
     }
+
+    .table td,
+    .table th {
+        border-top: 0 !important;
+    }
 </style>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
@@ -27,7 +32,7 @@
 
     <div class="col-12">
         <div class="nsm-page">
-            <div class="nsm-page-content">
+            <form class="nsm-page-content" id="createinvoiceform">
                 <div class="col-md-12 mb-4">
                     <h5>Customer Details</h5>
                     <div class="row form-group">
@@ -37,8 +42,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Job Location</label>
-                            <input class="form-control" value="<?= $customer->city, " ", $customer->state, " ", $customer->zipcode
-                                                                ?>" readonly>
+                            <input class="form-control" value="<?= $customer->city, " ", $customer->state, " ", $customer->zipcode ?>" readonly>
                         </div>
                         <div class="col-md-4">
                             <label>Job Name</label>
@@ -52,20 +56,20 @@
                     <div class="row form-group mb-3">
                         <div class="col-md-4">
                             <label>Invoice Type</label>
-                            <select class="form-select">
-                                <option>Deposit</option>
-                                <option>Deposit</option>
-                                <option>Deposit</option>
-                                <option>Deposit</option>
+                            <select name="invoice_type" class="form-control">
+                                <option value="Deposit">Deposit</option>
+                                <option value="Partial Payment">Partial Payment</option>
+                                <option value="Final Payment">Final Payment</option>
+                                <option value="Total Due" selected="selected">Total Due</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label>Job #</label>
-                            <input class="form-control" value="<?= $job->job_number ?>" readonly>
+                            <input class="form-control" value="<?= formatJobNumber($job->job_number) ?>" readonly>
                         </div>
                         <div class="col-md-4">
                             <label>Invoice #</label>
-                            <input class="form-control" readonly>
+                            <input class="form-control" id="invoice_number_display" readonly value="<?php echo $invoiceNumber; ?>">
                         </div>
                     </div>
 
@@ -87,11 +91,14 @@
                     <div class="row form-group">
                         <div class="col-md-4">
                             <label>Job Tags</label>
-                            <select class="form-select">
-                                <option>Job Tags</option>
-                                <option>Job Tags</option>
-                                <option>Job Tags</option>
-                                <option>Job Tags</option>
+                            <select id="job_tags" name="tags" class="form-control " required>
+                                <?php if (!empty($tags)) : ?>
+                                    <?php foreach ($tags as $tag) : ?>
+                                        <option <?= ($job->tags == $tag->name) ? 'selected' : '' ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>">
+                                            <?= $tag->name; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </select>
                         </div>
                     </div>
@@ -132,22 +139,22 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="number" min="0" class="form-control itemquantity">
+                                <input type="number" min="0" step="0.01" class="form-control itemquantity">
                             </td>
                             <td>
-                                <input type="number" min="0" class="form-control itemprice">
+                                <input type="number" min="0" step="0.01" class="form-control itemprice">
                             </td>
                             <td>
-                                <input type="number" min="0" class="form-control itemdiscount">
+                                <input type="number" min="0" step="0.01" class="form-control itemdiscount">
                             </td>
                             <td>
-                                <input type="number" min="0" class="form-control itemtax">
+                                <input type="number" min="0" step="0.01" class="form-control itemtax">
                             </td>
                             <td>
-                                <input type="number" min="0" class="form-control itemtotal">
+                                <input type="number" min="0" step="0.01" class="form-control itemtotal">
                             </td>
                             <td>
-                                <button class="nsm-button btn-danger" onclick="removeRow(this)">Remove</button>
+                                <button class="nsm-button btn-danger" onclick="removeRow(this)" type="button">Remove</button>
                             </td>
                         </tr>
                     </template>
@@ -182,29 +189,22 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span>Grand Total</span>
+                                    <span style="color:blue;">Grand Total</span>
                                 </td>
                                 <td>
                                     <span id="grandtotal">$ 0.00</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <span style="color:blue;">Request Deposit</span>
-                                </td>
-                                <td>
-                                    <span id="deposit">$ 0.00</span>
-                                </td>
-                            </tr>
+
                         </table>
 
                     </div>
-                </div>
-
-                <div class="col-md-12 mb-4">
-                    <h5>Request a Deposit</h5>
-                    <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
-
+                    <div class="row" style="background-color:white;">
+                        <div class="col-md-12">
+                            <h5>Request a Deposit</h5>
+                            <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <select class="form-control">
@@ -212,54 +212,13 @@
                                 <option value="%">Percentage %</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-4">
-                    <h5>Payment Schedule</h5>
-                    <span class="help help-sm help-block">Split the balance into multiple payment milestones.</span>
-                    <p><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Manage payment schedule </a></p>
-                </div>
-
-                <div class="col-md-12">
-                    <h5>Accepted payment methods</h5>
-                    <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" checked>
-                        <label class="form-check-label">
-                            Credit Card Payments ()
-                        </label>
+                        <div class="col-md-4 form-group">
+                            <div class="input-group">
+                                <input type="text" name="deposit_amount" value="0" class="form-control" autocomplete="off">
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <span class="help help-sm help-block">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically.</span>
-                        <div class="float-left mini-stat-img mr-4"><img src="<?= $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
-                    </div>
-                    <div>
-                        <span class="help help-sm help-block">Your payment processor is not set up
-                            <a href="">setup payment</a></span>
-                    </div>
-                    <div class="checkcheckbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                        <input type="checkbox" checked>
-                        <label><span>Bank Transfer</span></label>
-                    </div>
-                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                        <input type="checkbox" checked>
-                        <label><span>Instapay</span></label>
-                    </div>
-                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                        <input type="checkbox" checked>
-                        <label><span>Check</span></label>
-                    </div>
-                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                        <input type="checkbox" checked>
-                        <label><span>Cash</span></label>
-                    </div>
-                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                        <input type="checkbox" checked>
-                        <label><span>Deposit</span></label>
-                    </div>
                     <div class="mb-3">
                         <h5>Message to Customer</h5>
                         <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
@@ -270,14 +229,9 @@
                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
                         <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Optionally attach files to this invoice. Allowed type: pdf, doc, docx, png, jpg, gif.</label>
-                        <input style="width:40%;" class="form-control" type="file" id="formFile" accept=".pdf,.doc,.docx,.png,.jpg,.gif">
-                    </div>
                 </div>
-
-                <button class="nsm-button primary">Save</button>
-            </div>
+                <button class="nsm-button primary" type="submit">Save</button>
+            </form>
         </div>
     </div>
 </div>
@@ -333,21 +287,23 @@
             row.querySelector(".itemdiscount").value = item.discount;
             row.querySelector(".itemtax").value = item.tax;
 
-            const total = row.querySelector(".itemtotal");
-            total.value = item.qty * item.price;
-
             const quantity = row.querySelector(".itemquantity");
             const price = row.querySelector(".itemprice");
+            const discount = row.querySelector(".itemdiscount");
+            const tax = row.querySelector(".itemtax");
+            const total = row.querySelector(".itemtotal");
+
             quantity.addEventListener("input", updateTotal);
             price.addEventListener("input", updateTotal);
+            discount.addEventListener("input", updateTotal);
+            tax.addEventListener("input", updateTotal);
+
+            total.value = item.qty * item.price;
         }
 
         document.querySelector("#item-table tbody").appendChild(row);
-
         calculateSummary();
     }
-
-
 
     function calculateSummary() {
         const rows = document.querySelectorAll(".row-item");
@@ -361,20 +317,18 @@
             const price = parseFloat(row.querySelector(".itemprice").value) || 0;
             const tax = parseFloat(row.querySelector(".itemtax").value) || 0;
             const itemdiscount = parseFloat(row.querySelector(".itemdiscount").value) || 0;
-            const itemtotal = row.querySelector(".itemtotal");
-            itemtotal.value = (quantity * price).toFixed(2);
+            const itemTotalValue = (quantity * price).toFixed(2);
 
-            subtotal += parseFloat(itemtotal.value) || 0;
-            taxes += (subtotal * tax) / 100;
+            subtotal += parseFloat(itemTotalValue) || 0;
+            taxes += (itemTotalValue * tax) / 100;
             discount += itemdiscount;
-            grandtotal = subtotal + taxes - discount;
+            grandtotal = (subtotal + taxes) - discount;
         });
 
         document.getElementById("subtotal").textContent = "$ " + subtotal.toFixed(2);
         document.getElementById("taxes").textContent = "$ " + taxes.toFixed(2);
         document.getElementById("adjustment").textContent = "$ " + discount.toFixed(2);
         document.getElementById("grandtotal").textContent = "$ " + grandtotal.toFixed(2);
-        document.getElementById("deposit").textContent = "$ " + (grandtotal / 2).toFixed(2);
     }
 
     function updateTotal(event) {
@@ -389,8 +343,6 @@
 
         calculateSummary();
     }
-
-
 
     function removeRow(button) {
         var row = button.parentNode.parentNode;
@@ -480,15 +432,21 @@
         });
     })()
     const today = new Date().toISOString().substr(0, 10);
-
     document.getElementById("date-issued").value = today;
     document.getElementById("due-date").value = today;
 </script>
+
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
         const $jobNavItem = $("a.nsm-page-link:contains('Jobs')");
         $jobNavItem.closest("li").addClass("active");
+
+        const $form = document.getElementById("createinvoiceform");
+        $form.addEventListener("submit", function(event) {
+            event.preventDefault();
+        })
     });
 </script>
+<script src="<?= base_url("assets/js/jobs/manage.js") ?>"></script>

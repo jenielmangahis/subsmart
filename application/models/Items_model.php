@@ -348,6 +348,39 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+    public function _updateLocationQty($params){
+        if(array_key_exists("set", $params)){
+            foreach($params['set'] as $key => $val){
+                if( $val != '' ){
+                    $this->db->set($key, $val);    
+                }else{
+                    if( $val == 0 ){
+                        $this->db->set($key, $val);  
+                    }else{
+                        $this->db->set($key); 
+                    }
+                }
+                
+            }
+        }
+
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                if( $val != '' ){
+                    $this->db->where($key, $val);    
+                }else{
+                    if( $val == 0 ){
+                        $this->db->where($key, $val);  
+                    }else{
+                        $this->db->where($key); 
+                    }
+                }
+                
+            }
+        }
+
+        $this->db->update($this->table_has_location);
+    }
     public function getLocationById($id)
     {
         $this->db->select('*');

@@ -526,6 +526,8 @@ $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
 $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
 $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
+$route['accounting/all-sales/print-transactions']['post'] = 'accounting_controllers/all_sales/print_transactions';
+$route['accounting/all-sales/send-transactions']['post'] = 'accounting_controllers/all_sales/send_transactions';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';
@@ -1488,3 +1490,4 @@ $route['job/_quick_delete_job'] = 'Job/ajax_quick_delete_job';
 $route['calendar/_quick_delete_tc_off'] = 'Workcalender/ajax_delete_tcoff';
 $route['calendar/_quick_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
 $route['ticket/_quick_delete_ticket'] = 'Tickets/ajax_quick_delete_ticket';
+$route['event/_quick_view_event'] = 'Events/ajax_quick_view_event';
