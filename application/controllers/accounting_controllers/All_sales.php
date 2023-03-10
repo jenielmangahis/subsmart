@@ -23,6 +23,8 @@ class All_sales extends MY_Controller {
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_single_time_activity_model');
+        $this->load->model('invoice_settings_model');
+        $this->load->model('accounting_payment_methods_model');
 
         $this->page_data['page']->title = 'Sales Transactions';
         $this->page_data['page']->parent = 'Sales';
@@ -1879,7 +1881,147 @@ class All_sales extends MY_Controller {
 
     public function print_transactions()
     {
-        dd($this->input->post());
+        $this->load->helper('string');
+        $this->load->library('pdf');
+
+        $post = $this->input->post();
+        $transactions = $post['transactions'];
+
+        $pdfTransactions = [];
+        foreach($transactions as $data)
+        {
+            $explode = explode('-', $data);
+
+            switch($explode[0]) {
+                case 'invoice' :
+                    $invoice = $this->invoice_model->getinvoice($explode[1]);
+                    $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+                    $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+                    $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+                    $discount += floatval($invoice->taxes);
+                    $discount += floatval($invoice->adjustment_value);
+
+                    $invoice->discount_total = $discount;
+
+                    foreach($invoiceItems as $key => $invoiceItem) {
+                        $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+
+                        $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
+                        $taxAmount = floatval($taxAmount) / 100;
+                        $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $invoice->prefix = $invoiceSettings->invoice_num_prefix;
+                    $invoice->items = $invoiceItems;
+                    $invoice->type = 'Invoice';
+                    // $pdfData = [
+                    //     'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
+                    //     'invoice' => $invoice,
+                    //     'invoiceItems' => $invoiceItems
+                    // ];
+
+                    $pdfTransactions[] = $invoice;
+                break;
+                case 'estimate' :
+
+                break;
+                case 'credit_memo' :
+                    $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($explode[1]);
+                    $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $explode[1]);
+
+                    foreach($memoItems as $key => $creditMemoItem) {
+                        $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+                        $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+
+                        $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                        $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $creditMemo->items = $memoItems;
+                    $creditMemo->type = 'Credit Memo';
+                    // $pdfData = [
+                    //     'creditMemo' => $creditMemo,
+                    //     'memoItems' => $memoItems
+                    // ];
+
+                    $pdfTransactions[] = $creditMemo;
+                break;
+                case 'sales_receipt' :
+                    $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($explode[1]);
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $explode[1]);
+
+                    foreach($receiptItems as $key => $receiptItem) {
+                        $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                        $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+            
+                        $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                        $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $salesReceipt->items = $receiptItems;
+                    $salesReceipt->type = 'Sales Receipt';
+                    // $pdfData = [
+                    //     'salesReceipt' => $salesReceipt,
+                    //     'receiptItems' => $receiptItems
+                    // ];
+
+                    $pdfTransactions[] = $salesReceipt;
+                break;
+                case 'refund' :
+                    $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($explode[1]);
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $explode[1]);
+                    $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+                    foreach($receiptItems as $key => $receiptItem) {
+                        $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+                        $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+                        $taxAmount = floatval($taxAmount) / 100;
+
+                        $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+                        $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $refundReceipt->payment_method = $paymentMethod;
+                    $refundReceipt->items = $receiptItems;
+                    $refundReceipt->type = 'Refund';
+                    // $pdfData = [
+                    //     'paymentMethod' => $paymentMethod,
+                    //     'refundReceipt' => $refundReceipt,
+                    //     'receiptItems' => $receiptItems
+                    // ];
+
+                    $pdfTransactions[] = $refundReceipt;
+                break;
+            }
+        }
+
+        $view = "accounting/modals/print_action/print_sales_transactions";
+
+        $extension = '.pdf';
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'sales_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $this->pdf->save_pdf($view, ['transactions' => $pdfTransactions], $fileName, 'portrait');
+
+        $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
+
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+        // Header content type
+        header("Content-type: application/pdf");
+        header('Content-Disposition: inline; filename="print.pdf";');
+
+        ob_clean();
+        flush();
+        echo $pdf;
+        exit;
     }
     
     public function send_transactions()
@@ -1896,11 +2038,36 @@ class All_sales extends MY_Controller {
         foreach($transactions as $data)
         {
             $explode = explode('-', $data);
-            
+
             switch($explode[0]) {
                 case 'invoice' :
-                    $invoice = $this->invoice_model->getinvoice($data[1]);
+                    $invoice = $this->invoice_model->getinvoice($explode[1]);
                     $customer = $this->accounting_customers_model->getCustomerDetails($invoice->customer_id)[0];
+                    $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+                    $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+                    $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+                    $discount += floatval($invoice->taxes);
+                    $discount += floatval($invoice->adjustment_value);
+
+                    $invoice->discount_total = $discount;
+
+                    foreach($invoiceItems as $key => $invoiceItem) {
+                        $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+
+                        $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
+                        $taxAmount = floatval($taxAmount) / 100;
+                        $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                    }
+
+                    $fileName = 'Invoice_'.$invoice->invoice_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                    $view = "accounting/modals/print_action/print_invoice";
+
+                    $pdfData = [
+                        'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
+                        'invoice' => $invoice,
+                        'invoiceItems' => $invoiceItems
+                    ];
 
                     $email = empty($invoice->customer_email) ? $customer->email : $invoice->customer_email;
                     $subject = "New payment request from $company->business_name - invoice $invoice->invoice_number";
@@ -1912,7 +2079,7 @@ Thanks for your business!
 $company->business_name";
                 break;
                 case 'estimate' :
-                    $estimate = $this->estimate_model->getEstimate($data[1]);
+                    $estimate = $this->estimate_model->getEstimate($explode[1]);
                     $customer = $this->accounting_customers_model->getCustomerDetails($estimate->customer_id)[0];
 
                     $email = empty($estimate->email) ? $customer->email : $estimate->email;
@@ -1926,8 +2093,8 @@ Thanks for your business!
 $company->business_name";
                 break;
                 case 'credit_memo' :
-                    $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($data[1]);
-                    $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $data[1]);
+                    $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($explode[1]);
+                    $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $explode[1]);
                     $customer = $this->accounting_customers_model->getCustomerDetails($creditMemo->customer_id)[0];
 
                     foreach($memoItems as $key => $creditMemoItem) {
@@ -1957,8 +2124,8 @@ Have a great day!
 $company->business_name";
                 break;
                 case 'sales_receipt' :
-                    $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($data[1]);
-                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $data[1]);
+                    $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($explode[1]);
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $explode[1]);
                     $customer = $this->accounting_customers_model->getCustomerDetails($salesReceipt->customer_id)[0];
                     $fileName = 'Sales_Receipt_'.$salesReceipt->ref_no.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
 
@@ -1989,9 +2156,9 @@ Thanks for your business!
 $company->business_name";
                 break;
                 case 'refund' :
-                    $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($data[1]);
+                    $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($explode[1]);
 
-                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $data[1]);
+                    $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $explode[1]);
                     $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
 
                     foreach($receiptItems as $key => $receiptItem) {
@@ -2025,15 +2192,13 @@ $company->business_name";
                 break;
             }
 
-            
-
             $this->email->clear(true);
-            $this->email->from('nsmartrac@gmail.com');
+            $this->email->from($company->business_email);
             $this->email->to($email);
             $this->email->subject($subject);
             $this->email->message($message);
 
-            if($data[0] !== 'invoice' && $data[0] !== 'estimate') {
+            if($data[0] !== 'estimate') {
                 $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
 
                 $this->email->attach(base_url("/assets/pdf/$fileName"));

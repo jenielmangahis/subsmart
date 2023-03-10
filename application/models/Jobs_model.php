@@ -750,6 +750,8 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */

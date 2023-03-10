@@ -406,26 +406,50 @@ if (!function_exists('getLocation')){
         $CI = &get_instance();
         $CI->load->model('general_model');
 
-        $getLocation = array(
-            'where' => array(
-                'company_id' => $comp_id,
-                'item_id' => $id,
-                'qty >=' => $qty,
-            ),
-            'table' => 'items_has_storage_loc',
-            'select' => 'id,name'
-        );
-
-        $location = $CI->general_model->get_data_with_param($getLocation);
-        // if($option == 'value'){
-        //     return $location->id;
-        // }else{
-        //     return $location->name;
-        // }
-        return $location;
+        if($qty != false){
+            $getLocation = array(
+                'where' => array(
+                    'company_id' => $comp_id,
+                    'item_id' => $id,
+                    'qty >=' => $qty,
+                ),
+                'table' => 'items_has_storage_loc',
+                'select' => 'id,name'
+            );
+    
+            $location = $CI->general_model->get_data_with_param($getLocation);
+            return $location;
+        }else{
+            $getLocation = array(
+                'where' => array(
+                    'company_id' => $comp_id,
+                    'id' => $id,
+                ),
+                'table' => 'items_has_storage_loc',
+                'select' => 'name'
+            );
+            $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
+            return $location->name;
+        }
+        
     }
 }
+if (!function_exists('getItem')){
+    function getItem($id){
+        $CI = &get_instance();
+        $CI->load->model('general_model');
 
+        $getItems = array(
+            'where' => array(
+                'id' => $id,
+            ),
+            'table' => 'items',
+            'select' => 'title'
+        );
+        $location = $CI->general_model->get_data_with_param($getItems, FALSE);
+        return $location->title;
+    }
+}
 function csvHeaderToMap($start , $end){
     $headers = array (
         'Status',

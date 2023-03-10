@@ -2034,7 +2034,26 @@ class Job extends MY_Controller
             if (!empty($input['message'])) {
                 $jobs_data['message'] = $input['message'];
             }
+            $location = $input['location'];
+            $item_id = $input['item_id1'];
+            
+            $location_qty = $input['location_qty'];
 
+            if(isset($location)){
+                for($x=0; $x<count($item_id); $x++){
+                    $update_location_qty = array(
+                        'set' => array(
+                            'qty' => $location_qty[$x]
+                        ),
+                        'where' => array(
+                            'item_id' => $item_id[$x],
+                            'id' => $location[$x]
+                        )
+                        );
+                    
+                    $this->items_model->_updateLocationQty($update_location_qty);
+                }
+            }
             if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
@@ -2048,7 +2067,6 @@ class Job extends MY_Controller
                 createSyncToCalendar($jobs_id, 'job', $comp_id);
 
                 // insert data to job items table (items_id, qty, jobs_id)
-                $location = $input['location'];
                 // 
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
@@ -2081,21 +2099,7 @@ class Job extends MY_Controller
                 $this->general->add_($jobs_approval_data, 'jobs_approval');
 
                 //subtrac location's qty
-                $item_id = $input['item_id1'];
-                $location_qty = $input['location_qty'];
-                for($x=0; $x<count($item_id); $x++){
-                    $update_location_qty = array(
-                        'set' => array(
-                            'qty' => 'qty - '.$location_qty[$x]
-                        ),
-                        'where' => array(
-                            'item_id' => $item_id[$x],
-                            'id' => $location[$x]
-                        )
-                        );
-                    
-                    $this->items_model->_updateLocationQty($update_location_qty);
-                }
+               
                 
                 // insert data to job payments table
                 $job_payment_query = array(
@@ -2128,6 +2132,7 @@ class Job extends MY_Controller
                         $job_items_data = array();
                         $job_items_data['qty'] = $input['item_qty'][$xx];
                         $job_items_data['tax'] = $input['tax'];
+                        $job_items_data['location'] = $input['location'][$xx];
                         $where['job_id'] = $isJob->id;
                         $where['items_id'] = $input['item_id'][$xx];
                         if (empty($isItem)) {
@@ -2163,6 +2168,8 @@ class Job extends MY_Controller
 
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
             }
+
+            
             if (isset($input['wo_id'])) {
                 $get_work_order_data = array(
                     'where' => array(
@@ -4035,6 +4042,27 @@ class Job extends MY_Controller
         $items = $this->general->get_data_with_param($query);
         header('content-type: application/json');
         exit(json_encode(['data' => $items]));
+    }
+    public function getItemLocation(){
+        $comp_id = logged('company_id');
+        $input = $this->input->post();
+
+        $getLocation = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'item_id' => $input['id'],
+                'qty >=' => $input['qty'],
+                'qty >' => '0'
+
+            ),
+            'table' => 'items_has_storage_loc',
+            'select' => 'id,name'
+        );
+        $location = $this->general->get_data_with_param($getLocation);
+
+        $data_arr = array("locations" => $location);
+        echo json_encode($data_arr, JSON_UNESCAPED_UNICODE);
+
     }
 }
 

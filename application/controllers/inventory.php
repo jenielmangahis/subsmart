@@ -19,6 +19,7 @@ class Inventory extends MY_Controller
         $this->load->library('form_validation');
         $this->load->helper('file');
         $this->load->model('General_model', 'general');
+        $this->load->helper('functions_helper');
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
