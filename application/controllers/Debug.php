@@ -1928,6 +1928,43 @@ class Debug extends MY_Controller {
 
         exit;
     }
+
+    public function fixEventsAttendees(){
+        $this->load->model('Event_model');
+
+        $events = $this->Event_model->getAllEvents();
+
+        $total_updated = 0;
+        foreach($events as $e){
+            $attendees = json_encode([0 => $e->employee_id]);
+            $this->Event_model->update($e->id, ['employee_id' => $attendees]);
+
+            $total_updated++;
+        }
+
+        echo 'Total updated : ' . $total_updated;
+    }
+
+    public function smsVonage(){
+        $this->load->helper('sms_helper');
+
+        $sms_number = '639084387292';
+        $sms_msg    = 'This is a sample sms nsmatrac usging vonage api';
+
+        $result = smsVonage($sms_number, $sms_msg);
+
+        echo "<pre>";
+        print_r($result);
+    }
+
+    public function testJson(){
+        $json_data = '{"msg":"","is_valid":1,"data":[{"id":"10","parent_company_id":"23","link_company_id":"86","link_user_id":"203","status":"Verified","hash_id":"8DKgl9avmeG1vzA","date_activated":"2023-03-06 05:21:04","created":"2023-03-10 05:47:50","user_email":"bryann.revina10@gmail.com","parent_company_name":"sample company 3","link_company_name":"test business"},{"id":"9","parent_company_id":"23","link_company_id":"87","link_user_id":"204","status":"Verified","hash_id":"3VXyMYerEdOBQn6","date_activated":"2023-03-06 05:21:04","created":"2023-03-10 05:47:29","user_email":"bryann.revinax11x@gmail.com","parent_company_name":"sample company 3","link_company_name":"test business x11"}]}';
+
+        $data = json_decode($json_data);
+        echo "<pre>";
+        print_r($data);
+        exit;
+    }
 }
 /* End of file Debug.php */
 
