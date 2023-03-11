@@ -498,6 +498,7 @@ class Invoice extends MY_Controller
 
             'job_location'              => $this->input->post('jobs_location'),//
             'job_name'                  => $this->input->post('job_name'),//
+            'job_id'                    => $this->input->post('job_id'),
 
             'tags'                      => $this->input->post('tags'),//
             'invoice_type'              => $this->input->post('invoice_type'),//

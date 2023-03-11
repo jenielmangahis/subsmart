@@ -4002,6 +4002,14 @@ class Job extends MY_Controller
             return show_404();
         }
 
+        $this->db->select('id');
+        $this->db->where('job_id', $job->id);
+        $jobInvoice = $this->db->get('invoices')->row();
+
+        if (!is_null($jobInvoice)) {
+            return redirect('job/new_job1/' . $job->id);
+        }
+
         $this->db->where('prof_id', $job->customer_id);
         $customer = $this->db->get('acs_profile')->row();
 

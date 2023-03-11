@@ -1953,4 +1953,16 @@ $(function() {
             });
         }
 </script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        const jobStatus = "<?= $jobs_data ? $jobs_data->status : ''; ?>";
+        if (params.modal && params.modal === 'finish_job' && jobStatus === 'Approved') {
+            $('#finish_modal').modal('show');
+        }
+    });
+</script>
 <script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
