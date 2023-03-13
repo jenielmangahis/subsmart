@@ -18,8 +18,12 @@
     font-weight: bold;
 }
 .nsm-calendar .date {
-    font: 45px Roboto;
+    font: 40px Roboto;
     margin-top: -7px;
+    font-weight: bold;
+}
+.nsm-calendar .month{
+    font-size: 12px;
     font-weight: bold;
 }
 .nsm-list-icon{
@@ -266,7 +270,10 @@
                                         <b><?= $event_day_word; ?></b>
                                     </div>
                                     <div class="date">
-                                        <?= $event_day; ?>
+                                        <?= $event_day; ?>                                                                                
+                                    </div>
+                                    <div class="month">
+                                        <?= $event_month; ?>
                                     </div>
                                 </div> 
                                 <div class="nsm-calendar-info-container" style="text-align:center;">

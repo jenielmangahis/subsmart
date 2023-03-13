@@ -1,5 +1,5 @@
 <?php
-function formatJobNumber($number) {
+function widgetFormatJobNumber($number) {
     $formatFunc = function ($prefix, $number) {
         $numericPart = (int) str_replace($prefix, '', $number);
         return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
@@ -280,10 +280,10 @@ endif;
                                 ?>  
                                 <tr>
                                     <td><?php echo date_format(date_create($job->date_updated), 'M').", ".date_format(date_create($job->date_updated), 'd'); ?></td>
-                                    <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo formatJobNumber($latestJobs_data->job_number); ?></td>
+                                    <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo widgetFormatJobNumber($latestJobs_data->job_number); ?></td>
                                     <!-- <td><small><?php echo "$latestJobs_data->first_name, $latestJobs_data->last_name"; ?></small></td> -->
                                     <td><?php echo ($latestJobs_data->amount ? "$$latestJobs_data->amount" : '$0.00'); ?></td>
-                                    <td style="width: 0%;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo formatJobNumber($latestJobs_data->job_number); ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
+                                    <td style="width: 0%;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo widgetFormatJobNumber($latestJobs_data->job_number); ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
                                 </tr>
                                 <?php 
                                     $TECH_BADGE = "";
@@ -301,13 +301,13 @@ endif;
 <script>
 $(function(){
     var JOB_ACTIVITY_TABLE = $("#JOB_ACTIVITY_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-});
- $('[data-bs-toggle="popover"]').popover();  
-    // $("#jobs_list").nsmPagination({itemsPerPage:5});
+        "ordering": false,
+        language: {
+            processing: '<span>Fetching data...</span>'
+        },
+    });
+    $('[data-bs-toggle="popover"]').popover();  
+    //$("#jobs_list").nsmPagination({itemsPerPage:5});
 });
 </script>
 
