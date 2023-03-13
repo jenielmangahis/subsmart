@@ -163,7 +163,7 @@
                             $schedule_description = '';
                             $schedule_event_name = '';
 
-                            $schedule_invoice_amount = 0;
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->user_id;
@@ -335,7 +335,7 @@
                                 <?php } ?>
                                 <?php if( $schedule_invoice_amount > 0 ){ ?>                             
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
-                                        Invoice Amount :  $<?= $schedule_invoice_amount; ?>
+                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= $schedule_invoice_amount; ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>
