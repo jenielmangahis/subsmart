@@ -18,8 +18,12 @@
     font-weight: bold;
 }
 .nsm-calendar .date {
-    font: 45px Roboto;
+    font: 40px Roboto;
     margin-top: -7px;
+    font-weight: bold;
+}
+.nsm-calendar .month{
+    font-size: 12px;
     font-weight: bold;
 }
 .nsm-list-icon{
@@ -252,11 +256,14 @@
                                     <div class="date">
                                         <?= $event_day; ?>
                                     </div>
+                                    <div class="month">
+                                        <?= $event_month; ?>
+                                    </div>
                                 </div>    
                                 <div class="nsm-calendar-info-container" style="text-align:center;">
-                                    <?php if( $schedule_status != '' ){ ?>
+                                    <!-- <?php if( $schedule_status != '' ){ ?>
                                     <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                    <?php } ?>
+                                    <?php } ?> -->
                                     <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
                                     <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
                                     <?php }elseif( $schedule_start_time != '' ){  ?>
