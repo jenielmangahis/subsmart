@@ -93,7 +93,7 @@
                             $schedule_customer_phone = $cust_phone;
                             //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
                             $schedule_location = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ', ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
 
@@ -225,7 +225,7 @@
                                 $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
                                 $schedule_event_name     = ''; 
                                 $schedule_location   = $schedule['data']->mail_add;
-                                $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                                $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ', ' . $schedule['data']->cust_zip_code;
                             }
                             
                             $schedule_expiry_date = '';
