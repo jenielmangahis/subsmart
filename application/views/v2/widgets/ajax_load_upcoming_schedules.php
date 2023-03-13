@@ -96,6 +96,7 @@
                             $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ', ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->e_employee_id;
@@ -133,6 +134,8 @@
                                 $assigned_employees[] = $uid;    
                             }
 
+                            $schedule_invoice_amount = 0;
+
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'estimate' ){
                             $schedule_view_url = base_url('estimate/view/' . $schedule['data']->id);
@@ -152,6 +155,8 @@
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->user_id;
+
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'ticket' ){
@@ -199,6 +204,8 @@
                                 $assigned_employees[] = $schedule['data']->sales_rep;
                             }
 
+                            $schedule_invoice_amount = number_format($schedule['data']->grandtotal,2);
+
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'appointment' ){
                             $schedule_view_url = base_url('workcalender');
@@ -237,6 +244,8 @@
                             foreach($emp_ids as $eid){
                                 $assigned_employees[] = $eid;    
                             }
+
+                            $schedule_invoice_amount = 0;
 
                             $is_valid = 1;
                         }
@@ -306,6 +315,11 @@
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px;">
                                         <i class='bx bx-calendar-event'></i> <?= $schedule_description; ?>
+                                    </label>
+                                <?php } ?>
+                                <?php if( $schedule_invoice_amount > 0 ){ ?>                             
+                                    <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
+                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= $schedule_invoice_amount; ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>
