@@ -1112,8 +1112,8 @@ $("#attachment-file").change(function() {
                     }
                 }
                 if(data.city || data.state || data.zip_code){
-                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-                    ADDR_2 = data.city + ',' + ' ' + data.state + ' ' + data.zip_code;
+                    $('#cust_address2').text(data.city + ' ' + ' ' + data.state + ', ' + data.zip_code);
+                    ADDR_2 = data.city + ' ' + ' ' + data.state + ', ' + data.zip_code;
                 }else{
                     $('#cust_address2').text('-------------');
                 }
