@@ -675,7 +675,10 @@ class Events extends MY_Controller
         $EVENT_ID = $this->general->add_return_id($DATA, 'events');
 
         //SMS Notification
-        createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $_POST['EMPLOYEE_ID']);
+        foreach($_POST['EMPLOYEE_ID'] as $uid){
+            createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $uid);    
+        }
+        
 
         //Google Calendar
         createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
@@ -1254,51 +1257,75 @@ class Events extends MY_Controller
     }
 
     public function ajax_create_event(){
-        $USER_ID = logged('id');
-        $COMPANY_ID = logged('company_id');
 
-        $GET_EVENT_SETTINGS = array(
-            'where' => array( 'company_id' => $COMPANY_ID ),
-            'table' => 'EVENT_SETTINGS',
-            'select' => '*',
-        );
-        $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
-        $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
-        $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
-        $DATA = array(
-            'employee_id' => $employee_ids,
-            'start_date' => $_POST['FROM_DATE'],
-            'start_time' => $_POST['FROM_TIME'],
-            'end_date' => $_POST['TO_DATE'],
-            'end_time' => $_POST['TO_TIME'],
-            'event_type' => $_POST['EVENT_TYPE'],
-            'event_color' => $_POST['EVENT_COLOR'],
-            'url_link' => $_POST['URL_LINK'],
-            'customer_reminder_notification' => $_POST['CUSTOMER_REMINDER'],
-            'created_by' => $USER_ID,
-            'company_id' => $COMPANY_ID,
-            'description' => $_POST['EVENT_DESCRIPTION'],
-            'event_description' => $_POST['EVENT_DESCRIPTION'],
-            'status' => "Scheduled",
-            'event_address' => $_POST['LOCATION'],
-            'event_number' => $EVENT_NUMBER,
-            'event_tag' => $_POST['EVENT_TAG'],
-            'notes' => $_POST['PRIVATE_NOTES'],
-            'amount' => 0,
-            'timezone' => $_POST['TIMEZONE'],
-        );
+        $is_valid = 1;
+        $msg = '';
 
-        $EVENT_ID = $this->general->add_return_id($DATA, 'events');
+        $post = $this->input->post();
+        $uid  = logged('id');
+        $cid  = logged('company_id');
 
-        //SMS Notification
-        createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $_POST['EMPLOYEE_ID']);
+        if( empty($post['employee_id']) ){
+            $msg = 'Please attendees';
+            $is_valid = 0;
+        }
 
-        //Google Calendar
-        createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
-   
-        $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
-        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
-        customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
+        if( $post['event_description'] == '' ){
+            $msg = 'Please enter event description';
+            $is_valid = 0;
+        }
+
+        if( $is_valid == 1 ){
+            $GET_EVENT_SETTINGS = array(
+                'where' => array( 'company_id' => $cid ),
+                'table' => 'EVENT_SETTINGS',
+                'select' => '*',
+            );
+            $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
+            $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+            $employee_ids = json_encode($post['employee_id']);
+            $DATA = array(
+                'employee_id' => $employee_ids,
+                'start_date' => $post['start_date'],
+                'start_time' => $post['start_time'],
+                'end_date' => $post['end_date'],
+                'end_time' => $post['end_time'],
+                'event_type' => $post['event_type'],
+                'event_color' => $post['event_color'],
+                'url_link' => $_POST['url_link'],
+                'customer_reminder_notification' => $post['customer_reminder_notification'],
+                'created_by' => $uid,
+                'company_id' => $cid,
+                'description' => $post['event_description'],
+                'event_description' => $post['event_description'],
+                'status' => "Scheduled",
+                'event_address' => $post['event_address'],
+                'event_number' => $EVENT_NUMBER,
+                'event_tag' => $post['event_tags'],
+                'notes' => $post['private_notes'],
+                'amount' => 0,
+                'timezone' => $post['timezone'],
+            );
+
+            $event_id = $this->general->add_return_id($DATA, 'events');
+
+            //SMS Notification
+            foreach($post['employee_id'] as $uid){
+                createCronAutoSmsNotification($cid, $event_id, 'event', 'Scheduled', $uid);    
+            }            
+
+            //Google Calendar
+            createSyncToCalendar($event_id, 'event', $cid);
+       
+            $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
+            $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+            customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$EVENT_NUMBER);
+        }           
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
     }
 }
 
