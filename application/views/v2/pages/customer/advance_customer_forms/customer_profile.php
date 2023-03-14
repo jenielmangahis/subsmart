@@ -235,7 +235,7 @@
                 Email 
             </div>
             <div class="col-md-8">
-                <input data-type="customer_email" type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
+                <input data-type="customer_email" type="email" class="form-control email-input-element" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
             </div>
         </div>
 
@@ -270,3 +270,4 @@
     </div>
 </div>
 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_billing_info'); ?>
+<script src="/assets/js/customer/components/email-input.js"></script>

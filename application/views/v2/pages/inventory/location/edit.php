@@ -37,34 +37,20 @@ add_css(array(
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Edit Inventory Location</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Edit Location</span>
                                             </div>
                                         </span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="nsm-card-body">
-                                    <form id="inventory_form">
+                                    <form id="location_form">
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item Name</strong>
-                                            <input type="text" class="form-control" maxlength="25" value="<?php echo $location->name?>" placeholder="Maximum 25 characters only" name="name" id="title" required/>
-                                            <input type="text" value="<?php echo $location->id?>" name="id" hidden/>
+                                            <input type="text" class="form-control" maxlength="25" value="<?php echo $location->location_name?>" placeholder="Maximum 25 characters only" name="location_name" required/>
+                                            <input type="text" value="<?php echo $location->loc_id?>" name="loc_id" hidden/>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 mb-2">
-                                            <strong>Quantity</strong>
-                                            <input type="number" class="form-control " name="qty" id="qty" value="<?php echo $location->qty?>" />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 mb-2">
-                                            <strong>Item</strong>
-                                            <select id="customer_id" name="item_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                                <option value="111">Test</option>
-                                            </select>
-                                            </div>
                                     </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
@@ -130,14 +116,14 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-$("#inventory_form").submit(function(e) {
+$("#location_form").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
     // console.log(form.serialize());
     var url = form.attr('action');
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>inventory/editItemLocation",
+        url: "<?= base_url() ?>inventory/editLocation",
         data: form.serialize(), // serializes the form's elements.
         // success: function(data) {
         //     console.log(data);

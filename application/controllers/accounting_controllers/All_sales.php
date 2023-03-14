@@ -25,6 +25,7 @@ class All_sales extends MY_Controller {
         $this->load->model('accounting_single_time_activity_model');
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('EstimateSettings_model');
 
         $this->page_data['page']->title = 'Sales Transactions';
         $this->page_data['page']->parent = 'Sales';
@@ -1915,16 +1916,44 @@ class All_sales extends MY_Controller {
                     $invoice->prefix = $invoiceSettings->invoice_num_prefix;
                     $invoice->items = $invoiceItems;
                     $invoice->type = 'Invoice';
-                    // $pdfData = [
-                    //     'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
-                    //     'invoice' => $invoice,
-                    //     'invoiceItems' => $invoiceItems
-                    // ];
 
                     $pdfTransactions[] = $invoice;
                 break;
                 case 'estimate' :
+                    $estimate = $this->estimate_model->getEstimate($explode[1]);
+                    $customer = $this->accounting_customers_model->getCustomerDetails($estimate->customer_id)[0];
+                    $settings = $this->EstimateSettings_model->getEstimateSettingByCompanyId(logged('company_id'));
+                    $estimateItems = $this->estimate_model->getItemlistByID($estimate->id);
 
+                    $billingAddress = '';
+                    if ($customer->business_name !== "" && $customer->business_name !== null) {
+                        $billingAddress .= $customer->business_name;
+                    } else {
+                        $customerName = '';
+                        $customerName .= $customer->first_name !== "" ? $customer->first_name . " " : "";
+                        $customerName .= $customer->middle_name !== "" ? $customer->middle_name . " " : "";
+                        $customerName .= $customer->last_name !== "" ? $customer->last_name : "";
+                        $billingAddress .= trim($customerName);
+                    }
+                    $billingAddress .= "<br />";
+
+                    $billingAddress .= $customer->mail_add !== "" ? $customer->mail_add : "";
+                    $billingAddress .= $customer->city !== "" ? '<br />' . $customer->city : "";
+                    $billingAddress .= $customer->state !== "" ? ', ' . $customer->state : "";
+                    $billingAddress .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+                    $billingAddress .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+                    foreach($estimateItems as $key => $estimateItem)
+                    {
+                        $estimateItems[$key]->item = $this->items_model->getItemById($estimateItem->items_id)[0];
+                    }
+
+                    $estimate->prefix = !is_null($settings) ? $settings->estimate_num_prefix : 'EST-';
+                    $estimate->billing_address= $billingAddress;
+                    $estimate->items = $estimateItems;
+                    $estimate->type = 'Estimate';
+
+                    $pdfTransactions[] = $estimate;
                 break;
                 case 'credit_memo' :
                     $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($explode[1]);
@@ -1941,10 +1970,6 @@ class All_sales extends MY_Controller {
 
                     $creditMemo->items = $memoItems;
                     $creditMemo->type = 'Credit Memo';
-                    // $pdfData = [
-                    //     'creditMemo' => $creditMemo,
-                    //     'memoItems' => $memoItems
-                    // ];
 
                     $pdfTransactions[] = $creditMemo;
                 break;
@@ -1956,17 +1981,13 @@ class All_sales extends MY_Controller {
                         $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
                         $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
                         $taxAmount = floatval($taxAmount) / 100;
-            
+
                         $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
                         $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
                     }
 
                     $salesReceipt->items = $receiptItems;
                     $salesReceipt->type = 'Sales Receipt';
-                    // $pdfData = [
-                    //     'salesReceipt' => $salesReceipt,
-                    //     'receiptItems' => $receiptItems
-                    // ];
 
                     $pdfTransactions[] = $salesReceipt;
                 break;
@@ -1987,11 +2008,6 @@ class All_sales extends MY_Controller {
                     $refundReceipt->payment_method = $paymentMethod;
                     $refundReceipt->items = $receiptItems;
                     $refundReceipt->type = 'Refund';
-                    // $pdfData = [
-                    //     'paymentMethod' => $paymentMethod,
-                    //     'refundReceipt' => $refundReceipt,
-                    //     'receiptItems' => $receiptItems
-                    // ];
 
                     $pdfTransactions[] = $refundReceipt;
                 break;
@@ -2081,6 +2097,36 @@ $company->business_name";
                 case 'estimate' :
                     $estimate = $this->estimate_model->getEstimate($explode[1]);
                     $customer = $this->accounting_customers_model->getCustomerDetails($estimate->customer_id)[0];
+                    $settings = $this->EstimateSettings_model->getEstimateSettingByCompanyId(logged('company_id'));
+                    $estimateItems = $this->estimate_model->getItemlistByID($estimate->id);
+
+                    $billingAddress = '';
+                    if ($customer->business_name !== "" && $customer->business_name !== null) {
+                        $billingAddress .= $customer->business_name;
+                    } else {
+                        $customerName = '';
+                        $customerName .= $customer->first_name !== "" ? $customer->first_name . " " : "";
+                        $customerName .= $customer->middle_name !== "" ? $customer->middle_name . " " : "";
+                        $customerName .= $customer->last_name !== "" ? $customer->last_name : "";
+                        $billingAddress .= trim($customerName);
+                    }
+                    $billingAddress .= "<br />";
+
+                    $billingAddress .= $customer->mail_add !== "" ? $customer->mail_add : "";
+                    $billingAddress .= $customer->city !== "" ? '<br />' . $customer->city : "";
+                    $billingAddress .= $customer->state !== "" ? ', ' . $customer->state : "";
+                    $billingAddress .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+                    $billingAddress .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+                    foreach($estimateItems as $key => $estimateItem)
+                    {
+                        $estimateItems[$key]->item = $this->items_model->getItemById($estimateItem->items_id)[0];
+                    }
+
+                    $estimate->prefix = !is_null($settings) ? $settings->estimate_num_prefix : 'EST-';
+                    $estimate->billing_address= $billingAddress;
+                    $estimate->items = $estimateItems;
+                    $estimate->type = 'Estimate';
 
                     $email = empty($estimate->email) ? $customer->email : $estimate->email;
                     $subject = "Estimate $estimate->estimate_number from $company->business_name";

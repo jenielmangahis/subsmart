@@ -25,6 +25,20 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getLocationList()
+    {
+        // $this->db->where('company_id', getLoggedCompanyID());
+        // // $this->db->order_by('name', $order);
+        // $query = $this->db->get($this->table);
+        // return $query->result();
+        $company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from('storage_loc');
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getItemlist()
     {
         // $this->db->where('company_id', getLoggedCompanyID());
@@ -377,8 +391,8 @@ class Items_model extends MY_Model
     public function getLocationById($id)
     {
         $this->db->select('*');
-        $this->db->from($this->table_has_location);
-        $this->db->where('id', $id);
+        $this->db->from('storage_loc');
+        $this->db->where('loc_id', $id);
 
         $query = $this->db->get();
         return $query->row();
@@ -537,10 +551,15 @@ class Items_model extends MY_Model
         $query = $this->db->get($this->table_has_location);
         return $query->row();
     }
-    public function deleteLocation($id)
+    public function deleteLocation($id, $storage= FALSE)
     {
-        $this->db->where('id', $id);
-        $delete = $this->db->delete($this->table_has_location);
+        if($storage){
+            $this->db->where('loc_id', $id);
+            $delete = $this->db->delete('storage_loc');
+        }else{
+            $this->db->where('id', $id);
+            $delete = $this->db->delete($this->table_has_location);
+        }
         return $delete ? true : false;
     }
     
@@ -551,10 +570,10 @@ class Items_model extends MY_Model
         return $this->db->update($this->table_has_location, ["qty" => $newQty]);
     }
 
-    public function updateLocation($id, $data)
+    public function updateLocation($id, $data, $table)
     {
         $this->db->where('id', $id);
-        return $this->db->update($this->table_has_location, $data);
+        return $this->db->update($table);
     }
 
     public function getCompanyItemById($company_id, $item_id)

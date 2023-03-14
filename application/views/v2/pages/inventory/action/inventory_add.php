@@ -130,6 +130,18 @@
                                             <strong>Attach Image</strong>
                                             <input type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
+                                        <div class="row">
+                                            <div class="col-lg-8 mb-2">
+                                                <strong>Location</strong>
+                                                <select id="location_id" name="loc_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
+                                                    <option value="2" selected>Test</option>    
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4 mb-2">
+                                                <strong>Quantity</strong>
+                                                <input type="number" class="form-control " name="qty" id="qty" required />
+                                            </div>
+                                        </div>
                                         <?php foreach($custom_fields as $field) : ?>
                                         <div class="col-12 col-lg-6 mb-2">
                                             <div class="row g-3">
@@ -163,6 +175,52 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    $(function(){
+        $('#location_id').select2({
+            ajax: {
+                url: base_url + 'inventory/selectLocation',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    console.log(params);
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  params.page = params.page || 1;
+                  return {
+                    results: data.items,
+                  };
+                },
+                cache: true
+              },
+              minimumInputLength: 0,
+              templateResult: formatRepoLocation,
+              templateSelection: formatRepoLocationSelection
+        });
+    })
+    function formatRepoLocationSelection(repo) {
+
+            if( repo.loc_id != null ){
+                return repo.location_name;      
+            }else{
+                return repo.text;
+            }
+          
+        }
+        function formatRepoLocation(repo) {
+          if (repo.loading) {
+            return repo.text;
+          }
+
+          var $container = $(
+            '<div>'+repo.location_name + '</div>'
+          );
+
+          return $container;
+        }
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -179,7 +237,7 @@ $("#inventory_form").submit(function(e) {
     var url = form.attr('action');
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>/inventory/save_new_item",
+        url: "<?= base_url() ?>inventory/save_new_item",
         data: form.serialize(), // serializes the form's elements.
         // success: function(data) {
         //     console.log(data);
