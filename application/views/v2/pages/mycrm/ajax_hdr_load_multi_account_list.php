@@ -1,5 +1,12 @@
 <style>
-    
+.hdr-multi-company-name {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 23px;
+    margin-left: 7px;
+    height: 35px;
+    width: 74%;
+} 
 </style>
 <?php if( $multiAccounts ){ ?>
     <ul id="hdr-list-multi-accounts" class="mt-3">

@@ -212,7 +212,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <h6>Attendees</h6>
-                                        <select required id="employee_id" name="employee_id" class="form-control" multiple="multiple">
+                                        <select required id="employee_id" name="employee_id[]" class="form-control" multiple="multiple">
                                             <?php foreach($attendees as $uid => $uname){ ?>
                                                 <option value="<?= $uid; ?>" selected=""><?= $uname; ?></option>
                                             <?php } ?>
