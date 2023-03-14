@@ -64,16 +64,12 @@
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <td data-name="Name">Name</td>
-                            <td data-name="Item">Item</td>
-                            <td data-name="Quantity">Quantity</td>
-                            <td data-name="Initial Quantity">Initial Quantity</td>
+                            <td data-name="Name">Location</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($location as $locations) {
-                        echo $locations->name; ?>
+                    <?php foreach ($location as $locations) :?>
 
                         <tr>
                             <td>
@@ -81,10 +77,7 @@
                                     <input class="form-check-input select-one table-select" type="checkbox">
                                 </div>
                             </td>
-                            <td><?php echo $locations['name'] ?></td>
-                            <td><?php echo getItem($locations['item_id']) ?></td>
-                            <td><?php echo $locations['qty'] ?></td>
-                            <td><?php echo $locations['initial_qty'] ?></td>
+                            <td><?php echo $locations->location_name ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -92,16 +85,16 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations['id'] ); ?>" data-id="<?php echo $locations['id']  ?>">Edit</a>
+                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations['id']  ?>">Delete</a>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations->loc_id?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

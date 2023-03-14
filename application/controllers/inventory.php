@@ -78,8 +78,14 @@ class Inventory extends MY_Controller
         foreach ($ITEM_DATA as $ITEM_DATAS) {
             array_push($ITEM_LOCATION_ARRAY, $this->items_model->getLocationByItemId($ITEM_DATAS[10]));
         }
+        $location_param = array(
+            "where" => array(
+                'company_id' => $comp_id
+            ),
+            "table" => "storage_loc"
+        );
+        $this->page_data['locations'] = $this->general->get_data_with_param($location_param);
         $this->page_data['items_location'] = $ITEM_LOCATION_ARRAY;
-
         $this->load->view('v2/pages/inventory/list', $this->page_data);
     }
 
@@ -391,11 +397,25 @@ class Inventory extends MY_Controller
         $input = $this->input->post();
         $input['is_active'] =  1;
         $input['company_id'] =  logged('company_id');
-
+        $comp_id = logged('company_id');
+        $data = array(
+            'company_id' => $comp_id,
+            'initial_qty' => $this->input->post('qty'),
+            'qty' => $this->input->post('qty'),
+            'loc_id' => $this->input->post('loc_id'),
+            'insert_date' => date('Y-m-d H:i:s')
+        );
+    
         $customFields = $input['custom_field'];
         unset($input['custom_field']);
 
+        unset($input['loc_id']);
+        unset($input['qty']);
         $itemId = $this->items_model->insert($input);
+
+        $data['item_id'] = $itemId;
+        $this->items_model->saveNewItemLocation($data);
+
         if ($itemId) {
             if($customFields) {
                 $customFieldsValue = [];
@@ -479,8 +499,12 @@ class Inventory extends MY_Controller
     public function deleteLocation(){
         $post = $this->input->post();
         $id   = $post['id'];
+        $item = $this->items_model->deleteLocation($id, TRUE);
+    }
+    public function deleteItemLocation(){
+        $post = $this->input->post();
+        $id   = $post['id'];
         $item = $this->items_model->deleteLocation($id);
-
     }
     public function delete()
     {
@@ -789,7 +813,6 @@ class Inventory extends MY_Controller
     }
 
 
-
     public function categorizeNameAlphabetically($items) {
         $result = array();
 
@@ -850,7 +873,7 @@ class Inventory extends MY_Controller
         return $result;
     }
 
-    function deleteMultiple() {
+    public function deleteMultiple() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
         
@@ -873,7 +896,7 @@ class Inventory extends MY_Controller
         echo json_encode(true);
     }
 
-    function deleteMultipleVendor() {
+    public function deleteMultipleVendor() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
         
@@ -884,7 +907,7 @@ class Inventory extends MY_Controller
         echo json_encode(true);
     }
 
-    function deleteMultipleItemGroup() {
+    public function deleteMultipleItemGroup() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
         
@@ -895,8 +918,18 @@ class Inventory extends MY_Controller
         echo json_encode(true);
     }
 
+    public function addNewLocation(){
+        postAllowed();
+        $comp_id = logged('company_id');
+        $LOCATION_DATA = array(
+            'company_id'=> $comp_id,
+            'location_name' => $this->input->post('name')
+        );
+        $result = $this->general->add_($LOCATION_DATA, 'storage_loc');
 
-    function addNewItemLocation() {
+        echo json_encode($result);
+    }
+    public function addNewItemLocation() {
         postAllowed();
 
         $comp_id = logged('company_id');
@@ -904,7 +937,7 @@ class Inventory extends MY_Controller
             'company_id' => $comp_id,
             'initial_qty' => $this->input->post('qty'),
             'qty' => $this->input->post('qty'),
-            'name' => $this->input->post('name'),
+            'loc_id' => $this->input->post('loc_id'),
             'item_id' => $this->input->post('item_id'),
             'insert_date' => date('Y-m-d H:i:s')
         );
@@ -913,21 +946,20 @@ class Inventory extends MY_Controller
 
         echo json_encode($result);
     }
-    function editItemLocation() {
+    public function editLocation() {
         postAllowed();
-        $id = $this->input->post('id');
+        $id = $this->input->post('loc_id');
         $comp_id = logged('company_id');
         $data = array(
-            'qty' => $this->input->post('qty'),
-            'name' => $this->input->post('name'),
-            'item_id' => $this->input->post('item_id'),
+            'location_name' => $this->input->post('location_name'),
         );
-        $this->items_model->updateLocation($id, $data);
+        // $this->items_model->updateLocation($id, $data, 'storage_loc');
+        $this->general->update_with_key_field($data, $id, 'storage_loc', 'loc_id');
 
         echo json_encode(["message" => "success"]);
     }
 
-    function getItemLocations() {
+    public function getItemLocations() {
         postAllowed();
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
         echo json_encode($result);
@@ -1216,9 +1248,53 @@ class Inventory extends MY_Controller
     {
         $this->page_data['page']->title = 'Location';
 		$this->page_data['page']->parent = 'Tools';
-
-        $this->page_data['location'] = $this->items_model->getLocationByCompanyId();
+        $company_id = logged('company_id');
+        $data = array(
+            'where' => array(
+                'company_id' => $company_id
+            ),
+            "table" => 'storage_loc'
+        );
+        $this->page_data['location']  = $this->general->get_data_with_param($data);
         $this->load->view('v2/pages/inventory/location/list', $this->page_data);
+    }
+
+    public function getItemLocationNameById(){
+        $input = $this->input->post();
+        $company_id = logged('company_id');
+        $data = array(
+            'where' => array(
+                'id' => $input['id']
+            ),
+            'table' => 'items_has_storage_loc',
+            'select' => 'loc_id'
+        );
+        $LOCATION  = $this->general->get_data_with_param($data, FALSE);
+        $get_location_name = array(
+            'where' => array(
+                'loc_id' => $LOCATION->loc_id,
+                'company_id' => $company_id
+            ),
+            'table' => 'storage_loc',
+        );
+        $LOCATION_NAME  = $this->general->get_data_with_param($get_location_name, FALSE);
+        $json_data = ['locations' => $LOCATION_NAME];
+        echo json_encode($json_data);
+        
+    }
+
+    public function getLocationNameById(){
+        $input = $this->input->post();
+        $data = array(
+            'where' => array(
+                'loc_id' => $input['id']
+            ),
+            'table' => 'storage_loc',
+            'select' => 'location_name'
+        );
+        $LOCATION_NAME  = $this->general->get_data_with_param($data, FALSE);
+        $json_data = ['location' => $LOCATION_NAME];
+        echo json_encode($json_data);
     }
 
     public function addInventoryLocation() 
@@ -1235,14 +1311,30 @@ class Inventory extends MY_Controller
         $this->page_data['location'] = $this->items_model->getLocationById($id);
         $this->load->view('v2/pages/inventory/location/edit', $this->page_data);
     }
-    public function selectItems()
+    public function updateItemLocationQty(){
+        $input = $this->input->post();
+        $data = array(
+            'qty' => $input['qty']
+        );
+        $this->general->update_with_key_field($data, $input['id'], 'items_has_storage_loc', 'id');
+        echo json_encode(["message" => "success"]);
+
+    }
+    public function selectLocation()
     {
-        $items = $this->items_model->getItemlist();
+        $company_id = logged('company_id');
+        $data = array(
+            'where' => array(
+                'company_id' => $company_id
+            ),
+            "table" => 'storage_loc'
+        );
+        $items = $this->general->get_data_with_param($data);
 
         foreach($items as $item){
             $result[] = [
-                'id' => $item->id,
-                'title' => $item->title
+                'loc_id' => $item->loc_id,
+                'location_name' => $item->location_name
             ]; 
         }   
     

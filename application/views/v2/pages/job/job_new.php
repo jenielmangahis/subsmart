@@ -1179,14 +1179,14 @@
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
                                                                         <td><?php echo number_format((float)$total,2,'.',','); ?></td>
-                                                                        <?php if($jobs_data->status == "Scheduled" || !isset($jobs_data)):?>
+                                                                        <?php if($jobs_data->status == "Scheduled" && !isset($jobs_data)):?>
                                                                             <td style="width: 200px">
                                                                                 <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
                                                                                 <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
                                                                                 <select id="location" name="location[]" class="form-control location" >
                                                                                     <option value="">Select Type</option>
                                                                                         <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
-                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= $locationItem->name  ?></option>
+                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= $locationItem->loc_id  ?></option>
                                                                                         <?php endforeach; ?>
                                                                                 </select>
                                                                             </td>
@@ -1947,15 +1947,27 @@ $(function() {
         }
 </script>
 <script>
-    window.addEventListener('DOMContentLoaded', (event) => {
+    window.addEventListener('DOMContentLoaded', async (event) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
 
         const jobStatus = "<?= $jobs_data ? $jobs_data->status : ''; ?>";
+        const jobId = "<?= $jobs_data ? $jobs_data->id : ''; ?>";
+
         if (params.modal && params.modal === 'finish_job' && jobStatus === 'Approved') {
-            $('#finish_modal').modal('show');
+            const response = await Swal.fire({
+                title: 'Job is finished',
+                icon: 'success',
+                text: 'Invoice is generated and ready to view',
+                confirmButtonText: 'See details',
+            })
+
+            if (response.isConfirmed && jobId) {
+                window.location.href = `/job/viewInvoice/${jobId}`;
+            }
         }
     });
 </script>
+
 <script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>

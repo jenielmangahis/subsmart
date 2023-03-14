@@ -857,3 +857,36 @@ $(document).ready(function()
 	// var changed = $("#view_ssn").text();
 });
 </script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', async (event) => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        const invoiceId = "<?= $invoice->id ?>";
+        const invoiceJobId = "<?= $invoice->job_id ?>";
+
+        if (params.from && params.from === 'job') {
+            const response = await Swal.fire({
+                title: '',
+                icon: '',
+                text: 'Do you want to update or add photos to invoice?',
+                confirmButtonText: 'Yes',
+                showDenyButton: true,
+                showCancelButton: true,
+                denyButtonText: 'No',
+                cancelButtonText: 'Cancel',
+            })
+
+            if (response.isConfirmed && invoiceId) {
+                window.location.href = `/invoice/invoice_edit/${invoiceId}`;
+                return;
+            }
+
+            if (response.isDenied && invoiceJobId) {
+                window.location.href = `/job/billing/${invoiceJobId}`;
+            }
+        }
+    });
+</script>

@@ -95,7 +95,7 @@
                             $schedule_event_name = '';
                             //$schedule_location = $schedule['data']->job_location != '' ? $schedule['data']->job_location : '---';
                             $schedule_location = $schedule['data']->mail_add;
-                            $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                            $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ', ' . $schedule['data']->cust_zip_code;
                             $schedule_expiry_date = '';
                             $schedule_description = '';
                             $schedule_invoice_amount = $schedule['data']->invoice_amount;
@@ -163,7 +163,7 @@
                             $schedule_description = '';
                             $schedule_event_name = '';
 
-                            $schedule_invoice_amount = 0;
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->user_id;
@@ -193,7 +193,7 @@
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $cust_phone;
                             $schedule_location = $schedule['data']->service_location;
-                            $schedule_location_b = $schedule['data']->acs_city != '' ? $schedule['data']->acs_city . ', ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip : '---';
+                            $schedule_location_b = $schedule['data']->acs_city != '' ? $schedule['data']->acs_city . ' ' . $schedule['data']->acs_state . ', ' . $schedule['data']->acs_zip : '---';
                             $schedule_event_name = '';
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
@@ -235,7 +235,7 @@
                                 $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
                                 $schedule_event_name     = ''; 
                                 $schedule_location   = $schedule['data']->mail_add;
-                                $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                                $schedule_location_b = $schedule['data']->cust_city . ' ' . $schedule['data']->cust_state . ', ' . $schedule['data']->cust_zip_code;
                             }
                             
                             
@@ -335,7 +335,7 @@
                                 <?php } ?>
                                 <?php if( $schedule_invoice_amount > 0 ){ ?>                             
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
-                                        Invoice Amount :  $<?= $schedule_invoice_amount; ?>
+                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= $schedule_invoice_amount; ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>

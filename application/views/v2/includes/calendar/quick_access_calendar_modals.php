@@ -168,9 +168,9 @@
                     <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-service-ticket" href="javascript:void(0);"><i class="bx bx-fw bx bx-fw bx-note"></i>Service Ticket</a>
                     </div>
-                    <!-- <div class="col-12">
+                    <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-event" href="javascript:void(0);"><i class='bx bx-fw bx-calendar-event'></i>Event</a>
-                    </div> -->
+                    </div>
                     <div class="col-12">
                         <a class="nsm-button primary quick-select-calendar-schedule-type" id="calendar-quick-add-appointment" href="javascript:void(0);"><i class='bx bx-fw bxs-user-pin'></i>Appointment</a>
                     </div>

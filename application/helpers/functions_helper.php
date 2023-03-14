@@ -399,7 +399,24 @@ function addJSONResponseHeader() {
     header("Pragma: no-cache");
     header("Content-Type: application/json");
 }
+if (!function_exists('getLocationName')){
+    function getLocationName($id){
+        $comp_id = logged('company_id');
+        $CI = &get_instance();
+        $CI->load->model('general_model');
 
+        $getLocation = array(
+            'where' => array(
+                'loc_id' => $id,
+                'company_id' => $comp_id
+            ),
+            'table' => 'storage_loc',
+            'select' => 'location_name',
+        );
+        $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
+        return $location;
+    }
+}
 if (!function_exists('getLocation')){
     function getLocation($id, $qty){
         $comp_id = logged('company_id');
@@ -414,7 +431,7 @@ if (!function_exists('getLocation')){
                     'qty >=' => $qty,
                 ),
                 'table' => 'items_has_storage_loc',
-                'select' => 'id,name'
+                'select' => 'id,location_name'
             );
     
             $location = $CI->general_model->get_data_with_param($getLocation);
@@ -426,10 +443,10 @@ if (!function_exists('getLocation')){
                     'id' => $id,
                 ),
                 'table' => 'items_has_storage_loc',
-                'select' => 'name'
+                'select' => 'location_name'
             );
             $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
-            return $location->name;
+            return $location->location_nmae;
         }
         
     }

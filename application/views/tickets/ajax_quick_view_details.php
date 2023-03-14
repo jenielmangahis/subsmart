@@ -89,7 +89,7 @@
             <h6 class="title-border">FROM :</h6>
             <div style="font-size:16px;padding:3px;">
                 <b><?php echo $clients->business_name; ?></span></b> <br>
-                <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
+                <span><?php echo $clients->street .' <br>'. $clients->city .' '. $clients->state .', '. $clients->postal_code; ?></span><br>
                 <?php echo $clients->email_address; ?><br>
                 <?php echo $clients->phone_number; ?>
             </div>
@@ -97,7 +97,7 @@
             <h6 class="title-border">TO :</h6>
             <div style="font-size:16px;padding:3px;">
                 <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
-                <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
+                <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .' '. $tickets->state .', '. $tickets->zip_code; ?></span><br>
                 <span><?php echo $tickets->email; ?></span><br>
                 <span><?php echo $tickets->phone_h; ?></span>
             </div>

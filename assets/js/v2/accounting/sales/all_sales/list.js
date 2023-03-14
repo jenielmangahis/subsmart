@@ -1890,10 +1890,5 @@ $('#print-transactions').on('click', function(e) {
     });
 
     $('#print-transactions-form').submit();
-});
-
-$('#print-transactions-form').on('submit', function(e) {
-    e.preventDefault();
-    this.submit();
-    $(this).remove();
+    $('#print-transactions-form').remove();
 });

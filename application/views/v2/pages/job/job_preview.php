@@ -89,7 +89,7 @@
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
                                             <span><?= $company_info->street; ?></span><br>
-                                            <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
+                                            <span><?= $company_info->city.' '.$company_info->state.', '.$company_info->postal_code ; ?></span><br>
                                             <span> Phone: <?= $company_info->business_phone ; ?></span>
                                         </div>
                                         <div class="col-md-12">
@@ -99,7 +99,7 @@
                                                 <div class="col-md-5">
                                                     <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                                     <span><?= $jobs_data->mail_add; ?></span><br>
-                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span>
+                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.', '.$jobs_data->cust_zip_code ; ?></span>
                                                     <span class="fa fa-copy icon_preview"></span><br>
                                                     <span>Email: <?= $jobs_data->cust_email ; ?></span>
                                                     <a
