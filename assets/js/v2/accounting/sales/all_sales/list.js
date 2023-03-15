@@ -1856,7 +1856,7 @@ $('#send-transactions').on('click', function(e) {
     });
 
     $.ajax({
-        url: `/accounting/all-sales/send-transactions`,
+        url: `/accounting/send-sales-transactions`,
         data: data,
         type: 'post',
         processData: false,
@@ -1877,7 +1877,7 @@ $('#send-transactions').on('click', function(e) {
 
 $('#print-transactions').on('click', function(e) {
     if($('#print-transactions-form').length < 1) {
-        $('body').append(`<form action="/accounting/all-sales/print-transactions" method="post" id="print-transactions-form" target="_blank"></form>`);
+        $('body').append(`<form action="/accounting/print-sales-transactions" method="post" id="print-transactions-form" target="_blank"></form>`);
     }
 
     $('#transactions-table tbody .select-one:checked').each(function() {
@@ -1891,4 +1891,33 @@ $('#print-transactions').on('click', function(e) {
 
     $('#print-transactions-form').submit();
     $('#print-transactions-form').remove();
+});
+
+$('#send-reminders').on('click', function(e) {
+    var data = new FormData();
+
+    $('#transactions-table tbody .select-one:checked').each(function() {
+        var id = $(this).val();
+
+        data.append('invoices[]', id);
+    });
+
+    $.ajax({
+        url: `/accounting/send-invoice-reminders`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
 });

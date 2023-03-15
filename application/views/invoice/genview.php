@@ -858,6 +858,16 @@ $(document).ready(function()
 });
 </script>
 
+<style>
+    .from-job-swal-actions {
+        display: flex;
+        flex-direction: column;
+    }
+    .from-job-swal-actions button.swal2-styled {
+        width: 100%;
+        max-width: 70%;
+    }
+</style>
 <script>
     window.addEventListener('DOMContentLoaded', async (event) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -870,13 +880,16 @@ $(document).ready(function()
         if (params.from && params.from === 'job') {
             const response = await Swal.fire({
                 title: '',
-                icon: '',
-                text: 'Do you want to update or add photos to invoice?',
-                confirmButtonText: 'Yes',
+                icon: 'info',
+                text: 'Your invoice is now ready. What would you like to do next?',
+                confirmButtonText: 'Update Invoice',
                 showDenyButton: true,
                 showCancelButton: true,
-                denyButtonText: 'No',
-                cancelButtonText: 'Cancel',
+                denyButtonText: 'Collect Payment',
+                cancelButtonText: 'Review',
+                customClass: {
+                    actions: 'from-job-swal-actions',
+                }
             })
 
             if (response.isConfirmed && invoiceId) {

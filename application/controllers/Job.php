@@ -278,6 +278,11 @@ class Job extends MY_Controller
 
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+
+            $this->db->select('id');
+            $this->db->where('job_id', $id);
+            $jobInvoice = $this->db->get('invoices')->row();
+            $this->page_data['job_invoice'] = $jobInvoice;
         }
 
         $default_customer_id = 0;
@@ -2229,7 +2234,15 @@ class Job extends MY_Controller
                 exit(json_encode($data_arr));
             }*/
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'location' => $location, 'items_id', $item_id, 'qty'  => $location_qty];
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'location' => $location,
+            'items_id' => $item_id,
+            'qty' => $location_qty,
+            'job_id' => $jobs_id,
+            'estimate_id' => $jobs_data->estimate_id
+        ];
         echo json_encode($return);
     }
 

@@ -1735,6 +1735,142 @@ $('#transactions-table .delete-recurring-transaction').on('click', function(e) {
     });
 });
 
+$('#transactions-table thead .select-all').on('change', function() {
+    $('#transactions-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+$(document).on('change', '#transactions-table tbody tr:visible .select-one', function() {
+    var checked = $('#transactions-table tbody tr:visible .select-one:checked').length;
+    var rows = $('#transactions-table tbody tr:visible .select-one').length;
+
+    $('#transactions-table thead .select-all').prop('checked', checked === rows);
+
+    var printable = true;
+    var sendableReminder = true;
+
+    var printableTypes = [
+        'Invoice',
+        'Estimate',
+        'Credit Memo',
+        'Sales Receipt',
+        'Refund'
+    ];
+
+    var invoiceOpenNotStatus = [
+        'Draft',
+        'Declined',
+        'Paid'
+    ];
+
+    $('#transactions-table tbody tr:visible .select-one:checked').each(function() {
+        var statusIndex = $('#transactions-table thead tr td[data-name="Status"]').index();
+        var row = $(this).closest('tr');
+        var type = row.find('td:nth-child(3)').text().trim();
+        var status = $(row.find('td')[statusIndex]).text().trim();
+
+        if(printableTypes.includes(type) === false) {
+            printable = false;
+        }
+
+        if(type === 'Invoice' && invoiceOpenNotStatus.includes(status) || type !== 'Invoice') {
+            sendableReminder = false;
+        }
+    });
+
+    if(printable && checked > 0) {
+        $('#print-transactions').removeClass('disabled');
+        $('#send-transactions').removeClass('disabled');
+    } else {
+        $('#print-transactions').addClass('disabled');
+        $('#send-transactions').addClass('disabled');
+    }
+
+    if(sendableReminder && checked > 0) {
+        $('#send-reminders').removeClass('disabled');
+    } else {
+        $('#send-reminders').addClass('disabled');
+    }
+});
+
+$('#send-transactions').on('click', function(e) {
+    var data = new FormData();
+
+    $('#transactions-table tbody .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var id = $(this).val();
+        var typeIndex = $('#transactions-table thead tr td[data-name="Type"]').index();
+        var type = $(row.find('td')[typeIndex]).text().trim().toLowerCase();
+
+        data.append('transactions[]', `${type.replaceAll(' ', '_')}-${id}`);
+    });
+
+    $.ajax({
+        url: `/accounting/send-sales-transactions`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+});
+
+$('#print-transactions').on('click', function(e) {
+    if($('#print-transactions-form').length < 1) {
+        $('body').append(`<form action="/accounting/print-sales-transactions" method="post" id="print-transactions-form" target="_blank"></form>`);
+    }
+
+    $('#transactions-table tbody .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var id = $(this).val();
+        var typeIndex = $('#transactions-table thead tr td[data-name="Type"]').index();
+        var type = $(row.find('td')[typeIndex]).text().trim().toLowerCase();
+
+        $('#print-transactions-form').append(`<input type="hidden" name="transactions[]" value="${type.replaceAll(' ', '_')}-${id}">`);
+    });
+
+    $('#print-transactions-form').submit();
+    $('#print-transactions-form').remove();
+});
+
+$('#send-reminders').on('click', function(e) {
+    var data = new FormData();
+
+    $('#transactions-table tbody .select-one:checked').each(function() {
+        var id = $(this).val();
+
+        data.append('invoices[]', id);
+    });
+
+    $.ajax({
+        url: `/accounting/send-invoice-reminders`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+});
+
 function getRowData(id, modalName)
 {
     $.get(`/accounting/recurring-transactions/get-details/${id}`, function(res) {

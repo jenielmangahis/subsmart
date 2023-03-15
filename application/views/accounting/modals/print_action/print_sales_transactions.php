@@ -179,7 +179,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><?=date("m/d/Y", strtotime($transaction->accepted_date))?></td>
+                            <td><?=!empty($transaction->accepted_date) ? date("m/d/Y", strtotime($transaction->accepted_date)) : ''?></td>
                         </tr>
                     </tbody>
                 </table>

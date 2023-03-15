@@ -132,10 +132,8 @@
                             </td>
                             <td>
                                 <select class="form-select itemtype">
-                                    <option>Item Type</option>
-                                    <option>Item Type</option>
-                                    <option>Item Type</option>
-                                    <option>Item Type</option>
+                                    <option value="Product">Product</option>
+                                    <option value="Service">Service</option>
                                 </select>
                             </td>
                             <td>
@@ -288,6 +286,7 @@
             row.querySelector(".itemprice").value = item.price;
             row.querySelector(".itemdiscount").value = item.discount;
             row.querySelector(".itemtax").value = item.tax;
+            row.querySelector(".itemtype").value = capitalizeFirstLetter(item.type);
 
             const quantity = row.querySelector(".itemquantity");
             const price = row.querySelector(".itemprice");
@@ -306,6 +305,11 @@
         document.querySelector("#item-table tbody").appendChild(row);
         calculateSummary();
     }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
 
     function calculateSummary() {
         const rows = document.querySelectorAll(".row-item");
@@ -539,12 +543,20 @@
                 const jsonData = await response.json();
                 console.log(jsonData);
 
-                await Swal.fire(
-                    'Save Success',
-                    'Invoice has been created successfully',
-                    'success'
-                )
-                window.location.href = `/job/new_job1/${payload.job_id}`;
+                const swalResponse = await Swal.fire({
+                    title: 'Invoice Created',
+                    text: 'Invoice has been created successfully for this job',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'View Invoice',
+                    cancelButtonText: 'Go to Job',
+                });
+
+                if (swalResponse.isConfirmed) {
+                    window.location.href = `/invoice/genview/${jsonData.id}`;
+                } else {
+                    window.location.href = `/job/new_job1/${payload.job_id}`;
+                }
             } catch (error) {
                 console.log(error)
                 Swal.fire(

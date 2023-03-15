@@ -87,18 +87,16 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!response.success) return;
 
     $($modal).modal("hide");
-    const result = await Swal.fire({
-      title: "Nice!",
-      text: response.message,
+    const swalResponse = await Swal.fire({
+      title: "Job is approved",
       icon: "success",
-      showCancelButton: false,
-      confirmButtonColor: "#32243d",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Ok",
+      text: "Invoice is now available for your review",
+      confirmButtonText: "See Invoice",
     });
 
-    if (result.value) {
-      location.reload();
+    const jobId = $("input[id=esignJobId]").val();
+    if (swalResponse.isConfirmed && jobId) {
+      window.location.href = `/job/viewInvoice/${jobId}`;
     }
   });
 

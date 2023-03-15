@@ -1038,26 +1038,29 @@ $("#attachment-file").change(function() {
                 }
             });
         }
-        function sucess_add_job(){
-            Swal.fire({
-                title: 'Nice!',
-                text: 'Job has been added!',
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                //if (result.value) {
-                    var redirect_calendar = $('#redirect-calendar').val();
-                    if( redirect_calendar == 1 ){
-                        window.location.href='<?= base_url(); ?>workcalender';
-                    }else{
-                        window.location.href='<?= base_url(); ?>job/';
-                    }                    
-                //}
-            });
-        }
+        function sucess_add_job(data) {
+        Swal.fire({
+            title: 'Job has been added',
+            text: 'An initial invoice can now be created',
+            icon: 'success',
+            confirmButtonText: 'Create Initial Invoice',
+        }).then((result) => {
+            var redirect_calendar = $('#redirect-calendar').val();
+            if (redirect_calendar == 1) {
+                window.location.href = '<?= base_url(); ?>workcalender';
+            } else {
+                console.log({
+                    data
+                });
+                if (data.job_id) {
+                    window.location.href = '<?= base_url('job/createInvoice'); ?>/' + data.job_id;
+                    return;
+
+                }
+            }
+
+        });
+    }
         function error(title,text,icon){
             Swal.fire({
                 title: title,
