@@ -37,7 +37,7 @@ add_css(array(
                                     <div class="nsm-card-title">
                                         <span class="d-block">
                                             <div class="right-text">
-                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Add New Inventory Location</span>
+                                                <span class="page-title " style="font-weight: bold;font-size: 18px;"><i class='bx bxs-layer-plus'></i>&nbsp;Add New Location</span>
                                             </div>
                                         </span>
                                     </div>
@@ -51,20 +51,20 @@ add_css(array(
                                             <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required/>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Quantity</strong>
                                             <input type="number" class="form-control " name="qty" id="qty" />
                                         </div>
-                                    </div>
-                                    <div class="row">
+                                    </div> -->
+                                    <!-- <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Item</strong>
                                             <select id="customer_id" name="item_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
                                                 <option value="2" selected>Test</option>    
                                         </select>
                                             </div>
-                                    </div>
+                                    </div> -->
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <button class="nsm-button CANCEL_BUTTON_INVENTORY" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
@@ -86,26 +86,7 @@ add_css(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script>
-    // window.onload = function() { // same as window.addEventListener('load', (event) => {
-    //     console.log('onload');
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "<?= base_url() ?>inventory/selectItems",
-    //         success: function(data)
-    //         {
-    //             //console.log(data);
-    //             var template_data = JSON.parse(data).data;
-    //             var toAppend = '';
-    //             $.each(template_data,function(i,o){
-    //                 //console.log(cust_id);
-    //                 toAppend += '<option value='+o.id+'>'+o.title+'</option>';
-    //             });
-    //             $('#customer_id').append(toAppend);
-    //             //console.log(template_data);
-    //             console.log(data);
-    //         }
-    //     });
-    // };
+    
     $(function(){
         $('#customer_id').select2({
             ajax: {
@@ -169,7 +150,7 @@ $("#inventory_form").submit(function(e) {
     var url = form.attr('action');
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>/inventory/addNewItemLocation",
+        url: "<?= base_url() ?>inventory/addNewLocation",
         data: form.serialize(), // serializes the form's elements.
         // success: function(data) {
         //     console.log(data);
@@ -181,7 +162,7 @@ $("#inventory_form").submit(function(e) {
         text: 'Item was added successfully!',
     }).then((result) => {
         // if (result.isConfirmed) {
-            window.location.href = "<?= base_url()?>/inventory/location";
+            window.location.href = "<?= base_url()?>inventory/location";
         // }
     });
 });

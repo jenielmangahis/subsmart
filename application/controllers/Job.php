@@ -285,6 +285,11 @@ class Job extends MY_Controller
             $created_by = $this->general->get_data_with_param($query, false);            
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+
+            $this->db->select('id');
+            $this->db->where('job_id', $id);
+            $jobInvoice = $this->db->get('invoices')->row();
+            $this->page_data['job_invoice'] = $jobInvoice;
         }
 
         $this->page_data['job_created_by'] = $created_by;
@@ -2046,11 +2051,11 @@ class Job extends MY_Controller
             }
             $location = $input['location'];
             $item_id = $input['item_id1'];
-            
+
             $location_qty = $input['location_qty'];
 
-            if(isset($location)){
-                for($x=0; $x<count($item_id); $x++){
+            if (isset($location)) {
+                for ($x = 0; $x < count($item_id); $x++) {
                     $update_location_qty = array(
                         'set' => array(
                             'qty' => $location_qty[$x]
@@ -2059,8 +2064,8 @@ class Job extends MY_Controller
                             'item_id' => $item_id[$x],
                             'id' => $location[$x]
                         )
-                        );
-                    
+                    );
+
                     $this->items_model->_updateLocationQty($update_location_qty);
                 }
             }
@@ -2077,7 +2082,7 @@ class Job extends MY_Controller
                 createSyncToCalendar($jobs_id, 'job', $comp_id);
 
                 // insert data to job items table (items_id, qty, jobs_id)
-                // 
+                //
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
                     for ($xx = 0; $xx < $devices; $xx++) {
@@ -2109,8 +2114,8 @@ class Job extends MY_Controller
                 $this->general->add_($jobs_approval_data, 'jobs_approval');
 
                 //subtrac location's qty
-               
-                
+
+
                 // insert data to job payments table
                 $job_payment_query = array(
                     'amount' => $input['total_amount'],
@@ -2179,7 +2184,7 @@ class Job extends MY_Controller
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
             }
 
-            
+
             if (isset($input['wo_id'])) {
                 $get_work_order_data = array(
                     'where' => array(
@@ -2239,7 +2244,15 @@ class Job extends MY_Controller
                 exit(json_encode($data_arr));
             }*/
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'location' => $location, 'items_id', $item_id, 'qty'  => $location_qty];
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'location' => $location,
+            'items_id' => $item_id,
+            'qty' => $location_qty,
+            'job_id' => $jobs_id,
+            'estimate_id' => $jobs_data->estimate_id
+        ];
         echo json_encode($return);
     }
 
@@ -3993,6 +4006,22 @@ class Job extends MY_Controller
         exit(json_encode(['success' => $_POST]));
     }
 
+
+    public function viewInvoice($id)
+    {
+        $this->db->select('id');
+        $this->db->where('job_id', $id);
+        $jobInvoice = $this->db->get('invoices')->row();
+
+        if (!$jobInvoice) {
+            return redirect('/job/new_job1/' . $id);
+        }
+
+        // if invoice exists, redirect to genview page
+        redirect('/invoice/genview/' . $jobInvoice->id . '?from=job');
+    }
+
+
     public function createInvoice($id)
     {
         $this->db->where('id', $id);
@@ -4040,6 +4069,7 @@ class Job extends MY_Controller
 
 
 
+
     public function apiGetJobItems($id)
     {
         $items = $this->jobs_model->get_specific_job_items($id);
@@ -4061,7 +4091,8 @@ class Job extends MY_Controller
         header('content-type: application/json');
         exit(json_encode(['data' => $items]));
     }
-    public function getItemLocation(){
+    public function getItemLocation()
+    {
         $comp_id = logged('company_id');
         $input = $this->input->post();
 
@@ -4074,13 +4105,12 @@ class Job extends MY_Controller
 
             ),
             'table' => 'items_has_storage_loc',
-            'select' => 'id,name'
+            'select' => 'id,loc_id'
         );
         $location = $this->general->get_data_with_param($getLocation);
 
         $data_arr = array("locations" => $location);
         echo json_encode($data_arr, JSON_UNESCAPED_UNICODE);
-
     }
 }
 

@@ -857,3 +857,49 @@ $(document).ready(function()
 	// var changed = $("#view_ssn").text();
 });
 </script>
+
+<style>
+    .from-job-swal-actions {
+        display: flex;
+        flex-direction: column;
+    }
+    .from-job-swal-actions button.swal2-styled {
+        width: 100%;
+        max-width: 70%;
+    }
+</style>
+<script>
+    window.addEventListener('DOMContentLoaded', async (event) => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        const invoiceId = "<?= $invoice->id ?>";
+        const invoiceJobId = "<?= $invoice->job_id ?>";
+
+        if (params.from && params.from === 'job') {
+            const response = await Swal.fire({
+                title: '',
+                icon: 'info',
+                text: 'Your invoice is now ready. What would you like to do next?',
+                confirmButtonText: 'Update Invoice',
+                showDenyButton: true,
+                showCancelButton: true,
+                denyButtonText: 'Collect Payment',
+                cancelButtonText: 'Review',
+                customClass: {
+                    actions: 'from-job-swal-actions',
+                }
+            })
+
+            if (response.isConfirmed && invoiceId) {
+                window.location.href = `/invoice/invoice_edit/${invoiceId}`;
+                return;
+            }
+
+            if (response.isDenied && invoiceJobId) {
+                window.location.href = `/job/billing/${invoiceJobId}`;
+            }
+        }
+    });
+</script>

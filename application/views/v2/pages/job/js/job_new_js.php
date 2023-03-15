@@ -303,34 +303,52 @@ $("#attachment-file").change(function() {
 
         });
 
-        function getLoc(id, qty) {
+        async function getLoc(id, qty) {
             var postData = new FormData();
-                postData.append('id', id);
-                postData.append('qty', qty);
-            var data = {id: id, qty: qty};
-                fetch('<?= base_url('job/getItemLocation') ?>',{
+            postData.append('id', id);
+            postData.append('qty', qty);
+            fetch('<?= base_url('job/getItemLocation') ?>',{
                 method: 'POST',
                 body: postData
             }).then(response => response.json()).then(response => {
                 var { locations } = response;
-                    var select = document.querySelector('#location'+id);
-                               
-                    select.innerHTML = '';
-                    // Loop through each location and append a new option element to the select
-                    var options = document.createElement('option');
-                    
-                    options.text = "Select Location";
-                    options.value = "0";
-                    select.appendChild(options);
+                var select = document.querySelector('#location'+id);
+                select.innerHTML = '';
+                // Loop through each location and append a new option element to the select
+                var options = document.createElement('option');
+                options.text = "Select Location";
+                options.value = "0";
+                select.appendChild(options);
 
-                    locations.forEach(function(location) {
-                    var option = document.createElement('option');
-                    option.text = location.name;
-                    option.value = location.id;
-                    select.appendChild(option);
+                // Get all the location name promises
+                var promises = locations.map(function(location) {
+                    return getLocName(location.loc_id);
+                });
+
+                // Wait for all the promises to resolve
+                Promise.all(promises).then(function(names) {
+                    // Loop through each location and append a new option element to the select
+                    locations.forEach(function(location, index) {
+                        var option = document.createElement('option');
+                        option.text = names[index];
+                        option.value = location.id;
+                        select.appendChild(option);
                     }); 
-                    console.log('success');
-                
+                });
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
+
+        function getLocName(id){
+            var postData = new FormData();
+            postData.append('id', id);
+            return fetch('<?= base_url('inventory/getLocationNameById') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { location } = response;
+                return location.location_name;
             }).catch((error) =>{
                 console.log(error);
             })
@@ -1020,26 +1038,29 @@ $("#attachment-file").change(function() {
                 }
             });
         }
-        function sucess_add_job(){
-            Swal.fire({
-                title: 'Nice!',
-                text: 'Job has been added!',
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                //if (result.value) {
-                    var redirect_calendar = $('#redirect-calendar').val();
-                    if( redirect_calendar == 1 ){
-                        window.location.href='<?= base_url(); ?>workcalender';
-                    }else{
-                        window.location.href='<?= base_url(); ?>job/';
-                    }                    
-                //}
-            });
-        }
+        function sucess_add_job(data) {
+        Swal.fire({
+            title: 'Job has been added',
+            text: 'An initial invoice can now be created',
+            icon: 'success',
+            confirmButtonText: 'Create Initial Invoice',
+        }).then((result) => {
+            var redirect_calendar = $('#redirect-calendar').val();
+            if (redirect_calendar == 1) {
+                window.location.href = '<?= base_url(); ?>workcalender';
+            } else {
+                console.log({
+                    data
+                });
+                if (data.job_id) {
+                    window.location.href = '<?= base_url('job/createInvoice'); ?>/' + data.job_id;
+                    return;
+
+                }
+            }
+
+        });
+    }
         function error(title,text,icon){
             Swal.fire({
                 title: title,

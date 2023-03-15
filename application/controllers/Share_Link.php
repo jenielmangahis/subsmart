@@ -1631,6 +1631,51 @@ class Share_Link extends CI_Controller
         $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
         $this->load->view('invoice/print', $this->page_data);
     }
+
+    public function previewInvoicePDF($id)
+    {
+        $invoice = get_invoice_by_id($id);
+        $user = get_user_by_id(logged('id'));
+        $company = get_company_by_id(logged('company_id'));
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['user'] = $user;
+        // $this->page_data['items'] = $user;
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['user'] = $user;
+        }
+        $format = $this->input->get('format');
+        $this->page_data['company'] = $company;
+        $this->page_data['format'] = $format;
+        // print_r($this->page_data['users']);
+
+        if ($format === "pdf") {
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->library('pdf');
+            $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
+        }elseif($format === "save_pdf"){
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->library('pdf');
+            $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
+            
+        } else {
+            $this->page_data['profile'] = (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets;
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->view('invoice/pdf/template', $this->page_data, "portrait");
+        }
+    }
 }
 
 

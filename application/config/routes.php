@@ -458,6 +458,10 @@ $route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/dow
 $route['accounting/preview-and-print-sample']['post'] = 'accounting_modals/preview_and_print_sample';
 $route['accounting/save-print-checks-settings']['post'] = 'accounting_modals/save_print_checks_settings';
 
+$route['accounting/print-sales-transactions']['post'] = 'accounting_modals/print_sales_transactions';
+$route['accounting/send-sales-transactions']['post'] = 'accounting_modals/send_sales_transactions';
+$route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_invoice_reminders';
+
 $route['accounting/lists'] = 'accounting/lists';
 
 // Accounting attachments
@@ -526,8 +530,6 @@ $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
 $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
 $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
-$route['accounting/all-sales/print-transactions']['post'] = 'accounting_controllers/all_sales/print_transactions';
-$route['accounting/all-sales/send-transactions']['post'] = 'accounting_controllers/all_sales/send_transactions';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';

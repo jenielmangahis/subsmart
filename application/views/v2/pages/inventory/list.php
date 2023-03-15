@@ -15,6 +15,9 @@
          border-bottom: 0px solid #111; 
          margin-bottom: 10px;
     }
+    .modal-blur {
+    filter: blur(4px);
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -144,7 +147,7 @@
                             <td><?php echo $item[8]; ?></td>
                             <td><?php echo $item[9]; ?></td>
                             <td>
-                                <button class="nsm-button btn-sm SEE_LOCATION" data-bs-toggle="modal" data-bs-target="#inventory_location_modal" data-id="<?php echo $item[10]; ?>" disabled>See Location</button>
+                                <button class="nsm-button btn-sm SEE_LOCATION" data-id="<?php echo $item[10]; ?>" disabled>See Location</button>
                             </td>
                             <td>
                                 <div class="dropdown table-management">
@@ -182,12 +185,18 @@
             <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="nsm-button primary btn-sm" id="open-second-modal-btn">
+                            <i class='bx bx-fw bx-list-plus'></i>  Add Location
+                            </button>
+                        </div>
                             <table id="ITEM_LOCATION_TABLE" class="nsm-table">
                                 <thead>
                                     <tr>
                                         <td class='d-none' data-name="Item_ID">Item ID</td>
                                         <td data-name="Location">Location</td>
                                         <td data-name="Quantity">Quantity</td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -199,15 +208,45 @@
                                                     for ($i=0; $i < count($items_locations); $i++) { 
                                                         $TR .= "<tr>
                                                             <td class='d-none'>".$items_locations[$i]['item_id']."</td>
-                                                            <td>".$items_locations[$i]['name']."</td>
+                                                            <td>".getLocationName($items_locations[$i]['loc_id'])->location_name."</td>
                                                             <td>".$items_locations[$i]['qty']."</td>
+                                                            <td>
+                                                                <div class='dropdown table-management'>
+                                                                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                                    </a>
+                                                                    <ul class='dropdown-menu dropdown-menu-end'>
+                                                                        <li>
+                                                                        <a class='dropdown-item edit-location-item' data-id='".$items_locations[$i]['id']."'>Edit</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class='dropdown-item delete-location-item' href='javascript:void(0);' data-id='".$items_locations[$i]['id']."'>Delete</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
                                                         </tr>";
                                                     } 
                                                 } else {
                                                     $TR .= "<tr>
                                                             <td class='d-none'>".$items_locations[0]['item_id']."</td>
-                                                            <td>".$items_locations[0]['name']."</td>
+                                                            <td>".getLocationName($items_locations[0]['loc_id'])->location_name."</td>
                                                             <td>".$items_locations[0]['qty']."</td>
+                                                            <td>
+                                                                <div class='dropdown table-management'>
+                                                                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                                    </a>
+                                                                    <ul class='dropdown-menu dropdown-menu-end'>
+                                                                        <li>
+                                                                            <a class='dropdown-item edit-location-item' data-id='".$items_locations[0]['id']."'>Edit</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class='dropdown-item delete-location-item' href='javascript:void(0);' data-id='".$items_locations[0]['id']."'>Delete</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
                                                         </tr>";
                                                 }
                                             }
@@ -219,8 +258,78 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="add_location_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add Location</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="location_form">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <input type="text" name="item_id" hidden>
+                            <strong>Location</strong>
+                            <select id="location" name="loc_id" class="form-control location" >
+                                <option value="">Select Type</option>
+                                    <?php foreach ($locations as $location): ?>
+                                        <option value="<?= $location->loc_id ?>"><?= $location->location_name  ?></option>
+                                    <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 mb-5">
+                            <strong>Quantity</strong>
+                            <input type="number" class="form-control " name="qty" id="qty" required />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-list-plus'></i> Add </button>
+                        <button type="button" id="close-add-location-modal" class="nsm-button">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="edit_location_qty_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Update Location</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="edit_location_qty">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <input type="text" name="item_id" hidden>
+                            <strong>Location</strong>
+                            <input type="text" class="form-control" name="location_name" id="location_name" readonly />
+                            <input type="text" class="form-control" name="id" id="id" hidden />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 mb-5">
+                            <strong>Quantity</strong>
+                            <input type="number" class="form-control " name="qty" id="qty" required />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-list-plus'></i> Save </button>
+                        <button type="button" id="close-edit-location-qty-modal" class="nsm-button">Close</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -230,6 +339,86 @@
 
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+
+    var ITEM_ID;
+    $('.SEE_LOCATION').click(function() {
+        ITEM_ID = $(this).data('id');
+        $('#inventory_location_modal').modal('show');
+
+    });
+    $('#open-second-modal-btn').click(function() {
+        $('#inventory_location_modal').modal('hide');
+        $('#add_location_modal').modal('show');
+    });
+    $('.edit-location-item').click(async function() {
+        var id = $(this).data('id');
+        $('#inventory_location_modal').modal('hide');
+        $('#edit_location_qty_modal').modal('show');
+        getLoc(id).then(LOCATION_NAME => {
+            console.log(LOCATION_NAME);
+            $('#location_name').val(LOCATION_NAME);
+            $('#id').val(id);
+        });
+    });
+    $('#close-edit-location-qty-modal').click(function() {
+        $('#inventory_location_modal').modal('show');
+        $('#edit_location_qty_modal').modal('hide');
+    });
+    $('#close-add-location-modal').click(function() {
+        $('#inventory_location_modal').modal('show');
+        $('#add_location_modal').modal('hide');
+    });
+
+    function getLoc(id){
+        return new Promise((resolve, reject) => {
+            var postData = new FormData();
+            postData.append('id', id);
+            fetch('<?= base_url('inventory/getItemLocationNameById') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { locations } = response;
+                resolve(locations.location_name);
+            })
+        }).catch((error) =>{
+            console.log(error);
+        })
+    }
+    $("#edit_location_qty").submit(function(e) {
+        e.preventDefault();
+        var form = $('#edit_location_qty');
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>inventory/updateItemLocationQty",
+            data: form.serialize(), 
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Quantity was updated successfully!',
+        }).then((result) => {
+                window.location.href = "<?= base_url()?>/inventory";
+        });
+    });
+    $("#location_form").submit(function(e) {
+        e.preventDefault();
+        var form = $('#location_form');
+        var url = form.attr('action');
+        form.find('input[name=item_id]').val(ITEM_ID); 
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>inventory/addNewItemLocation",
+            data: form.serialize(), 
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Item was added successfully!',
+        }).then((result) => {
+                window.location.href = "<?= base_url()?>/inventory";
+        });
+    });
 $(document).ready(function() {
 
     var ITEM_LOCATION_TABLE = $("#ITEM_LOCATION_TABLE").DataTable({
@@ -435,6 +624,39 @@ $(document).ready(function() {
                     //         });
                     //     }
                     // }
+                });
+                Swal.fire({
+                    title: 'Delete Success',
+                    text: "Data has been deleted successfully!",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+    $(document).on("click", ".delete-location-item", function() {
+        let id = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Delete Location',
+            text: "Are you sure you want to delete this location?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('/inventory/deleteItemLocation') ?>", 
+                    data: {
+                        id: id
+                    },
                 });
                 Swal.fire({
                     title: 'Delete Success',
