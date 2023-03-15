@@ -170,7 +170,9 @@ $company_image = base_url('/uploads/users/business_profile/' . $company_info->id
             <table style="margin-bottom: 50px;">
                 <tr>
                     <div><?= strtoupper($jobs_data->first_name . ' ' . $jobs_data->last_name); ?></div>
-                    <div><?= strtoupper($jobs_data->cust_city . ' ' . $jobs_data->cust_state . ' ' . $jobs_data->cust_zip_code); ?></div>
+                    <div><?= strtoupper($jobs_data->mail_add); ?></div>
+                    <div><?= strtoupper($jobs_data->cust_city . ', ' . $jobs_data->cust_state . ' ' . $jobs_data->cust_zip_code); ?></div>
+                    <div>TEL: <?= formatPhoneNumber($jobs_data->phone_m); ?></div>
                 </tr>
             </table>
 
@@ -179,7 +181,7 @@ $company_image = base_url('/uploads/users/business_profile/' . $company_info->id
                     <div><?= strtoupper(trim($company_info->business_name)); ?></div>
                     <div><?= strtoupper($company_info->street); ?></div>
                     <div><?= strtoupper($company_info->city . ', ' . $company_info->state . ' ' . $company_info->postal_code); ?></div>
-                    <div>TEL: <?= $company_info->business_phone; ?></div>
+                    <div>TEL: <?= formatPhoneNumber($company_info->business_phone); ?></div>
                 </tr>
             </table>
 

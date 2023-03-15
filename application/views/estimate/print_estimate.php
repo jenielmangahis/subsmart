@@ -355,21 +355,21 @@ span.sc-item {
                     <div class="card">
                       <?php if($estimate){ ?>
                       <div class="d-block">
-                        <div class="col-xl-5 left" style="margin-bottom: 33px;">
+                        <div class="col-xl-6 left" style="margin-bottom: 33px;">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                           <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $client->business_address; ?></span><br />
-                            <span class="">EMAIL: <?= $client->email_address; ?></span><br />
-                            <span class="">PHONE: <?= $client->phone_number; ?></span>
+                            <span class=""><?= $client->street . '<br />' . $client->city . ', ' . $client->state . ' ' . $client->postal_code; ?></span><br />
+                            <span class="">EMAIL: <?= $client->business_email; ?></span><br />
+                            <span class="">PHONE: <?= formatPhoneNumber($client->business_phone); ?></span>
                           </div>
                         </div>
                         <div class="clear"></div>    
-                        <div class="col-xl-5 left">
+                        <div class="col-xl-6 left">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
                           <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br /><br />
+                            <span class=""><?= $customer->mail_add . "<br />" . $customer->city . ", " . $customer->state. " " . $customer->zip_code; ?></span><br />
                             <span class="">EMAIL: <span class=""><?= $customer->email; ?></span></span><br />
-                            <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span></span><br />
+                            <span class="">PHONE: <span class=""><?= formatPhoneNumber($customer->phone_m); ?></span></span><br />
                           </div>
                         </div>
                         <br class="clear"/>    

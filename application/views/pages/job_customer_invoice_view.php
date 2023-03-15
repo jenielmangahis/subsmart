@@ -169,7 +169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <b><?= $company_info->business_name; ?></b><br>
                                         <span><?= $company_info->street; ?></span><br>
                                         <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
-                                        <span> Phone: <?= $company_info->business_phone ; ?></span>
+                                        <span> Phone: <?= formatPhoneNumber($company_info->business_phone); ?></span>
                                     </div>
                                     <div class="col-md-6">
                                         <br>
@@ -178,23 +178,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div class="col-md-12">
                                                 <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                                 <span><?= $jobs_data->mail_add; ?></span><br>
-                                                <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
-                                                <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a>
+                                                <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br>
+                                                <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"></a>
                                                 <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
                                                     <br>
                                                     <span>Phone:  </span>
-                                                    <?= $jobs_data->phone_h;  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                <?php //else : echo 'N/A';?>
+                                                    <?= formatPhoneNumber($jobs_data->phone_h);  ?>
                                                 <?php endif; ?>
                                                 <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
                                                     <br>
                                                     <span>Mobile: </span>
-                                                    <?= $jobs_data->phone_h;  ?>
-                                                    <?= $jobs_data->phone_m;  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <?= formatPhoneNumber($jobs_data->phone_m);  ?>
                                                 <?php //else : echo 'N/A';?>
                                                 <?php endif; ?>
                                                 <br>

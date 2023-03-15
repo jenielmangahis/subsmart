@@ -2671,6 +2671,9 @@
         }else if( schedule_type == 'tc-off' ){
             var url = base_url + 'calendar/_quick_delete_tc_off';
             var msg = 'Are you sure you want to delete selected technician schedule off?<br /><br /><b>Note : You cannot restore data once deleted</b>';
+        }else if( schedule_type == 'event' ){
+            var url = base_url + 'event/_quick_delete_event';
+            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore event data once deleted</b>'
         }else{
             var url = base_url + 'calendar/_quick_delete_appointment';
             var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore appointment data once deleted</b>';
@@ -2731,6 +2734,8 @@
             location.href = base_url + 'tickets/editDetails/' + schedule_id;
         }else if( schedule_type == 'tc-off' ){
             quickEditTcOff(schedule_id);
+        }else if( schedule_type == 'event' ){
+            location.href = base_url + 'events/event_add/' + schedule_id;
         }
     });
 

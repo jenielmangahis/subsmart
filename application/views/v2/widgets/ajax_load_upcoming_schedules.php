@@ -274,9 +274,9 @@
                                     <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
                                     <?php } ?> -->
                                     <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                    <label class="content-subtitle mt-2 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
                                     <?php }elseif( $schedule_start_time != '' ){  ?>
-                                        <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
+                                        <label class="content-subtitle mt-2 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
                                     <?php } ?>                                
                                 </div>         
                             </td>

@@ -89,8 +89,8 @@
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
                                             <span><?= $company_info->street; ?></span><br>
-                                            <span><?= $company_info->city.' '.$company_info->state.', '.$company_info->postal_code ; ?></span><br>
-                                            <span> Phone: <?= $company_info->business_phone ; ?></span>
+                                            <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
+                                            <span> Phone: <?= formatPhoneNumber($company_info->business_phone); ?></span>
                                         </div>
                                         <div class="col-md-12">
                                             <br>
@@ -99,7 +99,7 @@
                                                 <div class="col-md-5">
                                                     <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                                     <span><?= $jobs_data->mail_add; ?></span><br>
-                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.', '.$jobs_data->cust_zip_code ; ?></span>
+                                                    <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span>
                                                     <span class="fa fa-copy icon_preview"></span><br>
                                                     <span>Email: <?= $jobs_data->cust_email ; ?></span>
                                                     <a
@@ -107,7 +107,7 @@
                                                             class="fa fa-envelope icon_preview"></span></a><br>
                                                     <span>Phone: </span>
                                                     <?php if ($jobs_data->phone_h!="" || $jobs_data->phone_h!=null): ?>
-                                                    <?= $jobs_data->phone_h;  ?>
+                                                    <?= formatPhoneNumber($jobs_data->phone_h);  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <?php else : echo 'N/A';?>
@@ -116,7 +116,7 @@
                                                     <span>Mobile: </span>
                                                     <?php if ($jobs_data->phone_m!="" || $jobs_data->phone_m!=null): ?>
                                                     <!-- <?= $jobs_data->phone_h;  ?> -->
-                                                    <?= $jobs_data->phone_m;  ?>
+                                                    <?= formatPhoneNumber($jobs_data->phone_m);  ?>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <?php else : echo 'N/A';?>
