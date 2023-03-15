@@ -217,6 +217,7 @@ class Jobs_model extends MY_Model
             $matchedItems = $matchedItemsQuery->result();
 
             $items = [];
+            $updatedMatchedItemIds = [];
 
             foreach ($productNames as $productName) {
                 $currentProduct = null;
@@ -234,6 +235,17 @@ class Jobs_model extends MY_Model
                 foreach ($matchedItems as $matchedItem) {
                     if ($matchedItem->title === $currentProduct->item) {
                         $currentProductMatchedItem = $matchedItem;
+
+                        if (!in_array($matchedItem->id, $updatedMatchedItemIds)) {
+                            $updatedMatchedItemIds[] = $matchedItem->id;
+
+                            if (is_null($matchedItem->price)) {
+                                $price = $currentProduct->price ? $currentProduct->price : 0;
+                                $this->db->where('id', $matchedItem->id);
+                                $this->db->update('items', ['price' => $price]);
+                                $matchedItem->price = $price;
+                            }
+                        }
                     }
                 }
 
@@ -244,7 +256,8 @@ class Jobs_model extends MY_Model
                         'company_id' => $currentCompanyId,
                         'is_active' => true,
                         'type' => 'Product',
-                        'description' => 'Auto-created from work order'
+                        'description' => 'Auto-created from work order',
+                        'price' => $currentProduct->price ? $currentProduct->price : 0,
                     ];
 
                     $id = $this->items_model->insert($itemInput);

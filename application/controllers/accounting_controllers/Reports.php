@@ -380,6 +380,7 @@ class Reports extends MY_Controller {
 // DEPOSIT DETAILS
         $this->page_data['payment_records'] = $this->DepositDetail_model->getPaymentRecord(logged('company_id'));
         $this->page_data['payment_records_acs'] = $this->DepositDetail_model->getPaymentRecordACS(logged('company_id'));
+        $this->page_data['getPaymentACS'] = $this->DepositDetail_model->getPaymentACS(logged('company_id'));
         // $this->page_data['invoices'] = $this->invoice_model->getPaidInv(getLoggedCompanyID());
         $payments = $this->invoice_model->get_company_payments(logged('company_id'));
 

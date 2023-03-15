@@ -70,7 +70,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><?=date("m/d/Y", strtotime($estimate->accepted_date))?></td>
+                            <td><?=!empty($estimate->accepted_date) ? date("m/d/Y", strtotime($estimate->accepted_date)) : ''?></td>
                         </tr>
                     </tbody>
                 </table>

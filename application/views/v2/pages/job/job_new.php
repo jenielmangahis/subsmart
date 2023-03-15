@@ -1954,6 +1954,7 @@ $(function() {
         }
 </script>
 <script>
+   
     window.addEventListener('DOMContentLoaded', async (event) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
@@ -1961,13 +1962,27 @@ $(function() {
 
         const jobStatus = "<?= $jobs_data ? $jobs_data->status : ''; ?>";
         const jobId = "<?= $jobs_data ? $jobs_data->id : ''; ?>";
+        const jobInvoice = "<?= $job_invoice ? $job_invoice->id : '' ?>";
 
-        if (params.modal && params.modal === 'finish_job' && jobStatus === 'Approved') {
+        if (jobId && !jobInvoice) {
             const response = await Swal.fire({
-                title: 'Job is finished',
+                title: "Invoice missing",
+                text: "This job don't have an invoice yet. Do you want to create one?",
+                confirmButtonText: 'Create Initial Invoice',
+                icon: 'warning',
+            });
+
+            if (response.isConfirmed && jobId) {
+                window.location.href = `/job/createInvoice/${jobId}`;
+            }
+        }
+     
+        if (jobInvoice && params.modal && params.modal === 'approved' && jobStatus === 'Approved') {
+            const response = await Swal.fire({
+                title: 'Job is approved',
                 icon: 'success',
-                text: 'Invoice is generated and ready to view',
-                confirmButtonText: 'See details',
+                text: 'Invoice is now available for your review',
+                confirmButtonText: 'See Invoice',
             })
 
             if (response.isConfirmed && jobId) {

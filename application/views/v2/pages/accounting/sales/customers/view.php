@@ -141,7 +141,6 @@
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                                             <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-transactions">Print transactions</a></li>
-                                                            <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-packing-slip">Print packing slip</a></li>
                                                             <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send-transactions">Send transactions</a></li>
                                                             <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send-reminders">Send reminders</a></li>
                                                         </ul>
@@ -409,6 +408,33 @@
                                                                         $tranType = 'billable-expense';
                                                                     break;
                                                                 }
+
+                                                                if($transaction['status'] === 'Open') {
+                                                                    $manageCol = '<div class="dropdown table-management">
+                                                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                                                        </a>
+                                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                                            <li>
+                                                                                <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="dropdown-item view-edit-'.$tranType.'" href="#">View/Edit</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>';
+                                                                } else {
+                                                                    $manageCol = '<div class="dropdown table-management">
+                                                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                                                        </a>
+                                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                                            <li>
+                                                                                <a class="dropdown-item view-edit-'.$tranType.'" href="#">View/Edit</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>';
+                                                                }
                                                                 echo '<tr>
                                                                     <td>
                                                                         <div class="table-row-icon table-checkbox">
@@ -423,21 +449,7 @@
                                                                     <td>'.$transaction['total'].'</td>
                                                                     <td>'.$transaction['attachments'].'</td>
                                                                     <td>'.$transaction['status'].'</td>
-                                                                    <td>
-                                                                        <div class="dropdown table-management">
-                                                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                                                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
-                                                                            </a>
-                                                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                                                <li>
-                                                                                    <a class="dropdown-item create-invoice" href="#">Create invoice</a>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <a class="dropdown-item view-edit-'.$tranType.'" href="#">View/Edit</a>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </td>
+                                                                    <td>'.$manageCol.'</td>
                                                                 </tr>';
                                                             break;
                                                             case 'recently-paid' :
