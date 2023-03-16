@@ -627,7 +627,7 @@ span.sc-item {
                                 <div class="col-xl-5 ml-0 pl-0">
                                   <span class="ul-text"><?php echo $client->street .' <br>'.$client->city .', '.$client->state .' '.$client->postal_code; ?></span><br>
                                   <span class=""><?= $client->business_email; ?></span><br />
-                                  <span class=""><?= $client->office_phone; ?></span>
+                                  <span class=""><?= formatPhoneNumber($client->office_phone); ?></span>
                                 </div>
                             </div>
                             <div class="col-md-6" style="text-align:right;font-size:16px;">
@@ -636,7 +636,7 @@ span.sc-item {
                                 <div class="">
                                   <span class=""><?= $customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                                   <span class=""><span class=""><?= $customer->email; ?></span><br />
-                                  <span class=""><span class=""><?= $customer->phone_w; ?></span><br />
+                                  <span class=""><span class=""><?= formatPhoneNumber($customer->phone_m); ?></span><br />
                                 </div>
                             </div>
                           </div>

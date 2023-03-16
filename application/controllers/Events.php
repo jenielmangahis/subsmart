@@ -1290,7 +1290,7 @@ class Events extends MY_Controller
                 'start_time' => $post['start_time'],
                 'end_date' => $post['end_date'],
                 'end_time' => $post['end_time'],
-                'event_type' => $post['event_type'],
+                'event_type' => $post['event_types'],
                 'event_color' => $post['event_color'],
                 'url_link' => $_POST['url_link'],
                 'customer_reminder_notification' => $post['customer_reminder_notification'],
@@ -1321,6 +1321,31 @@ class Events extends MY_Controller
             $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
             customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$EVENT_NUMBER);
         }           
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);       
+
+        exit;
+    }
+
+    public function ajax_quick_delete_event()
+    {
+        $is_valid = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+
+        $event = $this->event_model->getEvent($post['schedule_id']);
+        if( $event && ($event->company_id == $cid) ){
+            $this->event_model->delete($event->id);
+
+            $is_valid = 1;
+            $msg = '';
+        }else{
+            $msg = 'Cannot find data';
+        }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
         echo json_encode($json_data);       

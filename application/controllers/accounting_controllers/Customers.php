@@ -3730,6 +3730,35 @@ class Customers extends MY_Controller {
                     'memoItems' => $memoItems
                 ];
             break;
+            case 'invoice' :
+                $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($transactionId);
+                $customer = $this->accounting_customers_model->getCustomerDetails($invoice->customer_id)[0];
+                $invoiceItems = $this->invoice_model->get_invoice_items($explode[1]);
+                $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+                $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+                $discount += floatval($invoice->taxes);
+                $discount += floatval($invoice->adjustment_value);
+
+                $invoice->discount_total = $discount;
+
+                foreach($invoiceItems as $key => $invoiceItem) {
+                    $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+
+                    $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
+                    $taxAmount = floatval($taxAmount) / 100;
+                    $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+                }
+
+                $fileName = 'Invoice_'.$invoice->invoice_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+                $view = "accounting/modals/print_action/print_invoice";
+
+                $pdfData = [
+                    'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
+                    'invoice' => $invoice,
+                    'invoiceItems' => $invoiceItems
+                ];
+            break;
         }
 
         $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');

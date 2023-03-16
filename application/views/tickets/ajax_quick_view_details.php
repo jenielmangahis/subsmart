@@ -90,16 +90,20 @@
             <div style="font-size:16px;padding:3px;">
                 <b><?php echo $clients->business_name; ?></span></b> <br>
                 <span><?php echo $clients->street .' <br>'. $clients->city .' '. $clients->state .', '. $clients->postal_code; ?></span><br>
-                <?php echo $clients->email_address; ?><br>
-                <?php echo $clients->phone_number; ?>
+                <?php if( $clients->business_email != '' ){ ?>
+                    <span> Email: <a href="mailto:<?= $clients->business_email; ?>"><?= $clients->business_email; ?></a></span><br />
+                <?php } ?>
+                <span> Contact Number: <?= $clients->business_phone; ?></span>
             </div>
             <br />
             <h6 class="title-border">TO :</h6>
             <div style="font-size:16px;padding:3px;">
                 <b><span><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></span></b><br>
                 <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .' '. $tickets->state .', '. $tickets->zip_code; ?></span><br>
-                <span><?php echo $tickets->email; ?></span><br>
-                <span><?php echo $tickets->phone_h; ?></span>
+                <?php if( $tickets->email != '' ){ ?>
+                    <span>Email: <a href="mailto:<?php echo $tickets->email; ?>"><?php echo $tickets->email; ?></a></span><br>
+                <?php } ?>
+                <span>Contact Number: <?php echo $tickets->phone_h; ?></span>
             </div>
         </div>
         <div class="col-md-4">

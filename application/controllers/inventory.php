@@ -346,6 +346,15 @@ class Inventory extends MY_Controller
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
+
+        $getLocation = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'select' => 'loc_id, location_name',
+            'table' => 'storage_loc'
+        );
+        $this->page_data['location'] = $this->general->get_data_with_param($getLocation);
         $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
         $this->load->view('v2/pages/inventory/action/inventory_add', $this->page_data);
         // $this->page_data['page_title'] = 'Add Inventory Item';

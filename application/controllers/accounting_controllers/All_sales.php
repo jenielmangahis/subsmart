@@ -846,7 +846,7 @@ class All_sales extends MY_Controller {
     private function get_invoices($transactions, $filters = [])
     {
         $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
-        
+
         foreach($invoices as $invoice)
         {
             $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
@@ -899,6 +899,10 @@ class All_sales extends MY_Controller {
                         $flag = false;
                     }
                 break;
+            }
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
             }
 
             if($flag) {
@@ -963,7 +967,13 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>";
 
-            if($filters['type'] === 'open-invoices' && floatval($creditMemo->balance) > 0 || $filters['type'] !== 'open-invoices') {
+            $flag = true;
+
+            if(!is_null($filters['delivery_method']) && $filters['delivery_method'] !== 'send-later' || $filters['delivery_method'] === 'send-later' && $creditMemo->send_later !== '1') {
+                $flag = false;
+            }
+
+            if($flag) {
                 $transactions[] = [
                     'id' => $creditMemo->id,
                     'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
@@ -1028,29 +1038,37 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>";
 
-            $transactions[] = [
-                'id' => $salesReceipt->id,
-                'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
-                'type' => 'Sales Receipt',
-                'no' => $salesReceipt->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $salesReceipt->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $salesReceipt->message_sales_receipt,
-                'due_date' => '',
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $salesReceipt->email,
-                'attachments' => '',
-                'status' => 'Paid',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = false;
+
+            if(is_null($filters['delivery_method']) || $filters['delivery_method'] === 'send-later' && $salesReceipt->send_later === '1') {
+                $flag = true;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $salesReceipt->id,
+                    'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                    'type' => 'Sales Receipt',
+                    'no' => $salesReceipt->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $salesReceipt->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $salesReceipt->message_sales_receipt,
+                    'due_date' => '',
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $salesReceipt->email,
+                    'attachments' => '',
+                    'status' => 'Paid',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1085,29 +1103,36 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>";
 
-            $transactions[] = [
-                'id' => $refundReceipt->id,
-                'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
-                'type' => 'Refund',
-                'no' => $refundReceipt->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $refundReceipt->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $refundReceipt->message_refund_receipt,
-                'due_date' => '',
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $refundReceipt->email,
-                'attachments' => '',
-                'status' => 'Paid',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+            if($filters['delivery_method'] === 'print-later' && $refundReceipt->print_later !== '1' || $filters['delivery_method'] === 'send-later') {
+                $flag = false;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $refundReceipt->id,
+                    'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                    'type' => 'Refund',
+                    'no' => $refundReceipt->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $refundReceipt->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $refundReceipt->message_refund_receipt,
+                    'due_date' => '',
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $refundReceipt->email,
+                    'attachments' => '',
+                    'status' => 'Paid',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1136,29 +1161,37 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>';
 
-            $transactions[] = [
-                'id' => $delayedCredit->id,
-                'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
-                'type' => 'Credit',
-                'no' => $delayedCredit->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $delayedCredit->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $delayedCredit->memo,
-                'due_date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => '',
-                'attachments' => '',
-                'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCredit->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $delayedCredit->id,
+                    'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                    'type' => 'Credit',
+                    'no' => $delayedCredit->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $delayedCredit->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $delayedCredit->memo,
+                    'due_date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($delayedCredit->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1187,29 +1220,37 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>';
 
-            $transactions[] = [
-                'id' => $delayedCharge->id,
-                'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
-                'type' => 'Charge',
-                'no' => $delayedCharge->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $delayedCharge->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $delayedCharge->memo,
-                'due_date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => '',
-                'attachments' => '',
-                'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($delayedCharge->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $delayedCharge->id,
+                    'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                    'type' => 'Charge',
+                    'no' => $delayedCharge->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $delayedCharge->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $delayedCharge->memo,
+                    'due_date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($delayedCharge->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1310,6 +1351,10 @@ class All_sales extends MY_Controller {
                 break;
             }
 
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+
             if($flag) {
                 if($filters['type'] === 'estimates') {
                     $transactions[] = [
@@ -1383,29 +1428,37 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>';
 
-            $transactions[] = [
-                'id' => $payment->id,
-                'date' => date("m/d/Y", strtotime($payment->payment_date)),
-                'type' => 'Payment',
-                'no' => $payment->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $payment->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $payment->memo,
-                'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => '-'.number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $customer->email,
-                'attachments' => '',
-                'status' => 'Closed',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $payment->id,
+                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'type' => 'Payment',
+                    'no' => $payment->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $payment->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $payment->memo,
+                    'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => '-'.number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $customer->email,
+                    'attachments' => '',
+                    'status' => 'Closed',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1457,29 +1510,37 @@ class All_sales extends MY_Controller {
                 break;
             }
 
-            $transactions[] = [
-                'id' => $billableExpense->id,
-                'date' => $date,
-                'type' => 'Billable Expense Charge',
-                'no' => '',
-                'customer' => $customerName,
-                'customer_id' => $billableExpense->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $billableExpense->description,
-                'due_date' => $date,
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => '',
-                'attachments' => '',
-                'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+            
+            if($flag) {
+                $transactions[] = [
+                    'id' => $billableExpense->id,
+                    'date' => $date,
+                    'type' => 'Billable Expense Charge',
+                    'no' => '',
+                    'customer' => $customerName,
+                    'customer_id' => $billableExpense->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $billableExpense->description,
+                    'due_date' => $date,
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval(str_replace(',', '', $billableExpense->amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;
@@ -1762,29 +1823,37 @@ class All_sales extends MY_Controller {
 
             $total = $hr * $price;
 
-            $transactions[] = [
-                'id' => $timeCharge->id,
-                'date' => date("m/d/Y", strtotime($timeCharge->date)),
-                'type' => 'Time Charge',
-                'no' => '',
-                'customer' => $customerName,
-                'customer_id' => $timeCharge->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => '',
-                'due_date' => date("m/d/Y", strtotime($timeCharge->date)),
-                'aging' => '',
-                'balance' => '0.00',
-                'total' => number_format(floatval($total), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => '',
-                'attachments' => '',
-                'status' => $timeCharge->status === '1' ? 'Open' : 'Closed',
-                'po_number' => '',
-                'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($timeCharge->created_at)),
-                'manage' => $manageCol
-            ];
+            $flag = true;
+
+            if(!is_null($filters['delivery_method'])) {
+                $flag = false;
+            }
+
+            if($flag) {
+                $transactions[] = [
+                    'id' => $timeCharge->id,
+                    'date' => date("m/d/Y", strtotime($timeCharge->date)),
+                    'type' => 'Time Charge',
+                    'no' => '',
+                    'customer' => $customerName,
+                    'customer_id' => $timeCharge->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => '',
+                    'due_date' => date("m/d/Y", strtotime($timeCharge->date)),
+                    'aging' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval($total), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => '',
+                    'attachments' => '',
+                    'status' => $timeCharge->status === '1' ? 'Open' : 'Closed',
+                    'po_number' => '',
+                    'sales_rep' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($timeCharge->created_at)),
+                    'manage' => $manageCol
+                ];
+            }
         }
 
         return $transactions;

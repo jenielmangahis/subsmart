@@ -133,12 +133,14 @@
                                         <div class="row">
                                             <div class="col-lg-8 mb-2">
                                                 <strong>Location</strong>
-                                                <select id="location_id" name="loc_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                                    <option value="2" selected>Test</option>    
+                                                <select id="locations" name="loc_id" class="form-control" placeholder="Select" required>
+                                                    <?php foreach($location as $locations) : ?>
+                                                        <option value="<?= $locations->loc_id ?>"> <?= $locations->location_name ?></option>
+                                                        <?php endforeach; ?>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4 mb-2">
-                                                <strong>Quantity</strong>
+                                                <strong>Initial Quantity</strong>
                                                 <input type="number" class="form-control " name="qty" id="qty" required />
                                             </div>
                                         </div>
@@ -175,6 +177,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    $(document).ready(function() {
+        $("#locations").select2({
+            placeholder: "Choose Location..."
+        });
+    });
     $(function(){
         $('#location_id').select2({
             ajax: {
@@ -191,7 +198,7 @@
                 processResults: function (data, params) {
                   params.page = params.page || 1;
                   return {
-                    results: data.items,
+                    results: data,
                   };
                 },
                 cache: true
@@ -201,6 +208,7 @@
               templateSelection: formatRepoLocationSelection
         });
     })
+    
     function formatRepoLocationSelection(repo) {
 
             if( repo.loc_id != null ){
@@ -241,7 +249,7 @@ $("#inventory_form").submit(function(e) {
         data: form.serialize(), // serializes the form's elements.
         // success: function(data) {
         //     console.log(data);
-        // }
+        // }    
     });
     Swal.fire({
         icon: 'success',

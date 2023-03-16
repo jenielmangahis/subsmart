@@ -63,37 +63,27 @@
         <div class="row mt-5">
             <div class="col-md-8">
                 <h6 class="title-border">FROM :</h6>
-                <b><?= $company_info->business_name; ?></b><br>
-                <span><?= $company_info->street; ?></span><br>
-                <span><?= $company_info->city.' '.$company_info->state.', '.$company_info->postal_code ; ?></span><br>
-                <span> Phone: <?= $company_info->business_phone ; ?></span>
+                <div style="padding:0px 9px; font-size: 16px;">
+                    <b style="font-size:17px;"><?= $company_info->business_name; ?></b><br>
+                    <span><?= $company_info->street; ?></span><br>
+                    <span><?= $company_info->city.' '.$company_info->state.', '.$company_info->postal_code; ?></span><br>
+                    <?php if( $company_info->business_email != '' ){ ?>
+                        <span> Email: <a href="mailto:<?= $company_info->business_email; ?>"><?= $company_info->business_email; ?></a></span><br />
+                    <?php } ?>
+                    <span> Contact Number: <?= $company_info->business_phone; ?></span>
+                </div>
                 <br>
-                <br />
-                <h6 class="title-border">TO :</h6>
-                <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
-                <span><?= $jobs_data->mail_add; ?></span><br>
-                <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.', '.$jobs_data->cust_zip_code ; ?></span>                                                
-                <span>Email: <?= $jobs_data->cust_email ; ?></span>
-                <a
-                    href="mailto:<?= $jobs_data->cust_email ; ?>"><span
-                        class="fa fa-envelope icon_preview"></span></a><br>
-                <span>Phone: </span>
-                <?php if ($jobs_data->phone_h!="" || $jobs_data->phone_h!=null): ?>
-                <?= $jobs_data->phone_h;  ?>
-                <span class="fa fa-phone icon_preview"></span>
-                <span class="fa fa-envelope-open-text icon_preview"></span>
-                <?php else : echo 'N/A';?>
-                <?php endif; ?>
-                <br>
-                <span>Mobile: </span>
-                <?php if ($jobs_data->phone_m!="" || $jobs_data->phone_m!=null): ?>
-                <!-- <?= $jobs_data->phone_h;  ?> -->
-                <?= $jobs_data->phone_m;  ?>
-                <span class="fa fa-phone icon_preview"></span>
-                <span class="fa fa-envelope-open-text icon_preview"></span>
-                <?php else : echo 'N/A';?>
-                <?php endif; ?>
-                <br>
+                <h6 class="title-border">TO : </h6>
+                <div style="padding:0px 9px; font-size: 16px;">
+                    <b style="font-size:17px;"><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
+                    <span><?= $jobs_data->mail_add; ?></span><br>
+                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.', '.$jobs_data->cust_zip_code ; ?></span><br />
+                    <?php if( $jobs_data->cust_email != '' ){ ?>
+                        <span>Email: <a href="mailto:<?= $jobs_data->cust_email; ?>"><?= $jobs_data->cust_email; ?></a></span><br>
+                    <?php } ?>                
+                    <!-- <span>Phone: <?= $jobs_data->phone_h !="" || $jobs_data->phone_h !=null ? $jobs_data->phone_h : 'N/A'; ?> </span><br>    -->             
+                    <span>Contact Number: <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? $jobs_data->phone_m : 'N/A'; ?></span><br>
+                </div>
             </div>
             <div class="col-md-4">
                 <h6 class="title-border">TECHNICIANS :</h6>

@@ -1452,6 +1452,31 @@ ${companyName}`);
     $('#send-transaction-email').modal('show');
 });
 
+$('#transactions-table .send-invoice').on('click', function(e) {
+    e.preventDefault();
+    var refnumIndex = $('#transactions-table thead tr td[data-name="No."]').index();
+    var emailIndex = $('#transactions-table thead tr td[data-name="Email"]').index();
+
+    var row = $(this).closest('tr');
+    var ref_no = $(row.find('td')[refnumIndex]).text().trim();
+    var id = row.find('.select-one').val();
+    var email = $(row.find('td')[emailIndex]).text().trim();
+
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`New payment request from ${companyName} - invoice ${ref_no}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Here's your invoice! We appreciate your prompt payment.
+
+Thanks for your business!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/invoice/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
+});
+
 $('#transactions-table .send-credit-memo').on('click', function(e) {
     e.preventDefault();
     var row = $(this).closest('tr');

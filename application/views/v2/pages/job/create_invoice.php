@@ -177,14 +177,42 @@
                                     <span id="taxes">$ 0.00</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <span>Adjustment</span>
-                                </td>
-                                <td>
-                                    <span id="adjustment">$ 0.00</span>
-                                </td>
-                            </tr>
+                            <?php if (isset($workorder) && $workorder->installation_cost) : ?>
+                                <tr>
+                                    <td>
+                                        <span>Installation Cost</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $workorder->installation_cost, 2); ?></span>
+                                        <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
+                            <?php if (isset($workorder) && $workorder->otp_setup) : ?>
+                                <tr>
+                                    <td>
+                                        <span>One time (Program and Setup)</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $workorder->otp_setup, 2); ?></span>
+                                        <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
+                            <?php if (isset($workorder) && $workorder->monthly_monitoring) : ?>
+                                <tr>
+                                    <td>
+                                        <span>Monthly Monitoring</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $workorder->monthly_monitoring, 2); ?></span>
+                                        <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
                             <tr>
                                 <td>
                                     <span style="color:blue;">Grand Total</span>
@@ -193,7 +221,6 @@
                                     <span id="grandtotal">$ 0.00</span>
                                 </td>
                             </tr>
-
                         </table>
 
                     </div>
@@ -331,9 +358,16 @@
             grandtotal = (subtotal + taxes) - discount;
         });
 
+        const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
+        adjustmentIdSelectors.forEach(selector => {
+            const $element = document.getElementById(selector);
+            if ($element) {
+                grandtotal = parseFloat(grandtotal) + parseFloat($element.value);
+            }
+        })
+
         document.getElementById("subtotal").textContent = "$ " + subtotal.toFixed(2);
         document.getElementById("taxes").textContent = "$ " + taxes.toFixed(2);
-        document.getElementById("adjustment").textContent = "$ " + discount.toFixed(2);
         document.getElementById("grandtotal").textContent = "$ " + grandtotal.toFixed(2);
     }
 
@@ -483,7 +517,6 @@
                 sub_total: document.querySelector('#subtotal').textContent.slice(2),
                 balance: document.querySelector('#grandtotal').textContent.slice(2),
                 taxes: document.querySelector('#taxes').textContent.slice(2),
-                adjustment: document.querySelector('#adjustment').textContent.slice(2),
                 grand_total: document.querySelector('#grandtotal').textContent.slice(2),
                 terms_and_conditions: ckeditorData,
                 terms: ckeditorData,
@@ -491,7 +524,30 @@
                 work_order_number: '',
                 deposit_request_type: document.getElementById("deposit-amount-type").value,
                 deposit_request: document.getElementById("deposit-amount-value").value,
+                monthly_monitoring: 0,
+                program_setup: 0,
             };
+
+
+            const adjustmentSelectors = [{
+                id: "adjustment_ic",
+                payloadKey: "",
+            }, {
+                id: "adjustment_otps",
+                payloadKey: "program_setup",
+            }, {
+                id: "adjustment_mm",
+                payloadKey: "monthly_monitoring",
+            }];
+            adjustmentSelectors.forEach(selector => {
+                if (!selector.payloadKey || !payload[selector.payloadKey]) return;
+
+                const $element = document.getElementById(selector.id);
+                if ($element) {
+                    payload[selector.payloadKey] = parseFloat($element.value);
+                }
+            })
+
 
             const itemRows = document.querySelectorAll('#item-table tbody tr.row-item');
             itemRows.forEach(row => {

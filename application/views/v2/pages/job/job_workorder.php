@@ -458,6 +458,7 @@
                 </div>
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
+                <input type="hidden" name="work_order_id" value="<?= isset($jobs_data) ? $jobs_data->id : "" ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -882,6 +883,46 @@
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
+
+                                                    <?php if (isset($jobs_data) && $jobs_data->installation_cost): ?>
+                                                        <?php $subtotal = $subtotal + $jobs_data->installation_cost; ?>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label>Installation Cost</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>$<?= number_format((float) $jobs_data->installation_cost, 2) ?></label>
+                                                                <input id="adjustment_ic" type="hidden" value="<?= $jobs_data->installation_cost; ?>">
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+
+                                                    <?php if (isset($jobs_data) && $jobs_data->otp_setup): ?>
+                                                        <?php $subtotal = $subtotal + $jobs_data->otp_setup; ?>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label>One time (Program and Setup)</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>$<?= number_format((float) $jobs_data->otp_setup, 2) ?></label>
+                                                                <input id="adjustment_otps" type="hidden" value="<?= $jobs_data->otp_setup; ?>">
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+
+                                                    <?php if (isset($jobs_data) && $jobs_data->monthly_monitoring): ?>
+                                                        <?php $subtotal = $subtotal + $jobs_data->monthly_monitoring; ?>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <label>Monthly Monitoring</label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label>$<?= number_format((float) $jobs_data->monthly_monitoring, 2) ?></label>
+                                                                <input id="adjustment_mm" type="hidden" value="<?= $jobs_data->monthly_monitoring; ?>">
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+
                                                     <div class="row">
                                                         <hr>
                                                     </div>
