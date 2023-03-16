@@ -313,6 +313,10 @@ $("#attachment-file").change(function() {
             }).then(response => response.json()).then(response => {
                 var { locations } = response;
                 var select = document.querySelector('#location'+id);
+
+                // Avoid TypeError: Cannot set properties of null (setting 'innerHTML')
+                if (select === null) return;
+
                 select.innerHTML = '';
                 // Loop through each location and append a new option element to the select
                 var options = document.createElement('option');
@@ -355,6 +359,7 @@ $("#attachment-file").change(function() {
         }
 
         function calculate_subtotal(tax=0, def=false, discount=0){
+            console.log("Calculating subtotal...");
             var subtotal = 0 ;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
@@ -381,14 +386,6 @@ $("#attachment-file").change(function() {
 
                 $('#invoice_tax_total').html('$' + tax_total);
             }
-            var withCommas = Number(total).toLocaleString('en');
-            if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
-            }
-            if(discount > 0){
-                $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
-            }
-            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
                         
             const $requestedDeposit = document.getElementById("invoice_requested_deposit");
             if ($requestedDeposit && $requestedDeposit.dataset.value) {
@@ -397,10 +394,29 @@ $("#attachment-file").change(function() {
                 total = parseFloat(invoiceTotal).toFixed(2);                
                 $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
             }
+
+            const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
+            adjustmentIdSelectors.forEach(selector => {
+                const $element = document.getElementById(selector);
+                if ($element) {
+                    total = parseFloat(parseFloat(total) + parseFloat($element.value)).toFixed(2);                
+                }
+            })
+
+            var withCommas = Number(total).toLocaleString('en');
+            if(tax_total < 1){
+                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
+            }
+            if(discount > 0){
+                $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
+            }
+            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
+
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
             $('#total2').val(total);
         }
+        window.__calculate_subtotal = calculate_subtotal;
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
             num = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");

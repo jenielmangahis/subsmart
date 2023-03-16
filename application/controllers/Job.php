@@ -39,6 +39,7 @@ class Job extends MY_Controller
         } else {
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
+
         $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';
 
@@ -71,10 +72,39 @@ class Job extends MY_Controller
                     return $job;
                 }
 
+                // make sure to calculate amount from items
                 $job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
                 return $job;
             }, $jobs);
         }
+
+        $jobs = array_map(function ($job) {
+            if (!$job->work_order_id) {
+                return $job;
+            }
+
+            $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+            $this->db->where('id', $job->work_order_id);
+            $workorderQuery = $this->db->get('work_orders');
+            $workorder = $workorderQuery->row();
+
+            if (!$workorder) {
+                return $job;
+            }
+
+            // make sure to include adjustment to total
+            if ($workorder->installation_cost) {
+                $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
+            }
+            if ($workorder->otp_setup) {
+                $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
+            }
+            if ($workorder->monthly_monitoring) {
+                $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
+            }
+
+            return $job;
+        }, $jobs);
 
         $companyId = logged('company_id');
         $user_id   = logged('id');
@@ -2041,6 +2071,7 @@ class Job extends MY_Controller
                 'tax_rate' => $input['tax'],
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
+                'work_order_id' => $input['work_order_id']
             );
 
             if (!empty($input['customer_message'])) {
@@ -4037,6 +4068,16 @@ class Job extends MY_Controller
 
         if (!is_null($jobInvoice)) {
             return redirect('job/new_job1/' . $job->id);
+        }
+
+        if ($job->work_order_id) {
+            $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+            $this->db->where('id', $job->work_order_id);
+            $workorderQuery = $this->db->get('work_orders');
+            $workorder = $workorderQuery->row();
+            if ($workorder) {
+                $this->page_data['workorder'] = $workorder;
+            }
         }
 
         $this->db->where('prof_id', $job->customer_id);
