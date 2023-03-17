@@ -24,12 +24,6 @@
                 <span>Workers' Comp</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Benefits'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="#">
-                <i class='bx bx-fw bx-message-square-error'></i>
-                <span>Benefits</span>
-            </a>
-        </li>
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>

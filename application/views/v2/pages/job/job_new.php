@@ -949,7 +949,47 @@
                                                                     } 
                                                                 ?>
                                                             </select>
-                                                        </div>                                                      
+                                                        </div>     
+
+                                                        <?php if (isset($workorder) && $workorder->installation_cost): ?>
+                                                            <?php $subtotal = $subtotal + $workorder->installation_cost; ?>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label>Installation Cost</label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label>$<?= number_format((float) $workorder->installation_cost, 2) ?></label>
+                                                                    <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+
+                                                        <?php if (isset($workorder) && $workorder->otp_setup): ?>
+                                                            <?php $subtotal = $subtotal + $workorder->otp_setup; ?>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label>One time (Program and Setup)</label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label>$<?= number_format((float) $workorder->otp_setup, 2) ?></label>
+                                                                    <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+
+                                                        <?php if (isset($workorder) && $workorder->monthly_monitoring): ?>
+                                                            <?php $subtotal = $subtotal + $workorder->monthly_monitoring; ?>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label>Monthly Monitoring</label>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label>$<?= number_format((float) $workorder->monthly_monitoring, 2) ?></label>
+                                                                    <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+
                                                         <div class="col-sm-6">
                                                             <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">

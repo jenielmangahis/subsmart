@@ -274,11 +274,6 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-group'></i> Workers' Comp
                             </a>
                         </li>
-                        <li class="<?=$page->title === "Benefits" ? 'selected' : ''?>">
-                            <a href="#">
-                                <i class='bx bx-fw bx-file'></i> Benefits
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <li class="<?=$page->parent === 'Reports' ? 'selected' : ''?>">

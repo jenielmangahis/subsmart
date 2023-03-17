@@ -320,6 +320,13 @@ class Job extends MY_Controller
             $this->db->where('job_id', $id);
             $jobInvoice = $this->db->get('invoices')->row();
             $this->page_data['job_invoice'] = $jobInvoice;
+
+            if ($this->page_data['jobs_data']) {
+                $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+                $this->db->where('id', $this->page_data['jobs_data']->work_order_id);
+                $workorderQuery = $this->db->get('work_orders');
+                $this->page_data['workorder'] = $workorderQuery->row();
+            }
         }
 
         $this->page_data['job_created_by'] = $created_by;
@@ -721,6 +728,10 @@ class Job extends MY_Controller
                         break;
                     }
                 }
+            }
+
+            if (is_numeric($workorder->taxes)) {
+                $this->page_data['jobs_data']->tax_rate = $workorder->taxes;
             }
 
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);

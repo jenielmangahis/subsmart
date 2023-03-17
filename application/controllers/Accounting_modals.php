@@ -62,6 +62,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_account_transactions_model');
         $this->load->model('estimate_model');
         $this->load->model('EstimateSettings_model');
+        $this->load->model('Clients_model');
         $this->load->library('form_validation');
     }
 
@@ -22962,7 +22963,7 @@ class Accounting_modals extends MY_Controller
     {
         $this->load->helper('string');
         $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_invoice";
+        $view = 'invoice/pdf/template';
 
         $extension = '.pdf';
 
@@ -22973,27 +22974,17 @@ class Accounting_modals extends MY_Controller
         } while ($exists);
 
         $invoice = $this->invoice_model->getinvoice($invoiceId);
-        $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
-        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
-        $discount += floatval($invoice->taxes);
-        $discount += floatval($invoice->adjustment_value);
-
-        $invoice->discount_total = $discount;
-
-        foreach($invoiceItems as $key => $invoiceItem) {
-            $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-
-            $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
-            $taxAmount = floatval($taxAmount) / 100;
-            $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
-        }
+        $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
         $pdfData = [
-            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'invoice' => $invoice,
-            'invoiceItems' => $invoiceItems
+            'items' => $this->invoice_model->getItemsInv($invoice->id),
+            'user' => get_user_by_id(logged('id')),
+            'users' => $this->invoice_model->getInvoiceCustomer($invoice->id),
+            'company' => get_company_by_id(logged('company_id')),
+            'format' => 'pdf',
+            'profile' => $img[2] . "/" . $img[3] . "/" . $img[4],
         ];
 
         $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
@@ -23014,10 +23005,9 @@ class Accounting_modals extends MY_Controller
         $this->load->helper('string');
 
         $invoice = $this->invoice_model->getinvoice($invoiceId);
-        $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
-        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-        $view = "accounting/modals/print_action/print_invoice";
+        $view = 'invoice/pdf/template';
+
         $extension = '.pdf';
 
         do {
@@ -23026,35 +23016,18 @@ class Accounting_modals extends MY_Controller
             $exists = file_exists('./assets/pdf/'.$fileName);
         } while ($exists);
 
-        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
-        $discount += floatval($invoice->taxes);
-        $discount += floatval($invoice->adjustment_value);
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
 
-        $invoice->discount_total = $discount;
-
-        foreach($invoiceItems as $key => $invoiceItem) {
-            $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-
-            $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
-            $taxAmount = floatval($taxAmount) / 100;
-            $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
-        }
-
-        $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
-        $customerName = $customer->first_name . ' ' . $customer->last_name;
-
-        $address = $customerName."<br />";
-        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
+        $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
         $pdfData = [
-            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'invoice' => $invoice,
-            'invoiceItems' => $invoiceItems,
-            'address' => $address
+            'items' => $this->invoice_model->getItemsInv($invoice->id),
+            'user' => get_user_by_id(logged('id')),
+            'users' => $this->invoice_model->getInvoiceCustomer($invoice->id),
+            'company' => get_company_by_id(logged('company_id')),
+            'format' => 'pdf',
+            'profile' => $img[2] . "/" . $img[3] . "/" . $img[4],
         ];
 
         $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
@@ -23552,25 +23525,14 @@ class Accounting_modals extends MY_Controller
             switch($explode[0]) {
                 case 'invoice' :
                     $invoice = $this->invoice_model->getinvoice($explode[1]);
-                    $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
-                    $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+                    $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
-                    $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
-                    $discount += floatval($invoice->taxes);
-                    $discount += floatval($invoice->adjustment_value);
-
-                    $invoice->discount_total = $discount;
-
-                    foreach($invoiceItems as $key => $invoiceItem) {
-                        $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-
-                        $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
-                        $taxAmount = floatval($taxAmount) / 100;
-                        $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
-                    }
-
-                    $invoice->prefix = $invoiceSettings->invoice_num_prefix;
-                    $invoice->items = $invoiceItems;
+                    $invoice->items = $this->invoice_model->getItemsInv($invoice->id);
+                    $invoice->user = get_user_by_id(logged('id'));
+                    $invoice->users = $this->invoice_model->getInvoiceCustomer($invoice->id);
+                    $invoice->company = get_company_by_id(logged('company_id'));
+                    $invoice->format = 'pdf';
+                    $invoice->profile = $img[2] . "/" . $img[3] . "/" . $img[4];
                     $invoice->type = 'Invoice';
 
                     $pdfTransactions[] = $invoice;
@@ -23753,12 +23715,18 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $fileName = 'Invoice_'.$invoice->invoice_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
-                    $view = "accounting/modals/print_action/print_invoice";
+                    $view = 'invoice/pdf/template';
+
+                    $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
                     $pdfData = [
-                        'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
                         'invoice' => $invoice,
-                        'invoiceItems' => $invoiceItems
+                        'items' => $this->invoice_model->getItemsInv($invoice->id),
+                        'user' => get_user_by_id(logged('id')),
+                        'users' => $this->invoice_model->getInvoiceCustomer($invoice->id),
+                        'company' => get_company_by_id(logged('company_id')),
+                        'format' => 'pdf',
+                        'profile' => $img[2] . "/" . $img[3] . "/" . $img[4],
                     ];
 
                     $email = empty($invoice->customer_email) ? $customer->email : $invoice->customer_email;
@@ -23771,58 +23739,123 @@ Thanks for your business!
 $company->business_name";
                 break;
                 case 'estimate' :
-                    $estimate = $this->estimate_model->getEstimate($explode[1]);
-                    $customer = $this->accounting_customers_model->getCustomerDetails($estimate->customer_id)[0];
-                    $settings = $this->EstimateSettings_model->getEstimateSettingByCompanyId(logged('company_id'));
-                    $estimateItems = $this->estimate_model->getItemlistByID($estimate->id);
+                    $this->load->helper('pdf_helper');
 
-                    $billingAddress = '';
-                    if ($customer->business_name !== "" && $customer->business_name !== null) {
-                        $billingAddress .= $customer->business_name;
-                    } else {
-                        $customerName = '';
-                        $customerName .= $customer->first_name !== "" ? $customer->first_name . " " : "";
-                        $customerName .= $customer->middle_name !== "" ? $customer->middle_name . " " : "";
-                        $customerName .= $customer->last_name !== "" ? $customer->last_name : "";
-                        $billingAddress .= trim($customerName);
-                    }
-                    $billingAddress .= "<br />";
+                    $estimate = $this->estimate_model->getById($explode[1]);
+                    $company_id = $estimate->company_id;
+                    $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+                    $client   = $this->Clients_model->getById($company_id);
+                    $estimateItems = $this->estimate_model->getEstimatesItems($explode[1]);
+                    $fileName = 'Estimate_'.$estimate->estimate_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
 
-                    $billingAddress .= $customer->mail_add !== "" ? $customer->mail_add : "";
-                    $billingAddress .= $customer->city !== "" ? '<br />' . $customer->city : "";
-                    $billingAddress .= $customer->state !== "" ? ', ' . $customer->state : "";
-                    $billingAddress .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-                    $billingAddress .= $customer->country !== "" ? ' ' . $customer->country : "";
+                    $html = '
+                        <table style="padding-top:-40px;">
+                            <tr>
+                                <td>
+                                    <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
+                                    <br />
+                                    <span class="">'.$client->business_address.'</span><br />
+                                    <span class="">EMAIL: '.$client->email_address.'</span><br />
+                                    <span class="">PHONE: '.$client->phone_number.'</span>
+                                    <br/><br /><br />
+                                    <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
+                                    <br />
+                                    <span class="">'.$customer->mail_add. " " .$customer->city.'</span><br />
+                                    <span class="">EMAIL: '.$customer->email.'</span><br />
+                                    <span class="">PHONE: '.$customer->phone_w.'</span>
+                                </td>
+                                <td colspan=1></td>
+                                <td style="text-align:right;">
+                                    <h5 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h5>
+                                    <br />
+                                    <table>
+                                    <tr>
+                                        <td>Estimate Date :</td>
+                                        <td>'.date("F d, Y", strtotime($estimate->estimate_date)).'</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Expire Due :</td>
+                                        <td>'.date("F d, Y", strtotime($estimate->expiry_date)).'</td>
+                                    </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
 
-                    foreach($estimateItems as $key => $estimateItem)
-                    {
-                        $estimateItems[$key]->item = $this->items_model->getItemById($estimateItem->items_id)[0];
-                    }
+                        <table style="width="100%;>
+                        <thead>
+                            <tr>
+                                <th style="width:5%;"><b>#</b></th>
+                                <th style="width:35%;"><b>Items</b></th>
+                                <th style="width:12%;"><b>Item Type</b></th>
+                                <th style="width:12%;text-align: right;"><b>Qty</b></th>
+                                <th style="width:12%;text-align: right;"><b>Price</b></th>
+                                <th style="width:12%;text-align: right;"><b>Discount</b></th>
+                                <th style="width:12%;text-align: right;"><b>Total</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+                        $total_amount = 0;
+                        $total_tax = 0;
+                        $row = 1;
+                        foreach ($estimateItems as $item) {
+                            $html .= '<tr>
+                                <td valign="top" style="width:5%;">'.$row.'</td>
+                                <td valign="top" style="width:35%;">'.$item->title.'</td>
+                                <td valign="top" style="width:12%;">'.$item->type.'</td>
+                                <td valign="top" style="width:12%;text-align: right;">'.$item->qty.'</td>
+                                <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iCost, 2).'</td>
+                                <td valign="top" style="width:12%;text-align: right;">'.number_format($item->discount, 2).'</td>
+                                <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iTotal, 2).'</td>
+                            </tr>
+                            ';
+                            $row++;
+                            $total_amount += $item->iTotal;
+                        }
 
-                    $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
-                    $taxtotal1 = ((float)$estimate->tax1_total) + ((float)$estimate->tax2_total);
-                    $subtotal1 = ((float)$estimate->sub_total) + ((float)$estimate->sub_total2);
-                    $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
-                    $taxtotal2 = ((float)$estimate->tax1_total) + ((float)$estimate->tax2_total);
-                    $subtotal2 = ((float)$estimate->sub_total) + ((float)$estimate->sub_total2);
+                        $html .= '
+                        <tr><br><br>
+                        <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
+                        <td style="text-align: right;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+                        </tr>
+                        <tr>
+                        <td colspan="6" style="text-align: right;"><b>Taxes</b></td>
+                        <td style="text-align: right;"><b>$'.number_format($estimate->tax1_total, 2).'</b></td>
+                        </tr>
+                        <tr>
+                        <td colspan="6" style="text-align: right;"><b>'.$estimate->adjustment_name.'</b></td>
+                        <td style="text-align: right;"><b>$'.number_format($estimate->adjustment_value, 2).'</b></td>
+                        </tr>
+                        <tr>
+                        <td colspan="6" style="text-align: right;"><b>Grand Total</b></td>
+                        <td style="text-align: right;"><b>$'.number_format($total_amount, 2).'</b></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    <br /><br /><br />
+                    <p><b>Instructions</b><br /><br />'.$estimate->instructions.'</p>
+                    <p><b>Message</b><br /><br />'.$estimate->customer_message.'</p>
+                    <p><b>Terms</b><br /><Br />'.$estimate->terms_conditions.'</p>
+                    ';
 
-                    if ($estimate->estimate_type == 'Option') {
-                        $estimate->total = $total1;
-                        $estimate->sub_total = $subtotal1;
-                        $estimate->tax_total = $taxtotal1;
-                    } elseif ($estimate->estimate_type == 'Bundle') {
-                        $estimate->total = $total2;
-                        $estimate->sub_total = $subtotal2;
-                        $estimate->tax_total = $taxtotal2;
-                    } else {
-                        $estimate->total = $estimate->grand_total;
-                        $estimate->tax_total = $estimate->tax1_total;
-                    }
-
-                    $estimate->prefix = !is_null($settings) ? $settings->estimate_num_prefix : 'EST-';
-                    $estimate->billing_address= $billingAddress;
-                    $estimate->items = $estimateItems;
-                    $estimate->type = 'Estimate';
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Estimates";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(getcwd()."/assets/pdf/$fileName", 'F');
 
                     $email = empty($estimate->email) ? $customer->email : $estimate->email;
                     $subject = "Estimate $estimate->estimate_number from $company->business_name";
@@ -23875,7 +23908,7 @@ $company->business_name";
                         $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
                         $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
                         $taxAmount = floatval($taxAmount) / 100;
-            
+
                         $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
                         $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
                     }
@@ -23934,17 +23967,17 @@ $company->business_name";
                 break;
             }
 
+            if($explode[0] !== 'estimate') {
+                $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+            }
+
             $this->email->clear(true);
             $this->email->from($company->business_email);
             $this->email->to($email);
             $this->email->subject($subject);
             $this->email->message($message);
 
-            if($data[0] !== 'estimate') {
-                $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
-
-                $this->email->attach(base_url("/assets/pdf/$fileName"));
-            }
+            $this->email->attach(base_url("/assets/pdf/$fileName"));
             $this->email->send();
 
             unlink(getcwd()."/assets/pdf/$fileName");
@@ -23974,31 +24007,19 @@ $company->business_name";
         foreach($invoices as $invoiceId)
         {
             $invoice = $this->invoice_model->getinvoice($invoiceId);
-            $customer = $this->accounting_customers_model->getCustomerDetails($invoice->customer_id)[0];
-            $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
-            $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
-
-            $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
-            $discount += floatval($invoice->taxes);
-            $discount += floatval($invoice->adjustment_value);
-
-            $invoice->discount_total = $discount;
-
-            foreach($invoiceItems as $key => $invoiceItem) {
-                $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-
-                $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
-                $taxAmount = floatval($taxAmount) / 100;
-                $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
-            }
-
             $fileName = 'Invoice_'.$invoice->invoice_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
-            $view = "accounting/modals/print_action/print_invoice";
+            $view = 'invoice/pdf/template';
+
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
             $pdfData = [
-                'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
                 'invoice' => $invoice,
-                'invoiceItems' => $invoiceItems
+                'items' => $this->invoice_model->getItemsInv($invoice->id),
+                'user' => get_user_by_id(logged('id')),
+                'users' => $this->invoice_model->getInvoiceCustomer($invoice->id),
+                'company' => get_company_by_id(logged('company_id')),
+                'format' => 'pdf',
+                'profile' => $img[2] . "/" . $img[3] . "/" . $img[4],
             ];
 
             $email = empty($invoice->customer_email) ? $customer->email : $invoice->customer_email;

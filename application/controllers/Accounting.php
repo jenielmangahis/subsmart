@@ -1346,7 +1346,10 @@ class Accounting extends MY_Controller
     public function payrolloverview()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Sales Overview";
+        $this->page_data['page_title'] = "Payroll Overview";
+
+        $this->page_data['page']->parent = "Payroll";
+        $this->page_data['page']->title = "Payroll Overview";
         $this->load->view('accounting/payroll_overview', $this->page_data);
     }
 
@@ -1354,6 +1357,9 @@ class Accounting extends MY_Controller
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
+
+        $this->page_data['page']->parent = "Payroll";
+        $this->page_data['page']->title = "Workers' Comp";
         $this->load->view('accounting/workers_comp', $this->page_data);
     }
 

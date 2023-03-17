@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Job Location</label>
-                            <input class="form-control" id="job_location" value="<?= $customer->city, " ", $customer->state, " ", $customer->zipcode ?>" readonly>
+                            <input class="form-control" id="job_location" value="<?= getFormatedCustomerAddress($customer) ?>" readonly>
                         </div>
                         <div class="col-md-4">
                             <label>Job Name</label>
@@ -56,7 +56,7 @@
                     <div class="row form-group mb-3">
                         <div class="col-md-4">
                             <label>Invoice Type</label>
-                            <select name="invoice_type" class="form-control">
+                            <select name="invoice_type" class="form-select">
                                 <option value="Deposit">Deposit</option>
                                 <option value="Partial Payment">Partial Payment</option>
                                 <option value="Final Payment">Final Payment</option>
@@ -174,7 +174,8 @@
                                     <span>Taxes</span>
                                 </td>
                                 <td>
-                                    <span id="taxes">$ 0.00</span>
+                                    <span id="taxes">$ <?= number_format((float) $job->tax_rate, 2); ?></span>
+                                    <input id="default_tax" type="hidden" value="<?= $job->tax_rate; ?>">
                                 </td>
                             </tr>
                             <?php if (isset($workorder) && $workorder->installation_cost) : ?>
@@ -232,14 +233,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4 form-group">
-                            <select class="form-control" id="deposit-amount-type">
+                            <select class="form-select" id="deposit-amount-type">
                                 <option value="$" selected="selected">Deposit amount $</option>
                                 <option value="%">Percentage %</option>
                             </select>
                         </div>
                         <div class="col-md-4 form-group">
                             <div class="input-group">
-                                <input type="text" id="deposit-amount-value" name="deposit_amount" value="0" class="form-control" autocomplete="off">
+                                <input type="number" id="deposit-amount-value" name="deposit_amount" value="0" class="form-control" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -345,6 +346,7 @@
         let discount = 0;
         let grandtotal = 0;
 
+
         rows.forEach((row) => {
             const quantity = parseInt(row.querySelector(".itemquantity").value) || 0;
             const price = parseFloat(row.querySelector(".itemprice").value) || 0;
@@ -365,6 +367,10 @@
                 grandtotal = parseFloat(grandtotal) + parseFloat($element.value);
             }
         })
+
+        const defaultTax = parseFloat(document.getElementById("default_tax").value) || 0;
+        grandtotal += defaultTax;
+        taxes += defaultTax;
 
         document.getElementById("subtotal").textContent = "$ " + subtotal.toFixed(2);
         document.getElementById("taxes").textContent = "$ " + taxes.toFixed(2);
