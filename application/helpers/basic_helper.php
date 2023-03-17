@@ -5043,3 +5043,31 @@ if (!function_exists('formatJobNumber')) {
         return $number;
     }
 }
+
+if (!function_exists('getFormatedCustomerAddress')) {
+    function getFormatedCustomerAddress($customerObject, $isHtml = false) {
+        $address = '';
+
+        if (!empty(trim($customerObject->mail_add))) {
+            if (!$isHtml) {
+                $address .= $customerObject->mail_add;
+            } else {
+                $address .= $customerObject->mail_add . '<br>';
+            }
+        }
+
+        if (!empty(trim($customerObject->state))) {
+            if (!$isHtml) {
+                $address .= ', ' . $customerObject->state;
+            } else {
+                $address .= $customerObject->state;
+            }
+        }
+
+        if (!empty(trim($customerObject->zip_code))) {
+            $address .= ', ' . $customerObject->zip_code;
+        }
+
+        return $address;
+    }
+}

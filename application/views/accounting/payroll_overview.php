@@ -285,14 +285,26 @@
                                         <a href="#" class="add-employee pr-a" id="addEmployeeData"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6 >Add Employee</h6> </a>
 									</div>
+                                    <!-- <div class="col-sm-6">
+                                        <a href="/accounting/employees" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6 >Add Employee</h6> </a>
+                                    </div> -->
 									<div class="col-sm-6">
                                         <a href="#" class="add-employee pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Pay Contractor</h6></a>
 									</div>
+                                    <!-- <div class="col-sm-6">
+                                        <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Pay Contractor</h6></a>
+                                    </div> -->
 									<div class="col-sm-6">
                                         <a href="#" data-bs-toggle="modal" class="pr-a" data-bs-target="#modalAddContractor"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Add Contractor</h6> </a>
 									</div>
+                                    <!-- <div class="col-sm-6">
+                                        <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Add Contractor</h6></a>
+                                    </div> -->
 								</div>
 							</div>
 						</div>
