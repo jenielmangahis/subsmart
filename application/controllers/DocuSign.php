@@ -116,18 +116,22 @@ class DocuSign extends MYF_Controller
                 continue;
             }
 
-            // TODO: Get autopopulate data
+            if (array_key_exists($specs['auto_populate_with'], $autoPopulateData)) {
+                continue;
+            }
 
-            // $this->db->where('template_id', $specs['auto_populate_with']);
-            // $currAutoPopulateData = $this->db->get('user_docfile_templates_recipients')->row();
+            $this->db->where('color', $specs['auto_populate_with']);
+            $this->db->where('docfile_id', $documentId);
+            $currAutoPopulateData = $this->db->get('user_docfile_recipients')->row();
 
-            // if ($currAutoPopulateData) {
-            //     $this->db->where('role', $specs['role']);
-            //     $this->db->where('docfile_id', $documentId);
-            //     $currAutoPopulateData->recipient = $this->db->get('user_docfile_recipients')->row();
-            // }
+            $this->db->where('user_docfile_recipient_id', $currAutoPopulateData->id);
+            $jobRecipient = $this->db->get('user_docfile_job_recipients')->row();
 
-            // $autoPopulateData[$specs['auto_populate_with']] = $currAutoPopulateData;
+            if ($jobRecipient) {
+                $currAutoPopulateData = $this->_getJobCustomer($jobRecipient->job_id);
+            }
+
+            $autoPopulateData[$specs['auto_populate_with']] = $currAutoPopulateData;
         }
 
         header('content-type: application/json');

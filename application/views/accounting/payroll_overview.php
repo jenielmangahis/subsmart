@@ -278,33 +278,21 @@
 								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
 								<div class="row px-2 text-center mt-4 align-items-center">
 									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a"><p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <a href="#" class="run-payroll pr-a"><p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Run Payroll</h6></a>
 									</div>
-									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a" id="addEmployeeData"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6 >Add Employee</h6> </a>
-									</div>
-                                    <!-- <div class="col-sm-6">
+                                    <div class="col-sm-6">
                                         <a href="/accounting/employees" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6 >Add Employee</h6> </a>
-                                    </div> -->
-									<div class="col-sm-6">
-                                        <a href="#" class="add-employee pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Pay Contractor</h6></a>
-									</div>
-                                    <!-- <div class="col-sm-6">
+                                    </div>
+                                    <div class="col-sm-6">
                                         <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Pay Contractor</h6></a>
-                                    </div> -->
-									<div class="col-sm-6">
-                                        <a href="#" data-bs-toggle="modal" class="pr-a" data-bs-target="#modalAddContractor"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Add Contractor</h6> </a>
-									</div>
-                                    <!-- <div class="col-sm-6">
+                                    </div>
+                                    <div class="col-sm-6">
                                         <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Add Contractor</h6></a>
-                                    </div> -->
+                                    </div>
 								</div>
 							</div>
 						</div>
@@ -602,6 +590,10 @@
 
 <script>
     $(document).ready(function() {
+        $('.run-payroll').on('click', function() {
+            $('#new-popup .ajax-modal[data-view="payroll_modal"]').trigger('click');
+        });
+
         $('#employeeTable').DataTable({
             "searching": true,
             "sort": false

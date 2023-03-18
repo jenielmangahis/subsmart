@@ -16,14 +16,8 @@
     <?php endif; ?>
     <?php switch($transaction->type) { 
     case 'Invoice' : ?>
-        <div class="<?php echo ($transaction->format == 'print') ? 'print': '' ?>" style="width:<?php echo ($transaction->format == 'print') ? '50%': '100%' ?> !important;">
-            <div class="<?php echo ($transaction->format == 'print') ? 'invoice-paper print-body': 'invoice-paper' ?>" id="presenter-paper">
-            <?php if($transaction->format == 'print') : ?>
-            <div style="text-align: right; margin-bottom: 10px;">
-            <!-- <a class="btn-print" onclick="window.print();" href="#">Print</a> -->
-            <a class="btn-print" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
-            </div>
-            <?php endif; ?>
+        <div class="" style="width:100% !important;">
+            <div class="invoice-paper" id="presenter-paper">
 
             <div  id="printableArea" style="width:100%">
             
@@ -512,115 +506,6 @@
             font-family: Sans-Serif;
         }
         </style>
-
-        <script>
-        function printDiv(divName) {
-            var printContents = document.getElementById(divName).innerHTML;
-            var originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-        }
-        </script>
-        <!-- <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
-            <div>
-                <h2>INVOICE</h2>
-                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
-                    <tbody>
-                        <tr>
-                            <td width="60%"><strong>BILL TO</strong></td>
-                            <td style="text-align: right"><strong>INVOICE #</strong></td>
-                            <td><?=str_replace($transaction->prefix, '', $transaction->invoice_number)?></td>
-                        </tr>
-                        <tr style="vertical-align:top">
-                            <td rowspan="2"><?=$transaction->billing_address?></td>
-                            <td style="text-align: right"><strong>DATE</strong></td>
-                            <td><?=date("m/d/Y", strtotime($transaction->date_issued))?></td>
-                        </tr>
-                        <tr style="vertical-align:top">
-                            <td style="text-align: right"><strong>DUE DATE</strong></td>
-                            <td><?=date("m/d/Y", strtotime($transaction->due_date))?></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
-                    <thead>
-                        <tr>
-                            <th style="text-align: left" width="30%">ACTIVITY</th>
-                            <th style="text-align: right">QTY</th>
-                            <th style="text-align: right">RATE</th>
-                            <th style="text-align: right">DISCOUNT</th>
-                            <th style="text-align: right">TAX AMOUNT</th>
-                            <th style="text-align: right">AMOUNT</th>
-                        </tr>
-                    </thead>
-                    <tbody style="border-bottom: 1px dotted gray">
-                        <?php foreach($transaction->items as $invoiceItem) : ?>
-                            <tr>
-                                <td><?=$invoiceItem->item->title?></td>
-                                <td style="text-align: right"><?=intval($invoiceItem->qty)?></td>
-                                <td style="text-align: right"><?=number_format(floatval($invoiceItem->cost), 2, '.', ',')?></td>
-                                <td style="text-align: right"><?=number_format(floatval($invoiceItem->discount), 2, '.', ',')?></td>
-                                <td style="text-align: right"><?=number_format(floatval($invoiceItem->tax_amount), 2, '.', ',')?></td>
-                                <td style="text-align: right"><?=number_format(floatval($invoiceItem->total), 2, '.', ',')?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">SUBTOTAL</td>
-                            <td style="text-align: right"><?=number_format(floatval($transaction->sub_total), 2, '.', ',')?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">TAX</td>
-                            <td style="text-align: right"><?=number_format(floatval($transaction->taxes), 2, '.', ',')?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">DISCOUNT</td>
-                            <td style="text-align: right"><?=number_format(floatval($transaction->discount_total), 2, '.', ',')?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">ADJUSTMENT VALUE</td>
-                            <td style="text-align: right"><?=number_format(floatval($transaction->adjustment_value), 2, '.', ',')?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">TOTAL</td>
-                            <td style="text-align: right"><?=number_format(floatval($transaction->grand_total), 2, '.', ',')?></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td colspan="2">BALANCE DUE</td>
-                            <td style="text-align: right">
-                                <strong>
-                                    <?php
-                                        $amount = '$'.number_format(floatval($transaction->balance), 2, '.', ',');
-                                        $amount = str_replace('$-', '-$', $amount);
-                                        echo $amount;
-                                    ?>
-                                </strong>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div> -->
     <?php break;
     case 'Estimate' : ?>
         <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">

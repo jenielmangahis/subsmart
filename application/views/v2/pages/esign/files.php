@@ -568,7 +568,7 @@ echo put_header_assets();
                     <select class="form-select" name="autoPopulateWith" id="autoPopulateWith">
                         <option value="" selected>None</option>
                         <?php foreach ($recipients as $recipient): ?>
-                            <option value="<?=$recipient['id'];?>">
+                            <option value="<?=$recipient['color'];?>">
                                 <?=$recipient['name'];?>
                             </option>
                         <?php endforeach;?>
