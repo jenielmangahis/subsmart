@@ -188,10 +188,19 @@ define('PLAID_API_URL', 'https://development.plaid.com');
 //define('PLAID_API_REDIRECT_URL_DASHBOARD', 'https://localhost/ci/nsmart_v2/dashboard');
 //define('PLAID_API_REDIRECT_URL_MAIN', 'https://localhost/ci/nsmart_v2/plaid_accounts');
 
-//Online app
+//Plaid
 define('PLAID_API_REDIRECT_URL_DASHBOARD', 'https://nsmartrac.com/dashboard');
 define('PLAID_API_REDIRECT_URL_MAIN', 'https://nsmartrac.com/plaid_accounts');
-
 define('PLAID_API_WEBHOOK_URL', 'https://sample-web-hook.com');
 //define('PLAID_API_ENV', 'sandbox');
 define('PLAID_API_ENV', 'development');
+
+//Vonage SMS
+//Test
+/*define('VONAGE_API_KEY', '549b4fb1');
+define('VONAGE_API_SECRET', 'suuMjKjymRRuwn8q');
+define('VONAGE_BRANDING', 'Nsmart');*/
+//Nsmart Company
+define('VONAGE_API_KEY', '50b47ee3');
+define('VONAGE_API_SECRET', '4WKDyyrBj5Ru45BD');
+define('VONAGE_BRANDING', 'Nsmart');

@@ -563,8 +563,13 @@ function Signing(hash) {
         customer = data.job_recipient;
       }
 
+      const autoPopulateData = getAutoPopulateDataFromFieldSpecs(specs);
+      if (autoPopulateData) {
+        customer = autoPopulateData;
+      }
+
       if (customer && specs.name && !value) {
-        if (specs.name.toLowerCase() === "zip") {
+        if (String(specs.name.toLowerCase()).startsWith("zip")) {
           value =
             customer[specs.name] ||
             customer[specs.name.toLowerCase()] ||
@@ -583,6 +588,10 @@ function Signing(hash) {
 
       if (specs.value && !value && data.recipient.id === recipient.id) {
         value = specs.value;
+      }
+
+      if (value === undefined) {
+        value = "";
       }
 
       const placeholder = specs.placeholder || specs.name || field_name;
@@ -620,18 +629,6 @@ function Signing(hash) {
 
       if (specs.name) {
         $input.attr("data-name", specs.name);
-      }
-
-      if (specs.auto_populate_with && specs.auto_populate_with.length) {
-        if (Array.isArray(window.__esigndata.auto_populate_data)) {
-          const autoPopulateWith = window.__esigndata.auto_populate_data.find(
-            (recipient) => {
-              recipient.id === specs.auto_populate_with;
-            }
-          );
-
-          // TODO: use autoPopulateWith as value
-        }
       }
 
       let typingTimer;
@@ -743,9 +740,30 @@ function Signing(hash) {
       const $input = $field.find("input[type=text]");
       if ($input.val()) return; // avoid overiding user defined value
 
-      $input.val(recipient[nameLower]);
+      const currentRecipient =
+        getAutoPopulateDataFromFieldSpecs(parsedSpecs) || recipient;
+
+      $input.val(currentRecipient[nameLower]);
       $input.keyup(); // manually trigger event, this will make sure to save the value
     });
+  }
+
+  function getAutoPopulateDataFromFieldSpecs(specs) {
+    if (specs.auto_populate_with && specs.auto_populate_with.length) {
+      if (
+        window.__esigndata.auto_populate_data &&
+        window.__esigndata.auto_populate_data[specs.auto_populate_with]
+      ) {
+        const match =
+          window.__esigndata.auto_populate_data[specs.auto_populate_with];
+
+        if (match.first_name && match.last_name) {
+          match.name = `${match.first_name} ${match.last_name}`;
+        }
+
+        return match;
+      }
+    }
   }
 
   async function renderPDF(file) {
