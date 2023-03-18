@@ -2484,7 +2484,7 @@
         var default_date = moment(new Date());
         var date_selected = default_date.format('YYYY-MM-DD');
         calendar_modal_source = 'quick-add-job';
-        
+        $('#modal-quick-select-schedule-type').modal('hide');
         $('#modal-quick-add-job').modal('show');
 
         showLoader($("#quick-add-job-form-container"));        

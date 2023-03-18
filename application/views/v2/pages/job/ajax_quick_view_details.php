@@ -66,23 +66,23 @@
                 <div style="padding:0px 9px; font-size: 16px;">
                     <b style="font-size:17px;"><?= $company_info->business_name; ?></b><br>
                     <span><?= $company_info->street; ?></span><br>
-                    <span><?= $company_info->city.' '.$company_info->state.', '.$company_info->postal_code; ?></span><br>
+                    <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code; ?></span><br>
                     <?php if( $company_info->business_email != '' ){ ?>
                         <span> Email: <a href="mailto:<?= $company_info->business_email; ?>"><?= $company_info->business_email; ?></a></span><br />
                     <?php } ?>
-                    <span> Contact Number: <?= $company_info->business_phone; ?></span>
+                    <span> Contact Number: <?= formatPhoneNumber($company_info->business_phone); ?></span>
                 </div>
                 <br>
                 <h6 class="title-border">TO : </h6>
                 <div style="padding:0px 9px; font-size: 16px;">
                     <b style="font-size:17px;"><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                     <span><?= $jobs_data->mail_add; ?></span><br>
-                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.', '.$jobs_data->cust_zip_code ; ?></span><br />
+                    <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br />
                     <?php if( $jobs_data->cust_email != '' ){ ?>
                         <span>Email: <a href="mailto:<?= $jobs_data->cust_email; ?>"><?= $jobs_data->cust_email; ?></a></span><br>
                     <?php } ?>                
                     <!-- <span>Phone: <?= $jobs_data->phone_h !="" || $jobs_data->phone_h !=null ? $jobs_data->phone_h : 'N/A'; ?> </span><br>    -->             
-                    <span>Contact Number: <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? $jobs_data->phone_m : 'N/A'; ?></span><br>
+                    <span>Contact Number: <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?></span><br>
                 </div>
             </div>
             <div class="col-md-4">

@@ -51,6 +51,10 @@
     color: #ffffff;
     margin-bottom: 0px !important;
 }
+.nsm-calendar .month {
+    font-size: 12px;
+    font-weight: bold;
+}
 </style>
 <div style="">
 <table class="nsm-table" id="mini_upcoming_schedules_table">    
@@ -75,7 +79,7 @@
                             $schedule_end_time = $schedule['data']->end_time;
                             $schedule_status = $schedule['data']->status;
                             $schedule_type   = $schedule['data']->job_type;
-                            $schedule_tags   = $schedule['data']->tags_name;
+                            $schedule_tags   = $schedule['data']->tags;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';
@@ -98,6 +102,8 @@
                                 $assigned_employees[] = $schedule['data']->employee4_employee_id;
                             }
 
+                            $schedule_invoice_amount = $schedule['data']->invoice_amount;
+
                             $is_valid = 1;
 
                         }elseif( $schedule['type'] == 'event' ){
@@ -118,7 +124,12 @@
                             $schedule_event_name = '';
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->employee_id;
+                            $attendees = json_decode($schedule['data']->employee_id);
+                            foreach($attendees as $uid){
+                                $assigned_employees[] = $uid;    
+                            }                            
+
+                            $schedule_invoice_amount = 0;
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'estimate' ){
@@ -141,6 +152,8 @@
                             $assigned_employees[] = $schedule['data']->user_id;
                             $schedule_event_name = '';
 
+                            $schedule_invoice_amount = 0;
+
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'ticket' ){
                             $schedule_view_url = base_url('tickets/viewDetails/' . $schedule['data']->id);
@@ -162,6 +175,8 @@
                             $assigned_employees = array();
                             $assigned_employees[] = $schedule['data']->sales_rep;
                             $schedule_event_name = '';
+
+                            $schedule_invoice_amount = 0;
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'appointment' ){
@@ -204,6 +219,8 @@
                                 $assigned_employees[] = $eid;    
                             }
 
+                            $schedule_invoice_amount = 0;
+
                             $is_valid = 1;
                         }
                     ?>
@@ -222,13 +239,16 @@
                                     <div class="date">
                                         <?= $event_day; ?>
                                     </div>
+                                    <div class="month">
+                                        <?= $event_month; ?>
+                                    </div>
                                 </div>    
                                 <div class="nsm-calendar-info-container" style="text-align:center;">
-                                    <?php if( $schedule_status != '' ){ ?>
+                                    <!-- <?php if( $schedule_status != '' ){ ?>
                                     <span class="nsm-badge primary"><?php echo strtoupper($schedule_status); ?></span>
-                                    <?php } ?>
+                                    <?php } ?> -->
                                     <?php if( $schedule_start_time != '' && $schedule_end_time != '' ){ ?>
-                                    <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
+                                    <label class="content-subtitle mt-2 d-block text-uppercase" style="cursor: pointer; font-size: 11px;"><?= $schedule_start_time . ' - ' . $schedule_end_time; ?></label>
                                     <?php }elseif( $schedule_start_time != '' ){  ?>
                                         <label class="content-subtitle mt-1 d-block text-uppercase" style="cursor: pointer"><?= $schedule_start_time; ?></label>
                                     <?php } ?>                                
@@ -266,7 +286,12 @@
                                             </ul>                                    
                                         </label>
                                     <?php } ?>
-                                <?php } ?>                                
+                                <?php } ?>    
+                                <?php if( $schedule_invoice_amount > 0 ){ ?>                             
+                                    <label class="content-title gray-block" style="cursor: pointer;margin-bottom: 4px;">
+                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= $schedule_invoice_amount; ?>
+                                    </label>
+                                <?php } ?>                            
                                 
                                 <?php if( $schedule_description != '' ){ ?>
                                     <label class="content-title gray-block" style="cursor: pointer;margin-bottom: 4px;">
