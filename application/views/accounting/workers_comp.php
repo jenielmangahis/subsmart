@@ -611,14 +611,16 @@ function showTab(n) {
   if (n == 0) {
     document.getElementById("prevBtn").style.display = "none";
   } else {
-    document.getElementById("prevBtn").style.display = "inline";
+    document.getElementById("prevBtn").style.display = "block";
   }
   if (n == (x.length - 1)) {
     // document.getElementById("nextBtn").innerHTML = "Submit";
     $("#nextBtn").hide();
     $("#completeBtn").show();
   } else {
-    document.getElementById("nextBtn").innerHTML = "Next";
+    // document.getElementById("nextBtn").innerHTML = "Next";
+    $('#nextBtn').show();
+    $('#completeBtn').hide();
   }
   //... and run a function that will display the correct step indicator:
   fixStepIndicator(n)
@@ -753,7 +755,7 @@ $("#addEmployeeData").click(function () {
                 "<td><span>"+mRole+"</span><input  value='"+mRole+"' type=\"hidden\" name=\"mRole[]\"></td>\n" +
                 "<td><span>"+mOwnership+"</span><input  value='"+mOwnership+"' type=\"hidden\" name=\"mOwnership[]\"></td>\n" +
                 "<td>\n" +
-                "<a href=\"#\" class=\"remove btn btn-success\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                "<a href=\"#\" class=\"remove nsm-button error\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
                 "</td>\n" +
                 "</tr>";
             tableBody = $("#employeesTable");
