@@ -7,6 +7,7 @@
                 </span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
+            <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
             <div class="modal-body">
                 <div class="stepper-wrapper" style="width:80%; margin-left: auto; margin-right: auto">
                     <div class="stepper-item completed">
@@ -23,281 +24,262 @@
                     </div>
                 </div>
 
-                <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
-                    <div class="tab">
-                        <br>
-                        <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
-                            <h4>Your business</h4>
-                            <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
+                <div class="tab">
+                    <h4>Your business</h4>
+                    <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
 
-                            <h6><br>General industry</h6>
-                            <select class="form-control nsm-field" name="general_industry">
-                                <option value="">Select General industry</option>
-                                <option value="1">Advertising, Graphic Design, Photography and Printing</option>
-                                <option value="2">Agriculture, Forestry, Fishing and Hunting</option>
-                                <option value="3">Arts, Entertainment and Recreation</option>
-                                <option value="4">Communications, Electric or Gas Service</option>
-                                <option value="5">Educational and Social Services</option>
-                                <option value="6">Health Care, Social Assistance and Public Administration</option>
-                                <option value="7">Legal, Finance, Insurance and Real Estate</option>
-                                <option value="8">Manufacturing</option>
-                                <option value="9">Membership, Religious and Fraternal Organizations</option>
-                                <option value="10">Personal and Business Services</option>
-                                <option value="11">Restaurants and Lodging</option>
-                                <option value="12">Retail Trade - Nonstore</option>
-                                <option value="13">Retail Trade - Storefront</option>
-                                <option value="14">Specialty Trade Contractors</option>
-                                <option value="15">Technology, Engineering and Consulting</option>
-                                <option value="16">Transportation & Warehousing</option>
-                                <option value="17">Wholesale Trade</option>
-                                <!-- <option></option> -->
-                            </select>
+                    <h6><br>General industry</h6>
+                    <select class="form-control nsm-field" name="general_industry">
+                        <option value="">Select General industry</option>
+                        <option value="1">Advertising, Graphic Design, Photography and Printing</option>
+                        <option value="2">Agriculture, Forestry, Fishing and Hunting</option>
+                        <option value="3">Arts, Entertainment and Recreation</option>
+                        <option value="4">Communications, Electric or Gas Service</option>
+                        <option value="5">Educational and Social Services</option>
+                        <option value="6">Health Care, Social Assistance and Public Administration</option>
+                        <option value="7">Legal, Finance, Insurance and Real Estate</option>
+                        <option value="8">Manufacturing</option>
+                        <option value="9">Membership, Religious and Fraternal Organizations</option>
+                        <option value="10">Personal and Business Services</option>
+                        <option value="11">Restaurants and Lodging</option>
+                        <option value="12">Retail Trade - Nonstore</option>
+                        <option value="13">Retail Trade - Storefront</option>
+                        <option value="14">Specialty Trade Contractors</option>
+                        <option value="15">Technology, Engineering and Consulting</option>
+                        <option value="16">Transportation & Warehousing</option>
+                        <option value="17">Wholesale Trade</option>
+                        <!-- <option></option> -->
+                    </select>
 
-                            <h6><br>Type of business</h6>
-                            <select class="form-control nsm-field" name="type_of_business">
-                                <option value="">Select type of business</option>
-                                <option value="1">Apparel, Piece Goods and Notions</option>
-                                <option value="2">Beer, Wine and Distilled Alcoholic Beverages</option>
-                                <option value="3">Chemicals and Allied Products</option>
-                                <option value="4">Drugs, Drug Proprietaries and Druggists' Sundries</option>
-                                <option value="5">Electrical Goods</option>
-                                <option value="6">Furniture and Home furnishings</option>
-                                <option value="7">Groceries and Related Products</option>
-                            </select>
+                    <h6><br>Type of business</h6>
+                    <select class="form-control nsm-field" name="type_of_business">
+                        <option value="">Select type of business</option>
+                        <option value="1">Apparel, Piece Goods and Notions</option>
+                        <option value="2">Beer, Wine and Distilled Alcoholic Beverages</option>
+                        <option value="3">Chemicals and Allied Products</option>
+                        <option value="4">Drugs, Drug Proprietaries and Druggists' Sundries</option>
+                        <option value="5">Electrical Goods</option>
+                        <option value="6">Furniture and Home furnishings</option>
+                        <option value="7">Groceries and Related Products</option>
+                    </select>
 
-                            <h6><br>Standard industry classification (SIC)</h6>
-                            <select class="form-control nsm-field" name="classification">
-                                <option value="">Select Standard industry classification</option>
-                                <option value="1">Confectionery</option>
-                                <option value="2">Dairy Products, Except Dried Or Canned</option>
-                                <option value="3">Fish and Seafoods</option>
-                                <option value="4">Fresh Fruits and Vegetables</option>
-                                <option value="5">Groceries and Related Products, Not Elsewhere Classified</option>
-                                <option value="6">Groceries, General Line</option>
-                                <option value="7">Meats and Meat Products</option>
-                                <option value="8">Meats and Meat Products (with butchering or slaughtering)</option>
-                                <option value="9">Packaged Frozen Foods</option>
-                                <option value="10">Poultry and Poultry Products</option>
-                                <!-- <option></option> -->
-                            </select>
+                    <h6><br>Standard industry classification (SIC)</h6>
+                    <select class="form-control nsm-field" name="classification">
+                        <option value="">Select Standard industry classification</option>
+                        <option value="1">Confectionery</option>
+                        <option value="2">Dairy Products, Except Dried Or Canned</option>
+                        <option value="3">Fish and Seafoods</option>
+                        <option value="4">Fresh Fruits and Vegetables</option>
+                        <option value="5">Groceries and Related Products, Not Elsewhere Classified</option>
+                        <option value="6">Groceries, General Line</option>
+                        <option value="7">Meats and Meat Products</option>
+                        <option value="8">Meats and Meat Products (with butchering or slaughtering)</option>
+                        <option value="9">Packaged Frozen Foods</option>
+                        <option value="10">Poultry and Poultry Products</option>
+                        <!-- <option></option> -->
+                    </select>
 
-                            <h6><br>Business name</h6>
-                            <input type="text" class="form-control nsm-field" name="business_name">
+                    <h6><br>Business name</h6>
+                    <input type="text" class="form-control nsm-field" name="business_name">
 
-                            <h6><br>Principal business address</h6>
-                            <input type="text" class="form-control nsm-field"  name="business_address">
-                            
-                            <h6><br>Suite/Floor</h6>
-                            <input type="text" class="form-control nsm-field" style="width:30%;" name="suite">
+                    <h6><br>Principal business address</h6>
+                    <input type="text" class="form-control nsm-field"  name="business_address">
+                    
+                    <h6><br>Suite/Floor</h6>
+                    <input type="text" class="form-control nsm-field" style="width:30%;" name="suite">
 
-                            <h6><br>Year business started</h6>
-                            <select class="form-control nsm-field" id="year" style="width:40%;" name="year_started">
-                                <option></option>
-                            </select>
+                    <h6><br>Year business started</h6>
+                    <select class="form-control nsm-field" id="year" style="width:40%;" name="year_started">
+                        <option></option>
+                    </select>
 
-                            <h6><br>Legal entity type</h6>
-                            <select class="form-control nsm-field" name="legal_entity_type">
-                                <option>Corporation</option>
-                                <option>Limited Liability Company</option>
-                                <option>Non-Profit</option>
-                                <option>Partnership</option>
-                                <option>Sole Proprietor</option>
-                                <option>Other</option>
-                            </select>
+                    <h6><br>Legal entity type</h6>
+                    <select class="form-control nsm-field" name="legal_entity_type">
+                        <option>Corporation</option>
+                        <option>Limited Liability Company</option>
+                        <option>Non-Profit</option>
+                        <option>Partnership</option>
+                        <option>Sole Proprietor</option>
+                        <option>Other</option>
+                    </select>
 
-                            <h6><br>Federal Identification Number (optional)</h6>
-                            <input type="text" class="form-control nsm-field" style="width:40%;" name="federal_identification_number">
-                            <br><br>
-                            <!-- <input type="submit" value="Next" class="btn btn-success" style="float:right; margin:2px;"> -->
+                    <h6><br>Federal Identification Number (optional)</h6>
+                    <input type="text" class="form-control nsm-field" style="width:40%;" name="federal_identification_number">
+                </div>
+                <div class="tab">
+                    <h4>Your owners, officers, and employees</h4>
+                    <p>List all owners/officers and W-2 employees. In most cases, owners and officers may be excluded from a workers' comp policy, but this varies from state to state. Learn more</p>
 
-                        </div>
-                    </div>
-                    <div class="tab">
-                        <br>
-                        <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
-                            <h4>Your owners, officers, and employees</h4>
-                            <p>List all owners/officers and W-2 employees. In most cases, owners and officers may be excluded from a workers' comp policy, but this varies from state to state. Learn more</p>
-
-                            <table class="table">
-                                <thead>
-                                    <th>NAME</th>
-                                    <th>CLASS CODE</th>
-                                    <th>ROLE</th>
-                                    <th>OWNERSHIP</th>
-                                </thead>
-                                <tbody id="employeesTable">
-                                </tbody>
-                            </table>
-                            <br>
-                            <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#employee_list">Add new employee or owner</a>
-                            <br>
-                            <h6><br>Total estimated annual payroll</h6>
-                            <input type="text" class="form-control nsm-field" name="total_est_annual_payroll">
-
-                            <h6><br>Payroll frequency</h6>
-                            <select class="form-control nsm-field" name="payroll_frequency">
-                                <option value="Weekly">Weekly</option>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Biweekly">Biweekly</option>
-                            </select>
-
-                        </div>
-                    </div>
-                    <div class="tab">
-                        <br>
-                        <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
-                            <h4>A few more details about your business</h4>
-                            <p>Answer these questions to help us get a better picture of your business</p><br>
-
-                            <table>
-                                <tr>
-                                    <td><label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_01" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Does the business have any 1099 workers?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_02" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td> Do you have certificates of insurance for all 1099 employees?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_03" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Has the business had any workers' comp claims in the past 3 years?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_04" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Work performed underground or above 15 feet?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_05" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Any group transportation provided?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_06" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Any seasonal employees?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_07" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Do employees travel out of state?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_08" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>I/they have had a business insurance policy cancelled or non-renewed in the past 3 years.</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_09" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Labor interchange with other business/subsidiary?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_10" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>Do any employees predominantly work at home?</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                    <label class="switch">
-                                        <input class="switch-input" id="switch-input" name="check_11" type="checkbox" />
-                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
-                                        <span class="switch-handle"></span> 
-                                    </label></td>
-                                    <td>I/they have filed for bankruptcy in the past 5 years.</td>
-                                </tr>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="tab">
-                        <br>
-                        <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
-                            <h4>Is this contact info up to date?</h4>
-                            <p>Let our insurance partner, AP Intego, know how to reach you to discuss and finalize your quote.</p>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6>First name</h6>
-                                    <input type="text" class="form-control nsm-field" name="first_name">
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Last name</h6>
-                                    <input type="text" class="form-control nsm-field" name="last_name">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6>Phone</h6>
-                                    <input type="text" class="form-control nsm-field" name="phone">
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Email</h6>
-                                    <input type="email" class="form-control nsm-field" name="email">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6>Requested policy start date</h6>
-                                    <input type="text" class="form-control nsm-field" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date">
-                                </div>
-                                <!-- <div class="col-md-6">
-                                    <h6>Email</h6>
-                                    <input type="email" class="form-control nsm-field">
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
+                    <table class="table">
+                        <thead>
+                            <th>NAME</th>
+                            <th>CLASS CODE</th>
+                            <th>ROLE</th>
+                            <th>OWNERSHIP</th>
+                        </thead>
+                        <tbody id="employeesTable">
+                        </tbody>
+                    </table>
                     <br>
-                </form>
+                    <a class="link-modal-open text-decoration-none" href="#" id="" data-bs-toggle="modal" data-bs-target="#employee_list">Add new employee or owner</a>
+                    <br>
+                    <h6><br>Total estimated annual payroll</h6>
+                    <input type="text" class="form-control nsm-field" name="total_est_annual_payroll">
+
+                    <h6><br>Payroll frequency</h6>
+                    <select class="form-control nsm-field" name="payroll_frequency">
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Biweekly">Biweekly</option>
+                    </select>
+                </div>
+                <div class="tab">
+                    <h4>A few more details about your business</h4>
+                    <p>Answer these questions to help us get a better picture of your business</p><br>
+
+                    <table>
+                        <tr>
+                            <td><label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_01" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Does the business have any 1099 workers?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_02" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td> Do you have certificates of insurance for all 1099 employees?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_03" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Has the business had any workers' comp claims in the past 3 years?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_04" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Work performed underground or above 15 feet?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_05" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Any group transportation provided?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_06" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Any seasonal employees?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_07" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Do employees travel out of state?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_08" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>I/they have had a business insurance policy cancelled or non-renewed in the past 3 years.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_09" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Labor interchange with other business/subsidiary?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_10" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>Do any employees predominantly work at home?</td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <label class="switch">
+                                <input class="switch-input" id="switch-input" name="check_11" type="checkbox" />
+                                <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                <span class="switch-handle"></span> 
+                            </label></td>
+                            <td>I/they have filed for bankruptcy in the past 5 years.</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab">
+                    <h4>Is this contact info up to date?</h4>
+                    <p>Let our insurance partner, AP Intego, know how to reach you to discuss and finalize your quote.</p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>First name</h6>
+                            <input type="text" class="form-control nsm-field" name="first_name">
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Last name</h6>
+                            <input type="text" class="form-control nsm-field" name="last_name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Phone</h6>
+                            <input type="text" class="form-control nsm-field" name="phone">
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Email</h6>
+                            <input type="email" class="form-control nsm-field" name="email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Requested policy start date</h6>
+                            <input type="text" class="form-control nsm-field" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date">
+                        </div>
+                        <!-- <div class="col-md-6">
+                            <h6>Email</h6>
+                            <input type="email" class="form-control nsm-field">
+                        </div> -->
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="nsm-button" onclick="nextPrev(-1)">Previous</button>
-                <button class="nsm-button" onclick="nextPrev(1)">Next</button>
-                <button type="submit" class="nsm-button success">Submit</button>
+                <button type="button" class="nsm-button" onclick="nextPrev(-1)" id="prevBtn">Previous</button>
+                <button type="button" class="nsm-button primary" onclick="nextPrev(1)" id="nextBtn">Next</button>
+                <button type="submit" class="nsm-button success" id="completeBtn" style="display: none">Submit</button>
             </div>
+            </form>
         </div>
     </div>
 </div>

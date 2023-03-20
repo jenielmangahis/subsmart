@@ -261,14 +261,14 @@
 									<div class="col">
 										<h1>It's time to run payroll</h1>
                                         <button type="button" class="nsm-button primary">
-                                            <h5>Let's go</h5>
+                                            Let's go
                                         </button>
 									</div>
 									
 								</div>
 								<div class="row align-items-end mx-0 p-4">
 									<div class="col">
-										<a href="#">View paycheck list</a>
+										<a href="/accounting/employees/paycheck-list">View paycheck list</a>
 									</div>
 								</div>
 							</div>
