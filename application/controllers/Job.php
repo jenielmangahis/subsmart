@@ -1006,6 +1006,8 @@ class Job extends MY_Controller
 
     public function billing($id = null)
     {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
         $this->load->helper('functions');
@@ -1015,6 +1017,19 @@ class Job extends MY_Controller
         if (!$id == null) {
 
             $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+            $braintree_token = '';
+            if( $companyOnlinePaymentAccount ){
+                $gateway = new Braintree\Gateway([
+                    'environment' => BRAINTREE_ENVIRONMENT,
+                    'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                    'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                    'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                ]);
+
+                $braintree_token = $gateway->ClientToken()->generate();
+            }
+
+            $this->page_data['braintree_token'] = $braintree_token;
 
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
@@ -1060,7 +1075,7 @@ class Job extends MY_Controller
                     'id' => logged('company_id'),
                 ),
                 'table' => 'business_profile',
-                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state',
+                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state,business_image,id',
             );
             $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
             $this->page_data['job_total_amount'] = $job_total_amount;
@@ -1123,10 +1138,18 @@ class Job extends MY_Controller
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
+            } elseif ($input['pay_method'] == 'BRAINTREE') {                
+                $result = $this->braintree_send_sale($input['job_total_amount'], $input['payment_method_nonce']);
+                if ($result['is_success'] == 1) {
+                    $payment_data['is_paid'] = 1;
+                } else {
+                    $is_success = 0;
+                    $msg = $result['msg'];
+                }
             } elseif ($input['pay_method'] == 'CREDIT_CARD') {
                 $converge_data = [
                     'company_id' => $job->company_id,
-                    'amount' => $input['amount'],
+                    'amount' => $input['job_total_amount'],
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['card_mmyy'],
                     'exp_year' => $input['exp_year'],
@@ -4149,6 +4172,7 @@ class Job extends MY_Controller
         header('content-type: application/json');
         exit(json_encode(['data' => $items]));
     }
+
     public function getItemLocation()
     {
         $comp_id = logged('company_id');
@@ -4169,6 +4193,48 @@ class Job extends MY_Controller
 
         $data_arr = array("locations" => $location);
         echo json_encode($data_arr, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function braintree_send_sale($amount, $nonce)
+    {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+
+        if( $companyOnlinePaymentAccount ){
+            $gateway = new Braintree\Gateway([
+                'environment' => BRAINTREE_ENVIRONMENT,
+                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+            ]);
+            $result = $gateway->transaction()->sale([
+                'amount' => floatval($amount),
+                'paymentMethodNonce' => $nonce,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]);
+
+            if($result->success || !is_null($result->transaction)) {
+                $is_success = 1;
+            }else{
+                $errorString = "";
+                foreach($result->errors->deepAll() as $error) {
+                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
+                }
+                $msg = $errorString;                
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 }
 

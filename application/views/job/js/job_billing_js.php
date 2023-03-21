@@ -4,35 +4,37 @@
         $("#payment_info").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
-            var payment_method = $("#pay_method").val();
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>job/update_payment_details",
-                data: form.serialize(), // serializes the form's elements.
-                dataType: 'json',
-                success: function(o) {                    
-                    if(o.is_success === 1){
-                        sucess();
-                    }else{
-                        Swal.fire({
-                            title: 'Error!',
-                            text: o.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#32243d',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
+            var payment_method = $("#MODE_OF_PAYMENT").val();
+            if( payment_method != 'BRAINTREE' ){
+                //var url = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>job/update_payment_details",
+                    data: form.serialize(), // serializes the form's elements.
+                    dataType: 'json',
+                    success: function(o) {                    
+                        if(o.is_success === 1){
+                            sucess();
+                        }else{
+                            Swal.fire({
+                                title: 'Error!',
+                                text: o.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
 
-                        });
+                            });
+                        }
+
+                        $("#btn-billing-pay-now").html('Pay Now');
+                    },beforeSend: function() {
+                        $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
                     }
-
-                    $("#btn-billing-pay-now").html('Pay Now');
-                },beforeSend: function() {
-                    $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-                }
-            }); 
+                }); 
+            }            
         });
     });
 
@@ -146,7 +148,7 @@
     }
 
     function HIDE_ALL() {
-        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER, .STRIPE').hide();
+        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER, .STRIPE, .BRAINTREE').hide();
     }
     function SHOW_ALL() {
         $('.PAYMENT_BUTTON').show();
@@ -191,6 +193,10 @@
             $('.PAYMENT_BUTTON').hide();
             //$('.VENMO').fadeIn('fast');
             $('.STRIPE').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "BRAINTREE") {
+            HIDE_ALL();            
+            $('.BRAINTREE').fadeIn('fast');
         }
         if (SELECTED_PAYMENT == "INVOICING") {
             HIDE_ALL();

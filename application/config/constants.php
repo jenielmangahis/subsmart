@@ -195,6 +195,9 @@ define('PLAID_API_WEBHOOK_URL', 'https://sample-web-hook.com');
 //define('PLAID_API_ENV', 'sandbox');
 define('PLAID_API_ENV', 'development');
 
+//Braintree
+define('BRAINTREE_ENVIRONMENT', 'sandbox');
+
 //Vonage SMS
 //Test
 define('VONAGE_API_KEY', '41356d1e');

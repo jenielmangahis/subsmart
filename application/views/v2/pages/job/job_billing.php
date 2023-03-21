@@ -1,4 +1,9 @@
 <?php include viewPath('v2/includes/header'); ?>
+<style>
+.braintree-hosted-field {
+  height: 32px !important;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'"> <i class='bx bx-tag'></i> </div>
 </div>
@@ -110,6 +115,7 @@
                                                 <option value="VENMO">Venmo</option>
                                                 <option value="PAYPAL">Paypal</option>
                                                 <option value="STRIPE">Stripe</option>
+                                                <option value="BRAINTREE">Braintree</option>
                                                 <option value="SQUARE">Square</option>
                                                 <option value="INVOICING">Invoicing</option>
                                                 <option value="WARRANTY_WORK">Warranty Work</option>
@@ -158,6 +164,10 @@
                                         <div class="col-sm-6 mb-3 CREDIT_CARD">
                                             <label>Card Number</label>
                                             <input type="text" class="form-control" name="card_number" id="card_number" value="" /> 
+                                        </div>
+                                        <div class="col-sm-12 mb-3 BRAINTREE">
+                                            <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                            <div id="bt-dropin"></div>
                                         </div>
                                         <div class="col-sm-12 mb-3 CREDIT_CARD">
                                             <label>Expiration</label>
@@ -319,6 +329,8 @@
     <script src="https://checkout.stripe.com/checkout.js"></script>    
 <?php } ?>
 
+<script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
+
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <?php include viewPath('job/js/job_billing_js'); ?>
 <script>
@@ -423,6 +435,67 @@
         });
     <?php } ?>
     /*End Stripe Payment*/
+
+    /*Braintree Payment*/
+    <?php if($companyOnlinePaymentAccount->braintree_tokenization_key != '' && $braintree_token != ''){ ?>
+        var form = document.querySelector('#payment_info');
+        var client_token = "<?= $braintree_token; ?>";
+
+        braintree.dropin.create({
+          authorization: client_token,
+          selector: '#bt-dropin',          
+        }, function (createErr, instance) {
+          if (createErr) {
+            console.log('Create Error', createErr);
+            return;
+          }
+          form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            instance.requestPaymentMethod(function (err, payload) {
+              if (err) {
+                console.log('Request Payment Method Error', err);
+                return;
+              }
+
+              // Add the nonce to the form and submit
+              document.querySelector('#nonce').value = payload.nonce;
+              //form.submit();
+
+              //var url = form.attr('action');
+                var paymentForm = $('#payment_info');
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>job/update_payment_details",
+                    data: paymentForm.serialize(), // serializes the form's elements.
+                    dataType: 'json',
+                    success: function(o) {                    
+                        if(o.is_success === 1){
+                            sucess();
+                        }else{
+                            Swal.fire({
+                                title: 'Error!',
+                                text: o.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                
+                            });
+                        }
+
+                        $("#btn-billing-pay-now").html('Pay Now');
+                    },beforeSend: function() {
+                        $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                    }
+                }); 
+            });
+          });
+        });
+    <?php } ?>        
+    /*End Braintree Payment*/
 
     function createJobPayment(){
         var jobid = $('#job-id').val();
