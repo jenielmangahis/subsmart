@@ -146,7 +146,7 @@
     }
 
     function HIDE_ALL() {
-        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER').hide();
+        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER, .STRIPE').hide();
     }
     function SHOW_ALL() {
         $('.PAYMENT_BUTTON').show();
@@ -185,6 +185,12 @@
             $('.PAYMENT_BUTTON').hide();
             //$('.VENMO').fadeIn('fast');
             $('.PAYPAL').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "STRIPE") {
+            HIDE_ALL();
+            $('.PAYMENT_BUTTON').hide();
+            //$('.VENMO').fadeIn('fast');
+            $('.STRIPE').fadeIn('fast');
         }
         if (SELECTED_PAYMENT == "INVOICING") {
             HIDE_ALL();

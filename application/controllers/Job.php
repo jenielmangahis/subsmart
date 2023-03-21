@@ -1006,11 +1006,16 @@ class Job extends MY_Controller
 
     public function billing($id = null)
     {
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
         if (!$id == null) {
+
+            $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
 
@@ -1061,6 +1066,7 @@ class Job extends MY_Controller
             $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
             $this->page_data['jobs_data'] = $jobs_data;
+            $this->page_data['companyOnlinePaymentAccount'] = $companyOnlinePaymentAccount;
             $this->page_data['page']->title = 'Jobs Billing';
             $this->load->view('v2/pages/job/job_billing', $this->page_data);
             //$this->load->view('job/job_billing_v2', $this->page_data);
