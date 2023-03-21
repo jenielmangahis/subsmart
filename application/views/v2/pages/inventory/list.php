@@ -398,7 +398,7 @@
             title: 'Success',
             text: 'Quantity was updated successfully!',
         }).then((result) => {
-                window.location.href = "<?= base_url()?>/inventory";
+                window.location.href = "<?= base_url()?>inventory";
         });
     });
     $("#location_form").submit(function(e) {

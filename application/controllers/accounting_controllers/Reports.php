@@ -35,7 +35,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('items_model');
-
+        $this->load->model('accounting_single_time_activity_model');
         $this->load->model('tags_model');
 
         add_css(array(
@@ -409,6 +409,53 @@ class Reports extends MY_Controller {
             $deposits[$date]['fees'] = array_sum($feesCol);
         }
         $this->page_data['deposits'] = $deposits;
+
+        switch($view) {
+            case 'recent_edited_time_activities' :
+                $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
+
+                $activities = [];
+                foreach($timeActivities as $timeActivity) {
+                    $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                    $productName = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+                    switch($timeActivity->name_key) {
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($timeActivity->name_id);
+                            $employeeName = $employee->FName . ' ' . $employee->LName;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                            $employeeName = $vendor->display_name;
+                        break;
+                    }
+
+                    $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+                    $hours = substr($timeActivity->time, 0, -3);
+                    $time = explode(':', $hours);
+                    $hr = $time[0] + ($time[1] / 60);
+
+                    $total = $hr * $price;
+
+                    $activities[] = [
+                        'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
+                        'customer' => $customerName,
+                        'employee' => $employeeName,
+                        'product_service' => $productName,
+                        'memo_desc' => $timeActivity->description,
+                        'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
+                        'duration' => $timeActivity->time,
+                        'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
+                    ];
+                }
+
+                $this->page_data['activities'] = $activities;
+            break;
+        }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
