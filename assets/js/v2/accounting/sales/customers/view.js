@@ -1230,55 +1230,28 @@ $('#transactions-table .create-invoice').on('click', function (e) {
 
 $('#transactions-table .send-estimate').on("click", function(e) {
     e.preventDefault();
-    let id = customerId;
-    let est_id = $(this).closest('tr').find('.select-one').val();
+    var refnumIndex = $('#transactions-table thead tr td[data-name="No."]').index();
+    var emailIndex = $('#transactions-table thead tr td[data-name="Email"]').index();
 
-    Swal.fire({
-        title: 'Sending of Estimate',
-        text: "Send this to customer?",
-        icon: 'question',
-        confirmButtonText: 'Proceed',
-        showCancelButton: true,
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                type: 'POST',
-                url: base_url+"estimate/sendEstimateToAcs",
-                data: {
-                    id: id,
-                    est_id: est_id
-                },
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Good job!',
-                        text: "Successfully sent to Customer!",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
-                },
-                error: function() {
-                    Swal.fire({
-                        title: 'Error',
-                        text: "Something went wrong, please try again later.",
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
-                },
+    var row = $(this).closest('tr');
+    var ref_no = $(row.find('td')[refnumIndex]).text().trim();
+    var id = row.find('.select-one').val();
+    var email = $(row.find('td')[emailIndex]).text().trim();
 
-            });
-        }
-    });
+    $('#send-transaction-email span.modal-title').html('Send email for '+ref_no);
+    $('#send-transaction-email #email-to').val(email);
+    $('#send-transaction-email #email-subject').val(`Estimate ${ref_no} from ${companyName}`);
+    $('#send-transaction-email #email-message').val(`Dear ${customerName.trim()},
+
+Please review the estimate below.  Feel free to contact us if you have any questions.
+We look forward to working with you.
+
+Thanks for your business!
+${companyName}`);
+
+    $('#send-transaction-email #send-transaction-form').attr('action', `/accounting/customers/send-transaction/estimate/${id}`);
+    $('#send-transaction-email #send-transaction-form').attr('method', `post`);
+    $('#send-transaction-email').modal('show');
 });
 
 $('#transactions-table .delete-invoice').on('click', function(e) {

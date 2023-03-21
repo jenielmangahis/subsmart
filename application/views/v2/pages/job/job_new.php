@@ -648,7 +648,7 @@
                                                     <span class="bx bx-plus"></span>Manage Job Types
                                                 </a>
                                             </div>
-                                            <select id="job_type_option" name="jobtypes" class="form-control " required>
+                                            <select id="job_type_option" name="jobtypes" class="form-control " >
                                                 <option value="">Select Type</option>
                                                 <?php if(!empty($job_types)): ?>
                                                     <?php foreach ($job_types as $type): ?>
@@ -664,7 +664,7 @@
                                                     <span class="bx bx-plus"></span>Manage Job Tags
                                                 </a>
                                             </div>
-                                            <select id="job_tags" name="tags" class="form-control " required>
+                                            <select id="job_tags" name="tags" class="form-control " >
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
                                                     <?php foreach ($tags as $tag): ?>
@@ -770,6 +770,7 @@
                                                 <h6>Customer Info</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
                                                     <!-- <option selected value hidden>- Select Customer -</option> -->
+                                                    <option value="4801" selected>Test</option>
                                                     <?php if( $default_customer_id > 0 ){ ?>
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
@@ -838,7 +839,7 @@
                                             </div>
                                         </div>
                                         <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-hover">
+                                        <table class="table table-hover job_items_tbl">
                                             <tbody id="jobs_items">
                                             <?php if(isset($jobs_data)): ?>
                                                 <?php
@@ -949,47 +950,45 @@
                                                                     } 
                                                                 ?>
                                                             </select>
-                                                        </div>     
+                                                            </div> 
+                                                                <?php if (isset($workorder) && $workorder->installation_cost): ?>
+                                                                    <?php $subtotal = $subtotal + $workorder->installation_cost; ?>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <label>Installation Cost</label>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <label>$<?= number_format((float) $workorder->installation_cost, 2) ?></label>
+                                                                            <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                <?php endif; ?>
 
-                                                        <?php if (isset($workorder) && $workorder->installation_cost): ?>
-                                                            <?php $subtotal = $subtotal + $workorder->installation_cost; ?>
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label>Installation Cost</label>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <label>$<?= number_format((float) $workorder->installation_cost, 2) ?></label>
-                                                                    <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
-                                                                </div>
-                                                            </div>
-                                                        <?php endif; ?>
+                                                                <?php if (isset($workorder) && $workorder->otp_setup): ?>
+                                                                    <?php $subtotal = $subtotal + $workorder->otp_setup; ?>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <label>One time (Program and Setup)</label>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <label>$<?= number_format((float) $workorder->otp_setup, 2) ?></label>
+                                                                            <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                <?php endif; ?>
 
-                                                        <?php if (isset($workorder) && $workorder->otp_setup): ?>
-                                                            <?php $subtotal = $subtotal + $workorder->otp_setup; ?>
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label>One time (Program and Setup)</label>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <label>$<?= number_format((float) $workorder->otp_setup, 2) ?></label>
-                                                                    <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
-                                                                </div>
-                                                            </div>
-                                                        <?php endif; ?>
-
-                                                        <?php if (isset($workorder) && $workorder->monthly_monitoring): ?>
-                                                            <?php $subtotal = $subtotal + $workorder->monthly_monitoring; ?>
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label>Monthly Monitoring</label>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <label>$<?= number_format((float) $workorder->monthly_monitoring, 2) ?></label>
-                                                                    <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
-                                                                </div>
-                                                            </div>
-                                                        <?php endif; ?>
-
+                                                                <?php if (isset($workorder) && $workorder->monthly_monitoring): ?>
+                                                                    <?php $subtotal = $subtotal + $workorder->monthly_monitoring; ?>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <label>Monthly Monitoring</label>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <label>$<?= number_format((float) $workorder->monthly_monitoring, 2) ?></label>
+                                                                            <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                <?php endif; ?>                                                     
                                                         <div class="col-sm-6">
                                                             <label id="invoice_tax_total"><?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?></label>
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">
@@ -1191,7 +1190,7 @@
                                                             <label>Record all Items used on Jobs</label>
                                                         </div>
                                                         <div class="col-sm-12">
-                                                            <table id="device_audit" class="nsm-table table-bordered w-100">
+                                                            <table id="device_audit" class="nsm-table table-bordered w-100 device_job_items_tbl">
                                                                 <thead class="bg-light">
                                                                     <tr>
                                                                         <!-- <td style="width: 0% !important;"></td> -->
@@ -1233,13 +1232,13 @@
                                                                                 <select id="location" name="location[]" class="form-control location" >
                                                                                     <option value="">Select Type</option>
                                                                                         <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
-                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= $locationItem->loc_id  ?></option>
+                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= getLocationName($locationItem->loc_id)  ?></option>
                                                                                         <?php endforeach; ?>
                                                                                 </select>
                                                                             </td>
                                                                         <?php else: ?>
                                                                             <td><?php 
-                                                                                echo getLocation($item->location, false) ?></td>
+                                                                                echo getLocationName(getLocation($item->location, false))->location_name ?></td>
                                                                         <?php endif; ?>
                                                                     </tr>
                                                                     <?php } } ?>
@@ -1881,9 +1880,9 @@ $(function() {
         $("#sales_rep").select2({
             placeholder: "Sales Rep"
         });
-        $("#priority").select2({
-            placeholder: "Choose Priority..."
-        });
+            $("#priority").select2({
+                placeholder: "Choose Priority..."
+            });
         $(".location").select2({
             placeholder: "Choose Location"
         });
@@ -1994,7 +1993,6 @@ $(function() {
         }
 </script>
 <script>
-   
     window.addEventListener('DOMContentLoaded', async (event) => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
@@ -2002,27 +2000,13 @@ $(function() {
 
         const jobStatus = "<?= $jobs_data ? $jobs_data->status : ''; ?>";
         const jobId = "<?= $jobs_data ? $jobs_data->id : ''; ?>";
-        const jobInvoice = "<?= $job_invoice ? $job_invoice->id : '' ?>";
 
-        if (jobId && !jobInvoice) {
+        if (params.modal && params.modal === 'finish_job' && jobStatus === 'Approved') {
             const response = await Swal.fire({
-                title: "Invoice missing",
-                text: "This job don't have an invoice yet. Do you want to create one?",
-                confirmButtonText: 'Create Initial Invoice',
-                icon: 'warning',
-            });
-
-            if (response.isConfirmed && jobId) {
-                window.location.href = `/job/createInvoice/${jobId}`;
-            }
-        }
-     
-        if (jobInvoice && params.modal && params.modal === 'approved' && jobStatus === 'Approved') {
-            const response = await Swal.fire({
-                title: 'Job is approved',
+                title: 'Job is finished',
                 icon: 'success',
-                text: 'Invoice is now available for your review',
-                confirmButtonText: 'See Invoice',
+                text: 'Invoice is generated and ready to view',
+                confirmButtonText: 'See details',
             })
 
             if (response.isConfirmed && jobId) {

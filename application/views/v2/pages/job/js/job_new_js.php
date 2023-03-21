@@ -277,7 +277,7 @@ $("#attachment-file").change(function() {
                       "<td></td>";
 
             //device audit
-            markup3 ="<tr>" +
+            markup3 ="<tr id='ss'>" +
                 "<td>" + title + "</td>" +
                 "<td>" + item_type + "</td>" +
                 "<td></td>" +
@@ -313,16 +313,19 @@ $("#attachment-file").change(function() {
             }).then(response => response.json()).then(response => {
                 var { locations } = response;
                 var select = document.querySelector('#location'+id);
-
+                const locations_len = Object.keys(locations);
                 // Avoid TypeError: Cannot set properties of null (setting 'innerHTML')
                 if (select === null) return;
-
+                console.log(locations);
                 select.innerHTML = '';
                 // Loop through each location and append a new option element to the select
-                var options = document.createElement('option');
-                options.text = "Select Location";
-                options.value = "0";
-                select.appendChild(options);
+                if(locations_len.length > 1){
+                    var options = document.createElement('option');
+                    options.text = "Select Location";
+                    options.value = "0";
+                    select.appendChild(options);
+                }
+                
 
                 // Get all the location name promises
                 var promises = locations.map(function(location) {
@@ -457,7 +460,16 @@ $("#attachment-file").change(function() {
         });
 
         $("body").delegate(".remove_item_row", "click", function(){
-            $(this).parent().parent().remove();
+            var row = $(this).closest('tr');
+            var index = row.index();
+            $('.job_items_tbl tr').filter(function() {
+                return $(this).index() === index;
+            }).remove();
+            $('#device_audit tr').filter(function() {
+                return $(this).index() === index;
+            }).remove();
+            // $(this).parent().parent().remove();
+            console.log(row);
             calculate_subtotal();
         });
 

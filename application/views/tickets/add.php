@@ -204,7 +204,7 @@ a.btn-primary.btn-md {
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="">- Select Customer -</option>
+                            <option value="4801" selected>- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                                 <?php if( $default_customer_id > 0 ){ ?>
                                     <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -378,7 +378,9 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3" id="technicianDiv">
                                         <label for="purchase_order_number"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
-                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" required></select>
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" >
+                                            <option value="103" selected>TC Nguyen</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
