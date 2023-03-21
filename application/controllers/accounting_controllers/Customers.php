@@ -34,6 +34,7 @@ class Customers extends MY_Controller {
         $this->load->model('payment_records_model');
         $this->load->model('business_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('Clients_model');
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Sales';
@@ -3759,9 +3760,130 @@ class Customers extends MY_Controller {
                     'invoiceItems' => $invoiceItems
                 ];
             break;
+            case 'estimate' :
+                $this->load->helper('pdf_helper');
+
+                $estimate = $this->estimate_model->getById($transactionId);
+                $company_id = $estimate->company_id;
+                $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+                $client   = $this->Clients_model->getById($company_id);
+                $estimateItems = $this->estimate_model->getEstimatesItems($transactionId);
+                $fileName = 'Estimate_'.$estimate->estimate_number.'_from_'.str_replace(' ', '_', $company->business_name).'.pdf';
+
+                $html = '
+                    <table style="padding-top:-40px;">
+                        <tr>
+                            <td>
+                                <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
+                                <br />
+                                <span class="">'.$client->business_address.'</span><br />
+                                <span class="">EMAIL: '.$client->email_address.'</span><br />
+                                <span class="">PHONE: '.$client->phone_number.'</span>
+                                <br/><br /><br />
+                                <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
+                                <br />
+                                <span class="">'.$customer->mail_add. " " .$customer->city.'</span><br />
+                                <span class="">EMAIL: '.$customer->email.'</span><br />
+                                <span class="">PHONE: '.$customer->phone_w.'</span>
+                            </td>
+                            <td colspan=1></td>
+                            <td style="text-align:right;">
+                                <h5 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h5>
+                                <br />
+                                <table>
+                                <tr>
+                                    <td>Estimate Date :</td>
+                                    <td>'.date("F d, Y", strtotime($estimate->estimate_date)).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Expire Due :</td>
+                                    <td>'.date("F d, Y", strtotime($estimate->expiry_date)).'</td>
+                                </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <br /><br /><br />
+
+                    <table style="width="100%;>
+                    <thead>
+                        <tr>
+                            <th style="width:5%;"><b>#</b></th>
+                            <th style="width:35%;"><b>Items</b></th>
+                            <th style="width:12%;"><b>Item Type</b></th>
+                            <th style="width:12%;text-align: right;"><b>Qty</b></th>
+                            <th style="width:12%;text-align: right;"><b>Price</b></th>
+                            <th style="width:12%;text-align: right;"><b>Discount</b></th>
+                            <th style="width:12%;text-align: right;"><b>Total</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    $total_amount = 0;
+                    $total_tax = 0;
+                    $row = 1;
+                    foreach ($estimateItems as $item) {
+                        $html .= '<tr>
+                            <td valign="top" style="width:5%;">'.$row.'</td>
+                            <td valign="top" style="width:35%;">'.$item->title.'</td>
+                            <td valign="top" style="width:12%;">'.$item->type.'</td>
+                            <td valign="top" style="width:12%;text-align: right;">'.$item->qty.'</td>
+                            <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iCost, 2).'</td>
+                            <td valign="top" style="width:12%;text-align: right;">'.number_format($item->discount, 2).'</td>
+                            <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iTotal, 2).'</td>
+                        </tr>
+                        ';
+                        $row++;
+                        $total_amount += $item->iTotal;
+                    }
+
+                    $html .= '
+                    <tr><br><br>
+                    <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
+                    <td style="text-align: right;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+                    </tr>
+                    <tr>
+                    <td colspan="6" style="text-align: right;"><b>Taxes</b></td>
+                    <td style="text-align: right;"><b>$'.number_format($estimate->tax1_total, 2).'</b></td>
+                    </tr>
+                    <tr>
+                    <td colspan="6" style="text-align: right;"><b>'.$estimate->adjustment_name.'</b></td>
+                    <td style="text-align: right;"><b>$'.number_format($estimate->adjustment_value, 2).'</b></td>
+                    </tr>
+                    <tr>
+                    <td colspan="6" style="text-align: right;"><b>Grand Total</b></td>
+                    <td style="text-align: right;"><b>$'.number_format($total_amount, 2).'</b></td>
+                    </tr>
+                </tbody>
+                </table>
+                <br /><br /><br />
+                <p><b>Instructions</b><br /><br />'.$estimate->instructions.'</p>
+                <p><b>Message</b><br /><br />'.$estimate->customer_message.'</p>
+                <p><b>Terms</b><br /><Br />'.$estimate->terms_conditions.'</p>
+                ';
+
+                tcpdf();
+                $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $title = "Estimates";
+                $obj_pdf->SetTitle($title);
+                $obj_pdf->setPrintHeader(false);
+                $obj_pdf->setPrintFooter(false);
+                $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                $obj_pdf->SetFont('helvetica', '', 9);
+                $obj_pdf->setFontSubsetting(false);
+                $obj_pdf->AddPage();
+                ob_end_clean();
+                $obj_pdf->writeHTML($html, true, false, true, false, '');
+                $obj_pdf->Output(getcwd()."/assets/pdf/$fileName", 'F');
+            break;
         }
 
-        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+        if($transactionType !== 'estimate') {
+            $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+        }
 
         $this->email->clear(true);
         $this->email->from('nsmartrac@gmail.com');
