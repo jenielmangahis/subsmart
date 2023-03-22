@@ -149,7 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td align="right" width="65%"><?= $jobs_data->job_type;  ?></td>
                                         </tr>
                                         <tr>
-                                            <td align="right" ><?= $jobs_data->name;  ?></td>
+                                            <td align="right" ><?= $jobs_data->tags;  ?></td>
                                         </tr>
                                         <tr>
                                             <td align="right"><?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->start_date)) : '';  ?></td>
