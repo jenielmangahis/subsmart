@@ -1536,6 +1536,28 @@ class Job extends MY_Controller
             }
             unset($input['id']);
             $up = $this->general->update_with_key($input, $id, "jobs");
+
+            $input['ticket_status'] = $input['status'];
+            if ($input['ticket_status'] == "Started") {
+                $input['started_time'] = $input['job_start_time'];
+                $input['started_date'] = $input['job_start_date'];
+                
+                unset($input['job_start_time']);
+                unset($input['job_start_date']);
+            }
+            $ticket_data = array(
+                'where' => array(
+                    'id' => $id
+                ),
+                'select' => 'ticket_id',
+                'table' => 'jobs'
+            );
+            unset($input['status']);
+
+            $ticket_id = $this->general->get_data_with_param($ticket_data, FALSE);
+
+            $this->general->update_with_key($input, $ticket_id->ticket_id, "tickets");
+
             if ($up) {
                 //Log audit trail
 
@@ -2111,7 +2133,7 @@ class Job extends MY_Controller
                 'tax_rate' => $input['tax'],
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
-                'work_order_id' => $input['work_order_id']
+                'work_order_id' => $input['work_order_id'] != NULL ? $input['work_order_id'] : 0
             );
 
             if (!empty($input['customer_message'])) {
@@ -2322,7 +2344,8 @@ class Job extends MY_Controller
             'items_id' => $item_id,
             'qty' => $location_qty,
             'job_id' => $jobs_id,
-            'estimate_id' => $jobs_data->estimate_id
+            'estimate_id' => $jobs_data->estimate_id,
+            'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
     }

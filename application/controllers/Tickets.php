@@ -77,126 +77,8 @@ class Tickets extends MY_Controller
         // dd($status);
 
         // dd($this->input->post());
-        // 
-        // setting job number
-        $get_job_settings = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'job_settings',
-            'select' => '*',
-        );
-        $job_settings = $this->general->get_data_with_param($get_job_settings);
-        if ($job_settings) {    
-            $prefix   = $job_settings[0]->job_num_prefix;
-            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
-            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
-        } else {
-            $prefix = 'JOB-';
-            $lastId = $this->jobs_model->getlastInsert($comp_id);
-            if ($lastId) {
-                $next_num = $lastId->id + 1;
-                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-            } else {
-                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-            }
-        }
-
-        $job_number = $prefix . $next_num;
-
-        // get customer info
         
-        $get_customer_info = array(
-            'where' => array(
-                'prof_id' => $input['customer_id'],
-            ),
-            'table' => 'acs_profile',
-            'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
-        );
-        $customer = $this->general->get_data_with_param($get_customer_info, false);
-        $job_location = $customer->mail_add;
-
-        // set data for jobs table
-        // 
         
-        $jobs_data = array(
-            'job_number' => $job_number,
-            'customer_id' => $input['customer_id'],
-            'employee_id' => $input['employee_id'],
-            'job_location' => $job_location,
-            'job_description' => $input['job_description'],
-            'start_date' => $tDate,
-            'start_time' => $input['scheduled_time'],
-            'end_time' => $input['scheduled_time_to'],
-            'tags' => $input['job_tag'],
-            'status' => $input['ticket_status'],
-            'company_id' => $comp_id,
-            'date_created' => date('Y-m-d H:i:s'),
-            'tax_rate' => $input['taxes'],
-            'employee_id' => $input['employee_id'],
-            'job_type' => $input['service_type'],
-            'date_issued' => $tDate,
-            'work_order_id' => $input['work_order_id'] != NULL ? $input['work_order_id'] : 0
-        );
-        if(!empty($input['assign_tech'])){
-            for($x = 0; $x < (count($input['assign_tech'])); $x++){
-                $jobs_data['employee'.($x+2).'_id'] = $input['assign_tech'][$x];
-            }
-        }
-        if (!empty($input['message'])) {
-            $jobs_data['message'] = $input['message'];
-        }
-
-        // insert data to job
-        
-        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
-        
-        customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
-        //Google Calendar
-        createSyncToCalendar($jobs_id, 'job', $comp_id);
-
-        // insert data to job items table (items_id, qty, jobs_id)
-        if (isset($input['item_id'])) {
-            $devices = count($input['item_id']);
-            for ($xx = 0; $xx < $devices; $xx++) {
-                $job_items_data = array();
-                $job_items_data['job_id'] = $jobs_id; //from jobs table
-                $job_items_data['items_id'] = $input['item_id'][$xx];
-                $job_items_data['qty'] = $input['quantity'][$xx];
-                $job_items_data['location'] = $input['location'][$xx];
-                $this->general->add_($job_items_data, 'job_items');
-                unset($job_items_data);
-            }
-        }
-
-        // insert data to job url links table
-        $link = isset($input['link']) ? $input['link'] : 'none';
-        $jobs_links_data = array(
-            'link' => $link,
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_links_data, 'job_url_links');
-
-        // insert data to jobs approval table
-        $jobs_approval_data = array(
-            'authorize_name' => $input['authorize_name'],
-            'signature_link' => $input['signature_link'],
-            'datetime_signed' => $input['datetime_signed'],
-            'jobs_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-        // insert data to job payments table
-        $job_payment_query = array(
-            'amount' => $input['payment_amount: '],
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($job_payment_query, 'job_payments');
-
-        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
-
-
-
         $new_data = array(
             'customer_id'               => $this->input->post('customer_id'),
             'business_name'             => $this->input->post('business_name'),
@@ -497,11 +379,131 @@ class Tickets extends MY_Controller
     
             //     $notification = $this->tickets_model->save_notification($notif);
 
+        // setting job number
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => '*',
+        );
+        $job_settings = $this->general->get_data_with_param($get_job_settings);
+        if ($job_settings) {    
+            $prefix   = $job_settings[0]->job_num_prefix;
+            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        } else {
+            $prefix = 'JOB-';
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $next_num = $lastId->id + 1;
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+            } else {
+                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }
+        }
+
+        $job_number = $prefix . $next_num;
+
+        // get customer info
+        
+        $get_customer_info = array(
+            'where' => array(
+                'prof_id' => $input['customer_id'],
+            ),
+            'table' => 'acs_profile',
+            'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
+        );
+        $customer = $this->general->get_data_with_param($get_customer_info, false);
+        $job_location = $customer->mail_add;
+
+        // set data for jobs table
+        // 
+        
+        $jobs_data = array(
+            'job_number' => $job_number,
+            'customer_id' => $input['customer_id'],
+            'ticket_id' => $addQuery,
+            'employee_id' => $input['employee_id'],
+            'job_location' => $job_location,
+            'job_description' => $input['job_description'],
+            'start_date' => $tDate,
+            'start_time' => $input['scheduled_time'],
+            'end_time' => $input['scheduled_time_to'],
+            'tags' => $input['job_tag'],
+            'status' => $input['ticket_status'],
+            'company_id' => $comp_id,
+            'date_created' => date('Y-m-d H:i:s'),
+            'tax_rate' => $input['taxes'],
+            'employee_id' => $input['employee_id'],
+            'job_type' => $input['service_type'],
+            'date_issued' => $tDate,
+            'work_order_id' => $input['work_order_id'] != NULL ? $input['work_order_id'] : 0
+        );
+        if(!empty($input['assign_tech'])){
+            for($x = 0; $x < (count($input['assign_tech'])); $x++){
+                $jobs_data['employee'.($x+2).'_id'] = $input['assign_tech'][$x];
+            }
+        }
+        if (!empty($input['message'])) {
+            $jobs_data['message'] = $input['message'];
+        }
+
+        // insert data to job
+        
+        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+        
+        customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
+        //Google Calendar
+        createSyncToCalendar($jobs_id, 'job', $comp_id);
+
+        // insert data to job items table (items_id, qty, jobs_id)
+        if (isset($input['item_id'])) {
+            $devices = count($input['item_id']);
+            for ($xx = 0; $xx < $devices; $xx++) {
+                $job_items_data = array();
+                $job_items_data['job_id'] = $jobs_id; //from jobs table
+                $job_items_data['items_id'] = $input['item_id'][$xx];
+                $job_items_data['qty'] = $input['quantity'][$xx];
+                $job_items_data['location'] = $input['location'][$xx];
+                $this->general->add_($job_items_data, 'job_items');
+                unset($job_items_data);
+            }
+        }
+
+        // insert data to job url links table
+        $link = isset($input['link']) ? $input['link'] : 'none';
+        $jobs_links_data = array(
+            'link' => $link,
+            'job_id' => $jobs_id,
+        );
+        $this->general->add_($jobs_links_data, 'job_url_links');
+
+        // insert data to jobs approval table
+        $jobs_approval_data = array(
+            'authorize_name' => $input['authorize_name'],
+            'signature_link' => $input['signature_link'],
+            'datetime_signed' => $input['datetime_signed'],
+            'jobs_id' => $jobs_id,
+        );
+        $this->general->add_($jobs_approval_data, 'jobs_approval');
+
+        // insert data to job payments table
+        $job_payment_query = array(
+            'amount' => $input['payment_amount: '],
+            'job_id' => $jobs_id,
+        );
+        $this->general->add_($job_payment_query, 'job_payments');
+
+        createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
+
+
+
 
             if( $this->input->post('redirect_calendar') == 1){
                 redirect('workcalender');
             }else{
-                redirect('customer/ticketslist');
+                redirect('job/new_job1/'.$jobs_id);
             }
             
         } else {

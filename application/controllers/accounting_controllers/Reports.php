@@ -441,6 +441,7 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'create_date' => date("m/d/Y", strtotime($timeActivity->created_at)),
                         'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
                         'customer' => $customerName,
                         'employee' => $employeeName,
@@ -448,9 +449,28 @@ class Reports extends MY_Controller {
                         'memo_desc' => $timeActivity->description,
                         'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
                         'duration' => $timeActivity->time,
+                        'start_time' => $timeActivity->start_time,
+                        'end_time' => $timeActivity->end_time,
+                        'break' => $timeActivity->break_duration,
+                        'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
                         'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
                         'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
                     ];
+                }
+
+                if(!empty(get('date'))) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', get('from')),
+                        'end-date' => str_replace('-', '/', get('to'))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['activity_date']) >= strtotime($filters['start-date']) && strtotime($v['activity_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
                 }
 
                 $this->page_data['activities'] = $activities;
