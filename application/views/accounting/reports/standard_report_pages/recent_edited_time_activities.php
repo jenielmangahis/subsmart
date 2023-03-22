@@ -19,44 +19,60 @@
                                 <div class="row grid-mb">
                                     <div class="col-12">
                                         <label for="filter-activity-date">Time Activity Date</label>
-                                        <select class="nsm-field form-select" name="filter_report_period" id="filter-activity-date">
-                                            <option value="all-dates" selected>All Dates</option>
-                                            <option value="custom">Custom</option>
-                                            <option value="today">Today</option>
-                                            <option value="this-week">This Week</option>
-                                            <option value="this-week-to-date">This Week-to-date</option>
-                                            <option value="this-month">This Month</option>
-                                            <option value="this-month-to-date">This Month-to-date</option>
-                                            <option value="this-quarter">This Quarter</option>
-                                            <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                            <option value="this-year">This Year</option>
-                                            <option value="this-year-to-date">This Year-to-date</option>
-                                            <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                            <option value="yesterday">Yesterday</option>
-                                            <option value="recent">Recent</option>
-                                            <option value="last-week">Last Week</option>
-                                            <option value="last-week-to-date">Last Week-to-date</option>
-                                            <option value="last-month">Last Month</option>
-                                            <option value="last-month-to-date">Last Month-to-date</option>
-                                            <option value="last-quarter">Last Quarter</option>
-                                            <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                            <option value="last-year">Last Year</option>
-                                            <option value="last-year-to-date">Last Year-to-date</option>
-                                            <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                            <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                            <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                            <option value="since-365-days-ago">Since 365 Days Ago</option>
-                                            <option value="next-week">Next Week</option>
-                                            <option value="next-4-weeks">Next 4 Weeks</option>
-                                            <option value="next-month">Next Month</option>
-                                            <option value="next-quarter">Next Quarter</option>
-                                            <option value="next-year">Next Year</option>
+                                        <select class="nsm-field form-select" name="filter_activity_date" id="filter-activity-date">
+                                            <option value="all-dates" <?=empty($filter_date) || $filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                            <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="today" <?=$filter_date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="this-week" <?=$filter_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                            <option value="this-week-to-date" <?=$filter_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
+                                            <option value="this-month-to-date" <?=$filter_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="this-quarter-to-date" <?=$filter_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
+                                            <option value="this-year-to-date" <?=$filter_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                            <option value="this-year-to-last-month" <?=$filter_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                            <option value="yesterday" <?=$filter_date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                            <option value="recent" <?=$filter_date === 'recent' ? 'selected' : ''?>>Recent</option>
+                                            <option value="last-week" <?=$filter_date === 'last-week' ? 'selected' : ''?>>Last Week</option>
+                                            <option value="last-week-to-date" <?=$filter_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last Month</option>
+                                            <option value="last-month-to-date" <?=$filter_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                            <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                            <option value="last-quarter-to-date" <?=$filter_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                            <option value="last-year-to-date" <?=$filter_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                            <option value="since-30-days-ago" <?=$filter_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                            <option value="since-60-days-ago" <?=$filter_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                            <option value="since-90-days-ago" <?=$filter_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                            <option value="since-365-days-ago" <?=$filter_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
+                                            <option value="next-week" <?=$filter_date === 'next-week' ? 'selected' : ''?>>Next Week</option>
+                                            <option value="next-4-weeks" <?=$filter_date === 'next-4-weeks' ? 'selected' : ''?>>Next 4 Weeks</option>
+                                            <option value="next-month" <?=$filter_date === 'next-month' ? 'selected' : ''?>>Next Month</option>
+                                            <option value="next-quarter" <?=$filter_date === 'next-quarter' ? 'selected' : ''?>>Next Quarter</option>
+                                            <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
                                         </select>
                                     </div>
                                 </div>
+                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates') : ?>
+                                <div class="row grid-mb">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-to">
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-center">
-                                        <button type="button" class="nsm-button primary">
+                                        <button type="button" class="nsm-button primary" id="run-report">
                                             Run Report
                                         </button>
                                     </div>
@@ -72,8 +88,8 @@
                     </div>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                <div class="row g-3 justify-content-center">
+                    <div class="col-auto">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -147,115 +163,115 @@
                                                 <div class="row">
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-date" class="form-check-input" checked>
-                                                            <label for="col-date" class="form-check-label">Date</label>
+                                                            <input type="checkbox" name="col_chk" id="col-activity-date" class="form-check-input" checked>
+                                                            <label for="col-activity-date" class="form-check-label">Activity Date</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-transaction-type" class="form-check-input" checked>
-                                                            <label for="col-transaction-type" class="form-check-label">Transaction Type</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-num" class="form-check-input" checked>
-                                                            <label for="col-num" class="form-check-label">Num</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-create-date" class="form-check-input">
+                                                            <input type="checkbox" name="col_chk" id="col-create-date" class="form-check-input" checked>
                                                             <label for="col-create-date" class="form-check-label">Create Date</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-created-by" class="form-check-input">
+                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" checked>
                                                             <label for="col-created-by" class="form-check-label">Created By</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified" class="form-check-input">
-                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified-by" class="form-check-input">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" checked>
+                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" checked>
                                                             <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-name" class="form-check-input" checked>
-                                                            <label for="col-name" class="form-check-label">Name</label>
+                                                            <input type="checkbox" name="col_chk" id="col-customer" class="form-check-input" checked>
+                                                            <label for="col-customer" class="form-check-label">Customer</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-employee" class="form-check-input" checked>
+                                                            <label for="col-employee" class="form-check-label">Employee</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-memo-desc" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-product-service" class="form-check-input" checked>
+                                                            <label for="col-product-service" class="form-check-label">Product/Service</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-memo-desc" class="form-check-input" checked>
                                                             <label for="col-memo-desc" class="form-check-label">Memo/Description</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-split" class="form-check-input" checked>
-                                                            <label for="col-split" class="form-check-label">Split</label>
+                                                            <input type="checkbox" name="col_chk" id="col-rates" class="form-check-input" checked>
+                                                            <label for="col-rates" class="form-check-label">Rates</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-debit" class="form-check-input">
-                                                            <label for="col-debit" class="form-check-label">Debit</label>
+                                                            <input type="checkbox" name="col_chk" id="col-duration" class="form-check-input" checked>
+                                                            <label for="col-duration" class="form-check-label">Duration</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-credit" class="form-check-input">
-                                                            <label for="col-credit" class="form-check-label">Credit</label>
+                                                            <input type="checkbox" name="col_chk" id="col-start-time" class="form-check-input" checked>
+                                                            <label for="col-start-time" class="form-check-label">Start Time</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-payment-method" class="form-check-input">
-                                                            <label for="col-payment-method" class="form-check-label">Payment Method</label>
+                                                            <input type="checkbox" name="col_chk" id="col-end-time" class="form-check-input" checked>
+                                                            <label for="col-end-time" class="form-check-label">End Time</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" id="col-amount" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-break" class="form-check-input" checked>
+                                                            <label for="col-break" class="form-check-label">Break</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-taxable" class="form-check-input" checked>
+                                                            <label for="col-taxable" class="form-check-label">Taxable</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-billable" class="form-check-input" checked>
+                                                            <label for="col-billable" class="form-check-label">Billable</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-invoice-date" class="form-check-input" checked>
+                                                            <label for="col-invoice-date" class="form-check-label">Invoice Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-amount" class="form-check-input" checked>
                                                             <label for="col-amount" class="form-check-label">Amount</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-balance" class="form-check-input" checked>
-                                                            <label for="col-balance" class="form-check-label">Balance</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-tax-name" class="form-check-input">
-                                                            <label for="col-tax-name" class="form-check-label">Tax Name</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-tax-amount" class="form-check-input">
-                                                            <label for="col-tax-amount" class="form-check-label">Tax Amount</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-taxable-amount" class="form-check-input">
-                                                            <label for="col-taxable-amount" class="form-check-label">Taxable Amount</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -275,36 +291,62 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="reports-table">
                                     <thead>
                                         <tr>
                                             <td data-name="Activity Date">ACTIVITY DATE</td>
+                                            <td data-name="Create Date">CREATE DATE</td>
+                                            <td data-name="Created By">CREATED BY</td>
                                             <td data-name="Last Modified">LAST MODIFIED</td>
+                                            <td data-name="Last Modified By">LAST MODIFIED BY</td>
                                             <td data-name="Customer">CUSTOMER</td>
                                             <td data-name="Employee">EMPLOYEE</td>
                                             <td data-name="Product/Service">PRODUCT/SERVICE</td>
                                             <td data-name="Memo/Description">MEMO/DESCRIPTION</td>
                                             <td data-name="Rates">RATES</td>
                                             <td data-name="Duration">DURATION</td>
+                                            <td data-name="Start Time">START TIME</td>
+                                            <td data-name="End Time">END TIME</td>
+                                            <td data-name="Break">BREAK</td>
+                                            <td data-name="Taxable">TAXABLE</td>
                                             <td data-name="Billable">BILLABLE</td>
+                                            <td data-name="Invoice Date">INVOICE DATE</td>
                                             <td data-name="Amount">AMOUNT</td>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if(count($activities) > 0) : ?>
                                         <?php foreach($activities as $activity) : ?>
                                         <tr>
                                             <td><?=$activity['activity_date']?></td>
+                                            <td><?=$activity['create_date']?></td>
+                                            <td><?=$activity['created_by']?></td>
                                             <td><?=$activity['last_modified']?></td>
+                                            <td><?=$activity['last_modified_by']?></td>
                                             <td><?=$activity['customer']?></td>
                                             <td><?=$activity['employee']?></td>
                                             <td><?=$activity['product_service']?></td>
                                             <td><?=$activity['memo_desc']?></td>
                                             <td><?=$activity['rates']?></td>
                                             <td><?=$activity['duration']?></td>
+                                            <td><?=$activity['start_time']?></td>
+                                            <td><?=$activity['end_time']?></td>
+                                            <td><?=$activity['break']?></td>
+                                            <td><?=$activity['taxable']?></td>
                                             <td><?=$activity['billable']?></td>
+                                            <td><?=$activity['invoice_date']?></td>
                                             <td><?=$activity['amount']?></td>
                                         </tr>
                                         <?php endforeach; ?>
+                                        <?php else : ?>
+                                        <tr>
+                                            <td colspan="19">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>

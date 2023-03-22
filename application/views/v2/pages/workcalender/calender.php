@@ -94,6 +94,10 @@
     display: inline-block;
     color: #ffffff;
 }
+.fc-list-event-title .quick-calendar-tile span {    
+    color: #000000 !important;
+    line-height: 9px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

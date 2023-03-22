@@ -580,6 +580,41 @@ function Signing(hash) {
             customer[specs.name.toLowerCase()] ||
             customer["mail_add"] ||
             customer["subdivision"];
+        } else if (specs.name.toLowerCase() === "password") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["password"];
+        } else if (specs.name.toLowerCase() === "card_number") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["card_account_number"];
+        } else if (specs.name.toLowerCase() === "card_expiration") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["card_expiration"] ||
+            customer["card_expiration_mm_yyyy"];
+        } else if (specs.name.toLowerCase() === "card_name") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["card_name"] ||
+            customer["card_first_name"] ||
+            customer["card_last_name"];
+        } else if (specs.name.toLowerCase() === "mobile_number") {
+          value =
+            customer[specs.name] ||
+            customer[specs.name.toLowerCase()] ||
+            customer["phone_m"] ||
+            customer["phone_h"];
+        } else if (specs.name.toLowerCase().startsWith("job_")) {
+          if (window.__esigndata.job_data) {
+            const jobData = window.__esigndata.job_data;
+            const jobField = specs.name.toLowerCase().replace("job_", "");
+            value = jobData[jobField] || "";
+          }
         } else {
           value =
             customer[specs.name] || customer[specs.name.toLowerCase()] || "";
@@ -590,7 +625,7 @@ function Signing(hash) {
         value = specs.value;
       }
 
-      if (value === undefined) {
+      if (value === undefined || value === null) {
         value = "";
       }
 

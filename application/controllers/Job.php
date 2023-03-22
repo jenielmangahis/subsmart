@@ -135,7 +135,6 @@ class Job extends MY_Controller
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
-
         // get all employees
         $get_login_user = array(
             'where' => array(
@@ -305,7 +304,15 @@ class Job extends MY_Controller
                 }
             }
 
-
+            // get all employees
+            $query = array(
+                'where' => array(
+                    'id' => $jobs_data->created_by
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $created_by = $this->general->get_data_with_param($query, false);            
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
 
@@ -321,6 +328,8 @@ class Job extends MY_Controller
                 $this->page_data['workorder'] = $workorderQuery->row();
             }
         }
+
+        $this->page_data['job_created_by'] = $created_by;
 
         $default_customer_id = 0;
         $default_customer_name = '';
@@ -997,11 +1006,31 @@ class Job extends MY_Controller
 
     public function billing($id = null)
     {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
         if (!$id == null) {
+
+            $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+            $braintree_token = '';
+            if( $companyOnlinePaymentAccount ){
+                $gateway = new Braintree\Gateway([
+                    'environment' => BRAINTREE_ENVIRONMENT,
+                    'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                    'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                    'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                ]);
+
+                $braintree_token = $gateway->ClientToken()->generate();
+            }
+
+            $this->page_data['braintree_token'] = $braintree_token;
+
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
 
@@ -1046,12 +1075,13 @@ class Job extends MY_Controller
                     'id' => logged('company_id'),
                 ),
                 'table' => 'business_profile',
-                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state',
+                'select' => 'business_phone,business_name,business_email,street,city,postal_code,state,business_image,id',
             );
             $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
             $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);
             $this->page_data['jobs_data'] = $jobs_data;
+            $this->page_data['companyOnlinePaymentAccount'] = $companyOnlinePaymentAccount;
             $this->page_data['page']->title = 'Jobs Billing';
             $this->load->view('v2/pages/job/job_billing', $this->page_data);
             //$this->load->view('job/job_billing_v2', $this->page_data);
@@ -1108,10 +1138,18 @@ class Job extends MY_Controller
                 //$payment_data['ach_date_of_month'] = 0;
                 $payment_data['is_collected'] = 1;
                 $payment_data['is_paid']      = 1;
+            } elseif ($input['pay_method'] == 'BRAINTREE') {                
+                $result = $this->braintree_send_sale($input['job_total_amount'], $input['payment_method_nonce']);
+                if ($result['is_success'] == 1) {
+                    $payment_data['is_paid'] = 1;
+                } else {
+                    $is_success = 0;
+                    $msg = $result['msg'];
+                }
             } elseif ($input['pay_method'] == 'CREDIT_CARD') {
                 $converge_data = [
                     'company_id' => $job->company_id,
-                    'amount' => $input['amount'],
+                    'amount' => $input['job_total_amount'],
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['card_mmyy'],
                     'exp_year' => $input['exp_year'],
@@ -1498,6 +1536,28 @@ class Job extends MY_Controller
             }
             unset($input['id']);
             $up = $this->general->update_with_key($input, $id, "jobs");
+
+            $input['ticket_status'] = $input['status'];
+            if ($input['ticket_status'] == "Started") {
+                $input['started_time'] = $input['job_start_time'];
+                $input['started_date'] = $input['job_start_date'];
+                
+                unset($input['job_start_time']);
+                unset($input['job_start_date']);
+            }
+            $ticket_data = array(
+                'where' => array(
+                    'id' => $id
+                ),
+                'select' => 'ticket_id',
+                'table' => 'jobs'
+            );
+            unset($input['status']);
+
+            $ticket_id = $this->general->get_data_with_param($ticket_data, FALSE);
+
+            $this->general->update_with_key($input, $ticket_id->ticket_id, "tickets");
+
             if ($up) {
                 //Log audit trail
 
@@ -2067,12 +2127,13 @@ class Job extends MY_Controller
                 // 'message' => $input['message'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
+                'created_by' => $input['created_by'],
                 //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
                 'tax_rate' => $input['tax'],
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
-                'work_order_id' => $input['work_order_id']
+                'work_order_id' => $input['work_order_id'] != NULL ? $input['work_order_id'] : 0
             );
 
             if (!empty($input['customer_message'])) {
@@ -2283,7 +2344,8 @@ class Job extends MY_Controller
             'items_id' => $item_id,
             'qty' => $location_qty,
             'job_id' => $jobs_id,
-            'estimate_id' => $jobs_data->estimate_id
+            'estimate_id' => $jobs_data->estimate_id,
+            'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
     }
@@ -4133,6 +4195,7 @@ class Job extends MY_Controller
         header('content-type: application/json');
         exit(json_encode(['data' => $items]));
     }
+
     public function getItemLocation()
     {
         $comp_id = logged('company_id');
@@ -4153,6 +4216,48 @@ class Job extends MY_Controller
 
         $data_arr = array("locations" => $location);
         echo json_encode($data_arr, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function braintree_send_sale($amount, $nonce)
+    {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+
+        if( $companyOnlinePaymentAccount ){
+            $gateway = new Braintree\Gateway([
+                'environment' => BRAINTREE_ENVIRONMENT,
+                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+            ]);
+            $result = $gateway->transaction()->sale([
+                'amount' => floatval($amount),
+                'paymentMethodNonce' => $nonce,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]);
+
+            if($result->success || !is_null($result->transaction)) {
+                $is_success = 1;
+            }else{
+                $errorString = "";
+                foreach($result->errors->deepAll() as $error) {
+                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
+                }
+                $msg = $errorString;                
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 }
 

@@ -77,11 +77,13 @@ class DocuSign extends MYF_Controller
         }
 
         $jobRecipient = null;
+        $jobRecipientJobId = null;
         if (!$workorderRecipient) {
             $this->db->where('user_docfile_recipient_id', $recipientId);
             $jobRecipient = $this->db->get('user_docfile_job_recipients')->row();
 
             if ($jobRecipient) {
+                $jobRecipientJobId = $jobRecipient->job_id;
                 $jobRecipient = $this->_getJobCustomer($jobRecipient->job_id);
             }
         }
@@ -128,10 +130,79 @@ class DocuSign extends MYF_Controller
             $jobRecipient = $this->db->get('user_docfile_job_recipients')->row();
 
             if ($jobRecipient) {
+                $jobRecipientJobId = $jobRecipient->job_id;
                 $currAutoPopulateData = $this->_getJobCustomer($jobRecipient->job_id);
+
+                $this->db->select('access_password');
+                $this->db->where('fk_prof_id', $currAutoPopulateData->prof_id);
+                $accessData = $this->db->get('acs_access')->row();
+                $currAutoPopulateData->password = $accessData->access_password;
+
+                $this->db->select('card_fname,card_lname,acct_num,credit_card_num,credit_card_exp_mm_yyyy,credit_card_exp');
+                $this->db->where('fk_prof_id', $currAutoPopulateData->prof_id);
+                $accessData = $this->db->get('acs_billing')->row();
+                $currAutoPopulateData->card_first_name = $accessData->card_fname;
+                $currAutoPopulateData->card_last_name = $accessData->card_lname;
+                $currAutoPopulateData->card_name = $currAutoPopulateData->card_first_name . ' ' . $currAutoPopulateData->card_last_name;
+                $currAutoPopulateData->card_account_number = $accessData->acct_num;
+                $currAutoPopulateData->card_expiration = $accessData->credit_card_exp;
+                $currAutoPopulateData->card_expiration_mm_yyyy = $accessData->credit_card_exp_mm_yyyy;
             }
 
             $autoPopulateData[$specs['auto_populate_with']] = $currAutoPopulateData;
+        }
+
+        $jobData = null;
+        if (is_numeric($jobRecipientJobId)) {
+            $this->db->where('id', $jobRecipientJobId);
+            $job = $this->db->get('jobs')->row();
+
+            if (!$job->amount) {
+                $job->amount = 0;
+            }
+
+            // TODO: calculate job amount
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where('job_items.job_id', $job->id);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            foreach ($items as $item) {
+                $total = (((float) $item->price) * (float) $item->qty); // include tax? (float) $item->tax
+                $job->amount = $job->amount + $total;
+            }
+
+            // make sure to include tax_rate
+            $job->amount = ((float) ($job->tax_rate)) + $job->amount;
+
+            if ($job->work_order_id) {
+                $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+                $this->db->where('id', $job->work_order_id);
+                $workorderQuery = $this->db->get('work_orders');
+                $workorder = $workorderQuery->row();
+
+                if ($workorder) {
+                    // make sure to include adjustment to total
+                    if ($workorder->installation_cost) {
+                        $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
+                        $job->installation_cost = (float) $workorder->installation_cost;
+                    }
+                    if ($workorder->otp_setup) {
+                        $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
+                        $job->otp_setup = (float) $workorder->otp_setup;
+                    }
+                    if ($workorder->monthly_monitoring) {
+                        $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
+                        $job->mmr = (float) $workorder->monthly_monitoring;
+                        $job->monthly_monitoring = $job->mmr;
+                    }
+                }
+            }
+
+            $jobData = $job;
+            $jobData->equipment_cost = $job->amount;
         }
 
         header('content-type: application/json');
@@ -147,7 +218,8 @@ class DocuSign extends MYF_Controller
             'generated_pdf' => $generatedPDF,
             'auto_populate_data' => $autoPopulateData,
             'recipient_ids' => $recipientIds,
-            'job_id' =>  $jobId
+            'job_id' =>  $jobId,
+            'job_data' => $jobData
         ]);
     }
 
@@ -1130,7 +1202,7 @@ SQL;
     }
 
 
-    public function sendTemplate($templateId, $userId, $companyId)
+    public function sendTemplate($templateId, $userId, $companyId, $jobIdParam = null)
     {
         header('content-type: application/json');
 
@@ -1151,6 +1223,9 @@ SQL;
         $workorderId = $payload['workorder_id'] ?? null;
         $jobId = $payload['job_id'] ?? null;
 
+        if (is_null($jobId) && is_numeric($jobIdParam)) {
+            $jobId = $jobIdParam;
+        }
 
         foreach ($recipients as $recipient) {
             if (
@@ -1320,11 +1395,11 @@ SQL;
             $this->db->insert('user_docfile_document_sequence', $payload);
         }
 
-        $this->db->select(['id']);
+        $this->db->select(['id', 'subject']);
         $this->db->where('id', $docfileId);
         $envelope = $this->db->get('user_docfile')->row_array();
 
-        $this->db->select(['id', 'role']);
+        $this->db->select(['id', 'role', 'email']);
         $this->db->where('docfile_id', $docfileId);
         $this->db->where('completed_at is NULL', null, false);
         $this->db->order_by('id', 'asc');
@@ -1416,7 +1491,8 @@ SQL;
     {
         $userId = (int) $this->input->get('user_id', true);
         $companyId = (int) $this->input->get('company_id', true);
-        $this->sendTemplate($templateId, $userId, $companyId);
+        $jobId = (int) $this->input->get('job_id', true);
+        $this->sendTemplate($templateId, $userId, $companyId, $jobId);
     }
 
     public function apiSendTemplate($templateId)

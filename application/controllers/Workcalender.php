@@ -666,7 +666,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['eventType'] = 'event';
                 $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-                $resources_user_events[$inc]['title'] = $title;
+                $resources_user_events[$inc]['title'] = 'Event : ' . $event_number;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;                    
@@ -2680,9 +2680,11 @@ class Workcalender extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('Estimate_model');
         $this->load->model('Tickets_model');
+        $this->load->model('Estimate_model');
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('General_model');
 
         $post = $this->input->post();
         $cid = logged('company_id');
@@ -2697,7 +2699,33 @@ class Workcalender extends MY_Controller
             $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyIdAndDate($cid, $date);    
             $upcomingAppointments = $this->Appointment_model->getAllAppointmentsByCompanyAndDate($cid, $date); 
 
-            foreach( $upcomingJobs as $job ){
+            foreach( $upcomingJobs as $job ){                
+                $jobItems     = $this->Jobs_model->get_specific_job_items($job->id);
+                $total_amount = $job->tax_rate;
+                foreach($jobItems as $jt){
+                    $total_amount += $jt->price * $jt->qty;
+                }
+
+                $get_estimate_query = array(
+                    'where' => array(
+                        'id' => $job->estimate_id
+                    ),
+                    'table' => 'estimates',
+                    'select' => '*'
+                );
+
+                $estimate_data = $this->General_model->get_data_with_param($get_estimate_query, false);
+                if ($estimate_data) {
+                    if ($estimate_data->deposit_request == 2) {
+                        $deposit_amount = $estimate_data->grand_total * ($estimate_data->deposit_amount / 100);
+                    } else {
+                        $deposit_amount = $estimate_data->deposit_amount;
+                    }
+                }
+
+                $job_total_amount    = ($total_amount + $job->tax_rate) - $deposit_amount;
+                $job->invoice_amount = $job_total_amount;
+
                 $date_index = date("Y-m-d", strtotime($job->start_date));
                 $upcomingSchedules[$date_index][] = [
                     'type' => 'job',

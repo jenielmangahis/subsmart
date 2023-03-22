@@ -1,4 +1,9 @@
 <?php include viewPath('v2/includes/header'); ?>
+<style>
+.braintree-hosted-field {
+  height: 32px !important;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'"> <i class='bx bx-tag'></i> </div>
 </div>
@@ -109,6 +114,8 @@
                                                 <option value="ACH">ACH</option>
                                                 <option value="VENMO">Venmo</option>
                                                 <option value="PAYPAL">Paypal</option>
+                                                <option value="STRIPE">Stripe</option>
+                                                <option value="BRAINTREE">Braintree</option>
                                                 <option value="SQUARE">Square</option>
                                                 <option value="INVOICING">Invoicing</option>
                                                 <option value="WARRANTY_WORK">Warranty Work</option>
@@ -157,6 +164,10 @@
                                         <div class="col-sm-6 mb-3 CREDIT_CARD">
                                             <label>Card Number</label>
                                             <input type="text" class="form-control" name="card_number" id="card_number" value="" /> 
+                                        </div>
+                                        <div class="col-sm-12 mb-3 BRAINTREE">
+                                            <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                            <div id="bt-dropin"></div>
                                         </div>
                                         <div class="col-sm-12 mb-3 CREDIT_CARD">
                                             <label>Expiration</label>
@@ -225,8 +236,23 @@
                                             <label>Confirmation</label>
                                             <input type="number" class="form-control" name="confirmation" id="confirmation" value="" />
                                         </div>
+                                        <div class="col-sm-12 mb-3 STRIPE">
+                                            <?php if($companyOnlinePaymentAccount->stripe_publish_key != '' && $companyOnlinePaymentAccount->stripe_secret_key != ''){ ?>    
+                                                <a class="nsm-button primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>                                     
+                                            <?php }else{ ?>
+                                                <div class="alert alert-danger" role="alert">
+                                                  Your company doesn't have a valid paypal account. To setup your paypal account go to <a href="<?= base_url('tools/api_connectors') ?>">API Tools</a> and click Paypal
+                                                </div>
+                                            <?php } ?>
+                                        </div>
                                         <div class="col-sm-12 mb-3 PAYPAL">
-                                            <div id="paypal-button-container"></div>
+                                            <?php if( $companyOnlinePaymentAccount->paypal_client_id != '' ){ ?>
+                                                <div id="paypal-button-container"></div>
+                                            <?php }else{ ?>
+                                                <div class="alert alert-danger" role="alert">
+                                                  Your company doesn't have a valid paypal account. To setup your paypal account go to <a href="<?= base_url('tools/api_connectors') ?>">API Tools</a> and click Paypal
+                                                </div>
+                                            <?php } ?>
                                         </div>
                                         <div class="col-sm-12 mb-3 INVOICING_FIELD">
                                             <label>Term</label>
@@ -294,7 +320,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
+<?php if( $companyOnlinePaymentAccount->paypal_client_id != '' ){ ?>
+    <script src="https://www.paypal.com/sdk/js?client-id=<?= $companyOnlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
+    <!-- <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script> -->
+<?php } ?>
+<?php if($companyOnlinePaymentAccount->stripe_publish_key != '' && $companyOnlinePaymentAccount->stripe_secret_key != ''){ ?>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>    
+<?php } ?>
+
+<script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
+
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <?php include viewPath('job/js/job_billing_js'); ?>
 <script>
@@ -321,6 +357,9 @@
             });
         }
     });
+
+    //Paypal Payment
+    <?php if( $companyOnlinePaymentAccount->paypal_client_id != '' ){ ?>
     paypal.Buttons({
         style: {
             //layout: 'horizontal',
@@ -364,6 +403,99 @@
             });
         }
     }).render('#paypal-button-container');
+    <?php } ?>
+    /*End Paypal Payment*/
+
+    //Stripe Payment
+    <?php if($companyOnlinePaymentAccount->stripe_publish_key != '' && $companyOnlinePaymentAccount->stripe_secret_key != ''){ ?>    
+        var handler = StripeCheckout.configure({
+            key: '<?= $companyOnlinePaymentAccount->stripe_publish_key; ?>',
+            image: '',
+            token: function(token) {
+              createJobPayment();                  
+            }
+        });
+
+        $('.btn-pay-stripe').on('click', function(e) {
+        var amountInCents = Math.floor($("#total_amount").val() * 100);
+        var displayAmount = parseFloat(Math.floor($("#total_amount").val() * 100) / 100).toFixed(2);
+        // Open Checkout with further options
+        handler.open({
+            image : '<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>',
+            name: $("#job-number").val(),
+            description: 'Total amount ($' + displayAmount + ')',
+            amount: amountInCents,
+        });
+        e.preventDefault();
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+        handler.close();
+        });
+    <?php } ?>
+    /*End Stripe Payment*/
+
+    /*Braintree Payment*/
+    <?php if($companyOnlinePaymentAccount->braintree_tokenization_key != '' && $braintree_token != ''){ ?>
+        var form = document.querySelector('#payment_info');
+        var client_token = "<?= $braintree_token; ?>";
+
+        braintree.dropin.create({
+          authorization: client_token,
+          selector: '#bt-dropin',          
+        }, function (createErr, instance) {
+          if (createErr) {
+            console.log('Create Error', createErr);
+            return;
+          }
+          form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            instance.requestPaymentMethod(function (err, payload) {
+              if (err) {
+                console.log('Request Payment Method Error', err);
+                return;
+              }
+
+              // Add the nonce to the form and submit
+              document.querySelector('#nonce').value = payload.nonce;
+              //form.submit();
+
+              //var url = form.attr('action');
+                var paymentForm = $('#payment_info');
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>job/update_payment_details",
+                    data: paymentForm.serialize(), // serializes the form's elements.
+                    dataType: 'json',
+                    success: function(o) {                    
+                        if(o.is_success === 1){
+                            sucess();
+                        }else{
+                            Swal.fire({
+                                title: 'Error!',
+                                text: o.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                
+                            });
+                        }
+
+                        $("#btn-billing-pay-now").html('Pay Now');
+                    },beforeSend: function() {
+                        $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                    }
+                }); 
+            });
+          });
+        });
+    <?php } ?>        
+    /*End Braintree Payment*/
 
     function createJobPayment(){
         var jobid = $('#job-id').val();

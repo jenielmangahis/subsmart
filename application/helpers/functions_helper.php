@@ -431,7 +431,7 @@ if (!function_exists('getLocation')){
                     'qty >=' => $qty,
                 ),
                 'table' => 'items_has_storage_loc',
-                'select' => 'id,location_name'
+                'select' => 'id,loc_id'
             );
     
             $location = $CI->general_model->get_data_with_param($getLocation);
@@ -443,10 +443,10 @@ if (!function_exists('getLocation')){
                     'id' => $id,
                 ),
                 'table' => 'items_has_storage_loc',
-                'select' => 'location_name'
+                'select' => 'loc_id'
             );
             $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
-            return $location->location_nmae;
+            return $location->loc_id;
         }
         
     }

@@ -204,7 +204,7 @@ a.btn-primary.btn-md {
                     <div class="col-md-6">
                         <label for="customers" class="required"><b>Customer</b></label>
                         <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="4801" selected>- Select Customer -</option>
+                            <option>- Select Customer -</option>
                             <?php foreach($customers as $c){ ?>
                                 <?php if( $default_customer_id > 0 ){ ?>
                                     <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
@@ -379,7 +379,6 @@ a.btn-primary.btn-md {
                                         <label for="purchase_order_number"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
                                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" >
-                                            <option value="103" selected>TC Nguyen</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1481,11 +1480,11 @@ $(document).ready(function(){
 <link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
 <script>
 $('#scheduled_time').timepicker({
-  timeFormat: 'hh:mm a',
+  timeFormat: 'h:mm a',
   interval: 30,
   minTime: '8',
   maxTime: '11:00 PM',
-  startTime: '08:00 AM',
+  startTime: '8:00 AM',
   dynamic: false,
   dropdown: true,
   scrollbar: true
