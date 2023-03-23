@@ -321,6 +321,31 @@ class Estimate_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function add_estimate_temp_items($data)
+    {
+        $vendor = $this->db->insert('temp_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function delete_temp_item($id)
+    {
+        $where = array(
+            'id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('temp_items');
+        return true;
+    }
+
+    public function add_new_items($data)
+    {
+        $vendor = $this->db->insert('items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
         $user_id = getLoggedUserID();

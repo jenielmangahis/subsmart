@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath("v2/includes/accounting/reports/$modalsView"); ?>
 
 <div class="row page-content g-0">
     <div class="col-12">
@@ -101,32 +102,32 @@
                                             <ul class="dropdown-menu p-3">
                                                 <p class="m-0">Sort by</p>
                                                 <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                    <option value="default" selected>Default</option>
-                                                    <option value="activity-date">Activity Date</option>
-                                                    <option value="billable">Billable</option>
-                                                    <option value="break">Break</option>
-                                                    <option value="create-date">Create Date</option>
-                                                    <option value="created-by">Created By</option>
-                                                    <option value="customer">Customer</option>
-                                                    <option value="duration">Duration</option>
-                                                    <option value="employee">Employee</option>
-                                                    <option value="end-time">End Time</option>
-                                                    <option value="invoice-date">Invoice Date</option>
-                                                    <option value="last-modified">Last Modified</option>
-                                                    <option value="last-modified-by">Last Modified By</option>
-                                                    <option value="memo-description">Memo/Description</option>
-                                                    <option value="product-service">Product/Service</option>
-                                                    <option value="rates">Rates</option>
-                                                    <option value="start-time">Start Time</option>
-                                                    <option value="taxable">Taxable</option>
+                                                    <option value="default" <?=empty($sort_by) || $sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                    <option value="activity-date" <?=$sort_by === 'activity-date' ? 'selected' : ''?>>Activity Date</option>
+                                                    <option value="billable" <?=$sort_by === 'billable' ? 'selected' : ''?>>Billable</option>
+                                                    <option value="break" <?=$sort_by === 'break' ? 'selected' : ''?>>Break</option>
+                                                    <option value="create-date" <?=$sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                    <option value="created-by" <?=$sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
+                                                    <option value="customer" <?=$sort_by === 'customer' ? 'selected' : ''?>>Customer</option>
+                                                    <option value="duration" <?=$sort_by === 'duration' ? 'selected' : ''?>>Duration</option>
+                                                    <option value="employee" <?=$sort_by === 'employee' ? 'selected' : ''?>>Employee</option>
+                                                    <option value="end-time" <?=$sort_by === 'end-time' ? 'selected' : ''?>>End Time</option>
+                                                    <option value="invoice-date" <?=$sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
+                                                    <option value="last-modified" <?=$sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
+                                                    <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
+                                                    <option value="memo-desc" <?=$sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
+                                                    <option value="product-service" <?=$sort_by === 'product-service' ? 'selected' : ''?>>Product/Service</option>
+                                                    <option value="rates" <?=$sort_by === 'rates' ? 'selected' : ''?>>Rates</option>
+                                                    <option value="start-time" <?=$sort_by === 'start-time' ? 'selected' : ''?>>Start Time</option>
+                                                    <option value="taxable" <?=$sort_by === 'taxable' ? 'selected' : ''?>>Taxable</option>
                                                 </select>
                                                 <p class="m-0">Sort in</p>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" checked>
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" checked>
                                                     <label for="sort-asc" class="form-check-label">Ascending order</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc">
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                             </ul>
@@ -137,10 +138,10 @@
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -319,9 +320,9 @@
                                         <?php foreach($activities as $activity) : ?>
                                         <tr>
                                             <td><?=$activity['activity_date']?></td>
-                                            <td><?=$activity['create_date']?></td>
+                                            <td><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
                                             <td><?=$activity['created_by']?></td>
-                                            <td><?=$activity['last_modified']?></td>
+                                            <td><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
                                             <td><?=$activity['last_modified_by']?></td>
                                             <td><?=$activity['customer']?></td>
                                             <td><?=$activity['employee']?></td>
