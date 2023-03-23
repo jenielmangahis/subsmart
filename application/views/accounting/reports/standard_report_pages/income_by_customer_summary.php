@@ -297,35 +297,36 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // print_r($payment_records_acs);
+                                        // print_r($customers);
                                         $total = 0;
                                             foreach($payment_records_acs as $payment)
-                                            { ?>
+                                            { 
+                                                foreach($customers as $customer){
+                                                    if($customer->prof_id == $payment->customer_id){
+                                                ?>
                                            
-                                        
-                                        <tr data-toggle="collapse" data-target="#accordion<?php echo $payment->id; ?>" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i><?php echo $payment->first_name.' '.$payment->last_name; ?></td>
-                                            <td><b>$<?php echo number_format($payment->invoice_amount,2); ?></b></td>
-                                            <td></td>
-                                            <td><b>$<?php echo number_format($payment->invoice_amount,2); ?></b></td>
-                                        </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion<?php echo $payment->id; ?>">
-                                            <td>&emsp;<?php echo $payment->first_name.' '.$payment->last_name; ?></td>
-                                            <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
-                                            <td></td>
-                                            <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
-                                            <!-- <td>
-                                                <table>
-                                                    <tr>
-                                                        <td></td>
-                                                    </tr>
-                                                </table>
-                                            </td> -->
-                                        </tr>
+                                                <tr data-toggle="collapse" data-target="#accordion<?php echo $payment->id; ?>" class="clickable collapse-row collapsed">
+                                                    <td><i class="bx bx-fw bx-caret-right"></i><?php echo $customer->first_name.' '.$customer->last_name; ?></td>
+                                                    <td><b><?php //echo number_format($payment->invoice_amount,2); ?></b></td>
+                                                    <td></td>
+                                                    <td><b><?php //echo number_format($payment->invoice_amount,2); ?></b></td>
+                                                </tr>
+                                                <?php if($payment->customer_id == $customer->prof_id){ ?>
+                                                <tr  class="clickable collapse-row collapse"  id="accordion<?php echo $payment->id; ?>">
+                                                    <td>&emsp;<?php echo $customer->first_name.' '.$customer->last_name; ?></td>
+                                                    <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
+                                                    <td></td>
+                                                    <td>$<?php echo number_format($payment->invoice_amount,2); ?></td>
+                                                </tr>
+                                                <?php } ?>
                                         <?php
-                                            $total += $payment->invoice_amount;
-                                            $total++;
+                                        
+                                        $total += $payment->invoice_amount;
+                                        $total++;
+                                                }
+                                                    
                                             }
+                                        }
                                         ?>
                                         <!-- <tr  class="clickable collapse-row collapse"  id="accordion">
                                             <td>&emsp;<b>Total for Test Customer</b></td>

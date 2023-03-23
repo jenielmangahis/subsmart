@@ -286,8 +286,10 @@ class Reports extends MY_Controller {
         $view = str_replace('/', '_', $view);
         $js = str_replace('%', 'percentage', $view);
 
+        $this->page_data['modalsView'] = $view.'_modals';
         add_footer_js([
-            "assets/js/accounting/reports/standard_report_pages/$js.js"
+            "assets/js/accounting/reports/standard_report_pages/$js.js",
+            "assets/js/v2/printThis.js"
         ]);
 
 // CUSTOMER CONTACT LIST
@@ -441,19 +443,22 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
-                        'create_date' => date("m/d/Y", strtotime($timeActivity->created_at)),
-                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
+                        'create_date' => $timeActivity->created_at,
+                        'created_by' => '',
+                        'last_modified' => $timeActivity->updated_at,
+                        'last_modified_by' => '',
                         'customer' => $customerName,
                         'employee' => $employeeName,
                         'product_service' => $productName,
                         'memo_desc' => $timeActivity->description,
                         'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
-                        'duration' => $timeActivity->time,
-                        'start_time' => $timeActivity->start_time,
-                        'end_time' => $timeActivity->end_time,
-                        'break' => $timeActivity->break_duration,
+                        'duration' => substr($timeActivity->time, 0, -3),
+                        'start_time' => substr($timeActivity->start_time, 0, -3),
+                        'end_time' => substr($timeActivity->end_time, 0, -3),
+                        'break' => substr($timeActivity->break_duration, 0, -3),
                         'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
                         'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'invoice_date' => '',
                         'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
                     ];
                 }
@@ -471,6 +476,39 @@ class Reports extends MY_Controller {
                     $this->page_data['filter_date'] = get('date');
                     $this->page_data['start_date'] = str_replace('-', '/', get('from'));
                     $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'activity_date',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $a[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $b[$sort['column']]);
+                        }
+                    }
+                });
+
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
                 }
 
                 $this->page_data['activities'] = $activities;
@@ -789,5 +827,122 @@ class Reports extends MY_Controller {
             $data_arr = array("success" => true, "cust_header" => $cust_header);
         }
         die(json_encode($data_arr));
+    }
+
+    public function export($reportTypeId)
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+
+        $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
+
+        switch($reportType->name) {
+            case 'Recent/Edited Time Activities' :
+                $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
+
+                $activities = [];
+                foreach($timeActivities as $timeActivity) {
+                    $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                    $productName = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+                    switch($timeActivity->name_key) {
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($timeActivity->name_id);
+                            $employeeName = $employee->FName . ' ' . $employee->LName;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                            $employeeName = $vendor->display_name;
+                        break;
+                    }
+
+                    $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+                    $hours = substr($timeActivity->time, 0, -3);
+                    $time = explode(':', $hours);
+                    $hr = $time[0] + ($time[1] / 60);
+
+                    $total = $hr * $price;
+
+                    $activities[] = [
+                        'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'create_date' => $timeActivity->created_at,
+                        'created_by' => '',
+                        'last_modified' => $timeActivity->updated_at,
+                        'last_modified_by' => '',
+                        'customer' => $customerName,
+                        'employee' => $employeeName,
+                        'product_service' => $productName,
+                        'memo_desc' => $timeActivity->description,
+                        'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
+                        'duration' => substr($timeActivity->time, 0, -3),
+                        'start_time' => substr($timeActivity->start_time, 0, -3),
+                        'end_time' => substr($timeActivity->end_time, 0, -3),
+                        'break' => substr($timeActivity->break_duration, 0, -3),
+                        'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
+                        'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'invoice_date' => '',
+                        'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
+                    ];
+                }
+
+                if(!empty($post['date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', $post['from']),
+                        'end-date' => str_replace('-', '/', $post['to'])
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['activity_date']) >= strtotime($filters['start-date']) && strtotime($v['activity_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => !empty($post['column']) ? str_replace('-', '_', $post['column']) : 'activity_date',
+                    'order' => empty($post['order']) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $a[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $b[$sort['column']]);
+                        }
+                    }
+                });
+
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $writer->markMergedCell('Sheet1', 1, 0, 1, count($post['fields']) - 1);
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Recent_Edited_Time_Activities.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                }
+            break;
+        }
     }
 }
