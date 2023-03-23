@@ -494,6 +494,30 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-3">
+                                <div class="nsm-card primary p-5" role="button">
+                                    <div class="nsm-card-content h-100">
+                                        <div class="row h-100 align-content-between">
+                                            <div class="col-12 text-center mb-3">
+                                                <img class="nsm-card-img-lg" src="<?php echo $url->assets ?>img/braintree-logo.png">
+
+                                                <div class="nsm-card-title">
+                                                    <span>Braintree</span>
+                                                </div>
+                                                <label class="content-subtitle mb-2"></label>
+                                                <label class="nsm-subtitle d-block">
+                                                    Use Braintree that makes it easy to accept payments
+                                                </label>
+                                            </div>
+                                            <div class="col-12 text-center">
+                                                <button type="button" class="nsm-button primary" id="btn_setup_braintree">Setup</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -789,6 +813,8 @@
                             api_paypal();
                         }else if( $('#auth-module').val() == 'plaid' ){
                             api_plaid();
+                        }else if( $('#auth-module').val() == 'braintree' ){
+                            api_braintree();
                         }
                     } else {
                         Swal.fire({
@@ -870,6 +896,27 @@
 
             showLoader(_container);
             $("#setup_stripe_modal").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(result) {
+                    _container.html(result);
+                }
+            });
+        }
+
+        $("#btn_setup_braintree").on("click", function() {
+            let api_module = 'braintree';
+            generate_auth_key(api_module);
+        });
+
+        function api_braintree(){
+            let _container = $("#braintree_api_container");
+            let url = "<?php echo base_url(); ?>tools/_get_braintree_api_credentials";
+
+            showLoader(_container);
+            $("#setup_braintree_modal").modal("show");
 
             $.ajax({
                 type: "POST",
@@ -1261,6 +1308,45 @@
                 },
             });
         });
+
+        $("#form-braintree-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_braintree";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your braintree account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Cannot save data.',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                    $("#setup_braintree_modal").modal('hide');
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
     });
 
     $(document).on('click', '.btn-rc-edit', function(){
@@ -1322,6 +1408,15 @@
         $('.form-edit-values').show();
     });
     $(document).on('click', '.btn-plaid-cancel', function(){
+        $('.form-view-values').show();
+        $('.form-edit-values').hide();
+    });
+
+    $(document).on('click', '.btn-braintree-edit', function(){
+        $('.form-view-values').hide();
+        $('.form-edit-values').show();
+    });
+    $(document).on('click', '.btn-braintree-cancel', function(){
         $('.form-view-values').show();
         $('.form-edit-values').hide();
     });

@@ -9,6 +9,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
 <?php } ?>
+<?php if($braintree_token != ''){ ?>
+<script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
+<?php } ?>
 <?php include viewPath('job/css/job_new'); ?>
 <style>
     .card{
@@ -211,12 +214,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php
                                         $subtotal = 0.00;
                                         foreach ($jobs_data_items as $item):
-                                            $total = ($item->price * $item->qty);
+                                            $total = ($item->cost * $item->qty);
                                             ?>
                                             <tr>
                                                 <td><?= $item->title; ?></td>
                                                 <td><?= $item->qty; ?></td>
-                                                <td>$<?= $item->price; ?></td>
+                                                <td>$<?= $item->cost; ?></td>
                                                 <td>$<?= number_format((float)$total,2,'.',','); ?></td>
                                             </tr>
                                             <?php
@@ -237,6 +240,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <b class="right-text">$<?= number_format((float)$estimate_deposit_amount,2,'.',','); ?></b>
                                     <?php } ?>
                                     <br><hr>
+                                    <?php 
+                                        $grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                    ?>
 
                                     <?php if($jobs_data->tax != NULL): ?>
                                         <b>Tax </b>
@@ -251,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php endif; ?>
 
                                     <b>Grand Total</b>
-                                    <b class="right-text">$<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></b>
+                                    <b class="right-text">$<?= number_format((float)$grand_total,2,'.',','); ?></b>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -288,9 +294,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?></span>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
-                                    <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>">
+                                    <!-- <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>"> -->
+                                    <input type="hidden" id="total_amount" value="<?= $grand_total; ?>">
                                     <br /><br />
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
@@ -307,6 +314,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                               <?php } ?>
                                             <?php } ?>
 
+                                            <?php if($braintree_token != ''){ ?>
+                                                <a class="btn btn-primary btn-pay-braintree btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA BRAINTREE</a>
+                                            <?php } ?>
+
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                                 <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA STRIPE</a>
                                             <?php } ?>
@@ -316,6 +327,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php } ?>
                                           <?php } ?>
 
+                                        </div>
+                                        <div class="braintree-form" style="display:none;">
+                                            <form id="frm-braintree">
+                                                <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                                <div id="bt-dropin"></div>  
+                                                <a class="cancel-braintree btn btn-primary" href="javascript:void(0);">Back</a>       
+                                                <button type="submit" class="btn btn-primary" id="btn-billing-pay-now">Pay Now</button> 
+                                            </form>
+                                            
                                         </div>
                                         <?php echo form_close(); ?>
                                     <?php } ?>
@@ -364,6 +384,16 @@ $(function(){
     openLightbox(token);
   });
 
+  $('.btn-pay-braintree').click(function(){
+    $('.braintree-form').show();
+    $('.payment-api-container').hide();
+  });
+
+  $('.cancel-braintree').click(function(){
+    $('.braintree-form').hide();
+    $('.payment-api-container').show();
+  });
+
   $('.btn-confirm-order').click(function(){
     var job_id = $("#jobid").val();
     var total_amount = $("#total_amount").val();
@@ -385,6 +415,10 @@ $(function(){
                         <?php } ?>
 
                         $(".btn-pay-converge").show();
+
+                        <?php if($braintree_token != ''){ ?>
+                            $(".btn-pay-braintree").show();
+                        <?php } ?>
 
                         <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                             $(".btn-pay-stripe").show();
@@ -443,6 +477,10 @@ $(function(){
             $(".btn-pay-stripe").show();
         <?php } ?>
 
+        <?php if($braintree_token != ''){ ?>
+            $(".btn-pay-braintree").show();
+        <?php } ?>
+
         <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
             // Render the PayPal button into #paypal-button-container
             paypal.Buttons({
@@ -478,6 +516,66 @@ $(function(){
 
     <?php } ?>
   });
+    /*Braintree Payment*/
+    <?php if($braintree_token != ''){ ?>
+        var form = document.querySelector('#frm-braintree');
+        var client_token = "<?= $braintree_token; ?>";
+
+        braintree.dropin.create({
+          authorization: client_token,
+          selector: '#bt-dropin',          
+        }, function (createErr, instance) {
+          if (createErr) {
+            console.log('Create Error', createErr);
+            return;
+          }
+          form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            instance.requestPaymentMethod(function (err, payload) {
+              if (err) {
+                console.log('Request Payment Method Error', err);
+                return;
+              }
+
+              // Add the nonce to the form and submit
+              document.querySelector('#nonce').value = payload.nonce;
+              //form.submit();
+
+              //var url = form.attr('action');                
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>job/update_payment_details",
+                    data: form.serialize(), // serializes the form's elements.
+                    dataType: 'json',
+                    success: function(o) {                    
+                        if(o.is_success === 1){
+                            $('.braintree-form').hide();
+                            updateJobToPaid();
+                        }else{
+                            Swal.fire({
+                                title: 'Error!',
+                                text: o.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                
+                            });
+                        }
+
+                        $("#btn-billing-pay-now").html('Pay Now');
+                    },beforeSend: function() {
+                        $("#btn-billing-pay-now").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                    }
+                }); 
+            });
+          });
+        });
+    <?php } ?>        
+    /*End Braintree Payment*/
 
     //Converge
     function initiateLightbox () {

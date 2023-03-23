@@ -414,6 +414,9 @@
         border-color: lightgray;
         border-width: 0;
     }
+    #invoice_sub_total{
+        font-weight: bold;
+    }
 </style>
 <div class="row page-content g-0">    
     <div class="col-12">
@@ -424,7 +427,7 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="nsm-card primary">                                    
-                                    <div class="nsm-card-content">                                        
+                                    <div class="nsm-card-content">                                       
                                         <div class="form-group">
                                             <div class="row g-3 align-items-center mb-3">
                                               <div class="col-sm-2">
@@ -625,9 +628,7 @@
                             <div class="col-md-8">
                                 <div class="nsm-card primary table-custom">
                                     <div class="nsm-card-content">
-                                        <div class="row">
-                                            <hr>
-                                            <h6 class="custom-job-header">Customer Info</h6>
+                                        <div class="row">                                                                                        
                                             <div class="col-md-5">                                                
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
                                                     <option selected value="">- Select Customer -</option>
@@ -663,34 +664,46 @@
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="col-md-12">
-                                                    <iframe id="TEMPORARY_MAP_VIEW" height="300" width="100%"></iframe>
+                                                    <iframe id="TEMPORARY_MAP_VIEW" height="200" width="100%"></iframe>
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <h6 class='card_header custom-job-header'>Job Items Listing</h6>                                        
-                                        <table class="table table-hover">
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <p>Description of Job</p>
+                                                <textarea name="job_description" class="form-control" required=""></textarea>
+                                            </div>
+                                            <div class="col-6">
+                                                <p>Notes</p>
+                                                <?php 
+                                                    //$message = "Thank you for your business, Please call ".$company_info->business_name." at ".$company_info->business_phone." for quality customer service";
+                                                    $message = '';
+                                                ?>
+                                                <textarea name="job_notes" class="form-control" required=""><?= $message; ?></textarea>
+                                            </div>
+                                        </div>                                        
+                                        <div class="row mb-3 mt-3">
+                                            <div class="col-12">
+                                                <h6 class='card_header custom-job-header'>Job Items Listing</h6>  
+                                                <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list" style="float: right;">
+                                                    <i class='bx bx-plus'></i>Add Items
+                                                </button>
+                                            </div>
+                                        </div>                                                                              
+                                        <table class="table table-hover" id="quick-add-job-table-items" style="display: block;max-height:200px; overflow:auto;">
                                             <tbody id="jobs_items"></tbody>
                                         </table>
-                                            <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
-                                                <i class='bx bx-plus'></i>Add Items
-                                            </button>
-                                        <br>
-                                        <br>
-                                        <div class="col-sm-12">
-                                            <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required=""></textarea>
-                                            <hr/>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <p>Notes</p>
-                                            <?php 
-                                                //$message = "Thank you for your business, Please call ".$company_info->business_name." at ".$company_info->business_phone." for quality customer service";
-                                                $message = '';
-                                            ?>
-                                            <textarea name="job_notes" class="form-control" required=""><?= $message; ?></textarea>
-                                            <hr/>
-                                        </div>
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4" style="width: 85%; background-color: #d9d9d9;"><b>Total</b></td>
+                                                    <td colspan="2" style="background-color: #d9d9d9;">
+                                                        <label id="invoice_sub_total">$00.00</label>
+                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>                                                                                    
                                         <div class="row">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
@@ -750,7 +763,7 @@
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                     </tr>
-                                    <?php  } } ?>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>

@@ -249,8 +249,8 @@ $("#attachment-file").change(function() {
             var withCommas = Number(total).toLocaleString('en');
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
-                "<td><small>Qty</small><input min='1' data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type='number' name='item_qty[]' class='form-control qty' maxlength='1'></td>" +
-                "<td><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control' placeholder='Unit Price'></td>" +
+                "<td><small>Qty</small><input min='1' data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' maxlength='1'></td>" +
+                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
                 "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
@@ -456,6 +456,19 @@ $("#attachment-file").change(function() {
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
             getLoc(id, qty);
+            calculate_subtotal();
+        });
+
+        $("body").delegate(".item-price", "change", function(){
+            //console.log( "Handler for .keyup() called." );
+            var id   = $(this).attr('data-id');
+            var qty  = $('.item-qty-'+id).val();
+            var cost = $(this).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            $('#sub_total'+id).data('subtotal',new_sub_total);
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
             calculate_subtotal();
         });
 

@@ -319,7 +319,7 @@
                                 <?php } ?>
                                 <?php if( $schedule_invoice_amount > 0 ){ ?>                             
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
-                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= $schedule_invoice_amount; ?>
+                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= number_format($schedule_invoice_amount,2); ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>

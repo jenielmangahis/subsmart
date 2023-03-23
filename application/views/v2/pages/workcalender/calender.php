@@ -2485,8 +2485,7 @@
 
     $(document).on('click', '#calendar-quick-add-job', function(){
         var url = base_url + "job/_quick_add_job_form";
-        var default_date = moment(new Date());
-        var date_selected = default_date.format('YYYY-MM-DD');
+        var date_selected   = $('#quick-add-date-selected').val();
         calendar_modal_source = 'quick-add-job';
         $('#modal-quick-select-schedule-type').modal('hide');
         $('#modal-quick-add-job').modal('show');
@@ -2508,7 +2507,8 @@
 
     $(document).on('click', '#btn-quick-add-job', function(){
         var url = base_url + "job/_quick_add_job_form";
-        var date_selected   = $('#quick-add-date-selected').val();
+        var default_date = moment(new Date());
+        var date_selected = default_date.format('YYYY-MM-DD');        
         calendar_modal_source = 'quick-add-job';
         $('#modal-quick-select-schedule-type').modal('hide');
         $('#modal-quick-add-job').modal('show');
