@@ -610,6 +610,7 @@ class DocuSign extends MYF_Controller
 
         $this->db->where('id', $documentId);
         $envelope = $this->db->get('user_docfile')->row_array();
+        $attachToCustomer = null;
 
         if (!is_null($nextRecipient)) {
             if ($nextRecipient['role'] === 'Signs in Person') {
@@ -632,12 +633,35 @@ class DocuSign extends MYF_Controller
             $this->db->order_by('id', 'asc');
             $allRecipients = $this->db->get('user_docfile_recipients')->result_array();
             $this->sendCompletedNotice($envelope, $allRecipients);
+
+            $recipientIds = array_map(function ($recipient) {
+                return $recipient['id'];
+            }, $allRecipients);
+
+            $this->db->select('job_id');
+            $this->db->where_in('user_docfile_recipient_id', $recipientIds);
+            $jobId = $this->db->get('user_docfile_job_recipients')->row();
+            $jobId = is_null($jobId) ? null : $jobId->job_id;
+
+            if (!is_null($jobId)) {
+                $this->db->select('customer_id');
+                $this->db->where('id', $jobId);
+                $job = $this->db->get('jobs')->row();
+
+                if ($job) {
+                    $attachToCustomer = [
+                        'customer_id' => $job->customer_id,
+                        'esign_id' => $documentId
+                    ];
+                }
+            }
         }
 
         echo json_encode([
             'data' => $record,
             'next_recipient' => $nextRecipient,
             'has_user' => logged('id') !== false,
+            'attach_to_customer' => $attachToCustomer
         ]);
     }
 
@@ -663,7 +687,8 @@ class DocuSign extends MYF_Controller
 
             $data = [
                 '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
-                '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+                // '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+                '%company_logo%' => 'https://nsmartrac.com/assets/frontend/images/logo.png'
             ];
 
             $message = strtr($template, $data);
@@ -1604,7 +1629,8 @@ SQL;
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
             '%inviter_email%' => $inviter->email,
-            '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+            // '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+            '%company_logo%' => 'https://nsmartrac.com/assets/frontend/images/logo.png'
         ];
 
         $message = strtr($template, $data);

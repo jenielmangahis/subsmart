@@ -30,21 +30,21 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
         }
     });
 
-    // $(`#print_customer_transactions_modal table tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
+    $(`#print_all_sales_transactions_modal table tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 
-    // $(`#print_preview_customer_transactions_modal #customer_transactions_table_print tr`).each(function() {
-    //     if(chk.prop('checked')) {
-    //         $($(this).find('td')[index - 1]).show();
-    //     } else {
-    //         $($(this).find('td')[index - 1]).hide();
-    //     }
-    // });
+    $(`#print_preview_all_sales_transactions_modal #all_sales_transactions_table_print tr`).each(function() {
+        if(chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
 });
 
 $('.table-filter select:not(#filter-customer)').select2({

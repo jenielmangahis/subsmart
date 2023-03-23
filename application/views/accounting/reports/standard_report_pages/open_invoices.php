@@ -358,6 +358,7 @@
                                 <table class="nsm-table">
                                     <thead>
                                         <tr>
+                                            <td data-name="Name">NAME</td>
                                             <td data-name="Date">DATE</td>
                                             <td data-name="Transaction Type">TRANSACTION TYPE</td>
                                             <td data-name="Num">NUM</td>
@@ -367,38 +368,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse" id="accordion">
-                                            <td>06/13/2022</td>
-                                            <td>Invoice</td>
-                                            <td>123</td>
-                                            <td>Due on receipt</td>
-                                            <td>06/15/2022</td>
-                                            <td>$22,544.77</td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;<b>Total for Test Customer</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
+                                        <?php foreach($invoices as $invoice){ 
+                                                foreach($customers as $customer){ 
+                                                    if($customer->prof_id == $invoice->customer_id){
+                                            ?>
                                         <tr>
-                                            <td><b>TOTAL</b></td>
+                                            <td><?php echo $invoice->first_name.' '. $invoice->last_name; ?></td>
+                                            <td><?php echo $invoice->date_issued; ?></td>
+                                            <td>Invoice</td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
+                                            <td><?php echo $invoice->due_date; ?></td>
+                                            <td><b>$<?php echo number_format($invoice->grand_total,2); ?></b></td>
                                         </tr>
+                                        <?php } } } ?>
+                                        
                                     </tbody>
                                 </table>
                             </div>

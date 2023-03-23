@@ -151,6 +151,12 @@
         </div>
     </div>
 
+    <div class="loader-finishing d-none">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
     <div class="modal" tabindex="-1" role="dialog" id="signatureModal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

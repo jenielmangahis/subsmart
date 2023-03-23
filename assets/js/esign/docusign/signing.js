@@ -1195,6 +1195,7 @@ function Signing(hash) {
 
       $(this).attr("disabled", true);
       $(this).find(".spinner-border").removeClass("d-none");
+      $(".loader-finishing").removeClass("d-none");
 
       const $dateSigned = $("[data-field-type=dateSigned]");
       const dateSignedPromises = [...$dateSigned].map((dateSigned) => {
@@ -1235,6 +1236,33 @@ function Signing(hash) {
       });
 
       const data = await response.json();
+
+      // RET*RD ALERT!!! Do this in backend.
+      if (data.attach_to_customer) {
+        if (
+          data.attach_to_customer.customer_id &&
+          data.attach_to_customer.esign_id
+        ) {
+          const response = await fetch(
+            `${prefixURL}/Customer/apiAttachGeneratedEsign`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                customer_id: data.attach_to_customer.customer_id,
+                esign_id: data.attach_to_customer.esign_id,
+              }),
+              headers: {
+                accepts: "application/json",
+                "content-type": "application/json",
+              },
+            }
+          );
+
+          const jsonData = await response.json();
+          console.log(jsonData);
+        }
+      }
+
       if (data.hash) {
         window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;
         return;
@@ -1252,6 +1280,7 @@ function Signing(hash) {
 
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
+      $(".loader-finishing").addClass("d-none");
       markAsFinished();
     });
   }
