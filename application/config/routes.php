@@ -709,6 +709,7 @@ $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_l
 $route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/reports/ffcra_cares_act_report';
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 $route['accounting/reports/(:any)/export']['post'] = 'accounting_controllers/reports/export/$1';
+$route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controllers/reports/update_note/$1';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1160,9 +1161,11 @@ $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converg
 $route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_activate_company_stripe'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_activate_company_paypal'] = 'Tools/ajax_activate_company_online_payment_account';
+$route['tools/_activate_company_braintree'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_get_stripe_api_credentials'] = 'Tools/ajax_load_company_stripe_form';
 $route['tools/_get_paypal_api_credentials'] = 'Tools/ajax_load_company_paypal_form';
 $route['tools/_get_nmi_api_credentials'] = 'Tools/ajax_load_company_nmi_form';
+$route['tools/_get_braintree_api_credentials'] = 'Tools/ajax_load_company_braintree_form';
 $route['tools/_activate_company_nmi'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/activate_stripe'] = 'Debug/activateStripe';
 $route['tools/_get_ring_central_credentials'] = 'Tools/ajax_load_company_ring_central';
@@ -1187,6 +1190,7 @@ $route['users/_update_user_signature'] = 'Users/ajax_update_user_signature';
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
 $route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
+$route['_braintree_process_payment'] = 'Pages/ajax_braintree_process_payment';
 
 //Refer Friend
 $route['refer_friend'] = 'Pages/front_refer_friend';

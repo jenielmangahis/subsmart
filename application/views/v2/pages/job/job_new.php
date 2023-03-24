@@ -1567,14 +1567,22 @@
 <!-- Approved Job Modal -->
 <?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
-<div class="modal fade" id="finish_modal" role="dialog">
-    <div class="modal-dialog">
+
+<?php 
+    foreach ($invoices as $invoice) {
+        if ($invoice->job_id == $jobs_data->id) {
+            $INVOICE_ID_PREVIEW = $invoice->id;
+        }
+    }
+?>
+<div class="modal fade" id="finish_modal" data-bs-backdrop='static' role="dialog">
+    <div class="modal-dialog FINISH_MODAL_SIZE">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Finish Job</span>
+                <span class="modal-title content-title FINISH_MODAL_TITLE" style="font-size: 17px;">Finish Job</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
-            <div class="modal-body">
+            <div class="modal-body FINISH_MODAL_BODY">
                 <form id="update_status_to_closed">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
@@ -1596,10 +1604,23 @@
                                 <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin: 0;">
                                     <span class="bx bx-fw bx-money"></span> Pay Now
                                 </a>
-
-                                <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin-bottom: 0;">
+                                <a href="#" class="nsm-button primary SEND_INVOICE" style="margin-bottom: 0;">
                                     <span class="bx bx-fw bx-send"></span> Send Invoice
                                 </a>
+                                <script type="text/javascript">
+                                    $('.SEND_INVOICE').on('click', function(event) {
+                                        event.preventDefault();
+                                        $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
+                                        $('.FINISH_MODAL_TITLE').text('Invoice');
+                                        $('#finish_modal').hide();
+                                        $('.FINISH_MODAL_BODY').load('<?= base_url('invoice/genview/').$INVOICE_ID_PREVIEW; ?> .invoice-print', function(){
+                                            $('#finish_modal').fadeIn('fast');
+                                            $('#finish_modal').on('hide.bs.modal', function (e) {
+                                              window.location.replace('<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>');
+                                            })
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>

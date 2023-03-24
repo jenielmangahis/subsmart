@@ -121,6 +121,20 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="setup_braintree_modal" tabindex="-1" aria-labelledby="setup_braintree_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-braintree-account', 'autocomplete' => 'off']); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Braintree</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="braintree_api_container"></div>
+        </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="setup_nmi_modal" tabindex="-1" aria-labelledby="setup_nmi_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-nmi-account', 'autocomplete' => 'off']); ?>

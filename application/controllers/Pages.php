@@ -300,6 +300,8 @@ class Pages extends MYF_Controller {
 
     public function job_customer_invoice_view( $eid )
     {
+    	include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
         // load models
         $this->load->model('general_model');
         $this->load->model('jobs_model');
@@ -309,9 +311,22 @@ class Pages extends MYF_Controller {
         // load helpers
         $this->load->helper('functions');
     	//$this->load->helper(array('hashids_helper'));
-
+        
     	$job  = $this->jobs_model->get_specific_job_by_hash_id($eid);    	
     	if($job){
+    		$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+    		$braintree_token = '';
+            if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+                $gateway = new Braintree\Gateway([
+                    'environment' => BRAINTREE_ENVIRONMENT,
+                    'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                    'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                    'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                ]);
+
+                $braintree_token = $gateway->ClientToken()->generate();
+            }
+
     		$job_id = $job->id;
     		if( $job->estimate_id > 0 ){
     			$estimate = $this->Estimate_model->getEstimate($job->estimate_id);
@@ -330,6 +345,7 @@ class Pages extends MYF_Controller {
                 'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
             );
 
+            $this->page_data['braintree_token'] = $braintree_token;
             $this->page_data['estimate_deposit_amount'] = $estimate_deposit_amount;
             $this->page_data['onlinePaymentAccount'] = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
             $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
@@ -1290,5 +1306,55 @@ class Pages extends MYF_Controller {
 		$this->page_data['is_valid'] = $is_valid;
 	    $this->load->view('pages/front_activate_multi_account', $this->page_data);
 
+	}
+
+	public function testVonageWebhook()
+	{
+		$post = $this->input->post();
+		print_r($post);
+		exit;
+	}
+
+	public function ajax_braintree_process_payment()
+	{
+		include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+		$is_success = 0;
+		$msg  = '';
+
+		$post = $this->input->post();
+
+        $comp_id = logged('company_id');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+
+        if( $companyOnlinePaymentAccount ){
+            $gateway = new Braintree\Gateway([
+                'environment' => BRAINTREE_ENVIRONMENT,
+                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+            ]);
+            $result = $gateway->transaction()->sale([
+                'amount' => floatval($post['amount']),
+                'paymentMethodNonce' => $nonce,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]);
+
+            if($result->success || !is_null($result->transaction)) {
+                $is_success = 1;
+            }else{
+                $errorString = "";
+                foreach($result->errors->deepAll() as $error) {
+                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
+                }
+                $msg = $errorString;                
+            }
+        }
+
+		$data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
 	}
 }

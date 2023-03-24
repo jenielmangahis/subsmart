@@ -1848,10 +1848,12 @@ class Estimate extends MY_Controller
             $this->load->helper('pdf_helper');
             $this->load->model('AcsProfile_model');
             $this->load->model('Clients_model');
+            $this->load->model('Business_model');
 
             $company_id = $estimate->company_id;
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $client   = $this->Clients_model->getById($company_id);
+            //$client   = $this->Clients_model->getById($company_id);
+            $business = $this->business_model->getByCompanyId($company_id);
             // $estimateItems = unserialize($estimate->estimate_items);
             $estimateItems = $this->estimate_model->getEstimatesItems($id);
 
@@ -1859,17 +1861,18 @@ class Estimate extends MY_Controller
             <table style="padding-top:-40px;">
                 <tr>
                     <td>
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
+                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$business->business_name.'</span></h5>
                         <br />
-                        <span class="">'.$client->business_address.'</span><br />
-                        <span class="">EMAIL: '.$client->email_address.'</span><br />
-                        <span class="">PHONE: '.$client->phone_number.'</span>
+                        <span class="">'.$business->street.'</span><br />
+                        <span class="">'.$business->city . ", " . $business->state . " " . $business->postal_code .'</span><br />
+                        <span class="">EMAIL: '.$business->business_email.'</span><br />
+                        <span class="">PHONE: '.formatPhoneNumber($business->business_phone).'</span>
                         <br/><br /><br />
                         <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
                         <br />
-                        <span class="">'.$customer->mail_add. " " .$customer->city.'</span><br />
+                        <span class="">'.$customer->mail_add. "<br />" .$customer->city. ", " . $customer->state . " " .$customer->zip_code.'</span><br />
                         <span class="">EMAIL: '.$customer->email.'</span><br />
-                        <span class="">PHONE: '.$customer->phone_w.'</span>
+                        <span class="">PHONE: '.formatPhoneNumber($customer->phone_m).'</span>
                     </td>
                     <td colspan=1></td>
                     <td style="text-align:right;">
@@ -1976,13 +1979,14 @@ class Estimate extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
+        $this->load->model('Business_model');
 
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
         if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $client   = $this->Clients_model->getById($company_id);
+            $client   = $this->Business_model->getByCompanyId($company_id);
 
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;

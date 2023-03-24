@@ -169,12 +169,22 @@ class Jobs_model extends MY_Model
     public function get_specific_job_items($id)
     {
         $this->db->from($this->table_items);
-        $this->db->select('items.id as fk_item_id,items.id,items.title,items.price,items.type,job_items.qty,job_items.location,job_items.points,job_items.tax');
+        $this->db->select('items.id as fk_item_id,items.id,items.title,items.price,items.type,job_items.cost,job_items.qty,job_items.location,job_items.points,job_items.tax');
         $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->where("job_items.job_id", $id);
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_all_job_items()
+    {
+        $this->db->from($this->table_items);
+        $this->db->select('items.id as fk_item_id,items.id,items.title,items.price,items.type,job_items.job_id,job_items.items_id,job_items.cost,job_items.qty,job_items.location,job_items.points,job_items.tax');
+        $this->db->join('items', 'items.id = job_items.items_id', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 
     public function get_specific_workorder_items($id)
     {   
@@ -539,7 +549,7 @@ class Jobs_model extends MY_Model
         $end_date   = date('Y-m-d', strtotime($start_date . ' +7 day'));
 
         $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, job_payments.amount AS job_total_amount, 
-        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, cust.prof_id,
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.tax_rate, jobs.priority, cust.prof_id,
         job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.phone_m as cust_phone, cust.phone_h as cust_phone_home, cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName, users.id AS e_employee_id,ea.id AS employee2_employee_id, ea.profile_img AS employee2_img,ea.FName AS employee2_fname,ea.LName AS employee2_lname,eb.id AS employee3_employee_id,eb.profile_img AS employee3_img,eb.FName AS employee3_fname,eb.LName AS employee3_lname,ec.id AS employee4_employee_id, ec.profile_img AS employee4_img,ec.FName AS employee4_fname,ec.LName AS employee4_lname');
 
         $this->db->from($this->table);
@@ -686,6 +696,12 @@ class Jobs_model extends MY_Model
     public function updateJobSettingsByCompanyId($company_id, $data) {
         $this->db->where('company_id', $company_id);
         $this->db->update($this->table_job_settings, $data);
+    }
+
+    public function updateJobItemByJobIdAndItemId($job_id, $item_id, $data) {
+        $this->db->where('job_id', $job_id);
+        $this->db->where('items_id', $item_id);
+        $this->db->update($this->table_items, $data);
     }
 
     public function getlastInsert($company_id){

@@ -612,9 +612,9 @@ class Widgets extends MY_Controller
         foreach( $upcomingJobs as $job ){
             $date_index = date("Y-m-d", strtotime($job->start_date));
             $jobItems = $this->Jobs_model->get_specific_job_items($job->id);
-            $total_amount = $job->tax_rate;
+            $total_amount = 0;
             foreach($jobItems as $jt){
-                $total_amount += $jt->price * $jt->qty;
+                $total_amount += $jt->cost * $jt->qty;
             }
 
             $get_estimate_query = array(

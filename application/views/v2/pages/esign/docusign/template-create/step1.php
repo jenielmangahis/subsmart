@@ -59,6 +59,12 @@
             <textarea class="form-control" id="message" name="message" rows="3" placeholder="Enter Message" maxlength="10000"></textarea>
             <small class="form-text text-muted d-none">Characters remaining: <span class="limit">10000</span></small>
         </div>
+
+        <div class="form-group mb-2">
+            <label for="completed-message">Completed Message</label>
+            <textarea class="form-control" id="completed-message" rows="3" placeholder="Enter Completed Message" maxlength="10000"></textarea>
+            <small class="form-text text-muted d-none">Characters remaining: <span class="limit">10000</span></small>
+        </div>
     </div>
 
     <div class="d-flex justify-content-end">

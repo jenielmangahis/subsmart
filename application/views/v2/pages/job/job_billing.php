@@ -166,6 +166,15 @@
                                             <input type="text" class="form-control" name="card_number" id="card_number" value="" /> 
                                         </div>
                                         <div class="col-sm-12 mb-3 BRAINTREE">
+                                            <?php if($braintree_token != ''){ ?>    
+                                                <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                                <div id="bt-dropin"></div>                                     
+                                            <?php }else{ ?>
+                                                <div class="alert alert-danger" role="alert">
+                                                  Your company doesn't have a valid braintree account. To setup your braintree account go to <a href="<?= base_url('tools/api_connectors') ?>">API Tools</a> and click Braintree
+                                                </div>
+                                            <?php } ?>
+
                                             <input id="nonce" name="payment_method_nonce" type="hidden" />
                                             <div id="bt-dropin"></div>
                                         </div>
@@ -328,8 +337,9 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://checkout.stripe.com/checkout.js"></script>    
 <?php } ?>
-
+<?php if($braintree_token != ''){ ?>
 <script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
+<?php } ?>
 
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <?php include viewPath('job/js/job_billing_js'); ?>
@@ -437,7 +447,7 @@
     /*End Stripe Payment*/
 
     /*Braintree Payment*/
-    <?php if($companyOnlinePaymentAccount->braintree_tokenization_key != '' && $braintree_token != ''){ ?>
+    <?php if($braintree_token != ''){ ?>
         var form = document.querySelector('#payment_info');
         var client_token = "<?= $braintree_token; ?>";
 

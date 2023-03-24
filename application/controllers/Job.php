@@ -50,7 +50,7 @@ class Job extends MY_Controller
         if (!empty($jobIds)) {
             // Calculate job amount based on saved job's items.
 
-            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.qty,job_items.tax');
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.cost,job_items.qty,job_items.tax');
             $this->db->from('job_items');
             $this->db->join('items', 'items.id = job_items.items_id', 'left');
             $this->db->where_in('job_items.job_id', $jobIds);
@@ -63,7 +63,7 @@ class Job extends MY_Controller
                     $jobAmounts[$item->job_id] = 0;
                 }
 
-                $total = (((float) $item->price) * (float) $item->qty); // include tax? (float) $item->tax
+                $total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
                 $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
             }
 
@@ -269,7 +269,7 @@ class Job extends MY_Controller
                 'company_id' => $comp_id,
             ),
             'table' => 'invoices',
-            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+            'select' => 'id,job_id, job_number,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
@@ -1018,7 +1018,7 @@ class Job extends MY_Controller
 
             $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
             $braintree_token = '';
-            if( $companyOnlinePaymentAccount ){
+            if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
                 $gateway = new Braintree\Gateway([
                     'environment' => BRAINTREE_ENVIRONMENT,
                     'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
@@ -1057,7 +1057,7 @@ class Job extends MY_Controller
 
             $job_total_amount = 0;
             foreach ($jobItems as $item) {
-                $job_total_amount += (((float) $item->price) * (float) $item->qty);
+                $job_total_amount += (((float) $item->cost) * (float) $item->qty);
             }
 
             $job_total_amount = ($job_total_amount + $jobs_data->tax_rate) - $deposit_amount;
@@ -2183,6 +2183,7 @@ class Job extends MY_Controller
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['qty'] = $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
                         unset($job_items_data);
@@ -3373,7 +3374,7 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Cannot find data.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
         }
-        redirect('job');
+        redirect('job/new_job1/'.$job->id);
     }
 
     public function create_job_invoice_pdf($job_id)
@@ -3809,13 +3810,16 @@ class Job extends MY_Controller
             createSyncToCalendar($jobs_id, 'job', $comp_id);
 
             // insert data to job items table (items_id, qty, jobs_id)
+            $total_amount = 0;
             if (isset($input['item_id'])) {
-                $devices = count($input['item_id']);
+                $devices = count($input['item_id']);                
                 for ($xx = 0; $xx < $devices; $xx++) {
+                    $total_amount = $total_amount + ($input['item_qty'][$xx] * $input['item_price'][$xx]);
                     $job_items_data = array();
                     $job_items_data['job_id'] = $jobs_id; //from jobs table
                     $job_items_data['items_id'] = $input['item_id'][$xx];
                     $job_items_data['qty'] = $input['item_qty'][$xx];
+                    $job_items_data['cost'] = $input['item_price'][$xx];
                     $this->general->add_($job_items_data, 'job_items');
                     unset($job_items_data);
                 }
@@ -3826,6 +3830,13 @@ class Job extends MY_Controller
                 'job_num_next' => $job_settings[0]->job_num_next + 1
             );
             $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+
+            // insert data to job payments table
+            $job_payment_query = array(
+                'amount' => $total_amount,
+                'job_id' => $jobs_id,
+            );
+            $this->general->add_($job_payment_query, 'job_payments');
 
             //SMS Notification
             createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
@@ -4170,9 +4181,6 @@ class Job extends MY_Controller
         $this->page_data['page']->title = 'Create Invoice';
         $this->load->view('v2/pages/job/create_invoice', $this->page_data);
     }
-
-
-
 
     public function apiGetJobItems($id)
     {

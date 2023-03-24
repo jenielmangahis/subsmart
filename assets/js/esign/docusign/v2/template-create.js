@@ -292,6 +292,7 @@ function TemplateCreate() {
     const $description = $form.find("#description");
     const $subject = $form.find("#subject");
     const $message = $form.find("#message");
+    const $completedMessage = $form.find("#completed-message");
 
     if (!templateIdParam && action !== ACTIONS.CREATE) {
       return;
@@ -306,6 +307,7 @@ function TemplateCreate() {
         recipients: recipients.map((r) => r.getData()),
         subject: $subject.val(),
         message: $message.val(),
+        completed_message: $completedMessage.val(),
         workorder_id: workorder ? workorder.id : null,
         job_id: job ? job.id : null,
       };
@@ -353,6 +355,7 @@ function TemplateCreate() {
       description: $description.val(),
       subject: $subject.val(),
       message: $message.val(),
+      completed_message: $completedMessage.val(),
       recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
       id: templateIdParam,
       document_sequence: documentSequence,
@@ -523,6 +526,7 @@ function TemplateCreate() {
       description,
       subject,
       message,
+      completed_message,
       recipients,
       files = [],
     } = template;
@@ -542,11 +546,13 @@ function TemplateCreate() {
     const $file = $form.find("#docFile");
     const $subject = $form.find("#subject");
     const $message = $form.find("#message");
+    const $completedMessage = $form.find("#completed-message");
 
     $name.val(name);
     $description.val(description);
     $subject.val(subject);
     $message.val(message);
+    $completedMessage.val(completed_message);
     $file.removeAttr("required");
 
     const fakeEvent = { target: { files: templateFiles } };

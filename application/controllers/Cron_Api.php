@@ -437,7 +437,7 @@ class Cron_Api extends MYF_Controller {
                             $job_eid = $job->hash_id;
                         }else{
                             $job_eid = hashids_encrypt($job->job_unique_id, '', 15);
-                            $this->jobs_model->update($job->job_unique_id, ['hash_id' => $job_eid]);
+                            $this->Jobs_model->update($job->job_unique_id, ['hash_id' => $job_eid]);
                         }
 
                         $view_link = base_url('/job_invoice_view/' . $job_eid);
