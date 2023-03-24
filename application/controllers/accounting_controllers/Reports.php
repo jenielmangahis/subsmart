@@ -23,6 +23,7 @@ class Reports extends MY_Controller {
         $this->load->model('timesheet_model');
         $this->load->model('accounting_management_reports');
 
+        $this->load->model('accounting_report_type_notes_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('AcsBilling_model');
@@ -287,6 +288,7 @@ class Reports extends MY_Controller {
         $js = str_replace('%', 'percentage', $view);
 
         $this->page_data['modalsView'] = $view.'_modals';
+        $this->page_data['reportNote'] = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
         add_footer_js([
             "assets/js/accounting/reports/standard_report_pages/$js.js",
             "assets/js/v2/printThis.js"
@@ -832,6 +834,7 @@ class Reports extends MY_Controller {
     public function export($reportTypeId)
     {
         $this->load->library('PHPXLSXWriter');
+        $this->load->helper('pdf_helper');
         $post = $this->input->post();
         $order = $post['order'];
         $columnName = $post['column'];
@@ -869,15 +872,15 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
-                        'create_date' => $timeActivity->created_at,
+                        'create_date' => date("m/d/Y H:i:s A", strtotime($timeActivity->created_at)),
                         'created_by' => '',
-                        'last_modified' => $timeActivity->updated_at,
+                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
                         'last_modified_by' => '',
                         'customer' => $customerName,
                         'employee' => $employeeName,
                         'product_service' => $productName,
-                        'memo_desc' => $timeActivity->description,
-                        'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
+                        'memo_description' => $timeActivity->description,
+                        'rates' => !empty($timeActivity->hourly_rate) ? number_format(floatval($timeActivity->hourly_rate), 2) : '',
                         'duration' => substr($timeActivity->time, 0, -3),
                         'start_time' => substr($timeActivity->start_time, 0, -3),
                         'end_time' => substr($timeActivity->end_time, 0, -3),
@@ -936,13 +939,102 @@ class Reports extends MY_Controller {
                     $writer->markMergedCell('Sheet1', 1, 0, 1, count($post['fields']) - 1);
                     $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
+                    $row = 4;
+                    foreach($activities as $activity) {
+                        $data = [];
+                        foreach($post['fields'] as $field) {
+                            $data[] = $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data);
+
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+                    $date = date("l, F j, Y h:i A eP");
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
                     $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                     header("Content-Disposition: attachment;filename=Recent_Edited_Time_Activities.xlsx");
                     header('Cache-Control: max-age=0');
                     $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top:-40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">Recent/Edited Time Activities</h3>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width="100%;>
+                        <thead>
+                            <tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                            }
+                        $html .= '</tr>
+                        </thead>
+                        <tbody>';
+
+                        foreach($activities as $activity) {
+                            $html .= '<tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<td>'.$activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))].'</td>';
+                            }
+                            $html .= '</tr>';
+                        }
+                    
+                    $html .= '</tbody>
+                    </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Recent/Edited Time Activities";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities.pdf', 'D');
                 }
             break;
         }
+    }
+
+    public function update_note($reportTypeId)
+    {
+        $post = $this->input->post();
+        $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+        if(!is_null($reportNote)) {
+            $query = $this->accounting_report_type_notes_model->update_note(logged('company_id'), $reportTypeId, $post['note']);
+        } else {
+            $query = $this->accounting_report_type_notes_model->add_note(['company_id' => logged('company_id'), 'report_type_id' => $reportTypeId, 'notes' => $post['note']]);
+        }
+
+        echo json_encode([
+            'success' => $query ? true : false,
+            'message' => $query ? 'Note updated successfully!' : 'Note update failed'
+        ]);
     }
 }

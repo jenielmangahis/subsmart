@@ -675,6 +675,13 @@ class DocuSign extends MYF_Controller
         $attachment = $this->generatePDF($envelope['id']);
         $mail->addStringAttachment($attachment, $attachmentName . '.pdf');
 
+        $companyLogo = $this->getCompanyProfile();
+
+        $companyId = logged('company_id');
+        $this->db->where('id', $companyId);
+        $this->db->select('business_name, business_address');
+        $company = $this->db->get('clients')->row();
+
         $errors = [];
         foreach ($recipients as $recipient) {
             $message = json_encode([
@@ -683,12 +690,14 @@ class DocuSign extends MYF_Controller
                 'is_self_signed' => false,
             ]);
             $hash = encrypt($message, $this->password);
-            $companyLogo = $this->getCompanyProfile();
 
             $data = [
+                '%heading%' => '<h1 style="margin-bottom:0;">Completed: ' . $envelope['name'] . '</h1>',
+                '%business_name%' => $company->business_name,
+                '%business_address%' => $company->business_address,
+                '%message%' => nl2br(htmlentities($envelope['completed_message'], ENT_QUOTES, 'UTF-8')),
                 '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
-                // '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
-                '%company_logo%' => 'https://nsmartrac.com/assets/frontend/images/logo.png'
+                '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
             ];
 
             $message = strtr($template, $data);
@@ -804,7 +813,7 @@ class DocuSign extends MYF_Controller
         }
 
         $files = $_FILES['files'];
-        $count = count($files['name']);
+        $count = isset($files['name']) && is_array($files['name']) ? count($files['name']) : 0;
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['size'][$i] <= self::ONE_MB * 20) {
@@ -825,6 +834,7 @@ class DocuSign extends MYF_Controller
             'description' => $description,
             'subject' => $subject,
             'message' => $message,
+            'completed_message' => $completedMessage,
             'recipients' => $recipients,
         ] = $this->input->post();
 
@@ -836,6 +846,7 @@ class DocuSign extends MYF_Controller
             'description' => $description,
             'subject' => $subject,
             'message' => $message,
+            'completed_message' => $completedMessage,
             'user_id' => logged('id'),
             'company_id' => logged('company_id'),
         ];
@@ -1313,6 +1324,7 @@ SQL;
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $message = $payload['message'];
+        $completedMessage = $payload['completed_message'];
         $subject = $payload['subject'];
         $recipients = $payload['recipients'];
         $workorderId = $payload['workorder_id'] ?? null;
@@ -1345,6 +1357,7 @@ SQL;
             'status' => 'Draft',
             'subject' => $subject,
             'message' => $message,
+            'completed_message' => $completedMessage,
             'company_id' => $companyId,
             'unique_key' => guidv4()
         ]);
@@ -1490,7 +1503,7 @@ SQL;
             $this->db->insert('user_docfile_document_sequence', $payload);
         }
 
-        $this->db->select(['id', 'subject']);
+        $this->db->select(['id', 'subject', 'message', 'name']);
         $this->db->where('id', $docfileId);
         $envelope = $this->db->get('user_docfile')->row_array();
 
@@ -1624,13 +1637,20 @@ SQL;
         $hash = encrypt($message, $this->password);
         $companyLogo = $this->getCompanyProfile();
 
+        $companyId = logged('company_id');
+        $this->db->where('id', $companyId);
+        $this->db->select('business_name, business_address');
+        $company = $this->db->get('clients')->row();
+
         $data = [
+            '%heading%' => '<h1 style="margin-bottom:0;">Invite: ' . $envelope['name'] . '</h1>',
+            '%business_name%' => $company->business_name,
+            '%business_address%' => $company->business_address,
             '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
             '%inviter_email%' => $inviter->email,
-            // '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
-            '%company_logo%' => 'https://nsmartrac.com/assets/frontend/images/logo.png'
+            '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
         ];
 
         $message = strtr($template, $data);

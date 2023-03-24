@@ -709,6 +709,7 @@ $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_l
 $route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/reports/ffcra_cares_act_report';
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 $route['accounting/reports/(:any)/export']['post'] = 'accounting_controllers/reports/export/$1';
+$route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controllers/reports/update_note/$1';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 

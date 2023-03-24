@@ -131,8 +131,12 @@
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="<?=is_null($reportNote) ? 'add-notes' : 'edit-notes'?>">
+                                                <?php if(is_null($reportNote) || empty($reportNote->notes)) : ?>
                                                 <span>Add notes</span>
+                                                <?php else : ?>
+                                                <span>Edit notes</span>
+                                                <?php endif; ?>
                                             </button>
                                         </div>
                                     </div>
@@ -292,7 +296,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table" id="reports-table">
+                                <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
                                             <td data-name="Activity Date">ACTIVITY DATE</td>
@@ -350,6 +354,20 @@
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
+
+                                <div class="row">
+                                    <div class="col-12 d-none" id="report-note-form">
+                                        <textarea name="report_note" id="report-note" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
+                                        <label for="report-note">4000 characters max</label>
+                                        <button class="nsm-button primary float-end" id="save-note">Save</button>
+                                        <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
+                                    </div>
+                                    <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
+                                        <?php if(!is_null($reportNote)) : ?>
+                                        <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>

@@ -269,7 +269,7 @@ class Job extends MY_Controller
                 'company_id' => $comp_id,
             ),
             'table' => 'invoices',
-            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+            'select' => 'id,job_id, job_number,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
@@ -3374,7 +3374,7 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Cannot find data.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
         }
-        redirect('job');
+        redirect('job/new_job1/'.$job->id);
     }
 
     public function create_job_invoice_pdf($job_id)
@@ -4181,9 +4181,6 @@ class Job extends MY_Controller
         $this->page_data['page']->title = 'Create Invoice';
         $this->load->view('v2/pages/job/create_invoice', $this->page_data);
     }
-
-
-
 
     public function apiGetJobItems($id)
     {

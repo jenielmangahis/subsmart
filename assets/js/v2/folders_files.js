@@ -3218,7 +3218,7 @@ $(document).ready(function(){
           });
   
           const { data } = await response.json();
-          window.location = `${prefixURL}/eSign_v2/templatePrepare?id=${data.id}`;
+          window.location = `${prefixURL}/eSign_v2/templateEdit?id=${data.id}`;
         },
         share: function () {
           showUsersModal(id);
@@ -3306,7 +3306,7 @@ $(document).ready(function(){
         if (action) {
           event.preventDefault();
         }
-  
+
         if (actions[action]) {
           await actions[action]();
         }

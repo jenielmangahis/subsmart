@@ -137,19 +137,19 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.01" class="form-control itemquantity">
+                                <input type="number" min="0" step="0.001" class="form-control itemquantity">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.01" class="form-control itemprice">
+                                <input type="number" min="0" step="0.001" class="form-control itemprice">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.01" class="form-control itemdiscount">
+                                <input type="number" min="0" step="0.001" class="form-control itemdiscount">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.01" class="form-control itemtax">
+                                <input type="number" min="0" step="0.001" class="form-control itemtax">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.01" class="form-control itemtotal">
+                                <input type="number" min="0" step="0.001" class="form-control itemtotal">
                             </td>
                             <td>
                                 <button class="nsm-button btn-danger" onclick="removeRow(this)" type="button">Remove</button>
