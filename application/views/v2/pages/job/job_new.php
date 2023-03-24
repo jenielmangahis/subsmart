@@ -845,7 +845,7 @@
                                                 <?php
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
-                                                    $total = $item->price * $item->qty;
+                                                    $total = $item->cost * $item->qty;
                                                 ?>
                                                    <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
@@ -853,10 +853,10 @@
                                                             <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
                                                         <td><small>Qty</small>
-                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
@@ -1717,7 +1717,6 @@ add_footer_js(array(
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-
 
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <!-- Modals -->

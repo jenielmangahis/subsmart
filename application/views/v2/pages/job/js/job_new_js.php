@@ -7,7 +7,6 @@ if(isset($jobs_data)){
 ?>
 
 <script>
-
 $(".REMOVE_THUMBNAIL").click(function(event) {
     event.preventDefault();
     $("#attachment-file").val(null);
@@ -372,6 +371,15 @@ $("#attachment-file").change(function() {
             });
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total=0;
+
+            if( tax == 0 ){
+                //For tax selected
+                if( $('#tax_rate').val() != '' ){
+                    var tax = $('#tax_rate').val();
+                    var discount = $('#invoice_discount_total').text();
+                }
+            }
+
             if((tax !== 0 || tax !== '') && def == false){
                 tax_total = (Number(tax) / 100) * Number(total);
                 total = Number(total) + Number(tax_total) - Number(discount);
@@ -543,7 +551,7 @@ $("#attachment-file").change(function() {
 
         $("#tax_rate").on( 'change', function () {
             var tax = this.value;
-        var discount = $('#invoice_discount_total').text();
+            var discount = $('#invoice_discount_total').text();
             calculate_subtotal(tax, false, discount);
         });
 
