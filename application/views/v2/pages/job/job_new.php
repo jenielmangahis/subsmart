@@ -1574,8 +1574,8 @@
 <!-- Approved Job Modal -->
 <?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
-
 <?php 
+    // echo json_encode($TEST_JOB_INFO);
     foreach ($invoices as $invoice) {
         if ($invoice->job_id == $jobs_data->id) {
             $INVOICE_ID_PREVIEW = $invoice->id;
@@ -1617,14 +1617,18 @@
                                 <script type="text/javascript">
                                     $('.SEND_INVOICE').on('click', function(event) {
                                         event.preventDefault();
-                                        $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
                                         $('.FINISH_MODAL_TITLE').text('Invoice');
-                                        $('#finish_modal').hide();
+                                        $('.FINISH_MODAL_BODY').text('Loading Invoice...');
                                         $('.FINISH_MODAL_BODY').load('<?= base_url('invoice/genview/').$INVOICE_ID_PREVIEW; ?> .invoice-print', function(){
-                                            $('#finish_modal').fadeIn('fast');
-                                            $('#finish_modal').on('hide.bs.modal', function (e) {
-                                              window.location.replace('<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>');
-                                            })
+                                            if ($('.FINISH_MODAL_BODY').text().length <= 20) {
+                                                $('.FINISH_MODAL_BODY').html('This job doesn`t have an invoice yet. <a href="<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>">Create Initial Invoice.</a>');
+                                            } else {
+                                                $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
+                                                $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>");
+                                                $('#finish_modal').on('hide.bs.modal', function (e) {
+                                                    window.location.reload();
+                                                });
+                                            }
                                         });
                                     });
                                 </script>
@@ -1997,6 +2001,7 @@ $(function() {
     //             });
     //         }
     //     });
+
     $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
             $('[id="job_color_id"]').val(id);

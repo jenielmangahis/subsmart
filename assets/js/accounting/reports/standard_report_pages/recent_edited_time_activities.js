@@ -10,8 +10,17 @@ $('.date').each(function() {
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
+$('select').each(function() {
+    if($(this).closest('.modal').length > 0) {
+        $(this).select2({
+            minimumResultsForSearch: -1,
+            dropdownParent: $(this).closest('.modal')
+        });
+    } else {
+        $(this).select2({
+            minimumResultsForSearch: -1
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
@@ -553,6 +562,14 @@ $('#save-note').on('click', function(e) {
                 showCloseButton: true,
                 timer: 1500
             })
+
+            if($('#report-note').val().trim() === '') {
+                $('#add-notes, #edit-notes').text('Add notes');
+                $('#add-notes, #edit-notes').attr('id', 'add-notes');
+            } else {
+                $('#add-notes, #edit-notes').text('Edit notes');
+                $('#add-notes, #edit-notes').attr('id', 'edit-notes');
+            }
 
             $('#report-note-cont').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
             $('#report-note-form').addClass('d-none');

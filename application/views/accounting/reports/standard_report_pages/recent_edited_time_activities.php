@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
                             </button>
                             <button type="button" class="nsm-button primary">
@@ -357,7 +357,7 @@
 
                                 <div class="row">
                                     <div class="col-12 d-none" id="report-note-form">
-                                        <textarea name="report_note" id="report-note" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
+                                        <textarea name="report_note" id="report-note" maxlength="4000" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
                                         <label for="report-note">4000 characters max</label>
                                         <button class="nsm-button primary float-end" id="save-note">Save</button>
                                         <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>

@@ -163,9 +163,23 @@ function Signing(hash) {
       const $element = createElementFromHTML(html);
 
       if (value) {
+        let dateTime = null;
+        if (field.value) {
+          const { created_at } = field.value;
+          if (created_at) {
+            const date = moment(created_at);
+            dateTime = date.format("MMMM Do YYYY, h:mm:ss A");
+          }
+        }
+
         const valueHtml = `
               <div class="fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
+                ${
+                  dateTime
+                    ? `<span class="fillAndSign__signatureTime">${dateTime}</span>`
+                    : ""
+                }
               </div>
             `;
 
@@ -1024,9 +1038,26 @@ function Signing(hash) {
       const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
       await Promise.all(promises);
 
+      let dateTime = moment();
+      const field = window.__esigndata.fields.find((f) => f.id === fieldId);
+
+      if (field && field.value) {
+        const { created_at } = field.value;
+        if (created_at) {
+          dateTime = moment(created_at);
+        }
+      }
+
+      const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
+
       const html = `
         <div class="fillAndSign__signatureContainer">
           <img class="fillAndSign__signatureDraw" src="${signatureDataUrl}"/>
+          ${
+            dateTimeFormatted
+              ? `<span class="fillAndSign__signatureTime">${dateTimeFormatted}</span>`
+              : ""
+          }
         </div>
       `;
 

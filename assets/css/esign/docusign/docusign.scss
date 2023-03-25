@@ -396,3 +396,12 @@ select.docusignField__dropdown--isRequired {
   height: em(25);
   box-sizing: border-box;
 }
+
+.fillAndSign__signatureTime {
+  color: #fff;
+  background-color: #333;
+  padding: 0 2px;
+  font-family: Verdana;
+  font-size: 10px;
+  white-space: nowrap;
+}
