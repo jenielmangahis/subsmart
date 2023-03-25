@@ -619,6 +619,7 @@
                 } else {
                     window.location.href = `/job/new_job1/${payload.job_id}`;
                 }
+                $.get("<?= base_url('job/send_customer_invoice_email/').$job->id; ?>");
             } catch (error) {
                 console.log(error)
                 Swal.fire(

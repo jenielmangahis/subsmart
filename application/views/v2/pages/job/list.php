@@ -222,6 +222,7 @@ foreach ($jobs as $job) {
                                         $badgeCount = 7;
                                         break;
                                     case "Completed":
+                                    case "Finished":
                                         $badgeCount = 8;
                                         break;
                                 endswitch;
@@ -258,8 +259,10 @@ foreach ($jobs as $job) {
                             </td>
                             <td>
                                 <div>
-                                    <?php for($x=1;$x<=$badgeCount;$x++){ ?> <span class="nsm-badge primary-enhanced"></span>
-                                    <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> <span class="nsm-badge primary"></span>
+                                    <?php for($x=1;$x<=$badgeCount;$x++){ ?> 
+                                        <span class="nsm-badge primary-enhanced"></span>
+                                    <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> 
+                                        <span class="nsm-badge primary"></span>
                                     <?php } ?>
                                 </div>
                                 <small class="content-subtitle d-block mt-1"><?= $job->status; ?></small>

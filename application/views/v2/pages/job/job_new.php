@@ -748,7 +748,14 @@
                                         <div class="nsm-card-title">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></strong style="font-size: 17px;">
+                                                    <?php 
+                                                        if( !empty($job_created_by) ){
+                                                            $created_by = $job_created_by->FName . ' ' . $job_created_by->LName;
+                                                        }else{
+                                                            $created_by = $logged_in_user->FName . ' ' . $logged_in_user->LName;
+                                                        }
+                                                    ?>
+                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$created_by; ?></strong style="font-size: 17px;">
                                                 </div>
                                                 <div class="col-sm-6">
                                                      <button type="button" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
@@ -838,7 +845,7 @@
                                                 <?php
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
-                                                    $total = $item->price * $item->qty;
+                                                    $total = $item->cost * $item->qty;
                                                 ?>
                                                    <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
@@ -846,10 +853,10 @@
                                                             <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
                                                         <td><small>Qty</small>
-                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
@@ -1308,7 +1315,7 @@
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
                                             <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
-                                            <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
+                                            <input id="created_by" type="hidden" name="created_by" value="<?= isset($jobs_data) ? $jobs_data->created_by : ''; ?>">
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
@@ -1567,8 +1574,8 @@
 <!-- Approved Job Modal -->
 <?php include viewPath('v2/pages/job/modals/approved_modal'); ?>
 <!-- Finish Job Modal -->
-
 <?php 
+    // echo json_encode($TEST_JOB_INFO);
     foreach ($invoices as $invoice) {
         if ($invoice->job_id == $jobs_data->id) {
             $INVOICE_ID_PREVIEW = $invoice->id;
@@ -1610,14 +1617,18 @@
                                 <script type="text/javascript">
                                     $('.SEND_INVOICE').on('click', function(event) {
                                         event.preventDefault();
-                                        $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
                                         $('.FINISH_MODAL_TITLE').text('Invoice');
-                                        $('#finish_modal').hide();
+                                        $('.FINISH_MODAL_BODY').text('Loading Invoice...');
                                         $('.FINISH_MODAL_BODY').load('<?= base_url('invoice/genview/').$INVOICE_ID_PREVIEW; ?> .invoice-print', function(){
-                                            $('#finish_modal').fadeIn('fast');
-                                            $('#finish_modal').on('hide.bs.modal', function (e) {
-                                              window.location.replace('<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>');
-                                            })
+                                            if ($('.FINISH_MODAL_BODY').text().length <= 20) {
+                                                $('.FINISH_MODAL_BODY').html('This job doesn`t have an invoice yet. <a href="<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>">Create Initial Invoice.</a>');
+                                            } else {
+                                                $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
+                                                $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>");
+                                                $('#finish_modal').on('hide.bs.modal', function (e) {
+                                                    window.location.reload();
+                                                });
+                                            }
                                         });
                                     });
                                 </script>
@@ -1710,7 +1721,6 @@ add_footer_js(array(
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-
 
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <!-- Modals -->
@@ -1991,6 +2001,7 @@ $(function() {
     //             });
     //         }
     //     });
+
     $("body").delegate(".color-scheme", "click", function(){
             var id = this.id;
             $('[id="job_color_id"]').val(id);

@@ -2383,6 +2383,7 @@ SQL;
 
                         if ($decodedImg !== false) {
                             $temporaryPath = FCPATH . ltrim($field->unique_key, '/');
+                            $signatureHeight = 30;
 
                             if (file_put_contents($temporaryPath, $decodedImg) !== false) {
                                 $top = (int) $coordinates->pageTop;
@@ -2397,8 +2398,21 @@ SQL;
                                 $pdf->setY($topAdjusted);
                                 $pdf->setX($leftAdjusted);
 
-                                $pdf->Image($temporaryPath, null, null, null, 30);
+                                $pdf->Image($temporaryPath, null, null, null,  $signatureHeight);
                                 unlink($temporaryPath);
+
+                                if ($value->created_at) {
+                                    $date = new DateTime($value->created_at);
+                                    $formattedDate = $date->format('F jS Y, g:i:s A');
+
+                                    $pdf->setY($topAdjusted +  $signatureHeight);
+                                    $pdf->setX($leftAdjusted);
+                                    $pdf->SetFont('Courier', '', 7);
+                                    // $pdf->SetTextColor(255, 255, 255);
+                                    // $pdf->SetFillColor(0, 0, 0);
+                                    // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
+                                    $pdf->Write(0, $formattedDate);
+                                }
                             }
                         }
                     }
@@ -2483,6 +2497,9 @@ SQL;
             'docfile_id' => $document->id,
             'label' => $document->name
         ]);
+
+        // Display in browser
+        // $pdf->Output('I');
 
         $pdf->Output($uploadFilePath, 'F');
         return $pdf->Output(null, 'S');
