@@ -24,6 +24,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_management_reports');
 
         $this->load->model('accounting_report_type_notes_model');
+        $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('AcsBilling_model');
@@ -1061,5 +1062,22 @@ class Reports extends MY_Controller {
             'success' => $query ? true : false,
             'message' => $query ? 'Note updated successfully!' : 'Note update failed'
         ]);
+    }
+
+    public function add_custom_report_group()
+    {
+        $post = $this->input->post();
+
+        $groupId = $this->accounting_custom_reports_model->add_custom_report_group($post['name']);
+
+        echo json_encode([
+            'data' => $groupId,
+            'name' => $post['name']
+        ]);
+    }
+
+    public function save_custom_report()
+    {
+        $post = $this->input->post();
     }
 }

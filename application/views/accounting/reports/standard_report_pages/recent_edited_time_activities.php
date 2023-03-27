@@ -82,9 +82,47 @@
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
                                 <i class='bx bx-fw bx-customize'></i> Customize
                             </button>
-                            <button type="button" class="nsm-button primary">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: 20%">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="custom-report-name">Custom report name</label>
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Recent/Edited Time Activities">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="custom-report-group">Add this report to a group</label>
+                                        <select name="custom_report_group" id="custom-report-group" class="nsm-field form-control"></select>
+                                        <a href="#" class="text-decoration-none" id="add-new-custom-report-group">Add new group</a>
+                                    </div>
+                                    <div class="col-12 d-none">
+                                        <form id="new-custom-report-group">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <label for="custom-group-name">New group name</label>
+                                                    <input type="text" class="nsm-field form-control" name="new_custom_group_name" id="custom-group-name">
+                                                </div>
+                                                <div class="col-4 d-flex align-items-end">
+                                                    <button type="submit" class="nsm-button success">Add</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="share-with">Share with</label>
+                                        <select name="share_with" id="share-with" class="nsm-field form-control">
+                                            <option value="all">All</option>
+                                            <option value="none" selected>None</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="button" class="nsm-button primary" id="save-custom-report">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
                         </div>
                     </div>
                 </div>
