@@ -1871,7 +1871,7 @@ class Debug extends MY_Controller {
     public function generateHashId()
     {   
         $this->load->helper(array('url', 'hashids_helper'));
-        $id  = 42;
+        $id  = 331;
         $eid = hashids_encrypt($id, '', 15);
         echo $eid;
     }
@@ -1948,7 +1948,7 @@ class Debug extends MY_Controller {
     public function smsVonage(){
         $this->load->helper('sms_helper');
 
-        $sms_number = '639084387292';
+        $sms_number = '639179082622';
         $sms_msg    = 'This is a sample sms nsmatrac usging vonage api';
 
         $result = smsVonage($sms_number, $sms_msg);
@@ -1964,6 +1964,25 @@ class Debug extends MY_Controller {
         echo "<pre>";
         print_r($data);
         exit;
+    }
+
+    public function fixJobItemsCostValue(){
+        $this->load->model('Jobs_model');
+
+        $total_updated = 0;
+        $jobItems = $this->Jobs_model->get_all_job_items();
+        foreach($jobItems as $ji){
+            if( $ji->cost == 0 && $ji->price > 0 ){
+                $cost = $ji->price;
+                $data = ['cost' => $cost];     
+                echo $ji->job_id .'/'. $ji->items_id . "<br />";           
+                $this->Jobs_model->updateJobItemByJobIdAndItemId($ji->job_id, $ji->items_id, $data);
+
+                $total_updated++;
+            }
+        }
+
+        echo 'Total Updated : ' . $total_updated;
     }
 }
 /* End of file Debug.php */
