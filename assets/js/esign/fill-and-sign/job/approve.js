@@ -95,8 +95,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     const jobId = $("input[id=esignJobId]").val();
-    if (swalResponse.isConfirmed && jobId) {
+    if (swalResponse.isConfirmed) {
       window.location.href = `/job/viewInvoice/${jobId}`;
+    } else if (swalResponse.dismiss) {
+      window.location.reload();
     }
   });
 

@@ -387,7 +387,7 @@ class Job extends MY_Controller
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
-
+        // $this->page_data['TEST_JOB_INFO'] = $this->jobs_model->GET_JOB_INFO($id);
         $this->load->view('v2/pages/job/job_new', $this->page_data);
     }
 
@@ -3374,7 +3374,7 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Cannot find data.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
         }
-        redirect('job/new_job1/'.$job->id);
+        // redirect('job/new_job1/'.$job->id);
     }
 
     public function create_job_invoice_pdf($job_id)

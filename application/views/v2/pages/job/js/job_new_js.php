@@ -191,7 +191,8 @@ $("#attachment-file").change(function() {
                     success: function(data) {
                         if( data.is_success == 1 ){
                             if ($overlay) $overlay.style.display = "none";
-                            sucess_add_job(data);    
+                            sucess_add_job(data);
+                            $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->id; ?>"); 
                         }else{
                             error('Error',data.msg,'error');
                         }

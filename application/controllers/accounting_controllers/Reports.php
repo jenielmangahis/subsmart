@@ -24,6 +24,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_management_reports');
 
         $this->load->model('accounting_report_type_notes_model');
+        $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('AcsBilling_model');
@@ -930,6 +931,7 @@ class Reports extends MY_Controller {
 
                 $companyName = $this->page_data['clients']->business_name;
                 $reportName = $reportType->name;
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
@@ -953,6 +955,17 @@ class Reports extends MY_Controller {
 
                     $writer->writeSheetRow('Sheet1', []);
                     $writer->writeSheetRow('Sheet1', []);
+
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', ['Notes'], ['font-style' => 'bold', 'border' => 'bottom']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', [$reportNote->notes]);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->writeSheetRow('Sheet1', []);
+                        $row += 1;
+                    }
 
                     $row += 1;
                     $date = date("l, F j, Y h:i A eP");
@@ -994,8 +1007,21 @@ class Reports extends MY_Controller {
                             $html .= '</tr>';
                         }
                     
-                    $html .= '</tbody>
-                    </table>';
+                    $html .= '</tbody>';
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                    $html .= '<tfoot>
+                        <tr>
+                            <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="'.count($post['fields']).'">
+                                <h4><b>Notes</b></h4>
+                                '.$reportNote->notes.'
+                            </td>
+                        </tr>
+                    </tfoot>';
+                    }
+                    $html .= '</table>';
 
                     $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
 
@@ -1036,5 +1062,22 @@ class Reports extends MY_Controller {
             'success' => $query ? true : false,
             'message' => $query ? 'Note updated successfully!' : 'Note update failed'
         ]);
+    }
+
+    public function add_custom_report_group()
+    {
+        $post = $this->input->post();
+
+        $groupId = $this->accounting_custom_reports_model->add_custom_report_group($post['name']);
+
+        echo json_encode([
+            'data' => $groupId,
+            'name' => $post['name']
+        ]);
+    }
+
+    public function save_custom_report()
+    {
+        $post = $this->input->post();
     }
 }
