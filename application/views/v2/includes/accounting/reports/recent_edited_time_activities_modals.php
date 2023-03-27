@@ -423,7 +423,7 @@
                                                     <option value="last-quarter-to-date">Last Quarter-to-date</option>
                                                     <option value="last-year">Last Year</option>
                                                     <option value="last-year-to-date">Last Year-to-date</option>
-                                                    <option value="since-30-days-ago">Since 30 Days Ago</option>
+                                                    <option value="since-30-days-ago" selected>Since 30 Days Ago</option>
                                                     <option value="since-60-days-ago">Since 60 Days Ago</option>
                                                     <option value="since-90-days-ago">Since 90 Days Ago</option>
                                                     <option value="since-365-days-ago">Since 365 Days Ago</option>
@@ -432,7 +432,7 @@
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="" id="last-modified-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-30 days"))?>" id="last-modified-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">

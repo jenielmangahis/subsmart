@@ -710,6 +710,8 @@ $route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/re
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 $route['accounting/reports/(:any)/export']['post'] = 'accounting_controllers/reports/export/$1';
 $route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controllers/reports/update_note/$1';
+$route['accounting/reports/add-custom-report-group']['post'] = 'accounting_controllers/reports/add_custom_report_group';
+$route['accounting/reports/save-custom-report']['post'] = 'accounting_controllers/reports/save_custom_report';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 

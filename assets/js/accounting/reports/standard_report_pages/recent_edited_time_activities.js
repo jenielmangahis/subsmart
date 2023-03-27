@@ -577,3 +577,45 @@ $('#save-note').on('click', function(e) {
         }
     });
 });
+
+$('#add-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $(this).parent().next().removeClass('d-none');
+});
+
+$('#new-custom-report-group').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-group-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/add-custom-report-group`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
+            $('#custom-group-name').val('');
+        }
+    });
+});
+
+$('#save-custom-report').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('custom_report_group_id', $('#custom-report-group').val());
+    data.set('share_with', $('#share-with').val());
+    data.set('date_range', $('#time-activity-date').val());
+    data.set('divide_by_100', $('#divide-by-100').prop('checked'));
+    data.set('without_cents', $('#without-cents').prop('checked'));
+    data.set('negative_numbers', $('#negative-numbers').val());
+    data.set('show_in_red', $('#show-in-red').prop('checked'));
+    data.set('rows_limit', $('#limit').val());
+});
