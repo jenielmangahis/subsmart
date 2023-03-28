@@ -294,13 +294,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="col-md-12">
                                     <h6 class="title-border"></h6>
-                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>
-                                    <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>                                    
                                     <!-- <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>"> -->
                                     <input type="hidden" id="total_amount" value="<?= $grand_total; ?>">
                                     <br /><br />
                                     <?php if($jobs_data->status != 'Completed'){ ?>
                                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
+                                        <input type="hidden" id="jobid" name="jobid" value="<?= $jobs_data->job_unique_id; ?>">
                                         <div class="payment-msg"></div>
                                         <div class="payment-api-container" <?= $jobs_data->total_amount <= 0 ? 'style="display:none;"' : ''; ?>>
                                           <?php if($onlinePaymentAccount){ ?>
@@ -328,15 +328,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                           <?php } ?>
 
                                         </div>
+                                        <?php if($braintree_token != ''){ ?>
                                         <div class="braintree-form" style="display:none;">
-                                            <form id="frm-braintree">
                                                 <input id="nonce" name="payment_method_nonce" type="hidden" />
                                                 <div id="bt-dropin"></div>  
                                                 <a class="cancel-braintree btn btn-primary" href="javascript:void(0);">Back</a>       
                                                 <button type="submit" class="btn btn-primary" id="btn-billing-pay-now">Pay Now</button> 
-                                            </form>
-                                            
                                         </div>
+                                        <?php } ?>
                                         <?php echo form_close(); ?>
                                     <?php } ?>
                                 </div>
@@ -358,14 +357,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
 $(function(){
-  function updateJobToPaid(){
+  function updateJobToPaid(payment_method){
     var job_id = $("#jobid").val();
     var url = base_url + '_update_job_status_paid';
     $.ajax({
        type: "POST",
        url: url,
        dataType: "json",
-       data: {job_id:job_id},
+       data: {job_id:job_id,payment_method:payment_method},
        success: function(o)
        {
           $(".payment-api-container").hide();
@@ -451,7 +450,7 @@ $(function(){
                                     return actions.order.capture().then(function(details) {
                                         // Show a success message to the buyer
                                         //console.log(details);
-                                        updateJobToPaid();       
+                                        updateJobToPaid('converge');       
                                     });
                                 }
                             }).render('#paypal-button-container');
@@ -518,7 +517,7 @@ $(function(){
   });
     /*Braintree Payment*/
     <?php if($braintree_token != ''){ ?>
-        var form = document.querySelector('#frm-braintree');
+        var form = document.querySelector('#payment-job-invoice');
         var client_token = "<?= $braintree_token; ?>";
 
         braintree.dropin.create({
@@ -540,13 +539,16 @@ $(function(){
 
               // Add the nonce to the form and submit
               document.querySelector('#nonce').value = payload.nonce;
+
               //form.submit();
 
-              //var url = form.attr('action');                
+              //var url = form.attr('action');   
+                var nonce = payload.nonce;           
+                var jobid = $('#jobid').val();
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>job/update_payment_details",
-                    data: form.serialize(), // serializes the form's elements.
+                    url: "<?= base_url() ?>_braintree_process_payment",
+                    data: {jobid:jobid, nonce:nonce},
                     dataType: 'json',
                     success: function(o) {                    
                         if(o.is_success === 1){

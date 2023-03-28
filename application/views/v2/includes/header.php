@@ -760,6 +760,37 @@ if ($this->session->userdata('usertimezone') == null) {
                 </div>
                 <div class="nsm-nav-items">
                     <ul>
+                        <?php if( isCompanyPlanActive() == 0 && !in_array(logged('company_id'), exempted_company_ids()) ){ ?>
+                        <li>
+                            <style>
+                            .expired-notice{
+                                width: 289px;
+                                margin: auto;
+                            }
+                            .expired-notice span{
+                                color: #ff4d4d;
+                                font-size: 14px;
+                                display: inline-block;
+                                font-weight: bold;
+                            }
+                            .expired-btn{
+                                width: 40%;
+                                display: inline-block !important;
+                                background-color: #ff1a1a;
+                                color: #ffffff !important;
+                                border-radius: 5px;
+                                text-align: center;
+                            }
+                            .expired-btn:hover{
+                                background-color: #ff4d4d !important;
+                            }
+                            </style>
+                            <div class="expired-notice">
+                                <span class="expired-row"><i class='bx bxs-error-circle'></i> Subscription Expired</span>
+                                <a class="nsm-button btn-sm expired-btn" href="<?= base_url('mycrm/membership'); ?>">Renew Subscription</a>
+                            </div>
+                        </li>
+                        <?php } ?>
                         <li>
                             <?php
                             $clock_btn = 'clockIn';

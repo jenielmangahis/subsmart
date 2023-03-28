@@ -253,7 +253,7 @@ class Tools extends MY_Controller {
     }
 
     public function api_quickbooks_callback() {
-        $this->load->library('quickbooksapi');
+        $this->load->library('QuickbooksApi');
         $this->quickbooksapi->create_session($_SERVER['QUERY_STRING']);
         redirect(base_url('tools/quickbooks'));
     }

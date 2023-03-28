@@ -1476,6 +1476,7 @@ $route['api/get_company_multi_accounts'] = 'Api/fetchCompanyMultiAccountList';
 $route['api/send_activation_email'] = 'Api/resendActivationLink';
 $route['api/create_multi_account'] = 'Api/createCompanyMultiAccount';
 $route['api/delete_multi_account'] = 'Api/deleteCompanyMultiAccount';
+$route['api/vonage_inbound_sms'] = 'Api/vonageInboundSms';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

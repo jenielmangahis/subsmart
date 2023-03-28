@@ -495,7 +495,12 @@ class Pages extends MYF_Controller {
     	$this->Jobs_model->update($job->job_unique_id, ['status' => 'Completed']);
 
     	$payment_data = array();
-        $payment_data['method'] = 'CC';
+    	if( $post['payment_method'] != '' ){
+    		$payment_data['method'] = $post['payment_method'];
+    	}else{
+    		$payment_data['method'] = 'CC';	
+    	}
+        
         $payment_data['is_paid'] = 1;
         $payment_data['paid_datetime'] =date("m-d-Y h:i:s");;
         $check = array(
@@ -1319,40 +1324,61 @@ class Pages extends MYF_Controller {
 	{
 		include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('jobs_model');
 
 		$is_success = 0;
 		$msg  = '';
 
 		$post = $this->input->post();
+        $job  = $this->jobs_model->get_specific_job($post['jobid']);
+        if( $job ){
+        	$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
 
-        $comp_id = logged('company_id');
-        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+	        if( $companyOnlinePaymentAccount ){
+	        	$job_items = $this->jobs_model->get_specific_job_items($job->id);
+	        	$total_amount = 0;
+	        	foreach($job_items as $item){
+	        		$total_amount += ($item->cost * $item->qty);
+	        	}	
 
-        if( $companyOnlinePaymentAccount ){
-            $gateway = new Braintree\Gateway([
-                'environment' => BRAINTREE_ENVIRONMENT,
-                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
-                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
-                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
-            ]);
-            $result = $gateway->transaction()->sale([
-                'amount' => floatval($post['amount']),
-                'paymentMethodNonce' => $nonce,
-                'options' => [
-                    'submitForSettlement' => true
-                ]
-            ]);
+	        	$estimate_deposit_amount = 0;
+	        	if( $job->estimate_id > 0 ){
+	    			$estimate = $this->Estimate_model->getEstimate($job->estimate_id);
+	    			if( $estimate ){
+	    				$estimate_deposit_amount = $estimate->deposit_amount;
+	    			}
+	    		}
 
-            if($result->success || !is_null($result->transaction)) {
-                $is_success = 1;
-            }else{
-                $errorString = "";
-                foreach($result->errors->deepAll() as $error) {
-                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
-                }
-                $msg = $errorString;                
-            }
-        }
+	    		$total_amount = ($total_amount + $job->tax_rate) - $estimate_deposit_amount;
+
+	            $gateway = new Braintree\Gateway([
+	                'environment' => BRAINTREE_ENVIRONMENT,
+	                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+	                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+	                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+	            ]);
+	            $result = $gateway->transaction()->sale([
+	                'amount' => floatval($total_amount),
+	                'paymentMethodNonce' => $post['nonce'],
+	                'options' => [
+	                    'submitForSettlement' => true
+	                ]
+	            ]);
+
+	            if($result->success || !is_null($result->transaction)) {
+	                $is_success = 1;
+	            }else{
+	                $errorString = "";
+	                foreach($result->errors->deepAll() as $error) {
+	                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
+	                }
+	                $msg = $errorString;                
+	            }
+	        }else{
+	        	$msg = 'Cannot process payment using braintree.';
+	        }	
+        }   
+        
 
 		$data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
