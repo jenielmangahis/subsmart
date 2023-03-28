@@ -4441,7 +4441,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
-        $this->page_data['page']->title = 'Services';
+        $this->page_data['page']->title = 'Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();

@@ -381,36 +381,13 @@ a.btn-primary.btn-md {
                                                 // var_dump($assigned_technician);
                                                     foreach($assigned_technician as $eid){
                                                         $user = getUserName($eid);
-                                                        echo $custom_html = '<option value="'.$eid.'"></option>';
+                                                        $data = json_decode(json_encode($user), true);
+                                                        $ASSIGNED_TECHNICIAN_ID = $data['id'];
+                                                        $ASSIGNED_TECHNICIAN_NAME = $data['name'];
+                                                        echo $custom_html = "<option selected value='$ASSIGNED_TECHNICIAN_ID'>$ASSIGNED_TECHNICIAN_NAME</option>";
                                                     }
                                             ?>
                                         </select>
-                                        <?php
-                                            if($assigned_technician)
-                                            {
-                                        ?>
-                                        <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: 438.5px;">
-                                            <span class="selection">
-                                                <span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1">
-                                                    <ul class="select2-selection__rendered">
-                                                    <?php
-                                                        $assigned_technician = unserialize($tickets->technicians);
-                                                        // var_dump($assigned_technician);
-                                                            foreach($assigned_technician as $eid){
-                                                                $user = getUserName($eid); ?>
-                                                                 <!-- echo $custom_html = '<select value="'.$eid.'"></select>'; -->
-                                                                 <li class="select2-selection__choice" title=""><span class="select2-selection__choice__remove" role="presentation">×</span><?php echo $user['name']; ?></li>
-                                                    <?php
-                                                            }
-                                                    ?>
-                                                        <!-- <li class="select2-selection__choice" title=""><span class="select2-selection__choice__remove" role="presentation">×</span>Tommy Nguyen</li> -->
-                                                        <li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li>
-                                                    </ul>
-                                                </span>
-                                            </span>
-                                            <span class="dropdown-wrapper" aria-hidden="true"></span>
-                                        </span>
-                                        <?php } ?>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
@@ -903,7 +880,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-12 form-group">
                                         <button type="submit" class="btn btn-warning but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                         <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
-                                        <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
+                                        <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn but-red">Cancel this</a>
                                     </div>
                                 </div>
 
