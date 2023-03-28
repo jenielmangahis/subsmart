@@ -11,8 +11,8 @@ $(document).ready(function() {
         var withCommas = Number(total).toLocaleString('en');
         markup = "<tr id=\"ss\">" +
             "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-            "<td><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control item-qty-"+idd+" qty\" maxlength=\"1\"></td>\n" +
-            "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control item-price \" step='any' placeholder=\"Unit Price\"></td>\n" +
+            "<td><small>Qty</small><input min=\"0\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control item-qty-"+idd+" qty\" maxlength=\"1\"></td>\n" +
+            "<td><small>Unit Price</small><input data-id='"+idd+"' min=\"0\" id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control item-price \" step='any' placeholder=\"Unit Price\"></td>\n" +
             "<td><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
             //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
             "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+total+"</b></td>" +

@@ -531,6 +531,8 @@ $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
 $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
 
+$route['accounting/credit-notes'] = 'accounting_controllers/credit_notes/index';
+
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
@@ -1476,6 +1478,7 @@ $route['api/get_company_multi_accounts'] = 'Api/fetchCompanyMultiAccountList';
 $route['api/send_activation_email'] = 'Api/resendActivationLink';
 $route['api/create_multi_account'] = 'Api/createCompanyMultiAccount';
 $route['api/delete_multi_account'] = 'Api/deleteCompanyMultiAccount';
+$route['api/vonage_inbound_sms'] = 'Api/vonageInboundSms';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

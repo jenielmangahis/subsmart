@@ -180,7 +180,7 @@ class Tools extends MY_Controller {
         $this->page_data['page']->title = 'Quickbooks Payroll';
         $this->page_data['page']->parent = 'Tools';
 
-        $this->load->library('quickbooksapi');
+        $this->load->library('QuickbooksApi');
         $this->page_data['sidebar'] = $this->api_sidebars();
         $user_id = getLoggedUserID();
 
@@ -253,7 +253,7 @@ class Tools extends MY_Controller {
     }
 
     public function api_quickbooks_callback() {
-        $this->load->library('quickbooksapi');
+        $this->load->library('QuickbooksApi');
         $this->quickbooksapi->create_session($_SERVER['QUERY_STRING']);
         redirect(base_url('tools/quickbooks'));
     }
@@ -599,6 +599,16 @@ class Tools extends MY_Controller {
 
         $this->page_data['stripe'] = $stripe;
         $this->load->view('v2/pages/tools/ajax_company_stripe_form', $this->page_data);
+    }
+
+    public function ajax_load_company_braintree_form(){
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $company_id = logged('company_id');    
+
+        $brainTree = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+
+        $this->page_data['brainTree'] = $brainTree;
+        $this->load->view('v2/pages/tools/ajax_company_braintree_form', $this->page_data);
     }
 
     public function ajax_load_company_paypal_form(){

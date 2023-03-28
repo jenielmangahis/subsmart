@@ -129,17 +129,35 @@
 <script>
     $(document).on('click', '.delete-ticket', function(){
         var tkID = $(this).attr('data-tk-id');
+            Swal.fire({
+                title: 'Delete Service Ticket',
+                text: "Are you sure you want to delete this Ticket?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: '<?php echo base_url(); ?>tickets/deleteTicket',
+                        dataType: 'json',
+                        data: {tkID: tkID},
+                        success: function(result) {
+                            Swal.fire({
+                                title: 'Good job!',
+                                text: "Data Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                    });
 
-            $.ajax({
-                method: 'POST',
-                url: '<?php echo base_url(); ?>tickets/deleteTicket',
-                dataType: 'json',
-                data: {tkID: tkID},
-                success: function (e) {
-                //    alert('success');
-                // location.reload();
-                sucess("Data Deleted Successfully!");
-                    
                 }
             });
         });

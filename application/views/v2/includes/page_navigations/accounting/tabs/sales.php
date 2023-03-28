@@ -18,6 +18,12 @@
                 <span>Estimates</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Credit Notes'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="/accounting/credit-notes">
+                <i class='bx bx-fw bx-note'></i>
+                <span>Credit Notes</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Customers'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="/accounting/customers">
                 <i class='bx bx-fw bx-message-square-error'></i>

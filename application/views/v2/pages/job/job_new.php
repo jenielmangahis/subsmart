@@ -458,6 +458,8 @@
                 </div>
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
+                <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
+                <input type="hidden" name="job_hash" id="" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -880,13 +882,7 @@
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
                                         <br>
-                                        <br>
-                                        <div class="col-sm-12">
-                                            
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <input type="text" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
-                                        </div>
+                                        <br>                                        
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">

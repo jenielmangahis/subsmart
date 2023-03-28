@@ -2055,7 +2055,7 @@ class Job extends MY_Controller
 
             $check_job = array(
                 'where' => array(
-                    'job_number' => $input['job_number']
+                    'hash_id' => $input['job_hash']
                 ),
                 'table' => 'jobs',
                 'select' => 'job_number, id'
@@ -2242,6 +2242,7 @@ class Job extends MY_Controller
                         $job_items_data['qty'] = $input['item_qty'][$xx];
                         $job_items_data['tax'] = $input['tax'];
                         $job_items_data['location'] = $input['location'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx];
                         $where['job_id'] = $isJob->id;
                         $where['items_id'] = $input['item_id'][$xx];
                         if (empty($isItem)) {

@@ -216,6 +216,20 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
 
                 <?php foreach ($items as $item) : ?>
                     <?php if ($item->items_id != 0) : ?>
+                        <?php if($item->type == 'Service'){ ?>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid;border-bottom: solid white 1px;"><?= $item->title; ?></td>
+                            <td style="padding: 8px; border: 1px solid; text-align: center;"><?= $item->qty; ?></td>
+                            <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->costing, 2); ?></td>
+                            <td style="padding: 8px; border: 1px solid; text-align: center;">$0</td>
+                            <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->tax, 2); ?></td>
+                            <td style="padding: 8px; border: 1px solid; text-align: center;">
+                                <?php $a = (float) $item->qty * (float) $item->costing; ?>
+                                <?php $b = $a + (float) $item->tax; ?>
+                                $<?= number_format((float) $b, 2);  ?>
+                            </td>
+                        </tr>
+                        <?php }else{ ?>
                         <tr>
                             <td style="padding: 8px; border: 1px solid;"><?= $item->title; ?></td>
                             <td style="padding: 8px; border: 1px solid; text-align: center;"><?= $item->qty; ?></td>
@@ -228,6 +242,12 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
                                 $<?= number_format((float) $b, 2);  ?>
                             </td>
                         </tr>
+                        <?php } ?>
+                        <?php if($item->type == 'Service'){ ?>
+                        <tr>
+                            <td colspan="6" style="padding: 0 0 3px 8px; border: 1px solid;border-top: solid white 1px;font-style:italic;">Description: <?= $item->description; ?></td>
+                        </tr>
+                        <?php } ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
 
