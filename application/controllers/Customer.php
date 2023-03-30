@@ -1200,6 +1200,9 @@ class Customer extends MY_Controller
 
     public function activities($cid)
     {
+        $this->page_data['page']->title = 'Customer Activity';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('CustomerAuditLog_model');
         $this->load->model('AcsProfile_model');
 
@@ -1216,6 +1219,9 @@ class Customer extends MY_Controller
 
     public function invoice_list($cid)
     {
+        $this->page_data['page']->title = 'Customer Invoice List';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');
 
@@ -1296,6 +1302,9 @@ class Customer extends MY_Controller
 
     public function internal_notes($cid)
     {
+        $this->page_data['page']->title = 'Customer Internal Notes';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('CustomerInternalNotes_model');
         $this->load->model('AcsProfile_model');
 
@@ -4441,7 +4450,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
-        $this->page_data['page']->title = 'Services';
+        $this->page_data['page']->title = 'Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();

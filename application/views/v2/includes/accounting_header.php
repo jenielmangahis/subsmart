@@ -216,6 +216,11 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-chart'></i> Estimates
                             </a>
                         </li>
+                        <li class="<?=$page->title === 'Credit Notes' ? 'selected' : ''?>">
+                            <a href="/accounting/credit-notes">
+                                <i class='bx bx-fw bx-note'></i> Credit Notes
+                            </a>
+                        </li>
                         <li class="<?=$page->title === 'Customers' ? 'selected' : ''?>">
                             <a href="/accounting/customers">
                                 <i class='bx bx-fw bx-group'></i> Customers

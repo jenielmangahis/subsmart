@@ -63,336 +63,23 @@ $("#btn_print_report").on("click", function() {
 
 $('#filter-activity-date').on('change', function() {
     if($(this).val() !== 'all-dates') {
-        var startDate = '';
-        var endDate = '';
-
-        switch($(this).val()) {
-            case 'custom' :
-                if($('#filter-from').length > 0) {
-                    startDate = $('#filter-from').val();
-                    endDate = $('#filter-to').val();
-                }
-            break;
-            case 'today' :
-                var date = new Date();
-                startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'this-week' :
-                var date = new Date();
-                var from = date.getDate() - date.getDay();
-                var to = from + 6;
-
-                var from_date = new Date(date.setDate(from));
-                var to_date = new Date(date.setDate(to));
-
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'this-week-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from = date.getDate() - date.getDay();
-                var from_date = new Date(date.setDate(from));
-
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'this-month' :
-                var date = new Date();
-                var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    
-                startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'this-month-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'this-quarter' :
-                var date = new Date();
-                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-                
-                switch(currQuarter) {
-                    case 1 :
-                        startDate = '01/01/' + date.getFullYear();
-                        endDate = '03/31/'+ date.getFullYear();
-                    break;
-                    case 2 :
-                        startDate = '04/01/' + date.getFullYear();
-                        endDate = '06/30/'+ date.getFullYear();
-                    break;
-                    case 3 :
-                        startDate = '07/01/' + date.getFullYear();
-                        endDate = '09/30/'+ date.getFullYear();
-                    break;
-                    case 4 :
-                        startDate = '10/01/' + date.getFullYear();
-                        endDate = '12/31/'+ date.getFullYear();
-                    break;
-                }
-            break;
-            case 'this-quarter-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-                switch(currQuarter) {
-                    case 1 :
-                        startDate = '01/01/' + date.getFullYear();
-                    break;
-                    case 2 :
-                        startDate = '04/01/' + date.getFullYear();
-                    break;
-                    case 3 :
-                        startDate = '07/01/' + date.getFullYear();
-                    break;
-                    case 4 :
-                        startDate = '10/01/' + date.getFullYear();
-                    break;
-                }
-            break;
-            case 'this-year' :
-                var date = new Date();
-
-                startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'this-year-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'this-year-to-last-month' :
-                var date = new Date();
-                var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
-
-                startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'yesterday' :
-                var date = new Date();
-                date.setDate(date.getDate() - 1);
-                startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'recent' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from_date = new Date(date.setDate(date.getDate() - 4));
-
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'last-week' :
-                var date = new Date();
-                var from = date.getDate() - date.getDay();
-    
-                var from_date = new Date(date.setDate(from - 7));
-                var to_date = new Date(date.setDate(date.getDate() + 6));
-    
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'last-week-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from = date.getDate() - date.getDay();
-                var from_date = new Date(date.setDate(from - 7));
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'last-month' :
-                var date = new Date();
-                var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
-    
-                startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'last-month-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'last-quarter' :
-                var date = new Date();
-                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-                
-                switch(currQuarter) {
-                    case 1 :
-                        var from_date = new Date('01/01/' + date.getFullYear());
-                        var to_date = new Date('03/31/'+ date.getFullYear());
-                    break;
-                    case 2 :
-                        var from_date = new Date('04/01/' + date.getFullYear());
-                        var to_date = new Date('06/30/'+ date.getFullYear());
-                    break;
-                    case 3 :
-                        var from_date = new Date('07/01/' + date.getFullYear());
-                        var to_date = new Date('09/30/'+ date.getFullYear());
-                    break;
-                    case 4 :
-                        var from_date = new Date('10/01/' + date.getFullYear());
-                        var to_date = new Date('12/31/'+ date.getFullYear());
-                    break;
-                }
-
-                from_date.setMonth(from_date.getMonth() - 3);
-                to_date.setMonth(to_date.getMonth() - 3);
-
-                if(to_date.getDate() === 1) {
-                    to_date.setDate(to_date.getDate() - 1);
-                }
-
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'last-quarter-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-                switch(currQuarter) {
-                    case 1 :
-                        var from_date = new Date('01/01/' + date.getFullYear());
-                    break;
-                    case 2 :
-                        var from_date = new Date('04/01/' + date.getFullYear());
-                    break;
-                    case 3 :
-                        var from_date = new Date('07/01/' + date.getFullYear());
-                    break;
-                    case 4 :
-                        var from_date = new Date('10/01/' + date.getFullYear());
-                    break;
-                }
-
-                from_date.setMonth(from_date.getMonth() - 3);
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'last-year' :
-                var date = new Date();
-                date.setFullYear(date.getFullYear() - 1);
-    
-                startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'last-year-to-date' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                date.setFullYear(date.getFullYear() - 1);
-    
-                startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-            case 'since-30-days-ago' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from_date = new Date(date.setDate(date.getDate() - 30));
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'since-60-days-ago' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from_date = new Date(date.setDate(date.getDate() - 60));
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'since-90-days-ago' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-
-                var from_date = new Date(date.setDate(date.getDate() - 90));
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'since-365-days-ago' :
-                var date = new Date();
-                endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                
-                var from_date = new Date(date.setDate(date.getDate() - 365));
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            break;
-            case 'next-week' :
-                var date = new Date();
-                var from = date.getDate() - date.getDay();
-    
-                var from_date = new Date(date.setDate(from - 7));
-                var to_date = new Date(date.setDate(date.getDate() + 6));
-    
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'next-4-weeks' :
-
-            break;
-            case 'next-month' :
-                var date = new Date();
-                var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    
-                startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'next-quarter' :
-                var date = new Date();
-                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-
-                switch(currQuarter + 1) {
-                    case 1 :
-                        var from_date = new Date('01/01/' + date.getFullYear());
-                        var to_date = new Date('03/31/'+ date.getFullYear());
-                    break;
-                    case 2 :
-                        var from_date = new Date('04/01/' + date.getFullYear());
-                        var to_date = new Date('06/30/'+ date.getFullYear());
-                    break;
-                    case 3 :
-                        var from_date = new Date('07/01/' + date.getFullYear());
-                        var to_date = new Date('09/30/'+ date.getFullYear());
-                    break;
-                    case 4 :
-                        var from_date = new Date('10/01/' + date.getFullYear());
-                        var to_date = new Date('12/31/'+ date.getFullYear());
-                    break;
-                }
-
-                from_date.setMonth(from_date.getMonth() - 3);
-                to_date.setMonth(to_date.getMonth() - 3);
-
-                if(to_date.getDate() === 1) {
-                    to_date.setDate(to_date.getDate() - 1);
-                }
-
-                startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-                endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
-            case 'next-year' :
-                var date = new Date();
-                date.setFullYear(date.getFullYear() + 1);
-    
-                var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
-            break;
-        }
+        var dates = get_start_and_end_dates($(this).val());
 
         if($('#filter-from').length > 0) {
-            $('#filter-from').val(startDate);
-            $('#filter-to').val(endDate);
+            $('#filter-from').val(dates.start_date);
+            $('#filter-to').val(dates.end_date);
         } else {
             $(`<div class="row grid-mb">
                 <div class="col-12 col-md-6">
                     <label for="filter-from">From</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${startDate}" id="filter-from">
+                        <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="filter-from">
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <label for="filter-to">To</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${endDate}" id="filter-to">
+                        <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="filter-to">
                     </div>
                 </div>
             </div>`).insertAfter($(this).closest('.row'));
@@ -578,10 +265,61 @@ $('#save-note').on('click', function(e) {
     });
 });
 
+$('#filter-create-date, #filter-last-modified-date').on('change', function() {
+    $(this).parent().prev().find('input[type="checkbox"]').prop('checked', true);
+
+    if($(this).val() === 'all-dates') {
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
+    } else {
+        var dates = get_start_and_end_dates($(this).val());
+
+        if($(`#${$(this).attr('id')}-from`).length > 0) {
+            $(`#${$(this).attr('id')}-from`).val(dates.start_date);
+            $(`#${$(this).attr('id')}-to`).val(dates.end_date);
+        } else {
+            $(`<div class="col-12 col-md-6">
+                <label for="${$(this).attr('id')}-from">From</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="${$(this).attr('id')}-from">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="${$(this).attr('id')}-to">To</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="${$(this).attr('id')}-to">
+                </div>
+            </div>`).insertAfter($(this).parent());
+
+            $(`#${$(this).attr('id')}-from, #${$(this).attr('id')}-to`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
+    }
+});
+
 $('#add-new-custom-report-group').on('click', function(e) {
     e.preventDefault();
 
     $(this).parent().next().removeClass('d-none');
+});
+
+$(document).on('click', '#change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().removeClass('d-none');
+    $(this).html('Hide change columns');
+    $(this).attr('id', 'hide-change-columns');
+});
+
+$(document).on('click', '#hide-change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().addClass('d-none');
+    $(this).html('Change columns');
+    $(this).attr('id', 'change-columns');
 });
 
 $('#new-custom-report-group').on('submit', function(e) {
@@ -609,13 +347,391 @@ $('#save-custom-report').on('click', function(e) {
     e.preventDefault();
 
     var data = new FormData();
+    data.set('report_id', reportId);
     data.set('name', $('#custom-report-name').val());
     data.set('custom_report_group_id', $('#custom-report-group').val());
     data.set('share_with', $('#share-with').val());
-    data.set('date_range', $('#time-activity-date').val());
-    data.set('divide_by_100', $('#divide-by-100').prop('checked'));
-    data.set('without_cents', $('#without-cents').prop('checked'));
-    data.set('negative_numbers', $('#negative-numbers').val());
-    data.set('show_in_red', $('#show-in-red').prop('checked'));
-    data.set('rows_limit', $('#limit').val());
+    data.set('date_range', $('#time-activity-date').find('option:selected').text().trim());
+
+    data.append('settings[divide_by_100]', $('#divide-by-100').prop('checked'));
+    data.append('settings[without_cents]', $('#without-cents').prop('checked'));
+    data.append('settings[negative_numbers]', $('#negative-numbers').val());
+    data.append('settings[show_in_red]', $('#show-in-red').prop('checked'));
+    data.append('settings[rows_limit]', $('#limit').val());
+    
+    var columns = [];
+    $('[name="select_columns"]:checked').each(function() {
+        columns.push($(this).attr('id').replace('select-', ''));
+    });
+
+    data.append('settings[columns]', JSON.stringify(columns));
+
+    var filters = {};
+    $('#collapse-filter input[type="checkbox"]:checked').each(function() {
+        if($(this).attr('id') !== 'allow-filter-last-modified-date' && $(this).attr('id') !== 'allow-filter-create-date') {
+            var key = $(this).attr('id').replace('allow-', '');
+            Object.assign(filters, {[key]: $(this).parent().parent().next().find('select, input').val()});
+        } else {
+            var key = $(this).attr('id').replace('allow-', '');
+            Object.assign(filters, {[key]: $(this).parent().parent().next().find('select').val()});
+
+            if($(this).parent().parent().next().find('select').val() !== 'all-dates') {
+                var fromDate = $(`#${$(this).attr('id').replace('allow-', '')}-from`).val();
+                var toDate = $(`#${$(this).attr('id').replace('allow-', '')}-to`).val();
+                var fromKey = $(this).attr('id').replace('allow-', '')+'-from';
+                var toKey = $(this).attr('id').replace('allow-', '')+'-to';
+
+                Object.assign(filters, {[fromKey]: fromDate});
+                Object.assign(filters, {[toKey]: toDate});
+            }
+        }
+    });
+
+    data.append('settings[filters]', JSON.stringify(filters));
+
+    data.append('settings[show_logo]', $('#show-logo').prop('checked'));
+    if($('#customize-company-name').prop('checked')) {
+        data.append('settings[company_name]', $('#company-name').val());
+    }
+
+    if($('#customize-report-title').prop('checked')) {
+        data.append('settings[report_title]', $('#report-title').val());
+    }
+
+    data.append('settings[show_report_period]', $('#show-report-period').prop('checked'));
+    data.append('settings[date_prepared]', $('#show-date-prepared').prop('checked'));
+    data.append('settings[time_prepared]', $('#show-time-prepared').prop('checked'));
+    data.append('settings[header_alignment]', $('#header-alignment').val());
+    data.append('settings[footer_alignment]', $('#footer-alignment').val());
+
+    $.ajax({
+        url: `/accounting/reports/save-custom-report`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+        }
+    });
 });
+
+function get_start_and_end_dates(val)
+{
+    switch(val) {
+        case 'custom' :
+            if($('#filter-from').length > 0) {
+                startDate = $('#filter-from').val();
+                endDate = $('#filter-to').val();
+            }
+        break;
+        case 'today' :
+            var date = new Date();
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+            var to = from + 6;
+
+            var from_date = new Date(date.setDate(from));
+            var to_date = new Date(date.setDate(to));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-week-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from = date.getDate() - date.getDay();
+            var from_date = new Date(date.setDate(from));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'this-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-month-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    startDate = '01/01/' + date.getFullYear();
+                    endDate = '03/31/'+ date.getFullYear();
+                break;
+                case 2 :
+                    startDate = '04/01/' + date.getFullYear();
+                    endDate = '06/30/'+ date.getFullYear();
+                break;
+                case 3 :
+                    startDate = '07/01/' + date.getFullYear();
+                    endDate = '09/30/'+ date.getFullYear();
+                break;
+                case 4 :
+                    startDate = '10/01/' + date.getFullYear();
+                    endDate = '12/31/'+ date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-quarter-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            switch(currQuarter) {
+                case 1 :
+                    startDate = '01/01/' + date.getFullYear();
+                break;
+                case 2 :
+                    startDate = '04/01/' + date.getFullYear();
+                break;
+                case 3 :
+                    startDate = '07/01/' + date.getFullYear();
+                break;
+                case 4 :
+                    startDate = '10/01/' + date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-year' :
+            var date = new Date();
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-year-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-year-to-last-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'yesterday' :
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'recent' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 4));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from - 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-week-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from = date.getDate() - date.getDay();
+            var from_date = new Date(date.setDate(from - 7));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-month-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            to_date.setMonth(to_date.getMonth() - 3);
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-quarter-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-year' :
+            var date = new Date();
+            date.setFullYear(date.getFullYear() - 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-year-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            date.setFullYear(date.getFullYear() - 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'since-30-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 30));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-60-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 60));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-90-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 90));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-365-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            
+            var from_date = new Date(date.setDate(date.getDate() - 365));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'next-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from - 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-4-weeks' :
+
+        break;
+        case 'next-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+
+            switch(currQuarter + 1) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            to_date.setMonth(to_date.getMonth() - 3);
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-year' :
+            var date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+    }
+
+    return {
+        start_date : startDate,
+        end_date : endDate
+    };
+}

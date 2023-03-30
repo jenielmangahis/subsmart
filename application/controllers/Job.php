@@ -3336,8 +3336,8 @@ class Job extends MY_Controller
             $mail->Subject = $subject;
             $mail->Body    = $this->generateJobInvoiceHTML($job->job_unique_id);
             // $mail->addAttachment($attachment);
-
-            if (!$mail->Send()) {
+            $sendEmail = $mail->Send();
+            if (!$sendEmail) {
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             } else {
@@ -3377,6 +3377,142 @@ class Job extends MY_Controller
         }
         // redirect('job/new_job1/'.$job->id);
     }
+
+    public function sendCustomerInvoiceToEmail($id) {
+        $this->load->helper(['url', 'hashids_helper']);
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('invoice_model');
+
+        $job = $this->jobs_model->get_specific_job($id);
+        if ($job) {
+            //Update hashid
+            if ($job->hash_id == '') {
+                $eid = hashids_encrypt($job->job_unique_id, '', 15);
+                $job_id = hashids_decrypt($eid, '', 15);
+                $this->jobs_model->update($job->id, ['hash_id' => $eid]);
+            } else {
+                $eid = $job->hash_id;
+                $job_id = hashids_decrypt($eid, '', 15);
+            }
+
+            $url = base_url('/job_invoice_view/' . $eid);
+            $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+
+            $get_company_info = [
+                'where' => [
+                    'company_id' => $job->company_id,
+                ],
+                'table' => 'business_profile',
+                'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+            ];
+
+            $company = $this->general_model->get_data_with_param($get_company_info, false);
+            $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);
+            $group_items = [];
+            foreach ($jobs_data_items as $ji) {
+                $type = 'product';
+                if ($ji->type != 'product') {
+                    $type = 'service';
+                }
+                $group_items[$type][] = [
+                    'item_name' => $ji->title,
+                    'item_price' => $ji->price,
+                    'item_qty' => $ji->qty,
+                    'item_tax' => $ji->tax,
+                ];
+            }
+            $msg = "";
+            $subject = "nSmartrac: {$job->job_number} Invoice";
+            $img_source = base_url('/uploads/users/business_profile/' . $company->id . '/' . $company->business_image);
+            $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='" . $img_source . "' /><br />";
+            $msg .= "<h1>Your Invoice from " . $company->business_name . "</h1><br />";
+            $msg .= "<p>Hi " . $customer->first_name . ",</p>";
+            $msg .= "<p>Attached please find invoice <b>#" . $job->job_number . "</b> for your service</p>";
+            $msg .= "<p>Thank you,</p><br />";
+
+            $msg .= "<table>";
+            $msg .= "<tr><td><b>Invoice Number</b></td><td>: " . $job->job_number . "</td></tr>";
+            $msg .= "<tr><td><b>Service Date</b></td><td>: " . date('m/d/Y', strtotime($job->start_date)) . "</td></tr>";
+            $msg .= "<tr><td colspan='2'><br /></td></tr>";
+            $msg .= "<tr><td><b>Customer Name</b></td><td>: " . $job->first_name . ' ' . $job->last_name . "</td></tr>";
+            $msg .= "<tr><td><b>Service Address</b></td><td>: " . $job->cust_city . ' ' . $job->cust_state . ' ' . $job->cust_zip_code . "</td></tr>";
+            $msg .= "</table>";
+
+            $grand_total = 0;
+            foreach ($group_items as $type => $items) {
+                $subtotal = 0;
+
+                $msg .= "<h2>" . ucfirst($type) . "</h2>";
+                $msg .= "<table>";
+                foreach ($items as $i) {
+                    $total = $i['item_price'] * $i['item_qty'];
+                    $total_tax = $total_tax + $i['tax'];
+                    //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
+                    $msg .= "<tr><td width='300'>" . $i['item_name'] . "</td><td>" . number_format((float) $total, 2, '.', ',') . "</td></tr>";
+                    $subtotal = $subtotal + $total;
+                }
+                $msg .= "<tr><td colspan='2'><hr /></td></tr>";
+                $msg .= "<tr><td width='300'>Subtotal</td><td>" . number_format((float) $subtotal, 2, '.', ',') . "</td></tr>";
+                $msg .= "</table>";
+
+                $grand_total += $subtotal;
+            }
+
+            $nsmart_logo = base_url("assets/dashboard/images/logo.png");
+            $refer_friend = base_url("assets/img/refer_friend.jpg");
+            $refer_friend_url = base_url('refer_friend');
+
+            $msg .= "<br /><br />";
+            $msg .= "<table>";
+            //$msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total, 2, '.', ',')."</h2></td></tr>";
+            $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>" . number_format((float) $job->total_amount, 2, '.', ',') . "</h2></td></tr>";
+            $msg .= "<tr><td colspan='2'><br><br></td></tr>";
+            $msg .=
+                "<tr><td colspan='2' style='text-align:center;'><a href='" .
+                $url .
+                "' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
+            $msg .= "</table>";
+
+            if ($job->invoice_term != '') {
+                $msg .= $job->invoice_term;
+            } else {
+                $msg .=
+                    "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
+            }
+
+            $msg .=
+                "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:" .
+                $company->business_phone .
+                "'>" .
+                $company->business_phone .
+                "</a> | <a href='mailto:" .
+                $company->business_email .
+                "'>" .
+                $company->business_email .
+                "</a></p>";
+            $msg .= "<a href='" . $refer_friend_url . "' style='margin-left:156px;'><img src='" . $refer_friend . "' style='width:122px;' /></a>";
+
+            $msg .= "<br><br><br><br><br>";
+
+            $msg .= "<table style='margin-left:48px;'>";
+            $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='" . $nsmart_logo . "' /></td></tr>";
+            $msg .= "</table>";
+
+            $recipient = $customer->email;
+            $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
+
+            $mail = email__getInstance(['subject' => $subject]);
+            $mail->FromName = 'NsmarTrac';
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $this->generateJobInvoiceHTML($job->job_unique_id);
+            // $mail->addAttachment($attachment);
+            $mail->Send();
+        }
+    }
+
 
     public function create_job_invoice_pdf($job_id)
     {

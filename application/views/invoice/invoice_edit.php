@@ -632,13 +632,13 @@ input:checked + .slider:before {
                                                 <tr>
                                                     <td>Subtotal</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format((float) $invoice->sub_total,2); ?></span>
+                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format(intval($invoice->sub_total) ,2); ?></span>
                                                         <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Taxes</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="total_tax_"><?php echo number_format($invoice->taxes,2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
+                                                    <td colspan="2" align="right">$ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -661,7 +661,7 @@ input:checked + .slider:before {
                                                 <tr style="color:blue;font-weight:bold;font-size:16px;">
                                                     <td><b>Grand Total ($)</b></td>
                                                     <td></td>
-                                                    <td><b>$ <span id="grand_total"><?php echo number_format($invoice->grand_total,2); ?></span>
+                                                    <td><b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total), 2); ?></span>
                                                         <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>"></b></td>
                                                 </tr>
                                             </table>

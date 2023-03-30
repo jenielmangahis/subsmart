@@ -19,11 +19,20 @@ foreach ($jobs_data_items as $ji) {
 $due_date = date('m/d/Y', strtotime($jobs_data->invoice_due_date));
 $invoice_date = date('m/d/Y', strtotime($jobs_data->invoice_date));
 
+// if (is_null($jobs_data->invoice_due_date)) {
+//     $due_date = DateTime::createFromFormat('Y-m-d', $jobs_data->end_date);
+//     $due_date = $due_date->add(new DateInterval('P30D'));
+//     $due_date = $due_date->format('m/d/Y');
+// }
+
 if (is_null($jobs_data->invoice_due_date)) {
     $due_date = DateTime::createFromFormat('Y-m-d', $jobs_data->end_date);
-    $due_date = $due_date->add(new DateInterval('P30D'));
-    $due_date = $due_date->format('m/d/Y');
+    if ($due_date !== false) {
+        $due_date->add(new DateInterval('P30D'));
+        $due_date = $due_date->format('m/d/Y');
+    } 
 }
+
 
 if (is_null($jobs_data->invoice_date)) {
     $invoice_date = new DateTime();

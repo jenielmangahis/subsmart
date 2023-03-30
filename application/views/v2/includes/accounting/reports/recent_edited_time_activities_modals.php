@@ -286,8 +286,160 @@
                                             <div class="col-12 col-md-4">
                                                 <input type="number" name="limit" id="limit" class="nsm-field form-control" value="25">
                                             </div>
+                                            <div class="col-12 d-none">
+                                                <div class="row g-3">
+                                                    <div class="col-12">
+                                                        <label for="select-columns"><b>Select columns</b></label>
+                                                        <a href="#" class="float-end">Reset to default</a>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-activity-date">
+                                                            <label class="form-check-label" for="select-activity-date">
+                                                                Activity Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-create-date">
+                                                            <label class="form-check-label" for="select-create-date">
+                                                                Create Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-created-by">
+                                                            <label class="form-check-label" for="select-created-by">
+                                                                Created By
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-last-modified">
+                                                            <label class="form-check-label" for="select-last-modified">
+                                                                Last Modified
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-last-modified-by">
+                                                            <label class="form-check-label" for="select-last-modified-by">
+                                                                Last Modified By
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-customer">
+                                                            <label class="form-check-label" for="select-customer">
+                                                                Customer
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-employee">
+                                                            <label class="form-check-label" for="select-employee">
+                                                                Employee
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-product-service">
+                                                            <label class="form-check-label" for="select-product-service">
+                                                                Product/Service
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-memo-description">
+                                                            <label class="form-check-label" for="select-memo-description">
+                                                                Memo/Description
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-rates">
+                                                            <label class="form-check-label" for="select-rates">
+                                                                Rates
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-duration">
+                                                            <label class="form-check-label" for="select-duration">
+                                                                Duration
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-start-time">
+                                                            <label class="form-check-label" for="select-start-time">
+                                                                Start Time
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-end-time">
+                                                            <label class="form-check-label" for="select-end-time">
+                                                                End Time
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-break">
+                                                            <label class="form-check-label" for="select-break">
+                                                                Break
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-taxable">
+                                                            <label class="form-check-label" for="select-taxable">
+                                                                Taxable
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-billable">
+                                                            <label class="form-check-label" for="select-billable">
+                                                                Billable
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-invoice-date">
+                                                            <label class="form-check-label" for="select-invoice-date">
+                                                                Invoice Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-amount">
+                                                            <label class="form-check-label" for="select-amount">
+                                                                Amount
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-12">
-                                                <a href="#" class="text-decoration-none">Change columns</a>
+                                                <a href="#" class="text-decoration-none" id="change-columns">Change columns</a>
                                             </div>
                                         </div>
                                     </div>
@@ -432,13 +584,13 @@
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-30 days"))?>" id="last-modified-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-30 days"))?>" id="filter-last-modified-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="" id="last-modified-to">
+                                                    <input type="text" class="nsm-field form-control date" value="" id="filter-last-modified-date-to">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -522,8 +674,8 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="customize_report_period" value="1" id="customize-report-period">
-                                                    <label class="form-check-label" for="customize-report-period">
+                                                    <input class="form-check-input" type="checkbox" name="show_report_period" value="1" id="show-report-period">
+                                                    <label class="form-check-label" for="show-report-period">
                                                         Report period
                                                     </label>
                                                 </div>

@@ -1,7 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php include viewPath('includes/header'); ?>
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style>
@@ -44,24 +42,21 @@
     }
 </style>
 
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/customer'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" >
-                            <div class="row margin-bottom-ter align-items-center">
+<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
+<?php include viewPath('v2/includes/customer/customer_modals'); ?>
+
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row margin-bottom-ter align-items-center">
                                 <!-- Nav tabs -->
                                 <div class="col-auto">
-                                    <h2 class="page-title" style="display:inline-block;">Customer Activites </h2>
-                                    <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
+                                    <!-- <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span> -->
                                 </div>
                                 <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
                                     <span style="color:black;">
@@ -71,11 +66,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="banking-tab-container mb-5">
-                                        <div class="rb-01">
-                                            <?php include_once('cus_module_tabs.php'); ?>
-                                        </div>
-                                    </div>
                                     <div class="tab-content mt-4" >
                                         <ul class="timeline">
                                             <?php foreach ($activities as $ac) { ?>
@@ -89,17 +79,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- page wrapper end -->
-<?php include viewPath('includes/footer'); ?>
-<?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/adv_cust/js_list'); ?>
+
 <script>
 $(document).ready(function () {
     $('#activitiesListTable').DataTable({
@@ -110,3 +94,7 @@ $(document).ready(function () {
     });
 });
 </script>
+
+<?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('customer/adv_cust/css_list'); ?>
+<?php include viewPath('customer/adv_cust/js_list'); ?>
