@@ -85,7 +85,7 @@ function smsVonage($to_number, $sms_message)
 
     $return_data = array();
     $to_number   = cleanMobileNumber($to_number);
-    $to_number   = '+1'.$to_number;
+    $to_number   = '1'.$to_number;
     try {
         $basic  = new \Vonage\Client\Credentials\Basic(VONAGE_API_KEY, VONAGE_API_SECRET);
         $client = new \Vonage\Client($basic);
