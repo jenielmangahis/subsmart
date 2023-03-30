@@ -90,7 +90,7 @@ function smsVonage($to_number, $sms_message)
         $basic  = new \Vonage\Client\Credentials\Basic(VONAGE_API_KEY, VONAGE_API_SECRET);
         $client = new \Vonage\Client($basic);
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($to_number, VONAGE_BRANDING, $sms_message)
+            new \Vonage\SMS\Message\SMS($to_number, VONAGE_NUMBER, $sms_message)
         );
 
         $message = $response->current();
@@ -107,7 +107,7 @@ function smsVonage($to_number, $sms_message)
             $msg = 'Vonage : Cannot send sms with status : ' . $message->getStatus();
         } 
     } catch (Exception $e) {
-        $msg = $e->getMessage();
+        $msg = $to_number . '/' . $e->getMessage();
     }    
 
     $result = ['is_sent' => $is_sent, 'msg' => $msg, 'data' => $return_data];
