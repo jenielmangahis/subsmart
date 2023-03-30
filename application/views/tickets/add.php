@@ -870,15 +870,20 @@ a.btn-primary.btn-md {
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label for="billing_date"><h6>Attachments</h6></label><br> 
                                         <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
                                         <input type="file" name="attachments" id="attachments"
                                                 class="form-control"/>
                                     </div>
-                                </div>
-                                <div class="row" style="background-color:white;">
-                                    <div class="col-md-12 form-group">
+                                    <div class="col-md-12 mt-3">
+                                        <div class="form-check float-start">
+                                            <input type="hidden" name="SEND_EMAIL_ON_SCHEDULE" value="false">
+                                            <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
+                                            <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">Send an email after scheduling this service ticket.</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-3">
                                         <button type="submit" value="Scheduled" class="nsm-button primary" name="action"><i class="bx bx-fw bx-calendar-plus"></i> Schedule</button>
                                         <!-- <button name="action" value="Draft" type="submit"  class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
                                         <button name="action" value="Scheduled" type="submit"  class="nsm-button primary but" style="border-radius: 0 !important;">Schedule</button> -->
@@ -1070,6 +1075,15 @@ a.btn-primary.btn-md {
 <?php //include viewPath('includes/footer'); ?>
 
 <script>
+    $('#SEND_EMAIL_ON_SCHEDULE').on('change', function(event) {
+        event.preventDefault();
+        if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
+            $('input[name="SEND_EMAIL_ON_SCHEDULE"]').val('true');
+        } else {
+            $('input[name="SEND_EMAIL_ON_SCHEDULE"]').val('false');
+        }
+    });
+    
     $('#sel-customer_t').select2({         
         minimumInputLength: 0        
     });
@@ -1431,6 +1445,8 @@ $(document).ready(function(){
          data: {id : id },
          dataType: 'json',
          success: function(response){
+            // console.log(response);
+            // console.log(response.data);
             //  alert('success');
              // console.log(response['customer']);
          // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);

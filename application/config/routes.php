@@ -532,6 +532,7 @@ $route['accounting/all-sales'] = 'accounting_controllers/all_sales/index';
 $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sales/export';
 
 $route['accounting/credit-notes'] = 'accounting_controllers/credit_notes/index';
+$route['accounting/credit-notes/export']['post'] = 'accounting_controllers/credit_notes/export';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';

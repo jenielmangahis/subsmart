@@ -351,41 +351,58 @@ $('#save-custom-report').on('click', function(e) {
     data.set('name', $('#custom-report-name').val());
     data.set('custom_report_group_id', $('#custom-report-group').val());
     data.set('share_with', $('#share-with').val());
-    data.set('date_range', $('#time-activity-date').val());
-    data.set('divide_by_100', $('#divide-by-100').prop('checked'));
-    data.set('without_cents', $('#without-cents').prop('checked'));
-    data.set('negative_numbers', $('#negative-numbers').val());
-    data.set('show_in_red', $('#show-in-red').prop('checked'));
-    data.set('rows_limit', $('#limit').val());
+    data.set('date_range', $('#time-activity-date').find('option:selected').text().trim());
+
+    data.append('settings[divide_by_100]', $('#divide-by-100').prop('checked'));
+    data.append('settings[without_cents]', $('#without-cents').prop('checked'));
+    data.append('settings[negative_numbers]', $('#negative-numbers').val());
+    data.append('settings[show_in_red]', $('#show-in-red').prop('checked'));
+    data.append('settings[rows_limit]', $('#limit').val());
     
+    var columns = [];
     $('[name="select_columns"]:checked').each(function() {
-        data.append('columns[]', $(this).attr('id').replace('select-', ''));
+        columns.push($(this).attr('id').replace('select-', ''));
     });
 
+    data.append('settings[columns]', JSON.stringify(columns));
+
+    var filters = {};
     $('#collapse-filter input[type="checkbox"]:checked').each(function() {
         if($(this).attr('id') !== 'allow-filter-last-modified-date' && $(this).attr('id') !== 'allow-filter-create-date') {
-            data.append($(this).attr('id').replaceAll('-', '_').replace('allow_', ''), $(this).parent().parent().next().find('select, input').val());
+            var key = $(this).attr('id').replace('allow-', '');
+            Object.assign(filters, {[key]: $(this).parent().parent().next().find('select, input').val()});
         } else {
-            var fromDate = $(`#${$(this).attr('id').replace('allow-', '')}-from`).val();
-            var toDate = $(`#${$(this).attr('id').replace('allow-', '')}-to`).val();
-            data.append(`${$(this).attr('id').replace('allow-', '')}-from`, fromDate);
-            data.append(`${$(this).attr('id').replace('allow-', '')}-to`, toDate);
+            var key = $(this).attr('id').replace('allow-', '');
+            Object.assign(filters, {[key]: $(this).parent().parent().next().find('select').val()});
+
+            if($(this).parent().parent().next().find('select').val() !== 'all-dates') {
+                var fromDate = $(`#${$(this).attr('id').replace('allow-', '')}-from`).val();
+                var toDate = $(`#${$(this).attr('id').replace('allow-', '')}-to`).val();
+                var fromKey = $(this).attr('id').replace('allow-', '')+'-from';
+                var toKey = $(this).attr('id').replace('allow-', '')+'-to';
+
+                Object.assign(filters, {[fromKey]: fromDate});
+                Object.assign(filters, {[toKey]: toDate});
+            }
         }
     });
 
-    data.set('show_logo', $('#show-logo').prop('checked'));
+    data.append('settings[filters]', JSON.stringify(filters));
+
+    data.append('settings[show_logo]', $('#show-logo').prop('checked'));
     if($('#customize-company-name').prop('checked')) {
-        data.set('company_name', $('#company-name').val());
+        data.append('settings[company_name]', $('#company-name').val());
     }
 
     if($('#customize-report-title').prop('checked')) {
-        data.set('report_title', $('#report-title').val());
+        data.append('settings[report_title]', $('#report-title').val());
     }
-    data.set('show_report_period', $('#show-report-period').prop('checked'));
-    data.set('date_prepared', $('#show-date-prepared').prop('checked'));
-    data.set('time_prepared', $('#show-time-prepared').prop('checked'));
-    data.set('header_alignment', $('#header-alignment').val());
-    data.set('footer_alignment', $('#footer-alignment').val());
+
+    data.append('settings[show_report_period]', $('#show-report-period').prop('checked'));
+    data.append('settings[date_prepared]', $('#show-date-prepared').prop('checked'));
+    data.append('settings[time_prepared]', $('#show-time-prepared').prop('checked'));
+    data.append('settings[header_alignment]', $('#header-alignment').val());
+    data.append('settings[footer_alignment]', $('#footer-alignment').val());
 
     $.ajax({
         url: `/accounting/reports/save-custom-report`,

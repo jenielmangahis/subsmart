@@ -2482,7 +2482,7 @@ function total_invoice_amount($invoices)
         // if ($invoice->invoice_totals) {
             // $totals = unserialize($invoice->invoice_totals);
             // $grand_total += floatval($totals['grand_total']);
-            $grand_total += $invoice->grand_total;
+            $grand_total += intval($invoice->grand_total);
         // }
     }
 

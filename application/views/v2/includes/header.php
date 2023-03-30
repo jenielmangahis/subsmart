@@ -279,7 +279,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             </a>
                         </li>
                         <li>
-                            <a href="<?= base_url("credit_notes") ?>">
+                            <a href="<?= base_url("accounting/credit-notes") ?>">
                                 <i class='bx bx-fw bx-file'></i> Credit Notes
                             </a>
                         </li>

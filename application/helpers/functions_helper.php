@@ -447,9 +447,22 @@ if (!function_exists('getLocation')){
             );
             $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
             return $location->loc_id;
-        }
-        
+        } 
     }
+    // function getLocation(){
+    //     $comp_id = logged('company_id');
+    //     $CI = &get_instance();
+    //     $CI->load->model('general_model');
+    //         $getLocation = array(
+    //             'where' => array(
+    //                 'company_id' => $comp_id,
+    //             ),
+    //             'table' => 'storage_loc',
+    //             'select' => 'loc_id, location_name'
+    //         );
+    //         $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
+    //         return $location;
+    // }
 }
 if (!function_exists('getItem')){
     function getItem($id){

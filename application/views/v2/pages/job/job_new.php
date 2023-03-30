@@ -643,38 +643,6 @@
                                                 <option value="utc5">Central Time (UTC -5)</option>
                                             </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>Select Job Type</h6>
-                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
-                                                    <span class="bx bx-plus"></span>Manage Job Types
-                                                </a>
-                                            </div>
-                                            <select id="job_type_option" name="jobtypes" class="form-control " >
-                                                <option value="">Select Type</option>
-                                                <?php if(!empty($job_types)): ?>
-                                                    <?php foreach ($job_types as $type): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>Select Job Tag</h6>
-                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>" >
-                                                    <span class="bx bx-plus"></span>Manage Job Tags
-                                                </a>
-                                            </div>
-                                            <select id="job_tags" name="tags" class="form-control " >
-                                                <option value="">Select Tags</option>
-                                                <?php if(!empty($tags)): ?>
-                                                    <?php foreach ($tags as $tag): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
                                         <div>
                                             <h6>Assigned To</h6>
                                             <div class="row">
@@ -835,9 +803,50 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <p>Description of Job</p>
-                                                <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                                                <hr/>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Select Job Type</h6>
+                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
+                                                                    <span class="bx bx-plus"></span>Manage Job Types
+                                                                </a>
+                                                            </div>
+                                                            <select id="job_type_option" name="jobtypes" class="form-control " >
+                                                                <option value="">Select Type</option>
+                                                                <?php if(!empty($job_types)): ?>
+                                                                    <?php foreach ($job_types as $type): ?>
+                                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Select Job Tag</h6>
+                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>" >
+                                                                    <span class="bx bx-plus"></span>Manage Job Tags
+                                                                </a>
+                                                            </div>
+                                                            <select id="job_tags" name="tags" class="form-control " >
+                                                                <option value="">Select Tags</option>
+                                                                <?php if(!empty($tags)): ?>
+                                                                    <?php foreach ($tags as $tag): ?>
+                                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <h6>Description of Job</h6>
+                                                        <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                        <hr/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <h6 class='card_header'>Job Items Listing</h6>
@@ -881,8 +890,7 @@
                                             <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
-                                        <br>
-                                        <br>                                        
+                                            <hr>
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -1083,7 +1091,7 @@
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">
-                                                            <h5>Notes</h5>
+                                                            <h6>Notes</h6>
                                                         </div>
                                                         <div class="col-sm-12">
                                                             <?php 
@@ -1319,6 +1327,12 @@
                                             <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
                                                 <?php if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
+                                                    <div class="form-check float-start">
+                                                      <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
+                                                      <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
+                                                        Send an email after scheduling this job.
+                                                      </label>
+                                                    </div>
                                                     <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
                                                 <?php endif; ?>
                                                 <?php if(isset($jobs_data)): ?>

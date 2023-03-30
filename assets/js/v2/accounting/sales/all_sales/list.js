@@ -1780,12 +1780,7 @@ $('.export-transactions').on('click', function() {
     $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
 
     $('#export-form').submit();
-});
-
-$('#export-form').on('submit', function(e) {
-    e.preventDefault();
-    this.submit();
-    $(this).remove();
+    $('#export-form').remove();
 });
 
 $('#transactions-table thead .select-all').on('change', function() {
