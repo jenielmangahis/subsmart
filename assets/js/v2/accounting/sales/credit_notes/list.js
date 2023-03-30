@@ -267,3 +267,33 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
 $("#btn_print_credit_notes").on("click", function() {
     $("#credit_notes_table_print").printThis();
 });
+
+$('.export-transactions').on('click', function() {
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/credit-notes/export" method="post" id="export-form"></form>`);
+    }
+
+    var fields = $('#credit-notes-table thead tr td:not(:first-child, :last-child)');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = window.location.href.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="date">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="desc">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});

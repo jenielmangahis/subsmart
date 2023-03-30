@@ -1079,5 +1079,17 @@ class Reports extends MY_Controller {
     public function save_custom_report()
     {
         $post = $this->input->post();
+        $reportType = $this->accounting_report_types_model->get_by_id($post['report_id']);
+
+        $customReportData = [
+            'company_id' => logged('company_id'),
+            'report_type_id' => $post['report_id'],
+            'name' => $post['name'],
+            'custom_report_group_id' => $post['custom_report_group_id'],
+            'share_with' => $post['share_with'],
+            'created_by' => logged('id'),
+            'date_range' => $post['date_range'],
+            'report_settings' => $post['settings']
+        ];
     }
 }

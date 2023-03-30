@@ -64,19 +64,19 @@
                 <span>Messages</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customer Internal Notes'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/internal_notes/'.$cus_id); ?>">
                 <i class='bx bx-fw bx-file'></i>
                 <span>Internal Memo</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customer Invoice List'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/invoice_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-receipt'></i>
                 <span>Invoices</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customer Activity'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/activities/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-clipboard'></i>
                 <span>Activity</span>

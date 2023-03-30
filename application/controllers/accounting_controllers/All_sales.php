@@ -1908,11 +1908,11 @@ class All_sales extends MY_Controller {
         $tableHeaders = $get['headers'];
         $transactions = $get['transactions'];
 
-        $excelHead .= "Type: ".ucfirst(str_replace('-', ' ', $type));
+        $excelHead .= !empty($type) ? "Type: ".ucfirst(str_replace('-', ' ', $type)) : "Type: All transactions";
         $excelHead .= $status ? " · Status: $status" : " · Status: All statuses";
         $excelHead .= $deliveryMethod ? " · Delivery method: $deliveryMethod" : " · Delivery method: Any";
         $excelHead .= $customerId ? " · Name: $customer->first_name $customer->last_name" : "";
-        $excelHead .= $type !== 'unbilled-income' ? " · Date: ".ucfirst(str_replace("-", " ", $date)) : " · Date: Last 365 days";
+        $excelHead .= $type !== 'unbilled-income' && !empty($date) ? " · Date: ".ucfirst(str_replace("-", " ", $date)) : " · Date: Last 365 days";
 
         $writer = new XLSXWriter();
         $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);

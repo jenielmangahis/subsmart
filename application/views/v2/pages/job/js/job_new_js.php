@@ -192,7 +192,9 @@ $("#attachment-file").change(function() {
                         if( data.is_success == 1 ){
                             if ($overlay) $overlay.style.display = "none";
                             sucess_add_job(data);
-                            $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->id; ?>"); 
+                            if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
+                                $.get("<?= base_url('job/sendCustomerInvoiceToEmail/').$jobs_data->id; ?>"+data.job_id); 
+                            }
                         }else{
                             error('Error',data.msg,'error');
                         }
@@ -287,11 +289,10 @@ $("#attachment-file").change(function() {
                 "<td>" + 
                 "<input hidden name='item_id1[]' value='"+ idd +"'>" +
                 "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
-                "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
+                "<select id='location"+idd+"' name='location[]' class='form-control location2'>" +
                 "</select>" +
                 "</td>";
 
-            
             tableBody3 = $("#device_audit_append");
             tableBody3.append(markup3);
 
@@ -1099,16 +1100,13 @@ $("#attachment-file").change(function() {
             if (redirect_calendar == 1) {
                 window.location.href = '<?= base_url(); ?>workcalender';
             } else {
-                console.log({
-                    data
-                });
+                // console.log({ data });
                 if (data.job_id) {
-                    window.location.href = '<?= base_url('job/createInvoice'); ?>/' + data.job_id;
+                    window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+                    window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
                     return;
-
                 }
             }
-
         });
     }
         function error(title,text,icon){
