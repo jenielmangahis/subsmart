@@ -144,8 +144,8 @@ class Cron_Notification extends MYF_Controller {
                                     'company_id' => $client->id,
                                     'messageId' => $isSent['data']['message_id'], 
                                     'channel' => 'sms',
-                                    'from' => VONAGE_NUMBER, 
-                                    'to' => $isSent['data']['to'],
+                                    'sms_from' => VONAGE_NUMBER, 
+                                    'sms_to' => $isSent['data']['to'],
                                     'sms_message' => $sms_message,
                                     'status' => $isSent['data']['status']
                                 ];
