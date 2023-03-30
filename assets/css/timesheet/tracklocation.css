@@ -39,7 +39,7 @@ button.trac360_side_controls:active:hover {
 .map-section {
     padding-right: 0px;
     padding-left: 0px;
-    margin-top: 35px;
+    /*margin-top: 35px;*/
 }
 
 .trac360-side-bar-menu li a {
@@ -68,18 +68,19 @@ button.trac360_side_controls:active:hover {
 }
 
 .sec-2-option {
-    padding-left: 10px;
+    padding-left: 0px;
     padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     color: #6c7585;
     border-bottom: solid 2px;
-    height: 150px;
+    /*height: 150px;*/
     transition: cubic-bezier(1, 0, 0, 1);
     -moz-transition: all 0.2s ease-in;
     -o-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
+    background-color: #DAD1E0;
 }
 
 .sec-2-option:hover {

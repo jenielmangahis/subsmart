@@ -61,6 +61,10 @@
     <script src="<?= base_url("assets/js/ringcentral/ringcentral-web-phone.js"); ?>"></script>
     <?php } ?>
 
+    <?php if( isset($enable_tracklocation) ){ ?>
+    <script src="<?php echo $url->assets ?>js/timesheet/tracklocation.js"></script>
+    <?php } ?>
+
     <?php if( isset($enable_popper_tooltip) ){ ?>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

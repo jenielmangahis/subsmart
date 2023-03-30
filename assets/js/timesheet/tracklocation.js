@@ -9,7 +9,6 @@ function setMapCenter(lat, lng) {
 }
 
 function employee_selected(lat, lng, customer_id) {
-
     // alert("#sec-2-option-" + customer_id);
     $(".current_view").removeClass("current_view");
     $("#sec-2-option-" + customer_id).addClass("current_view");

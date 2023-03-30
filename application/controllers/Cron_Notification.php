@@ -18,6 +18,7 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('TwilioSmsLogs_model');
         $this->load->model('Clients_model');
         $this->load->model('CronAutoSmsNotification_model');
+        $this->load->model('VonageSms_model');
 
         $total_sent = 0;  
         $filter[] = ['field' => 'cron_auto_sms_notification.is_sent', 'value' => 0];
@@ -34,6 +35,9 @@ class Cron_Notification extends MYF_Controller {
                         $smsApi = 'ring_central';
                         $is_with_valid_sms_account = true;
                     }                
+                }elseif( $client->default_sms_api == 'vonage' ){
+                    $smsApi = 'vonage';
+                    $is_with_valid_sms_account = true;
                 }/*elseif( $client->default_sms_api == 'twilio' ){
                     $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($client->id);
                     if( $twilioAccount ){
@@ -124,6 +128,41 @@ class Cron_Notification extends MYF_Controller {
                                 ];
                                 $this->CronAutoSmsNotification_model->update($sms->id, $data);
                             } 
+                        }elseif( $smsApi == 'vonage' ){
+                            $isSent = smsVonage($sms->mobile_number, $sms_message);
+                            if( $isSent['is_success'] == 1 ){
+                                $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                                $data = [
+                                    'api_name' => $smsApi,
+                                    'is_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+
+                                //Log vonage sms
+                                $vonage_data = [
+                                    'company_id' => $client->id,
+                                    'messageId' => $isSent['data']['message_id'], 
+                                    'channel' => 'sms',
+                                    'from' => VONAGE_NUMBER, 
+                                    'to' => $isSent['data']['to'],
+                                    'sms_message' => $sms_message,
+                                    'status' => $isSent['data']['status']
+                                ];
+
+                                $this->VonageSms_model->create($vonage_data);
+
+                                $total_sent++;
+                            }else{
+                                $err_msg = $isSent['msg'];
+                                $data = [
+                                    'api_name' => $smsApi,
+                                    'is_sent' => 0,
+                                    'is_with_error' => 1,
+                                    'err_msg' => $err_msg
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                            }
                         }
                     }          
                 } 

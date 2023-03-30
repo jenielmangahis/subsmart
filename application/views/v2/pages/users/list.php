@@ -377,40 +377,43 @@
             });
         });
 
-        $("#edit_employee_form").on("submit", function(e) {
-            let _this = $(this);
+        $(document).on('submit', '#edit_employee_form', function(e){
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>users/ajaxUpdateEmployeeV2";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
+            var _this = $(this);
+            var url = base_url + 'users/_update_employee';
+            var formData = new FormData(this);
             $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
+              url: base_url + 'users/_update_employee',
+                type: "POST",
                 dataType: "json",
-                success: function(result) {
-                    if (result == 1) {
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Employee record has been updated successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false, 
+                success: function(data) {
+                    if (data.is_success == 1) {                  
+                      Swal.fire({
+                        title: 'Success',
+                        text: "Employee record s has been Updated.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                      }).then((result) => {
+                        //if (result.value) {
+                          location.reload()
+                        //}
+                      });
                     } else {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "Something is wrong in the process",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
+                      Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: data.msg,
+                        icon: 'warning'
+                      });
                     }
 
                     $("#edit_employee_modal").modal('hide');
@@ -418,7 +421,7 @@
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
-                },
+                }
             });
         });
 
