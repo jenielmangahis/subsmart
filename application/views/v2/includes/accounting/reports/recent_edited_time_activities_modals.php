@@ -290,7 +290,7 @@
                                                 <div class="row g-3">
                                                     <div class="col-12">
                                                         <label for="select-columns"><b>Select columns</b></label>
-                                                        <a href="#" class="float-end">Reset to default</a>
+                                                        <a href="#" class="float-end text-decoration-none" id="reset-columns-to-default">Reset to default</a>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
@@ -652,7 +652,7 @@
                                             <div class="col-12 col-md-6"></div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="customize_company_name" value="1" id="customize-company-name">
+                                                    <input class="form-check-input" type="checkbox" name="customize_company_name" checked value="1" id="customize-company-name">
                                                     <label class="form-check-label" for="company-name">
                                                         Company name
                                                     </label>
@@ -663,7 +663,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="customize_report_title" value="1" id="customize-report-title">
+                                                    <input class="form-check-input" type="checkbox" name="customize_report_title" checked value="1" id="customize-report-title">
                                                     <label class="form-check-label" for="customize-report-title">
                                                         Report title
                                                     </label>
@@ -674,7 +674,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_report_period" value="1" id="show-report-period">
+                                                    <input class="form-check-input" type="checkbox" name="show_report_period" checked value="1" id="show-report-period">
                                                     <label class="form-check-label" for="show-report-period">
                                                         Report period
                                                     </label>
@@ -686,7 +686,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_date_prepared" value="1" id="show-date-prepared">
+                                                    <input class="form-check-input" type="checkbox" name="show_date_prepared" checked value="1" id="show-date-prepared">
                                                     <label class="form-check-label" for="show-date-prepared">
                                                         Date prepared
                                                     </label>
@@ -694,7 +694,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_time_prepared" value="1" id="show-time-prepared">
+                                                    <input class="form-check-input" type="checkbox" name="show_time_prepared" checked value="1" id="show-time-prepared">
                                                     <label class="form-check-label" for="show-time-prepared">
                                                         Time prepared
                                                     </label>

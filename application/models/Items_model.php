@@ -386,7 +386,7 @@ class Items_model extends MY_Model
             }
         }
 
-        $this->db->update($this->table_has_location);
+        // $this->db->update($this->table_has_location);
     }
     public function getLocationById($id)
     {
@@ -679,6 +679,24 @@ class Items_model extends MY_Model
     {
         $this->db->insert_batch($this->table_custom_fields_value, $fieldsValue);
         return $this->db->insert_id();
+    }
+
+    public function getAllItemWithLocation()
+    {
+        $company_id = logged('company_id');
+        $this->db->select('items.id, items.title, items.price, items.type, items_has_storage_loc.name AS location_name, items_has_storage_loc.id AS location_id');
+        $this->db->from('items');
+        $this->db->where('items.company_id', $company_id);
+        $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllLocation() {
+        $this->db->select('*');
+        $this->db->from('storage_loc');
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

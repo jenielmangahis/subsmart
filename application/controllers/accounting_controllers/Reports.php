@@ -1079,17 +1079,54 @@ class Reports extends MY_Controller {
     public function save_custom_report()
     {
         $post = $this->input->post();
-        $reportType = $this->accounting_report_types_model->get_by_id($post['report_id']);
 
-        $customReportData = [
-            'company_id' => logged('company_id'),
-            'report_type_id' => $post['report_id'],
-            'name' => $post['name'],
-            'custom_report_group_id' => $post['custom_report_group_id'],
-            'share_with' => $post['share_with'],
-            'created_by' => logged('id'),
-            'date_range' => $post['date_range'],
-            'report_settings' => $post['settings']
-        ];
+        if(isset($post['custom_report_id'])) {
+            $customReportData = [
+                'report_type_id' => $post['report_id'],
+                'name' => $post['name'],
+                'custom_report_group_id' => $post['custom_report_group_id'],
+                'share_with' => $post['share_with'],
+                'created_by' => logged('id'),
+                'date_range' => $post['date_range'],
+                'report_settings' => json_encode($post['settings'])
+            ];
+
+            $update = $this->accounting_custom_reports_model->update_custom_report($post['custom_report_id'], $customReportData);
+
+            if($update) {
+                $customReportId = $post['custom_report_id'];
+            }
+        } else {
+            $customReportData = [
+                'company_id' => logged('company_id'),
+                'report_type_id' => $post['report_id'],
+                'name' => $post['name'],
+                'custom_report_group_id' => $post['custom_report_group_id'],
+                'share_with' => $post['share_with'],
+                'created_by' => logged('id'),
+                'date_range' => $post['date_range'],
+                'report_settings' => json_encode($post['settings'])
+            ];
+    
+            $customReportId = $this->accounting_custom_reports_model->add_custom_report($customReportData);
+        }
+
+        echo json_encode([
+            'data' => $customReportId,
+            'success' => $customReportId ? true : false,
+            'message' => $customReportId ? 'Custom report saved successfully.' : 'Custom report saving failed.'
+        ]);
+    }
+
+    public function check_name()
+    {
+        $name = $this->input->post('name');
+
+        $checkName = $this->accounting_custom_reports_model->check_name($name, logged('company_id'));
+
+        echo json_encode([
+            'data' => $checkName,
+            'exists' => $checkName ? true : false
+        ]);
     }
 }

@@ -7,6 +7,28 @@ if(isset($jobs_data)){
 ?>
 
 <script>
+<?php 
+$ALERT_SESSION = $this->session->userdata('CREATE_INITIAL_INVOICE_ALERT');
+if ($jobs_data && $jobs_data->status == "Scheduled" && $ALERT_SESSION == "true") { ?>
+    Swal.fire({
+        title: 'Job has been scheduled',
+        text: 'An initial invoice can now be created',
+        icon: 'success',
+        confirmButtonText: 'Create Initial Invoice',
+    }).then((result) => {
+        var redirect_calendar = $('#redirect-calendar').val();
+        if (redirect_calendar == 1) {
+            window.location.href = '<?= base_url(); ?>workcalender';
+        } else {
+            <?php $this->session->set_userdata('CREATE_INITIAL_INVOICE_ALERT', 'false'); ?>
+            window.open("<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>", '_blank', 'location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+            return;
+        }
+        <?php $this->session->set_userdata('CREATE_INITIAL_INVOICE_ALERT', 'false'); ?>
+    });
+<?php } ?>
+
+
 $(".REMOVE_THUMBNAIL").click(function(event) {
     event.preventDefault();
     $("#attachment-file").val(null);
@@ -245,6 +267,8 @@ $("#attachment-file").change(function() {
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
+            var location_name = $(this).data('location_name');
+            var location_id = $(this).data('location_id');
             var item_type = $(this).data('item_type');
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
@@ -286,10 +310,13 @@ $("#attachment-file").change(function() {
                 "<td>" + price + "</td>" +
                 "<td id='device_qty"+idd+"'>"+ qty + "</td>" +
                 "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
-                "<td>" + 
+                "<td>" +
                 "<input hidden name='item_id1[]' value='"+ idd +"'>" +
                 "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
-                "<select id='location"+idd+"' name='location[]' class='form-control location2'>" +
+                "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
+                "<option>Select Location</option>" +
+                "<option value='" +location_id+ "' selected>" +location_name+ "</option>" +
+                "<?php if ($getAllLocation) { foreach ($getAllLocation as $getAllLocations) { echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>"; } } ?>" +
                 "</select>" +
                 "</td>";
 
@@ -300,8 +327,9 @@ $("#attachment-file").change(function() {
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
             calculate_subtotal();
-            getLoc(idd, qty);
-
+            $(".location").select2({
+                placeholder: "Choose Location"
+            });
         });
 
         async function getLoc(id, qty) {

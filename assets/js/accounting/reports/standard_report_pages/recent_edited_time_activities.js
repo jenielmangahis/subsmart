@@ -63,23 +63,23 @@ $("#btn_print_report").on("click", function() {
 
 $('#filter-activity-date').on('change', function() {
     if($(this).val() !== 'all-dates') {
-        var dates = get_start_and_end_dates($(this).val());
+        var dates = get_start_and_end_dates($(this).val(), $(this));
 
-        if($('#filter-from').length > 0) {
-            $('#filter-from').val(dates.start_date);
-            $('#filter-to').val(dates.end_date);
+        if($('#filter-activity-date-from').length > 0) {
+            $('#filter-activity-date-from').val(dates.start_date);
+            $('#filter-activity-date-to').val(dates.end_date);
         } else {
             $(`<div class="row grid-mb">
                 <div class="col-12 col-md-6">
-                    <label for="filter-from">From</label>
+                    <label for="filter-activity-date-from">From</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="filter-from">
+                        <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="filter-activity-date-from">
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label for="filter-to">To</label>
+                    <label for="filter-activity-date-to">To</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="filter-to">
+                        <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="filter-activity-date-to">
                     </div>
                 </div>
             </div>`).insertAfter($(this).closest('.row'));
@@ -272,7 +272,7 @@ $('#filter-create-date, #filter-last-modified-date').on('change', function() {
         $(this).parent().next().next().remove();
         $(this).parent().next().remove();
     } else {
-        var dates = get_start_and_end_dates($(this).val());
+        var dates = get_start_and_end_dates($(this).val(), $(this));
 
         if($(`#${$(this).attr('id')}-from`).length > 0) {
             $(`#${$(this).attr('id')}-from`).val(dates.start_date);
@@ -298,6 +298,45 @@ $('#filter-create-date, #filter-last-modified-date').on('change', function() {
             });
         }
     }
+});
+
+$('#time-activity-date').on('change', function() {
+    if($(this).val() === 'all-dates') {
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
+    } else {
+        var dates = get_start_and_end_dates($(this).val(), $(this));
+
+        if($(`#${$(this).attr('id')}-from`).length > 0) {
+            $(`#${$(this).attr('id')}-from`).val(dates.start_date);
+            $(`#${$(this).attr('id')}-to`).val(dates.end_date);
+        } else {
+            $(`<div class="col-12 col-md-4">
+                <label for="${$(this).attr('id')}-from">From</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="${$(this).attr('id')}-from">
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="${$(this).attr('id')}-to">To</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="${$(this).attr('id')}-to">
+                </div>
+            </div>`).insertAfter($(this).parent());
+
+            $(`#${$(this).attr('id')}-from, #${$(this).attr('id')}-to`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
+    }
+});
+
+$('#reset-columns-to-default').on('click', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', true);
 });
 
 $('#add-new-custom-report-group').on('click', function(e) {
@@ -347,8 +386,52 @@ $('#save-custom-report').on('click', function(e) {
     e.preventDefault();
 
     var data = new FormData();
-    data.set('report_id', reportId);
     data.set('name', $('#custom-report-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/check-custom-report-name`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.exists) {
+                Swal.fire({
+                    // title: 'Delete Invoice',
+                    text: 'A custom report with this name already exists. Enter a new name, or click Replace to replace the existing report.',
+                    icon: 'warning',
+                    confirmButtonText: 'Replace',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        save_custom_report(res.data);
+                    }
+                });
+            } else {
+                save_custom_report();
+            }
+        }
+    });
+});
+
+$('#run-report-button').on('click', function() {
+    $('#filter-activity-date').val($('#time-activity-date').val()).trigger('change');
+    if($('#time-activity-date').val() !== 'all-dates') {
+        $('#filter-activity-date-from').val($('#time-activity-date-from').val());
+        $('#filter-activity-date-to').val($('#time-activity-date-to').val());
+    }
+});
+
+function save_custom_report(customReport = {})
+{
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('report_id', reportId);
     data.set('custom_report_group_id', $('#custom-report-group').val());
     data.set('share_with', $('#share-with').val());
     data.set('date_range', $('#time-activity-date').find('option:selected').text().trim());
@@ -358,7 +441,7 @@ $('#save-custom-report').on('click', function(e) {
     data.append('settings[negative_numbers]', $('#negative-numbers').val());
     data.append('settings[show_in_red]', $('#show-in-red').prop('checked'));
     data.append('settings[rows_limit]', $('#limit').val());
-    
+
     var columns = [];
     $('[name="select_columns"]:checked').each(function() {
         columns.push($(this).attr('id').replace('select-', ''));
@@ -404,6 +487,10 @@ $('#save-custom-report').on('click', function(e) {
     data.append('settings[header_alignment]', $('#header-alignment').val());
     data.append('settings[footer_alignment]', $('#footer-alignment').val());
 
+    if(Object.keys(customReport).length > 0) {
+        data.append('custom_report_id', customReport.id);
+    }
+
     $.ajax({
         url: `/accounting/reports/save-custom-report`,
         data: data,
@@ -412,17 +499,25 @@ $('#save-custom-report').on('click', function(e) {
         contentType: false,
         success: function(result) {
             var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
         }
     });
-});
+}
 
-function get_start_and_end_dates(val)
+function get_start_and_end_dates(val, el)
 {
     switch(val) {
         case 'custom' :
-            if($('#filter-from').length > 0) {
-                startDate = $('#filter-from').val();
-                endDate = $('#filter-to').val();
+            if($(`#${el.attr('id')}-from`).length > 0) {
+                startDate = $(`#${el.attr('id')}-from`).val();
+                endDate = $(`#${el.attr('id')}-to`).val();
             }
         break;
         case 'today' :

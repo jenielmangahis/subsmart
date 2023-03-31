@@ -58,15 +58,15 @@
                                 <?php if(!empty($filter_date) && $filter_date !== 'all-dates') : ?>
                                 <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
+                                        <label for="filter-activity-date-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-activity-date-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
+                                        <label for="filter-activity-date-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-to">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-activity-date-to">
                                         </div>
                                     </div>
                                 </div>
