@@ -233,15 +233,15 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
         // get items
-        $get_items = array(
-            'where' => array(
-                'items.company_id' => $comp_id,
-                //'is_active' => 1,
-            ),
-            'table' => 'items',
-            'select' => 'items.id,title,price,type',
-        );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+        // $get_items = array(
+        //     'where' => array(
+        //         'items.company_id' => $comp_id,
+        //         //'is_active' => 1,
+        //     ),
+        //     'table' => 'items',
+        //     'select' => 'items.id,title,price,type',
+        // );
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
 
         // get estimates
         $get_estimates = array(
@@ -388,6 +388,7 @@ class Job extends MY_Controller
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
         // $this->page_data['TEST_JOB_INFO'] = $this->jobs_model->GET_JOB_INFO($id);
+        $this->page_data['getAllLocation'] = $this->items_model->getAllLocation();
         $this->load->view('v2/pages/job/job_new', $this->page_data);
     }
 

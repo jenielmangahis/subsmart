@@ -83,31 +83,40 @@ function smsVonage($to_number, $sms_message)
     $is_sent = 0;
     $msg = '';
 
+    $return_data = array();
+    $to_number   = cleanMobileNumber($to_number);
+    $to_number   = '1'.$to_number;
     try {
-       $basic  = new \Vonage\Client\Credentials\Basic(VONAGE_API_KEY, VONAGE_API_SECRET);
+        $basic  = new \Vonage\Client\Credentials\Basic(VONAGE_API_KEY, VONAGE_API_SECRET);
         $client = new \Vonage\Client($basic);
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($to_number, VONAGE_BRANDING, $sms_message)
+            new \Vonage\SMS\Message\SMS($to_number, VONAGE_NUMBER, $sms_message)
         );
 
         $message = $response->current();
 
         if ($message->getStatus() == 0) {
             $is_sent = 1;        
+            $return_data = [
+                'message_id' => $message->getMessageId(),
+                'remaining_balance' => $message->getRemainingBalance(),
+                'to' => $message->getTo(),
+                'status' => $message->getStatus()
+            ];
         } else {
-            $msg = 'Cannot send sms - ' . $message->getStatus();
+            $msg = 'Vonage : Cannot send sms with status : ' . $message->getStatus();
         } 
     } catch (Exception $e) {
-        $msg = $e->getMessage();
+        $msg = $to_number . '/' . $e->getMessage();
     }    
 
-    $result = ['is_sent' => $is_sent, 'msg' => $msg];
+    $result = ['is_sent' => $is_sent, 'msg' => $msg, 'data' => $return_data];
 
     return $result;
 }
 
 function cleanMobileNumber($to_number, $extension = '+1')
-{
+{    
     $to_number = str_replace("-", "", $to_number);
     $to_number = str_replace(".", "", $to_number);
     $to_number = str_replace(" ", "", $to_number);

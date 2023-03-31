@@ -40,6 +40,10 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 
+    <?php if( isset($enable_tracklocation) ){ ?>
+    <link rel="stylesheet" href="<?= base_url("assets/css/timesheet/tracklocation.css") ?>">
+    <?php } ?>
+
     <!-- Multi select -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
 

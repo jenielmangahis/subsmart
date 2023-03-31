@@ -767,12 +767,15 @@ class Users extends MY_Controller
 			}
 		}
 
+		$this->page_data['page']->title = 'Employees Track Location';
+        $this->page_data['page']->parent = 'Company';
 		$this->page_data['lasttracklocation_employee'] = $lasttracklocation_employee;
-
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		$this->page_data['current_user_id'] = logged('id');
+		$this->page_data['enable_tracklocation'] = 1;
 
-		$this->load->view('users/tracklocation', $this->page_data);
+		//$this->load->view('users/tracklocation', $this->page_data);
+		$this->load->view('v2/pages/users/tracklocation', $this->page_data);
 	}
 
 	public function index()
@@ -1294,7 +1297,7 @@ class Users extends MY_Controller
 			'user' => $id
 		], ['order' => ['id', 'desc']]);
 
-		$this->load->view('users/view', $this->page_data);
+		$this->load->view('v2/pages/users/view', $this->page_data);
 	}
 
 	public function edit($id)
@@ -1713,78 +1716,104 @@ class Users extends MY_Controller
 		$query = $this->Users_model->insertClock_In_Out_Lat_Long($user_id, $data);
 		echo json_encode($query);
 	}
+
 	public function ajaxUpdateEmployee()
 	{
-		$user_id = $this->input->post('values[user_id]');
-		$fname = $this->input->post('values[firstname]');
-		$lname = $this->input->post('values[lastname]');
-		$email = $this->input->post('values[email]');
-		$username = $this->input->post('values[username]');
-		$password = $this->input->post('values[password]');
-		$address = $this->input->post('values[address]');
+		$is_success = 1;
+		$msg = '';
 
-		$city  = $this->input->post('values[city]');
-		$state  = $this->input->post('values[state]');
-		$postal_code  = $this->input->post('values[postal_code]');
+		$post = $this->input->post();
+		$user = $this->Users_model->getUserByID($post['user_id']);
+		
+		if( $user ){
+			if( $post['firstname'] == '' || $post['lastname'] == '' ){
+				$msg = 'Please enter employee name';
+				$is_success = 0;
+			}
 
-		$role = $this->input->post('values[role]');
-		$status = $this->input->post('values[status]');
+			if( $post['emp_number'] == '' ){
+				$msg = 'Please enter employee number';
+				$is_success = 0;
+			}
 
-		$has_web_access = 0;
-		if ($this->input->post('values[web_access]') == 'on') {
-			$has_web_access = 1;
+			if( $post['state'] == '' || $post['address'] == '' || $post['postal_code'] == '' ){
+				$msg = 'Please complete employee address (state, address, zip code)';
+				$is_success = 0;
+			}
+
+			if( $is_success == 1 ){
+				if( isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0 ){
+					$config = array(
+						'upload_path' => './uploads/users/user-profile/',
+						'allowed_types' => '*',
+						'overwrite' => TRUE,
+						'max_size' => '20000',
+						'max_height' => '0',
+						'max_width' => '0',
+						'encrypt_name' => true
+					);
+					$config = $this->uploadlib->initialize($config);
+					$this->load->library('upload',$config);					
+					if ($this->upload->do_upload("userfile")){						
+						$uploadData = $this->upload->data();
+						$profile_image = $uploadData['file_name'];
+					}else{
+						$profile_image = $user->profile_img;
+					}
+				}else{
+					$profile_image = $user->profile_img;
+				}
+					
+
+				$has_web_access = 0;
+				if ($post['web_access'] == 'on') {
+					$has_web_access = 1;
+				}
+
+				$has_app_access = 0;
+				if ($post['app_access'] == 'on') {
+					$has_app_access = 1;
+				}		
+
+				$mobile = '';
+				if( $post['mobile'] != '' ){
+					$mobile = formatPhoneNumber($post['mobile']);
+				}
+				$phone  = '';
+				if( $post['phone'] != '' ){
+					$phone = formatPhoneNumber($post['phone']);
+				}
+
+				$data = array(
+					'FName' => $post['firstname'],
+					'LName' => $post['lastname'],
+					'role' => $post['role'],
+					'status' => $post['status'],
+					'profile_img' => $profile_image,
+					'address' => $post['address'],
+					'state' => $post['state'],
+					'city' => $post['city'],
+					'phone' => $phone,
+					'mobile' => $mobile,
+					'has_web_access' => $has_web_access,
+					'has_app_access' => $has_app_access,
+					'postal_code' => $post['postal_code'],
+					'payscale_id' => $post['empPayscale'],
+					'user_type' => $post['user_type'],
+					'employee_number' => $post['emp_number']
+				);
+
+				$user = $this->Users_model->update($user->id,$data);
+				$msg  = '';
+			}
+		}else{
+			$is_success = 0;
+			$msg = 'Cannot find user data';
 		}
 
-		$has_app_access = 0;
-		if ($this->input->post('values[app_access]') == 'on') {
-			$has_app_access = 1;
-		}
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
 
-		$profile_img = $this->input->post('values[profile_photo]');
-		$payscale_id = $this->input->post('values[empPayscale]');
-		$emp_number  = $this->input->post('values[emp_number]');
-		$user_type   = $this->input->post('values[user_type]');
-		$user = $this->Users_model->getUser($user_id);
-
-		if ($profile_img == '') {
-			$profile_img = $user->profile_img;
-		}
-
-		$data = array(
-			'FName' => $fname,
-			'LName' => $lname,
-			'username' => $username,
-			'email' => $email,
-			'role' => $role,
-			'status' => $status,
-			'profile_img' => $profile_img,
-			'address' => $address,
-			'state' => $state,
-			'city' => $city,
-			'has_web_access' => $has_web_access,
-			'has_app_access' => $has_app_access,
-			'postal_code' => $postal_code,
-			'payscale_id' => $payscale_id,
-			'user_type' => $user_type,
-			'employee_number' => $emp_number
-		);
-		$data2 = array(
-			'user_id' => $this->input->post('values[user_id]'),
-			'company_id' => logged('company_id'),
-			'clock_in_latitude' => $this->input->post('values[clock_in_location_latitude]'),
-			'clock_in_longtitude' => $this->input->post('values[clock_in_location_longtitude]'),
-			'clock_out_latitude' => $this->input->post('values[clock_out_location_latitude]'),
-			'clock_out_longtitude' => $this->input->post('values[clock_out_location_longtitude]'),
-			'allow_gps_clock_in' => $this->input->post('values[allow_clock_in_toggle_btn]'),
-			'allow_gps_clock_out' => $this->input->post('values[allow_clock_out_toggle_btn]'),
-			'clock_in_address' => $this->input->post('values[clock_in_formatted_address]'),
-			'clock_out_address' => $this->input->post('values[clock_out_formatted_address]'),
-			'clock_in_radius' => $this->input->post('values[clock_in_radius_field]'),
-			'clock_out_radius' => $this->input->post('values[clock_out_radius_field]'),
-		);
-		$user = $this->Users_model->update($user_id, $data);
-		$data_location = $this->Users_model->insertClock_In_Out_Lat_Long($user_id, $data2);
-		echo json_encode(1);
 	}
 
 	public function ajaxUpdateEmployeeV2(){

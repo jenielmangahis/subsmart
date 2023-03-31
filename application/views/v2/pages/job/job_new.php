@@ -1194,7 +1194,7 @@
                                                             <label>Record all Items used on Jobs</label>
                                                         </div>
                                                         <div class="col-sm-12">
-                                                            <table id="device_audit" class="nsm-table table-bordered w-100 device_job_items_tbl">
+                                                            <table id="device_audit" class="nsm-table table-sm table-bordered w-100 device_job_items_tbl">
                                                                 <thead class="bg-light">
                                                                     <tr>
                                                                         <!-- <td style="width: 0% !important;"></td> -->
@@ -1229,21 +1229,29 @@
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
                                                                         <td><?php echo number_format((float)$total,2,'.',','); ?></td>
-                                                                        <?php if($jobs_data->status == "Scheduled" && !isset($jobs_data)):?>
-                                                                            <td style="width: 200px">
+                                                                        <?php if($jobs_data->status == "Scheduled") {?>
+                                                                            <td>
                                                                                 <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
                                                                                 <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
-                                                                                <select id="location" name="location[]" class="form-control location" >
-                                                                                    <option value="">Select Type</option>
-                                                                                        <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
-                                                                                            <option <?= $locationItem->id === $item->location  ? 'selected' : '' ?>  value="<?= $locationItem->id ?>"><?= getLocationName($locationItem->loc_id)  ?></option>
-                                                                                        <?php endforeach; ?>
+                                                                                <select id="location" name="location[]" class="form-select form-select-sm location" >
+                                                                                    <?php
+                                                                                        if ($item->location_name == "") {
+                                                                                            echo "<option value=''>Select Location</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "<option selected value='$item->location_id'>$item->location_name</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        }
+                                                                                    ?>
                                                                                 </select>
                                                                             </td>
-                                                                        <?php else: ?>
-                                                                            <td><?php 
-                                                                                echo getLocationName(getLocation($item->location, false))->location_name ?></td>
-                                                                        <?php endif; ?>
+                                                                        <?php } else { ?>
+                                                                            <td><?php echo $item->location_name; ?></td>
+                                                                        <?php }; ?>
                                                                     </tr>
                                                                     <?php } } ?>
                                                                 </tbody>
@@ -1372,7 +1380,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -1387,7 +1394,7 @@
                             <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
                         </div>
                         <div class="col-sm-12">
-                            <table id="items_table" class="table table-hover w-100">
+                            <table id="items_table" class="table table-hover table-sm w-100">
                                 <thead class="bg-light">
                                     <tr>
                                         <td style="width: 0% !important;"></td>
@@ -1395,6 +1402,7 @@
                                         <td><strong>Qty</strong></td>
                                         <td><strong>Price</strong></td>
                                         <td><strong>Type</strong></td>
+                                        <td><strong>Location</strong></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1405,12 +1413,13 @@
                                     ?>
                                     <tr>
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
                                         <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
+                                        <td><?php echo $item->location_name; ?></td>
                                     </tr>
                                     <?php } } ?>
                                 </tbody>

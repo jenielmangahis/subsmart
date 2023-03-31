@@ -501,6 +501,7 @@ class Tickets extends MY_Controller
             if( $this->input->post('redirect_calendar') == 1){
                 redirect('workcalender');
             }else{
+                $this->session->set_userdata('CREATE_INITIAL_INVOICE_ALERT', 'true');
                 redirect('job/new_job1/'.$jobs_id);
             }
             

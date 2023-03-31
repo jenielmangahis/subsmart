@@ -28,34 +28,21 @@
 </div>
 <div class="row gy-3 mb-4">
     <div class="col-12">
-        <label class="content-title">Login Details</label>
-    </div>
-    <div class="col-12 col-md-6">
-        <label class="content-subtitle fw-bold d-block mb-2">Email</label>
-        <div class="nsm-field-group icon-right">
-            <input type="email" class="nsm-field form-control" id="employeeEmail" name="email" required value="<?= $user->email; ?>">
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <label class="content-subtitle fw-bold d-block mb-2">Username</label>
-        <div class="nsm-field-group icon-right">
-            <input type="text" class="nsm-field form-control" id="employeeUsername" name="username" required value="<?= $user->username; ?>">
-        </div>
-    </div>
-</div>
-<div class="row gy-3 mb-4">
-    <div class="col-12">
         <label class="content-title">Other Details</label>
     </div>
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2">Address</label>
         <input type="text" class="nsm-field form-control" name="address" required value="<?= $user->address; ?>">
     </div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-5">
+        <label class="content-subtitle fw-bold d-block mb-2">City</label>
+        <input type="text" class="nsm-field form-control" name="city" required value="<?= $user->city; ?>">
+    </div>
+    <div class="col-12 col-md-5">
         <label class="content-subtitle fw-bold d-block mb-2">State</label>
         <input type="text" class="nsm-field form-control" name="state" required value="<?= $user->state; ?>">
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-2">
         <label class="content-subtitle fw-bold d-block mb-2">Zip Code</label>
         <input type="text" class="nsm-field form-control" name="postal_code" required value="<?= $user->postal_code; ?>">
     </div>

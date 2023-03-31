@@ -21,4 +21,17 @@ class Accounting_custom_reports_model extends MY_Model {
 		$this->db->insert($this->table, $data);
 		return $this->db->insert_id();
 	}
+
+	public function check_name($name, $companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('name', $name);
+		return $this->db->get($this->table)->row();
+	}
+
+	public function update_custom_report($customReportId, $data)
+	{
+		$this->db->where('id', $customReportId);
+		return $this->db->update($this->table, $data);
+	}
 }

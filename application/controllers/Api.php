@@ -591,4 +591,29 @@ class Api extends MYF_Controller
 
         return $is_sent;
     }
+
+    public function vonageInboundSms()
+    {
+        $this->load->model('VonageSms_model');
+
+        $post = $this->input->post();
+        if( !empty($post) ){
+            $data = json_decode($post);        
+            if(  isset($data->messageId) && $data->messageId != '' ){
+                $data = [
+                    'company_id' => 1,
+                    'messageId' => $data->messageId,
+                    'channel' => 'sms',
+                    'from' => $data->msisdn,
+                    'to' => $data->to,
+                    'sms_message' => $data->text,
+                    'status' => 'Sent'
+                ];
+
+                $this->VonageSms_model->create($data);            
+            }   
+        }        
+
+        http_response_code(200);
+    }
 }

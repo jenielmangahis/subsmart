@@ -1870,10 +1870,18 @@ class Debug extends MY_Controller {
 
     public function generateHashId()
     {   
+        $this->load->model('Jobs_model');
+
         $this->load->helper(array('url', 'hashids_helper'));
         $id  = 331;
         $eid = hashids_encrypt($id, '', 15);
+
+        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs(1);
+        echo "<pre>";
+        print_r($jobs);
         echo $eid;
+
+        exit;
     }
 
     public function testJob()
@@ -1946,6 +1954,7 @@ class Debug extends MY_Controller {
     }
 
     public function smsVonage(){
+        phpinfo();exit;
         $this->load->helper('sms_helper');
 
         $sms_number = '639179082622';

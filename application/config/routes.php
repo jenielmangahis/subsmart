@@ -715,6 +715,7 @@ $route['accounting/reports/(:any)/export']['post'] = 'accounting_controllers/rep
 $route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controllers/reports/update_note/$1';
 $route['accounting/reports/add-custom-report-group']['post'] = 'accounting_controllers/reports/add_custom_report_group';
 $route['accounting/reports/save-custom-report']['post'] = 'accounting_controllers/reports/save_custom_report';
+$route['accounting/reports/check-custom-report-name']['post'] = 'accounting_controllers/reports/check_name';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 

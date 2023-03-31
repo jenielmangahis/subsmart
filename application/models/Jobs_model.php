@@ -168,10 +168,11 @@ class Jobs_model extends MY_Model
 
     public function get_specific_job_items($id)
     {
+        $this->db->select('items.id as fk_item_id, items.id, items.title, items.price, items.type, job_items.cost, job_items.qty, items_has_storage_loc.name as location_name, items_has_storage_loc.id as location_id, job_items.points, job_items.tax');
         $this->db->from($this->table_items);
-        $this->db->select('items.id as fk_item_id,items.id,items.title,items.price,items.type,job_items.cost,job_items.qty,job_items.location,job_items.points,job_items.tax');
-        $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->where("job_items.job_id", $id);
+        $this->db->join('items', 'items.id = job_items.items_id', 'left');
+        $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
         $query = $this->db->get();
         return $query->result();
     }
