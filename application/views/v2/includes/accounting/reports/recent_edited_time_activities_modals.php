@@ -214,13 +214,13 @@
                                             <div class="col-12 col-md-4">
                                                 <label for="from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="time-activity-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label for="to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="to">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="time-activity-date-to">
                                                 </div>
                                             </div>
                                             <?php endif; ?>
@@ -236,13 +236,13 @@
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="number_format" value="divide-by-100" id="divide-by-100">
+                                                    <input class="form-check-input" <?=isset($divide_by_100) ? 'checked' : ''?> type="checkbox" name="number_format" value="divide-by-100" id="divide-by-100">
                                                     <label class="form-check-label" for="divide-by-100">
                                                         Divide by 100
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="number_format" value="without-cents" id="without-cents">
+                                                    <input class="form-check-input" <?=isset($without_cents) ? 'checked' : ''?> type="checkbox" name="number_format" value="without-cents" id="without-cents">
                                                     <label class="form-check-label" for="without-cents">
                                                         Without cents
                                                     </label>
@@ -250,12 +250,12 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="negative_numbers" id="negative-numbers" class="nsm-field form-control">
-                                                    <option value="-100">-100</option>
-                                                    <option value="(100)">(100)</option>
-                                                    <option value="100-">100-</option>
+                                                    <option value="-100" <?=empty($negative_numbers) || $negative_numbers === '-100' ? 'selected' : ''?>>-100</option>
+                                                    <option value="(100)" <?=$negative_numbers === '(100)' ? 'selected' : ''?>>(100)</option>
+                                                    <option value="100-" <?=$negative_numbers === '100-' ? 'selected' : ''?>>100-</option>
                                                 </select>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_in_red" value="1" id="show-in-red">
+                                                    <input class="form-check-input" <?=isset($show_in_red) ? 'checked' : ''?> type="checkbox" name="show_in_red" value="1" id="show-in-red">
                                                     <label class="form-check-label" for="show-in-red">
                                                         Show in red
                                                     </label>
@@ -284,7 +284,7 @@
                                                 <label for="limit"><b>Limit</b></label>
                                             </div>
                                             <div class="col-12 col-md-4">
-                                                <input type="number" name="limit" id="limit" class="nsm-field form-control" value="25">
+                                                <input type="number" name="limit" id="limit" class="nsm-field form-control" value="<?=isset($limit) ? $limit : '25'?>">
                                             </div>
                                             <div class="col-12 d-none">
                                                 <div class="row g-3">
@@ -462,7 +462,7 @@
                                         <div class="row grid-mb g-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_customer" value="1" id="allow-filter-customer">
+                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_customer) ? 'checked' : '' ?> name="allow_filter_customer" value="1" id="allow-filter-customer">
                                                     <label class="form-check-label" for="allow-filter-customer">
                                                         Customer
                                                     </label>
@@ -470,14 +470,18 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_customer" id="filter-customer" class="nsm-field form-control">
-                                                    <option value="all" selected>All</option>
-                                                    <option value="not-specified">Not Specified</option>
-                                                    <option value="Specified">Specified</option>
+                                                    <option value="all" <?=empty($filter_customer) || $filter_customer === 'all' ? 'selected' : ''?>>All</option>
+                                                    <option value="not-specified" <?=!is_object($filter_customer) && $filter_customer === 'not-specified' ? 'selected' : ''?>>Not Specified</option>
+                                                    <option value="Specified" <?=!is_object($filter_customer) && $filter_customer === 'specified' ? 'selected' : ''?>>Specified</option>
+
+                                                    <?php if(!in_array($filter_customer, ['all', 'not-specified', 'specified']) && is_object($filter_customer)) : ?>
+                                                    <option value="<?=$filter_customer->id?>" selected><?=$filter_customer->name?></option>
+                                                    <?php endif; ?>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_product_service" value="1" id="allow-filter-product-service">
+                                                    <input class="form-check-input" <?=isset($product_service) ? 'checked' : '' ?> type="checkbox" name="allow_filter_product_service" value="1" id="allow-filter-product-service">
                                                     <label class="form-check-label" for="allow-filter-product-service">
                                                         Product/Service
                                                     </label>
@@ -485,14 +489,18 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_product_service" id="filter-product-service" class="nsm-field form-control">
-                                                    <option value="all" selected>All</option>
-                                                    <option value="not-specified">Not Specified</option>
-                                                    <option value="Specified">Specified</option>
+                                                    <option value="all" <?=empty($product_service) || $product_service === 'all' ? 'selected' : ''?>>All</option>
+                                                    <option value="not-specified" <?=!is_object($product_service) && $product_service === 'not-specified' ? 'selected' : ''?>>Not Specified</option>
+                                                    <option value="Specified" <?=!is_object($product_service) && $product_service === 'specified' ? 'selected' : ''?>>Specified</option>
+
+                                                    <?php if(!in_array($product_service, ['all', 'not-specified', 'specified']) && is_object($product_service)) : ?>
+                                                    <option value="<?=$product_service->id?>" selected><?=$product_service->name?></option>
+                                                    <?php endif; ?>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_employee" value="1" id="allow-filter-employee">
+                                                    <input class="form-check-input" <?=isset($employee) ? 'checked' : '' ?> type="checkbox" name="allow_filter_employee" value="1" id="allow-filter-employee">
                                                     <label class="form-check-label" for="allow-filter-employee">
                                                         Employee
                                                     </label>
@@ -500,14 +508,18 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_employee" id="filter-employee" class="nsm-field form-control">
-                                                    <option value="all" selected>All</option>
-                                                    <option value="not-specified">Not Specified</option>
-                                                    <option value="Specified">Specified</option>
+                                                    <option value="all" <?=empty($employee) || $employee === 'all' ? 'selected' : ''?>>All</option>
+                                                    <option value="not-specified" <?=!is_object($employee) && $employee === 'not-specified' ? 'selected' : ''?>>Not Specified</option>
+                                                    <option value="Specified" <?=!is_object($employee) && $employee === 'specified' ? 'selected' : ''?>>Specified</option>
+
+                                                    <?php if(!in_array($employee, ['all', 'not-specified', 'specified']) && is_object($employee)) : ?>
+                                                    <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
+                                                    <?php endif; ?>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_create_date" value="1" id="allow-filter-create-date">
+                                                    <input class="form-check-input" <?=isset($create_date) ? 'checked' : '' ?> type="checkbox" name="allow_filter_create_date" value="1" id="allow-filter-create-date">
                                                     <label class="form-check-label" for="allow-filter-create-date">
                                                         Create Date
                                                     </label>
@@ -515,37 +527,51 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_create_date" id="filter-create-date" class="nsm-field form-control">
-                                                    <option value="all-dates">All Dates</option>
-                                                    <option value="custom">Custom</option>
-                                                    <option value="today">Today</option>
-                                                    <option value="this-week">This Week</option>
-                                                    <option value="this-week-to-date">This Week-to-date</option>
-                                                    <option value="this-month">This Month</option>
-                                                    <option value="this-month-to-date">This Month-to-date</option>
-                                                    <option value="this-quarter">This Quarter</option>
-                                                    <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                                    <option value="this-year">This Year</option>
-                                                    <option value="this-year-to-date">This Year-to-date</option>
-                                                    <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                                    <option value="yesterday">Yesterday</option>
-                                                    <option value="recent">Recent</option>
-                                                    <option value="last-week">Last Week</option>
-                                                    <option value="last-week-to-date">Last Week-to-date</option>
-                                                    <option value="last-month">Last Month</option>
-                                                    <option value="last-month-to-date">Last Month-to-date</option>
-                                                    <option value="last-quarter">Last Quarter</option>
-                                                    <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                                    <option value="last-year">Last Year</option>
-                                                    <option value="last-year-to-date">Last Year-to-date</option>
-                                                    <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                                    <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                                    <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                                    <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                                    <option value="all-dates" <?=empty($create_date) || $create_date === 'all' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="custom" <?=$create_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                    <option value="today" <?=$create_date === 'today' ? 'selected' : ''?>>Today</option>
+                                                    <option value="this-week" <?=$create_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                                    <option value="this-week-to-date" <?=$create_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                                    <option value="this-month" <?=$create_date === 'custom' ? 'this-month' : ''?>>This Month</option>
+                                                    <option value="this-month-to-date" <?=$create_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                                    <option value="this-quarter" <?=$create_date === 'custom' ? 'this-quarter' : ''?>>This Quarter</option>
+                                                    <option value="this-quarter-to-date" <?=$create_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                                    <option value="this-year" <?=$create_date === 'custom' ? 'this-year' : ''?>>This Year</option>
+                                                    <option value="this-year-to-date" <?=$create_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                                    <option value="this-year-to-last-month" <?=$create_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                                    <option value="yesterday" <?=$create_date === 'custom' ? 'yesterday' : ''?>>Yesterday</option>
+                                                    <option value="recent" <?=$create_date === 'custom' ? 'recent' : ''?>>Recent</option>
+                                                    <option value="last-week" <?=$create_date === 'custom' ? 'last-week' : ''?>>Last Week</option>
+                                                    <option value="last-week-to-date" <?=$create_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                                    <option value="last-month" <?=$create_date === 'custom' ? 'last-month' : ''?>>Last Month</option>
+                                                    <option value="last-month-to-date" <?=$create_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                                    <option value="last-quarter" <?=$create_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                                    <option value="last-quarter-to-date" <?=$create_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                                    <option value="last-year" <?=$create_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                                    <option value="last-year-to-date" <?=$create_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                                    <option value="since-30-days-ago" <?=$create_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-60-days-ago" <?=$create_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                                    <option value="since-90-days-ago" <?=$create_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                                    <option value="since-365-days-ago" <?=$create_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
                                                 </select>
                                             </div>
+                                            <?php if(!empty($create_date) && $create_date !== 'all-dates') : ?>
+                                            <div class="col-12 col-md-6">
+                                                <label for="filter-create-date-from">From</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$create_date_from?>" id="filter-create-date-from">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label for="filter-create-date-to">To</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$create_date_to?>" id="filter-create-date-to">
+                                                </div>
+                                            </div>
+                                            <?php endif; ?>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_last_modified_date" value="1" id="allow-filter-last-modified-date">
+                                                    <input class="form-check-input" <?=isset($last_modified_date) ? 'checked' : '' ?> type="checkbox" name="allow_filter_last_modified_date" value="1" id="allow-filter-last-modified-date">
                                                     <label class="form-check-label" for="allow-filter-last-modified-date">
                                                         Last Modified Date
                                                     </label>
@@ -553,49 +579,51 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_last_modified_date" id="filter-last-modified-date" class="nsm-field form-control">
-                                                    <option value="all-dates">All Dates</option>
-                                                    <option value="custom">Custom</option>
-                                                    <option value="today">Today</option>
-                                                    <option value="this-week">This Week</option>
-                                                    <option value="this-week-to-date">This Week-to-date</option>
-                                                    <option value="this-month">This Month</option>
-                                                    <option value="this-month-to-date">This Month-to-date</option>
-                                                    <option value="this-quarter">This Quarter</option>
-                                                    <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                                    <option value="this-year">This Year</option>
-                                                    <option value="this-year-to-date">This Year-to-date</option>
-                                                    <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                                    <option value="yesterday">Yesterday</option>
-                                                    <option value="recent">Recent</option>
-                                                    <option value="last-week">Last Week</option>
-                                                    <option value="last-week-to-date">Last Week-to-date</option>
-                                                    <option value="last-month">Last Month</option>
-                                                    <option value="last-month-to-date">Last Month-to-date</option>
-                                                    <option value="last-quarter">Last Quarter</option>
-                                                    <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                                    <option value="last-year">Last Year</option>
-                                                    <option value="last-year-to-date">Last Year-to-date</option>
-                                                    <option value="since-30-days-ago" selected>Since 30 Days Ago</option>
-                                                    <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                                    <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                                    <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                                    <option value="all-dates" <?=empty($last_modified_date) || $last_modified_date === 'all' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="custom" <?=$last_modified_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                    <option value="today" <?=$last_modified_date === 'today' ? 'selected' : ''?>>Today</option>
+                                                    <option value="this-week" <?=$last_modified_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                                    <option value="this-week-to-date" <?=$last_modified_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                                    <option value="this-month" <?=$last_modified_date === 'custom' ? 'this-month' : ''?>>This Month</option>
+                                                    <option value="this-month-to-date" <?=$last_modified_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                                    <option value="this-quarter" <?=$last_modified_date === 'custom' ? 'this-quarter' : ''?>>This Quarter</option>
+                                                    <option value="this-quarter-to-date" <?=$last_modified_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                                    <option value="this-year" <?=$last_modified_date === 'custom' ? 'this-year' : ''?>>This Year</option>
+                                                    <option value="this-year-to-date" <?=$last_modified_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                                    <option value="this-year-to-last-month" <?=$last_modified_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                                    <option value="yesterday" <?=$last_modified_date === 'custom' ? 'yesterday' : ''?>>Yesterday</option>
+                                                    <option value="recent" <?=$last_modified_date === 'custom' ? 'recent' : ''?>>Recent</option>
+                                                    <option value="last-week" <?=$last_modified_date === 'custom' ? 'last-week' : ''?>>Last Week</option>
+                                                    <option value="last-week-to-date" <?=$last_modified_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                                    <option value="last-month" <?=$last_modified_date === 'custom' ? 'last-month' : ''?>>Last Month</option>
+                                                    <option value="last-month-to-date" <?=$last_modified_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                                    <option value="last-quarter" <?=$last_modified_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                                    <option value="last-quarter-to-date" <?=$last_modified_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                                    <option value="last-year" <?=$last_modified_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                                    <option value="last-year-to-date" <?=$last_modified_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                                    <option value="since-30-days-ago" <?=$last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-60-days-ago" <?=$last_modified_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                                    <option value="since-90-days-ago" <?=$last_modified_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                                    <option value="since-365-days-ago" <?=$last_modified_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
                                                 </select>
                                             </div>
+                                            <?php if(empty($last_modified_date) && $last_modified_date !== 'all-dates') : ?>
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=date("m/d/Y", strtotime("-30 days"))?>" id="filter-last-modified-date-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$last_modified_date === 'all-dates' ? date("m/d/Y", strtotime("-30 days")) : $last_modified_date_from?>" id="filter-last-modified-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="" id="filter-last-modified-date-to">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$last_modified_date === 'all-dates' ? '' : $last_modified_date_to?>" id="filter-last-modified-date-to">
                                                 </div>
                                             </div>
+                                            <?php endif; ?>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_billable" value="1" id="allow-filter-billable">
+                                                    <input class="form-check-input" <?=isset($billable) ? 'checked' : '' ?> type="checkbox" name="allow_filter_billable" value="1" id="allow-filter-billable">
                                                     <label class="form-check-label" for="allow-filter-billable">
                                                         Billable
                                                     </label>
@@ -603,21 +631,21 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_billable" id="filter-billable" class="nsm-field form-control">
-                                                    <option value="all">All</option>
-                                                    <option value="yes">Billable</option>
-                                                    <option value="no">Non-Billable</option>
+                                                    <option value="all" <?=empty($billable) || $billable === 'all' ? 'selected' : ''?>>All</option>
+                                                    <option value="yes" <?=$billable === 'yes' ? 'selected' : ''?>>Billable</option>
+                                                    <option value="no" <?=$billable === 'no' ? 'selected' : ''?>>Non-Billable</option>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="allow_filter_memo" value="1" id="allow-filter-memo">
+                                                    <input class="form-check-input" <?=isset($memo) ? 'checked' : '' ?> type="checkbox" name="allow_filter_memo" value="1" id="allow-filter-memo">
                                                     <label class="form-check-label" for="allow-filter-memo">
                                                         Memo
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <input type="text" class="nsm-field form-control" value="" name="filter_memo" id="filter-memo">
+                                                <input type="text" class="nsm-field form-control" value="<?=isset($memo) ? $memo : ''?>" name="filter_memo" id="filter-memo">
                                             </div>
                                         </div>
                                     </div>
@@ -643,7 +671,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_logo" value="1" id="show-logo">
+                                                    <input class="form-check-input" <?=isset($show_logo) ? 'checked' : '' ?> type="checkbox" name="show_logo" value="1" id="show-logo">
                                                     <label class="form-check-label" for="show-logo">
                                                         Show logo
                                                     </label>
@@ -652,14 +680,14 @@
                                             <div class="col-12 col-md-6"></div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="customize_company_name" checked value="1" id="customize-company-name">
+                                                    <input class="form-check-input" checked type="checkbox" name="customize_company_name" value="1" id="customize-company-name">
                                                     <label class="form-check-label" for="company-name">
                                                         Company name
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <input type="text" name="company_name" id="company-name" class="nsm-field form-control" value="<?=$clients->business_name?>">
+                                                <input type="text" name="company_name" id="company-name" class="nsm-field form-control" value="<?=$company_name?>">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
@@ -670,11 +698,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <input type="text" name="report_title" id="report-title" class="nsm-field form-control" value="Recent/Edited Time Activities">
+                                                <input type="text" name="report_title" id="report-title" class="nsm-field form-control" value="<?=$report_title?>">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_report_period" checked value="1" id="show-report-period">
+                                                    <input class="form-check-input" <?=isset($show_logo) ? 'checked' : '' ?> type="checkbox" name="show_report_period" value="1" id="show-report-period">
                                                     <label class="form-check-label" for="show-report-period">
                                                         Report period
                                                     </label>
@@ -686,7 +714,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_date_prepared" checked value="1" id="show-date-prepared">
+                                                    <input class="form-check-input" <?=isset($date_prepared) ? 'checked' : '' ?> type="checkbox" name="show_date_prepared" checked value="1" id="show-date-prepared">
                                                     <label class="form-check-label" for="show-date-prepared">
                                                         Date prepared
                                                     </label>
@@ -694,7 +722,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="show_time_prepared" checked value="1" id="show-time-prepared">
+                                                    <input class="form-check-input" <?=isset($time_prepared) ? 'checked' : '' ?> type="checkbox" name="show_time_prepared" checked value="1" id="show-time-prepared">
                                                     <label class="form-check-label" for="show-time-prepared">
                                                         Time prepared
                                                     </label>
@@ -708,9 +736,9 @@
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <select name="header_alignment" id="header-alignment" class="nsm-field form-control">
-                                                    <option value="left">Left</option>
-                                                    <option value="center" selected>Center</option>
-                                                    <option value="right">Right</option>
+                                                    <option value="left" <?=$header_alignment === 'left' ? 'selected' : ''?>>Left</option>
+                                                    <option value="center" <?=empty($header_alignment) || $header_alignment === 'center' ? 'selected' : ''?>>Center</option>
+                                                    <option value="right" <?=$header_alignment === 'right' ? 'selected' : ''?>>Right</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -720,9 +748,9 @@
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <select name="footer_alignment" id="footer-alignment" class="nsm-field form-control">
-                                                    <option value="left">Left</option>
-                                                    <option value="center" selected>Center</option>
-                                                    <option value="right">Right</option>
+                                                    <option value="left" <?=$footer_alignment === 'left' ? 'selected' : ''?>>Left</option>
+                                                    <option value="center" <?=empty($footer_alignment) || $footer_alignment === 'center' ? 'selected' : ''?>>Center</option>
+                                                    <option value="right" <?=$footer_alignment === 'right' ? 'selected' : ''?>>Right</option>
                                                 </select>
                                             </div>
                                         </div>

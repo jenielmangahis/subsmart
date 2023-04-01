@@ -417,52 +417,32 @@ if (!function_exists('getLocationName')){
         return $location;
     }
 }
-if (!function_exists('getLocation')){
-    function getLocation($id, $qty){
-        $comp_id = logged('company_id');
-        $CI = &get_instance();
+if (!function_exists('getLocation')) {
+    function getLocation($job_id, $items_id) {
+        $company_id = logged('company_id');
+        $CI =& get_instance();
         $CI->load->model('general_model');
+        $jobItemLocation = array(
+            'select' => 'location',
+            'table' => 'job_items',
+            'where' => array(
+                'job_id' => $job_id,
+                'items_id' => $items_id
+            )
+        );
+        $jobItemLocation_result = $CI->general_model->get_data_with_param($jobItemLocation);
 
-        if($qty != false){
-            $getLocation = array(
-                'where' => array(
-                    'company_id' => $comp_id,
-                    'item_id' => $id,
-                    'qty >=' => $qty,
-                ),
-                'table' => 'items_has_storage_loc',
-                'select' => 'id,loc_id'
-            );
-    
-            $location = $CI->general_model->get_data_with_param($getLocation);
-            return $location;
-        }else{
-            $getLocation = array(
-                'where' => array(
-                    'company_id' => $comp_id,
-                    'id' => $id,
-                ),
-                'table' => 'items_has_storage_loc',
-                'select' => 'loc_id'
-            );
-            $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
-            return $location->loc_id;
-        } 
+        $itemLocationLookup = array(
+            'select' => 'loc_id AS LOCATION_ID, location_name AS LOCATION_NAME',
+            'table' => 'storage_loc',
+            'where' => array(
+                'loc_id' => $jobItemLocation_result[0]->location,
+                'company_id' => $company_id
+            )
+        );
+        $itemLocationLookup_result = $CI->general_model->get_data_with_param($itemLocationLookup);
+        return $itemLocationLookup_result[0];
     }
-    // function getLocation(){
-    //     $comp_id = logged('company_id');
-    //     $CI = &get_instance();
-    //     $CI->load->model('general_model');
-    //         $getLocation = array(
-    //             'where' => array(
-    //                 'company_id' => $comp_id,
-    //             ),
-    //             'table' => 'storage_loc',
-    //             'select' => 'loc_id, location_name'
-    //         );
-    //         $location = $CI->general_model->get_data_with_param($getLocation, FALSE);
-    //         return $location;
-    // }
 }
 if (!function_exists('getItem')){
     function getItem($id){

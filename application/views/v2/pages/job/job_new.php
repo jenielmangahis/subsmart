@@ -1236,12 +1236,12 @@
                                                                                 <select id="location" name="location[]" class="form-select form-select-sm location" >
                                                                                     <?php
                                                                                         if ($item->location_name == "") {
-                                                                                            echo "<option value=''>Select Location</option>";
+                                                                                            echo "<option value hidden disable>Select Location</option>";
                                                                                             foreach ($getAllLocation as $getAllLocations) {
                                                                                                 echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
                                                                                             }
                                                                                         } else {
-                                                                                            echo "<option selected value='$item->location_id'>$item->location_name</option>";
+                                                                                            echo "<option selected disabled hidden value='".getLocation($jobs_data->id, $item->location_id)->LOCATION_ID."'>".getLocation($jobs_data->id, $item->location_id)->LOCATION_NAME."</option>";
                                                                                             foreach ($getAllLocation as $getAllLocations) {
                                                                                                 echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
                                                                                             }
@@ -1250,7 +1250,7 @@
                                                                                 </select>
                                                                             </td>
                                                                         <?php } else { ?>
-                                                                            <td><?php echo $item->location_name; ?></td>
+                                                                            <td><?php echo getLocation($jobs_data->id, $item->location_id)->LOCATION_NAME; ?></td>
                                                                         <?php }; ?>
                                                                     </tr>
                                                                     <?php } } ?>
@@ -1334,7 +1334,7 @@
                                             <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
                                             <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                <?php if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
+                                                <?php if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
                                                     <div class="form-check float-start">
                                                       <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
                                                       <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">

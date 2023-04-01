@@ -108,8 +108,8 @@ $('#run-report').on('click', function(e) {
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'all-dates' ? `from=${$('#filter-from').val().replaceAll('/', '-')}&to=${$('#filter-to').val().replaceAll('/', '-')}` : '';
-    url += sortBy !== 'default' ? `column=${sortBy}` : '';
+    url += filterDate !== 'all-dates' ? `from=${$('#filter-activity-date-from').val().replaceAll('/', '-')}&to=${$('#filter-activity-date-to').val().replaceAll('/', '-')}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
     url += sortIn !== 'asc' ? `order=${sortIn}` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
@@ -425,6 +425,49 @@ $('#run-report-button').on('click', function() {
         $('#filter-activity-date-from').val($('#time-activity-date-from').val());
         $('#filter-activity-date-to').val($('#time-activity-date-to').val());
     }
+
+    var filterDate = $('#time-activity-date').val();
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
+    url += filterDate !== 'all-dates' ? `from=${$('#time-activity-date-from').val().replaceAll('/', '-')}&to=${$('#time-activity-date-to').val().replaceAll('/', '-')}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
+    url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
+    url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
+    url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
+    url += $('#limit').val() !== '25' ? `limit=${$('#limit').val()}&` : '';
+
+    url += $('#allow-filter-customer').prop('checked') && $('#filter-customer').val() !== 'all' ? `customer=${$('#filter-customer').val()}&` : '';
+    url += $('#allow-filter-product-service').prop('checked') && $('#filter-product-service').val() !== 'all' ? `product-service=${$('#filter-product-service').val()}&` : '';
+    url += $('#allow-filter-employee').prop('checked') && $('#filter-employee').val() !== 'all' ? `employee=${$('#filter-employee').val()}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date=${$('#filter-create-date').val()}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-from=${$('#filter-create-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-to=${$('#filter-create-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date=${$('#filter-last-modified-date').val()}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-from=${$('#filter-last-modified-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-to=${$('#filter-last-modified-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-billable').prop('checked') && $('#filter-billable').val() !== 'all' ? `billable=${$('#filter-billable').val()}&` : '';
+    url += $('#allow-filter-memo').prop('checked') && $('#filter-memo').val().trim() !== '' ? `memo=${$('#filter-memo').val().trim()}&` : '';
+
+    url += $('#show-logo').prop('checked') ? `show-logo=1&` : '';
+    url += $('#customize-company-name').prop('checked') ? `company-name=${$('#company-name').val()}` : '';
+    url += $('#customize-report-title').prop('checked') ? `report-title=${$('#report-title').val()}` : '';
+    url += $('#show-report-period').prop('checked') ? `show-report-period=1&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `show-date-prepared=1&` : '';
+    url += $('#show-time-prepared').prop('checked') ? `show-time-prepared=1&` : '';
+    url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
+    url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
 });
 
 function save_custom_report(customReport = {})

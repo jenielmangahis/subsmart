@@ -515,6 +515,106 @@ class Reports extends MY_Controller {
                 }
 
                 $this->page_data['activities'] = $activities;
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('limit'))) {
+                    $this->page_data['limit'] = get('limit');
+                }
+
+                if(!empty(get('customer'))) {
+                    if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
+                        $this->page_data['filter_customer'] = new stdClass();
+                        $this->page_data['filter_customer']->id = get('customer');
+                        $customer = $this->accounting_customers_model->get_by_id(get('customer'));
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+                        $this->page_data['filter_customer']->name = $customerName;
+                    } else {
+                        $this->page_data['filter_customer'] = get('customer');
+                    }
+                }
+
+                if(!empty(get('product-service'))) {
+                    $this->page_data['product_service'] = new stdClass();
+                    $this->page_data['product_service']->id = get('product-service');
+                    $item = $this->items_model->getByID(get('product-service'));
+                    $this->page_data['product_service']->name = $item->title;
+                }
+
+                if(!empty(get('employee'))) {
+                    $this->page_data['employee'] = new stdClass();
+                    $this->page_data['employee']->id = get('employee');
+                    $employee = $this->users_model->getUserByID(get('employee'));
+                    $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName;
+                }
+
+                if(!empty(get('create-date'))) {
+                    $this->page_data['create_date'] = get('create-date');
+                    $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
+                    $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+                }
+
+                if(!empty(get('last-modified-date'))) {
+                    $this->page_data['last_modified_date'] = get('last-modified-date');
+                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+                }
+
+                if(!empty(get('billable'))) {
+                    $this->page_data['billable'] = get('billable');
+                }
+
+                if(!empty(get('memo'))) {
+                    $this->page_data['memo'] = get('memo');
+                }
+
+                if(!empty(get('show-logo'))) {
+                    $this->page_data['show_logo'] = get('show-logo');
+                }
+
+                $this->page_data['company_name'] = $this->page_data['clients']->business_name;
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Recent/Edited Time Activities';
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                if(!empty(get('show-report-period'))) {
+                    $this->page_data['show_report_period'] = get('show-report-period');
+                }
+
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = get('show-date-prepared');
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = get('show-time-prepared');
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment');
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment');
+                }
             break;
         }
 
