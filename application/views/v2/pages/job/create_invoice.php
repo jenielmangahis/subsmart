@@ -609,16 +609,20 @@
                     title: 'Invoice Created',
                     text: 'Invoice has been created successfully for this job',
                     icon: 'success',
+                    showConfirmButton: false,
                     showCancelButton: true,
-                    confirmButtonText: 'View Invoice',
-                    cancelButtonText: 'Go to Job',
+                    // confirmButtonText: 'View Invoice',
+                    cancelButtonText: 'Close this Window',
                 });
 
-                if (swalResponse.isConfirmed) {
-                    window.location.href = `/invoice/genview/${jsonData.id}`;
-                } else {
-                    window.location.href = `/job/new_job1/${payload.job_id}`;
+                if (swalResponse.isDismissed) {
+                    window.close();
                 }
+                // if (swalResponse.isConfirmed) {
+                //     window.location.href = `/invoice/genview/${jsonData.id}`;
+                // } else {
+                //     window.location.href = `/job/new_job1/${payload.job_id}`;
+                // }
             } catch (error) {
                 console.log(error)
                 Swal.fire(

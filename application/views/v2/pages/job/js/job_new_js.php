@@ -478,7 +478,7 @@ $("#attachment-file").change(function() {
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
-            getLoc(id, qty);
+            // getLoc(id, qty);
             calculate_subtotal();
         });
 
@@ -493,7 +493,7 @@ $("#attachment-file").change(function() {
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
-            getLoc(id, qty);
+            // getLoc(id, qty);
             calculate_subtotal();
         });
 

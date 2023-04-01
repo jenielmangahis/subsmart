@@ -96,7 +96,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const jobId = $("input[id=esignJobId]").val();
     if (swalResponse.isConfirmed) {
-      window.location.href = `/job/viewInvoice/${jobId}`;
+      window.open(`/job/viewInvoice/${jobId}`, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+      window.location.reload();
     } else if (swalResponse.dismiss) {
       window.location.reload();
     }
