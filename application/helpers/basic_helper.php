@@ -4767,10 +4767,11 @@ if(!function_exists('set_expense_graph_data')) {
                             $filter[] = ['field' => 'mobile_number', 'value' => $itemCreator->mobile];
                             $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
                             if( !$isExists ){
+                               $mobile_number = formatSmSNumber($itemCreator->mobile);
                                $cron_data = [
                                     'company_auto_sms_id' => $autoSms->id,
                                     'obj_id' => $object_id,
-                                    'mobile_number' => $itemCreator->mobile,
+                                    'mobile_number' => $mobile_number,
                                     'sms_message' => $autoSms->sms_text,
                                     'is_sent' => 0,
                                     'module_name' => $module_name,
@@ -4796,10 +4797,11 @@ if(!function_exists('set_expense_graph_data')) {
                         $filter[] = ['field' => 'mobile_number', 'value' => $assignedUser->mobile];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
                         if( !$isExists ){
+                            $mobile_number = formatSmSNumber($assignedUser->mobile);
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
-                                'mobile_number' => $assignedUser->mobile,
+                                'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,
                                 'is_sent' => 0,
                                 'module_name' => $module_name,
@@ -4822,10 +4824,11 @@ if(!function_exists('set_expense_graph_data')) {
                         $filter[] = ['field' => 'mobile_number', 'value' => $assignedAgent->mobile];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
                         if( !$isExists ){
+                            $mobile_number = formatSmSNumber($assignedAgent->mobile);
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
-                                'mobile_number' => $assignedAgent->mobile,
+                                'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,
                                 'is_sent' => 0,
                                 'module_name' => $module_name,
@@ -4850,10 +4853,11 @@ if(!function_exists('set_expense_graph_data')) {
                         $filter[] = ['field' => 'mobile_number', 'value' => $u->mobile];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
                         if( !$isExists ){
+                            $mobile_number = formatSmSNumber($u->mobile);
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
-                                'mobile_number' => $u->mobile,
+                                'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,    
                                 'is_sent' => 0,  
                                 'module_name' => $module_name,                      
@@ -4878,10 +4882,11 @@ if(!function_exists('set_expense_graph_data')) {
                         $filter[] = ['field' => 'mobile_number', 'value' => $u->mobile];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
                         if( !$isExists ){
+                            $mobile_number = formatSmSNumber($u->mobile);
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
-                                'mobile_number' => $u->mobile,
+                                'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,   
                                 'is_sent' => 0,  
                                 'module_name' => $module_name,                              
@@ -4906,11 +4911,12 @@ if(!function_exists('set_expense_graph_data')) {
                                 $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
                                 $filter[] = ['field' => 'mobile_number', 'value' => $user->mobile];
                                 $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                                if( !$isExists ){                          
+                                if( !$isExists ){  
+                                    $mobile_number = formatSmSNumber($user->mobile);                        
                                     $cron_data = [
                                         'company_auto_sms_id' => $autoSms->id,
                                         'obj_id' => $object_id,
-                                        'mobile_number' => $user->mobile,
+                                        'mobile_number' => $mobile_number,
                                         'sms_message' => $autoSms->sms_text,
                                         'is_sent' => 0,
                                         'module_name' => $module_name, 
@@ -5070,4 +5076,16 @@ if (!function_exists('getFormatedCustomerAddress')) {
 
         return $address;
     }
+}
+
+function formatSmSNumber($to_number, $extension = '+1')
+{    
+    $to_number = str_replace("-", "", $to_number);
+    $to_number = str_replace(".", "", $to_number);
+    $to_number = str_replace(" ", "", $to_number);
+    $to_number = str_replace("(", "", $to_number);
+    $to_number = str_replace(")", "", $to_number);
+    //$to_number = str_replace($extension, "", $to_number);
+
+    return $to_number;
 }

@@ -1953,13 +1953,12 @@ class Debug extends MY_Controller {
         echo 'Total updated : ' . $total_updated;
     }
 
-    public function smsVonage(){
-        phpinfo();exit;
+    public function smsVonage(){        
         $this->load->helper('sms_helper');
 
-        $sms_number = '639179082622';
-        $sms_msg    = 'This is a sample sms nsmatrac usging vonage api';
-
+        //$sms_number = '8506195914';
+        $sms_number = '9179082622';
+        $sms_msg    = 'Job order: JOB-00076 has been scheduled';
         $result = smsVonage($sms_number, $sms_msg);
 
         echo "<pre>";
