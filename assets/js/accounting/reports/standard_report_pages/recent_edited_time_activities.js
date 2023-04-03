@@ -1,6 +1,6 @@
 const currUrl = window.location.href;
-const urlSplit = currUrl.split('/');
-const reportId = urlSplit[urlSplit.length - 1].includes('?') ? urlSplit[urlSplit.length - 1].split('?')[0].replace('#', '') : urlSplit[urlSplit.length - 1].replace('#', '');
+const urlSplit = currUrl.includes('?') ? currUrl.split('?')[0].split('/') : currUrl.split('/');
+const reportId = urlSplit[urlSplit.length - 1].replace('#', '');
 
 $('.date').each(function() {
     $(this).datepicker({
@@ -454,12 +454,14 @@ $('#run-report-button').on('click', function() {
     url += $('#allow-filter-billable').prop('checked') && $('#filter-billable').val() !== 'all' ? `billable=${$('#filter-billable').val()}&` : '';
     url += $('#allow-filter-memo').prop('checked') && $('#filter-memo').val().trim() !== '' ? `memo=${$('#filter-memo').val().trim()}&` : '';
 
-    url += $('#show-logo').prop('checked') ? `show-logo=1&` : '';
-    url += $('#customize-company-name').prop('checked') ? `company-name=${$('#company-name').val()}` : '';
-    url += $('#customize-report-title').prop('checked') ? `report-title=${$('#report-title').val()}` : '';
+    url += $('#show-logo').prop('checked') ? `show-logo=yes&` : '';
+    url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
+    url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
+    url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Recent/Edited Time Activities' ? `report-title=${$('#report-title').val()}&` : '';
     url += $('#show-report-period').prop('checked') ? `show-report-period=1&` : '';
-    url += $('#show-date-prepared').prop('checked') ? `show-date-prepared=1&` : '';
-    url += $('#show-time-prepared').prop('checked') ? `show-time-prepared=1&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
+    url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
     url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
     url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
 

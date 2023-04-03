@@ -298,20 +298,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
+                                        <?php 
+                                        if($receivedPayments){
+                                        foreach($receivedPayments as $receivedPayment){ ?>
+                                        <tr data-toggle="collapse" data-target="#accordion<?php echo $receivedPayment->id; ?>" class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i> <?php foreach($customers as $customer){ if($receivedPayment->customer_id == $customer->prof_id){ echo $customer->first_name.' '.$customer->last_name; } ?> <?php } ?></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
+                                        <tr data-toggle="collapse" data-target="#accordion<?php echo $receivedPayment->id; ?>" class="clickable collapse-row collapse" id="accordion<?php echo $receivedPayment->id;  ?>">
                                             <td>06/13/2022</td>
                                             <td>Invoice</td>
                                             <td></td>
                                             <td>123</td>
                                             <td>$22,544.77</td>
                                         </tr>
+                                        <?php } } ?>
                                     </tbody>
                                 </table>
                             </div>
