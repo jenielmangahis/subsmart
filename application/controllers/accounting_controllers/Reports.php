@@ -514,8 +514,6 @@ class Reports extends MY_Controller {
                     $this->page_data['sort_in'] = get('order');
                 }
 
-                $this->page_data['activities'] = $activities;
-
                 if(!empty(get('divide-by-100'))) {
                     $this->page_data['divide_by_100'] = get('divide-by-100');
                 }
@@ -534,6 +532,9 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('limit'))) {
                     $this->page_data['limit'] = get('limit');
+                    $activities = array_slice($activities, 0, intval(get('limit')));
+                } else {
+                    $activities = array_slice($activities, 0, 25);
                 }
 
                 if(!empty(get('customer'))) {
@@ -582,38 +583,54 @@ class Reports extends MY_Controller {
                     $this->page_data['memo'] = get('memo');
                 }
 
+                $this->page_data['activities'] = $activities;
+
                 if(!empty(get('show-logo'))) {
-                    $this->page_data['show_logo'] = get('show-logo');
+                    $this->page_data['show_logo'] = true;
+                    $this->page_data['company_logo'] = companyProfileImage(logged('company_id'));
                 }
 
                 $this->page_data['company_name'] = $this->page_data['clients']->business_name;
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
                 if(!empty(get('company-name'))) {
                     $this->page_data['company_name'] = get('company-name');
                 }
 
                 $this->page_data['report_title'] = 'Recent/Edited Time Activities';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
                 if(!empty(get('report-title'))) {
                     $this->page_data['report_title'] = get('report-title');
                 }
 
                 if(!empty(get('show-report-period'))) {
-                    $this->page_data['show_report_period'] = get('show-report-period');
+                    $this->page_data['show_report_period'] = false;
                 }
 
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
                 if(!empty(get('show-date-prepared'))) {
-                    $this->page_data['show_date_prepared'] = get('show-date-prepared');
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
                 }
 
                 if(!empty(get('show-time-prepared'))) {
-                    $this->page_data['show_time_prepared'] = get('show-time-prepared');
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
                 }
 
                 if(!empty(get('header-alignment'))) {
-                    $this->page_data['header_alignment'] = get('header-alignment');
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
                 }
 
                 if(!empty(get('footer-alignment'))) {
-                    $this->page_data['footer_alignment'] = get('footer-alignment');
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
                 }
             break;
         }

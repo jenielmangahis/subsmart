@@ -324,13 +324,22 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row <?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                    <?php if(!isset($show_company_name)) : ?>
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                                     </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="m-0 fw-bold">Recent/Edited Time Activities</p>
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_report_title)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0 fw-bold"><?=$report_title?></p>
                                     </div>
+                                    <?php endif; ?>
+                                    <?php if(isset($show_report_period)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0">Created/Edited: Since <?=date("F j, Y")?></p>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
@@ -407,8 +416,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="nsm-card-footer text-center">
-                                <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
+                            <div class="nsm-card-footer <?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                                <p class="m-0"><?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
@@ -418,4 +427,7 @@
     </div>
 </div>
 
+<script>
+    const companyName = "<?=$clients->business_name?>"
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
