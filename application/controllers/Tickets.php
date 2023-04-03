@@ -336,6 +336,60 @@ class Tickets extends MY_Controller
 
         if ($addQuery > 0) {
 
+            
+            $temp_items             = $this->input->post('temp_items');
+            $temp_item_type         = $this->input->post('temp_item_type');
+            $temp_quantity          = $this->input->post('temp_quantity');
+            $temp_price             = $this->input->post('temp_price');
+            $temp_tax               = $this->input->post('temp_tax');
+            $temp_total             = $this->input->post('temp_total');
+            $temp_discount          = $this->input->post('temp_discount');
+            $saveForFuture          = $this->input->post('saveForFuture');
+
+            
+            if($temp_items)
+            {
+                $b = 0;
+                foreach($temp_items as $row2){
+                    $data2['title'] = $temp_items[$b];
+                    $data2['company_id'] = $company_id;
+                    $data2['type'] = $temp_item_type[$b];
+                    $data2['qty'] = $temp_quantity[$b];
+                    $data2['price'] = $temp_price[$b];
+                    $data2['discount'] = $temp_discount[$b];
+                    $data2['tax'] = $temp_tax[$b];
+                    $data2['total'] = $temp_total[$b];
+                    $data2['added_from'] = 'Tickets';
+                    $data2['id_form '] = $addQuery;
+                    $addQuery3 = $this->estimate_model->add_estimate_temp_items($data2);
+
+                    if((int) $saveForFuture[$b] == 1)
+                    {
+                        $data3['company_id']    = $company_id;
+                        $data3['title']         = $temp_items[$b];
+                        $data3['type']          = $temp_item_type[$b];
+                        $data3['qty_order']     = $temp_quantity[$b];
+                        $data3['price']         = $temp_price[$b];
+                        $data3['retail']        = $temp_price[$b];
+                        $data3['is_active']     = 1;
+                        $addQuery4              = $this->estimate_model->add_new_items($data3);
+
+                        $data4['items_id']      = $addQuery4;
+                        $data4['qty']           = $temp_quantity[$b];
+                        $data4['cost']          = $temp_price[$b];
+                        $data4['tax']           = $temp_tax[$b];
+                        $data4['total']         = $temp_total[$b];
+                        $data4['ticket_id ']    = $addQuery;
+                        $addQuery5              = $this->tickets_model->add_ticket_items($data4);
+
+                        $deleteItem = $this->estimate_model->delete_temp_itemType($addQuery3,'Tickets');
+
+                    }
+
+                    $b++;
+                }
+            }
+
                 $item_id    = $this->input->post('item_id');
                 $item_type  = $this->input->post('item_type');
                 $quantity   = $this->input->post('quantity');

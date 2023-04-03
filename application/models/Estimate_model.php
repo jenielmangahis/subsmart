@@ -339,6 +339,18 @@ class Estimate_model extends MY_Model
         return true;
     }
 
+    public function delete_temp_itemType($id,$type)
+    {
+        $where = array(
+            'id'   => $id,
+            'added_from' => $type
+          );
+
+        $this->db->where($where);
+        $this->db->delete('temp_items');
+        return true;
+    }
+
     public function add_new_items($data)
     {
         $vendor = $this->db->insert('items', $data);
