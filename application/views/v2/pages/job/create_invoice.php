@@ -607,7 +607,7 @@
 
                 const swalResponse = await Swal.fire({
                     title: 'Invoice Created',
-                    text: 'Invoice has been created successfully for this job',
+                    text: 'Invoice has been created for this job successfully.',
                     icon: 'success',
                     showConfirmButton: false,
                     showCancelButton: true,

@@ -21,6 +21,72 @@ $('select').each(function() {
             minimumResultsForSearch: -1
         });
     }
+
+    if($(this).attr('id') === 'filter-customer') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-customer'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
+
+    if($(this).attr('id') === 'filter-employee') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-employee'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
+
+    if($(this).attr('id') === 'filter-product-service') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-item'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
@@ -417,6 +483,12 @@ $('#save-custom-report').on('click', function(e) {
             }
         }
     });
+});
+
+$('#filter-customer, #filter-product-service, #filter-employee').on('change', function() {
+    if($(this).val() !== 'all') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked');
+    }
 });
 
 $('#run-report-button').on('click', function() {
