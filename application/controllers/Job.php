@@ -3519,6 +3519,64 @@ class Job extends MY_Controller
         }
     }
 
+    public function sendCustomerJobScheduled($id) {
+        $this->load->helper(['url', 'hashids_helper']);
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('invoice_model');
+        $JOB_INFO = $this->jobs_model->get_specific_job($id);
+        $COMPANY_INFO = [
+            'where' => [
+                'company_id' => $JOB_INFO->company_id,
+            ],
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        ];
+        $COMPANY_INFO = $this->general_model->get_data_with_param($COMPANY_INFO, false);
+        $CUSTOMER_INFO = $this->AcsProfile_model->getByProfId($JOB_INFO->customer_id);
+        // ===========================================================
+        $COMPANY_LOGO = base_url("/uploads/users/business_profile/$COMPANY_INFO->id/$COMPANY_INFO->business_image");
+        $COMPANY_NUMBER = preg_replace('/^(\d{3})(\d{3})(\d{4})$/', '($1) $2-$3', $COMPANY_INFO->business_phone);
+        $COMPANY_EMAIL = $COMPANY_INFO->business_email;
+        $EMAIL_CONTENT = "";
+        $EMAIL_SUBJECT = "$COMPANY_INFO->business_name: $JOB_INFO->job_number";
+        // ===========================================================
+        $EMAIL_CONTENT .= "<div style='width: 450px;margin: 25px;'>";
+        $EMAIL_CONTENT .= "<div><center><img style='height: auto; width: 150px; margin-bottom: 10px;' src='$COMPANY_LOGO'></center></div>";
+        $EMAIL_CONTENT .= "<div><center><h2 class='SEGOE_UI_FONT'>Your Job with $COMPANY_INFO->business_name ($JOB_INFO->job_number) has been scheduled</h2></center></div>";
+        $EMAIL_CONTENT .= "<div><h4 class='SEGOE_UI_FONT' style='margin-bottom: 5px;'>WHEN</h4></div>";
+        $EMAIL_CONTENT .= "<div><span class='SEGOE_UI_FONT'>".date_format(date_create($JOB_INFO->job_start_date), 'l, M d, Y')." at $JOB_INFO->job_start_time"."</span></div>";
+        $EMAIL_CONTENT .= "<div><h4 class='SEGOE_UI_FONT' style='margin-bottom: 5px;'>ADDRESS</h4></div>";
+        $EMAIL_CONTENT .= "<div><span class='SEGOE_UI_FONT'>$JOB_INFO->mail_add, $JOB_INFO->cust_city, $JOB_INFO->cust_state $JOB_INFO->cust_zip_code</span></div>";
+        $EMAIL_CONTENT .= "<div><iframe height='250' width='100%' style='border:0;margin-top:10px;margin-bottom: 5px;' src='http://maps.google.com/maps?q=$JOB_INFO->mail_add, $JOB_INFO->cust_city, $JOB_INFO->cust_state $JOB_INFO->cust_zip_code&amp;output=embed'></iframe></div>";
+        $EMAIL_CONTENT .= "<div><h4 class='SEGOE_UI_FONT' style='margin-bottom: 5px;'>JOB DESCRIPTION</h4></div>";
+        $EMAIL_CONTENT .= "<div style='margin-bottom: 3px;'><span class='SEGOE_UI_FONT'>$JOB_INFO->job_type - $JOB_INFO->tags</span></div>";
+        $EMAIL_CONTENT .= "<div><span class='SEGOE_UI_FONT' style='color: gray;'>$JOB_INFO->job_description</span></div>";
+        $EMAIL_CONTENT .= "<br>";
+        $EMAIL_CONTENT .= "<br>";
+        $EMAIL_CONTENT .= "<br>";
+        $EMAIL_CONTENT .= "<div><center class='SEGOE_UI_FONT' style='margin-bottom: 8px;'>$COMPANY_NUMBER | $COMPANY_EMAIL</center></div>";
+        $EMAIL_CONTENT .= "<div><center class='SEGOE_UI_FONT' style='text-decoration-line: underline;'>$COMPANY_INFO->street, $COMPANY_INFO->city, $COMPANY_INFO->state $COMPANY_INFO->postal_code</center></div>";
+        $EMAIL_CONTENT .= "</div>";
+        $EMAIL_CONTENT .= "<style>.SEGOE_UI_FONT {font-family: segoe UI;}</style>";
+        $RECIPIENT = $CUSTOMER_INFO->email;
+        $EMAILER = email__getInstance(['subject' => $EMAIL_SUBJECT]);
+        $EMAILER->FromName = "$COMPANY_INFO->business_name";
+        $EMAILER->addAddress($RECIPIENT, $RECIPIENT);
+        $EMAILER->isHTML(true);
+        $EMAILER->Subject = $EMAIL_SUBJECT;
+        $EMAILER->Body = $EMAIL_CONTENT;
+        $EMAILER->Send();
+        // echo "<pre>";
+        // print_r ($JOB_INFO);
+        // echo "</pre>";
+        // echo "<pre>";
+        // print_r ($COMPANY_INFO);
+        // echo "</pre>";
+        // echo "<pre>";
+        // print_r ($CUSTOMER_INFO);
+        // echo "</pre>";
+    }
 
     public function create_job_invoice_pdf($job_id)
     {

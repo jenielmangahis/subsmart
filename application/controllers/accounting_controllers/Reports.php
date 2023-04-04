@@ -450,8 +450,12 @@ class Reports extends MY_Controller {
                         'created_by' => '',
                         'last_modified' => $timeActivity->updated_at,
                         'last_modified_by' => '',
+                        'customer_id' => $timeActivity->customer_id,
                         'customer' => $customerName,
+                        'employee_id' => $timeActivity->name_id,
+                        'employee_key' => $timeActivity->name_key,
                         'employee' => $employeeName,
+                        'item_id' => $timeActivity->service_id,
                         'product_service' => $productName,
                         'memo_desc' => $timeActivity->description,
                         'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
@@ -538,41 +542,132 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty(get('customer'))) {
+                    $this->page_data['filter_customer'] = new stdClass();
+                    $this->page_data['filter_customer']->id = get('customer');
                     if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
-                        $this->page_data['filter_customer'] = new stdClass();
-                        $this->page_data['filter_customer']->id = get('customer');
                         $customer = $this->accounting_customers_model->get_by_id(get('customer'));
                         $customerName = $customer->first_name . ' ' . $customer->last_name;
                         $this->page_data['filter_customer']->name = $customerName;
+
+                        $filters = [
+                            'customer_id' => get('customer')
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
                     } else {
-                        $this->page_data['filter_customer'] = get('customer');
+                        $this->page_data['filter_customer']->name = ucwords(str_replace('-', ' ', get('customer')));
+
+                        if(get('customer') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
                     }
                 }
 
                 if(!empty(get('product-service'))) {
                     $this->page_data['product_service'] = new stdClass();
                     $this->page_data['product_service']->id = get('product-service');
-                    $item = $this->items_model->getByID(get('product-service'));
-                    $this->page_data['product_service']->name = $item->title;
+                    if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID(get('product-service'));
+                        $this->page_data['product_service']->name = $item->title;
+
+                        $filters = [
+                            'item_id' => get('product-service')
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['product_service']->name = ucwords(str_replace('-', ' ', get('product-service')));
+
+                        if(get('product-service') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
                 }
 
                 if(!empty(get('employee'))) {
                     $this->page_data['employee'] = new stdClass();
                     $this->page_data['employee']->id = get('employee');
-                    $employee = $this->users_model->getUserByID(get('employee'));
-                    $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName;
+                    if(!in_array(get('employee'), ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', get('employee'));
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                                $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName . ' - Employee';
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                                $this->page_data['employee']->name = $vendor->display_name . ' - Vendor';
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['employee']->name = ucwords(str_replace('-', ' ', get('employee')));
+
+                        if(get('employee') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
                 }
 
                 if(!empty(get('create-date'))) {
                     $this->page_data['create_date'] = get('create-date');
                     $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
                     $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
                 }
 
                 if(!empty(get('last-modified-date'))) {
                     $this->page_data['last_modified_date'] = get('last-modified-date');
                     $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
                     $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
                 }
 
                 if(!empty(get('billable'))) {

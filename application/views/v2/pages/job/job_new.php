@@ -1606,7 +1606,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title FINISH_MODAL_TITLE" style="font-size: 17px;">Finish Job</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                <i class="bx bx-fw bx-x m-0 text-muted exit_finish_modal" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body FINISH_MODAL_BODY">
                 <form id="update_status_to_closed">
@@ -1636,11 +1636,17 @@
                                 <script type="text/javascript">
                                     $('.SEND_INVOICE').on('click', function(event) {
                                         event.preventDefault();
-                                        $('.FINISH_MODAL_TITLE').text('Invoice');
+                                        $('.FINISH_MODAL_TITLE').text('Invoice Preview');
                                         $('.FINISH_MODAL_BODY').text('Loading Invoice...');
                                         $('.FINISH_MODAL_BODY').load('<?= base_url('invoice/genview/').$INVOICE_ID_PREVIEW; ?> .invoice-print', function(){
                                             if ($('.FINISH_MODAL_BODY').text().length <= 20) {
-                                                $('.FINISH_MODAL_BODY').html('This job doesn`t have an invoice yet. <a href="<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>">Create Initial Invoice.</a>');
+                                                $('.FINISH_MODAL_BODY').html(`Unable to Send and Preview an Invoice. This job doesn't have an invoice yet, <a id="CREATE_INVOICE_1" href="#">Create Initial Invoice.</a>`);
+                                                $('#CREATE_INVOICE_1').click(function(event) {
+                                                    event.preventDefault();
+                                                    window.open('<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
+                                                    $('.FINISH_MODAL_BODY').html(`After creating an Invoice, <a href="#" onclick="window.location.reload();">Refresh this page</a> to load invoice preview.`);
+                                                    $('.exit_finish_modal').hide();
+                                                });
                                             } else {
                                                 $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
                                                 $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>");
