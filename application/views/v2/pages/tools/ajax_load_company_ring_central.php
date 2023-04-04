@@ -12,7 +12,7 @@
     <div class="input-container" style="height: 400px; overflow: hidden scroll;">
         <div class="row">
             <div class="col-12">
-                <label class="content-subtitle">Ring central api account details.</label>
+                <label class="content-subtitle">Ring Central API account details.</label>
             </div>
         </div>
         <div class="row mb-5 mt-5">
@@ -60,7 +60,7 @@
     <div class="input-container" style="height: 400px; overflow: hidden scroll;">
         <div class="row">
             <div class="col-12">
-                <label class="content-subtitle">Enter your ring central api account details.</label>
+                <label class="content-subtitle">Enter your Ring Central API account details.</label>
             </div>
         </div>
         <div class="row mb-5 mt-5">
@@ -108,7 +108,7 @@
     <div class="input-container" style="height: 400px; overflow: hidden scroll;">
         <div class="row">
             <div class="col-12">
-                <label class="content-subtitle">Enter your ring central api account details.</label>
+                <label class="content-subtitle">Enter your Ring Central API account details.</label>
             </div>
         </div>
         <div class="row mb-5 mt-5">

@@ -527,12 +527,12 @@
                         <hr>
                     </div>
                     <div class="col-12">
-                        <h4 class="fw-bold">SMS and Phone Call</h4>
+                        <h4 class="fw-bold">SMS</h4>
                     </div>
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Please select your preferred sms and phone call api to be used.
+                            Please select your preferred sms api to be used.
                         </div>
                     </div>
 
@@ -548,7 +548,7 @@
                                         </div>
                                         <label class="content-subtitle mb-2"></label>
                                         <label class="nsm-subtitle d-block">
-                                            Send SMS and make phone call via ring central API.
+                                            Send SMS and make phone call via Ring Central API.
                                         </label>
                                     </div>
                                     <div class="col-12 text-center">
@@ -556,11 +556,42 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input" type="checkbox" name="switch_ring_central" id="switch_ring_central" <?= $default_sms_api == 'ring_central' ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="switch_ring_central">Use Default SMS and Call Tool</label>
+                                                    <label class="form-check-label" for="switch_ring_central">Use Default SMS Tool</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <button type="button" class="nsm-button primary" id="btn-setup-ring-central">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="button">
+                            <div class="nsm-card-content h-100">
+                                <div class="row h-100 align-content-between">
+                                    <div class="col-12 text-center mb-3">
+                                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/vonage.png">
+
+                                        <div class="nsm-card-title">
+                                            <span>Vonage</span>
+                                        </div>
+                                        <label class="content-subtitle mb-2"></label>
+                                        <label class="nsm-subtitle d-block">
+                                            Send SMS and make phone call via Vonage API.
+                                        </label>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input" type="checkbox" name="switch_vonage" id="switch_vonage" <?= $default_sms_api == 'vonage' ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="switch_vonage">Use Default SMS Tool</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="nsm-button primary" id="btn-setup-vonage">Manage</button>
                                     </div>
                                 </div>
                             </div>
@@ -815,6 +846,8 @@
                             api_plaid();
                         }else if( $('#auth-module').val() == 'braintree' ){
                             api_braintree();
+                        }else if( $('#auth-module').val() == 'vonage' ){
+                            api_vonage();
                         }
                     } else {
                         Swal.fire({
@@ -844,6 +877,28 @@
 
             showLoader(_container);
             $("#setup_ring_central").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(result) {
+                    _container.html(result);
+                }
+            });
+        }
+
+        $("#btn-setup-vonage").on("click", function(){
+            let api_module = 'vonage';
+            generate_auth_key(api_module);
+            
+        });
+
+        function api_vonage(){
+            let _container = $("#vonage-container");
+            let url = "<?php echo base_url(); ?>tools/_get_vonage_credentials";
+
+            showLoader(_container);
+            $("#setup_vonage").modal("show");
 
             $.ajax({
                 type: "POST",
@@ -1027,7 +1082,47 @@
 
                         Swal.fire({
                             title: 'Update Successful!',
-                            text: "Your ring central account was successfully saved.",
+                            text: "Your Ring Central account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }                    
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $("#form-vonage-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_vonage";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        $("#setup_vonage").modal('hide');
+
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your Vonage account was successfully saved.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -1074,7 +1169,41 @@
 
                         $('#switch_ring_central').prop("checked", false);
                     }else{
-                        $('#switch_twilio').prop("checked", false);
+                        //$('#switch_twilio').prop("checked", false);
+                        $('#switch_vonage').prop("checked", false);
+                    }
+                },
+            });
+        });
+
+        $('#switch_vonage').on('change', function(){
+            var url = "<?php echo base_url(); ?>tools/_update_company_default_sms_api";
+
+            if ($(this).is(':checked')) {
+                var default_sms = 'vonage';
+            }else{
+                var default_sms = '';
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: {default_sms:default_sms},
+                success: function(result) {
+                    if (!result.is_success) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+
+                        $('#switch_vonage').prop("checked", false);
+                    }else{
+                        //$('#switch_twilio').prop("checked", false);
+                        $('#switch_ring_central').prop("checked", false);
                     }
                 },
             });
@@ -1107,6 +1236,7 @@
                         $('#switch_twilio').prop("checked", false);
                     }else{
                         $('#switch_ring_central').prop("checked", false);
+                        $('#switch_vonage').prop("checked", false);
                     }
                 },
             });
@@ -1354,6 +1484,15 @@
         $('.form-edit-values').show();
     });
     $(document).on('click', '.btn-rc-cancel', function(){
+        $('.form-view-values').show();
+        $('.form-edit-values').hide();
+    });
+
+    $(document).on('click', '.btn-vonage-edit', function(){
+        $('.form-view-values').hide();
+        $('.form-edit-values').show();
+    });
+    $(document).on('click', '.btn-vonage-cancel', function(){
         $('.form-view-values').show();
         $('.form-edit-values').hide();
     });

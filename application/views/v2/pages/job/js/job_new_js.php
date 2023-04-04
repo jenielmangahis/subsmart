@@ -215,7 +215,7 @@ $("#attachment-file").change(function() {
                             if ($overlay) $overlay.style.display = "none";
                             sucess_add_job(data);
                             if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
-                                $.get("<?= base_url('job/sendCustomerInvoiceToEmail/').$jobs_data->id; ?>"+data.job_id); 
+                                $.get("<?= base_url('job/sendCustomerJobScheduled/').$jobs_data->id; ?>"+data.job_id); 
                             }
                         }else{
                             error('Error',data.msg,'error');

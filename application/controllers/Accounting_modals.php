@@ -10782,6 +10782,16 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'filter-report-customer' :
+                $return = $this->get_customer_choices($return, $search, 'report');
+            break;
+            case 'filter-report-employee' :
+                $return = $this->get_employee_choices($return, $search, 'report');
+                $return = $this->get_vendor_choices($return, $search, 'report');
+            break;
+            case 'filter-report-item' :
+                $return = $this->get_items_choices($return, $search, 'report');
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -10892,6 +10902,9 @@ class Accounting_modals extends MY_Controller
             $choices['results'] = [];
         }
         foreach ($vendors as $vendor) {
+            if($field === 'report') {
+                $vendor->display_name .= ' - Vendor';
+            }
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
                 if ($stripos !== false) {
@@ -10902,9 +10915,13 @@ class Accounting_modals extends MY_Controller
                             'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
                         ];
                     } else {
+                        $id = $vendor->id;
+                        if($field === 'report') {
+                            $id = 'vendor-'.$vendor->id;
+                        }
                         $searched = substr($vendor->display_name, $stripos, strlen($search));
                         $choices['results'][] = [
-                            'id' => $vendor->id,
+                            'id' => $id,
                             'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
                         ];
                     }
@@ -10921,8 +10938,13 @@ class Accounting_modals extends MY_Controller
                         'text' => $vendor->display_name
                     ];
                 } else {
+                    $id = $vendor->id;
+                    if($field === 'report') {
+                        $id = 'vendor-'.$vendor->id;
+                    }
+
                     $choices['results'][] = [
-                        'id' => $vendor->id,
+                        'id' => $id,
                         'text' => $vendor->display_name
                     ];
                 }
@@ -10938,6 +10960,23 @@ class Accounting_modals extends MY_Controller
 
         if(!isset($choices['results'])) {
             $choices['results'] = [];
+        }
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'not-specified',
+                'text' => 'Not Specified'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'specified',
+                'text' => 'Specified'
+            ];
         }
         foreach ($customers as $customer) {
             $name = $customer->first_name . ' ' . $customer->last_name;
@@ -10992,16 +11031,59 @@ class Accounting_modals extends MY_Controller
         if(!isset($choices['results'])) {
             $choices['results'] = [];
         }
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'not-specified',
+                'text' => 'Not Specified'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'specified',
+                'text' => 'Specified'
+            ];
+        }
+
         foreach ($employees as $employee) {
             $name = $employee->FName . ' ' . $employee->LName;
+            if($field === 'report') {
+                $name .= ' - Employee';
+            }
             if ($search !== null && $search !== '') {
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
                     $searched = substr($name, $stripos, strlen($search));
-                    $choices['results'][] = [
-                        'id' => 'employee-'.$employee->id,
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                    ];
+                    $name = str_replace($searched, "<strong>$searched</strong>", $name);
+                    // $choices['results'][] = [
+                    //     'id' => 'employee-'.$employee->id,
+                    //     'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                    // ];
+
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                        if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
+                            $choices['results'][array_key_last($choices['results'])]['text'] = 'Employees';
+                        } else {
+                            $choices['results'][]['text'] = 'Employees';
+                        }
+                        $choices['results'][array_key_last($choices['results'])]['children'][] =  [
+                            'id' => 'employee-'.$employee->id,
+                            'text' => $name
+                        ];
+                    } else {
+                        $id = $employee->id;
+                        if($field === 'report') {
+                            $id = 'employee-'.$employee->id;
+                        }
+                        $choices['results'][] = [
+                            'id' => $id,
+                            'text' => $name
+                        ];
+                    }
                 }
             } else {
                 if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
@@ -11015,8 +11097,12 @@ class Accounting_modals extends MY_Controller
                         'text' => $name
                     ];
                 } else {
+                    $id = $employee->id;
+                    if($field === 'report') {
+                        $id = 'employee-'.$employee->id;
+                    }
                     $choices['results'][] = [
-                        'id' => $employee->id,
+                        'id' => $id,
                         'text' => $name
                     ];
                 }
@@ -11361,12 +11447,29 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_items_choices($choices, $search = null)
+    private function get_items_choices($choices, $search = null, $field = '')
     {
         $filters = [
             'status' => [1]
         ];
         $items = $this->items_model->getItemsWithFilter($filters);
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'not-specified',
+                'text' => 'Not Specified'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'specified',
+                'text' => 'Specified'
+            ];
+        }
 
         foreach($items as $item) {
             if($search !== null && $search !== '') {
