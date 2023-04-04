@@ -324,7 +324,11 @@ class Pages extends MYF_Controller {
                     'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
                 ]);
 
-                $braintree_token = $gateway->ClientToken()->generate();
+                try {
+                	$braintree_token = $gateway->ClientToken()->generate();	
+                } catch (Exception $e) {
+                	$braintree_token = '';
+                }
             }
 
     		$job_id = $job->id;

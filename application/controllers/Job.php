@@ -1027,7 +1027,12 @@ class Job extends MY_Controller
                     'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
                 ]);
 
-                $braintree_token = $gateway->ClientToken()->generate();
+                try {
+                    $braintree_token = $gateway->ClientToken()->generate();    
+                } catch (Exception $e) {
+                    $braintree_token = '';   
+                }
+                
             }
 
             $this->page_data['braintree_token'] = $braintree_token;
