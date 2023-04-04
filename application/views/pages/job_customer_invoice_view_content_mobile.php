@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">                
-                <div class="card-body">
+                <div class="card-body" style="padding:1.25rem 1.25rem 0 1.25rem !important;">
                     <div class="row mt-3">
                         <div class="col-12" style="padding-left: 2px;">
                             <?php if($company_info->business_image != "" ): ?>
