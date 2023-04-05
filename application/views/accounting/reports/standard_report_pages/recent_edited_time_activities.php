@@ -206,119 +206,118 @@
                                                 <div class="row">
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-activity-date" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-activity-date" class="form-check-input" <?=isset($columns) && in_array('Activity Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-activity-date" class="form-check-label">Activity Date</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-create-date" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-create-date" class="form-check-input" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-create-date" class="form-check-label">Create Date</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-created-by" class="form-check-label">Created By</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-last-modified" class="form-check-label">Last Modified</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-customer" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-customer" class="form-check-input" <?=isset($columns) && in_array('Customer', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-customer" class="form-check-label">Customer</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-employee" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-employee" class="form-check-input" <?=isset($columns) && in_array('Employee', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-employee" class="form-check-label">Employee</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-product-service" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-product-service" class="form-check-input" <?=isset($columns) && in_array('Product/Service', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-product-service" class="form-check-label">Product/Service</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-memo-desc" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-memo-desc" class="form-check-input" <?=isset($columns) && in_array('Memo/Description', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-memo-desc" class="form-check-label">Memo/Description</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-rates" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-rates" class="form-check-input" <?=isset($columns) && in_array('Rates', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-rates" class="form-check-label">Rates</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-duration" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-duration" class="form-check-input" <?=isset($columns) && in_array('Duration', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-duration" class="form-check-label">Duration</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-start-time" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-start-time" class="form-check-input" <?=isset($columns) && in_array('Start Time', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-start-time" class="form-check-label">Start Time</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-end-time" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-end-time" class="form-check-input" <?=isset($columns) && in_array('End Time', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-end-time" class="form-check-label">End Time</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-break" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-break" class="form-check-input" <?=isset($columns) && in_array('Break', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-break" class="form-check-label">Break</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-taxable" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-taxable" class="form-check-input" <?=isset($columns) && in_array('Taxable', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-taxable" class="form-check-label">Taxable</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-billable" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-billable" class="form-check-input" <?=isset($columns) && in_array('Billable', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-billable" class="form-check-label">Billable</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-invoice-date" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-invoice-date" class="form-check-input" <?=isset($columns) && in_array('Invoice Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-invoice-date" class="form-check-label">Invoice Date</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-amount" class="form-check-input" checked>
+                                                            <input type="checkbox" name="col_chk" id="col-amount" class="form-check-input" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-amount" class="form-check-label">Amount</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
                                             </ul>
                                         </div>
                                     </div>
@@ -346,48 +345,48 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
-                                            <td data-name="Activity Date">ACTIVITY DATE</td>
-                                            <td data-name="Create Date">CREATE DATE</td>
-                                            <td data-name="Created By">CREATED BY</td>
-                                            <td data-name="Last Modified">LAST MODIFIED</td>
-                                            <td data-name="Last Modified By">LAST MODIFIED BY</td>
-                                            <td data-name="Customer">CUSTOMER</td>
-                                            <td data-name="Employee">EMPLOYEE</td>
-                                            <td data-name="Product/Service">PRODUCT/SERVICE</td>
-                                            <td data-name="Memo/Description">MEMO/DESCRIPTION</td>
-                                            <td data-name="Rates">RATES</td>
-                                            <td data-name="Duration">DURATION</td>
-                                            <td data-name="Start Time">START TIME</td>
-                                            <td data-name="End Time">END TIME</td>
-                                            <td data-name="Break">BREAK</td>
-                                            <td data-name="Taxable">TAXABLE</td>
-                                            <td data-name="Billable">BILLABLE</td>
-                                            <td data-name="Invoice Date">INVOICE DATE</td>
-                                            <td data-name="Amount">AMOUNT</td>
+                                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>>ACTIVITY DATE</td>
+                                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
+                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
+                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
+                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
+                                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
+                                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
+                                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>>PRODUCT/SERVICE</td>
+                                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
+                                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>>RATES</td>
+                                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>>DURATION</td>
+                                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>>START TIME</td>
+                                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>>END TIME</td>
+                                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>>BREAK</td>
+                                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>>TAXABLE</td>
+                                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>>BILLABLE</td>
+                                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if(count($activities) > 0) : ?>
                                         <?php foreach($activities as $activity) : ?>
                                         <tr>
-                                            <td><?=$activity['activity_date']?></td>
-                                            <td><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
-                                            <td><?=$activity['created_by']?></td>
-                                            <td><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
-                                            <td><?=$activity['last_modified_by']?></td>
-                                            <td><?=$activity['customer']?></td>
-                                            <td><?=$activity['employee']?></td>
-                                            <td><?=$activity['product_service']?></td>
-                                            <td><?=$activity['memo_desc']?></td>
-                                            <td><?=$activity['rates']?></td>
-                                            <td><?=$activity['duration']?></td>
-                                            <td><?=$activity['start_time']?></td>
-                                            <td><?=$activity['end_time']?></td>
-                                            <td><?=$activity['break']?></td>
-                                            <td><?=$activity['taxable']?></td>
-                                            <td><?=$activity['billable']?></td>
-                                            <td><?=$activity['invoice_date']?></td>
-                                            <td><?=$activity['amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['activity_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$activity['created_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$activity['last_modified_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$activity['customer']?></td>
+                                            <td <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$activity['employee']?></td>
+                                            <td <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$activity['product_service']?></td>
+                                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$activity['memo_desc']?></td>
+                                            <td <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$activity['rates']?></td>
+                                            <td <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$activity['duration']?></td>
+                                            <td <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['start_time']?></td>
+                                            <td <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['end_time']?></td>
+                                            <td <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$activity['break']?></td>
+                                            <td <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$activity['taxable']?></td>
+                                            <td <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$activity['billable']?></td>
+                                            <td <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['invoice_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$activity['amount']?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                         <?php else : ?>

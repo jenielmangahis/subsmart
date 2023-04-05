@@ -176,7 +176,36 @@ $('#run-report').on('click', function(e) {
     url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
     url += filterDate !== 'all-dates' ? `from=${$('#filter-activity-date-from').val().replaceAll('/', '-')}&to=${$('#filter-activity-date-to').val().replaceAll('/', '-')}&` : '';
     url += sortBy !== 'default' ? `column=${sortBy}&` : '';
-    url += sortIn !== 'asc' ? `order=${sortIn}` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
+    url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
+    url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
+    url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
+    url += $('#limit').val() !== '25' ? `limit=${$('#limit').val()}&` : '';
+
+    url += $('#allow-filter-customer').prop('checked') && $('#filter-customer').val() !== 'all' ? `customer=${$('#filter-customer').val()}&` : '';
+    url += $('#allow-filter-product-service').prop('checked') && $('#filter-product-service').val() !== 'all' ? `product-service=${$('#filter-product-service').val()}&` : '';
+    url += $('#allow-filter-employee').prop('checked') && $('#filter-employee').val() !== 'all' ? `employee=${$('#filter-employee').val()}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date=${$('#filter-create-date').val()}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-from=${$('#filter-create-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-to=${$('#filter-create-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date=${$('#filter-last-modified-date').val()}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-from=${$('#filter-last-modified-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-to=${$('#filter-last-modified-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-billable').prop('checked') && $('#filter-billable').val() !== 'all' ? `billable=${$('#filter-billable').val()}&` : '';
+    url += $('#allow-filter-memo').prop('checked') && $('#filter-memo').val().trim() !== '' ? `memo=${$('#filter-memo').val().trim()}&` : '';
+
+    url += $('#show-logo').prop('checked') ? `show-logo=yes&` : '';
+    url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
+    url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
+    url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Recent/Edited Time Activities' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-period').prop('checked') ? `show-report-period=1&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
+    url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
+    url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
+    url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
@@ -335,6 +364,7 @@ $('#filter-create-date, #filter-last-modified-date').on('change', function() {
     $(this).parent().prev().find('input[type="checkbox"]').prop('checked', true);
 
     if($(this).val() === 'all-dates') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
         $(this).parent().next().next().remove();
         $(this).parent().next().remove();
     } else {
@@ -487,7 +517,25 @@ $('#save-custom-report').on('click', function(e) {
 
 $('#filter-customer, #filter-product-service, #filter-employee').on('change', function() {
     if($(this).val() !== 'all') {
-        $(`#allow-${$(this).attr('id')}`).prop('checked');
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+    }
+});
+
+$('#filter-billable').on('change', function() {
+    if($(this).val() !== 'all') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+    }
+});
+
+$('#filter-memo').on('change', function() {
+    if($(this).val().trim() !== '') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
     }
 });
 
@@ -513,6 +561,15 @@ $('#run-report-button').on('click', function() {
     url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
     url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
     url += $('#limit').val() !== '25' ? `limit=${$('#limit').val()}&` : '';
+
+    var columns = [];
+    $('input[name="select_columns"]:checked').each(function() {
+        columns.push($(this).next().text().trim());
+    });
+
+    if(columns.length < $('#reports-table thead tr td:visible').length) {
+        url += `columns=${columns}`;
+    }
 
     url += $('#allow-filter-customer').prop('checked') && $('#filter-customer').val() !== 'all' ? `customer=${$('#filter-customer').val()}&` : '';
     url += $('#allow-filter-product-service').prop('checked') && $('#filter-product-service').val() !== 'all' ? `product-service=${$('#filter-product-service').val()}&` : '';

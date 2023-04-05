@@ -24,7 +24,7 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
-        <li onclick="location.href='<?php echo url('inventor/import') ?>'">
+        <li onclick="location.href='<?php echo url('inventory/import') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-import"></i>
             </div>
@@ -95,7 +95,7 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('inventor/import') ?>'">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('inventory/import') ?>'">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
                             <button type="button" class="nsm-button export-items">

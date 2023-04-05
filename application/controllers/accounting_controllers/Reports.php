@@ -444,6 +444,85 @@ class Reports extends MY_Controller {
 
                     $total = $hr * $price;
 
+                    $rates = number_format(floatval($timeActivity->hourly_rate), 2);
+                    $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
+                    if(!empty(get('divide-by-100'))) {
+                        $rates = number_format(floatval($rates) / 100, 2);
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $rates = number_format(floatval($rates), 0);
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = '('.$rates.')';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = $rates.'-';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($rates, 0, 1) === '-') {
+                                $rates = '<span class="text-danger">'.$rates.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rates, 0, 1) === '(' && substr($rates, -1) === ')') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rates, -1) === '-') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
                         'create_date' => $timeActivity->created_at,
@@ -458,7 +537,7 @@ class Reports extends MY_Controller {
                         'item_id' => $timeActivity->service_id,
                         'product_service' => $productName,
                         'memo_desc' => $timeActivity->description,
-                        'rates' => number_format(floatval($timeActivity->hourly_rate), 2),
+                        'rates' => $rates,
                         'duration' => substr($timeActivity->time, 0, -3),
                         'start_time' => substr($timeActivity->start_time, 0, -3),
                         'end_time' => substr($timeActivity->end_time, 0, -3),
@@ -466,7 +545,7 @@ class Reports extends MY_Controller {
                         'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
                         'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
                         'invoice_date' => '',
-                        'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
+                        'amount' => $timeActivity->billable === '1' ? $amount : ''
                     ];
                 }
 
@@ -486,7 +565,7 @@ class Reports extends MY_Controller {
                 }
 
                 $sort = [
-                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'activity_date',
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'last_modified',
                     'order' => empty(get('order')) ? 'asc' : 'desc'
                 ];
 
@@ -539,6 +618,11 @@ class Reports extends MY_Controller {
                     $activities = array_slice($activities, 0, intval(get('limit')));
                 } else {
                     $activities = array_slice($activities, 0, 25);
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
                 }
 
                 if(!empty(get('customer'))) {
@@ -672,10 +756,26 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('billable'))) {
                     $this->page_data['billable'] = get('billable');
+
+                    $filters = [
+                        'billable' => get('billable')
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return $v['billable'] === ucfirst($filters['billable']);
+                    }, ARRAY_FILTER_USE_BOTH);
                 }
 
                 if(!empty(get('memo'))) {
                     $this->page_data['memo'] = get('memo');
+
+                    $filters = [
+                        'memo' => get('memo')
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
                 }
 
                 $this->page_data['activities'] = $activities;
