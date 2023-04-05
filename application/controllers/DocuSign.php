@@ -1622,9 +1622,13 @@ SQL;
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
     {
         $companyId = logged('company_id');
-        $this->db->where('id', $companyId);
+        $this->db->where('company_id', $companyId);
+        $this->db->select('business_name, address');
+        $company = $this->db->get('business_profile')->row();
+
+        /*$this->db->where('id', $companyId);
         $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();
+        $company = $this->db->get('clients')->row();*/
 
         $mail = email__getInstance(['subject' => $envelope['subject'], 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
