@@ -671,8 +671,16 @@ class Events extends MY_Controller
             'amount' => 0,
             'timezone' => $_POST['TIMEZONE'],
         );
-
-        $EVENT_ID = $this->general->add_return_id($DATA, 'events');
+        if( $_POST['EVENT_ID'] > 0 ){
+            $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
+            if( $event ){
+                $EVENT_ID = $event->id;
+                $this->event_model->update($_POST['EVENT_ID'],$DATA);                
+            }
+        }else{
+            $EVENT_ID = $this->general->add_return_id($DATA, 'events');    
+        }
+        
 
         //SMS Notification
         foreach($_POST['EMPLOYEE_ID'] as $uid){

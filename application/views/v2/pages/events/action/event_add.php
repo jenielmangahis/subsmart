@@ -161,6 +161,7 @@
     </div> -->
     <form method="POST" name="myform" id="ADD_EVENT_FORM">
         <input type="hidden" id="redirect-calendar" value="<?php echo $redirect_calendar; ?>">
+        <input type="hidden" name="eid" value="<?= isset($jobs_data) ? $jobs_data->id : ''; ?>" id="eid">
         <div class="col-lg-12 mb-3">
             <div class="row g-3">
                 <div class="col-lg-4">
@@ -229,7 +230,7 @@
                                             <?php foreach ($color_settings as $color): ?>
                                             <li>
                                                 <a data-color="<?php echo $color->color_code; ?>" style="background-color: <?php echo $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?php echo $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?php echo $color->color_name; ?>">
-                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; } ?>
                                                 </a>
                                             </li>
                                             <?php endforeach; ?>
@@ -487,6 +488,7 @@ $('#ADD_EVENT_FORM').submit(function (event) {
     var EVENT_TAG = $("#event_tags_option").val();
     var EVENT_DESCRIPTION = $(".EVENT_DESCRIPTION").val();
     var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").text();
+    var EVENT_ID = $("#eid").val();
     $.post("<?php echo base_url('events/event_save'); ?>", {
         FROM_DATE: FROM_DATE,
         FROM_TIME: FROM_TIME,
@@ -503,6 +505,7 @@ $('#ADD_EVENT_FORM').submit(function (event) {
         EVENT_TAG: EVENT_TAG,
         EVENT_DESCRIPTION: EVENT_DESCRIPTION,
         TOTAL_ITEM_AMOUNT: TOTAL_ITEM_AMOUNT,
+        EVENT_ID: EVENT_ID
     }).done(function (data) {
         Swal.fire({
             icon: 'success',
