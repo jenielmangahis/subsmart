@@ -1660,8 +1660,7 @@ SQL;
         ];
 
         $message = strtr($template, $data);
-        $message = str_replace('Sincerely,', '', $message);
-
+        
         $mail->MsgHTML($message);
         $mail->addAddress($recipient['email']);
         $isSent = $mail->send();
