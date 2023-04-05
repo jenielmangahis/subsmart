@@ -294,7 +294,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-activity-date">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-activity-date" <?=isset($columns) && in_array('Activity Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-activity-date">
                                                                 Activity Date
                                                             </label>
@@ -302,7 +302,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-create-date">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-create-date" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-create-date">
                                                                 Create Date
                                                             </label>
@@ -310,7 +310,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-created-by">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-created-by" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-created-by">
                                                                 Created By
                                                             </label>
@@ -318,7 +318,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-last-modified">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-last-modified" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-last-modified">
                                                                 Last Modified
                                                             </label>
@@ -326,7 +326,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-last-modified-by">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-last-modified-by" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-last-modified-by">
                                                                 Last Modified By
                                                             </label>
@@ -334,7 +334,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-customer">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-customer" <?=isset($columns) && in_array('Customer', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-customer">
                                                                 Customer
                                                             </label>
@@ -342,7 +342,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-employee">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-employee" <?=isset($columns) && in_array('Employee', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-employee">
                                                                 Employee
                                                             </label>
@@ -350,7 +350,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-product-service">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-product-service" <?=isset($columns) && in_array('Product/Service', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-product-service">
                                                                 Product/Service
                                                             </label>
@@ -358,7 +358,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-memo-description">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-memo-description" <?=isset($columns) && in_array('Memo/Description', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-memo-description">
                                                                 Memo/Description
                                                             </label>
@@ -366,7 +366,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-rates">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-rates" <?=isset($columns) && in_array('Rates', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-rates">
                                                                 Rates
                                                             </label>
@@ -374,7 +374,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-duration">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-duration" <?=isset($columns) && in_array('Duration', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-duration">
                                                                 Duration
                                                             </label>
@@ -382,7 +382,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-start-time">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-start-time" <?=isset($columns) && in_array('Start Time', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-start-time">
                                                                 Start Time
                                                             </label>
@@ -390,7 +390,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-end-time">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-end-time" <?=isset($columns) && in_array('End Time', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-end-time">
                                                                 End Time
                                                             </label>
@@ -398,7 +398,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-break">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-break" <?=isset($columns) && in_array('Break', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-break">
                                                                 Break
                                                             </label>
@@ -406,7 +406,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-taxable">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-taxable" <?=isset($columns) && in_array('Taxable', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-taxable">
                                                                 Taxable
                                                             </label>
@@ -414,7 +414,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-billable">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-billable" <?=isset($columns) && in_array('Billable', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-billable">
                                                                 Billable
                                                             </label>
@@ -422,7 +422,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-invoice-date">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-invoice-date" <?=isset($columns) && in_array('Invoice Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-invoice-date">
                                                                 Invoice Date
                                                             </label>
@@ -430,7 +430,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" checked type="checkbox" name="select_columns" value="1" id="select-amount">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-amount" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-amount">
                                                                 Amount
                                                             </label>
@@ -527,7 +527,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_create_date" id="filter-create-date" class="nsm-field form-control">
-                                                    <option value="all-dates" <?=empty($create_date) || $create_date === 'all' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="all-dates" <?=empty($create_date) || $create_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
                                                     <option value="custom" <?=$create_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                     <option value="today" <?=$create_date === 'today' ? 'selected' : ''?>>Today</option>
                                                     <option value="this-week" <?=$create_date === 'this-week' ? 'selected' : ''?>>This Week</option>
@@ -579,7 +579,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_last_modified_date" id="filter-last-modified-date" class="nsm-field form-control">
-                                                    <option value="all-dates" <?=empty($last_modified_date) || $last_modified_date === 'all' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="all-dates" <?=$last_modified_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
                                                     <option value="custom" <?=$last_modified_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                     <option value="today" <?=$last_modified_date === 'today' ? 'selected' : ''?>>Today</option>
                                                     <option value="this-week" <?=$last_modified_date === 'this-week' ? 'selected' : ''?>>This Week</option>
@@ -601,7 +601,7 @@
                                                     <option value="last-quarter-to-date" <?=$last_modified_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
                                                     <option value="last-year" <?=$last_modified_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
                                                     <option value="last-year-to-date" <?=$last_modified_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
-                                                    <option value="since-30-days-ago" <?=$last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-30-days-ago" <?=empty($last_modified_date) || $last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
                                                     <option value="since-60-days-ago" <?=$last_modified_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
                                                     <option value="since-90-days-ago" <?=$last_modified_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
                                                     <option value="since-365-days-ago" <?=$last_modified_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
@@ -611,7 +611,7 @@
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$last_modified_date === 'all-dates' ? date("m/d/Y", strtotime("-30 days")) : $last_modified_date_from?>" id="filter-last-modified-date-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=empty($last_modified_date) || $last_modified_date === 'since-30-days-ago' ? date("m/d/Y", strtotime("-30 days")) : $last_modified_date_from?>" id="filter-last-modified-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
