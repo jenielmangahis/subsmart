@@ -25,7 +25,12 @@ function email__getInstance($config = [])
     $mail->Timeout = 10; // seconds
     $mail->Port = $port;
     $mail->From = $from;
-    $mail->FromName = 'nSmarTrac';
+    if( $config['from_name'] == '' ){
+        $mail->FromName = 'nSmarTrac';    
+    }else{
+        $mail->FromName = $config['from_name'];    
+    }
+    
     $mail->Subject = $subject;
     $mail->IsHTML($config['isHTML']);
 

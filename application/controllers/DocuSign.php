@@ -1621,7 +1621,12 @@ SQL;
 
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
     {
-        $mail = email__getInstance(['subject' => $envelope['subject']]);
+        $companyId = logged('company_id');
+        $this->db->where('id', $companyId);
+        $this->db->select('business_name, business_address');
+        $company = $this->db->get('clients')->row();
+
+        $mail = email__getInstance(['subject' => $envelope['subject'], 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 
@@ -1637,15 +1642,12 @@ SQL;
         $hash = encrypt($message, $this->password);
         $companyLogo = $this->getCompanyProfile();
 
-        $companyId = logged('company_id');
-        $this->db->where('id', $companyId);
-        $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();
-
         $data = [
             '%heading%' => '<h1 style="margin-bottom:0;">Invite: ' . $envelope['name'] . '</h1>',
-            '%business_name%' => $company->business_name,
-            '%business_address%' => $company->business_address,
+            //'%business_name%' => $company->business_name,
+            //'%business_address%' => $company->business_address,
+            '%business_name%' => '',
+            '%business_address%' => '',
             '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
