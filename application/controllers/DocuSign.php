@@ -667,7 +667,12 @@ class DocuSign extends MYF_Controller
 
     private function sendCompletedNotice(array $envelope, array $recipients)
     {
-        $mail = email__getInstance(['subject' => 'Your document has been completed']);
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $this->db->select('business_name, address, business_phone, business_email');
+        $company = $this->db->get('business_profile')->row();
+
+        $mail = email__getInstance(['subject' => 'Your document has been completed', 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
         $template = file_get_contents($templatePath);
 
@@ -677,10 +682,10 @@ class DocuSign extends MYF_Controller
 
         $companyLogo = $this->getCompanyProfile();
 
-        $companyId = logged('company_id');
+        /*$companyId = logged('company_id');
         $this->db->where('id', $companyId);
         $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();
+        $company = $this->db->get('clients')->row();*/
 
         $errors = [];
         foreach ($recipients as $recipient) {
@@ -694,7 +699,9 @@ class DocuSign extends MYF_Controller
             $data = [
                 '%heading%' => '<h1 style="margin-bottom:0;">Completed: ' . $envelope['name'] . '</h1>',
                 '%business_name%' => $company->business_name,
-                '%business_address%' => $company->business_address,
+                '%business_address%' => $company->address,
+                '%business_phone%' => formatPhoneNumber($company->business_phone),
+                '%business_email%' => $company->business_email,
                 '%message%' => nl2br(htmlentities($envelope['completed_message'], ENT_QUOTES, 'UTF-8')),
                 '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
                 '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
@@ -1623,7 +1630,7 @@ SQL;
     {
         $companyId = logged('company_id');
         $this->db->where('company_id', $companyId);
-        $this->db->select('business_name, address');
+        $this->db->select('business_name, address, business_phone, business_email');
         $company = $this->db->get('business_profile')->row();
 
         /*$this->db->where('id', $companyId);
@@ -1652,6 +1659,8 @@ SQL;
             //'%business_address%' => $company->business_address,
             '%business_name%' => '',
             '%business_address%' => '',
+            '%business_phone%' => formatPhoneNumber($company->business_phone),
+            '%business_email%' => $company->business_email,
             '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
