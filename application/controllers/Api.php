@@ -726,7 +726,7 @@ class Api extends MYF_Controller
                 $mail = email__getInstance(['subject' => 'Estimate Details']);
                 $mail->addAddress($recipient, $recipient);
                 $mail->isHTML(true);
-                $mail->Body = $this->load->view('estimate/send_email_acs', $data, true);
+                $mail->Body = $this->load->view('estimate/send_email_acs_v2', $data, true);
 
                 if(!$mail->Send()) {                    
                     $msg = 'Mailer Error: ' . $mail->ErrorInfo;

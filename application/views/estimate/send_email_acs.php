@@ -123,9 +123,6 @@
             <div>
                 <div style="padding: 20px;">
                     <div style="padding: 10px;">
-                        <div>
-                            <h2>ESTIMATES</h2>
-                        </div>
                         <div class="">
                             <div id="printableArea" style="">
                             <div style="margin-bottom: 10px;margin-left: 0px !important;margin-top:50px;">
