@@ -20,6 +20,7 @@ class Customer extends MY_Controller
         $this->load->model('Activity_model','activity');
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
+        $this->load->model('Workorder_model', 'workorder_model');
 
         $this->checkLogin();
 
@@ -4540,6 +4541,7 @@ class Customer extends MY_Controller
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
 
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['items'] = $this->items_model->getItemlist();
         $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);

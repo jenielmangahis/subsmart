@@ -8,49 +8,70 @@
             <div class="modal-body">
                 <table class="nsm-table">
                     <thead>
+                        <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td data-name="Activity Date">ACTIVITY DATE</td>
-                            <td data-name="Create Date">CREATE DATE</td>
-                            <td data-name="Created By">CREATED BY</td>
-                            <td data-name="Last Modified">LAST MODIFIED</td>
-                            <td data-name="Last Modified By">LAST MODIFIED BY</td>
-                            <td data-name="Customer">CUSTOMER</td>
-                            <td data-name="Employee">EMPLOYEE</td>
-                            <td data-name="Product/Service">PRODUCT/SERVICE</td>
-                            <td data-name="Memo/Description">MEMO/DESCRIPTION</td>
-                            <td data-name="Rates">RATES</td>
-                            <td data-name="Duration">DURATION</td>
-                            <td data-name="Start Time">START TIME</td>
-                            <td data-name="End Time">END TIME</td>
-                            <td data-name="Break">BREAK</td>
-                            <td data-name="Taxable">TAXABLE</td>
-                            <td data-name="Billable">BILLABLE</td>
-                            <td data-name="Invoice Date">INVOICE DATE</td>
-                            <td data-name="Amount">AMOUNT</td>
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if(!isset($show_report_title)) : ?>
+                        <tr>
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <p class="m-0 fw-bold"><?=$report_title?></p>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if(isset($show_report_period)) : ?>
+                        <tr>
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <p class="m-0">Created/Edited: Since <?=date("F j, Y")?></p>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>>ACTIVITY DATE</td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>>PRODUCT/SERVICE</td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>>RATES</td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>>DURATION</td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>>START TIME</td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>>END TIME</td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>>BREAK</td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>>TAXABLE</td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>>BILLABLE</td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if(count($activities) > 0) : ?>
                         <?php foreach($activities as $activity) : ?>
                         <tr>
-                            <td><?=$activity['activity_date']?></td>
-                            <td><?=$activity['create_date']?></td>
-                            <td><?=$activity['created_by']?></td>
-                            <td><?=$activity['last_modified']?></td>
-                            <td><?=$activity['last_modified_by']?></td>
-                            <td><?=$activity['customer']?></td>
-                            <td><?=$activity['employee']?></td>
-                            <td><?=$activity['product_service']?></td>
-                            <td><?=$activity['memo_desc']?></td>
-                            <td><?=$activity['rates']?></td>
-                            <td><?=$activity['duration']?></td>
-                            <td><?=$activity['start_time']?></td>
-                            <td><?=$activity['end_time']?></td>
-                            <td><?=$activity['break']?></td>
-                            <td><?=$activity['taxable']?></td>
-                            <td><?=$activity['billable']?></td>
-                            <td><?=$activity['invoice_date']?></td>
-                            <td><?=$activity['amount']?></td>
+                            <td <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['activity_date']?></td>
+                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
+                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$activity['created_by']?></td>
+                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
+                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$activity['last_modified_by']?></td>
+                            <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$activity['customer']?></td>
+                            <td <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$activity['employee']?></td>
+                            <td <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$activity['product_service']?></td>
+                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$activity['memo_desc']?></td>
+                            <td <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$activity['rates']?></td>
+                            <td <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$activity['duration']?></td>
+                            <td <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['start_time']?></td>
+                            <td <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['end_time']?></td>
+                            <td <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$activity['break']?></td>
+                            <td <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$activity['taxable']?></td>
+                            <td <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$activity['billable']?></td>
+                            <td <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['invoice_date']?></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$activity['amount']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
@@ -63,6 +84,13 @@
                         </tr>
                         <?php endif; ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="19" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                                <?=date($prepared_timestamp)?>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="modal-footer">
@@ -83,59 +111,70 @@
             <div class="modal-body">
                 <table class="w-100" id="report_table_print">
                     <thead>
+                        <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="19" class="text-center">
-                                <h4><?=$clients->business_name?></h4>
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
+                        <?php endif; ?>
+                        <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="19" class="text-center">
-                                Recent/Edited Time Activities
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
+                        <?php endif; ?>
+                        <?php if(isset($show_report_period)) : ?>
                         <tr>
-                            <td data-name="Activity Date">ACTIVITY DATE</td>
-                            <td data-name="Create Date">CREATE DATE</td>
-                            <td data-name="Created By">CREATED BY</td>
-                            <td data-name="Last Modified">LAST MODIFIED</td>
-                            <td data-name="Last Modified By">LAST MODIFIED BY</td>
-                            <td data-name="Customer">CUSTOMER</td>
-                            <td data-name="Employee">EMPLOYEE</td>
-                            <td data-name="Product/Service">PRODUCT/SERVICE</td>
-                            <td data-name="Memo/Description">MEMO/DESCRIPTION</td>
-                            <td data-name="Rates">RATES</td>
-                            <td data-name="Duration">DURATION</td>
-                            <td data-name="Start Time">START TIME</td>
-                            <td data-name="End Time">END TIME</td>
-                            <td data-name="Break">BREAK</td>
-                            <td data-name="Taxable">TAXABLE</td>
-                            <td data-name="Billable">BILLABLE</td>
-                            <td data-name="Invoice Date">INVOICE DATE</td>
-                            <td data-name="Amount">AMOUNT</td>
+                            <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                <p class="m-0">Created/Edited: Since <?=date("F j, Y")?></p>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>>ACTIVITY DATE</td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>>PRODUCT/SERVICE</td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>>RATES</td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>>DURATION</td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>>START TIME</td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>>END TIME</td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>>BREAK</td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>>TAXABLE</td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>>BILLABLE</td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if(count($activities) > 0) : ?>
                         <?php foreach($activities as $activity) : ?>
                         <tr>
-                            <td><?=$activity['activity_date']?></td>
-                            <td><?=$activity['create_date']?></td>
-                            <td><?=$activity['created_by']?></td>
-                            <td><?=$activity['last_modified']?></td>
-                            <td><?=$activity['last_modified_by']?></td>
-                            <td><?=$activity['customer']?></td>
-                            <td><?=$activity['employee']?></td>
-                            <td><?=$activity['product_service']?></td>
-                            <td><?=$activity['memo_desc']?></td>
-                            <td><?=$activity['rates']?></td>
-                            <td><?=$activity['duration']?></td>
-                            <td><?=$activity['start_time']?></td>
-                            <td><?=$activity['end_time']?></td>
-                            <td><?=$activity['break']?></td>
-                            <td><?=$activity['taxable']?></td>
-                            <td><?=$activity['billable']?></td>
-                            <td><?=$activity['invoice_date']?></td>
-                            <td><?=$activity['amount']?></td>
+                            <td <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['activity_date']?></td>
+                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
+                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$activity['created_by']?></td>
+                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
+                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$activity['last_modified_by']?></td>
+                            <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$activity['customer']?></td>
+                            <td <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$activity['employee']?></td>
+                            <td <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$activity['product_service']?></td>
+                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$activity['memo_desc']?></td>
+                            <td <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$activity['rates']?></td>
+                            <td <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$activity['duration']?></td>
+                            <td <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['start_time']?></td>
+                            <td <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['end_time']?></td>
+                            <td <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$activity['break']?></td>
+                            <td <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$activity['taxable']?></td>
+                            <td <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$activity['billable']?></td>
+                            <td <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['invoice_date']?></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$activity['amount']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
@@ -148,6 +187,13 @@
                         </tr>
                         <?php endif; ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="19" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                                <?=date($prepared_timestamp)?>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -736,9 +782,9 @@
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <select name="header_alignment" id="header-alignment" class="nsm-field form-control">
-                                                    <option value="left" <?=$header_alignment === 'left' ? 'selected' : ''?>>Left</option>
+                                                    <option value="left" <?=$header_alignment === 'start' ? 'selected' : ''?>>Left</option>
                                                     <option value="center" <?=empty($header_alignment) || $header_alignment === 'center' ? 'selected' : ''?>>Center</option>
-                                                    <option value="right" <?=$header_alignment === 'right' ? 'selected' : ''?>>Right</option>
+                                                    <option value="right" <?=$header_alignment === 'end' ? 'selected' : ''?>>Right</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -748,9 +794,9 @@
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <select name="footer_alignment" id="footer-alignment" class="nsm-field form-control">
-                                                    <option value="left" <?=$footer_alignment === 'left' ? 'selected' : ''?>>Left</option>
+                                                    <option value="left" <?=$footer_alignment === 'start' ? 'selected' : ''?>>Left</option>
                                                     <option value="center" <?=empty($footer_alignment) || $footer_alignment === 'center' ? 'selected' : ''?>>Center</option>
-                                                    <option value="right" <?=$footer_alignment === 'right' ? 'selected' : ''?>>Right</option>
+                                                    <option value="right" <?=$footer_alignment === 'end' ? 'selected' : ''?>>Right</option>
                                                 </select>
                                             </div>
                                         </div>

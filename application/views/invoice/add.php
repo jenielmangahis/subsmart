@@ -387,6 +387,11 @@ input:checked + .slider:before {
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_name : ''; ?>" name="job_name" id="job_name" />
                                 </div>
+                                <div class="col-md-5 form-group">
+                                <br>
+                                    <label for="job_name">Business Name <small class="help help-sm">(optional)</small></label>
+                                    <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?php echo $clients->business_name; ?>" />
+                                </div>
                             </div>
 
                             <br>

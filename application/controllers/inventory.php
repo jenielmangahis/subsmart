@@ -86,6 +86,7 @@ class Inventory extends MY_Controller
         );
         $this->page_data['locations'] = $this->general->get_data_with_param($location_param);
         $this->page_data['items_location'] = $ITEM_LOCATION_ARRAY;
+        $this->page_data['items_history'] = $this->items_model->getAllDeductionHistory();
         $this->load->view('v2/pages/inventory/list', $this->page_data);
     }
 
@@ -282,6 +283,25 @@ class Inventory extends MY_Controller
         // $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
         // //print_r($this->page_data['items']);
         // $this->load->view('inventory/import_items', $this->page_data);
+    }
+
+    public function importCSV(){
+        $csvHeaders = json_decode($this->input->post('headers'), true);
+        $csvRows = json_decode($this->input->post('rows'), true);
+        $csvColumnLength = $this->input->post('columnLength');
+        $csvRowLength = $this->input->post('rowLength');
+
+        $data = array();
+        $data['company_id'] = logged('company_id');
+
+        for ($i = 0; $i < $csvRowLength ; $i++) { 
+
+            for ($j = 0; $j < $csvColumnLength ; $j++) { 
+                $data[$csvHeaders[$j]] = $csvRows[$i][$j];
+            }
+            $dataInsert = $this->general->add_return_id($data, 'items');
+        }    
+        echo 'true';
     }
 
     public function add()

@@ -23,6 +23,7 @@ class Invoice extends MY_Controller
         $this->load->model('Accounting_invoices_model', 'accounting_invoices_model');
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('accounting_receive_payment_model');
+        $this->load->model('Workorder_model', 'workorder_model');
 
         $user_id = getLoggedUserID();
 
@@ -378,6 +379,7 @@ class Invoice extends MY_Controller
             $default_cust_id = $this->input->get('cus_id');
         }
 
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['default_cust_id'] = $default_cust_id;
         $this->page_data['workorder']  = $workorder;
         $this->page_data['w_customer'] = $w_customer;
@@ -500,6 +502,7 @@ class Invoice extends MY_Controller
             'job_name'                  => $this->input->post('job_name'),//
             'job_id'                    => $this->input->post('job_id'),
 
+            'business_name'             => $this->input->post('business_name'),
             'tags'                      => $this->input->post('tags'),//
             'invoice_type'              => $this->input->post('invoice_type'),//
             'work_order_number'         => $this->input->post('work_order_number'),//

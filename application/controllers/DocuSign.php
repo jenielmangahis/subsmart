@@ -697,7 +697,7 @@ class DocuSign extends MYF_Controller
             $hash = encrypt($message, $this->password);
 
             $data = [
-                '%heading%' => '<h1 style="margin-bottom:0;">Completed: ' . $envelope['name'] . '</h1>',
+                '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Completed: ' . $envelope['name'] . '</h1>',
                 '%business_name%' => $company->business_name,
                 '%business_address%' => $company->address,
                 '%business_phone%' => formatPhoneNumber($company->business_phone),
@@ -1654,10 +1654,9 @@ SQL;
         $companyLogo = $this->getCompanyProfile();
 
         $data = [
-            '%heading%' => '<h1 style="margin-bottom:0;">Invite: ' . $envelope['name'] . '</h1>',
-            //'%business_name%' => $company->business_name,
-            //'%business_address%' => $company->business_address,
-            '%business_name%' => '',
+            '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Review: ' . $envelope['name'] . '</h1>',
+            '%business_name%' => $company->business_name,
+            //'%business_address%' => $company->business_address,            
             '%business_address%' => '',
             '%business_phone%' => formatPhoneNumber($company->business_phone),
             '%business_email%' => $company->business_email,

@@ -857,6 +857,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $total = $item->cost * $item->qty;
+                                                    $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
@@ -877,7 +878,7 @@
                                                             <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
+                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2" onclick="$('#ITEMLIST_PRODUCT_<?php echo "$item->id"; ?>').show();"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -891,6 +892,9 @@
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
                                             <hr>
+                                            <style type="text/css">
+                                                <?php echo $hideSelectedItems; ?>
+                                            </style>
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -1411,12 +1415,12 @@
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
                                     ?>
-                                    <tr>
+                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>" <?php echo $item_qty[0]->total_qty <= 0 ? "disabled" : ""; ?>><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
+                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "<span class='badge bg-danger'>Empty</span>"; ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                         <td><?php echo $item->location_name; ?></td>

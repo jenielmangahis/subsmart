@@ -749,21 +749,21 @@ class Api extends MYF_Controller
         include APPPATH . 'libraries/Converge/src/Converge.php';
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
-        $this->load->model('Jobs_model');        
+        $this->load->model('Jobs_model');      
+        $this->load->model('Invoice_model');  
 
         $is_success = 0;
-        $msg = 'Cannot find job data';
+        $msg = 'Cannot find data';
 
-        $post = $this->input->post();
-        if( $post['job_id'] > 0 ){
-            $job = $this->Jobs_model->get_specific_job_by_hash_id($post['job_id']);
-            if( $job ){
-                $company_id   = $job->company_id;
+        $post = $this->input->post();                
+        if( $post['invoice_id'] > 0 ){
+            $invoice = $this->Invoice_model->getinvoice($post['invoice_id']);
+            if( $invoice ){
+                $company_id   = $invoice->company_id;
                 if( $post['card_number'] != '' && $post['card_cvc'] != '' &&  $post['exp_month'] != '' && $post['exp_year'] != '' ){
-                    $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
-                    if( $convergeCred ){                    
-                        $exp_year = date("m/d/" . $post['exp_year']);
-                        $exp_date = $post['exp_month'] . date("y", strtotime($exp_year));
+                    $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+                    if( $convergeCred ){                                            
+                        $exp_date = $post['exp_month'] . date("y", strtotime($post['exp_year']));
                         $converge = new \wwwroth\Converge\Converge([
                             'merchant_id' => $convergeCred->converge_merchant_id,
                             'user_id' => $convergeCred->converge_merchant_user_id,
@@ -779,7 +779,7 @@ class Api extends MYF_Controller
                             'ssl_avs_zip' => $post['zip'],
                         ]);
 
-                        if ($createSale['success'] == 1) {
+                        if ($createSale['success'] == 1) {                            
                             $is_success = 1;
                             $msg = '';
                         } else {
