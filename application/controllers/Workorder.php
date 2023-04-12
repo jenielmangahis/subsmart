@@ -3768,7 +3768,8 @@ class Workorder extends MY_Controller
         $this->page_data['next_num'] = $next_num;
 
         // print_r($this->page_data['terms_conditions']);
-        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
+        // dd($this->workorder_model->getclientsById());
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         //$this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
         $this->page_data['checklists'] = $checklists;
@@ -4260,6 +4261,8 @@ class Workorder extends MY_Controller
             'mobile_number'                         => $this->input->post('mobile_number'),
             'email'                                 => $this->input->post('email'),
             'checklists'                            => $selected_checklists,
+            
+            'business_name'                         => $this->input->post('business_name'),
             // 'job_location'                          => $this->input->post('job_location') .', ' .$this->input->post('city') .', '. $this->input->post('state') .', '. $this->input->post('zip_code') .', '. $this->input->post('cross_street'),
             'job_location'                          => $this->input->post('job_location'),
             'city'                                  => $this->input->post('city'),
@@ -7601,6 +7604,8 @@ class Workorder extends MY_Controller
             'phone_number'                          => $this->input->post('phone'),
             'mobile_number'                         => $this->input->post('mobile'),
             'email'                                 => $this->input->post('email'),
+            
+            'business_name'                         => $this->input->post('business_name'),
             // 'employee_id' => '0',
             'job_location'                          => $this->input->post('address'),
             'city'                                  => $this->input->post('city'),
@@ -8092,6 +8097,7 @@ class Workorder extends MY_Controller
         $new_data = array(
             'work_order_number'                     => $this->input->post('workorder_number'),
             'customer_id'                           => $w_acs,
+            'business_name'                         => $this->input->post('business_name'),
             'phone_number'                          => $this->input->post('phone'),
             'mobile_number'                         => $this->input->post('mobile'),
             'email'                                 => $this->input->post('email'),

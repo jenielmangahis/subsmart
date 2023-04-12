@@ -701,12 +701,11 @@ class Estimate_model extends MY_Model
     {
         $where = array(
             'estimates_id'      => $id,
-            ''
           );
 
         $this->db->select('*');
-		$this->db->from('estimates_option_items');
-        $this->db->join('items', 'estimates_option_items.items_id  = items.id');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->result();

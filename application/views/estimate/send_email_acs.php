@@ -123,9 +123,6 @@
             <div>
                 <div style="padding: 20px;">
                     <div style="padding: 10px;">
-                        <div>
-                            <h2>ESTIMATES</h2>
-                        </div>
                         <div class="">
                             <div id="printableArea" style="">
                             <div style="margin-bottom: 10px;margin-left: 0px !important;margin-top:50px;">
@@ -174,7 +171,7 @@
                                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
                                 <thead>
                                     <tr>
-                                        <!-- <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th> -->
+                                        <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
                                         <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
                                         <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
                                         <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
@@ -191,7 +188,7 @@
                                         </tr>
                                     <?php foreach($items_dataOP1 as $itemData1){ ?>
                                             <tr class="table-items__tr">
-                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                            <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
                                             <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData1->costing,2); ?></td>
@@ -227,7 +224,7 @@
                                         </tr>
                                     <?php foreach($items_dataOP2 as $itemData2){ ?>
                                             <tr class="table-items__tr">
-                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                            <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData2->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData2->type; ?></td>
                                             <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData2->costing,2); ?></td>
@@ -265,7 +262,7 @@
                                         </tr>
                                     <?php foreach($items_dataBD1 as $itemDatabd1){ ?>
                                             <tr class="table-items__tr">
-                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                            <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemDatabd1->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemDatabd1->type; ?></td>
                                             <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd1->costing,2); ?></td>
@@ -301,7 +298,7 @@
                                         </tr>
                                     <?php foreach($items_dataBD2 as $itemDatabd2){ ?>
                                             <tr class="table-items__tr">
-                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                            <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemDatabd2->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemDatabd2->type; ?></td>
                                             <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemDatabd2->costing,2); ?></td>
@@ -335,7 +332,7 @@
                                     <?php }else{ ?>
                                         <?php foreach($items as $itemData){ ?>
                                             <tr class="table-items__tr">
-                                            <!-- <td valign="top" style="width:30px; text-align:center;"></td> -->
+                                            <td valign="top" style="width:30px; text-align:center;"></td>
                                             <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
                                             <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
                                             <td valign="top" style="width: 80px; text-align: right;"><?= number_format((float) $itemData->iCost,2); ?></td>

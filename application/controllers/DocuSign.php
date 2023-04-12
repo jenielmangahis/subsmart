@@ -667,7 +667,12 @@ class DocuSign extends MYF_Controller
 
     private function sendCompletedNotice(array $envelope, array $recipients)
     {
-        $mail = email__getInstance(['subject' => 'Your document has been completed']);
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $this->db->select('business_name, address, business_phone, business_email');
+        $company = $this->db->get('business_profile')->row();
+
+        $mail = email__getInstance(['subject' => 'Your document has been completed', 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
         $template = file_get_contents($templatePath);
 
@@ -677,10 +682,10 @@ class DocuSign extends MYF_Controller
 
         $companyLogo = $this->getCompanyProfile();
 
-        $companyId = logged('company_id');
+        /*$companyId = logged('company_id');
         $this->db->where('id', $companyId);
         $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();
+        $company = $this->db->get('clients')->row();*/
 
         $errors = [];
         foreach ($recipients as $recipient) {
@@ -692,9 +697,11 @@ class DocuSign extends MYF_Controller
             $hash = encrypt($message, $this->password);
 
             $data = [
-                '%heading%' => '<h1 style="margin-bottom:0;">Completed: ' . $envelope['name'] . '</h1>',
+                '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Completed: ' . $envelope['name'] . '</h1>',
                 '%business_name%' => $company->business_name,
-                '%business_address%' => $company->business_address,
+                '%business_address%' => $company->address,
+                '%business_phone%' => formatPhoneNumber($company->business_phone),
+                '%business_email%' => $company->business_email,
                 '%message%' => nl2br(htmlentities($envelope['completed_message'], ENT_QUOTES, 'UTF-8')),
                 '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
                 '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
@@ -1024,6 +1031,76 @@ class DocuSign extends MYF_Controller
         }
 
         $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $default = $this->db->get('user_docfile_template_defaults')->row();
+
+        if ($default) {
+            foreach ($records as $record) {
+                $record->is_default = $default->template_id == $record->id;
+            }
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
+
+    public function apiTemplatesFromParams()
+    {
+        $sharedOnly = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
+        $sharedAndOwned = filter_var($this->input->get('all'), FILTER_VALIDATE_BOOLEAN);
+
+        $companyId = filter_var($this->input->get('company_id'));
+        $userId = filter_var($this->input->get('user_id'));
+
+        $getOwned = function () use ($userId, $companyId) {
+            $this->db->where('company_id', $companyId);
+            $this->db->where('user_id', $userId);
+            $this->db->order_by('created_at', 'DESC');
+            return $this->db->get('user_docfile_templates')->result();
+        };
+
+        $getShared = function () use ($userId) {
+            $this->db->where('user_id', $userId);
+            $sharedTemplates = $this->db->get('user_docfile_templates_shared')->result_array();
+
+            if (empty($sharedTemplates)) {
+                return [];
+            }
+
+            $sharedTemplateIds = array_map(function ($template) {
+                return $template['template_id'];
+            }, $sharedTemplates);
+
+            $this->db->where_in('id', $sharedTemplateIds);
+            $this->db->order_by('created_at', 'DESC');
+            $results = $this->db->get('user_docfile_templates')->result();
+
+            $usersMap = []; // user_id => user_object
+            foreach ($results as $result) {
+                if (!array_key_exists($result->user_id, $usersMap)) {
+                    $this->db->where('id', $result->user_id);
+                    $usersMap[$result->user_id] = $this->db->get('users')->row();
+                }
+
+                $result->user = $usersMap[$result->user_id];
+                $result->is_shared = true;
+            }
+
+            return $results;
+        };
+
+        $records = [];
+        if ($sharedAndOwned) {
+            $records = array_merge($getOwned(), $getShared());
+        } else {
+            $records = $sharedOnly ? $getShared() : $getOwned();
+        }
+
+        foreach ($records as $record) {
+            $this->db->where_in('template_id', $record->id);
+            $record->thumbnail = $this->db->get('user_docfile_templates_thumbnail')->row();
+        }
+
         $this->db->where('company_id', $companyId);
         $default = $this->db->get('user_docfile_template_defaults')->row();
 
@@ -1551,7 +1628,16 @@ SQL;
 
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
     {
-        $mail = email__getInstance(['subject' => $envelope['subject']]);
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $this->db->select('business_name, address, business_phone, business_email');
+        $company = $this->db->get('business_profile')->row();
+
+        /*$this->db->where('id', $companyId);
+        $this->db->select('business_name, business_address');
+        $company = $this->db->get('clients')->row();*/
+
+        $mail = email__getInstance(['subject' => $envelope['subject'], 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 
@@ -1567,15 +1653,13 @@ SQL;
         $hash = encrypt($message, $this->password);
         $companyLogo = $this->getCompanyProfile();
 
-        $companyId = logged('company_id');
-        $this->db->where('id', $companyId);
-        $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();
-
         $data = [
-            '%heading%' => '<h1 style="margin-bottom:0;">Invite: ' . $envelope['name'] . '</h1>',
+            '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Review: ' . $envelope['name'] . '</h1>',
             '%business_name%' => $company->business_name,
-            '%business_address%' => $company->business_address,
+            //'%business_address%' => $company->business_address,            
+            '%business_address%' => '',
+            '%business_phone%' => formatPhoneNumber($company->business_phone),
+            '%business_email%' => $company->business_email,
             '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
@@ -1584,7 +1668,7 @@ SQL;
         ];
 
         $message = strtr($template, $data);
-
+        
         $mail->MsgHTML($message);
         $mail->addAddress($recipient['email']);
         $isSent = $mail->send();

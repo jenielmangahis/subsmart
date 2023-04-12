@@ -1652,7 +1652,7 @@ class Job extends MY_Controller
                 'prof_id' => $id
             ),
             'table' => 'acs_profile',
-            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,phone_m,city,state,mail_add,cross_street,zip_code,mail_add,country',
+            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,phone_m,city,state,mail_add,cross_street,zip_code,mail_add,country,business_name',
         );
         $data = $this->general->get_data_with_param($get_customer, false);
         $data_arr = array("success" => true, "data" => $data);
@@ -2192,6 +2192,7 @@ class Job extends MY_Controller
                         $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
+                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
                         unset($job_items_data);
                     }
                 }
@@ -2234,6 +2235,9 @@ class Job extends MY_Controller
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
                     for ($xx = 0; $xx < $devices; $xx++) {
+
+                        // Deduct Quantity in inventory
+
                         $check_item = array(
                             'where' => array(
                                 'job_id' => $isJob->id,
@@ -2258,6 +2262,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
+                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
                         unset($job_items_data);
                     }
                 }

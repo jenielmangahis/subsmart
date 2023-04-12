@@ -721,10 +721,7 @@ class Api extends MYF_Controller
                     // 'source' => $source
                 );
 
-
-                // $recipient  = "emploucelle@gmail.com";
-                $recipient  = $customerData->email;
-                // $message = "This is a test email";
+                $recipient  = $customerData->email;               
 
                 $mail = email__getInstance(['subject' => 'Estimate Details']);
                 $mail->addAddress($recipient, $recipient);
@@ -745,5 +742,59 @@ class Api extends MYF_Controller
         $return = ['msg' => $msg, 'is_sent' => $is_sent];
         echo json_encode($return);
         exit;
+    }
+
+    public function convergeSendSale()
+    {
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Jobs_model');      
+        $this->load->model('Invoice_model');  
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();                
+        if( $post['invoice_id'] > 0 ){
+            $invoice = $this->Invoice_model->getinvoice($post['invoice_id']);
+            if( $invoice ){
+                $company_id   = $invoice->company_id;
+                if( $post['card_number'] != '' && $post['card_cvc'] != '' &&  $post['exp_month'] != '' && $post['exp_year'] != '' ){
+                    $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+                    if( $convergeCred ){                                            
+                        $exp_date = $post['exp_month'] . date("y", strtotime($post['exp_year']));
+                        $converge = new \wwwroth\Converge\Converge([
+                            'merchant_id' => $convergeCred->converge_merchant_id,
+                            'user_id' => $convergeCred->converge_merchant_user_id,
+                            'pin' => $convergeCred->converge_merchant_pin,
+                            'demo' => true,
+                        ]);
+                        $createSale = $converge->request('ccsale', [
+                            'ssl_card_number' => $post['card_number'],
+                            'ssl_exp_date' => $exp_date,
+                            'ssl_cvv2cvc2' => $post['card_cvc'],
+                            'ssl_amount' => floatval($post['amount']),
+                            'ssl_avs_address' => $post['address'],
+                            'ssl_avs_zip' => $post['zip'],
+                        ]);
+
+                        if ($createSale['success'] == 1) {                            
+                            $is_success = 1;
+                            $msg = '';
+                        } else {
+                            $msg = $createSale['errorMessage'];
+                        }
+                    }else{
+                        $msg = 'Invalid Company Converge Account';
+                    }
+                }else{
+                    $msg = 'Invalid card details';
+                }                
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }

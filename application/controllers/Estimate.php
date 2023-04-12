@@ -15,6 +15,7 @@ class Estimate extends MY_Controller
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('items_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('Workorder_model', 'workorder_model');
         
         $this->checkLogin();
 
@@ -126,6 +127,7 @@ class Estimate extends MY_Controller
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),
             'expiry_date' => $this->input->post('expiry_date'),
+            'business_name' => $this->input->post('business_name'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),
             'type' => $this->input->post('estimate_type'),
@@ -344,6 +346,7 @@ class Estimate extends MY_Controller
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);            
         
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
@@ -386,6 +389,7 @@ class Estimate extends MY_Controller
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
@@ -450,6 +454,7 @@ class Estimate extends MY_Controller
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
@@ -483,6 +488,7 @@ class Estimate extends MY_Controller
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
+            'business_name' => $this->input->post('business_name'),
             'estimate_number' => $this->input->post('estimate_number'),
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
@@ -695,6 +701,7 @@ class Estimate extends MY_Controller
             'job_name' => $this->input->post('job_name'),
             'estimate_number' => $this->input->post('estimate_number'),
             'estimate_date' => $this->input->post('estimate_date'),
+            'business_name' => $this->input->post('business_name'),
             'expiry_date' => $this->input->post('expiry_date'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'status' => $this->input->post('status'),

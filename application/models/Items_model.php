@@ -698,6 +698,38 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function deductItemQuantity($item_id, $quantityToDeduct, $md5ID) {
+        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.qty, items.title');
+        $this->db->from('items_has_storage_loc');
+        $this->db->join('items', 'items_has_storage_loc.item_id = items.id');
+        $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $query = $this->db->get();
+        $currentQuantity = $query->result()[0]->qty;
+        $newQuantity = $currentQuantity - $quantityToDeduct;
+
+        $updateItemQuantity = $this->db->update('items_has_storage_loc', ['qty' => $newQuantity], array('item_id' => $item_id));
+
+        $deductionDetails = [
+            'item_id' => $md5ID,
+            'item_name' => $query->result()[0]->title,
+            'deduction' => $quantityToDeduct,
+            'remaining_quantity' => $newQuantity,
+        ];
+
+        $recordDeduction = $this->db->insert('items_history', $deductionDetails);
+        
+        return $recordDeduction;
+    }
+
+    public function getAllDeductionHistory() {
+        $this->db->select('*');
+        $this->db->from('items_history');
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 
 

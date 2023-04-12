@@ -265,7 +265,15 @@ a.btn-primary.btn-md {
                         <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
                         <textarea class="form-control" name="service_description"></textarea>
                     </div>
-                </div><br.
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="job_name"><b>Business Name (Optional)</label>
+                        <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?php echo $clients->business_name; ?>" />
+                    </div>
+                </div>
+                <br>
+                <br>
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>

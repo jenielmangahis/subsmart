@@ -873,6 +873,10 @@ table input.form-control {
 															<td align="left"><div style=""><b>Source:</b> </div></td>
 															<td align="right"><?php echo $lead->ls_name ?></td>
 														</tr>
+														</tr>
+															<td align="left"><div style=""><b>Business Name:</b> </div></td>
+															<td align="right"><?php echo $customer->business_name ?></td>
+														</tr>
 														<!-- </tr>
 															<td align="left"><div style=""><b>Agent:</b> </div></td>
 															<td align="right"><?php //echo $first->FName.' '.$first->LName; ?></td>

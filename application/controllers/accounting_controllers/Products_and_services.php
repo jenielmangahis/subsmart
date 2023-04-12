@@ -1480,8 +1480,9 @@ class Products_and_services extends MY_Controller {
                 $mapRebatable = $data[$csvHeaders[$mappingSelected[5]]];
                 $mapPurchDesc = $data[$csvHeaders[$mappingSelected[6]]];
                 $mapCost = $data[$csvHeaders[$mappingSelected[7]]];
-                $mapQuantity = $data[$csvHeaders[$mappingSelected[8]]];
-                $mapReorderPoint = $data[$csvHeaders[$mappingSelected[9]]];
+                $mapLocation = $data[$csvHeaders[$mappingSelected[8]]];
+                $mapQuantity = $data[$csvHeaders[$mappingSelected[9]]];
+                $mapReorderPoint = $data[$csvHeaders[$mappingSelected[10]]];
 
                 $itemData = [
                     'company_id' => logged('company_id'),
@@ -1510,7 +1511,7 @@ class Products_and_services extends MY_Controller {
                             'company_id' => logged('company_id'),
                             'qty' => $mapQuantity,
                             'initial_qty' => $mapQuantity,
-                            'name' => '',
+                            'name' => $mapLocation,
                             'item_id' => $insertId,
                             'insert_date' => date('Y-m-d H:i:s')
                         ]
