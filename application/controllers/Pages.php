@@ -520,6 +520,38 @@ class Pages extends MYF_Controller {
             $this->general->add_($payment_data, 'jobs_pay_details');
         }
 
+        //Update invoice
+        $invoiceCheck = array(
+            'where' => array(
+                'job_id' => $post['job_id']
+            ),
+            'table' => 'invoices'
+        );
+        $invoiceExists = $this->general->get_data_with_param($invoiceCheck,FALSE);
+        if( $invoiceExists ){
+        	$invoice_data = [
+        		'status' => 'Paid'        		
+        	];
+        	$this->general->update_with_key_field($invoice_data, $post['job_id'], 'invoices','job_id');
+
+        	//Update invoice payments
+	        $invoicePaymentCheck = array(
+	            'where' => array(
+	                'invoice_id' => $invoiceExists->id
+	            ),
+	            'table' => 'invoice_payments'
+	        );
+	        $invoicePaymentExists = $this->general->get_data_with_param($invoicePaymentCheck,FALSE);
+	        if( $invoicePaymentExists ){
+				$invoice_payment_data = [
+        			'payment_method' => $payment_data['method'],
+        			'is_paid' => 1        		
+	        	];
+	        	$this->general->update_with_key_field($invoice_payment_data, $invoicePaymentExists->id, 'invoice_payments','invoice_id');	        	
+	        }
+
+        }
+
     	$json_data = ['is_success' => 1];
     	echo json_encode($json_data);
     }

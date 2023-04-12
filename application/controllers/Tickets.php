@@ -960,8 +960,8 @@ class Tickets extends MY_Controller
 
         // dd($addQuery);
         $delete2 = $this->tickets_model->delete_items($id);
-
-        if ($addQuery > 0) {
+        //if ($addQuery > 0) {        
+        if ($addQuery) {
 
                 $item_id    = $this->input->post('item_id');
                 $item_type  = $this->input->post('item_type');
@@ -983,7 +983,7 @@ class Tickets extends MY_Controller
                     $data['item_type']  = $item_type[$i];
                     $data['discount']   = $discount[$i];
                     $data['total']      = $gtotal[$i];
-                    $data['ticket_id '] = $addQuery;
+                    $data['ticket_id '] = $this->input->post('ticketID');
 
 
                     $addQuery2 = $this->tickets_model->add_ticket_items($data);

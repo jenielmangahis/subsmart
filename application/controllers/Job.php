@@ -1215,6 +1215,38 @@ class Job extends MY_Controller
                 } else {
                     $updated =  $this->general->add_($payment_data, 'job_payments');
                 }
+
+                //Update invoice
+                $invoiceCheck = array(
+                    'where' => array(
+                        'job_id' => $input['jobs_id']
+                    ),
+                    'table' => 'invoices'
+                );
+                $invoiceExists = $this->general->get_data_with_param($invoiceCheck,FALSE);
+                if( $invoiceExists ){
+                    $invoice_data = [
+                        'status' => 'Paid'              
+                    ];
+                    $this->general->update_with_key_field($invoice_data, $input['jobs_id'], 'invoices','job_id');
+
+                    //Update invoice payments
+                    $invoicePaymentCheck = array(
+                        'where' => array(
+                            'invoice_id' => $invoiceExists->id
+                        ),
+                        'table' => 'invoice_payments'
+                    );
+                    $invoicePaymentExists = $this->general->get_data_with_param($invoicePaymentCheck,FALSE);
+                    if( $invoicePaymentExists ){
+                        $invoice_payment_data = [
+                            'payment_method' => $payment_data['method'],
+                            'is_paid' => 1              
+                        ];
+                        $this->general->update_with_key_field($invoice_payment_data, $invoicePaymentExists->id, 'invoice_payments','invoice_id');               
+                    }
+
+                }
             }
         }
 

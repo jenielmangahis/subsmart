@@ -658,8 +658,10 @@ class Workcalender extends MY_Controller
                 //Attendees
                 $attendees   = json_decode($event->employee_id);
                 $resourceIds = array();
-                foreach( $attendees as $eid ){
-                    $resourceIds[] = "user" . $eid;   
+                if( is_array($attendees) ){
+                    foreach( $attendees as $eid ){
+                        $resourceIds[] = "user" . $eid;   
+                    }    
                 }
 
                 $resources_user_events[$inc]['eventId'] = $event->id;
@@ -822,7 +824,7 @@ class Workcalender extends MY_Controller
         }
 
         //Jobs
-        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);
+        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);        
         foreach ($jobs as $j) {
             if ($j->job_description != '') {
                 $starttime = $j->start_date . " " . $j->start_time;

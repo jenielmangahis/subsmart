@@ -598,7 +598,7 @@ class DocuSign_v2 extends MYF_Controller
     }
 
     public function templateCreate()
-    {
+    {        
         $this->checkLogin();
 
         add_css([
