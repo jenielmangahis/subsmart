@@ -1873,15 +1873,9 @@ class Debug extends MY_Controller {
         $this->load->model('Jobs_model');
 
         $this->load->helper(array('url', 'hashids_helper'));
-        $id  = 331;
+        $id  = 333;
         $eid = hashids_encrypt($id, '', 15);
-
-        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs(1);
-        echo "<pre>";
-        print_r($jobs);
         echo $eid;
-
-        exit;
     }
 
     public function testJob()
@@ -1991,6 +1985,153 @@ class Debug extends MY_Controller {
         }
 
         echo 'Total Updated : ' . $total_updated;
+    }
+
+    public function estimateEmailTemplate(){
+        $this->load->helper(array('url', 'hashids_helper'));
+        $this->load->model('Estimate_model', 'estimate_model');
+
+        $estimate_id  = 172;            
+        $estimateData = $this->estimate_model->getEstimate($estimate_id);
+        if( $estimateData ){
+            $eid  = hashids_encrypt($estimateData->id, '', 15);
+            $c_id = $estimateData->company_id;
+            $p_id = $estimateData->customer_id;
+
+            $customerData = $this->estimate_model->get_customerData_data($p_id);
+
+            $items_dataOP1 = $this->estimate_model->getItemlistByIDOption1($estimate_id);
+            $items_dataOP2 = $this->estimate_model->getItemlistByIDOption2($estimate_id);
+
+            $items_dataBD1 = $this->estimate_model->getItemlistByIDBundle1($estimate_id);
+            $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($estimate_id);
+            $items = $this->estimate_model->getEstimatesItems($estimate_id);
+
+            
+            $urlApprove = base_url('share_Link/approveEstimate/' . $eid);
+            $urlDecline = base_url('share_Link/declineEstimate/' . $eid);
+
+            $business = $this->business_model->getByCompanyId($c_id);
+            $imageUrl = getCompanyBusinessProfileImage();
+
+            $data = array(
+                // 'workorder'             => $workorder,
+                'imageUrl'                      => $urlLogo,
+                'estimateID'                    => $estimateData->id,
+                'urlApprove'                    => $urlApprove,
+                'urlDecline'                    => $urlDecline,
+                'company'                       => $business->business_name,
+                'business_address'              => "$business->address, $business->city $business->postal_code",
+                'phone_number'                  => $business->business_phone,
+                'email_address'                 => $business->business_email,
+
+                'acs_name'                      => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+                'acsemail'                      => $customerData->email,
+                'acsaddress'                    => $customerData->mail_add,
+                'phone_m'                       => $customerData->phone_m,
+
+                'items_dataOP1'                 => $items_dataOP1,
+                'items_dataOP2'                 => $items_dataOP2,
+                'items_dataBD1'                 => $items_dataBD1,
+                'items_dataBD2'                 => $items_dataBD2,
+
+                'estimate_number'               => $estimateData->estimate_number,
+                'job_location'                  => $estimateData->job_location,
+                'job_name'                      => $estimateData->job_name,
+                'estimate_date'                 => $estimateData->estimate_date,
+                'expiry_date'                   => $estimateData->expiry_date,
+                'purchase_order_number'         => $estimateData->purchase_order_number,
+                'status'                        => $estimateData->status,
+                'estimate_type'                 => $estimateData->estimate_type,
+                'type'                          => $estimateData->type,
+                'deposit_request'               => $estimateData->deposit_request,
+                'deposit_amount'                => $estimateData->deposit_amount,
+                'customer_message'              => $estimateData->customer_message,
+                'terms_conditions'              => $estimateData->terms_conditions,
+                'instructions'                  => $estimateData->instructions,
+                'email'                         => $estimateData->email,
+                'phone'                         => $estimateData->phone_number,
+                'mobile'                        => $estimateData->mobile_number,
+                'terms_and_conditions'          => $estimateData->terms_and_conditions,
+                'terms_of_use'                  => $estimateData->terms_of_use,
+                'job_description'               => $estimateData->job_description,
+                'instructions'                  => $estimateData->instructions,
+                'bundle1_message'               => $estimateData->bundle1_message,
+                'bundle2_message'               => $estimateData->bundle2_message,
+
+                'items'                         => $items,
+
+                'bundle_discount'               => $estimateData->bundle_discount,
+                // 'deposit_amount'                => $estimateData->deposit_amount,
+                'bundle1_total'                 => $estimateData->bundle1_total,
+                'bundle2_total'                 => $estimateData->bundle2_total,
+
+                'option_message'                => $estimateData->option_message,
+                'option2_message'               => $estimateData->option2_message,
+                'option1_total'                 => $estimateData->option1_total,
+                'option2_total'                 => $estimateData->option2_total,
+
+                'sub_total'                     => $estimateData->sub_total,
+                'sub_total2'                    => $estimateData->sub_total2,
+                'tax1_total'                    => $estimateData->tax1_total,
+                'tax2_total'                    => $estimateData->tax2_total,
+
+                'grand_total'                   => $estimateData->grand_total,
+                'adjustment_name'               => $estimateData->adjustment_name,
+                'adjustment_value'              => $estimateData->adjustment_value,
+                'markup_type'                   => $estimateData->markup_type,
+                'markup_amount'                 => $estimateData->markup_amount,
+                'eid'                           => $eid
+                // 'source' => $source
+            );
+
+            $recipient  = 'bryann.revina03@gmail.com';               
+
+            $mail = email__getInstance(['subject' => 'Estimate Details', 'nmsart']);
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            $mail->Body = $this->load->view('estimate/send_email_acs_v2', $data, true);
+
+            if(!$mail->Send()) {                    
+                $msg = 'Mailer Error: ' . $mail->ErrorInfo;
+                echo $msg;
+            }else{
+                $msg = '';
+                $is_sent = 1;
+
+                echo 'Sent';
+            }
+        }else{
+            $msg = 'Cannot find estimate data';
+            echo $msg;
+        }
+    }
+
+    public function testNiceJob()
+    {
+        // Generated by curl-to-PHP: http://incarnate.github.io/curl-to-php/
+        $REFRESH_TOKEN = '12434545';
+        $CLIENT_ID = '32423423';
+        $CLIENT_SECRET = '4dsaf324532';
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://api.nicejob.com/oauth/token');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET");
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        echo "<pre>";
+        print_r($result);
     }
 }
 /* End of file Debug.php */
