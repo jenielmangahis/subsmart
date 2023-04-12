@@ -344,6 +344,17 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/ajax_load_company_ring_central', $this->page_data);
     }
 
+    public function ajax_load_company_vonage(){
+        $this->load->model('VonageAccounts_model');
+
+        $company_id = logged('company_id');    
+
+        $vonage = $this->VonageAccounts_model->getByCompanyId($company_id);
+
+        $this->page_data['vonage'] = $vonage;
+        $this->load->view('v2/pages/tools/ajax_load_company_vonage', $this->page_data);
+    }
+
     public function ajax_load_company_twilio(){
         $this->load->model('TwilioAccounts_model');
 
@@ -396,6 +407,70 @@ class Tools extends MY_Controller {
 
             $msg = '';
             $is_success = true;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_activate_company_vonage(){
+        $this->load->helper('sms_helper');
+        $this->load->model('VonageAccounts_model');
+
+        $is_success = true;
+        $msg = 'Invalid ring central account';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        if( $post['vn_api_key'] == '' ){
+            $is_success = false;
+            $msg = 'Please enter your Vonage API key';
+        } 
+
+        if( $post['vn_api_secret'] == '' ){
+            $is_success = false;
+            $msg = 'Please enter your Vonage API secrey';
+        }
+
+        if( $post['vn_branding'] == '' ){
+            $is_success = false;
+            $msg = 'Please enter your Vonage Branding';
+        }
+
+        if( $post['vn_from_number'] == '' ){
+            $is_success = false;
+            $msg = 'Vonage Virtual Number is required';
+        }
+
+        if( $is_success ){  
+            $vonageAccount = $this->VonageAccounts_model->getByCompanyId($company_id);
+            if( $vonageAccount ){
+                $vonage_data = [                    
+                    'vn_api_key' => base64_encode($post['vn_api_key']),
+                    'vn_api_secret' => base64_encode($post['vn_api_secret']),
+                    'vn_branding' => $post['vn_branding'],
+                    'vn_from_number' => $post['vn_from_number']
+                ];
+                $this->VonageAccounts_model->update($vonageAccount->id, $vonage_data);
+            }else{
+                $vonage_data = [
+                    'company_id' => $company_id,
+                    'vn_api_key' => base64_encode($post['vn_api_key']),
+                    'vn_api_secret' => base64_encode($post['vn_api_secret']),
+                    'vn_branding' => $post['vn_branding'],
+                    'vn_from_number' => $post['vn_from_number']
+                ];
+
+                $this->VonageAccounts_model->create($vonage_data);
+            }
+
+            $msg = '';
+            
         }
 
         $json_data = [
@@ -460,6 +535,7 @@ class Tools extends MY_Controller {
         $this->load->model('Clients_model');
         $this->load->model('RingCentralAccounts_model');
         $this->load->model('TwilioAccounts_model');
+        $this->load->model('VonageAccounts_model');
 
         $is_success = false;
         $msg = 'Cannot update settings';
@@ -489,6 +565,17 @@ class Tools extends MY_Controller {
                 $is_success = true;
             }else{
                 $msg = 'You do not have a valid twilio account.';
+            }
+        }elseif( $post['default_sms'] == 'vonage' ){
+            $vonage = $this->VonageAccounts_model->getByCompanyId($company_id);
+            if( !empty($vonage) ){
+                $data = ['default_sms_api' => 'vonage'];
+                $this->Clients_model->update($client->id, $data);
+
+                $msg = '';
+                $is_success = true;
+            }else{
+                $msg = 'You do not have a valid vonage account.';
             }
         }else{
             $data = ['default_sms_api' => ''];

@@ -1183,6 +1183,85 @@ class Reports extends MY_Controller {
 
                     $total = $hr * $price;
 
+                    $rates = number_format(floatval($timeActivity->hourly_rate), 2);
+                    $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
+                    if(!empty($post['divide-by-100'])) {
+                        $rates = number_format(floatval($rates) / 100, 2);
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $rates = number_format(floatval($rates), 0);
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = '('.$rates.')';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = $rates.'-';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($rates, 0, 1) === '-') {
+                                $rates = '<span class="text-danger">'.$rates.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($rates, 0, 1) === '(' && substr($rates, -1) === ')') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rates, -1) === '-') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
                         'create_date' => date("m/d/Y H:i:s A", strtotime($timeActivity->created_at)),
@@ -1193,7 +1272,7 @@ class Reports extends MY_Controller {
                         'employee' => $employeeName,
                         'product_service' => $productName,
                         'memo_description' => $timeActivity->description,
-                        'rates' => !empty($timeActivity->hourly_rate) ? number_format(floatval($timeActivity->hourly_rate), 2) : '',
+                        'rates' => !empty($timeActivity->hourly_rate) ? $rates : '',
                         'duration' => substr($timeActivity->time, 0, -3),
                         'start_time' => substr($timeActivity->start_time, 0, -3),
                         'end_time' => substr($timeActivity->end_time, 0, -3),
@@ -1201,8 +1280,12 @@ class Reports extends MY_Controller {
                         'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
                         'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
                         'invoice_date' => '',
-                        'amount' => $timeActivity->billable === '1' ? number_format($total, 2) : ''
+                        'amount' => $timeActivity->billable === '1' ? $amount : ''
                     ];
+                }
+
+                if(!empty($post['limit'])) {
+                    $activities = array_slice($activities, 0, intval($post['limit']));
                 }
 
                 if(!empty($post['date'])) {
@@ -1217,7 +1300,7 @@ class Reports extends MY_Controller {
                 }
 
                 $sort = [
-                    'column' => !empty($post['column']) ? str_replace('-', '_', $post['column']) : 'activity_date',
+                    'column' => !empty($post['column']) ? str_replace('-', '_', $post['column']) : 'last_modified',
                     'order' => empty($post['order']) ? 'asc' : 'desc'
                 ];
 
@@ -1241,26 +1324,217 @@ class Reports extends MY_Controller {
                     }
                 });
 
+                if(!empty($post['customer'])) {
+                    if(!in_array($post['customer'], ['all', 'not-specified', 'specified'])) {
+                        $customer = $this->accounting_customers_model->get_by_id($post['customer']);
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+                        $filters = [
+                            'customer_id' => $post['customer']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['customer'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['product-service'])) {
+                    if(!in_array($post['customer'], ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID($post['product-service']);
+
+                        $filters = [
+                            'item_id' => $post['product-service']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+
+                        if($post['product-service'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['employee'])) {
+                    if(!in_array($post['employee'], ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', $post['employee']);
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['employee'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['create-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['last-modified-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['billable'])) {
+                    $filters = [
+                        'billable' => $post['billable']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return $v['billable'] === ucfirst($filters['billable']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['memo'])) {
+                    $filters = [
+                        'memo' => $post['memo']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
                 $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
                 $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
                 $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
-                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
-                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
-                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
-                    $writer->markMergedCell('Sheet1', 1, 0, 1, count($post['fields']) - 1);
-                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row = 0;
 
-                    $row = 4;
+                    $header = [];
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    if(empty($post['show-company-name'])) {
+                        $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-title'])) {
+                        $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(!empty($post['show-report-period'])) {
+                        $reportPeriod = "Created/Edited: Since " . date("F j, Y");
+                        $writer->writeSheetRow('Sheet1', [$reportPeriod], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
                     foreach($activities as $activity) {
                         $data = [];
+
+                        $style = [];
                         foreach($post['fields'] as $field) {
+                            if($field === 'Rates' || $field === 'Amount') {
+                                if(stripos($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                    $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                    $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                // if(substr($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                    $style[] = ['color' => '#FF0000'];
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
+                            } else {
+                                $style[] = ['color' => '#000000'];
+                            }
                             $data[] = $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
                         }
 
-                        $writer->writeSheetRow('Sheet1', $data);
+                        $writer->writeSheetRow('Sheet1', $data, $style);
 
                         $row++;
                     }
@@ -1280,8 +1554,8 @@ class Reports extends MY_Controller {
                     }
 
                     $row += 1;
-                    $date = date("l, F j, Y h:i A eP");
-                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => $footerAlignment, 'valign' => 'center']);
                     $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
 
                     $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
@@ -1293,10 +1567,11 @@ class Reports extends MY_Controller {
                     $html = '
                         <table style="padding-top:-40px;">
                             <tr>
-                                <td style="text-align: center">
-                                    <h2 style="margin: 0">'.$companyName.'</h2>
-                                    <h3 style="margin: 0">Recent/Edited Time Activities</h3>
-                                </td>
+                                <td style="text-align: '.$headerAlignment.'">';
+                                    $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                    $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                    $html .= !empty($post['show-report-period']) ? '<h4 style="margin: 0">Created/Edited: Since '.date("F j, Y").'</h4>' : '';
+                                $html .= '</td>
                             </tr>
                         </table>
                         <br /><br /><br />
@@ -1314,15 +1589,15 @@ class Reports extends MY_Controller {
                         foreach($activities as $activity) {
                             $html .= '<tr>';
                             foreach($post['fields'] as $field) {
-                                $html .= '<td>'.$activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))].'</td>';
+                                $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
                             }
                             $html .= '</tr>';
                         }
                     
                     $html .= '</tbody>';
+                    $html .= '<tfoot>';
                     if(!empty($reportNote) && !empty($reportNote->notes)) {
-                    $html .= '<tfoot>
-                        <tr>
+                    $html .= '<tr>
                             <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
                         </tr>
                         <tr>
@@ -1330,10 +1605,15 @@ class Reports extends MY_Controller {
                                 <h4><b>Notes</b></h4>
                                 '.$reportNote->notes.'
                             </td>
-                        </tr>
-                    </tfoot>';
+                        </tr>';
                     }
-                    $html .= '</table>';
+                    $html .= '<tr style="text-align: '.$footerAlignment.'">
+                                <td colspan="'.count($post['fields']).'">
+                                    <p style="margin: 0">'.$date.'</p>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>';
 
                     $fileName = str_replace(' ', '_', $companyName).'_Recent_Edited_Time_Activities';
 
