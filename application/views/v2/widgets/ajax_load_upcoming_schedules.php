@@ -202,13 +202,13 @@
                                 }
                             }                            
 
-                            if( !empty($assigned_employees) ){
+                            /*if( !empty($assigned_employees) ){
                                 if( !in_array($schedule['data']->sales_rep, $assigned_employees) ){
                                     $assigned_employees[] = $schedule['data']->sales_rep;        
                                 }
                             }else{
                                 $assigned_employees[] = $schedule['data']->sales_rep;
-                            }
+                            }*/
 
                             $schedule_invoice_amount = number_format($schedule['data']->grandtotal,2);
 

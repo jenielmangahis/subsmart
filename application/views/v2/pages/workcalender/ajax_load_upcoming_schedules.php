@@ -208,7 +208,7 @@
                                 }
                             }                            
 
-                            $assigned_employees[] = $schedule['data']->sales_rep;
+                            //$assigned_employees[] = $schedule['data']->sales_rep;
 
                             $is_valid = 1;
                         }elseif( $schedule['type'] == 'appointment' ){
