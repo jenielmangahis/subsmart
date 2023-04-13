@@ -101,7 +101,7 @@
                             $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->e_employee_id;
+                            //$assigned_employees[] = $schedule['data']->e_employee_id;
                             if( $schedule['data']->employee2_employee_id > 0 ){
                                 $assigned_employees[] = $schedule['data']->employee2_employee_id;
                             }
@@ -112,10 +112,10 @@
                                 $assigned_employees[] = $schedule['data']->employee4_employee_id;
                             }
                             if( $schedule['data']->employee5_employee_id > 0 ){
-                                $assigned_employees[] = $schedule['data']->employee4_employee_id;
+                                $assigned_employees[] = $schedule['data']->employee5_employee_id;
                             }
                             if( $schedule['data']->employee6_employee_id > 0 ){
-                                $assigned_employees[] = $schedule['data']->employee4_employee_id;
+                                $assigned_employees[] = $schedule['data']->employee6_employee_id;
                             }
 
                             $is_valid = 1;
