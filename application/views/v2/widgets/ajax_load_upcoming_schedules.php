@@ -87,7 +87,7 @@
                             $schedule_end_time = $schedule['data']->end_time;
                             $schedule_status = $schedule['data']->status;
                             $schedule_type   = $schedule['data']->job_type;
-                            $schedule_tags   = $schedule['data']->tags_name;
+                            $schedule_tags   = $schedule['data']->tags;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $cust_phone;
