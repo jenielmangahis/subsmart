@@ -4,7 +4,7 @@
     table {
         width: 100% !important;
     }
-    #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter{
+    #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter, #HISTORY_TABLE_length, #HISTORY_TABLE_filter, #HISTORY_TABLE_info, .HISTORY_DIV{
         display: none;
     }
     table.dataTable thead th, table.dataTable thead td {
@@ -155,6 +155,10 @@
                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');">History</a>
+                                            <!-- ITEM_LOCATION_TABLE.columns(1).search('^'+DATA_ID+'$', true, false).draw(); -->
+                                        </li>
                                         <li>
                                             <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?php echo $item[3]; ?>">Edit</a>
                                         </li>
@@ -336,9 +340,64 @@
 </div>
 <!-- MODAL SECTION -->
 
+  <!-- Modal -->
+  <div class="modal fade" id="history_list" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Item Dispense History</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>  
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2 HISTORY_DIV">
+                            <input id="HISTORY_TABLE_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search History...">
+                        </div>
+                        <div class="col-sm-12">
+                                <table id="HISTORY_TABLE" class="nsm-table">
+                                <thead class="bg-light"> 
+                                    <tr>
+                                        <th data-name="Datetime">Datetime</th>
+                                        <th data-name="Item" class="d-none">Item ID</th>
+                                        <th data-name="Item" style="width: 125px;">Item</th>
+                                        <th data-name="Deduction">Deduction</th>
+                                        <th data-name="Remaining">Remaining</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($items_history as $history) { ?>
+                                    <tr>
+                                        <td><?php echo $history->datetime ?></td>
+                                        <td class="d-none"><?php echo $history->item_id ?></td>
+                                        <td style="width: 125px;"><?php echo $history->item_name ?></td>
+                                        <td>-<?php echo $history->deduction ?></td>
+                                        <td><?php echo $history->remaining_quantity ?></td>
+                                    </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        var HISTORY_TABLE = $("#HISTORY_TABLE").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        });
+
+        $("#HISTORY_TABLE_SEARCH").keyup(function() {
+            HISTORY_TABLE.columns(1).search($(this).val()).draw();
+        });
+    });
 
     var ITEM_ID;
     $('.SEE_LOCATION').click(function() {
@@ -445,10 +504,8 @@ $(document).ready(function() {
     });
 
     $("#search_field_custom").keyup(function() {
-        INVENTORY_TABLE.search($(this).val()).draw()
+        INVENTORY_TABLE.search($(this).val()).draw();
     });
-    INVENTORY_TABLE_SETTINGS = INVENTORY_TABLE.settings();
-
 
     let selectedIds = [];
 
