@@ -1215,6 +1215,38 @@ class Job extends MY_Controller
                 } else {
                     $updated =  $this->general->add_($payment_data, 'job_payments');
                 }
+
+                //Update invoice
+                $invoiceCheck = array(
+                    'where' => array(
+                        'job_id' => $input['jobs_id']
+                    ),
+                    'table' => 'invoices'
+                );
+                $invoiceExists = $this->general->get_data_with_param($invoiceCheck,FALSE);
+                if( $invoiceExists ){
+                    $invoice_data = [
+                        'status' => 'Paid'              
+                    ];
+                    $this->general->update_with_key_field($invoice_data, $input['jobs_id'], 'invoices','job_id');
+
+                    //Update invoice payments
+                    $invoicePaymentCheck = array(
+                        'where' => array(
+                            'invoice_id' => $invoiceExists->id
+                        ),
+                        'table' => 'invoice_payments'
+                    );
+                    $invoicePaymentExists = $this->general->get_data_with_param($invoicePaymentCheck,FALSE);
+                    if( $invoicePaymentExists ){
+                        $invoice_payment_data = [
+                            'payment_method' => $payment_data['method'],
+                            'is_paid' => 1              
+                        ];
+                        $this->general->update_with_key_field($invoice_payment_data, $invoicePaymentExists->id, 'invoice_payments','invoice_id');               
+                    }
+
+                }
             }
         }
 
@@ -2192,7 +2224,7 @@ class Job extends MY_Controller
                         $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2262,7 +2294,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2362,6 +2394,12 @@ class Job extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    // public function testFunction(){
+    //     echo "<pre>";
+    //     print_r ($this->items_model->recordItemTransaction(1, 20, 2, "deduct"));
+    //     echo "</pre>";
+    // }
 
     public function delete()
     {

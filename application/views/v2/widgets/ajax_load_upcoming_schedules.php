@@ -87,7 +87,7 @@
                             $schedule_end_time = $schedule['data']->end_time;
                             $schedule_status = $schedule['data']->status;
                             $schedule_type   = $schedule['data']->job_type;
-                            $schedule_tags   = $schedule['data']->tags_name;
+                            $schedule_tags   = $schedule['data']->tags;
                             $schedule_number = $schedule['data']->job_number;
                             $schedule_customer_name = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $cust_phone;
@@ -99,7 +99,7 @@
                             $schedule_invoice_amount = $schedule['data']->invoice_amount;
 
                             $assigned_employees = array();
-                            $assigned_employees[] = $schedule['data']->e_employee_id;
+                            //$assigned_employees[] = $schedule['data']->e_employee_id;
                             if( $schedule['data']->employee2_employee_id > 0 ){
                                 $assigned_employees[] = $schedule['data']->employee2_employee_id;
                             }
@@ -108,6 +108,12 @@
                             }
                             if( $schedule['data']->employee4_employee_id > 0 ){
                                 $assigned_employees[] = $schedule['data']->employee4_employee_id;
+                            }
+                            if( $schedule['data']->employee5_employee_id > 0 ){
+                                $assigned_employees[] = $schedule['data']->employee5_employee_id;
+                            }
+                            if( $schedule['data']->employee6_employee_id > 0 ){
+                                $assigned_employees[] = $schedule['data']->employee6_employee_id;
                             }
 
                             $is_valid = 1;
@@ -196,13 +202,13 @@
                                 }
                             }                            
 
-                            if( !empty($assigned_employees) ){
+                            /*if( !empty($assigned_employees) ){
                                 if( !in_array($schedule['data']->sales_rep, $assigned_employees) ){
                                     $assigned_employees[] = $schedule['data']->sales_rep;        
                                 }
                             }else{
                                 $assigned_employees[] = $schedule['data']->sales_rep;
-                            }
+                            }*/
 
                             $schedule_invoice_amount = number_format($schedule['data']->grandtotal,2);
 

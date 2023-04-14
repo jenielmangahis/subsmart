@@ -219,54 +219,62 @@ class PlaidAccount extends MY_Controller {
         $is_valid = 1;
         $cid = logged('company_id');
         $uid = logged('id');
+        $role_id = logged('role');
+        $user_type = logged('user_type');
+        
+        if( $user_type == 7 || $role_id == 3 ){
+            $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
+            $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
+            $recentTransactions = array();
+            if( $plaidAccount ){
+                foreach($plaidBankAccounts as $pc){            
+                    try{
+                        $start_date = date('Y-m-d', strtotime("-1 week"));
+                        $end_date   = date("Y-m-d");
 
-        $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
-        $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
-        $recentTransactions = array();
-        if( $plaidAccount ){
-            foreach($plaidBankAccounts as $pc){            
-                try{
-                    $start_date = date('Y-m-d', strtotime("-1 week"));
-                    $end_date   = date("Y-m-d");
+                        $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
+                        $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
+                        if( isset($balance->error_code) && $balance->error_code != '' ){
+                            $pc->balance_available = 'Cannot fetch bank account balance';
+                            $pc->balance_current   = 'Cannot fetch bank account balance';
 
-                    $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
-                    $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
-                    if( isset($balance->error_code) && $balance->error_code != '' ){
-                        $pc->balance_available = 'Cannot fetch bank account balance';
-                        $pc->balance_current   = 'Cannot fetch bank account balance';
+                            $err_data = [
+                                'user_id' => $uid,
+                                'log_date' => date("Y-m-d H:i:s"),
+                                'log_msg' => $balance->error_code . ' / ' . $balance->error_message
+                            ];
+
+                            $this->PlaidErrorLogs_model->create($err_data);
+                        }else{
+                            if( !empty($balance->accounts) ){
+                                $pc->balance_available = $balance->accounts[0]->balances->available;
+                                $pc->balance_current   = $balance->accounts[0]->balances->current;
+                            }
+                        }
+
+                        if( $plaidTransactions && $plaidTransactions->transactions ){
+                            $recentTransactions[] = $plaidTransactions->transactions;
+                        }
+                    }catch(Exception $e){
+                        $err = $e->getMessage();
 
                         $err_data = [
                             'user_id' => $uid,
                             'log_date' => date("Y-m-d H:i:s"),
-                            'log_msg' => $balance->error_code . ' / ' . $balance->error_message
+                            'log_msg' => $err
                         ];
 
                         $this->PlaidErrorLogs_model->create($err_data);
-                    }else{
-                        if( !empty($balance->accounts) ){
-                            $pc->balance_available = $balance->accounts[0]->balances->available;
-                            $pc->balance_current   = $balance->accounts[0]->balances->current;
-                        }
-                    }
-
-                    if( $plaidTransactions && $plaidTransactions->transactions ){
-                        $recentTransactions[] = $plaidTransactions->transactions;
-                    }
-                }catch(Exception $e){
-                    $err = $e->getMessage();
-
-                    $err_data = [
-                        'user_id' => $uid,
-                        'log_date' => date("Y-m-d H:i:s"),
-                        'log_msg' => $err
-                    ];
-
-                    $this->PlaidErrorLogs_model->create($err_data);
-                }         
+                    }         
+                }
+            }else{
+                $is_valid = 0;
             }
         }else{
-            $is_valid = 0;
+           $plaidBankAccounts = array();
+           $recentTransactions = array(); 
         }
+        
         
         $this->page_data['is_valid'] = $is_valid;
         $this->page_data['plaidBankAccounts']  = $plaidBankAccounts;

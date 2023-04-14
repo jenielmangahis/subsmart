@@ -318,7 +318,6 @@ class Contractors extends MY_Controller {
             'state' => $this->input->post('state'),
             'zip' => $this->input->post('zip_code'),
             'tax_id' => $this->input->post('contractor_type') === "1" ? $this->input->post('social_sec_num') : $this->input->post('emp_id_num'),
-            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         $update = $this->vendors_model->update_contractor($contractorId, $basicDetails);
@@ -329,7 +328,7 @@ class Contractors extends MY_Controller {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
         }
 
-        redirect("accounting/contractors/view/$contractorId");
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function set_status($contractorId, $status)
@@ -346,7 +345,7 @@ class Contractors extends MY_Controller {
             $this->session->set_flashdata('success', 'Unexpected error, please try again!');
         }
 
-        redirect("accounting/contractors/view/$contractorId");
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function load_contractor_payments($contractorId)

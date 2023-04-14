@@ -764,7 +764,6 @@ class Chart_of_accounts extends MY_Controller {
 
         $this->page_data['account'] = $account;
         $this->page_data['type'] = $type;
-        $this->page_data['registers'] = $registers;
         // $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
         $this->load->view('v2/pages/accounting/accounting/chart_of_accounts/view_register', $this->page_data);
     }

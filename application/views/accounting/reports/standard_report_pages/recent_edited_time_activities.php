@@ -161,11 +161,11 @@
                                                 </select>
                                                 <p class="m-0">Sort in</p>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" checked>
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($order) ? 'checked' : ''?>>
                                                     <label for="sort-asc" class="form-check-label">Ascending order</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($order) && $order === 'desc' ? 'checked' : ''?>>
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                             </ul>
@@ -324,6 +324,11 @@
                                 </div>
 
                                 <div class="row <?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                    <?php if(isset($show_logo)) : ?>
+                                    <!-- <div class="position-absolute">
+                                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px"/>
+                                    </div> -->
+                                    <?php endif; ?>
                                     <?php if(!isset($show_company_name)) : ?>
                                     <div class="col-12 grid-mb">
                                         <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>

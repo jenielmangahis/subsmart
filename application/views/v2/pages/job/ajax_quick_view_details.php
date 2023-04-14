@@ -63,8 +63,10 @@
         <div class="row mt-5">
             <div class="col-md-8">
                 <h6 class="title-border">FROM :</h6>
-                <div style="padding:0px 9px; font-size: 16px;">
-                    <b style="font-size:17px;"><?= $company_info->business_name; ?></b><br>
+                <div style="padding:0px 9px; font-size: 14px;">
+                    <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                        <i class='bx bx-buildings'></i> <?= $company_info->business_name; ?>
+                    </span>                    
                     <span><?= $company_info->street; ?></span><br>
                     <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code; ?></span><br>
                     <?php if( $company_info->business_email != '' ){ ?>
@@ -73,9 +75,18 @@
                     <span> Contact Number: <?= formatPhoneNumber($company_info->business_phone); ?></span>
                 </div>
                 <br>
-                <h6 class="title-border">TO : </h6>
-                <div style="padding:0px 9px; font-size: 16px;">
-                    <b style="font-size:17px;"><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
+                <h6 class="title-border">TO : <?= $jobs_data->customer_id; ?></h6>
+                <div style="padding:0px 9px; font-size: 14px;">
+                    <?php if( $jobs_data->customer_type == 'Business' && $jobs_data->acs_business_name != '' ){ ?>
+                        <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                            <i class='bx bx-user-circle' ></i> <?= $jobs_data->first_name .' '. $jobs_data->last_name; ?> - 
+                            <i class='bx bx-buildings'></i> <?= $jobs_data->acs_business_name; ?>
+                        </span>
+                    <?php }else{ ?>
+                        <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                            <i class='bx bx-user-circle' ></i> <?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>
+                        </span>
+                    <?php } ?>                    
                     <span><?= $jobs_data->mail_add; ?></span><br>
                     <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br />
                     <?php if( $jobs_data->cust_email != '' ){ ?>

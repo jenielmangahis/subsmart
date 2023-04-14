@@ -1,8 +1,6 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
-<?php include viewPath('includes/header'); ?>
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
+<?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <style>
     #draggable { width: 150px; height: 150px; padding: 0.5em; }
@@ -28,43 +26,31 @@
     }
 </style>
 
-<div class="wrapper" role="wrapper">
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" >
-                            <div class="row margin-bottom-ter align-items-center">
-                                <!-- Nav tabs -->
-                                <div class="col-auto">
-                                    <h2 class="page-title" style="display:inline-block;">Credit Industry</h2>
-                                    <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="h1-spacer">
-                                        <a class="btn btn-primary btn-md btn-customer-create-message" href="<?= base_url('customer/add_dispute_item/'.$cus_id) ?>">
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Here are all credit report items you've saved for this client.
+                        </div>
+                    </div>
+                </div>
+                <div class="h1-spacer">
+                                        <a class="btn btn-primary btn-md btn-customer-create-message" onclick="window.open('<?= base_url('customer/add_dispute_item/'.$cus_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
                                             <span class="fa fa-plus"></span> Add New Item
                                         </a>
-                                        <a class="btn btn-primary btn-md btn-customer-add-note" href="<?= base_url('creditor_furnisher/list') ?>">
+                                        <a class="btn btn-primary btn-md btn-customer-add-note" onclick="window.open('<?= base_url('creditor_furnisher/list') ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
                                             <span class="fa fa-plus"></span> Manage Creditors / Furnishers
                                         </a>
                                     </div>
-                                </div>
-                                <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
-                                    <span style="color:black;">
-                                        Here are all credit report items you've saved for this client.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="tab-content mt-4" >
-                                        <table class="table table-hover" id="messagesListTable">
+                                    <br>
+                <table class="table table-hover" id="messagesListTable">
                                             <thead>
                                             <tr>
                                                 <th style="width:20%;">Creditor/Furnisher</th>
@@ -125,9 +111,85 @@
                                                 <?php } ?>
                                             </tbody>
                                         </table>
-                                    </div>
+                <!-- <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td class="table-icon"></td>
+                            <td data-name="Item Name">Item Name</td>
+                            <td data-name="Quantity">Quantity</td>
+                            <td data-name="Price">Price</td>
+                            <td data-name="Total">Total</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($inventory)) :
+                        ?>
+                            <?php
+                            foreach ($inventory as $i) :
+                            ?>
+                                <tr>
+                                    <td>
+                                        <div class="table-row-icon">
+                                            <i class='bx bx-user-pin'></i>
+                                        </div>
+                                    </td>
+                                    <td class="nsm-text-primary" colspan="4">
+                                        <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('job/job_preview/' . $i['job']->id); ?>'"><?= $i['job']->job_number . ' - ' . $i['job']->job_description; ?></label>
+                                    </td>
+                                </tr>
 
-                                    <!-- Modal Delete Dispute -->
+                                <?php
+                                $total_amount = 0;
+                                foreach ($i['items'] as $item) :
+                                    $total_row_price = $item->price * $item->qty;
+                                    $total_amount += $total_row_price;
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <div class="table-row-icon">
+                                                <i class='bx bx-user-pin'></i>
+                                            </div>
+                                        </td>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?= $item->title; ?></label>
+                                        </td>
+                                        <td><?= $item->qty; ?></td>
+                                        <td><?= number_format($item->price, 2); ?></td>
+                                        <td><?= number_format($total_row_price, 2); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td>
+                                        <div class="table-row-icon">
+                                            <i class='bx bx-user-pin'></i>
+                                        </div>
+                                    </td>
+                                    <td class="nsm-text-primary">
+                                        <label class="nsm-link default d-block fw-bold">Total</label>
+                                    </td>
+                                    <td colspan="3"><?= number_format($total_amount,2); ?></td>
+                                </tr>
+                            <?php
+                            endforeach;
+                            ?>
+                        <?php
+                        else :
+                        ?>
+                            <tr>
+                                <td colspan="5">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php
+                        endif;
+                        ?>
+                    </tbody>
+                </table> -->
+
+                  <!-- Modal Delete Dispute -->
                                     <div class="modal fade bd-example-modal-md" id="modal-delete-dispute" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
                                       <div class="modal-dialog modal-md" role="document">
                                         <div class="modal-content">
@@ -174,18 +236,18 @@
                                       </div>
                                     </div>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- page wrapper end -->
-<?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/adv_cust/js_list'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".nsm-table").nsmPagination();
+    });
+</script>
+
+
 <script>
 $(document).ready(function () {
     $('#messagesListTable').DataTable({
@@ -318,3 +380,8 @@ $(document).ready(function () {
     });
 });
 </script>
+
+<?php include viewPath('v2/includes/footer'); ?>
+
+
+

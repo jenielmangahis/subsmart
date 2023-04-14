@@ -822,8 +822,8 @@ class Tickets extends MY_Controller
 
         // dd($addQuery);
         $delete2 = $this->tickets_model->delete_items($id);
-
-        if ($addQuery > 0) {
+        //if ($addQuery > 0) {        
+        if ($addQuery) {
 
                 $item_id    = $this->input->post('item_id');
                 $item_type  = $this->input->post('item_type');
@@ -845,7 +845,7 @@ class Tickets extends MY_Controller
                     $data['item_type']  = $item_type[$i];
                     $data['discount']   = $discount[$i];
                     $data['total']      = $gtotal[$i];
-                    $data['ticket_id '] = $addQuery;
+                    $data['ticket_id '] = $this->input->post('ticketID');
 
 
                     $addQuery2 = $this->tickets_model->add_ticket_items($data);
@@ -1385,10 +1385,10 @@ class Tickets extends MY_Controller
 
         $tickets     = $this->tickets_model->get_tickets_data_one($id);
         $ticket_rep  = $tickets->sales_rep;
-
+        
         $this->page_data['reps'] = $this->tickets_model->get_ticket_representative($ticket_rep);
         $this->page_data['ticketsCompany'] = $this->tickets_model->get_tickets_company($tickets->company_id);
-        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
+        $this->page_data['tickets'] = $tickets;
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
