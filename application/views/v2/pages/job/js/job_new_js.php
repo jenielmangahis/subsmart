@@ -1137,6 +1137,7 @@ $("#attachment-file").change(function() {
                     text: 'An initial invoice can now be created',
                     icon: 'success',
                     confirmButtonText: 'Create Initial Invoice',
+                    confirmButtonColor: '#32243d',
                 }).then((result) => {
                     var redirect_calendar = $('#redirect-calendar').val();
                     if (redirect_calendar == 1) {
