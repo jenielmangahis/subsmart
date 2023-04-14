@@ -807,7 +807,7 @@ class DocuSign extends MYF_Controller
             'assets/js/esign/docusign/template-create.js',
         ]);
 
-        $this->load->view('esign/docusign/template-create/index', $this->page_data);
+        $this->load->view('v2/pages/esign/docusign/template-create/index', $this->page_data);
     }
 
     public function apiStoreTemplate()

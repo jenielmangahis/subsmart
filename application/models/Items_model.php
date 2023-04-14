@@ -698,6 +698,65 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
+        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty');
+        $this->db->from('items_has_storage_loc');
+        $this->db->join('items', 'items_has_storage_loc.item_id = items.id');
+        $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $query = $this->db->get();
+
+        $currentQuantity = $query->result()[0]->qty;
+        $itemLocation = $query->result()[0]->name;
+
+        if ($transactionType == "add") {
+            $this->db->select('storage_loc.location_name');
+            $this->db->from('storage_loc');
+            $this->db->where('storage_loc.loc_id', $location_id);
+            $query = $this->db->get();
+
+            $locationName = $query->result()[0]->location_name;
+
+            $newQuantity = $currentQuantity + $quantity;
+            $updateItem = $this->db->update('items_has_storage_loc', ['qty' => $newQuantity], array('item_id' => $item_id));
+
+            $transactionDetails = [
+                'search_id' => md5($item_id),
+                'item_id' => $item_id,
+                'item_location' => $locationName,
+                'transaction' => "+$quantity",
+                'running_quantity' => $newQuantity,
+            ];
+
+            $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
+        }
+
+        if ($transactionType == "deduct") {
+            $newQuantity = $currentQuantity - $quantity;
+            $updateItem = $this->db->update('items_has_storage_loc', ['qty' => $newQuantity], array('item_id' => $item_id));
+
+            $transactionDetails = [
+                'search_id' => md5($item_id),
+                'item_id' => $item_id,
+                'item_location' => $itemLocation,
+                'transaction' => "-$quantity",
+                'running_quantity' => $newQuantity,
+            ];
+            
+            $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
+        }
+
+        return "true";
+    }
+
+    public function getAllRecordItemTransaction() {
+        $this->db->select('*');
+        $this->db->from('items_transaction_history');
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 
 

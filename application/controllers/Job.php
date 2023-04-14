@@ -2224,7 +2224,7 @@ class Job extends MY_Controller
                         $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2294,7 +2294,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2394,6 +2394,12 @@ class Job extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    // public function testFunction(){
+    //     echo "<pre>";
+    //     print_r ($this->items_model->recordItemTransaction(1, 20, 2, "deduct"));
+    //     echo "</pre>";
+    // }
 
     public function delete()
     {
