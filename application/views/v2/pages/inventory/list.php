@@ -7,6 +7,9 @@
     #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter, #HISTORY_TABLE_length, #HISTORY_TABLE_filter, #HISTORY_TABLE_info, .HISTORY_DIV{
         display: none;
     }
+    #INV_ITEM_NAME {
+        font-weight: normal;
+    }
     table.dataTable thead th, table.dataTable thead td {
     padding: 10px 18px;
     border-bottom: 1px solid lightgray;
@@ -157,6 +160,7 @@
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');">History</a>
+                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#INV_ITEM_NAME').text('(<?php echo $item[0]; ?>)')">View Transaction</a>
                                             <!-- ITEM_LOCATION_TABLE.columns(1).search('^'+DATA_ID+'$', true, false).draw(); -->
                                         </li>
                                         <li>
@@ -345,7 +349,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
+<<<<<<< HEAD
                 <span class="modal-title content-title" style="font-size: 17px;">Item Dispense History</span>
+=======
+                <span class="modal-title content-title" style="font-size: 17px;">Item Transaction History <i id="INV_ITEM_NAME"></i></span>
+>>>>>>> ce81d7b3dc1e9c6f14e7f6a588de923abb4e7ebc
                 <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>  
             <div class="modal-body">
@@ -358,6 +366,7 @@
                                 <thead class="bg-light"> 
                                     <tr>
                                         <th data-name="Datetime">Datetime</th>
+<<<<<<< HEAD
                                         <th data-name="Item" class="d-none">Item ID</th>
                                         <th data-name="Item" style="width: 125px;">Item</th>
                                         <th data-name="Deduction">Deduction</th>
@@ -372,6 +381,22 @@
                                         <td style="width: 125px;"><?php echo $history->item_name ?></td>
                                         <td>-<?php echo $history->deduction ?></td>
                                         <td><?php echo $history->remaining_quantity ?></td>
+=======
+                                        <th data-name="Item" class="d-none">Search ID</th>
+                                        <th data-name="Location">Location</th>
+                                        <th data-name="Transaction">Transaction</th>
+                                        <th data-name="Running Quantity">Running Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($items_transaction_history as $history) { ?>
+                                    <tr>
+                                        <td><?php echo $history->datetime; ?></td>
+                                        <td class="d-none"><?php echo $history->search_id; ?></td>
+                                        <td><?php echo $history->item_location; ?></td>
+                                        <td><?php echo $history->transaction; ?></td>
+                                        <td><?php echo $history->running_quantity; ?></td>
+>>>>>>> ce81d7b3dc1e9c6f14e7f6a588de923abb4e7ebc
                                     </tr>
                                     <?php } ?>
                                 </tbody>
