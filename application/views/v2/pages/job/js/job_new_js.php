@@ -265,22 +265,24 @@ $("#attachment-file").change(function() {
         $(".select_item").click(function () {
             var idd = this.id;
             var title = $(this).data('itemname');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
+            var price = parseInt($(this).attr('data-price'));
+            var qty = parseInt($(this).attr('data-quantity'));
             var location_name = $(this).data('location_name');
             var location_id = $(this).data('location_id');
             var item_type = $(this).data('item_type');
-            var total_ = price * qty;
+            // var total_ = price * qty;
+            var total_ = 0;
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
+            $("#ITEMLIST_PRODUCT_"+idd).hide();
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
-                "<td><small>Qty</small><input min='1' data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' maxlength='1'></td>" +
+                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='0' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0' max='"+qty+"'></td>" +
                 "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
                 "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
-                "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2'><i class='bx bx-trash'></i></button></td>" +
+                "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
                 "</tr>";
             tableBody = $("#jobs_items");
             tableBody.append(markup);
@@ -1118,24 +1120,38 @@ $("#attachment-file").change(function() {
             });
         }
         function sucess_add_job(data) {
-        Swal.fire({
-            title: 'Job has been added',
-            text: 'An initial invoice can now be created',
-            icon: 'success',
-            confirmButtonText: 'Create Initial Invoice',
-        }).then((result) => {
-            var redirect_calendar = $('#redirect-calendar').val();
-            if (redirect_calendar == 1) {
-                window.location.href = '<?= base_url(); ?>workcalender';
-            } else {
-                // console.log({ data });
-                if (data.job_id) {
-                    window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-                    window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
-                    return;
-                }
+            if( data.is_update == 1 ){ //Update
+                Swal.fire({
+                    text: 'Job has been updated',                    
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    location.href = base_url + 'job';
+                });
+            }else{ //Create
+                Swal.fire({
+                    title: 'Job has been added',
+                    text: 'An initial invoice can now be created',
+                    icon: 'success',
+                    confirmButtonText: 'Create Initial Invoice',
+                }).then((result) => {
+                    var redirect_calendar = $('#redirect-calendar').val();
+                    if (redirect_calendar == 1) {
+                        window.location.href = '<?= base_url(); ?>workcalender';
+                    } else {
+                        // console.log({ data });
+                        if (data.job_id) {
+                            window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+                            window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
+                            return;
+                        }
+                    }
+                });
             }
-        });
+            
     }
         function error(title,text,icon){
             Swal.fire({

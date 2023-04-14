@@ -459,7 +459,7 @@
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
-                <input type="hidden" name="job_hash" id="" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
+                <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -857,6 +857,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $total = $item->cost * $item->qty;
+                                                    $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
                                                         <td width="35%"><small>Item name</small>
@@ -877,7 +878,7 @@
                                                             <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2"><i class="bx bx-trash" aria-hidden="true"></i></button>
+                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2" onclick="$('#ITEMLIST_PRODUCT_<?php echo "$item->id"; ?>').show();"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -891,6 +892,9 @@
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
                                             <hr>
+                                            <style type="text/css">
+                                                <?php echo $hideSelectedItems; ?>
+                                            </style>
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -1334,15 +1338,17 @@
                                             <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
                                             <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                <?php if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
+                                                <?php //if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
                                                     <div class="form-check float-start">
                                                       <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
                                                       <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
                                                         Send an email after scheduling this job.
                                                       </label>
                                                     </div>
-                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
-                                                <?php endif; ?>
+                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i>
+                                                        <?= isset($jobs_data) ? 'Update' : 'Schedule'; ?>
+                                                    </button>
+                                                <?php //endif; ?>
                                                 <?php if(isset($jobs_data)): ?>
                                                     <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
                                                 <?php endif; ?>
@@ -1411,12 +1417,12 @@
                                             foreach ($items as $item) {
                                                $item_qty = get_total_item_qty($item->id);
                                     ?>
-                                    <tr>
+                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>" <?php echo $item_qty[0]->total_qty <= 0 ? "disabled" : ""; ?>><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
+                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "<span class='badge bg-danger'>Empty</span>"; ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                         <td><?php echo $item->location_name; ?></td>

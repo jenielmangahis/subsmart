@@ -2082,6 +2082,8 @@ class Job extends MY_Controller
             $msg = 'Cannot accept job having 0 amount';
         }
 
+        $is_update = 0;
+
         if ($is_success == 1) {
             $get_job_settings = array(
                 'where' => array(
@@ -2102,6 +2104,7 @@ class Job extends MY_Controller
 
             if (!empty($isJob)) {
                 $job_number = $isJob->job_number;
+                $is_update = 1;
             } else {
                 $job_settings = $this->general->get_data_with_param($get_job_settings);
                 if ($job_settings) {
@@ -2224,7 +2227,7 @@ class Job extends MY_Controller
                         $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2294,7 +2297,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
-                        $this->items_model->deductItemQuantity($input['item_id'][$xx], $input['item_qty'][$xx], md5($input['item_id'][$xx]));
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2390,10 +2393,17 @@ class Job extends MY_Controller
             'qty' => $location_qty,
             'job_id' => $jobs_id,
             'estimate_id' => $jobs_data->estimate_id,
+            'is_update' => $is_update,
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
     }
+
+    // public function testFunction(){
+    //     echo "<pre>";
+    //     print_r ($this->items_model->recordItemTransaction(1, 20, 2, "deduct"));
+    //     echo "</pre>";
+    // }
 
     public function delete()
     {
