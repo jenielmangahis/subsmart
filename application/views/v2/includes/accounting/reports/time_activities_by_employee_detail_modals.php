@@ -54,7 +54,7 @@
                                                     <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
                                                 </select>
                                             </div>
-                                            <?php if(!empty($filter_date) && $filter_date !== 'this-month-to-date') : ?>
+                                            <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
                                             <div class="col-12 col-md-4">
                                                 <label for="from">From</label>
                                                 <div class="nsm-field-group calendar">

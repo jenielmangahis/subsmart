@@ -2082,6 +2082,8 @@ class Job extends MY_Controller
             $msg = 'Cannot accept job having 0 amount';
         }
 
+        $is_update = 0;
+
         if ($is_success == 1) {
             $get_job_settings = array(
                 'where' => array(
@@ -2102,6 +2104,7 @@ class Job extends MY_Controller
 
             if (!empty($isJob)) {
                 $job_number = $isJob->job_number;
+                $is_update = 1;
             } else {
                 $job_settings = $this->general->get_data_with_param($get_job_settings);
                 if ($job_settings) {
@@ -2201,6 +2204,7 @@ class Job extends MY_Controller
                 }
             }
             if (empty($isJob)) {
+                echo 5;exit;
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
                 //Create hash_id
@@ -2390,6 +2394,7 @@ class Job extends MY_Controller
             'qty' => $location_qty,
             'job_id' => $jobs_id,
             'estimate_id' => $jobs_data->estimate_id,
+            'is_update' => $is_update,
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);

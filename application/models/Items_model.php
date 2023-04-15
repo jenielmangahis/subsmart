@@ -386,7 +386,7 @@ class Items_model extends MY_Model
             }
         }
 
-        // $this->db->update($this->table_has_location);
+        $this->db->update($this->table_has_location);
     }
     public function getLocationById($id)
     {

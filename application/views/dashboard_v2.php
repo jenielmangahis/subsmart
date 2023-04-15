@@ -83,7 +83,7 @@
 </div>
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
-        <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
+        <button name="button" type="button" class="nsm-button" data-toggle="modal" data-target=".addticketsModal">
             <i class='bx bx-fw bx bx-fw bx-note'></i> Add Service Ticket
         </button>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
@@ -366,3 +366,4 @@
 
 <script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('tickets/add_modal'); ?>

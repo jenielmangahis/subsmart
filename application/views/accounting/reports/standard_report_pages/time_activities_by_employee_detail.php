@@ -55,7 +55,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <?php if(!empty($filter_date) && $filter_date !== 'this-month-to-date') : ?>
+                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
                                 <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-activity-date-from">From</label>
@@ -75,10 +75,10 @@
                                     <div class="col-12">
                                         <label for="rows-columns"><b>Rows/Columns</b></label>
                                     </div>
-                                    <div class="col-12 col-md-6 d-flex align-items-center">
+                                    <div class="col-12 col-md-4 d-flex align-items-center">
                                         <label for="group-by">Group by</label>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-8">
                                         <select id="group-by" class="form-control nsm-field">
                                             <option value="none" <?=$group_by === 'none' ? 'selected' : ''?>>None</option>
                                             <option value="customer" <?=$group_by === 'customer' ? 'selected' : ''?>>Customer</option>

@@ -1190,120 +1190,67 @@ class Reports extends MY_Controller {
                 });
 
                 $grouped = [];
-                if(!empty(get('group-by'))) {
-                    switch(get('group-by')) {
-                        case 'customer' :
-                            foreach($activities as $activity)
-                            {
-                                $key = $activity['customer_id'];
-                                if(array_key_exists($key, $grouped)) {
-                                    $grouped[$key]['activities'][] = $activity;
-                                    $duration = $grouped[$key]['duration_total'];
-                                    $amount = $grouped[$key]['amount_total'];
-        
-                                    $durationExplode = explode(':', $duration);
-                                    $totalHrs = intval($durationExplode[0]);
-                                    $totalMins = intval($durationExplode[1]);
-        
-                                    $actDuration = $activity['duration'];
-                                    $actDurationExplode = explode(':', $actDuration);
-                                    $actHrs = intval($actDurationExplode[0]);
-                                    $actMins = intval($actDurationExplode[1]);
-                                    $actAmount = $activity['amount'];
-        
-                                    $totalHrs += $actHrs;
-                                    $totalMins += $actMins;
-        
-                                    if($totalMins > 60) {
-                                        do {
-                                            $totalHrs++;
-                                            $totalMins -= 60;
-                                        } while($totalMins >= 60);
-                                    }
-        
-                                    if(strlen($totalHrs) === 1) {
-                                        $totalHrs = '0'.$totalHrs;
-                                    }
-        
-                                    if(strlen($totalMins) === 1) {
-                                        $totalMins = $totalMins.'0';
-                                    }
-
-                                    $grouped[$key]['duration_total'] = $totalHrs.':'.$totalMins;
-                                    $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($actAmount), 2);
-                                } else {
-                                    $grouped[$key] = [
-                                        'name' => $activity['customer'],
-                                        'duration_total' => $activity['duration'],
-                                        'amount_total' => $activity['amount'],
-                                        'activities' => [
-                                            $activity
-                                        ]
-                                    ];
-                                }
-                            }
-                        break;
-                        case 'product-service' :
-                            foreach($activities as $activity)
-                            {
-                                $key = $activity['item_id'];
-                                if(array_key_exists($key, $grouped)) {
-                                    $grouped[$key]['activities'][] = $activity;
-                                    $duration = $grouped[$key]['duration_total'];
-                                    $amount = $grouped[$key]['amount_total'];
-        
-                                    $durationExplode = explode(':', $duration);
-                                    $totalHrs = intval($durationExplode[0]);
-                                    $totalMins = intval($durationExplode[1]);
-        
-                                    $actDuration = $activity['duration'];
-                                    $actDurationExplode = explode(':', $actDuration);
-                                    $actHrs = intval($actDurationExplode[0]);
-                                    $actMins = intval($actDurationExplode[1]);
-                                    $actAmount = $activity['amount'];
-        
-                                    $totalHrs += $actHrs;
-                                    $totalMins += $actMins;
-        
-                                    if($totalMins > 60) {
-                                        do {
-                                            $totalHrs++;
-                                            $totalMins -= 60;
-                                        } while($totalMins >= 60);
-                                    }
-        
-                                    if(strlen($totalHrs) === 1) {
-                                        $totalHrs = '0'.$totalHrs;
-                                    }
-        
-                                    if(strlen($totalMins) === 1) {
-                                        $totalMins = $totalMins.'0';
-                                    }
-        
-                                    $grouped[$key]['duration_total'] = $totalHrs.':'.$totalMins;
-                                    $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($actAmount), 2);
-                                } else {
-                                    $grouped[$key] = [
-                                        'name' => $activity['product_service'],
-                                        'duration_total' => $activity['duration'],
-                                        'amount_total' => $activity['amount'],
-                                        'activities' => [
-                                            $activity
-                                        ]
-                                    ];
-                                }
-                            }
-                        break;
-                        default :
-                            $grouped = $activities;
-                        break;
-                    }
-
-                    $this->page_data['group_by'] = get('group-by');
-                } else {
+                if(get('group-by') !== 'none') {
                     foreach($activities as $activity)
                     {
-                        $key = $activity['employee_key'].'-'.$activity['employee_id'];
+                        switch(get('group-by')) {
+                            case 'customer' :
+                                $key = $activity['customer_id'];
+                                $name = $activity['customer'];
+                            break;
+                            case 'product-service' :
+                                $key = $activity['item_id'];
+                                $name = $activity['product_service'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $activity['activity_date']);
+                                $name = date("F j, Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $dto = new DateTime();
+                                $dto->setISODate($year, $week, 0);
+                                $weekStart = $dto->format('F j, Y');
+                                $weekStartMonth = $dto->format('F');
+                                $weekStartYear = $dto->format('Y');
+                                $dto->modify('+6 days');
+                                $weekEnd = $dto->format('F j, Y');
+                                $weekEndMonth = $dto->format('F');
+                                $weekEndYear = $dto->format('Y');
+
+                                $key = $week.'-'.$year;
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'work-week' :
+
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($activity['activity_date']));
+                                $name = date("F Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'quarter' :
+
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($activity['activity_date']));
+                                $name = date("Y", strtotime($activity['activity_date']));
+                            break;
+                            default :
+                                $key = $activity['employee_key'].'-'.$activity['employee_id'];
+                                $name = $activity['employee'];
+                            break;
+                        }
                         if(array_key_exists($key, $grouped)) {
                             $grouped[$key]['activities'][] = $activity;
                             $duration = $grouped[$key]['duration_total'];
@@ -1322,7 +1269,7 @@ class Reports extends MY_Controller {
                             $totalHrs += $actHrs;
                             $totalMins += $actMins;
 
-                            if($totalMins > 60) {
+                            if($totalMins >= 60) {
                                 do {
                                     $totalHrs++;
                                     $totalMins -= 60;
@@ -1334,14 +1281,14 @@ class Reports extends MY_Controller {
                             }
 
                             if(strlen($totalMins) === 1) {
-                                $totalMins = $totalMins.'0';
+                                $totalMins = '0'.$totalMins;
                             }
 
                             $grouped[$key]['duration_total'] = $totalHrs.':'.$totalMins;
                             $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($actAmount), 2);
                         } else {
                             $grouped[$key] = [
-                                'name' => $activity['employee'],
+                                'name' => $name,
                                 'duration_total' => $activity['duration'],
                                 'amount_total' => $activity['amount'],
                                 'activities' => [
@@ -1350,7 +1297,14 @@ class Reports extends MY_Controller {
                             ];
                         }
                     }
+                } else {
+                    $grouped = $activities;
                 }
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
                 $activities = $grouped;
 
                 $this->page_data['activities'] = $activities;

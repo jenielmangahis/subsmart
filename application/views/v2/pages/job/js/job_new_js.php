@@ -207,7 +207,7 @@ $("#attachment-file").change(function() {
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>/job/save_job",
+                    url: "<?= base_url() ?>job/save_job",
                     data: form.serialize(), // serializes the form's elements.
                     dataType:'json',
                     success: function(data) {
@@ -1120,24 +1120,39 @@ $("#attachment-file").change(function() {
             });
         }
         function sucess_add_job(data) {
-        Swal.fire({
-            title: 'Job has been added',
-            text: 'An initial invoice can now be created',
-            icon: 'success',
-            confirmButtonText: 'Create Initial Invoice',
-        }).then((result) => {
-            var redirect_calendar = $('#redirect-calendar').val();
-            if (redirect_calendar == 1) {
-                window.location.href = '<?= base_url(); ?>workcalender';
-            } else {
-                // console.log({ data });
-                if (data.job_id) {
-                    window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-                    window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
-                    return;
-                }
+            if( data.is_update == 1 ){ //Update
+                Swal.fire({
+                    text: 'Job has been updated',                    
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    location.href = base_url + 'job';
+                });
+            }else{ //Create
+                Swal.fire({
+                    title: 'Job has been added',
+                    text: 'An initial invoice can now be created',
+                    icon: 'success',
+                    confirmButtonText: 'Create Initial Invoice',
+                    confirmButtonColor: '#32243d',
+                }).then((result) => {
+                    var redirect_calendar = $('#redirect-calendar').val();
+                    if (redirect_calendar == 1) {
+                        window.location.href = '<?= base_url(); ?>workcalender';
+                    } else {
+                        // console.log({ data });
+                        if (data.job_id) {
+                            window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+                            window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
+                            return;
+                        }
+                    }
+                });
             }
-        });
+            
     }
         function error(title,text,icon){
             Swal.fire({

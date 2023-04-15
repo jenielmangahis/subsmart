@@ -459,7 +459,7 @@
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
-                <input type="hidden" name="job_hash" id="" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
+                <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -1338,15 +1338,17 @@
                                             <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
                                             <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                <?php if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
+                                                <?php //if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
                                                     <div class="form-check float-start">
                                                       <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
                                                       <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
                                                         Send an email after scheduling this job.
                                                       </label>
                                                     </div>
-                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
-                                                <?php endif; ?>
+                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i>
+                                                        <?= isset($jobs_data) ? 'Update' : 'Schedule'; ?>
+                                                    </button>
+                                                <?php //endif; ?>
                                                 <?php if(isset($jobs_data)): ?>
                                                     <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
                                                 <?php endif; ?>

@@ -88,7 +88,7 @@
                 <span>eSign</span>
             </a>
         </li>
-        <!-- Do not remove the last li -->
+        <!-- Do not remove the last li --> 
         <li><label></label></li>
     </ul>
 </div>
@@ -103,6 +103,6 @@
 
         const templateId = json.data.template_id;
         const customerId = $esignLink.dataset.customerId;
-        $esignLink.setAttribute("href", `${prefixURL}/eSign/templatePrepare?id=${templateId}&customer_id=${customerId}`); 
+        // $esignLink.setAttribute("href", `${prefixURL}/eSign/templatePrepare?id=${templateId}&customer_id=${customerId}`); 
     })()
 </script>
