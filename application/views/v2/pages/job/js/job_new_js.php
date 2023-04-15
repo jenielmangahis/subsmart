@@ -207,7 +207,7 @@ $("#attachment-file").change(function() {
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>/job/save_job",
+                    url: "<?= base_url() ?>job/save_job",
                     data: form.serialize(), // serializes the form's elements.
                     dataType:'json',
                     success: function(data) {

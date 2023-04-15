@@ -2204,6 +2204,7 @@ class Job extends MY_Controller
                 }
             }
             if (empty($isJob)) {
+                echo 5;exit;
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
                 //Create hash_id

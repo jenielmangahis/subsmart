@@ -5,69 +5,97 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         display: none !important;
     }
 
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
-
-    .action-bar ul li a:after {
-        width: 0 !important;
-    }
-    .action-bar ul li a > i {
-        font-size: 20px !important;
-    }
-    .action-bar ul li {
-        margin-right: 5px !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item {
-        font-size: 1rem;
-        padding-right: 0 !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
-       background-color: revert;
-    }
-    .report-container .action-bar li a {
-        font-size: 14px !important;
-    }
-    .report-container .action-bar li a i {
-        font-size: unset !important;
-    }
-    .report-container #report-table {
-        font-size: 12px !important;
-    }
-    .report-container .report-footer {
-        font-size: 10px;
-    }
-</style>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Time Activities by Employee Detail Report</h3>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div> -->
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                <div class="row grid-mb">
+                                    <div class="col-12">
+                                        <label for="filter-activity-date">Time Activity Date</label>
+                                        <select class="nsm-field form-select" name="filter_activity_date" id="filter-activity-date">
+                                            <option value="all-dates" <?=$filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                            <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="today" <?=$filter_date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="this-week" <?=$filter_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                            <option value="this-week-to-date" <?=$filter_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
+                                            <option value="this-month-to-date" <?=empty($filter_date) || $filter_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="this-quarter-to-date" <?=$filter_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
+                                            <option value="this-year-to-date" <?=$filter_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                            <option value="this-year-to-last-month" <?=$filter_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                            <option value="yesterday" <?=$filter_date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                            <option value="recent" <?=$filter_date === 'recent' ? 'selected' : ''?>>Recent</option>
+                                            <option value="last-week" <?=$filter_date === 'last-week' ? 'selected' : ''?>>Last Week</option>
+                                            <option value="last-week-to-date" <?=$filter_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last Month</option>
+                                            <option value="last-month-to-date" <?=$filter_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                            <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                            <option value="last-quarter-to-date" <?=$filter_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                            <option value="last-year-to-date" <?=$filter_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                            <option value="since-30-days-ago" <?=$filter_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                            <option value="since-60-days-ago" <?=$filter_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                            <option value="since-90-days-ago" <?=$filter_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                            <option value="since-365-days-ago" <?=$filter_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
+                                            <option value="next-week" <?=$filter_date === 'next-week' ? 'selected' : ''?>>Next Week</option>
+                                            <option value="next-4-weeks" <?=$filter_date === 'next-4-weeks' ? 'selected' : ''?>>Next 4 Weeks</option>
+                                            <option value="next-month" <?=$filter_date === 'next-month' ? 'selected' : ''?>>Next Month</option>
+                                            <option value="next-quarter" <?=$filter_date === 'next-quarter' ? 'selected' : ''?>>Next Quarter</option>
+                                            <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
+                                <div class="row grid-mb">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-activity-date-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-activity-date-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-activity-date-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-activity-date-to">
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                                <div class="row grid-mb">
+                                    <div class="col-12">
+                                        <label for="rows-columns"><b>Rows/Columns</b></label>
+                                    </div>
+                                    <div class="col-12 col-md-4 d-flex align-items-center">
+                                        <label for="group-by">Group by</label>
+                                    </div>
+                                    <div class="col-12 col-md-8">
+                                        <select id="group-by" class="form-control nsm-field">
+                                            <option value="none" <?=$group_by === 'none' ? 'selected' : ''?>>None</option>
+                                            <option value="customer" <?=$group_by === 'customer' ? 'selected' : ''?>>Customer</option>
+                                            <option value="employee" <?=empty($group_by) || $group_by === 'employee' ? 'selected' : ''?>>Employee</option>
+                                            <option value="product-service" <?=$group_by === 'product-service' ? 'selected' : ''?>>Product/Service</option>
+                                            <option value="day" <?=$group_by === 'day' ? 'selected' : ''?>>Day</option>
+                                            <option value="week" <?=$group_by === 'week' ? 'selected' : ''?>>Week</option>
+                                            <option value="work-week" <?=$group_by === 'work-week' ? 'selected' : ''?>>Work Week</option>
+                                            <option value="month" <?=$group_by === 'month' ? 'selected' : ''?>>Month</option>
+                                            <option value="quarter" <?=$group_by === 'quarter' ? 'selected' : ''?>>Quarter</option>
+                                            <option value="year" <?=$group_by === 'year' ? 'selected' : ''?>>Year</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row align-items-center">
