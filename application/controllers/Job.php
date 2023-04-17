@@ -2098,14 +2098,16 @@ class Job extends MY_Controller
                     'hash_id' => $input['job_hash']
                 ),
                 'table' => 'jobs',
-                'select' => 'job_number, id'
+                'select' => 'job_number, id, created_by'
             );
             $isJob = $this->general->get_data_with_param($check_job, false);
 
             if (!empty($isJob)) {
                 $job_number = $isJob->job_number;
-                $is_update = 1;
+                $is_update  = 1;
+                $created_by = $isJob->created_by;
             } else {
+                $created_by   = logged('id');
                 $job_settings = $this->general->get_data_with_param($get_job_settings);
                 if ($job_settings) {
                     $prefix   = $job_settings[0]->job_num_prefix;
@@ -2168,7 +2170,7 @@ class Job extends MY_Controller
                 // 'message' => $input['message'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
-                'created_by' => $input['created_by'],
+                'created_by' => $created_by,
                 //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
                 'tax_rate' => $input['tax'],
@@ -2204,7 +2206,7 @@ class Job extends MY_Controller
                 }
             }
             if (empty($isJob)) {
-                echo 5;exit;
+                
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
                 //Create hash_id
@@ -4041,6 +4043,7 @@ class Job extends MY_Controller
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
                 //'notes' => $input['notes'],
+                'created_by' => $user_id,
                 'attachment' => '',
                 'tax_rate' => '0',
                 'job_type' => $input['job_type'],

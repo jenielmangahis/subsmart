@@ -494,6 +494,10 @@ $(document).ready(function () {
   const $modal = $("#selectDocument");
   const $input = $modal.find("#docFile");
   const $docModal = $("#documentModal");
+  
+  // senddocument
+  const $sendEnvelope = $("#send-envelope");
+  const $sendEnvelopeModal = $("#sendEnvelope");
 
   const validFileExtensions = ["pdf"];
   let files = [];
@@ -672,6 +676,12 @@ $(document).ready(function () {
     event.preventDefault();
     $modal.modal("show");
   });
+
+  // send envelope
+  $sendEnvelope.on("click", function(e) {
+    e.preventDefault();
+    $sendEnvelopeModal.modal('show');
+  })
 
   $input.on("change", async function (event) {
     const { files } = event.target;

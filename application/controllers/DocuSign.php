@@ -307,7 +307,7 @@ class DocuSign extends MYF_Controller
                 if ($isMoreThan24Hours) {
                     $this->db->where('id', $document->id);
                     $this->db->update('user_docfile', ['status' => 'Deleted']);
-                    continue;
+                    // continue;
                 }
             }
 
@@ -367,7 +367,7 @@ class DocuSign extends MYF_Controller
     private function getManageData($view)
     {
         $view = strtolower($view);
-
+       
         if ($view === 'action_required') {
             return $this->getActionRequired();
         }
@@ -390,12 +390,20 @@ class DocuSign extends MYF_Controller
                 break;
 
             case 'deleted':
-                $this->db->where('status', 'Trashed');
-                $this->db->where('trashed_at is NOT NULL', null, false);
+                $this->db->where('status', 'Deleted');
+                break;
+            
+            case 'completed':
+                $this->db->where('status', 'Completed');
+                break;
+
+            case 'inbox':
+                $this->db->where('status !=', 'Deleted');
                 break;
 
             default:
                 $this->db->where('status !=', 'Deleted');
+                break;
         }
 
         return $this->db->get('user_docfile')->result();
@@ -2228,6 +2236,7 @@ SQL;
             return [];
         }
 
+        $this->db->where('status <>', 'Deleted');
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
