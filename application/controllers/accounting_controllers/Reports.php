@@ -1212,17 +1212,38 @@ class Reports extends MY_Controller {
                                 $week = intval($date->format("W"));
                                 $year = date('Y', strtotime($ddate));
 
-                                $dto = new DateTime();
-                                $dto->setISODate($year, $week, 0);
-                                $weekStart = $dto->format('F j, Y');
-                                $weekStartMonth = $dto->format('F');
-                                $weekStartYear = $dto->format('Y');
-                                $dto->modify('+6 days');
-                                $weekEnd = $dto->format('F j, Y');
-                                $weekEndMonth = $dto->format('F');
-                                $weekEndYear = $dto->format('Y');
-
                                 $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
 
                                 if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
                                     $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
@@ -1233,14 +1254,79 @@ class Reports extends MY_Controller {
                                 }
                             break;
                             case 'work-week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
 
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
                             break;
                             case 'month' :
                                 $key = date("m-Y", strtotime($activity['activity_date']));
                                 $name = date("F Y", strtotime($activity['activity_date']));
                             break;
                             case 'quarter' :
+                                $month = date("n", strtotime($activity['activity_date']));
 
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($activity['activity_date']));
+                                        $name = "January - March ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($activity['activity_date']));
+                                        $name = "April - June ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($activity['activity_date']));
+                                        $name = "July - September ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($activity['activity_date']));
+                                        $name = "October - December ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                }
                             break;
                             case 'year' :
                                 $key = date("Y", strtotime($activity['activity_date']));

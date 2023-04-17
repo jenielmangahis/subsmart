@@ -279,8 +279,8 @@ class Debug extends MY_Controller {
         $this->load->model('RingCentralAccounts_model');
 
         $cid  = logged('company_id');
-
-        $ringcentral = smsRingCentral('8503081341', '+18509417380', 'test ringcentral');
+        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+        $ringcentral = smsRingCentral($ringCentralAccount, '8503772479', 'Hi, this is from nsmart webapp sms using ring central. Please reply if received. Thank you');
 
         echo "<pre>";
         print_r($ringcentral);

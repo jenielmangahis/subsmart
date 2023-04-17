@@ -1,3 +1,4 @@
+<h1><?php echo $cus_id; ?></h1>
 <div class="nsm-page-nav">
     <ul>
         <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
@@ -19,7 +20,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == 'Services'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('tickets/addTicketCust/'.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('tickets/addTicketCust/'.$cus_id); ?>', '_self','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
                 <i class='bx bx-fw bx-wrench'></i>
                 <span>Services</span>
             </a>
@@ -83,7 +84,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" id="esignlink"  href="javascript:void(0);" onclick="window.open('<?= base_url('eSign/templatePrepare?customer_id=' . $cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-customer-id="<?=$cus_id?>">
+            <a class="nsm-page-link" id="esignlink" href="<?= base_url('vault/mylibrary?customer_id=' . $cus_id); ?>" data-customer-id="<?=$cus_id?>">
                 <i class='bx bx-fw bx-palette'></i>
                 <span>eSign</span>
             </a>

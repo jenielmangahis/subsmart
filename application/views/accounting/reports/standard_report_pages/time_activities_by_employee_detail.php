@@ -418,16 +418,7 @@
                                         </tr>
                                         <?php else : ?>
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> <b><?=$activity['name']?></b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="10"><i class="bx bx-fw bx-caret-right"></i> <b><?=$activity['name']?></b></td>
                                             <td><b><?=$activity['duration_total']?></b></td>
                                             <td></td>
                                             <td></td>
@@ -459,17 +450,8 @@
                                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$act['amount']?></td>
                                         </tr>
                                         <?php endforeach; ?>
-                                        <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
-                                            <td><b>Total for <?=$activity['name']?></b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                        <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
+                                            <td colspan="10"><b>Total for <?=$activity['name']?></b></td>
                                             <td><b><?=$activity['duration_total']?></b></td>
                                             <td></td>
                                             <td></td>
@@ -490,66 +472,6 @@
                                             </td>
                                         </tr>
                                         <?php endif; ?>
-                                        <!-- <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Employee</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>1:00</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse" id="accordion">
-                                            <td>&emsp;06/21/2022</td>
-                                            <td>Test Customer</td>
-                                            <td>Test Service</td>
-                                            <td></td>
-                                            <td>22,544.77</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>1:00</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Yes</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>22,544.77</td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse" id="accordion">
-                                            <td><b>Total for Test Employee</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>1:00</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                        </tr> -->
                                     </tbody>
                                 </table>
 
