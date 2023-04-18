@@ -48,7 +48,14 @@ add_css(array(
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Location</strong>
-                                            <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required/>
+                                            <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required>
+                                        </div>
+                                        <div class="col-lg-12 mb-2">
+                                            <input class="form-check-input" type="checkbox" value="" id="DEFAULT_LOCATION">
+                                            <label class="form-check-label" for="DEFAULT_LOCATION">
+                                             Set to Default Location
+                                            </label>
+                                            <input type="hidden" name="DEFAULT_LOCATION" value="false" readonly>
                                         </div>
                                     </div>
                                     <!-- <div class="row">
@@ -86,7 +93,15 @@ add_css(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script>
-    
+    $("#DEFAULT_LOCATION").on('change', function(event) {
+        event.preventDefault();
+        if ($(this).prop("checked") == true) {
+            $("input[name='DEFAULT_LOCATION']").val("true");
+        } else {
+            $("input[name='DEFAULT_LOCATION']").val("false");
+        }
+    });
+
     $(function(){
         $('#customer_id').select2({
             ajax: {

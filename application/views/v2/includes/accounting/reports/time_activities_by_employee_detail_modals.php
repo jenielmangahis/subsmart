@@ -434,7 +434,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_last_modified_date" id="filter-last-modified-date" class="nsm-field form-control">
-                                                    <option value="all-dates" <?=$last_modified_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="all-dates" <?=empty($last_modified_date) || $last_modified_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
                                                     <option value="custom" <?=$last_modified_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                     <option value="today" <?=$last_modified_date === 'today' ? 'selected' : ''?>>Today</option>
                                                     <option value="this-week" <?=$last_modified_date === 'this-week' ? 'selected' : ''?>>This Week</option>
@@ -456,13 +456,13 @@
                                                     <option value="last-quarter-to-date" <?=$last_modified_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
                                                     <option value="last-year" <?=$last_modified_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
                                                     <option value="last-year-to-date" <?=$last_modified_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
-                                                    <option value="since-30-days-ago" <?=empty($last_modified_date) || $last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-30-days-ago" <?=$last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
                                                     <option value="since-60-days-ago" <?=$last_modified_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
                                                     <option value="since-90-days-ago" <?=$last_modified_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
                                                     <option value="since-365-days-ago" <?=$last_modified_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
                                                 </select>
                                             </div>
-                                            <?php if(empty($last_modified_date) && $last_modified_date !== 'all-dates') : ?>
+                                            <?php if(!empty($last_modified_date) && $last_modified_date !== 'all-dates') : ?>
                                             <div class="col-12 col-md-6">
                                                 <label for="last-modified-from">From</label>
                                                 <div class="nsm-field-group calendar">
