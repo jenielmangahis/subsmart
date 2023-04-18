@@ -758,6 +758,11 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function clearDefaultLocation() {
+        $data = [ 'default' => "" ];
+       $this->db->update('storage_loc', $data); 
+    }
+
 }
 
 

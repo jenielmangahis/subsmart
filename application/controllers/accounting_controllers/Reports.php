@@ -741,17 +741,20 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('last-modified-date'))) {
                     $this->page_data['last_modified_date'] = get('last-modified-date');
-                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
-                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
 
-                    $filters = [
-                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
-                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
-                    ];
-
-                    $activities = array_filter($activities, function($v, $k) use ($filters) {
-                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
-                    }, ARRAY_FILTER_USE_BOTH);
+                    if(get('last-modified-date') !== 'all-dates') {
+                        $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                        $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+    
+                        $filters = [
+                            'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                            'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                        ];
+    
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
                 }
 
                 if(!empty(get('billable'))) {
@@ -826,6 +829,598 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('footer-alignment'))) {
                     $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+            break;
+            case 'time_activities_by_employee_detail' :
+                $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
+
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
+                }
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
+                }
+
+                $activities = [];
+                foreach($timeActivities as $timeActivity) {
+                    $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                    $productName = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+                    switch($timeActivity->name_key) {
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($timeActivity->name_id);
+                            $employeeName = $employee->FName . ' ' . $employee->LName;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                            $employeeName = $vendor->display_name;
+                        break;
+                    }
+
+                    $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+                    $hours = substr($timeActivity->time, 0, -3);
+                    $time = explode(':', $hours);
+                    $hr = $time[0] + ($time[1] / 60);
+
+                    $total = $hr * $price;
+
+                    $rates = number_format(floatval($timeActivity->hourly_rate), 2);
+                    $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
+                    if(!empty(get('divide-by-100'))) {
+                        $rates = floatval($rates) / 100;
+                        $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $rates = number_format(floatval($rates), 0);
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = '('.$rates.')';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = $rates.'-';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($rates, 0, 1) === '-') {
+                                $rates = '<span class="text-danger">'.$rates.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rates, 0, 1) === '(' && substr($rates, -1) === ')') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rates, -1) === '-') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $activities[] = [
+                        'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'create_date' => $timeActivity->created_at,
+                        'created_by' => '',
+                        'last_modified' => $timeActivity->updated_at,
+                        'last_modified_by' => '',
+                        'customer_id' => $timeActivity->customer_id,
+                        'customer' => $customerName,
+                        'employee_id' => $timeActivity->name_id,
+                        'employee_key' => $timeActivity->name_key,
+                        'employee' => $employeeName,
+                        'item_id' => $timeActivity->service_id,
+                        'product_service' => $productName,
+                        'memo_desc' => $timeActivity->description,
+                        'rates' => $rates,
+                        'duration' => substr($timeActivity->time, 0, -3),
+                        'start_time' => substr($timeActivity->start_time, 0, -3),
+                        'end_time' => substr($timeActivity->end_time, 0, -3),
+                        'break' => substr($timeActivity->break_duration, 0, -3),
+                        'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
+                        'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'invoice_date' => '',
+                        'amount' => $timeActivity->billable === '1' ? $amount : ''
+                    ];
+                }
+
+                $this->page_data['start_date'] = date("m/01/Y");
+                $this->page_data['end_date'] = date("m/d/Y");
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    if(get('date') !== 'all-dates') {
+                        $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                        $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                    }
+                }
+
+                if($this->page_data['filter_date'] !== 'all-dates') {
+                    $filters = [
+                        'start-date' => $this->page_data['start_date'],
+                        'end-date' => $this->page_data['end_date']
+                    ];
+    
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['activity_date']) >= strtotime($filters['start-date']) && strtotime($v['activity_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('customer'))) {
+                    $this->page_data['filter_customer'] = new stdClass();
+                    $this->page_data['filter_customer']->id = get('customer');
+                    if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
+                        $customer = $this->accounting_customers_model->get_by_id(get('customer'));
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+                        $this->page_data['filter_customer']->name = $customerName;
+
+                        $filters = [
+                            'customer_id' => get('customer')
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['filter_customer']->name = ucwords(str_replace('-', ' ', get('customer')));
+
+                        if(get('customer') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('product-service'))) {
+                    $this->page_data['product_service'] = new stdClass();
+                    $this->page_data['product_service']->id = get('product-service');
+                    if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID(get('product-service'));
+                        $this->page_data['product_service']->name = $item->title;
+
+                        $filters = [
+                            'item_id' => get('product-service')
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['product_service']->name = ucwords(str_replace('-', ' ', get('product-service')));
+
+                        if(get('product-service') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('employee'))) {
+                    $this->page_data['employee'] = new stdClass();
+                    $this->page_data['employee']->id = get('employee');
+                    if(!in_array(get('employee'), ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', get('employee'));
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                                $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName . ' - Employee';
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                                $this->page_data['employee']->name = $vendor->display_name . ' - Vendor';
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['employee']->name = ucwords(str_replace('-', ' ', get('employee')));
+
+                        if(get('employee') === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('create-date'))) {
+                    $this->page_data['create_date'] = get('create-date');
+                    $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
+                    $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('last-modified-date'))) {
+                    $this->page_data['last_modified_date'] = get('last-modified-date');
+                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('billable'))) {
+                    $this->page_data['billable'] = get('billable');
+
+                    $filters = [
+                        'billable' => get('billable')
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return $v['billable'] === ucfirst($filters['billable']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('memo'))) {
+                    $this->page_data['memo'] = get('memo');
+
+                    $filters = [
+                        'memo' => get('memo')
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'last_modified',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $a[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $b[$sort['column']]);
+                        }
+                    }
+                });
+
+                $grouped = [];
+                if(get('group-by') !== 'none') {
+                    foreach($activities as $activity)
+                    {
+                        switch(get('group-by')) {
+                            case 'customer' :
+                                $key = $activity['customer_id'];
+                                $name = $activity['customer'];
+                            break;
+                            case 'product-service' :
+                                $key = $activity['item_id'];
+                                $name = $activity['product_service'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $activity['activity_date']);
+                                $name = date("F j, Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'work-week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($activity['activity_date']));
+                                $name = date("F Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'quarter' :
+                                $month = date("n", strtotime($activity['activity_date']));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($activity['activity_date']));
+                                        $name = "January - March ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($activity['activity_date']));
+                                        $name = "April - June ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($activity['activity_date']));
+                                        $name = "July - September ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($activity['activity_date']));
+                                        $name = "October - December ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                }
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($activity['activity_date']));
+                                $name = date("Y", strtotime($activity['activity_date']));
+                            break;
+                            default :
+                                $key = $activity['employee_key'].'-'.$activity['employee_id'];
+                                $name = $activity['employee'];
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['activities'][] = $activity;
+                            $duration = $grouped[$key]['duration_total'];
+                            $amount = $grouped[$key]['amount_total'];
+
+                            $durationExplode = explode(':', $duration);
+                            $totalHrs = intval($durationExplode[0]);
+                            $totalMins = intval($durationExplode[1]);
+
+                            $actDuration = $activity['duration'];
+                            $actDurationExplode = explode(':', $actDuration);
+                            $actHrs = intval($actDurationExplode[0]);
+                            $actMins = intval($actDurationExplode[1]);
+                            $actAmount = $activity['amount'];
+
+                            $totalHrs += $actHrs;
+                            $totalMins += $actMins;
+
+                            if($totalMins >= 60) {
+                                do {
+                                    $totalHrs++;
+                                    $totalMins -= 60;
+                                } while($totalMins >= 60);
+                            }
+
+                            if(strlen($totalHrs) === 1) {
+                                $totalHrs = '0'.$totalHrs;
+                            }
+
+                            if(strlen($totalMins) === 1) {
+                                $totalMins = '0'.$totalMins;
+                            }
+
+                            $grouped[$key]['duration_total'] = $totalHrs.':'.$totalMins;
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($actAmount), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'duration_total' => $activity['duration'],
+                                'amount_total' => $activity['amount'],
+                                'activities' => [
+                                    $activity
+                                ]
+                            ];
+                        }
+                    }
+                } else {
+                    $grouped = $activities;
+                }
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
+                $activities = $grouped;
+
+                $this->page_data['activities'] = $activities;
+                $this->page_data['company_name'] = $this->page_data['clients']->business_name;
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Time Activities by Employee Detail';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                if(!empty(get('show-report-period'))) {
+                    $this->page_data['show_report_period'] = false;
                 }
             break;
         }

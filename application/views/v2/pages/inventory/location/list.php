@@ -65,6 +65,7 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Name">Location</td>
+                            <td data-name="Default">Default</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -78,6 +79,7 @@
                                 </div>
                             </td>
                             <td><?php echo $locations->location_name ?></td>
+                            <td><?php echo ($locations->default == "true") ? "<i style='font-size: 31px;' class='bx bx-check text-success'></i>" : ""?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
