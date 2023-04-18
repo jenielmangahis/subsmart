@@ -63,6 +63,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('estimate_model');
         $this->load->model('EstimateSettings_model');
         $this->load->model('Clients_model');
+        $this->load->model('accounting_custom_reports_model');
         $this->load->library('form_validation');
     }
 
@@ -10792,6 +10793,9 @@ class Accounting_modals extends MY_Controller
             case 'filter-report-item' :
                 $return = $this->get_items_choices($return, $search, 'report');
             break;
+            case 'custom-report-group' :
+                $return = $this->get_custom_report_group_choices($return, $search);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -11609,6 +11613,32 @@ class Accounting_modals extends MY_Controller
                 'id' => 0,
                 'text' => 'Nontaxable'
             ];
+        }
+
+        return $choices;
+    }
+
+    private function get_custom_report_group_choices($choices, $search = null)
+    {
+        $groups = $this->accounting_custom_reports_model->get_custom_report_groups(logged('company_id'));
+
+        foreach($groups as $group)
+        {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($group->name, $search);
+                if($stripos !== false) {
+                    $searched = substr($group->name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $group->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $group->name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $group->id,
+                    'text' => $group->name
+                ];
+            }
         }
 
         return $choices;

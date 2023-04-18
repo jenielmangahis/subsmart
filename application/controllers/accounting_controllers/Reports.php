@@ -741,17 +741,20 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('last-modified-date'))) {
                     $this->page_data['last_modified_date'] = get('last-modified-date');
-                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
-                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
 
-                    $filters = [
-                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
-                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
-                    ];
-
-                    $activities = array_filter($activities, function($v, $k) use ($filters) {
-                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
-                    }, ARRAY_FILTER_USE_BOTH);
+                    if(get('last-modified-date') !== 'all-dates') {
+                        $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                        $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+    
+                        $filters = [
+                            'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                            'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                        ];
+    
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
                 }
 
                 if(!empty(get('billable'))) {
@@ -888,8 +891,12 @@ class Reports extends MY_Controller {
                     $rates = number_format(floatval($timeActivity->hourly_rate), 2);
                     $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
                     if(!empty(get('divide-by-100'))) {
-                        $rates = number_format(floatval($rates) / 100, 2);
+                        $rates = floatval($rates) / 100;
                         $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
                     }
 
                     if(!empty(get('without-cents'))) {

@@ -133,10 +133,17 @@
                                         <div class="row">
                                             <div class="col-lg-8 mb-2">
                                                 <strong>Location</strong>
-                                                <select id="locations" name="loc_id" class="form-control" placeholder="Select" required>
-                                                    <?php foreach($location as $locations) : ?>
-                                                        <option value="<?= $locations->loc_id ?>"> <?= $locations->location_name ?></option>
-                                                        <?php endforeach; ?>
+                                                <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
+                                                    <option value='0' onselect="alert('test');">All Locations</option>
+                                                    <?php
+                                                        foreach($location as $locations) {
+                                                            if ($locations->default == "true") {
+                                                                echo "<option value='$locations->loc_id' selected>$locations->location_name</option>";
+                                                            } else {
+                                                                echo "<option value='$locations->loc_id'>$locations->location_name</option>";
+                                                            }
+                                                        }
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4 mb-2">
@@ -177,6 +184,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    $('#locations').on('select2:select', function (e) {
+      if (e.params.data.id === '0') {
+        $(this).val(null).trigger('change');
+        $(this).val(e.params.data.id).change();
+      }
+    });
+
     $(document).ready(function() {
         $("#locations").select2({
             placeholder: "Choose Location..."

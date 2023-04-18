@@ -12,7 +12,7 @@ class Accounting_custom_reports_model extends MY_Model {
 
 	public function add_custom_report_group($name)
 	{
-		$this->db->insert('accounting_custom_report_groups', ['name' => $name]);
+		$this->db->insert('accounting_custom_report_groups', ['name' => $name, 'company_id' => logged('company_id')]);
 		return $this->db->insert_id();
 	}
 
@@ -33,5 +33,12 @@ class Accounting_custom_reports_model extends MY_Model {
 	{
 		$this->db->where('id', $customReportId);
 		return $this->db->update($this->table, $data);
+	}
+
+	public function get_custom_report_groups($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$query = $this->db->get('accounting_custom_report_groups');
+		return $query->result();
 	}
 }

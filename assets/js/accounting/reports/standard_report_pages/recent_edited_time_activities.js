@@ -22,6 +22,27 @@ $('select').each(function() {
         });
     }
 
+    if($(this).attr('id') === 'custom-report-group') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'custom-report-group'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect
+        });
+    }
+
     if($(this).attr('id') === 'filter-customer') {
         $(this).select2({
             ajax: {
@@ -690,8 +711,8 @@ function get_start_and_end_dates(val, el)
     switch(val) {
         case 'custom' :
             if($(`#${el.attr('id')}-from`).length > 0) {
-                startDate = $(`#${el.attr('id')}-from`).val();
-                endDate = $(`#${el.attr('id')}-to`).val();
+                startDate = $(`#${el.attr('id')}-from`).val() === null ? '' : $(`#${el.attr('id')}-from`).val();
+                endDate = $(`#${el.attr('id')}-to`).val() === null ? '' : $(`#${el.attr('id')}-to`).val();
             }
         break;
         case 'today' :

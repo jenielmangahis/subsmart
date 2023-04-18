@@ -47,9 +47,16 @@ add_css(array(
                                     <form id="location_form">
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
-                                            <strong>Item Name</strong>
+                                            <strong>Location Name</strong>
                                             <input type="text" class="form-control" maxlength="25" value="<?php echo $location->location_name?>" placeholder="Maximum 25 characters only" name="location_name" required/>
                                             <input type="text" value="<?php echo $location->loc_id?>" name="loc_id" hidden/>
+                                        </div>
+                                        <div class="col-lg-12 mb-2">
+                                            <input class="form-check-input" type="checkbox" id="DEFAULT_LOCATION" <?php echo ($location->default == "true") ? "checked" : "" ; ?>>
+                                            <label class="form-check-label" for="DEFAULT_LOCATION">
+                                             Set to Default Location
+                                            </label>
+                                            <input type="hidden" name="DEFAULT_LOCATION" value="<?php echo ($location->default == "true") ? "true" : "false" ; ?>" readonly>
                                         </div>
                                     </div>
                                         <div class="col-lg-12 mt-2">
@@ -73,6 +80,15 @@ add_css(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script>
+    $("#DEFAULT_LOCATION").on('change', function(event) {
+        event.preventDefault();
+        if ($(this).prop("checked") == true) {
+            $("input[name='DEFAULT_LOCATION']").val("true");
+        } else {
+            $("input[name='DEFAULT_LOCATION']").val("false");
+        }
+    });
+    
     $(function(){
         $('#customer_id').select2({
             ajax: {

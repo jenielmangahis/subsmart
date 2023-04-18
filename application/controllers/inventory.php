@@ -372,7 +372,7 @@ class Inventory extends MY_Controller
             'where' => array(
                 'company_id' => logged('company_id')
             ),
-            'select' => 'loc_id, location_name',
+            'select' => 'loc_id, location_name, default',
             'table' => 'storage_loc'
         );
         $this->page_data['location'] = $this->general->get_data_with_param($getLocation);
@@ -950,13 +950,26 @@ class Inventory extends MY_Controller
 
     public function addNewLocation(){
         postAllowed();
-        $comp_id = logged('company_id');
-        $LOCATION_DATA = array(
-            'company_id'=> $comp_id,
-            'location_name' => $this->input->post('name')
-        );
-        $result = $this->general->add_($LOCATION_DATA, 'storage_loc');
+        $COMPANY_ID = logged('company_id');
+        $LOCATION_NAME = $this->input->post('name');
+        $DEFAULT = $this->input->post('DEFAULT_LOCATION');
 
+        if ($DEFAULT == "true") {
+            $this->items_model->clearDefaultLocation();
+            $LOCATION_DATA = array(
+                'company_id'=> $COMPANY_ID,
+                'location_name' => $LOCATION_NAME,
+                'default' => $DEFAULT,
+            );
+        } else {
+            $LOCATION_DATA = array(
+                'company_id'=> $COMPANY_ID,
+                'location_name' => $LOCATION_NAME,
+                'default' => "",
+            );
+        }
+
+        $result = $this->general->add_($LOCATION_DATA, 'storage_loc');
         echo json_encode($result);
     }
     public function addNewItemLocation() {
@@ -984,13 +997,25 @@ class Inventory extends MY_Controller
     }
     public function editLocation() {
         postAllowed();
-        $id = $this->input->post('loc_id');
-        $comp_id = logged('company_id');
-        $data = array(
-            'location_name' => $this->input->post('location_name'),
-        );
+        $ID = $this->input->post('loc_id');
+        $LOCATION_NAME = $this->input->post('location_name');
+        $DEFAULT = $this->input->post('DEFAULT_LOCATION');
+
+        if ($DEFAULT == "true") {
+            $this->items_model->clearDefaultLocation();
+            $LOCATION_DATA = array(
+                'location_name' => $LOCATION_NAME,
+                'default' => $DEFAULT,
+            );
+        } else {
+            $LOCATION_DATA = array(
+                'location_name' => $LOCATION_NAME,
+                'default' => "",
+            );
+        }
+
         // $this->items_model->updateLocation($id, $data, 'storage_loc');
-        $this->general->update_with_key_field($data, $id, 'storage_loc', 'loc_id');
+        $this->general->update_with_key_field($LOCATION_DATA, $ID, 'storage_loc', 'loc_id');
 
         echo json_encode(["message" => "success"]);
     }
