@@ -249,3 +249,11 @@
         <?php echo form_close(); ?>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="enable_disable_api" tabindex="-1" aria-labelledby="enable_disable_label" aria-hidden="true">
+    <div class="modal-dialog">        
+        <div class="modal-content">            
+            <div class="modal-body" id="enable-disable-api-container"></div>            
+        </div>
+    </div>
+</div>

@@ -27,10 +27,17 @@ class Tools extends MY_Controller {
         $this->load->model('users_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Clients_model');
+        $this->load->model('CompanyApiConnector_model');
         
         $company_id = logged('company_id');    
         $user   = $this->session->userdata('logged');
         $client = $this->Clients_model->getById($company_id);
+        $companyApiConnectors = $this->CompanyApiConnector_model->getAllEnabledByCompanyId($company_id);
+
+        $enabledApiConnectors = array();
+        foreach($companyApiConnectors as $ac){
+            $enabledApiConnectors[$ac->api_name] = $ac->api_name;
+        }
 
         $default_sms_api = $client->default_sms_api;
 
@@ -49,6 +56,7 @@ class Tools extends MY_Controller {
             ];
         }
 
+        $this->page_data['enabledApiConnectors'] = $enabledApiConnectors;
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['setting'] = $setting;
         $this->page_data['default_sms_api'] = $default_sms_api;
@@ -156,23 +164,22 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/business_tools', $this->page_data);
     }
 
-    public function google_contacts() {
+    public function google_contacts() {        
+        $this->load->library('GoogleApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'google_contacts');
+        $customers = $this->AcsProfile_model->getCustomerBasicInfoByCompanyId($company_id);
+
         $this->page_data['page']->title = 'Google Contacts';
         $this->page_data['page']->parent = 'Tools';
-
-        $this->load->library('GoogleApi');
-
         $this->page_data['sidebar'] = $this->api_sidebars();
-        $user_id = getLoggedUserID();
-        $this->page_data['google_client_id'] = '30029411767-vjhs0kkitoj3fqun84qrrn7jllohffef.apps.googleusercontent.com';
-        $this->page_data['google_client_secret'] = 'mF_M9MamoAmTWwxvYOYLJm4w';
-        $this->page_data['google_redirect_uri'] = 'http://localhost/projects/nsmartrac/tools/google_contacts';
-
-        // remove comment for live production s
-        //if ($this->user_details->check_if_exist($user_id)) {
-            $this->page_data['api_enabled'] = false;
-       // }
-       // $this->page_data['contacts'] = $this->api_gc->get_all();
+        $this->page_data['total_customers'] = count($customers);        
+        $this->page_data['google_credentials'] = google_credentials();        
+        $this->page_data['api_enabled'] = false;       
+        $this->page_data['companyGoogleContactsApi'] = $companyGoogleContactsApi;
         $this->load->view('v2/pages/tools/google_contacts', $this->page_data);
     }
 
@@ -209,8 +216,14 @@ class Tools extends MY_Controller {
     }
 
     public function zapier() {
+        $this->load->model('CompanyApiConnector_model');
+
+        $company_id   = logged('company_id');
+        $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'zapier');
+
         $this->page_data['page']->title = 'Zapier';
         $this->page_data['page']->parent = 'Tools';
+        $this->page_data['apiConnector'] = $apiConnector;
 
         $this->page_data['sidebar'] = $this->api_sidebars();
         $this->load->view('v2/pages/tools/zapier', $this->page_data);
@@ -860,4 +873,262 @@ class Tools extends MY_Controller {
         echo json_encode($json_data);
     }
 
+    public function ajax_enable_disable_confirmation_api()
+    {
+        $this->load->model('CompanyApiConnector_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, $post['api_name']);
+
+        $this->page_data['apiConnector'] = $apiConnector;
+        $this->page_data['is_enable'] = $post['is_enabled'];
+        $this->page_data['api_name']  = $post['api_name'];
+        $this->load->view('v2/pages/tools/ajax_enable_disable_api', $this->page_data);
+    }
+
+    public function ajax_enable_api()
+    {
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = false;
+        $msg = 'Invalid API name';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id'); 
+
+        if( $post['api_name'] == 'zapier' ){            
+            $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, $post['api_name']);
+            if( $apiConnector ){
+                $data_api = ['status' => 1];
+                $this->CompanyApiConnector_model->update($apiConnector->id, $data_api);      
+            }else{
+                $api_key  = $this->generateApiKey(30, $company_id);
+                $data_api = [
+                    'company_id' => $company_id,
+                    'api_name' => 'zapier',
+                    'status' => 1,
+                    'zapier_api_key' => $api_key,
+                    'created' => date("Y-m-d H:i:s")
+                ];   
+
+                $this->CompanyApiConnector_model->create($data_api);                
+            }
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_disable_api()
+    {
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = false;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, $post['api_name']);
+        if( $apiConnector ){
+            $data_api = ['status' => 0];
+            $this->CompanyApiConnector_model->update($apiConnector->id, $data_api);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data); 
+    }
+
+    public function generateApiKey($length = 30, $company_id) {
+        $api_key = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+        $api_key = $api_key . $company_id;
+        return $api_key;
+    }
+
+    public function ajax_zapier_regenerate_key(){
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = false;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'zapier');
+        if( $apiConnector ){
+            $api_key  = $this->generateApiKey(30, $company_id);
+            $data_api = ['zapier_api_key' => $api_key];
+            $this->CompanyApiConnector_model->update($apiConnector->id, $data_api);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data); 
+    }
+
+    public function ajax_google_contact_account_bind(){
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg = 'Failed to connect. Please try again.';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+        if( $post['token'] != '' ){
+            $company_id = logged('company_id');
+            $google_credentials = google_credentials();
+            $profile = google_get_oauth2_token($post['token'], $google_credentials['client_id'], $google_credentials['client_secret']);            
+            if( $profile && $profile['access_token'] != '' ){
+                $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'google_contacts');
+                if( $companyGoogleContactsApi ){
+                    $data_google_contacts = [                        
+                        'status' => 1,
+                        'google_email' => $profile['user']->email,
+                        'google_access_token' => $profile['access_token'],
+                        'google_refresh_token' => $profile['refreshToken'],
+                        'google_last_sync' => NULL,
+                        'created' => date("Y-m-d H:i:s")
+                    ];
+                    $this->CompanyApiConnector_model->update($companyGoogleContactsApi->id, $data_google_contacts);
+                }else{
+                    $data_google_contacts = [
+                        'company_id' => $company_id,
+                        'api_name' => 'google_contacts',
+                        'status' => 1,
+                        'google_email' => $profile['user']->email,
+                        'google_access_token' => $profile['access_token'],
+                        'google_refresh_token' => $profile['refreshToken'],
+                        'created' => date("Y-m-d H:i:s")
+                    ];    
+
+                    $this->CompanyApiConnector_model->create($data_google_contacts);
+                }
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_import_customer_data_to_google_contacts(){
+
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg = 'Failed to connect to Google.';
+
+        $total_imported = 0;
+        $total_failed   = 0;
+
+        $company_id = logged('company_id');
+        $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'google_contacts');
+        if( $companyGoogleContactsApi && $companyGoogleContactsApi->google_access_token != '' ){
+            $customers = $this->AcsProfile_model->getCustomerBasicInfoByCompanyId($company_id);
+
+            //Set Client
+            $google_credentials = google_credentials();
+            $client = new Google_Client();
+            $client->setClientId($google_credentials['client_id']);
+            $client->setClientSecret($google_credentials['client_secret']);
+            $client->setAccessToken($companyGoogleContactsApi->google_access_token);
+            $client->refreshToken($companyGoogleContactsApi->google_refresh_token);
+            $client->setScopes(array(
+                'email',
+                'profile',
+                'https://www.googleapis.com/auth/contacts',
+            ));
+            $client->setApprovalPrompt('force');
+            $client->setAccessType('offline');
+            
+            foreach($customers as $customer){                
+                try {                    
+                    $service = new Google_Service_PeopleService($client);            
+                    $person  = new Google_Service_PeopleService_Person();
+
+                    $email   = new Google_Service_PeopleService_EmailAddress();
+                    $email->setValue($customer->email);
+                    $person->setEmailAddresses($email);
+
+                    $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                    $name = new Google_Service_PeopleService_Name();
+                    $name->setDisplayName($customer_name);
+                    $person->setNames($name);
+
+                    if( $customer->phone_m != '' ){
+                        $phoneNumber = new Google_Service_People_PhoneNumber();
+                        $phoneNumber->setType('mobile');
+                        $phoneNumber->setValue(formatPhoneNumber($customer->phone_m));
+                        $person->setPhoneNumbers($phoneNumber);    
+                    }                    
+
+                    $exe = $service->people->createContact($person);
+
+                    $total_imported++;
+                } catch (Exception $e) {
+                    $total_failed++;
+                }
+            }
+
+            //Update google contacts api 
+            $data_google_contacts = [                        
+                'google_contacts_total_imported' => $total_imported,
+                'google_contacts_total_failed' => $total_failed,
+                'google_last_sync' => date("Y-m-d H:i:s"),                
+            ];
+            $this->CompanyApiConnector_model->update($companyGoogleContactsApi->id, $data_google_contacts);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'total_imported' => $total_imported, 'total_failed' => $total_failed];
+        echo json_encode($return);
+    }
+
+    public function ajax_disconnect_google_contacts(){
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find Google Account.';
+
+        $company_id = logged('company_id');
+        $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'google_contacts');
+        if( $companyGoogleContactsApi ){
+            $this->CompanyApiConnector_model->update($companyGoogleContactsApi->id, ['status' => 0]);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'total_imported' => $total_imported, 'total_failed' => $total_failed];
+        echo json_encode($return);
+    }
 }
