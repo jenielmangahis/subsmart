@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/inventory/inventory_settings_modals'); ?>\
+<?php include viewPath('v2/includes/inventory/inventory_settings_modals'); ?>
 <div class="row page-content g-0">
 <div class="col-12 mb-3">
     <?php include viewPath('v2/includes/page_navigations/inventory_tabs'); ?>
@@ -137,9 +137,23 @@
                                         <!-- <div class="col-lg-12 mb-2">
                                             <img src="" id="img_profile">
                                             </div> -->
-                                        <div class="col-lg-12 mb-2">
+                                        <div class="col-lg-6 mb-2">
                                             <strong>Attach Image</strong>
                                             <input value="<?php echo $item->attached_image; ?>" type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
+                                        </div>
+                                        <div class="col-lg-6 mb-2">
+                                            <strong>Location</strong>
+                                            <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
+                                                <option value='0' onselect="alert('test');">All Locations</option>
+                                                    <?php
+                                                    foreach ($selectedLocation as $selectedLocations) {
+                                                        echo "<option value='$selectedLocations->loc_id' selected>$selectedLocations->location_name</option>";
+                                                    }
+                                                    foreach ($getAllLocation as $getAllLocations) {
+                                                        echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                    }
+                                                    ?>
+                                            </select>
                                         </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
@@ -162,6 +176,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+
+$(document).ready(function() {
+        $("#locations").select2({
+            placeholder: "Choose Location..."
+        });
+    });
+
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();

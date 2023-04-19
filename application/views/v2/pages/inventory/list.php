@@ -413,7 +413,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var HISTORY_TABLE = $("#HISTORY_TABLE").DataTable({
-            "ordering": false,
+            order: [[0, 'desc']],
+            // "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
             },

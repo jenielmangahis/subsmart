@@ -130,39 +130,31 @@
                                             <strong>Attach Image</strong>
                                             <input type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-8 mb-2">
-                                                <strong>Location</strong>
-                                                <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
-                                                    <option value='0' onselect="alert('test');">All Locations</option>
+                                        <div class="col-lg-9 mb-2">
+                                            <strong>Location</strong>
+                                            <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
+                                                <option value='0' onselect="alert('test');">All Locations</option>
                                                     <?php
-                                                        foreach($location as $locations) {
-                                                            if ($locations->default == "true") {
-                                                                echo "<option value='$locations->loc_id' selected>$locations->location_name</option>";
-                                                            } else {
-                                                                echo "<option value='$locations->loc_id'>$locations->location_name</option>";
-                                                            }
+                                                    foreach ($location as $locations) {
+                                                        if ($locations->default == "true") {
+                                                            echo "<option value='$locations->loc_id' selected>$locations->location_name</option>";
+                                                        } else {
+                                                            echo "<option value='$locations->loc_id'>$locations->location_name</option>";
                                                         }
+                                                    }
                                                     ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-lg-4 mb-2">
-                                                <strong>Initial Quantity</strong>
-                                                <input type="number" class="form-control " name="qty" id="qty" required />
-                                            </div>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 mb-2">
+                                            <strong>Initial Quantity</strong>
+                                            <input type="number" class="form-control " name="initial_quantity" id="initial_quantity" required />
                                         </div>
                                         <?php foreach($custom_fields as $field) : ?>
-                                        <div class="col-12 col-lg-6 mb-2">
-                                            <div class="row g-3">
-                                                <div class="col-6">
-                                                    <strong class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></strong>
-                                                </div>
-                                                <div class="col-6 text-end">
-                                                    <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?=$field->id; ?>" data-name="<?=$field->name; ?>">Edit</a>
-                                                </div>
+                                            <div style="position: relative;" class="col-lg-6 mt-2">
+                                                <strong class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></strong>
+                                                <a style="position: absolute; top: 1px; right: 15px;" href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?=$field->id; ?>" data-name="<?=$field->name; ?>">Edit</a>
+                                                <input type="text" name="custom_field[<?=$field->id?>]" class="nsm-field form-control" />
                                             </div>
-                                            <input type="text" name="custom_field[<?=$field->id?>]" class="nsm-field form-control"/>
-                                        </div>
                                         <?php endforeach; ?>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">

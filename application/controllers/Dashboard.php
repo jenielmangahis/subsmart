@@ -24,6 +24,8 @@ class Dashboard extends Widgets {
         $this->load->model('Activity_model', 'activity');
         $this->load->model('General_model', 'general');
         $this->load->model('Accounting_bank_accounts', 'accounting_bank_accounts');
+        $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('Tickets_model', 'tickets_model');
 
         add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -124,9 +126,15 @@ class Dashboard extends Widgets {
 
     public function index() {     
         // load necessary model and functions
+        
+        $this->hasAccessModule(39);
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+        
         $this->load->model('widgets_model');
         $this->load->helper('functions');
         $this->load->helper('functions_helper');
+
 
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -146,6 +154,8 @@ class Dashboard extends Widgets {
         ));
 
         $user_id = logged('id');
+        
+        $company_id = logged('company_id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         // echo $this->db->last_query(); 
         // echo "<br>";
@@ -300,6 +310,27 @@ class Dashboard extends Widgets {
         $this->page_data['client_name'] = $plaid_token;
         $this->page_data['plaid_token'] = $plaid_token;
         $this->page_data['plaid_handler_open'] = $plaid_handler_open;
+
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+
+        $this->page_data['redirect_calendar'] = $redirect_calendar;
+        $this->page_data['default_user'] = $default_user;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $type = $this->input->get('type');
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
+        $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
         // $this->load->view('dashboard', $this->page_data);
