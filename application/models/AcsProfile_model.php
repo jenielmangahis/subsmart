@@ -389,6 +389,16 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
+    public function getCustomerBasicInfoByCompanyId($company_id)
+    {
+        $this->db->select('email,mail_add,city,state,zip_code,phone_m,phone_h,business_name,first_name,middle_name,last_name');
+        $this->db->from($this->table);        
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_customers_with_open_estimates($companyId)
     {
         $this->db->select('acs_profile.*');

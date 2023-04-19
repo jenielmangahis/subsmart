@@ -885,6 +885,9 @@ class Customer extends MY_Controller
     public function subscription($id=null){
         $this->hasAccessModule(9);
 
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['page']->title = 'Subscription Payment';
+
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
@@ -911,12 +914,14 @@ class Customer extends MY_Controller
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
 
-        $this->load->view('customer/subscription', $this->page_data);
+        $this->load->view('v2/pages/customer/subscription', $this->page_data);
 
     }
 
     public function subscription_new($id=null)
     {
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['page']->title = 'New Subscription Plan';
         $userid = $id;
         $user_id = logged('id');
         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
@@ -926,7 +931,7 @@ class Customer extends MY_Controller
             'select' => 'id,FName,LName',
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-        $this->load->view('customer/subscription_new', $this->page_data);
+        $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
     }
 
     public function subscription_details($id=null)
@@ -1044,7 +1049,7 @@ class Customer extends MY_Controller
        // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
 
-        $this->load->view('customer/settings', $this->page_data);
+        $this->load->view('v2/pages/customer/settings', $this->page_data);
     }
 
     public function module($id=null)

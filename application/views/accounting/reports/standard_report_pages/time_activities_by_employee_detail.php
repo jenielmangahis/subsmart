@@ -363,7 +363,7 @@
                                     <?php endif; ?>
                                     <?php if(!isset($show_report_period)) : ?>
                                     <div class="col-12 grid-mb">
-                                        <p class="m-0">Activity: <?=date("F 1-j, Y")?></p>
+                                        <p class="m-0">Activity: <?=$report_period?></p>
                                     </div>
                                     <?php endif; ?>
                                 </div>

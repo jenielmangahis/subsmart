@@ -1183,6 +1183,13 @@ $route['tools/_get_twilio_credentials'] = 'Tools/ajax_load_company_twilio';
 $route['tools/_activate_company_twilio'] = 'Tools/ajax_activate_company_twilio';
 $route['tools/_get_plaid_api_credentials'] = 'Tools/ajax_load_company_plaid_form';
 $route['tools/_activate_company_plaid'] = 'Tools/ajax_activate_company_plaid';
+$route['tools/_enable_disable_api_confirmation'] = 'Tools/ajax_enable_disable_confirmation_api';
+$route['tools/_enable_api'] = 'Tools/ajax_enable_api';
+$route['tools/_disable_api'] = 'Tools/ajax_disable_api';
+$route['tools/_zapier_regenerate_key'] = 'Tools/ajax_zapier_regenerate_key';
+$route['tools/_google_contact_account_bind'] = 'Tools/ajax_google_contact_account_bind';
+$route['tools/_import_customer_data_to_google_contacts'] = 'Tools/ajax_import_customer_data_to_google_contacts';
+$route['tools/_disconnect_google_contacts'] = 'Tools/ajax_disconnect_google_contacts';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

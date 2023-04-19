@@ -700,13 +700,13 @@ class Items_model extends MY_Model
     }
 
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
-        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty');
+        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty, SUM(items_has_storage_loc.qty) AS TOTAL_QUANTITY');
         $this->db->from('items_has_storage_loc');
-        $this->db->join('items', 'items_has_storage_loc.item_id = items.id');
         $this->db->where('items_has_storage_loc.item_id', $item_id);
         $query = $this->db->get();
 
         $currentQuantity = $query->result()[0]->qty;
+        $totalQuantity = $query->result()[0]->TOTAL_QUANTITY;
         $itemLocation = $query->result()[0]->name;
 
         if ($transactionType == "add") {
@@ -717,15 +717,12 @@ class Items_model extends MY_Model
 
             $locationName = $query->result()[0]->location_name;
 
-            $newQuantity = $currentQuantity + $quantity;
-            $updateItem = $this->db->update('items_has_storage_loc', ['qty' => $newQuantity], array('item_id' => $item_id));
-
             $transactionDetails = [
                 'search_id' => md5($item_id),
                 'item_id' => $item_id,
                 'item_location' => $locationName,
                 'transaction' => "+$quantity",
-                'running_quantity' => $newQuantity,
+                'running_quantity' => $totalQuantity,
             ];
 
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
@@ -733,7 +730,13 @@ class Items_model extends MY_Model
 
         if ($transactionType == "deduct") {
             $newQuantity = $currentQuantity - $quantity;
-            $updateItem = $this->db->update('items_has_storage_loc', ['qty' => $newQuantity], array('item_id' => $item_id));
+
+            $updateItem = $this->db->update('items_has_storage_loc', 
+                ['qty' => $newQuantity], array(
+                    'item_id' => $item_id,
+                    'loc_id' => $location_id,
+                )
+            );
 
             $transactionDetails = [
                 'search_id' => md5($item_id),
@@ -750,9 +753,7 @@ class Items_model extends MY_Model
     }
 
     public function getAllRecordItemTransaction() {
-        $this->db->select('*');
-        $this->db->from('items_transaction_history');
-        $this->db->order_by('id', "DESC");
+        $this->db->select('*')->from('items_transaction_history')->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
     }
@@ -760,6 +761,16 @@ class Items_model extends MY_Model
     public function clearDefaultLocation() {
         $data = [ 'default' => "" ];
        $this->db->update('storage_loc', $data); 
+    }
+
+    public function getSelectedLocation($item_id) {
+        $this->db->select('items_has_storage_loc.loc_id, storage_loc.location_name');
+        $this->db->from('items_has_storage_loc');
+        $this->db->join('storage_loc', 'storage_loc.loc_id = items_has_storage_loc.loc_id', 'left');
+        $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $this->db->group_by('items_has_storage_loc.loc_id');
+        $query = $this->db->get();
+        return $query->result();
     }
 
 }

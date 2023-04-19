@@ -83,7 +83,7 @@
 </div>
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
-        <button name="button" type="button" class="nsm-button" data-toggle="modal" data-target=".addticketsModal">
+        <button name="button" type="button" class="nsm-button" id="btn-quick-add-service-ticket">
             <i class='bx bx-fw bx bx-fw bx-note'></i> Add Service Ticket
         </button>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
@@ -101,7 +101,7 @@
         <button name="button" type="button" class="nsm-button" onclick="location.href='<?= base_url('customer') ?>'">
             <i class='bx bx-fw bx-search-alt'></i> Find Customer
         </button>
-        <button name="button" type="button" class="nsm-button" onclick="location.href='<?php echo base_url('job/new_job1') ?>'">
+        <button name="button" type="button" class="nsm-button"  id="btn-quick-add-job">
             <i class='bx bx-fw bx-message-square-error'></i> Add Job
         </button>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#quick_links_modal">
@@ -365,5 +365,56 @@
 
 
 <script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
+<?php //include viewPath('tickets/add_modal'); ?>
+<?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
+<?php include viewPath('v2/includes/calendar/quick_access_calendar_modals'); ?>
+<script>
+    $(document).on('click', '#btn-quick-add-service-ticket', function(){
+       var url = base_url + "ticket/_quick_add_service_ticket_form";
+       var default_date = moment(new Date());
+       var date_selected = default_date.format('YYYY-MM-DD');
+       calendar_modal_source = 'quick-add-service-ticket';
+       $('#modal-quick-add-service-ticket').modal('show');
+
+       showLoader($("#quick-add-service-ticket-form-container"));        
+
+       setTimeout(function () {
+         $.ajax({
+            type: "GET",
+            url: url,
+            data: {date_selected:date_selected},
+            success: function(o)
+            {          
+               $("#quick-add-service-ticket-form-container").html(o);
+            }
+         });
+       }, 500); 
+    });
+
+    
+    $(document).on('click', '#btn-quick-add-job', function(){
+        var url = base_url + "job/_quick_add_job_form";
+        var default_date = moment(new Date());
+        var date_selected = default_date.format('YYYY-MM-DD');        
+        calendar_modal_source = 'quick-add-job';
+        $('#modal-quick-select-schedule-type').modal('hide');
+        $('#modal-quick-add-job').modal('show');
+
+        showLoader($("#quick-add-job-form-container"));        
+
+        setTimeout(function () {
+          $.ajax({
+             type: "GET",
+             url: url,
+             data: {date_selected:date_selected},
+             success: function(o)
+             {          
+                $("#quick-add-job-form-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
-<?php include viewPath('tickets/add_modal'); ?>
+

@@ -636,6 +636,74 @@ $('#save-custom-report').on('click', function(e) {
     });
 });
 
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
 function save_custom_report(customReport = {})
 {
     var data = new FormData();
@@ -979,14 +1047,21 @@ function get_start_and_end_dates(val, el)
             var date = new Date();
             var from = date.getDate() - date.getDay();
 
-            var from_date = new Date(date.setDate(from - 7));
+            var from_date = new Date(date.setDate(from + 7));
             var to_date = new Date(date.setDate(date.getDate() + 6));
 
             startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
             endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
         break;
         case 'next-4-weeks' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
 
+            var from_date = new Date(date.setDate(from + 7));
+            var to_date = new Date(date.setDate(date.getDate() + 27));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
         break;
         case 'next-month' :
             var date = new Date();
@@ -1017,9 +1092,6 @@ function get_start_and_end_dates(val, el)
                     var to_date = new Date('12/31/'+ date.getFullYear());
                 break;
             }
-
-            from_date.setMonth(from_date.getMonth() - 3);
-            to_date.setMonth(to_date.getMonth() - 3);
 
             if(to_date.getDate() === 1) {
                 to_date.setDate(to_date.getDate() - 1);

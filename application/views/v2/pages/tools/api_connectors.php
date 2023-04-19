@@ -93,7 +93,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_nicejob" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('nicejob', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" data-apiname="nicejob" type="checkbox" id="switch_nicejob" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_nicejob">Enabled</label>
                                                 </div>
                                             </div>
@@ -101,7 +107,9 @@
                                                 <label class="nsm-subtitle text-success">$10.00/Month</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/nicejob'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/nicejob'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +134,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_zapier" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('zapier', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" data-apiname="zapier" type="checkbox" id="switch_zapier" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_zapier">Enabled</label>
                                                 </div>
                                             </div>
@@ -134,7 +148,9 @@
                                                 <label class="nsm-subtitle text-success">$5.00/Month</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zapier'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zapier'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +175,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_mailchimp" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('mailchimp', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_mailchimp" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_mailchimp">Enabled</label>
                                                 </div>
                                             </div>
@@ -167,7 +189,9 @@
                                                 <label class="nsm-subtitle text-success">$10.00/Month</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/mailchimp'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/mailchimp'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -192,7 +216,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_activecampaign" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('active_campaign', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_activecampaign" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_activecampaign">Enabled</label>
                                                 </div>
                                             </div>
@@ -200,7 +230,9 @@
                                                 <label class="nsm-subtitle text-success">$10.00/Month</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/active_campaign'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/active_campaign'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +257,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_api" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('api_integration', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_api" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_api">Enabled</label>
                                                 </div>
                                             </div>
@@ -233,7 +271,9 @@
                                                 <label class="nsm-subtitle text-success">$10.00/Month</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/api_integration'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/api_integration'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +298,13 @@
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
-                                                    <input class="form-check-input" type="checkbox" id="switch_zillow" checked>
+                                                    <?php 
+                                                        $is_enabled = 0;
+                                                        if( array_key_exists('zillow', $enabledApiConnectors) ){
+                                                            $is_enabled = 1;
+                                                        }   
+                                                    ?>
+                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_zillow" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_zillow">Enabled</label>
                                                 </div>
                                             </div>
@@ -266,7 +312,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zillow'); ?>'">Manage</button>
+                                        <?php if( $is_enabled == 1 ){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zillow'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -811,6 +859,29 @@
                 }
             });  
         }
+
+        $('.chk_api_enabled').on('change', function(e){                        
+            var api_name = $(this).attr('data-apiname');
+            if( $(this).is(':checked') ){
+                var is_enabled = 1;
+                $(this).prop( "checked",false);
+            }else{
+                var is_enabled = 0;
+                $(this).prop( "checked",true);
+            }
+
+            $('#enable_disable_api').modal('show');
+
+            var url = base_url + "tools/_enable_disable_api_confirmation";
+            $.ajax({
+                type: 'POST',
+                url: url,                
+                data: {api_name:api_name,is_enabled:is_enabled},
+                success: function(o) {
+                    $('#enable-disable-api-container').html(o);
+                },
+            });
+        });
 
         $("#form-auth-verify").on("submit", function(e) {
             e.preventDefault();

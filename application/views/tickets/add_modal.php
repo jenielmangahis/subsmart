@@ -1,24 +1,172 @@
-<style>
-    /* .modal-dialog {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 
-.modal-content {
-  height: auto;
-  min-height: 100%;
-  border-radius: 0;
-}
-.full-screen {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    top: 0;
-    left: 0;
-} */
-</style>
+<style>
+    
+    .select2-results__option {
+        text-align: left;
+    }
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        text-align: left;
+    }
+    .autocomplete-img{
+      height: 50px;
+      width: 50px;
+    }
+    .autocomplete-left{
+      display: inline-block;
+      width: 65px;
+    }
+    .autocomplete-right{
+        display: inline-block;
+        width: 80%;
+        vertical-align: top;
+    }
+    .clear{
+      clear: both;
+    }
+    
+    .signature_mobile
+    {
+        display: none;
+    }
+    
+    .show_mobile_view
+    {
+        display: none;
+    }
+    hr{
+        border: 0.5px solid #32243d !important;
+        width: 100%;
+    }
+    .row{
+        margin-top: 20px;
+    }
+    .banking-tab-container {
+        border-bottom: 1px solid grey;
+        padding-left: 0;
+    }
+    .form-line{
+        padding-bottom: 1px;
+    }
+    .input_select{
+        color: #363636;
+        border: 2px solid #e0e0e0;
+        box-shadow: none;
+        display: inline-block !important;
+        width: 100%;
+        background-color: #fff;
+        background-clip: padding-box;
+        font-size: 11px !important;
+    }
+    .pb-30 {
+      padding-bottom: 30px;
+    }
+    h5.card-title.mb-0, p.card-text.mt-txt {
+      text-align: center !important;
+    }
+    .dropdown-toggle::after {
+        display: block;
+        position: absolute;
+        top: 54% !important;
+        right: 9px !important;
+    }
+    .card-deck-upgrades {
+      display: block;
+    }
+    .card-deck-upgrades div {
+        padding: 20px;
+        float: left;
+        width: 33.33%;
+    }
+    .card-body.align-left {
+      width: 100% !important;
+    }
+    .card-deck-upgrades div a {
+        display: block;
+        width: 100%;
+        min-height: 400px;
+        float: left;
+        text-align: center;
+    }
+    .page-title, .box-title {
+      font-family: Sarabun, sans-serif !important;
+      font-size: 1.75rem !important;
+      font-weight: 600 !important;
+      padding-top: 5px;
+    }
+    .pr-b10 {
+      position: relative;
+      bottom: 10px;
+    }
+    .left {
+      float: left;
+    }
+    .p-40 {
+      padding-left: 15px !important;
+      padding-top: 40px !important;
+    }
+    a.btn-primary.btn-md {
+        height: 38px;
+        display: inline-block;
+        border: 0px;
+        padding-top: 7px;
+        position: relative;
+        top: 0px;
+    }
+    .card.p-20 {
+        padding-top: 18px !important;
+    }
+    .fr-right {
+      float: right;
+      justify-content: flex-end;
+    }
+    .p-20 {
+      padding-top: 25px !important;
+      padding-bottom: 25px !important;
+      padding-right: 20px !important;
+      padding-left: 20px !important;
+    }
+    .pd-17 {
+      position: relative;
+      left: 17px;
+    }
+    @media only screen and (max-width: 1300px) {
+      .card-deck-upgrades div a {
+          min-height: 440px;
+      }
+    }
+    @media only screen and (max-width: 1250px) {
+      .card-deck-upgrades div a {
+          min-height: 480px;
+      }
+      .card-deck-upgrades div {
+        padding: 10px !important;
+      }
+    }
+    @media only screen and (max-width: 600px) {
+      .p-40 {
+        padding-top: 0px !important;
+      }
+      .pr-b10 {
+        position: relative;
+        bottom: 0px;
+      }
+    }
+    </style>
+    
+       <style>
+       .but:hover {
+        font-weight: 900;
+        color:black;
+        }
+        .but-red:hover {
+        font-weight: 900;
+        color:red;
+        }
+        .required:after {
+        content:" *";
+        color: red;
+        }
+       </style>
 
 <!-- <div class="modal fade addticketsModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
@@ -349,7 +497,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <tr style="display:;">
+                                            <!-- <tr style="display:;">
                                                 <td width="30%">
                                                     <input type="text" class="form-control getItems"
                                                         onKeyup="getItems(this)" name="items[]">
@@ -384,7 +532,7 @@
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
                                                 <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                            </tr>
+                                            </tr> -->
                                             </tbody>
                                         </table>
                                         <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
@@ -879,3 +1027,573 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="modal_items_list" class="table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item);
+                                                $item_qty = get_total_item_qty($item->id);    
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>    
+                                                <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>                                            
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">Add
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
+<script>
+    $('#SEND_EMAIL_ON_SCHEDULE').on('change', function(event) {
+        event.preventDefault();
+        if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
+            $('input[name="SEND_EMAIL_ON_SCHEDULE"]').val('true');
+        } else {
+            $('input[name="SEND_EMAIL_ON_SCHEDULE"]').val('false');
+        }
+    });
+    
+    $('#sel-customer_t').select2({         
+        minimumInputLength: 0        
+    });
+    $('#appointment-user').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_users',
+                dataType: 'json',
+                delay: 250,                
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data,
+                    };
+                },
+                /*formatResult: function(item) {
+                    return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+                },*/
+                cache: true
+            },
+            dropdownParent: $("#technicianDiv"),
+            placeholder: 'Select User',
+            minimumInputLength: 0,
+            templateResult: formatRepoUser,
+            templateSelection: formatRepoSelectionUser
+        });
+
+        
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+</script>
+<script>
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
+        }
+    }
+
+
+    $(document).ready(function () {
+        $('#sel-customer').select2();
+        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+
+        /*$('#customers')
+            .empty() //empty select
+            .append($("<option/>") //add option tag in select
+                .val(customer_id) //set value for option to post it
+                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+            .val(customer_id) //select option of select2
+            .trigger("change"); //apply to select2*/
+    });
+</script>
+<script type="module"  src="<?= base_url("assets/js/customer/dashboard/index.js") ?>"></script>
+
+<script>
+
+document.getElementById("payment_method").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#invoicing').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#invoicing').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#invoicing').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+}
+</script>
+<script>
+    
+    $(".saveServiceType").on("click", function(e) {
+            let service_name = $("#addServiceTypevalue").val();
+            var $select = $('#service_type');
+
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('tickets/saveServiceType'); ?>",
+                data: {
+                    service_name: service_name
+                },
+                dataType: 'json',
+                success: function(response) {
+                    location.reload();
+                    $('#addServiceType').modal('hide');
+                    $select.selectmenu("refresh", true);
+                }
+            });
+        });
+</script>
+
+<script>
+    
+$(document).ready(function(){
+ 
+ $('#sel-customer_t').change(function(){
+ var id  = $(this).val();
+//  alert(id);
+
+     $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/addLocationajax",
+         data: {id : id },
+         dataType: 'json',
+         success: function(response){
+            // console.log(response);
+            // console.log(response.data);
+            //  alert('success');
+             // console.log(response['customer']);
+         // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+         // var phone = response['customer'].phone_h;
+         // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+         var phone = response['customer'].phone_h;
+             // phone = normalize(phone);
+         
+         var mobile = response['customer'].phone_m;
+             // mobile = normalize(mobile);
+
+        //  var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+        //  var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+         
+         $("#service_location").val(response['customer'].mail_add);
+         $("#customer_city").val(response['customer'].city);
+         $("#customer_state").val(response['customer'].state);
+         $("#customer_zip").val(response['customer'].zip_code);
+         $("#customer_phone").val(response['customer'].phone_h +' '+ response['customer'].phone_m);
+         $("#business_name").val(response['customer'].business_name);
+        //  $("#email").val(response['customer'].email);
+        //  $("#date_of_birth").val(response['customer'].date_of_birth);
+        //  $("#phone_no").val(test_p);
+        //  $("#mobile_no").val(test_m);
+        //  $("#city").val(response['customer'].city);
+        //  $("#state").val(response['customer'].state);
+        //  $("#zip").val(response['customer'].zip_code);
+        //  $("#cross_street").val(response['customer'].cross_street);
+        //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+
+        //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+
+        //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+     
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
+});
+
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
+<script>
+$('#scheduled_time').timepicker({
+  timeFormat: 'h:mm a',
+  interval: 30,
+  minTime: '8',
+  maxTime: '11:00 PM',
+  startTime: '8:00 AM',
+  dynamic: false, 
+  dropdown: true,
+  scrollbar: true
+});
+
+$('#scheduled_time')
+  .timepicker('option', 'change', function(time) {
+    var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
+    $('#scheduled_time_to').timepicker('option', 'minTime', time);
+    $('#scheduled_time_to').timepicker('setTime', later);
+  });
+
+$('#scheduled_time_to').timepicker({
+  timeFormat: 'hh:mm a',
+  interval: 30,
+  maxTime: '11:00 PM',
+  startTime: '08:00 AM',
+  dynamic: false,
+  dropdown: true,
+  scrollbar: true
+});
+
+</script>
+<script>
+    
+$('#modal_items_list').DataTable({
+    "autoWidth" : false,
+    "columnDefs": [
+    { width: 540, targets: 0 },
+    { width: 100, targets: 0 },
+    { width: 100, targets: 0 }
+    ],
+    "ordering": false,
+});
+</script>
+
+<script>
+    CKEDITOR.replace('editor');
+</script>
+<script>
+
+$(".updateHeader").on("click", function(e) {
+    // alert('test');
+    $('#updateHeaderModal').modal('show');
+});
+
+
+$(".saveHeader").on("click", function(e) {
+    // alert('test');
+    var content = $('.headereditor').val();
+    // alert(content);
+    
+    $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>tickets/saveTickets",
+         data: {content : content },
+         dataType: 'json',
+         success: function(response){
+            $('#updateHeaderModal').modal('hide');
+            $("#updateHeaderDiv").load(location.href + " #updateHeaderDiv");
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
+});
+
+$(".updateHeaderSave").on("click", function(e) {
+    // alert('test');
+    var content = $(".headereditor").val();
+    // alert(content);
+    
+    $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>tickets/updateHeader",
+         data: {content : content },
+         dataType: 'json',
+         success: function(response){
+            $('#updateHeaderModal').modal('hide');
+            $("#updateHeaderDiv").load(location.href + " #updateHeaderDiv");
+         },
+             error: function(response){
+             //alert('Error'+response);
+    
+             }
+     });
+});
+</script>

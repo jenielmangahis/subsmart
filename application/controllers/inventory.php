@@ -425,47 +425,67 @@ class Inventory extends MY_Controller
     public function save_new_item()
     {
         $input = $this->input->post();
-        $input['is_active'] =  1;
-        $input['company_id'] =  logged('company_id');
-        $comp_id = logged('company_id');
-        $data = array(
-            'company_id' => $comp_id,
-            'initial_qty' => $this->input->post('qty'),
-            'qty' => $this->input->post('qty'),
-            'loc_id' => $this->input->post('loc_id'),
-            'insert_date' => date('Y-m-d H:i:s')
-        );
+
+        $input['is_active'] = 1;
+        $input['company_id'] = logged('company_id');
     
-        $customFields = $input['custom_field'];
-        unset($input['custom_field']);
+        $ITEM_DATA = array(
+            'company_id' => $input['company_id'],
+            'title' => $input['title'],
+            'brand' => $input['brand'],
+            'price' => $input['price'],
+            'retail' => $input['retail'],
+            'cost_per' => $input['cost_per'],
+            'units' => $input['units'],
+            'vendor_id' => $input['vendor_id'],
+            'type' => $input['type'],
+            'url' => $input['url'],
+            'COGS' => $input['COGS'],
+            'model' => $input['model'],
+            'serial_number' => $input['serial_number'],
+            'points' => $input['points'],
+            'qty_order' => $input['qty_order'],
+            're_order_points' => $input['re_order_points'],
+            'item_categories_id' => $input['item_categories_id'],
+            'description' => $input['description'],
+            'is_active' => $input['is_active'],
+        );
+        $ITEM_ID = $this->items_model->insert($ITEM_DATA);
 
-        unset($input['loc_id']);
-        unset($input['qty']);
-        $itemId = $this->items_model->insert($input);
-
-        $data['item_id'] = $itemId;
-        $this->items_model->saveNewItemLocation($data);
-
-        if ($itemId) {
-            if($customFields) {
-                $customFieldsValue = [];
-                foreach($customFields as $fieldId => $value) {
-                    $customFieldsValue[] = [
-                        'custom_field_id' => $fieldId,
-                        'value' => $value,
-                        'item_id' => $itemId
-                    ];
-                }
-
-                $this->items_model->insert_custom_fields_value($customFieldsValue);
-            }
-
-            echo "1";
-        } else {
-            echo "0";
+        for ($i = 0; $i < count($input['loc_id']); $i++) { 
+            $STORAGE_LOCATION_DATA = array(
+                'item_id' => $ITEM_ID,
+                'company_id' => $input['company_id'],
+                'initial_qty' => $input['initial_quantity'],
+                'qty' => $input['initial_quantity'],
+                'loc_id' => $input['loc_id'][$i],
+                'insert_date' => date('Y-m-d H:i:s'),
+            );
+            $this->items_model->saveNewItemLocation($STORAGE_LOCATION_DATA);
         }
 
-        redirect('inventory');
+        // $customFields = $input['custom_field'];
+        // unset($input['custom_field']);
+
+        // if ($itemId) {
+        //     if($customFields) {
+        //         $customFieldsValue = [];
+        //         foreach($customFields as $fieldId => $value) {
+        //             $customFieldsValue[] = [
+        //                 'custom_field_id' => $fieldId,
+        //                 'value' => $value,
+        //                 'item_id' => $itemId
+        //             ];
+        //         }
+
+        //         $this->items_model->insert_custom_fields_value($customFieldsValue);
+        //     }
+        //     echo "1";
+        // } else {
+        //     echo "0";
+        // }
+
+        // redirect('inventory');
     }
 
     public function edit_item( $id )
@@ -483,6 +503,15 @@ class Inventory extends MY_Controller
             'table' => 'item_categories',
             'select' => '*',
         );
+        $getAllLocation = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'select' => 'loc_id, location_name, default',
+            'table' => 'storage_loc'
+        );
+        $this->page_data['getAllLocation'] = $this->general->get_data_with_param($getAllLocation);
+        $this->page_data['selectedLocation'] = $this->items_model->getSelectedLocation($id);
         $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
         $this->page_data['item'] = $this->items_model->getByID($id);
         $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
@@ -499,6 +528,12 @@ class Inventory extends MY_Controller
         } else {
             echo "0";
         }
+    }
+
+    public function testFunction() {
+        echo "<pre>";
+        print_r ($this->items_model->getSelectedLocation(11807));
+        echo "</pre>";
     }
 
     public function  update_service_item()
@@ -986,7 +1021,7 @@ class Inventory extends MY_Controller
             'insert_date' => date('Y-m-d H:i:s')
         );
 
-        // $this->items_model->saveNewItemLocation($data);
+        $this->items_model->saveNewItemLocation($data);
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
 
         if ($executeOnce == 0) {
