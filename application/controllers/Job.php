@@ -1692,6 +1692,10 @@ class Job extends MY_Controller
         //echo json_encode($this->general->get_data_with_param($get_customer, false), true);
     }
 
+    public function getCustomerInfo($id) {
+        echo json_encode($this->jobs_model->getSelectedCustomerInfo($id));
+    }
+
     public function get_esign_selected()
     {
         $id = $_POST['id'];

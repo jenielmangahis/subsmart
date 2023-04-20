@@ -25,11 +25,14 @@ class Vault extends MY_Controller {
 
 	public function mylibrary()
 	{
+		$this->page_data['page']->title = 'My Library';
+		$this->page_data['page']->menu = 'vault';
+
 		$this->page_data['folder_manager'] = getFolderManagerView(true, true);
 		add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
-		$this->load->view('vault/list', $this->page_data);
+		$this->load->view('v2/pages/customer/vault/list', $this->page_data);
 	}
-
+	
 	public function beforeafter()
 	{
         $this->load->model('Before_after_model', 'before_after_model');

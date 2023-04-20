@@ -20,7 +20,8 @@ class DocuSign extends MYF_Controller
     {
         $decrypted = decrypt($this->input->get('hash', true), $this->password);
         $decrypted = json_decode($decrypted, true);
-        ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
+        
+        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'prof_id' => $prof_id] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
 
         $this->db->where('id', $recipientId);
@@ -104,6 +105,7 @@ class DocuSign extends MYF_Controller
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
         $autoPopulateData = [];
+
         foreach ($fields as $field) {
             if (!$field->specs) {
                 continue;
@@ -204,6 +206,16 @@ class DocuSign extends MYF_Controller
             $jobData = $job;
             $jobData->equipment_cost = $job->amount;
         }
+
+        $this->db->where('prof_id', $prof_id);
+        $client = $this->db->get('acs_profile')->row();
+
+        $clientKeys = ['first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'contact_phone1', 'contact_phone2'];
+        $filteredClient = array_filter( (array)$client , function($v) use ($clientKeys) {
+            return in_array($v, $clientKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        
+        $autoPopulateData['client'] = $filteredClient;
 
         header('content-type: application/json');
         echo json_encode([
@@ -330,7 +342,7 @@ class DocuSign extends MYF_Controller
 
                     $message = json_encode([
                         'recipient_id' => $document->next_recipient->id,
-                        'document_id' => $document->id,
+                        'document_id' => $document->id
                     ]);
 
                     $hash = encrypt($message, $this->password);
@@ -353,7 +365,7 @@ class DocuSign extends MYF_Controller
 
                 $message = json_encode([
                     'recipient_id' => $recipientId,
-                    'document_id' => $document->id,
+                    'document_id' => $document->id
                 ]);
                 $hash = encrypt($message, $this->password);
                 $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
@@ -1315,7 +1327,7 @@ SQL;
     }
 
 
-    public function sendTemplate($templateId, $userId, $companyId, $jobIdParam = null)
+    public function sendTemplate($templateId, $customerId, $userId, $companyId, $jobIdParam = null)
     {
         header('content-type: application/json');
 
@@ -1526,7 +1538,7 @@ SQL;
             ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
             $response = json_encode(['success' => is_null($error), 'error' => $error]);
         } else if ($recipient['role'] === 'Signs in Person') {
-            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id']]);
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'prof_id' => $customerId]); // add customer id here
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
 
@@ -1555,7 +1567,7 @@ SQL;
 
         $message = json_encode([
             'recipient_id' => $lastRecipient->id,
-            'document_id' => $document->id,
+            'document_id' => $document->id
         ]);
 
         $hash = encrypt($message, $this->password);
@@ -1610,9 +1622,9 @@ SQL;
         $this->sendTemplate($templateId, $userId, $companyId, $jobId);
     }
 
-    public function apiSendTemplate($templateId)
+    public function apiSendTemplate($templateId, $customerId)
     {
-        $this->sendTemplate($templateId, logged('id'), logged('company_id'));
+        $this->sendTemplate($templateId, $customerId, logged('id'), logged('company_id'));
     }
 
     private function getSigningUrl()
@@ -2606,7 +2618,7 @@ SQL;
         $lastRecipient = end(array_values($document->recipients));
         $message = json_encode([
             'recipient_id' => $lastRecipient->id,
-            'document_id' => $document->id,
+            'document_id' => $document->id
         ]);
 
         $hash = encrypt($message, $this->password);
@@ -2636,7 +2648,7 @@ SQL;
             $lastRecipient = end(array_values($recipients));
             $message = json_encode([
                 'recipient_id' => $lastRecipient->id,
-                'document_id' => $document->id,
+                'document_id' => $document->id
             ]);
 
             $hash = encrypt($message, $this->password);

@@ -69,12 +69,43 @@ function Signing(hash) {
 
   function getRenderField({ field, recipient }) {
     const { field_name, coordinates, id: fieldId, value: fieldValue } = field;
+    const { first_name, last_name, mail_add, city, state, zip_code, contact_phone1, contact_phone2 } = window.__esigndata.auto_populate_data.client;
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
     top = parseInt(top);
     left = parseInt(left);
 
+    console.log(field);
+
     const container = document.querySelector(".signing__documentContainer");
+
+    if ( field_name === "Subscriber Name" ) {
+      return first_name + ' ' + last_name;
+    }
+
+    if ( field_name === "Primary Contact" ) {
+      return contact_phone1;
+    }
+
+    if ( field_name === "Address" ) {
+      return mail_add;
+    }
+
+    if ( field_name === "Secondary Contact" ) {
+      return contact_phone2;
+    }
+
+    if ( field_name === "City" ) {
+      return city;
+    }
+
+    if ( field_name === "State" ) {
+      return state;
+    }
+
+    if ( field_name === "ZIP" ) {
+      return zip_code;
+    }
 
     if (field_name === "Date Signed") {
       return moment().format("MM/DD/YYYY");

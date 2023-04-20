@@ -7,6 +7,7 @@ function TemplateCreate() {
   const maxRecipients = 10;
   let recipients = [];
   let templateId = undefined;
+  let customerId = undefined;
   let template = {};
   let files = [];
   let workorder = undefined;
@@ -281,11 +282,11 @@ function TemplateCreate() {
 
     $addRecipientButton.on("click", () => addRecipient());
 
-    $form.on("submit", (e) => sendForm(e, templateIdParam, action));
+    $form.on("submit", (e) => sendForm(e, templateIdParam, customerId, action));
     $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam, action));
   }
 
-  async function sendForm(event, templateIdParam, action) {
+  async function sendForm(event, templateIdParam, customerId, action) {
     event.preventDefault();
 
     const $name = $form.find("#name");
@@ -310,7 +311,9 @@ function TemplateCreate() {
         job_id: job ? job.id : null,
       };
 
-      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
+      // const prof_id = ;
+
+      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}/${customerId}`;
       const response = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(payload),
@@ -652,7 +655,7 @@ function TemplateCreate() {
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
       const jobId = urlParams.get("job_id");
-      const customerId = urlParams.get("customer_id");
+      customerId = urlParams.get("customer_id");
 
       if (workorderId) {
         await getWorkorderCustomer(workorderId);

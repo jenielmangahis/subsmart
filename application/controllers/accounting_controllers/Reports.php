@@ -447,8 +447,12 @@ class Reports extends MY_Controller {
                     $rates = number_format(floatval($timeActivity->hourly_rate), 2);
                     $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
                     if(!empty(get('divide-by-100'))) {
-                        $rates = number_format(floatval($rates) / 100, 2);
+                        $rates = floatval($rates) / 100;
                         $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
                     }
 
                     if(!empty(get('without-cents'))) {
@@ -1953,8 +1957,12 @@ class Reports extends MY_Controller {
                     $rates = number_format(floatval($timeActivity->hourly_rate), 2);
                     $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
                     if(!empty($post['divide-by-100'])) {
-                        $rates = number_format(floatval($rates) / 100, 2);
+                        $rates = floatval($rates) / 100;
                         $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
                     }
 
                     if(!empty($post['without-cents'])) {
@@ -2035,8 +2043,12 @@ class Reports extends MY_Controller {
                         'created_by' => '',
                         'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
                         'last_modified_by' => '',
+                        'customer_id' => $timeActivity->customer_id,
                         'customer' => $customerName,
+                        'employee_id' => $timeActivity->name_id,
+                        'employee_key' => $timeActivity->name_key,
                         'employee' => $employeeName,
+                        'item_id' => $timeActivity->service_id,
                         'product_service' => $productName,
                         'memo_description' => $timeActivity->description,
                         'rates' => !empty($timeActivity->hourly_rate) ? $rates : '',
@@ -2516,9 +2528,9 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
-                        'create_date' => $timeActivity->created_at,
+                        'create_date' => date("m/d/Y H:i:s A", strtotime($timeActivity->created_at)),
                         'created_by' => '',
-                        'last_modified' => $timeActivity->updated_at,
+                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
                         'last_modified_by' => '',
                         'customer_id' => $timeActivity->customer_id,
                         'customer' => $customerName,
@@ -2527,8 +2539,8 @@ class Reports extends MY_Controller {
                         'employee' => $employeeName,
                         'item_id' => $timeActivity->service_id,
                         'product_service' => $productName,
-                        'memo_desc' => $timeActivity->description,
-                        'rates' => $rates,
+                        'memo_description' => $timeActivity->description,
+                        'rates' => !empty($timeActivity->hourly_rate) ? $rates : '',
                         'duration' => substr($timeActivity->time, 0, -3),
                         'start_time' => substr($timeActivity->start_time, 0, -3),
                         'end_time' => substr($timeActivity->end_time, 0, -3),
@@ -2540,38 +2552,37 @@ class Reports extends MY_Controller {
                     ];
                 }
 
-                $this->page_data['start_date'] = date("m/01/Y");
-                $this->page_data['end_date'] = date("m/d/Y");
+                $start_date = date("m/01/Y");
+                $end_date = date("m/d/Y");
                 $report_period = date("F 1-j, Y");
                 if(!empty($post['date'])) {
-                    $this->page_data['filter_date'] = $post['date'];
                     if($post['date'] !== 'all-dates') {
-                        $this->page_data['start_date'] = str_replace('-', '/', $post['from']);
-                        $this->page_data['end_date'] = str_replace('-', '/', $post['to']);
+                        $start_date = str_replace('-', '/', $post['from']);
+                        $end_date = str_replace('-', '/', $post['to']);
                     }
 
-                    switch(get('date')) {
+                    switch($post['date']) {
                         case 'all-dates' :
                             $report_period = 'All Dates';
                         break;
                         case 'today' :
-                            $report_period = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $report_period = date("F j, Y", strtotime($start_date));
                         break;
                         case 'yesterday' :
-                            $report_period = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $report_period = date("F j, Y", strtotime($start_date));
                         break;
                         case 'this-month' :
                             $report_period = date("F Y");
                         break;
                         case 'last-month' :
-                            $report_period = date("F Y", strtotime($this->page_data['start_date']));
+                            $report_period = date("F Y", strtotime($start_date));
                         break;
                         case 'next-month' :
-                            $report_period = date("F Y", strtotime($this->page_data['start_date']));
+                            $report_period = date("F Y", strtotime($start_date));
                         break;
                         case 'this-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2579,8 +2590,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
                         break;
                         case 'last-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2588,8 +2599,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
                         break;
                         case 'next-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2597,8 +2608,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
                         break;
                         case 'this-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2606,8 +2617,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
                         break;
                         case 'last-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2615,8 +2626,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
                         break;
                         case 'next-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2624,8 +2635,8 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
                         break;
                         case 'this-year-to-last-month' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2633,28 +2644,28 @@ class Reports extends MY_Controller {
                             $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
                         break;
                         case 'since-30-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
 
                             $report_period = 'Since '.$startDate;
                         break;
                         case 'since-60-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
 
                             $report_period = 'Since '.$startDate;
                         break;
                         case 'since-90-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
 
                             $report_period = 'Since '.$startDate;
                         break;
                         case 'since-365-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
 
                             $report_period = 'Since '.$startDate;
                         break;
                         default : 
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
 
                             $startMonth = date("F", strtotime($startDate));
                             $endMonth = date("F", strtotime($endDate));
@@ -2673,10 +2684,10 @@ class Reports extends MY_Controller {
                     }
                 }
 
-                if($this->page_data['filter_date'] !== 'all-dates') {
+                if($post['date'] !== 'all-dates') {
                     $filters = [
-                        'start-date' => $this->page_data['start_date'],
-                        'end-date' => $this->page_data['end_date']
+                        'start-date' => $start_date,
+                        'end-date' => $end_date
                     ];
     
                     $activities = array_filter($activities, function($v, $k) use ($filters) {
@@ -2685,12 +2696,10 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['customer'])) {
-                    $this->page_data['filter_customer'] = new stdClass();
-                    $this->page_data['filter_customer']->id = $post['customer'];
                     if(!in_array($post['customer'], ['all', 'not-specified', 'specified'])) {
                         $customer = $this->accounting_customers_model->get_by_id($post['customer']);
                         $customerName = $customer->first_name . ' ' . $customer->last_name;
-                        $this->page_data['filter_customer']->name = $customerName;
+                        $filter_customer->name = $customerName;
 
                         $filters = [
                             'customer_id' => $post['customer']
@@ -2700,8 +2709,6 @@ class Reports extends MY_Controller {
                             return $v['customer_id'] === $filters['customer_id'];
                         }, ARRAY_FILTER_USE_BOTH);
                     } else {
-                        $this->page_data['filter_customer']->name = ucwords(str_replace('-', ' ', $post['customer']));
-
                         if($post['customer'] === 'not-specified') {
                             $activities = array_filter($activities, function($v, $k) {
                                 return empty($v['customer_id']);
@@ -2715,11 +2722,8 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['product-service'])) {
-                    $this->page_data['product_service'] = new stdClass();
-                    $this->page_data['product_service']->id = $post['product-service'];
                     if(!in_array($post['product-service'], ['all', 'not-specified', 'specified'])) {
                         $item = $this->items_model->getByID($post['product-service']);
-                        $this->page_data['product_service']->name = $item->title;
 
                         $filters = [
                             'item_id' => $post['product-service']
@@ -2729,8 +2733,6 @@ class Reports extends MY_Controller {
                             return $v['item_id'] === $filters['item_id'];
                         }, ARRAY_FILTER_USE_BOTH);
                     } else {
-                        $this->page_data['product_service']->name = ucwords(str_replace('-', ' ', $post['product-service']));
-
                         if($post['product-service'] === 'not-specified') {
                             $activities = array_filter($activities, function($v, $k) {
                                 return empty($v['item_id']);
@@ -2744,19 +2746,15 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['employee'])) {
-                    $this->page_data['employee'] = new stdClass();
-                    $this->page_data['employee']->id = $post['employee'];
                     if(!in_array($post['employee'], ['all', 'not-specified', 'specified'])) {
                         $explode = explode('-', $post['employee']);
 
                         switch($explode[0]) {
                             case 'employee' :
                                 $employee = $this->users_model->getUserByID($explode[1]);
-                                $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName . ' - Employee';
                             break;
                             case 'vendor' :
                                 $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
-                                $this->page_data['employee']->name = $vendor->display_name . ' - Vendor';
                             break;
                         }
 
@@ -2769,8 +2767,6 @@ class Reports extends MY_Controller {
                             return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
                         }, ARRAY_FILTER_USE_BOTH);
                     } else {
-                        $this->page_data['employee']->name = ucwords(str_replace('-', ' ', $post['employee']));
-
                         if($post['employee'] === 'not-specified') {
                             $activities = array_filter($activities, function($v, $k) {
                                 return empty($v['employee_id']);
@@ -2784,10 +2780,6 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['create-date'])) {
-                    $this->page_data['create_date'] = $post['create-date'];
-                    $this->page_data['create_date_from'] = str_replace('-', '/', $post['create-date-from']);
-                    $this->page_data['create_date_to'] = str_replace('-', '/', $post['create-date-to']);
-
                     $filters = [
                         'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
                         'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
@@ -2799,10 +2791,6 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['last-modified-date'])) {
-                    $this->page_data['last_modified_date'] = $post['last-modified-date'];
-                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', $post['last-modified-date-from']);
-                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', $post['last-modified-date-to']);
-
                     $filters = [
                         'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
                         'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
@@ -2814,8 +2802,6 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['billable'])) {
-                    $this->page_data['billable'] = $post['billable'];
-
                     $filters = [
                         'billable' => $post['billable']
                     ];
@@ -2826,8 +2812,6 @@ class Reports extends MY_Controller {
                 }
 
                 if(!empty($post['memo'])) {
-                    $this->page_data['memo'] = $post['memo'];
-
                     $filters = [
                         'memo' => $post['memo']
                     ];
@@ -3109,34 +3093,40 @@ class Reports extends MY_Controller {
                     $grouped = $activities;
                 }
 
-                if(!empty($post['group-by'])) {
-                    $this->page_data['group_by'] = $post['group-by'];
-                }
-
                 $activities = $grouped;
 
-                $this->page_data['activities'] = $activities;
-                $this->page_data['company_name'] = $this->page_data['clients']->business_name;
-                if(!empty($post['show-company-name'])) {
-                    $this->page_data['show_company_name'] = false;
-                }
-
+                $companyName = $this->page_data['clients']->business_name;
                 if(!empty($post['company-name'])) {
-                    $this->page_data['company_name'] = $post['company-name'];
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
                 }
-
-                $this->page_data['report_title'] = 'Time Activities by Employee Detail';
-                if(!empty($post['show-report-title'])) {
-                    $this->page_data['show_report_title'] = false;
-                }
-
+                $reportName = $reportType->name;
                 if(!empty($post['report-title'])) {
-                    $this->page_data['report_title'] = $post['report-title'];
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
                 }
 
-                if(!empty($post['show-report-period'])) {
-                    $this->page_data['show_report_period'] = false;
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
                 }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
@@ -3160,8 +3150,8 @@ class Reports extends MY_Controller {
                         $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
                         $row++;
                     }
-                    if(!empty($post['show-report-period'])) {
-                        $reportPeriod = "Created/Edited: Since " . date("F j, Y");
+                    if(empty($post['show-report-period'])) {
+                        $reportPeriod = "Activity: " . $report_period;
                         $writer->writeSheetRow('Sheet1', [$reportPeriod], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
                         $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
                         $row++;
@@ -3169,29 +3159,77 @@ class Reports extends MY_Controller {
 
                     $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
                     $row += 2;
-                    foreach($activities as $activity) {
-                        $data = [];
 
-                        $style = [];
-                        foreach($post['fields'] as $field) {
-                            if($field === 'Rates' || $field === 'Amount') {
-                                if(stripos($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                                    $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                    $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                // if(substr($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                                    $style[] = ['color' => '#FF0000'];
+                    if($post['group-by'] === 'none') {
+                        foreach($activities as $activity) {
+                            $data = [];
+    
+                            $style = [];
+                            foreach($post['fields'] as $field) {
+                                if($field === 'Rates' || $field === 'Amount') {
+                                    if(stripos($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                        $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                    // if(substr($activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                        $style[] = ['color' => '#FF0000'];
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
                                 } else {
                                     $style[] = ['color' => '#000000'];
                                 }
-                            } else {
-                                $style[] = ['color' => '#000000'];
+                                $data[] = $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
                             }
-                            $data[] = $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+    
+                            $row++;
                         }
+                    } else {
+                        foreach($activities as $activity)
+                        {
+                            $groupHead = [];
+                            $groupTotal = [];
 
-                        $writer->writeSheetRow('Sheet1', $data, $style);
+                            foreach($post['fields'] as $field)
+                            {
+                                $groupHead[] = '';
+                                $groupTotal[] = $field === 'Duration' || $field === 'Amount' ? $activity[strtolower($field).'_total'] : '';
+                            }
+                            $groupHead[0] = $activity['name'];
+                            $groupTotal[0] = 'Total for '.$activity['name'];
 
-                        $row++;
+                            $writer->writeSheetRow('Sheet1', $groupHead, ['font-style' => 'bold']);
+                            $row++;
+
+                            foreach($activity['activities'] as $act)
+                            {
+                                $data = [];
+                                $style = [];
+                                foreach($post['fields'] as $field) {
+                                    if($field === 'Rates' || $field === 'Amount') {
+                                        if(stripos($act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                            $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                            $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        // if(substr($act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                            $style[] = ['color' => '#FF0000'];
+                                        } else {
+                                            $style[] = ['color' => '#000000'];
+                                        }
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
+                                    $data[] = $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                                }
+        
+                                $writer->writeSheetRow('Sheet1', $data, $style);
+        
+                                $row++;
+                            }
+
+                            $writer->writeSheetRow('Sheet1', $groupTotal, ['font-style' => 'bold', 'border' => 'top']);
+                            $row++;
+                        }
                     }
 
                     $writer->writeSheetRow('Sheet1', []);
@@ -3241,6 +3279,7 @@ class Reports extends MY_Controller {
                         </thead>
                         <tbody>';
 
+                    if($post['group-by'] === 'none') {
                         foreach($activities as $activity) {
                             $html .= '<tr>';
                             foreach($post['fields'] as $field) {
@@ -3248,6 +3287,44 @@ class Reports extends MY_Controller {
                             }
                             $html .= '</tr>';
                         }
+                    } else {
+                        foreach($activities as $activity)
+                        {
+                            $html .= '<tr>
+                                <td colspan="'.count($post['fields']).'"><b>'.$activity['name'].'</b></td>
+                            </tr>';
+                            
+                            foreach($activity['activities'] as $act)
+                            {
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                }
+                                $html .= '</tr>';
+                            }
+
+                            $count = array_search('Duration', $post['fields']);
+                            if($count === false) {
+                                $count = array_search('Amount', $post['fields']);
+                            }
+                            if($count === false) {
+                                $count = count($post['fields']);
+                            }
+
+                            $total = '<td style="border-top: 1px solid black" colspan="'.$count.'"><b>Total for '.$activity['name'].'</b></td>';
+                            foreach($post['fields'] as $index => $field)
+                            {
+                                if($index > $count - 1) {
+                                    $value = $field === 'Duration' || $field === 'Amount' ? $activity[strtolower($field).'_total'] : '';
+                                    $total .= '<td style="border-top: 1px solid black"><b>'.$value.'</b></td>';
+                                }
+                            }
+
+                            $html .= '<tr>';
+                            $html .= $total;
+                            $html .= '</tr>';
+                        }
+                    }
                     
                     $html .= '</tbody>';
                     $html .= '<tfoot>';

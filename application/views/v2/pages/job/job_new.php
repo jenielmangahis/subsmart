@@ -737,7 +737,7 @@
                                         <div class="row">
                                             <hr>
                                             <div class="col-md-5">
-                                                <h6>Customer Info</h6>
+                                                <h6>Customer</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
                                                     <!-- <option selected value hidden>- Select Customer -</option> -->
                                                     <option value="4801" selected>Test</option>
@@ -745,7 +745,23 @@
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
                                                 </select>
-                                                <table id="customer_info" class="table">
+                                                <div class="alert alert-secondary show mt-2" role="alert" style="background: #f9f9f9;">
+                                                    <div class="row">
+                                                        <div class="col-md-12"><strong>Customer Information</strong></div>
+                                                        <div class="col-md-12">- Account Number:&nbsp;&nbsp;<u id="customerAccountNumber"></u></div>
+                                                        <div class="col-md-12">- Business Name:&nbsp;&nbsp;<u id="customerBusinessName"></u></div>
+                                                        <div class="col-md-12">- Password:&nbsp;&nbsp;<u id="customerPassword"></u></div>
+                                                        <div class="col-md-12">- Address:&nbsp;&nbsp;<u id="customerAddress"></u></div>
+                                                        <div class="col-md-12">- Phone Number:&nbsp;&nbsp;<u id="customerPhoneNumber"></u></div>
+                                                        <div class="col-md-12">- Email:&nbsp;&nbsp;<u id="customerEmail"></u></div>
+                                                        <div class="col-md-12">- Equipment Amount:&nbsp;&nbsp;<u id="customerEquimentAmount"></u></div>
+                                                        <div class="col-md-12">- Activation:&nbsp;&nbsp;<u id="customerActivationStatus"></u></div>
+                                                        <div class="col-md-12">- First Month Monitoring:&nbsp;&nbsp;<u id="customerMMR"></u></div>  
+                                                    </div>
+                                                  <!-- <div>Banking Details:&nbsp;&nbsp;<u>Show Banking Details</u></div> -->
+                                                </div>
+                                                
+                                                <table id="customer_info" class="table d-none">
                                                     <thead>
                                                     <tr>
                                                         <td></td>
@@ -784,6 +800,42 @@
                                                             <div class="spinner-border" role="status"></div>
                                                             <span style="">Loading Map...</span>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="alert alert-secondary show mt-2" role="alert" style="background: #f9f9f9;">
+                                                    <div class="row">
+                                                        <div class="col-md-12"><strong>Banking Details</strong></div>
+                                                        <div class="col-md-4">- Account Name:&nbsp;&nbsp;<u id="billingAccountName"></u></div>
+                                                        <div class="col-md-4">- Account No:&nbsp;&nbsp;<u id="billingAccountNo"></u></div>
+                                                        <div class="col-md-4">- Credit Card No:&nbsp;&nbsp;<u id="billingCreditCardNo"></u></div>
+                                                        <div class="col-md-4">- Credit Card Expiration:&nbsp;&nbsp;<u id="billingCreditCardExpiration"></u></div>
+                                                        <div class="col-md-8">- Card Address:&nbsp;&nbsp;<u id="billingCardAddress"></u></div>
+                                                    <!--
+                                                        <div class="col-md-4">- Equipment:&nbsp;&nbsp;<u id="billingEquipment"></u></div>
+                                                        <div class="col-md-4">- Initial Deposit:&nbsp;&nbsp;<u id="billingInitialDeposit"></u></div>
+                                                        <div class="col-md-4">- MMR:&nbsp;&nbsp;<u id="billingMMR"></u></div>
+                                                        <div class="col-md-4">- Billing Frequency:&nbsp;&nbsp;<u id="billingFrequency"></u></div>
+                                                        <div class="col-md-4">- Billing Day:&nbsp;&nbsp;<u id="billingDay"></u></div>
+                                                        <div class="col-md-4">- Contract Term:&nbsp;&nbsp;<u id="billingContractTerm"></u></div>
+                                                        <div class="col-md-4">- Billing Start Date:&nbsp;&nbsp;<u id="billingStartDate"></u></div>
+                                                        <div class="col-md-4">- Billing End Date:&nbsp;&nbsp;<u id="billingEndDate"></u></div>
+                                                        <div class="col-md-4">- Billing Method:&nbsp;&nbsp;<u id="billingMethod"></u></div>
+                                                        <div class="col-md-4">- Check No:&nbsp;&nbsp;<u id="billingCheckNo"></u></div>
+                                                        <div class="col-md-4">- Routing No:&nbsp;&nbsp;<u id="billingRoutingNo"></u></div>
+                                                        
+                                                        <div class="col-md-4">- Account Credential:&nbsp;&nbsp;<u id="billingAccountCredential"></u></div>
+                                                        <div class="col-md-4">- Account Note:&nbsp;&nbsp;<u id="billingAccountNote"></u></div>
+                                                        <div class="col-md-4">- Confirmation:&nbsp;&nbsp;<u id="billingConfirmation"></u></div>
+                                                        <div class="col-md-4">- Finance Amount:&nbsp;&nbsp;<u id="billingFinanceAmount"></u></div>
+                                                        <div class="col-md-4">- Recurring Start Date:&nbsp;&nbsp;<u id="billingRecurringStartDate"></u></div>
+                                                        <div class="col-md-4">- Recurring End Date:&nbsp;&nbsp;<u id="billingRecurringEndDate"></u></div>
+                                                        <div class="col-md-4">- Transaction Amount:&nbsp;&nbsp;<u id="billingTransactionAmount"></u></div>
+                                                        <div class="col-md-4">- Transaction Category:&nbsp;&nbsp;<u id="billingTransactionCategory"></u></div>
+                                                        <div class="col-md-4">- Last Payment Date:&nbsp;&nbsp;<u id="billingLastPaymentDate"></u></div>
+                                                        <div class="col-md-4">- Next Billing Date:&nbsp;&nbsp;<u id="billingNextBillingDate"></u></div> 
+                                                    -->
                                                     </div>
                                                 </div>
                                             </div>
