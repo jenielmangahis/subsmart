@@ -464,26 +464,26 @@ class Inventory extends MY_Controller
             $this->items_model->saveNewItemLocation($STORAGE_LOCATION_DATA);
         }
 
-        // $customFields = $input['custom_field'];
-        // unset($input['custom_field']);
+        $customFields = $input['custom_field'];
+        unset($input['custom_field']);
 
-        // if ($itemId) {
-        //     if($customFields) {
-        //         $customFieldsValue = [];
-        //         foreach($customFields as $fieldId => $value) {
-        //             $customFieldsValue[] = [
-        //                 'custom_field_id' => $fieldId,
-        //                 'value' => $value,
-        //                 'item_id' => $itemId
-        //             ];
-        //         }
+        if ($itemId) {
+            if($customFields) {
+                $customFieldsValue = [];
+                foreach($customFields as $fieldId => $value) {
+                    $customFieldsValue[] = [
+                        'custom_field_id' => $fieldId,
+                        'value' => $value,
+                        'item_id' => $itemId
+                    ];
+                }
 
-        //         $this->items_model->insert_custom_fields_value($customFieldsValue);
-        //     }
-        //     echo "1";
-        // } else {
-        //     echo "0";
-        // }
+                $this->items_model->insert_custom_fields_value($customFieldsValue);
+            }
+            echo "1";
+        } else {
+            echo "0";
+        }
 
         // redirect('inventory');
     }
@@ -519,15 +519,31 @@ class Inventory extends MY_Controller
     }
 
     public function update_item() {
-        $data = $this->input->post();
-        $id   = $data['id'];
-        unset($data['id']);        
-        $company_id =  logged('company_id');
-        if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
-            echo "1";
-        } else {
-            echo "0";
-        }
+        $input = $this->input->post();
+    
+        $ITEM_DATA = array(
+            'title' => $input['title'],
+            'brand' => $input['brand'],
+            'price' => $input['price'],
+            'retail' => $input['retail'],
+            'cost_per' => $input['cost_per'],
+            'units' => $input['units'],
+            'vendor_id' => $input['vendor_id'],
+            'type' => $input['type'],
+            'url' => $input['url'],
+            'COGS' => $input['COGS'],
+            'model' => $input['model'],
+            'serial_number' => $input['serial_number'],
+            'points' => $input['points'],
+            'qty_order' => $input['qty_order'],
+            're_order_points' => $input['re_order_points'],
+            'item_categories_id' => $input['item_categories_id'],
+            'description' => $input['description'],
+        );
+        $UPDATE_ITEM_DATA = $this->items_model->update($ITEM_DATA, array(
+            "id" => $input['item_id']
+        ));
+       // echo $UPDATE_ITEM_DATA;
     }
 
     public function testFunction() {

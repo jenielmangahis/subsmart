@@ -781,6 +781,18 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
+    public function getSelectedCustomerInfo($customerID) {
+        $this->db->select("acs_profile.prof_id, acs_profile.company_id, acs_profile.fk_user_id, acs_profile.fk_sa_id, acs_profile.mail_add, acs_profile.cross_street, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.country, acs_profile.phone_h, acs_profile.phone_m, acs_profile.email, acs_profile.activated, acs_access.access_password, business_profile.business_name, acs_alarm.monitor_id, acs_office.equipment_cost, acs_billing.mmr, acs_billing.*");
+        $this->db->from("acs_profile");
+        $this->db->join('acs_access', 'acs_access.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = acs_profile.company_id', 'left');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.prof_id', $customerID);
+        $query = $this->db->get();
+        return $query->result()[0];
+    }
     
 }
 /* End of file Jobs_model.php */

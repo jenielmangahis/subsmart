@@ -33,6 +33,10 @@
                                 <hr>
                                 <div class="nsm-card-body">
                                     <div class="row">
+                                        <div class="col-lg-12 mb-2 d-none">
+                                            <strong>Item ID</strong>
+                                            <input value="<?php echo $item->id; ?>" type="text" class="form-control" name="item_id" readonly/>
+                                        </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Name</strong>
                                             <input value="<?php echo $item->title; ?>" type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="title" id="title" required/>
@@ -137,11 +141,11 @@
                                         <!-- <div class="col-lg-12 mb-2">
                                             <img src="" id="img_profile">
                                             </div> -->
-                                        <div class="col-lg-6 mb-2">
+                                        <div class="col-lg-12 mb-2">
                                             <strong>Attach Image</strong>
                                             <input value="<?php echo $item->attached_image; ?>" type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
-                                        <div class="col-lg-6 mb-2">
+                                        <!-- <div class="col-lg-6 mb-2">
                                             <strong>Location</strong>
                                             <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
                                                 <option value='0' onselect="alert('test');">All Locations</option>
@@ -154,7 +158,7 @@
                                                     }
                                                     ?>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <input type="hidden" name="id" value="<?php echo $item->id; ?>">
@@ -201,9 +205,9 @@ $("#inventory_form").submit(function(e) {
         type: "POST",
         url: "<?= base_url() ?>/inventory/update_item",
         data: form.serialize(), // serializes the form's elements.
-        // success: function(data) {
-        //     console.log(data);
-        // }
+        success: function(data) {
+            // console.log(data);
+        }
     });
     Swal.fire({
         icon: 'success',

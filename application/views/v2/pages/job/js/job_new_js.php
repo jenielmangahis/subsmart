@@ -882,19 +882,109 @@ $("#attachment-file").change(function() {
                 }
             });
         });
+
         $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
-            if(customer_selected !== ""){
-                load_customer_data(customer_selected);
-            }else{
-                $('#cust_fullname').text('xxxxx xxxxx');
-                $('#cust_address').text('-------------');
-                $('#cust_number').text('(xxx) xxx-xxxx');
-                $('#cust_email').text('xxxxx@xxxxx.xxx');
-                initMap();
-            }
+            // if(customer_selected !== ""){
+            //     load_customer_data(customer_selected);
+            // }else{
+            //     $('#cust_fullname').text('xxxxx xxxxx');
+            //     $('#cust_address').text('-------------');
+            //     $('#cust_number').text('(xxx) xxx-xxxx');
+            //     $('#cust_email').text('xxxxx@xxxxx.xxx');
+            //     initMap();
+            // }
+            initializeCustomerData(customer_selected);
         });
+
+        function initializeCustomerData(customerID){
+            $.post('<?php echo base_url("job/getCustomerInfo/"); ?>'+customerID, {param1: 'value1'}, function(data) {
+                // =====
+                let result = JSON.parse(data);
+                let customerAccountNumber = (result.monitor_id) ? result.monitor_id : "" ;
+                let customerBusinessName = (result.business_name) ? result.business_name : "" ;
+                let customerPassword = (result.access_password) ? result.access_password : "" ;
+                let customerAddress = (result.mail_add) ? result.mail_add + ", " + result.zip_code : result.cross_street + ", " + result.zip_code ;
+                let customerPhoneNumber = (result.phone_h) ? result.phone_h : result.phone_m ;
+                let customerEmail = (result.email) ? result.email : "" ;
+                let customerEquimentAmount = (result.equipment_cost) ? result.equipment_cost : "" ;
+                let customerActivationStatus = (result.activated == 1) ? "Yes" : "No" ;
+                let customerMMR = (result.mmr) ? "$"+result.mmr : "" ;
+                // ====
+                let billingAccountName = (result.card_fname) ? result.card_fname + " " + result.card_lname : "" ;
+                let billingAccountNo = (result.acct_num) ? result.acct_num : "" ;
+                let billingCreditCardNo = (result.credit_card_num) ? result.credit_card_num : "" ;
+                let billingCreditCardExpiration = (result.credit_card_exp) ? result.credit_card_exp : "" ;
+                let billingCardAddress = result.card_address + " " + result.city + " " + result.state + ", " + result.zip;
+                // let billingEquipment = (result.equipment) ? result.equipment : "" ;
+                // let billingInitialDeposit = (result.initial_dep) ? "$"+result.initial_dep : "" ;
+                // let billingMMR = (result.mmr) ? "$"+result.mmr : "" ;
+                // let billingFrequency = (result.bill_freq) ? result.bill_freq : "" ;
+                // let billingDay = (result.bill_day) ? result.bill_day : "" ;
+                // let billingContractTerm = (result.contract_term) ? result.contract_term : "" ;
+                // let billingStartDate = (result.bill_start_date) ? result.bill_start_date : "" ;
+                // let billingEndDate = (result.bill_end_date) ? result.bill_end_date : "" ;
+                // let billingMethod = (result.bill_method) ? result.bill_method : "" ;
+                // let billingCheckNo = (result.check_num) ? result.check_num : "" ;   
+                // let billingRoutingNo = (result.routing_num) ? result.routing_num : "" ;
+                // let billingAccountCredential = (result.account_credential) ? result.account_credential : "" ;
+                // let billingAccountNote = (result.account_note) ? result.account_note : "" ;
+                // let billingConfirmation = (result.confirmation) ? result.confirmation : "" ;
+                // let billingFinanceAmount = (result.finance_amount) ? "$"+result.finance_amount : "" ;
+                // let billingRecurringStartDate = (result.recurring_start_date) ? result.recurring_start_date : "" ;
+                // let billingRecurringEndDate = (result.recurring_end_date) ? result.recurring_end_date : "" ;
+                // let billingTransactionAmount = (result.transaction_amount) ? "$"+result.transaction_amount : "" ;
+                // let billingTransactionCategory = (result.transaction_category) ? result.transaction_category : "" ;
+                // let billingLastPaymentDate = (result.last_payment_date) ? result.last_payment_date : "" ;
+                // let billingNextBillingDate = (result.next_billing_date) ? result.next_billing_date : "" ;
+                // =====
+                $("#customerAccountNumber").text(customerAccountNumber);
+                $("#customerBusinessName").text(customerBusinessName);
+                $("#customerPassword").text(customerPassword);
+                $("#customerAddress").text(customerAddress);
+                $("#customerPhoneNumber").text(customerPhoneNumber);
+                $("#customerEmail").text(customerEmail);
+                $("#customerEquimentAmount").text(customerEquimentAmount);
+                $("#customerActivationStatus").text(customerActivationStatus);
+                $("#customerMMR").text(customerMMR);
+                // =====
+                $("#billingAccountName").text(billingAccountName);
+                $("#billingAccountNo").text(billingAccountNo);
+                $("#billingCreditCardNo").text(billingCreditCardNo);
+                $("#billingCreditCardExpiration").text(billingCreditCardExpiration);
+                $("#billingCardAddress").text(customerAddress);
+                // $("#billingEquipment").text(billingEquipment);
+                // $("#billingInitialDeposit").text(billingInitialDeposit);
+                // $("#billingMMR").text(billingMMR);
+                // $("#billingFrequency").text(billingFrequency);
+                // $("#billingDay").text(billingDay);
+                // $("#billingContractTerm").text(billingContractTerm);
+                // $("#billingStartDate").text(billingStartDate);
+                // $("#billingEndDate").text(billingEndDate);
+                // $("#billingMethod").text(billingMethod);
+                // $("#billingCheckNo").text(billingCheckNo);
+                // $("#billingRoutingNo").text(billingRoutingNo);
+                // $("#billingAccountCredential").text(billingAccountCredential);
+                // $("#billingAccountNote").text(billingAccountNote);
+                // $("#billingConfirmation").text(billingConfirmation);
+                // $("#billingFinanceAmount").text(billingFinanceAmount);
+                // $("#billingRecurringStartDate").text(billingRecurringStartDate);
+                // $("#billingRecurringEndDate").text(billingRecurringEndDate);
+                // $("#billingTransactionAmount").text(billingTransactionAmount);
+                // $("#billingTransactionCategory").text(billingTransactionCategory);
+                // $("#billingLastPaymentDate").text(billingLastPaymentDate);
+                // $("#billingNextBillingDate").text(billingNextBillingDate);
+                // =====
+                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+customerAddress+'&output=embed');
+                $('.MAP_LOADER').fadeIn();
+                $('#TEMPORARY_MAP_VIEW').hide();
+                // =====
+                console.log(result);
+            });
+        }
+
+        initializeCustomerData(<?php echo $customer; ?>);
 
         function get_employee_name($this){
             $.ajax({
@@ -1197,7 +1287,7 @@ $("#attachment-file").change(function() {
         var ADDR_2 = "";
         var postData = new FormData();
         postData.append('id', $id);
-
+        
         fetch('<?= base_url('job/get_customer_selected') ?>', {
             method: 'POST',
             body: postData

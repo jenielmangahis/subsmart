@@ -700,9 +700,10 @@ class Items_model extends MY_Model
     }
 
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
-        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty, SUM(items_has_storage_loc.qty) AS TOTAL_QUANTITY');
+        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "'.$item_id.'") AS TOTAL_QUANTITY');
         $this->db->from('items_has_storage_loc');
         $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $this->db->where('items_has_storage_loc.loc_id', $location_id);
         $query = $this->db->get();
 
         $currentQuantity = $query->result()[0]->qty;

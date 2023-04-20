@@ -66,12 +66,12 @@ if ($isMyLibrary) {
         <div class="vault__header">
 
           <?php if ($isMyLibrary): ?>
-            <h1 class="vault__title">My Library</h1>
+            <!-- <h1 class="vault__title">My Library</h1>
             <div class="alert alert-warning mt-2" role="alert">
               <span style="color:black;">
                 My Library is a place where you can quickly find and access all of your files, content, and customer information from anywhere, on any device. Create specific or general folders to better categorized your files for quicker access. Format to includes are PDF, DOC, JPEG, GIF, CSV and much more. It is your private storage area for you documents.
               </span>
-            </div>
+            </div> -->
 
           <?php elseif ($isBusinessFormTemplates): ?>
             <h1 class="vault__title">Business Form Templates</h1>
