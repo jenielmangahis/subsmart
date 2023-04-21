@@ -207,15 +207,77 @@ class DocuSign extends MYF_Controller
             $jobData->equipment_cost = $job->amount;
         }
 
+        #Clients
         $this->db->where('prof_id', $prof_id);
         $client = $this->db->get('acs_profile')->row();
 
-        $clientKeys = ['first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'contact_phone1', 'contact_phone2'];
+        $clientKeys = [
+            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country'
+        ];
         $filteredClient = array_filter( (array)$client , function($v) use ($clientKeys) {
             return in_array($v, $clientKeys);
         }, ARRAY_FILTER_USE_KEY);
-        
         $autoPopulateData['client'] = $filteredClient;
+
+        #password
+        $this->db->where('fk_prof_id', $prof_id);
+        $acs_access = $this->db->get('acs_access')->row();
+
+        $acs_accessKeys = [
+            'access_password'
+        ];
+        
+        $filteredAcs_access = array_filter( (array)$acs_access , function($v) use ($acs_accessKeys) {
+            return in_array($v, $acs_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['acs_access'] = $filteredAcs_access;
+        
+        #billing
+        $this->db->where('fk_prof_id', $prof_id);
+        $billing = $this->db->get('acs_billing')->row();
+        
+        /*
+        *   Billing Method: bill_method
+        *   Checking Account Number: check_num
+        *   ABA #: routing_num
+        *   Acc #: acct_num
+        *   Security Code: ?? credit_card_exp_mm_yyy - correct
+        *   Exp. Date: credit_card_exp
+        *   Equipment cost: Equiment Cost
+        *   One Time Activation: Initial Dep
+        *   1st Month Monitoring: Rate Plan
+        */        
+        $billingKeys = [
+            'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+        ];
+
+        $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
+            return in_array($v, $billingKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        
+        $autoPopulateData['billing'] = $filteredBilling;
+
+        #cost due at signing
+        $cost_due = $this->db->select('o.equipment_cost, b.initial_dep as one_time_activation, b.mmr as first_month_monitoring')->from('acs_office as o')
+                        ->join('acs_billing as b','o.fk_prof_id = b.fk_prof_id')
+                        ->where('o.fk_prof_id', $prof_id)
+                        ->get()->row();
+
+        $equipment_cost = $cost_due->equipment_cost == '' ? 0 : number_format((float)$cost_due->equipment_cost, 2, '.', '');                  
+        $first_month_monitoring = $cost_due->first_month_monitoring == '' ? 0 : number_format((float)$cost_due->first_month_monitoring, 2, '.', '');                  
+        $equipment_one_time_activationcost = $cost_due->one_time_activation == '' ? 0 :number_format((float)$cost_due->one_time_activation, 2, '.', ''); 
+        $total_due = number_format($equipment_cost + $first_month_monitoring + $equipment_one_time_activationcost, 2, '.', ''); 
+
+        $_cost = array(
+            "equipment_cost" => $equipment_cost,
+            "first_month_monitoring" => $first_month_monitoring,
+            "one_time_activation" => $equipment_one_time_activationcost,
+            "total_due" => $total_due
+        );
+        
+        $autoPopulateData['cost_due'] = $_cost;
+
+        #end of changes
 
         header('content-type: application/json');
         echo json_encode([
@@ -693,11 +755,6 @@ class DocuSign extends MYF_Controller
         $mail->addStringAttachment($attachment, $attachmentName . '.pdf');
 
         $companyLogo = $this->getCompanyProfile();
-
-        /*$companyId = logged('company_id');
-        $this->db->where('id', $companyId);
-        $this->db->select('business_name, business_address');
-        $company = $this->db->get('clients')->row();*/
 
         $errors = [];
         foreach ($recipients as $recipient) {

@@ -24,7 +24,6 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Settings</a></li>
                     <?php endif; ?>
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                 </ul>
             </div>
         </li>

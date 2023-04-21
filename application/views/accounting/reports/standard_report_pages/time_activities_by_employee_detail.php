@@ -85,50 +85,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3">
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-2">
-                                                    <label for="report-period">Report period</label>
-                                                    <select name="report_period" id="report-period" class="form-control">
-                                                        <option value="all-dates">All Dates</option>
-                                                        <option value="custom">Custom</option>
-                                                        <option value="today">Today</option>
-                                                        <option value="this-week">This Week</option>
-                                                        <option value="this-week-to-date">This Week-to-date</option>
-                                                        <option value="this-month">This Month</option>
-                                                        <option value="this-month-to-date" selected>This Month-to-date</option>
-                                                        <option value="this-quarter">This Quarter</option>
-                                                        <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                                        <option value="this-year">This Year</option>
-                                                        <option value="this-year-to-date">This Year-to-date</option>
-                                                        <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                                        <option value="yesterday">Yesterday</option>
-                                                        <option value="recent">Recent</option>
-                                                        <option value="last-week">Last Week</option>
-                                                        <option value="last-week-to-date">Last Week-to-date</option>
-                                                        <option value="last-month">Last Month</option>
-                                                        <option value="last-month-to-date">Last Month-to-date</option>
-                                                        <option value="last-quarter">Last Quarter</option>
-                                                        <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                                        <option value="last-year">Last Year</option>
-                                                        <option value="last-year-to-date">Last Year-to-date</option>
-                                                        <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                                        <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                                        <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                                        <option value="since-365-days-ago">Since 365 Days Ago</option>
-                                                        <option value="next-week">Next Week</option>
-                                                        <option value="next-4-weeks">Next 4 Weeks</option>
-                                                        <option value="next-month">Next Month</option>
-                                                        <option value="next-quarter">Next Quarter</option>
-                                                        <option value="next-year">Next Year</option>
-                                                    </select>
+                <div class="row g-3 justify-content-center">
+                    <div class="col-auto">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 grid-mb">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-3">
+                                                <p class="m-0">Sort by</p>
+                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                    <option value="default" <?=empty($sort_by) || $sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                    <option value="activity-date" <?=$sort_by === 'activity-date' ? 'selected' : ''?>>Activity Date</option>
+                                                    <option value="billable" <?=$sort_by === 'billable' ? 'selected' : ''?>>Billable</option>
+                                                    <option value="break" <?=$sort_by === 'break' ? 'selected' : ''?>>Break</option>
+                                                    <option value="create-date" <?=$sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                    <option value="created-by" <?=$sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
+                                                    <option value="customer" <?=$sort_by === 'customer' ? 'selected' : ''?>>Customer</option>
+                                                    <option value="duration" <?=$sort_by === 'duration' ? 'selected' : ''?>>Duration</option>
+                                                    <option value="employee" <?=$sort_by === 'employee' ? 'selected' : ''?>>Employee</option>
+                                                    <option value="end-time" <?=$sort_by === 'end-time' ? 'selected' : ''?>>End Time</option>
+                                                    <option value="invoice-date" <?=$sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
+                                                    <option value="last-modified" <?=$sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
+                                                    <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
+                                                    <option value="memo-desc" <?=$sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
+                                                    <option value="product-service" <?=$sort_by === 'product-service' ? 'selected' : ''?>>Product/Service</option>
+                                                    <option value="rates" <?=$sort_by === 'rates' ? 'selected' : ''?>>Rates</option>
+                                                    <option value="start-time" <?=$sort_by === 'start-time' ? 'selected' : ''?>>Start Time</option>
+                                                    <option value="taxable" <?=$sort_by === 'taxable' ? 'selected' : ''?>>Taxable</option>
+                                                </select>
+                                                <p class="m-0">Sort in</p>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($order) ? 'checked' : ''?>>
+                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
                                                 </div>
-                                                <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("m/01/Y")?>">
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($order) && $order === 'desc' ? 'checked' : ''?>>
+                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">
                                                     <span class="h6">to</span>
