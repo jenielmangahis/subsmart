@@ -4751,11 +4751,11 @@ if(!function_exists('set_expense_graph_data')) {
         $CI->load->model('Users_model');
 
         $sent_numbers = array();
-        $filter[] = ['field' => 'module_name', 'value' => strtolower($module_name)];
-        $filter[] = ['field' => 'module_status', 'value' => $module_status];
-        $filter[] = ['field' => 'is_enabled', 'value' => 1];
-        $autoSms  = $CI->CompanyAutoSmsSettings_model->getByCompanyId($company_id, $filter);
-        if( $autoSms ){            
+        $filter[] = ['field' => 'company_auto_sms_settings.module_name', 'value' => strtolower($module_name)];
+        $filter[] = ['field' => 'company_auto_sms_settings.module_status', 'value' => $module_status];
+        $filter[] = ['field' => 'company_auto_sms_settings.is_enabled', 'value' => 1];
+        $dataAutoSms  = $CI->CompanyAutoSmsSettings_model->getAllByCompanyId($company_id, $filter);
+        foreach($dataAutoSms as $autoSms){
             if( $autoSms->send_to_creator == 1 ){
                 if( $user_id > 0 ){
                     $itemCreator = $CI->Users_model->getUserByID($user_id);
@@ -4938,7 +4938,7 @@ if(!function_exists('set_expense_graph_data')) {
                     }
                 }                
             }
-        }
+        }        
 
         $total_sent = count($sent_numbers);
         if( $total_sent > 0 ){
