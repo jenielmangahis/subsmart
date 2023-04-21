@@ -546,11 +546,11 @@ class Inventory extends MY_Controller
        // echo $UPDATE_ITEM_DATA;
     }
 
-    public function testFunction() {
-        echo "<pre>";
-        print_r ($this->items_model->getSelectedLocation(11807));
-        echo "</pre>";
-    }
+    // public function testMethod() {
+    //     echo "<pre>";
+    //     print_r ($this->items_model->recordItemTransaction(1, 4, 3, "deduct"));
+    //     echo "</pre>";
+    // }
 
     public function  update_service_item()
     {
@@ -1037,7 +1037,7 @@ class Inventory extends MY_Controller
             'insert_date' => date('Y-m-d H:i:s')
         );
 
-        $this->items_model->saveNewItemLocation($data);
+        $this->items_model->checkAndSaveItemLocation($this->input->post('item_id'), $this->input->post('loc_id'), $this->input->post('qty'), $data);
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
 
         if ($executeOnce == 0) {

@@ -1,263 +1,282 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style type="text/css">
-    .hide-toggle::after {
-        display: none !important;
-    }
+<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath("v2/includes/accounting/reports/$modalsView"); ?>
 
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
-
-    .action-bar ul li a:after {
-        width: 0 !important;
-    }
-    .action-bar ul li a > i {
-        font-size: 20px !important;
-    }
-    .action-bar ul li {
-        margin-right: 5px !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item {
-        font-size: 1rem;
-        padding-right: 0 !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
-       background-color: revert;
-    }
-    .report-container .action-bar li a {
-        font-size: 14px !important;
-    }
-    .report-container .action-bar li a i {
-        font-size: unset !important;
-    }
-    .report-container #report-table {
-        font-size: 12px !important;
-    }
-    .report-container .report-footer {
-        font-size: 10px;
-    }
-</style>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Account List Report</h3>
-                                </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-sm-6">
-                                    <h6><a href="/accounting/reports" class="text-info"><i class="fa fa-chevron-left"></i> Back to report list</a></h6>
-                                </div>
-                                <div class="col-sm-6">
-                                    <a href="javascript:void(0);" id="add-new-account-button" class="btn btn-success float-right">
-                                        Save customization
-                                    </a>
-                                    <a href="#" class="btn btn-transparent mr-2 float-right" style="padding: 10px 12px !important">
-                                        Customize
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row report-container">
-                                    <div class="col">
-                                        <div class="m-auto border" style="width: 60%">
-                                            <div class="container-fluid">
-                                                <div class="row border-bottom">
-                                                    <div class="col-md-6" style="font-size: 10px !important">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle text-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Sort <i class="fa fa-caret-down text-info"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <p class="m-0">Sort by</p>
-                                                                        <select name="sort_by" id="sort-by" class="form-control">
-                                                                            <option value="default" selected>Default</option>
-                                                                            <option value="account">Account</option>
-                                                                            <option value="create-date">Create Date</option>
-                                                                            <option value="created-by">Created By</option>
-                                                                            <option value="description">Description</option>
-                                                                            <option value="detail-type">Detail Type</option>
-                                                                            <option value="last-modified">Last Modified</option>
-                                                                            <option value="last-modified-by">Last Modified By</option>
-                                                                            <option value="type">Type</option>
-                                                                        </select>
-                                                                        <p class="m-0">Sort in</p>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="radio" id="sort-asc" name="sort_order" checked>
-                                                                            <label for="sort-asc">Ascending order</label>
-                                                                        </div>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="radio" id="sort-desc" name="sort_order">
-                                                                            <label for="sort-desc">Descending order</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li><a href="#" class="text-info">Add notes</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul class="ml-auto">
-                                                                <li><a href="#"><i class="fa fa-envelope"></i></a></li>
-                                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-download"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                                        <a class="dropdown-item" href="#">Export to Excel</a>
-                                                                        <a class="dropdown-item" href="#">Export to PDF</a>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-cog"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <p class="m-0">Display density</p>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="checkbox" checked="checked" id="compact-display">
-                                                                            <label for="compact-display">Compact</label>
-                                                                        </div>
-                                                                        <p class="m-0">Change columns</p>
-                                                                        <div class="row">
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-account">
-                                                                                    <label for="col-account">Account</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-create-date">
-                                                                                    <label for="col-create-date">Create Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified-by">
-                                                                                    <label for="col-last-modified-by">Last Modified By</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-type">
-                                                                                    <label for="col-type">Type</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-created-by">
-                                                                                    <label for="col-created-by">Created By</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-description">
-                                                                                    <label for="col-description">Description</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-detail-type">
-                                                                                    <label for="col-detail-type">Detail Type</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified">
-                                                                                    <label for="col-last-modified">Last Modified</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-balance">
-                                                                                    <label for="col-balance">Balance</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="m-0"><a href="#" class="text-info">Reorder columns</a></p>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div> -->
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
+                                <i class='bx bx-fw bx-customize'></i> Customize
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class='bx bx-fw bx-save'></i> Save customization
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: 20%">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="custom-report-name">Custom report name</label>
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Account List">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="custom-report-group">Add this report to a group</label>
+                                        <select name="custom_report_group" id="custom-report-group" class="nsm-field form-control"></select>
+                                        <a href="#" class="text-decoration-none" id="add-new-custom-report-group">Add new group</a>
+                                    </div>
+                                    <div class="col-12 d-none">
+                                        <form id="new-custom-report-group">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <label for="custom-group-name">New group name</label>
+                                                    <input type="text" class="nsm-field form-control" name="new_custom_group_name" id="custom-group-name">
                                                 </div>
-
-                                                <div class="row">
-                                                    <div class="col-12 text-center">
-                                                        <h4><span class="company-name">nSmarTrac</span> <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Account List</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <table class="table" style="width: 100%;" id="report-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ACCOUNT</th>
-                                                                    <th>TYPE</th>
-                                                                    <th>DETAIL TYPE</th>
-                                                                    <th>DESCRIPTION</th>
-                                                                    <th class="text-right">BALANCE</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Test Account</td>
-                                                                    <td>Bank</td>
-                                                                    <td>Cash on hand</td>
-                                                                    <td></td>
-                                                                    <td class="text-right">1,000.00</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row report-footer">
-                                                    <div class="col-12 text-center">
-                                                        <p><?=date("l, F j, Y h:i A eP")?></p>
-                                                    </div>
+                                                <div class="col-4 d-flex align-items-end">
+                                                    <button type="submit" class="nsm-button success">Add</button>
                                                 </div>
                                             </div>
-                                            <!-- end of container fluid -->
+                                        </form>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="share-with">Share with</label>
+                                        <select name="share_with" id="share-with" class="nsm-field form-control">
+                                            <option value="all">All</option>
+                                            <option value="none" selected>None</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="button" class="nsm-button primary" id="save-custom-report">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 justify-content-center">
+                    <div class="col-auto">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 grid-mb">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-3">
+                                                <p class="m-0">Sort by</p>
+                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                    <option value="default" <?=empty($sort_by) || $sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                    <option value="account" <?=$sort_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                    <option value="create-date" <?=$sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                    <option value="created-by" <?=$sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
+                                                    <option value="description" <?=$sort_by === 'description' ? 'selected' : ''?>>Description</option>
+                                                    <option value="detail-type" <?=$sort_by === 'detail-type' ? 'selected' : ''?>>Detail Type</option>
+                                                    <option value="last-modified" <?=$sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
+                                                    <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
+                                                    <option value="type" <?=$sort_by === 'type' ? 'selected' : ''?>>Type</option>
+                                                </select>
+                                                <p class="m-0">Sort in</p>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($order) ? 'checked' : ''?>>
+                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($order) && $order === 'desc' ? 'checked' : ''?>>
+                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
+                                                </div>
+                                            </ul>
+                                            <button type="button" class="nsm-button" id="<?=is_null($reportNote) ? 'add-notes' : 'edit-notes'?>">
+                                                <?php if(is_null($reportNote) || empty($reportNote->notes)) : ?>
+                                                <span>Add notes</span>
+                                                <?php else : ?>
+                                                <span>Edit notes</span>
+                                                <?php endif; ?>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button">
+                                                <i class='bx bx-fw bx-envelope'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
+                                                <i class='bx bx-fw bx-printer'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-export"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
+                                            </ul>
+                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-cog"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
+                                                <p class="m-0">Display density</p>
+                                                <div class="form-check">
+                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <label for="compact-display" class="form-check-label">Compact</label>
+                                                </div>
+                                                <p class="m-0">Change columns</p>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-account" class="form-check-input" <?=isset($columns) && in_array('Account', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-account" class="form-check-label">Account</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-type" class="form-check-input" <?=isset($columns) && in_array('Type', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-type" class="form-check-label">Type</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-detail-type" class="form-check-input" <?=isset($columns) && in_array('Detail Type', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-detail-type" class="form-check-label">Detail Type</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-create-date" class="form-check-input" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-create-date" class="form-check-label">Create Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-created-by" class="form-check-label">Created By</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-description" class="form-check-input" <?=isset($columns) && in_array('Description', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-description" class="form-check-label">Description</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-balance" class="form-check-input" <?=isset($columns) && in_array('Balance', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-balance" class="form-check-label">Balance</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row <?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                    <?php if(isset($show_logo)) : ?>
+                                    <!-- <div class="position-absolute">
+                                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px"/>
+                                    </div> -->
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_company_name)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_report_title)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0 fw-bold"><?=$report_title?></p>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content h-auto grid-mb">
+                                <table class="nsm-table grid-mb" id="reports-table">
+                                    <thead>
+                                        <tr>
+                                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>ACCOUNT</td>
+                                            <td data-name="Type" <?=isset($columns) && !in_array('Type', $columns) ? 'style="display: none"' : ''?>>TYPE</td>
+                                            <td data-name="Detail Type" <?=isset($columns) && !in_array('Detail Type', $columns) ? 'style="display: none"' : ''?>>DETAIL TYPE</td>
+                                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
+                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
+                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
+                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
+                                            <td data-name="Description" <?=isset($columns) && !in_array('Description', $columns) ? 'style="display: none"' : ''?>>DESCRIPTION</td>
+                                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>>BALANCE</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(count($accounts) > 0) : ?>
+                                        <?php foreach($accounts as $account) : ?>
+                                        <tr>
+                                            <td <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$account['name']?></td>
+                                            <td <?=isset($columns) && !in_array('Type', $columns) ? 'style="display: none"' : ''?>><?=$account['type']?></td>
+                                            <td <?=isset($columns) && !in_array('Detail Type', $columns) ? 'style="display: none"' : ''?>><?=$account['detail_type']?></td>
+                                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$account['create_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$account['created_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$account['last_modified']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$account['last_modified_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Description', $columns) ? 'style="display: none"' : ''?>><?=$account['description']?></td>
+                                            <td <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><?=$account['balance']?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php else : ?>
+                                        <tr>
+                                            <td colspan="19">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+
+                                <div class="row">
+                                    <div class="col-12 d-none" id="report-note-form">
+                                        <textarea name="report_note" id="report-note" maxlength="4000" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
+                                        <label for="report-note">4000 characters max</label>
+                                        <button class="nsm-button primary float-end" id="save-note">Save</button>
+                                        <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
+                                    </div>
+                                    <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
+                                        <?php if(!is_null($reportNote)) : ?>
+                                        <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-footer <?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                                <p class="m-0"><?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
-                    <!-- end card -->
                 </div>
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container-fluid -->
     </div>
 </div>
 
-
-<!-- page wrapper end -->
-<?php include viewPath('includes/footer_accounting'); ?>
+<script>
+    const companyName = "<?=$clients->business_name?>"
+</script>
+<?php include viewPath('v2/includes/footer'); ?>

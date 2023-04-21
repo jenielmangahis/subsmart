@@ -9,7 +9,7 @@ class CronAutoSmsNotification_model extends MY_Model
 
     public function getAll($filter=array(), $limit = 0)
     {
-        $this->db->select('cron_auto_sms_notification.*, company_auto_sms_settings.company_id, company_auto_sms_settings.module_name, company_auto_sms_settings.module_status, business_profile.business_name');
+        $this->db->select('cron_auto_sms_notification.*, company_auto_sms_settings.company_id, company_auto_sms_settings.module_name, company_auto_sms_settings.module_status, business_profile.business_name, company_auto_sms_settings.send_to_assigned_user');
         $this->db->from($this->table);
         $this->db->join('company_auto_sms_settings', 'cron_auto_sms_notification.company_auto_sms_id = company_auto_sms_settings.id', 'left');
         $this->db->join('business_profile', 'company_auto_sms_settings.company_id = business_profile.company_id', 'left');

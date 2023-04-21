@@ -33,6 +33,13 @@ class Chart_of_accounts_model extends MY_Model {
 		echo $this->db->query($query);
 	}
 
+	public function get_by_company_id($companyId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
 	public function select()
 	{
 		$this->db->where('company_id', logged('company_id'));

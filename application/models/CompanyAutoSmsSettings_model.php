@@ -129,6 +129,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Started' => 'Started',
             'New' => 'New',
             'Completed' => 'Completed',            
+            //'Status Changed' => 'Status Changed'
             //'Email Opened' => 'Email Opened',
         ];
 
@@ -143,7 +144,8 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Accepted' => 'Accepted',
             'Declined By Customer' => 'Declined By Customer',
             'Lost' => 'Lost',
-            'Email Opened' => 'Email Opened'
+            'Email Opened' => 'Email Opened',
+            //'Status Changed' => 'Status Changed'
         ];
 
         return $status;
@@ -160,6 +162,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             'Invoiced' => 'Invoiced',
             'Withdrawn' => 'Withdrawn',
             'Closed' => 'Closed',
+            //'Status Changed' => 'Status Changed'
             //'Email Opened' => 'Email Opened'
         ];
 
@@ -209,7 +212,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
             '{{customer.email}}' => 'Customer Email',
             '{{customer.phone}}' => 'Customer Phone',
             '{{business.name}}' => "Company Name",
-
+            '{{tech.firstname}}' => "Tech Firstname",
+            '{{tech.lastname}}' => "Tech Lastname",
+            '{{tags}}' => "Tags",
+            '{{scheduled.information}}' => 'Scheduled Information'
         ];
 
         return $smartTags;
@@ -223,7 +229,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
             '{{customer.email}}' => 'Customer Email',
             '{{customer.phone}}' => 'Customer Phone',
             '{{business.name}}' => "Company Name",
-
+            '{{tech.firstname}}' => "Tech Firstname",
+            '{{tech.lastname}}' => "Tech Lastname",
+            '{{tags}}' => "Tags",
+            '{{scheduled.information}}' => 'Scheduled Information'
         ];
 
         return $smartTags;
@@ -240,6 +249,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
             '{{creator.name}}' => "Creator Name",
             '{{tags}}' => "Tags",
             '{{installation.date}}' => "Installation Date",
+            '{{tech.firstname}}' => "Tech Firstname",
+            '{{tech.lastname}}' => "Tech Lastname",
+            '{{tags}}' => "Tags",
+            '{{scheduled.information}}' => 'Scheduled Information'
         ];
 
         return $smartTags;

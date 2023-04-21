@@ -4771,6 +4771,7 @@ if(!function_exists('set_expense_graph_data')) {
                                $cron_data = [
                                     'company_auto_sms_id' => $autoSms->id,
                                     'obj_id' => $object_id,
+                                    'user_id' => $user_id,
                                     'mobile_number' => $mobile_number,
                                     'sms_message' => $autoSms->sms_text,
                                     'is_sent' => 0,
@@ -4801,6 +4802,7 @@ if(!function_exists('set_expense_graph_data')) {
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
+                                'user_id' => $assigned_to_user_id,
                                 'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,
                                 'is_sent' => 0,
@@ -4828,6 +4830,7 @@ if(!function_exists('set_expense_graph_data')) {
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
+                                'user_id' => $agent_id,
                                 'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,
                                 'is_sent' => 0,
@@ -4857,6 +4860,7 @@ if(!function_exists('set_expense_graph_data')) {
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
+                                'user_id' => $u->id,
                                 'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,    
                                 'is_sent' => 0,  
@@ -4886,6 +4890,7 @@ if(!function_exists('set_expense_graph_data')) {
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
+                                'user_id' => $u->id,
                                 'mobile_number' => $mobile_number,
                                 'sms_message' => $autoSms->sms_text,   
                                 'is_sent' => 0,  
@@ -4916,6 +4921,7 @@ if(!function_exists('set_expense_graph_data')) {
                                     $cron_data = [
                                         'company_auto_sms_id' => $autoSms->id,
                                         'obj_id' => $object_id,
+                                        'user_id' => $uid,
                                         'mobile_number' => $mobile_number,
                                         'sms_message' => $autoSms->sms_text,
                                         'is_sent' => 0,

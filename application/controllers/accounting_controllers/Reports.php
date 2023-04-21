@@ -415,6 +415,8 @@ class Reports extends MY_Controller {
         }
         $this->page_data['deposits'] = $deposits;
 
+        $this->page_data['company_name'] = $this->page_data['clients']->business_name;
+
         switch($view) {
             case 'recent_edited_time_activities' :
                 $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
@@ -792,7 +794,6 @@ class Reports extends MY_Controller {
                     $this->page_data['company_logo'] = companyProfileImage(logged('company_id'));
                 }
 
-                $this->page_data['company_name'] = $this->page_data['clients']->business_name;
                 if(!empty(get('show-company-name'))) {
                     $this->page_data['show_company_name'] = false;
                 }
@@ -1577,7 +1578,6 @@ class Reports extends MY_Controller {
                 $activities = $grouped;
 
                 $this->page_data['activities'] = $activities;
-                $this->page_data['company_name'] = $this->page_data['clients']->business_name;
                 if(!empty(get('show-company-name'))) {
                     $this->page_data['show_company_name'] = false;
                 }
@@ -1598,6 +1598,229 @@ class Reports extends MY_Controller {
                 if(!empty(get('show-report-period'))) {
                     $this->page_data['show_report_period'] = false;
                 }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+            break;
+            case 'account_list' :
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
+                }
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
+                }
+
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Account List';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                $compAccs = $this->chart_of_accounts_model->get_by_company_id(logged('company_id'));
+                $accounts = [];
+                foreach($compAccs as $account)
+                {
+                    $balance = number_format(floatval($account->balance), 2);
+                    if(!empty(get('divide-by-100'))) {
+                        $balance = number_format(floatval($balance) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $balance = number_format(floatval($balance), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($balance, 0, 1) === '-') {
+                                    $balance = str_replace('-', '', $balance);
+                                    $balance = '('.$balance.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($balance, 0, 1) === '-') {
+                                    $balance = str_replace('-', '', $balance);
+                                    $balance = $balance.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($balance, 0, 1) === '-') {
+                                $balance = '<span class="text-danger">'.$balance.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($balance, 0, 1) === '(' && substr($balance, -1) === ')') {
+                                        $balance = '<span class="text-danger">'.$balance.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($balance, -1) === '-') {
+                                        $balance = '<span class="text-danger">'.$balance.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $accounts[] = [
+                        'name' => $account->name,
+                        'type' => $this->account_model->getName($account->account_id),
+                        'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                        'create_date' => date("m/d/Y H:i:s", strtotime($account->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y H:i:s", strtotime($account->updated_at)),
+                        'last_modified_by' => '',
+                        'description' => $account->description,
+                        'balance' => $balance,
+                        'status' => $account->active
+                    ];
+                }
+
+                if(!empty(get('create-date'))) {
+                    $this->page_data['create_date'] = get('create-date');
+                    $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
+                    $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-to')))
+                    ];
+
+                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('last-modified-date'))) {
+                    $this->page_data['last_modified_date'] = get('last-modified-date');
+                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                    ];
+
+                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('deleted'))) {
+                    if(get('deleted') === 'deleted') {
+                        $accounts = array_fitler($accounts, function($v, $k) {
+                            return empty($v['status']);
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                } else {
+                    $accounts = array_filter($accounts, function($v, $k) {
+                        return $v['status'] === '1';
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'type',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                usort($accounts, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['create_date', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $b[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $a[$sort['column']]);
+                        }
+                    }
+                });
+
+                $this->page_data['accounts'] = $accounts;
             break;
         }
 
