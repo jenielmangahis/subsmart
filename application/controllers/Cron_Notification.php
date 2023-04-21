@@ -47,7 +47,7 @@ class Cron_Notification extends MYF_Controller {
                 }*/
                 
                 if( $is_with_valid_sms_account ){                    
-                    $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message);
+                    $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message, $sms->user_id);
 
                     /*if( $smsApi == 'twilio' ){
                         $isSent  = smsTwilio($twilioAccount, $sms->mobile_number, $sms_message);
@@ -108,7 +108,7 @@ class Cron_Notification extends MYF_Controller {
                         $this->CronAutoSmsNotification_model->update($sms->id, $data);
                     }else{
                         if( $smsApi == 'ring_central' ){
-                            $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
+                            //$isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
                             //$isSent['is_sent'] = true;
                             if( $isSent['is_success'] == 1 ){
                                 $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
@@ -173,7 +173,7 @@ class Cron_Notification extends MYF_Controller {
         exit;
     }
 
-    public function smsReplaceSmartTags($module_name, $object_id, $sms_message)
+    public function smsReplaceSmartTags($module_name, $object_id, $sms_message, $user_id)
     {
         $this->load->model('Estimate_model');
         $this->load->model('Workorder_model');
@@ -198,6 +198,9 @@ class Cron_Notification extends MYF_Controller {
         $tags = '';
         $installation_date = '';
         $creator_name = '';
+        $scheduled_text = '';
+
+        $recipient = $this->Users_model->getUserByID($user_id);
 
         if( $module_name == $this->CompanyAutoSmsSettings_model->moduleJob() ){
             $job = $this->Jobs_model->get_specific_job($object_id);
@@ -221,6 +224,11 @@ class Cron_Notification extends MYF_Controller {
                 if( $jobCreator ){
                     $creator_name = $jobCreator->FName . ' ' . $jobCreator->LName;
                 }
+
+                $date_start = date('F d, D', strtotime($job->start_date)) . ' ' . date("g:i A", strtotime($job->start_time));
+                $date_end   = date('F d, D', strtotime($job->end_date)) . ' ' . date("g:i A", strtotime($job->end_time));
+
+                $scheduled_text = 'will start on ' . $date_start . ' and scheduled to complete on ' . $date_end;                
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
             $estimate = $this->Estimate_model->getById($object_id);
@@ -230,8 +238,18 @@ class Cron_Notification extends MYF_Controller {
                     $business_name = $company->business_name;
                 }
 
+                $tags = '';
+
+                if($job->tags != '' ){
+                    $tags = $estimate->tags;
+                }
+
                 $order_number  = $estimate->estimate_number;
                 $customer_name = $estimate->first_name . ' ' . $job->last_name;
+
+                $date = date('F d, D', strtotime($job->start_date));
+
+                $scheduled_text = 'scheduled on ' . $date;                
             }
         }elseif( $module_name == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
             $workorder = $this->Workorder_model->adminGetById($object_id);
@@ -347,7 +365,14 @@ class Cron_Notification extends MYF_Controller {
         $sms_message = str_replace("{{lead.phone}}", $lead_phone, $sms_message);
         $sms_message = str_replace("{{lead.email}}", $lead_email, $sms_message);
 
-        $sms_message = str_replace("{{creator.name}}", $creator_name, $sms_message);        
+        $sms_message = str_replace("{{creator.name}}", $creator_name, $sms_message);  
+
+        $sms_message = str_replace("{{tech.firstname}}", $recipient->FName, $sms_message);  
+        $sms_message = str_replace("{{tech.lastname}}", $recipient->LName, $sms_message);  
+
+        if( $scheduled_text != '' ){
+            $sms_message = str_replace("{{scheduled.information}}", $scheduled_text, $sms_message);      
+        }
 
         if( $tags != '' ){
             $sms_message = str_replace("{{tags}}", $tags, $sms_message);

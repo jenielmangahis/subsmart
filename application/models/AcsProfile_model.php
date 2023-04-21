@@ -380,7 +380,7 @@ class AcsProfile_model extends MY_Model
 
     public function getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id)
     {
-        $this->db->select('mail_add,city,state,zip_code,phone_m,phone_h,business_name');
+        $this->db->select('prof_id,email,mail_add,city,state,zip_code,phone_m,phone_h,business_name,first_name,middle_name,last_name');
         $this->db->from($this->table);
         $this->db->where('prof_id', $prof_id);
         $this->db->where('company_id', $company_id);
@@ -391,7 +391,7 @@ class AcsProfile_model extends MY_Model
 
     public function getCustomerBasicInfoByCompanyId($company_id)
     {
-        $this->db->select('email,mail_add,city,state,zip_code,phone_m,phone_h,business_name,first_name,middle_name,last_name');
+        $this->db->select('prof_id,email,mail_add,city,state,zip_code,phone_m,phone_h,business_name,first_name,middle_name,last_name');
         $this->db->from($this->table);        
         $this->db->where('company_id', $company_id);
 
