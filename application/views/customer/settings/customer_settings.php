@@ -19,14 +19,44 @@
                         <td><?= $status->name; ?></td>
                         <td><?= date("m/d/Y",strtotime($status->date_created)); ?></td>
                         <td>
-                            <button id="<?= $status->id; ?>" class="btn btn-sm btn-default deleteCustomerStatus">
-                                <i class="fa fa-trash"></i> Delete
-                            </button>
+                            <button id="<?= $status->id; ?>" class="btn btn-sm btn-primary updateCustomerStatus" data-toggle="modal" data-target="#updateStatusModal" data-statusid="<?php echo $status->id;; ?>" data-statusname="<?php echo $status->name;; ?>"><i class='bx bxs-edit'></i> Update</button>
+                            <button id="<?= $status->id; ?>" class="btn btn-sm btn-danger deleteCustomerStatus"><i class='bx bxs-trash-alt'></i> Delete</button>
                         </td>
                     </tr>
                 <?php } ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="updateStatusModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Update Status</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="updateStatusForm">
+                    <div class="row">
+                        <div class="col-md-12 mb-3 d-none">
+                            <h6>Status ID</h6>
+                            <input class="form-control" type="text" name="statusID" readonly required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <h6>Status Name</h6>
+                            <input class="form-control" type="text" name="statusName" required>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary" data-action="approve">Update</button>
+                                <button type="button" class="nsm-button" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

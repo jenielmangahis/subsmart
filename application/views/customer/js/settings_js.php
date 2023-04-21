@@ -1,4 +1,48 @@
 <script>
+    $(document).ready(function() {
+        $('.updateCustomerStatus').on('click', function(event) {
+            event.preventDefault();
+            let statusID = $(this).attr('data-statusid');
+            let statusName = $(this).attr('data-statusname');
+            $("input[name='statusID']").val(statusID);
+            $("input[name='statusName']").val(statusName);
+        });
+
+        $('#updateStatusForm').on('submit', function(event) {
+            event.preventDefault();
+            let statusFormData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url("customer/editCustomerStatus"); ?>",
+                data: statusFormData,
+                success: function(data) {
+                    if (data == "true") {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Customer Status Name was been updated successfully!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Reload Page'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Failed to Update',
+                            text: 'Customer Status Name was failed to update!',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Close'
+                        });
+                    }
+                }
+            });
+        }); 
+    });
+
     var table_lt = $('#leadtype').DataTable({
         "lengthChange": false,
         "searching" : false,

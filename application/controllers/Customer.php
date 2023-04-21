@@ -534,7 +534,7 @@ class Customer extends MY_Controller
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview_pdf', $this->page_data);
+        $this->load->view('v2/pages/customer/preview', $this->page_data);
     }
 
     public function billing($id=null){
@@ -1021,7 +1021,6 @@ class Customer extends MY_Controller
         );
         $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
 
-
         // get system package type
         $spt_query = array(
             'table' => 'ac_system_package_type',
@@ -1031,7 +1030,6 @@ class Customer extends MY_Controller
             'select' => '*',
         );
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
@@ -6418,5 +6416,15 @@ class Customer extends MY_Controller
 
         $return = ['name' => $customer_name, 'phone' => $customer_phone];
         echo json_encode($return);
+    }
+
+    public function editCustomerStatus() {
+        $input = $this->input->post();
+        $data = array(
+            'id' => $input['statusID'], 
+            'name' => $input['statusName'], 
+        );
+        $updateStatus = $this->customer_ad_model->update_data($data,"acs_cust_status","id");
+        if ($updateStatus) { echo "true"; } else { echo "false"; }
     }
 }

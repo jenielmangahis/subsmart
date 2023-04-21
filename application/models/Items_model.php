@@ -422,6 +422,33 @@ class Items_model extends MY_Model
         return false;
     }
 
+    public function checkAndSaveItemLocation($item_id, $loc_id, $qty,  $data = array()) {
+        $this->db->select('items_has_storage_loc.loc_id, items_has_storage_loc.name, items_has_storage_loc.qty');
+        $this->db->from('items_has_storage_loc');
+        $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $this->db->where('items_has_storage_loc.loc_id', $loc_id);
+        $this->db->limit(1);
+        $query = $this->db->get();
+        $result = $query->result();
+        // =====
+        if (count($result) == 0) {
+            $this->db->select('loc_id, location_name');
+            $this->db->from('storage_loc'); 
+            $this->db->where('loc_id', $loc_id);
+            $query = $this->db->get();
+            $data['name'] = $query->result()[0]->location_name;
+            $insertNewLocation = $this->db->insert($this->table_has_location, $data);
+        } else {
+            $updateItem = $this->db->update('items_has_storage_loc', 
+                ['qty' => $query->result()[0]->qty + $qty], array(
+                    'item_id' => $item_id,
+                    'loc_id' => $loc_id,
+                )
+            );
+        }
+        // =====
+    }
+
     public function saveBatchItemLocation($data = [])
     {
         if (!empty($data)) {
@@ -701,24 +728,20 @@ class Items_model extends MY_Model
 
 
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
-        $this->db->select('items_has_storage_loc.item_id, items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "'.$item_id.'") AS TOTAL_QUANTITY');
-        $this->db->from('items_has_storage_loc');
-        $this->db->where('items_has_storage_loc.item_id', $item_id);
-        $this->db->where('items_has_storage_loc.loc_id', $location_id);
-        $query = $this->db->get();
-
-        $currentQuantity = $query->result()[0]->qty;
-        $totalQuantity = $query->result()[0]->TOTAL_QUANTITY;
-        $itemLocation = $query->result()[0]->name;
-
         if ($transactionType == "add") {
+            // =====
+            $this->db->select('SUM(items_has_storage_loc.qty) AS TOTAL_QUANTITY');
+            $this->db->from('items_has_storage_loc');
+            $this->db->where('items_has_storage_loc.item_id', $item_id);
+            $itemStorageLocationQuery = $this->db->get();
+            $totalQuantity = $itemStorageLocationQuery->result()[0]->TOTAL_QUANTITY;
+            // =====
             $this->db->select('storage_loc.location_name');
             $this->db->from('storage_loc');
             $this->db->where('storage_loc.loc_id', $location_id);
-            $query = $this->db->get();
-
-            $locationName = $query->result()[0]->location_name;
-
+            $locationQuery = $this->db->get();
+            $locationName = $locationQuery->result()[0]->location_name;
+            // =====
             $transactionDetails = [
                 'search_id' => md5($item_id),
                 'item_id' => $item_id,
@@ -726,20 +749,32 @@ class Items_model extends MY_Model
                 'transaction' => "+$quantity",
                 'running_quantity' => $totalQuantity,
             ];
-
+            // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
+            // =====
         }
 
         if ($transactionType == "deduct") {
+            // =====
+            $this->db->select('items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "'.$item_id.'") AS TOTAL_QUANTITY');
+            $this->db->from('items_has_storage_loc');
+            $this->db->where('items_has_storage_loc.item_id', $item_id);
+            $this->db->where('items_has_storage_loc.loc_id', $location_id);
+            $itemStorageLocationQuery1 = $this->db->get();
+            $itemLocation = $itemStorageLocationQuery1->result()[0]->name;
+            $currentQuantity = $itemStorageLocationQuery1->result()[0]->qty;
+            $totalQuantity = $itemStorageLocationQuery1->result()[0]->TOTAL_QUANTITY;
+            // =====
             $newQuantity = $currentQuantity - $quantity;
-
+            if ($newQuantity <= 0) { $newQuantity = 0; }
+            // =====
             $updateItem = $this->db->update('items_has_storage_loc', 
                 ['qty' => $newQuantity], array(
                     'item_id' => $item_id,
                     'loc_id' => $location_id,
                 )
             );
-
+            // =====
             $transactionDetails = [
                 'search_id' => md5($item_id),
                 'item_id' => $item_id,
@@ -747,10 +782,10 @@ class Items_model extends MY_Model
                 'transaction' => "-$quantity",
                 'running_quantity' => $newQuantity,
             ];
-            
+            // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
+            // =====
         }
-
         return "true";
     }
 

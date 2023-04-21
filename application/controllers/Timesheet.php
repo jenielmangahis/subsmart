@@ -64,6 +64,9 @@ class Timesheet extends MY_Controller
 
     public function employee()
     {
+        $this->page_data['page']->title = 'Time Employee';
+        $this->page_data['page']->parent = 'timesheet';
+
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -89,7 +92,7 @@ class Timesheet extends MY_Controller
             "Sunday" => date("M d,y", strtotime('sunday this week')),
         );
         $this->page_data['date_this_week'] = $date_this_week;
-        $this->load->view('users/timesheet-employee', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_employee', $this->page_data);
     }
 
 
@@ -102,6 +105,9 @@ class Timesheet extends MY_Controller
             "assets/js/timesheet/timesheet_schedule.js",
 
         ));
+        $this->page_data['page']->title = 'Time Schedule';
+        $this->page_data['page']->parent = 'timesheet';
+
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -123,7 +129,7 @@ class Timesheet extends MY_Controller
         );
         $this->page_data['date_this_week'] = $date_this_week;
 
-        $this->load->view('users/timesheet-schedule', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_schedule', $this->page_data);
     }
 
     public function list()
@@ -165,6 +171,9 @@ class Timesheet extends MY_Controller
             "assets/js/timesheet/timesheet_requests.js"
 
         ));
+        $this->page_data['page']->title = 'Requests';
+        $this->page_data['page']->parent = 'timesheet';
+
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -198,7 +207,7 @@ class Timesheet extends MY_Controller
         );
         $this->page_data['date_this_week'] = $date_this_week;
 
-        $this->load->view('users/timesheet-requests', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_requests', $this->page_data);
     }
 
     // added for tracking Time Log of employees
@@ -1173,10 +1182,14 @@ class Timesheet extends MY_Controller
             "assets/js/timesheet/timesheet_notification_list.js"
 
         ));
+
+        $this->page_data['page']->title = 'Notification';
+        $this->page_data['page']->parent = 'timesheet';
+
         $this->load->model('timesheet_model');
         $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
         // var_dump($this->page_data['allnotification']);
-        $this->load->view('users/timesheet_notification_list', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
     }
     public function getseennotifications()
     {
@@ -3587,12 +3600,17 @@ class Timesheet extends MY_Controller
             "assets/js/timesheet/timesheet_attendance_logs.js"
 
         ));
+
+        $this->page_data['page']->title = 'Attendance Logs';
+        $this->page_data['page']->parent = 'timesheet';
+
         $this->load->model('timesheet_model');
         $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
 
         // var_dump($this->page_data['allnotification']);
-        $this->load->view('users/timesheet_attendance_logs', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_attendance_logs', $this->page_data);
     }
+    
     public function show_attendance_logs_table()
     {
         $date_from = $this->input->post("date_from");
@@ -5040,7 +5058,7 @@ class Timesheet extends MY_Controller
     }
     public function my_schedule()
     {
-        $this->page_data['page']->title = 'My Schedule';
+        $this->page_data['page']->title = 'Shift Schedule';
         $this->page_data['page']->parent = 'Company';
 
         add_css(array(
@@ -5051,9 +5069,8 @@ class Timesheet extends MY_Controller
         add_footer_js(array(
             "assets/js/timesheet/calendar/main.js",
             "assets/js/timesheet/timesheet_my_schedule.js",
-
         ));
-        $this->load->view('users/timesheet_my_schedule', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_my_schedule', $this->page_data);
         // $this->load->view('v2/pages/users/timesheet_my_schedule', $this->page_data);
     }
     public function get_my_schedules()
@@ -5298,13 +5315,16 @@ class Timesheet extends MY_Controller
             "assets/js/timesheet/timesheet_settings.js"
 
         ));
+        $this->page_data['page']->title = 'Timesheet Settings';
+        $this->page_data['page']->parent = 'Timesheet';
+
         $this->load->model('timesheet_model');
         $this->page_data['all_timezone_list'] = $this->timesheet_model->get_all_timezone_list();
         $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
         $this->page_data['report_privacy'] = $report_privacy;
         $this->page_data['report_settings'] = $this->timesheet_model->get_saved_timezone(logged("id"));
         $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated, "UTC", $this->session->userdata("usertimezone"));
-        $this->load->view('users/timesheet_settings', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_settings', $this->page_data);
     }
     public function get_saved_timezone()
     {
