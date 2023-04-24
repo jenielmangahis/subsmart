@@ -456,6 +456,7 @@ $(document).ready(function () {
       },
       {
         render: columns.lastChanged,
+        ordering: 'desc',
       },
       {
         sortable: false,

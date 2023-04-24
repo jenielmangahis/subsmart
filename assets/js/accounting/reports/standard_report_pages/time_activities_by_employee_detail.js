@@ -114,20 +114,6 @@ $('.dropdown-menu').on('click', function(e) {
     e.stopPropagation();
 });
 
-$('#show-cols').on('click', function(e) {
-    e.preventDefault();
-
-    if($(this).text().trim().replace('Show ', '') === 'More') {
-        $(this).html('<i class="fa fa-caret-up text-info"></i> Show Less');
-
-        $(this).parent().prev().show();
-    } else {
-        $(this).html('<i class="fa fa-caret-down text-info"></i> Show More');
-
-        $(this).parent().prev().hide();
-    }
-});
-
 $('input[name="col_chk"]').on('change', function() {
     var chk = $(this);
     var dataName = $(this).next().text();
@@ -559,7 +545,7 @@ $('#run-report-button').on('click', function() {
     url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
     url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
     url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Time Activities by Employee Detail' ? `report-title=${$('#report-title').val()}&` : '';
-    url += $('#show-report-period').prop('checked') ? `show-report-period=1&` : '';
+    url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
     url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
     url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
     url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';

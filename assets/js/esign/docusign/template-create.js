@@ -311,8 +311,6 @@ function TemplateCreate() {
         job_id: job ? job.id : null,
       };
 
-      // const prof_id = ;
-
       const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}/${customerId}`;
       const response = await fetch(endpoint, {
         method: "POST",

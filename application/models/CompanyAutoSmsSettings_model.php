@@ -36,8 +36,10 @@ class CompanyAutoSmsSettings_model extends MY_Model
         $this->db->join('business_profile', 'business_profile.company_id = company_auto_sms_settings.company_id', 'left');
         $this->db->where('company_auto_sms_settings.company_id', $company_id);
 
-        if ( !empty($filters['search']) ){
-            $this->db->or_like('business_profile.business_name', $filters['search'], 'both');        
+        if( !empty($filters) ){
+            foreach($filters as $value){                       
+                $this->db->where($value['field'], $value['value']);
+            }
         }
 
         $this->db->order_by('company_auto_sms_settings.id', 'DESC');
@@ -212,6 +214,7 @@ class CompanyAutoSmsSettings_model extends MY_Model
             '{{customer.email}}' => 'Customer Email',
             '{{customer.phone}}' => 'Customer Phone',
             '{{business.name}}' => "Company Name",
+            '{{creator.name}}' => "Creator Name",
             '{{tech.firstname}}' => "Tech Firstname",
             '{{tech.lastname}}' => "Tech Lastname",
             '{{tags}}' => "Tags",

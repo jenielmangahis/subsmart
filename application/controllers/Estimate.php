@@ -2166,20 +2166,24 @@ class Estimate extends MY_Controller
         $user_id  = logged('id');
 
         $new_data = array(
-            'company_id' => $company_id,
-            'fk_user_id' => $user_id,
-            'customer_type' => $this->input->post('customer_type'),
-            'first_name' => $this->input->post('first_name'),
-            'middle_name' => $this->input->post('middle_name'),
-            'last_name' => $this->input->post('last_name'),
-            'email' => $this->input->post('contact_email'),
-            'mail_add' => $this->input->post('street_address'),
-            'city' => $this->input->post('city'),
-            'state' => $this->input->post('state'),
-            'zip_code' => $this->input->post('postcode'),
-            'cross_street' => $this->input->post('street_address'),
-            'phone_h' => $this->input->post('contact_phone'),
-            'phone_m' => $this->input->post('contact_mobile')
+            'company_id'                => $company_id,
+            'fk_user_id'                => $user_id,
+            'customer_type'             => $this->input->post('customer_type'),
+            'first_name'                => $this->input->post('first_name'),
+            'middle_name'               => $this->input->post('middle_name'),
+            'last_name'                 => $this->input->post('last_name'),
+            'email'                     => $this->input->post('contact_email'),
+            'mail_add'                  => $this->input->post('street_address'),
+            'city'                      => $this->input->post('city'),
+            'state'                     => $this->input->post('state'),
+            'zip_code'                  => $this->input->post('postcode'),
+            'cross_street'              => $this->input->post('street_address'),
+            'phone_h'                   => $this->input->post('contact_phone'),
+            'phone_m'                   => $this->input->post('contact_mobile'),
+            'suffix_name'               => $this->input->post('suffix_name'),
+            'date_of_birth'             => $this->input->post('date_of_birth'),
+            'social_security_number'    => $this->input->post('social_security_number'),
+            'status'                    => $this->input->post('status')
         );
 
         $addQuery = $this->estimate_model->addNewCustomer($new_data);

@@ -12,6 +12,7 @@ function TemplateCreate() {
   let workorder = undefined;
   let job = undefined;
   let customer = undefined;
+  let customerId = undefined;
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
@@ -312,12 +313,13 @@ function TemplateCreate() {
         job_id: job ? job.id : null,
       };
 
+      const urlParams = new URLSearchParams(window.location.search);
+      customerId = urlParams.get("customer_id");
       if (job && !payload.job_id) {
-        const urlParams = new URLSearchParams(window.location.search);
         payload.job_id = urlParams.get("job_id");
       }
 
-      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
+      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}/${customerId}`;
       const response = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(payload),
@@ -707,7 +709,6 @@ function TemplateCreate() {
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
       const jobId = urlParams.get("job_id");
-      const customerId = urlParams.get("customer_id");
 
       if (workorderId) {
         await getWorkorderCustomer(workorderId);

@@ -20,6 +20,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/accounting/accounting-modal-forms.css") ?>">
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/main.css") ?>">
+    <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/esign-main.css") ?>">
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/media.css") ?>">
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/general-style.css") ?>">
     <!-- Boxicons CSS-->

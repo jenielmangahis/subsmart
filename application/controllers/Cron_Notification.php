@@ -108,8 +108,7 @@ class Cron_Notification extends MYF_Controller {
                         $this->CronAutoSmsNotification_model->update($sms->id, $data);
                     }else{
                         if( $smsApi == 'ring_central' ){
-                            //$isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
-                            //$isSent['is_sent'] = true;
+                            $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);                            
                             if( $isSent['is_success'] == 1 ){
                                 $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
                                 $data = [

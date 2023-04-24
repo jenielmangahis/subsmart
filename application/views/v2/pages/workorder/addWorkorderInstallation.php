@@ -1434,6 +1434,8 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
+                                                
+                                                <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                                 <select id="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
                                                     <option selected hidden>Select Customer</option>
                                                 </select>
@@ -1926,8 +1928,34 @@ tr {
                 <?php echo form_close(); ?>
             </div>
         </div>
+
+        
+
+        <!-- Modal New Customer -->
+        <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bx bx-fw bx-x m-0"></i>
+
+                        </button>
+                    </div>
+                    <div class="modal-body pt-0 pl-3 pb-3"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary saveCustomer">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
+
+
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
@@ -2368,4 +2396,65 @@ $(".nsm-subtitle").html(function() {
         }
     });
 </script>
+
+<script>
+$(document).on('click', '.saveCustomer', function() {
+
+    var first_name      = $('[name="first_name"]').val();
+    var middle_name     = $('[name="middle_name"]').val();
+    var last_name       = $('[name="last_name"]').val();
+    var contact_email   = $('[name="contact_email"]').val();
+    var contact_mobile  = $('[name="contact_mobile"]').val();
+    var contact_phone   = $('[name="contact_phone"]').val();
+    var customer_type   = $('[name="customer_type"]').val();
+    var street_address  = $('[name="street_address"]').val();
+    var suite_unit      = $('[name="suite_unit"]').val();
+    var city            = $('[name="city"]').val();
+    var postcode        = $('[name="postcode"]').val();
+    var state           = $('[name="state"]').val();
+
+    //new added
+    var suffix_name             = $('[name="suffix_name"]').val();
+    var date_of_birth           = $('[name="date_of_birth"]').val();
+    var social_security_number  = $('[name="social_security_number"]').val();
+    var status                  = $('[name="status"]').val();
+
+    // alert(first_name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+                    data: {
+                        first_name: first_name,
+                        middle_name: middle_name,
+                        last_name: last_name,
+                        contact_email: contact_email,
+                        contact_mobile: contact_mobile,
+                        contact_phone: contact_phone,
+                        customer_type: customer_type,
+                        street_address: street_address,
+                        suite_unit: suite_unit,
+                        city: city,
+                        postcode: postcode,
+                        state: state,
+                        suffix_name: suffix_name,
+                        date_of_birth: date_of_birth,
+                        social_security_number: social_security_number,
+                        status: status
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // alert('success');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        location.reload();
+
+                    }
+                });
+
+});
+</script>
+
 <?php include viewPath('v2/includes/footer'); ?>
+<script src="<?php echo $url->assets ?>js/add.js"></script>

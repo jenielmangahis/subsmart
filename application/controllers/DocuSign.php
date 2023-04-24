@@ -473,6 +473,7 @@ class DocuSign extends MYF_Controller
 
             case 'inbox':
                 $this->db->where('status !=', 'Deleted');
+                $this->db->where('status !=', 'Trashed');
                 break;
 
             default:
@@ -2305,6 +2306,7 @@ SQL;
             return [];
         }
 
+        $this->db->where('status <>', 'Trashed');
         $this->db->where('status <>', 'Deleted');
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
