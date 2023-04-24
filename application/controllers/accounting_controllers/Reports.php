@@ -1002,6 +1002,31 @@ class Reports extends MY_Controller {
                     ];
                 }
 
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'last_modified',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $b[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $a[$sort['column']]);
+                        }
+                    }
+                });
+
                 $this->page_data['start_date'] = date("m/01/Y");
                 $this->page_data['end_date'] = date("m/d/Y");
                 $this->page_data['report_period'] = date("F 1-j, Y");
@@ -1298,31 +1323,6 @@ class Reports extends MY_Controller {
                         return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
                     }, ARRAY_FILTER_USE_BOTH);
                 }
-
-                $sort = [
-                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'last_modified',
-                    'order' => empty(get('order')) ? 'asc' : 'desc'
-                ];
-
-                usort($activities, function($a, $b) use ($sort) {
-                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
-                        if($a[$sort['column']] === $b[$sort['column']]) {
-                            return strtotime($b['create_date']) > strtotime($a['create_date']);
-                        }
-
-                        if($sort['order'] === 'asc') {
-                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
-                        } else {
-                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
-                        }
-                    } else {
-                        if($sort['order'] === 'asc') {
-                            return strcmp($a[$sort['column']], $b[$sort['column']]);
-                        } else {
-                            return strcmp($b[$sort['column']], $a[$sort['column']]);
-                        }
-                    }
-                });
 
                 $grouped = [];
                 if(get('group-by') !== 'none')
@@ -1740,6 +1740,7 @@ class Reports extends MY_Controller {
                     }
 
                     $accounts[] = [
+                        'account_id' => $account->id,
                         'name' => $account->name,
                         'type' => $this->account_model->getName($account->account_id),
                         'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
@@ -1751,6 +1752,115 @@ class Reports extends MY_Controller {
                         'balance' => $balance,
                         'status' => $account->active
                     ];
+                }
+
+                if(!empty(get('account'))) {
+                    $this->page_data['filter_account'] = new stdClass();
+                    $this->page_data['filter_account']->id = get('account');
+
+                    if(intval(get('account')) > 0) {
+                        $account = $this->chart_of_accounts_model->getById(get('account'));
+                        $this->page_data['filter_account']->name = $account->name;
+
+                        $filters = [
+                            'account_id' => get('account')
+                        ];
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                            return $v['account_id'] === $filters['account_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $names = [
+                            'balance-sheet-accounts' => 'All Balance Sheet Accounts',
+                            'asset-accounts' => 'All Asset Accounts',
+                            'current-asset-accounts' => 'All Current Asset Accounts',
+                            'bank-accounts' => 'All Bank Accounts',
+                            'accounts-receivable-accounts' => 'All Accounts receivable (A/R) Accounts',
+                            'other-current-assets-accounts' => 'All Other Current Assets Accounts',
+                            'fixed-assets-accounts' => 'All Fixed Assets Accounts',
+                            'other-assets-accounts' => 'All Other Assets Accounts',
+                            'liability-accounts' => 'All Liability Accounts',
+                            'accounts-payable-accounts' => 'All Accounts payable (A/P) Accounts',
+                            'credit-card-accounts' => 'All Credit Card Accounts',
+                            'other-current-liabilities-accounts' => 'All Other Current Liabilities Accounts',
+                            'long-term-liabilities-accounts' => 'All Long Term Liabilities Accounts',
+                            'equity-accounts' => 'All Equity Accounts',
+                            'income-expense-accounts' => 'All Income/Expense Accounts',
+                            'income-accounts' => 'All Income Accounts',
+                            'cost-of-goods-sold-accounts' => 'All Cost of Goods Sold Accounts',
+                            'expenses-accounts' => 'All Expenses Accounts',
+                            'other-income-accounts' => 'All Other Income Accounts',
+                            'other-expense-accounts' => 'All Other Expense Accounts'
+                        ];
+                        $this->page_data['filter_account']->name = $names[get('account')];
+
+                        $type = get('account');
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($type) {
+                            switch($type) {
+                                case 'balance-sheet-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false || strpos($v['type'], 'Liabilities') !== false || $v['type'] === 'Equity' || $v['type'] === 'Credit Card';
+                                break;
+                                case 'asset-account' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false;
+                                break;
+                                case 'current-asset-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'bank-accounts' :
+                                    return $v['type'] === 'Bank';
+                                break;
+                                case 'accounts-receivable-accounts' :
+                                    return $v['type'] === 'Accounts receivable (A/R)';
+                                break;
+                                case 'other-current-assets-accounts' :
+                                    return $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'fixed-assets-accounts' :
+                                    return $v['type'] === 'Fixed Assets';
+                                break;
+                                case 'other-assets-accounts' :
+                                    return $v['type'] === 'Other Assets';
+                                break;
+                                case 'liability-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || strpos($v['type'], 'Liabilities') !== false;
+                                break;
+                                case 'accounts-payable-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'credit-card-accounts' :
+                                    return $v['type'] === 'Credit Card';
+                                break;
+                                case 'other-current-liabilities-accounts' :
+                                    return $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'long-term-liabilities-accounts' :
+                                    return $v['type'] === 'Long Term Liabilities';
+                                break;
+                                case 'equity-accounts' :
+                                    return $v['type'] === 'Equity';
+                                break;
+                                case 'income-expense-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold' || strpos($v['type'], 'Income') !== false || strpos($v['type'], 'Expense') !== false;
+                                break;
+                                case 'income-accounts' :
+                                    return $v['type'] === 'Income';
+                                break;
+                                case 'cost-of-goods-sold-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold';
+                                break;
+                                case 'expenses-accounts' :
+                                    return $v['type'] === 'Expenses';
+                                break;
+                                case 'other-income-accounts' :
+                                    return $v['type'] === 'Other Income';
+                                break;
+                                case 'other-expense-accounts' :
+                                    return $v['type'] === 'Other Expense';
+                                break;
+                            };
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
                 }
 
                 if(!empty(get('create-date'))) {
@@ -3589,6 +3699,420 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Time_Activities_by_Employee_Detail.pdf', 'D');
+                }
+            break;
+            case 'Account List' :
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+                $compAccs = $this->chart_of_accounts_model->get_by_company_id(logged('company_id'));
+                $accounts = [];
+                foreach($compAccs as $account)
+                {
+                    $balance = number_format(floatval($account->balance), 2);
+                    if(!empty($post['divide-by-100'])) {
+                        $balance = number_format(floatval($balance) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $balance = number_format(floatval($balance), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($balance, 0, 1) === '-') {
+                                    $balance = str_replace('-', '', $balance);
+                                    $balance = '('.$balance.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($balance, 0, 1) === '-') {
+                                    $balance = str_replace('-', '', $balance);
+                                    $balance = $balance.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($balance, 0, 1) === '-') {
+                                $balance = '<span class="text-danger">'.$balance.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($balance, 0, 1) === '(' && substr($balance, -1) === ')') {
+                                        $balance = '<span class="text-danger">'.$balance.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($balance, -1) === '-') {
+                                        $balance = '<span class="text-danger">'.$balance.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $accounts[] = [
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'type' => $this->account_model->getName($account->account_id),
+                        'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
+                        'create_date' => date("m/d/Y H:i:s", strtotime($account->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y H:i:s", strtotime($account->updated_at)),
+                        'last_modified_by' => '',
+                        'description' => $account->description,
+                        'balance' => $balance,
+                        'status' => $account->active
+                    ];
+                }
+
+                if(!empty($post['account'])) {
+                    $this->page_data['filter_account'] = new stdClass();
+                    $this->page_data['filter_account']->id = $post['account'];
+
+                    if(intval($post['account']) > 0) {
+                        $account = $this->chart_of_accounts_model->getById($post['account']);
+                        $this->page_data['filter_account']->name = $account->name;
+
+                        $filters = [
+                            'account_id' => $post['account']
+                        ];
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                            return $v['account_id'] === $filters['account_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $names = [
+                            'balance-sheet-accounts' => 'All Balance Sheet Accounts',
+                            'asset-accounts' => 'All Asset Accounts',
+                            'current-asset-accounts' => 'All Current Asset Accounts',
+                            'bank-accounts' => 'All Bank Accounts',
+                            'accounts-receivable-accounts' => 'All Accounts receivable (A/R) Accounts',
+                            'other-current-assets-accounts' => 'All Other Current Assets Accounts',
+                            'fixed-assets-accounts' => 'All Fixed Assets Accounts',
+                            'other-assets-accounts' => 'All Other Assets Accounts',
+                            'liability-accounts' => 'All Liability Accounts',
+                            'accounts-payable-accounts' => 'All Accounts payable (A/P) Accounts',
+                            'credit-card-accounts' => 'All Credit Card Accounts',
+                            'other-current-liabilities-accounts' => 'All Other Current Liabilities Accounts',
+                            'long-term-liabilities-accounts' => 'All Long Term Liabilities Accounts',
+                            'equity-accounts' => 'All Equity Accounts',
+                            'income-expense-accounts' => 'All Income/Expense Accounts',
+                            'income-accounts' => 'All Income Accounts',
+                            'cost-of-goods-sold-accounts' => 'All Cost of Goods Sold Accounts',
+                            'expenses-accounts' => 'All Expenses Accounts',
+                            'other-income-accounts' => 'All Other Income Accounts',
+                            'other-expense-accounts' => 'All Other Expense Accounts'
+                        ];
+                        $this->page_data['filter_account']->name = $names[$post['account']];
+
+                        $type = $post['account'];
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($type) {
+                            switch($type) {
+                                case 'balance-sheet-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false || strpos($v['type'], 'Liabilities') !== false || $v['type'] === 'Equity' || $v['type'] === 'Credit Card';
+                                break;
+                                case 'asset-account' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false;
+                                break;
+                                case 'current-asset-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'bank-accounts' :
+                                    return $v['type'] === 'Bank';
+                                break;
+                                case 'accounts-receivable-accounts' :
+                                    return $v['type'] === 'Accounts receivable (A/R)';
+                                break;
+                                case 'other-current-assets-accounts' :
+                                    return $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'fixed-assets-accounts' :
+                                    return $v['type'] === 'Fixed Assets';
+                                break;
+                                case 'other-assets-accounts' :
+                                    return $v['type'] === 'Other Assets';
+                                break;
+                                case 'liability-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || strpos($v['type'], 'Liabilities') !== false;
+                                break;
+                                case 'accounts-payable-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'credit-card-accounts' :
+                                    return $v['type'] === 'Credit Card';
+                                break;
+                                case 'other-current-liabilities-accounts' :
+                                    return $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'long-term-liabilities-accounts' :
+                                    return $v['type'] === 'Long Term Liabilities';
+                                break;
+                                case 'equity-accounts' :
+                                    return $v['type'] === 'Equity';
+                                break;
+                                case 'income-expense-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold' || strpos($v['type'], 'Income') !== false || strpos($v['type'], 'Expense') !== false;
+                                break;
+                                case 'income-accounts' :
+                                    return $v['type'] === 'Income';
+                                break;
+                                case 'cost-of-goods-sold-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold';
+                                break;
+                                case 'expenses-accounts' :
+                                    return $v['type'] === 'Expenses';
+                                break;
+                                case 'other-income-accounts' :
+                                    return $v['type'] === 'Other Income';
+                                break;
+                                case 'other-expense-accounts' :
+                                    return $v['type'] === 'Other Expense';
+                                break;
+                            };
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                }
+
+                if(!empty($post['create-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
+                    ];
+
+                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['last-modified-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
+                    ];
+
+                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['deleted'])) {
+                    if($post['deleted'] === 'deleted') {
+                        $accounts = array_fitler($accounts, function($v, $k) {
+                            return empty($v['status']);
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                } else {
+                    $accounts = array_filter($accounts, function($v, $k) {
+                        return $v['status'] === '1';
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => $post['column'] !== 'default' ? str_replace('-', '_', $post['column']) : 'type',
+                    'order' => $post['order']
+                ];
+
+                usort($accounts, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['create_date', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $b[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $a[$sort['column']]);
+                        }
+                    }
+                });
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    if(empty($post['show-company-name'])) {
+                        $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-title'])) {
+                        $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+                    foreach($accounts as $account) {
+                        $data = [];
+
+                        $style = [];
+                        foreach($post['fields'] as $field) {
+                            if($field === 'Balance') {
+                                if(stripos($account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                    $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                    $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                // if(substr($account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                    $style[] = ['color' => '#FF0000'];
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
+                            } else {
+                                $style[] = ['color' => '#000000'];
+                            }
+                            $data[] = $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', ['Notes'], ['font-style' => 'bold', 'border' => 'bottom']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', [$reportNote->notes]);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->writeSheetRow('Sheet1', []);
+                        $row += 1;
+                    }
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => $footerAlignment, 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Account_List';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Account_List.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top:-40px;">
+                            <tr>
+                                <td style="text-align: '.$headerAlignment.'">';
+                                    $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                    $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                $html .= '</td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width="100%;>
+                        <thead>
+                            <tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                            }
+                        $html .= '</tr>
+                        </thead>
+                        <tbody>';
+
+                        foreach($accounts as $account) {
+                            $html .= '<tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                            }
+                            $html .= '</tr>';
+                        }
+                    
+                    $html .= '</tbody>';
+                    $html .= '<tfoot>';
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                    $html .= '<tr>
+                            <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="'.count($post['fields']).'">
+                                <h4><b>Notes</b></h4>
+                                '.$reportNote->notes.'
+                            </td>
+                        </tr>';
+                    }
+                    $html .= '<tr style="text-align: '.$footerAlignment.'">
+                                <td colspan="'.count($post['fields']).'">
+                                    <p style="margin: 0">'.$date.'</p>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Account_List';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Account List";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Account_List.pdf', 'D');
                 }
             break;
         }

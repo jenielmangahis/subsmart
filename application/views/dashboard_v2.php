@@ -37,11 +37,12 @@
             </div>
             <span class="nsm-fab-label">New Task</span>
         </li>
-        <li onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-user-plus"></i>
-            </div>
-            <span class="nsm-fab-label">Add Customer</span>
+        <!-- <li onclick="location.href='<?php //echo base_url('customer/add_advance') ?>'"> -->
+        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+                <i class='bx bx-fw bx-message-square-error'></i>
+                <span>Jobs</span>
+            </a>
         </li>
         <li onclick="location.href='<?= base_url('customer') ?>'">
             <div class="nsm-fab-icon">

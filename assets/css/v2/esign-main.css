@@ -1,0 +1,15 @@
+.content_sidebar.content_sidebar-left.resizable {
+    height: 90vh !important;
+}
+
+.menu_listItem .esign-fa {
+    position: relative;
+    left: -25px;
+    z-index: 2;
+    color: #868686;
+    width: 0;
+}
+
+.main-pdf-render__container {
+    overflow-x: hidden;
+} 

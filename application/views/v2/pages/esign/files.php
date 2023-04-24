@@ -347,10 +347,13 @@ echo put_header_assets();
                                     </div>
                                 </div>
 
+                                <div>
+                                    <p class="fw-bold"><small>Profile</small></p>
+                                </div>
                                 <div class="sidebar_item">
                                     <div class="menu-fields">
-                                        <ul class="menu_list" style="height: 200px;overflow: hidden;overflow-y: scroll;width: 100%;">
-                                            <li class="menu_listItem">
+                                        <ul class="menu_list">
+                                        <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-name"></i></span>
                                                     <span class="u-ellipsis ng-binding">Name</span>
@@ -378,45 +381,34 @@ echo put_header_assets();
                                                     <span class="u-ellipsis ng-binding">Title</span>
                                                 </div>
                                             </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="sidebar_item">
+                                    <div class="menu-fields">
+                                        <ul class="menu_list">
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-subscriber_name"></i></span>
+                                                    <i class="esign-fa fas fa-spell-check"></i>
                                                     <span class="u-ellipsis ng-binding">Subscriber Name</span>
                                                 </div>
                                             </li>
-
-                                            <li class="menu_listItem">
-                                                <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-subscriber_email"></i></span>
-                                                    <span class="u-ellipsis ng-binding">Subscriber Email</span>
-                                                </div>
-                                            </li>
-
-                                            <li class="menu_listItem">
-                                                <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-primary_contact"></i></span>
-                                                    <span class="u-ellipsis ng-binding">Primary Contact</span>
-                                                </div>
-                                            </li>
-
+                                            
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-address"></i></span>
+                                                    <i class="esign-fa fas fa-map-marker-alt"></i>
                                                     <span class="u-ellipsis ng-binding">Address</span>
                                                 </div>
                                             </li>
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
-                                                    <span class="u-ellipsis ng-binding">Secondary Contact</span>
-                                                </div>
-                                            </li>
-
-                                            <li class="menu_listItem">
-                                                <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-city"></i></span>
+                                                    <i class="esign-fa fas fa-building"></i>
                                                     <span class="u-ellipsis ng-binding">City</span>
                                                 </div>
                                             </li>
@@ -424,6 +416,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-state"></i></span>
+                                                    <i class="esign-fa far fa-flag"></i>
                                                     <span class="u-ellipsis ng-binding">State</span>
                                                 </div>
                                             </li>
@@ -431,27 +424,66 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-zip"></i></span>
+                                                    <i class="esign-fa far fa-address-card"></i>
                                                     <span class="u-ellipsis ng-binding">ZIP</span>
                                                 </div>
                                             </li>
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-country"></i></span>
-                                                    <span class="u-ellipsis ng-binding">Country</span>
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-subscriber_email"></i></span>
+                                                    <i class="esign-fa far fa-paper-plane"></i>
+                                                    <span class="u-ellipsis ng-binding">Subscriber Email</span>
                                                 </div>
                                             </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-primary_contact"></i></span>
+                                                    <i class="esign-fa fas fa-phone-square-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Primary Contact</span>
+                                                </div>
+                                            </li>
+
+                                            
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
+                                                    <i class="esign-fa fas fa-mobile-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Secondary Contact</span>
+                                                </div>
+                                            </li>                                            
+
+                                            <!-- <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-country"></i></span>
+                                                    <i class="esign-fa fas fa-globe-americas"></i>
+                                                    <span class="u-ellipsis ng-binding">Country</span>
+                                                </div>
+                                            </li> -->
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-access_password"></i></span>
+                                                    <i class="esign-fa fas fa-key"></i>
                                                     <span class="u-ellipsis ng-binding">Access Password</span>
                                                 </div>
                                             </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
-                                            <li class="menu_listItem">
+                                <div>
+                                    <p class="fw-bold"><small>Account Details</small></p>
+                                </div>
+                                <div class="sidebar_item">
+                                    <div class="menu-fields">
+                                        <ul class="menu_list">
+                                        <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-check_num"></i></span>
+                                                    <i class="esign-fa fas fa-money-check"></i>
                                                     <span class="u-ellipsis ng-binding">Checking Account Number</span>
                                                 </div>
                                             </li>
@@ -459,6 +491,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-aba"></i></span>
+                                                    <i class="esign-fa fas fa-wallet"></i>
                                                     <span class="u-ellipsis ng-binding">ABA</span>
                                                 </div>
                                             </li>
@@ -466,6 +499,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_acct_num"></i></span>
+                                                    <i class="esign-fa fas fa-credit-card"></i>
                                                     <span class="u-ellipsis ng-binding">Card Account Number</span>
                                                 </div>
                                             </li>
@@ -473,6 +507,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_name"></i></span>
+                                                    <i class="esign-fa far fa-id-card"></i>
                                                     <span class="u-ellipsis ng-binding">Card Holder Name</span>
                                                 </div>
                                             </li>
@@ -480,6 +515,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_exp"></i></span>
+                                                    <i class="esign-fa fas fa-calendar-times"></i>
                                                     <span class="u-ellipsis ng-binding">Card Expiration</span>
                                                 </div>
                                             </li>
@@ -487,13 +523,24 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_security_code"></i></span>
+                                                    <i class="esign-fa fas fa-fingerprint"></i>
                                                     <span class="u-ellipsis ng-binding">Card Security Code</span>
                                                 </div>
                                             </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
+                                <div>
+                                    <p class="fw-bold"><small>Billing</small></p>
+                                </div>
+                                <div class="sidebar_item">
+                                    <div class="menu-fields">
+                                        <ul class="menu_list">
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-equipment_cost"></i></span>
+                                                    <i class="esign-fa fas fa-dollar-sign"></i>
                                                     <span class="u-ellipsis ng-binding">Equipment Cost</span>
                                                 </div>
                                             </li>
@@ -501,6 +548,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-first_month_monitoring"></i></span>
+                                                    <i class="esign-fa fas fa-calendar-alt"></i>
                                                     <span class="u-ellipsis ng-binding">First Month Mon</span>
                                                 </div>
                                             </li>
@@ -508,6 +556,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-one_time_activation"></i></span>
+                                                    <i class="esign-fa fas fa-business-time"></i>
                                                     <span class="u-ellipsis ng-binding">One Time Act</span>
                                                 </div>
                                             </li>
@@ -515,14 +564,14 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-total_due"></i></span>
+                                                    <i class="esign-fa fas fa-dollar-sign"></i>
                                                     <span class="u-ellipsis ng-binding">Total Due</span>
                                                 </div>
                                             </li>
-                                            
-
                                         </ul>
                                     </div>
                                 </div>
+                                
 
                                 <div class="sidebar_item">
                                     <div class="menu-fields">

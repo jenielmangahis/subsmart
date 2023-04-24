@@ -1614,6 +1614,13 @@ $(document).on('click', '.saveCustomer', function() {
     var city = $('[name="city"]').val();
     var postcode = $('[name="postcode"]').val();
     var state = $('[name="state"]').val();
+
+    //new added
+    var suffix_name = $('[name="suffix_name"]').val();
+    var date_of_birth = $('[name="date_of_birth"]').val();
+    var social_security_number = $('[name="social_security_number"]').val();
+    var status = $('[name="status"]').val();
+
     // alert(first_name);
 
                 $.ajax({
@@ -1631,7 +1638,11 @@ $(document).on('click', '.saveCustomer', function() {
                         suite_unit: suite_unit,
                         city: city,
                         postcode: postcode,
-                        state: state
+                        state: state,
+                        suffix_name: suffix_name,
+                        date_of_birth: date_of_birth,
+                        social_security_number: social_security_number,
+                        status: status
                     },
                     dataType: 'json',
                     success: function(response) {

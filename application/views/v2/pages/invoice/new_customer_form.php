@@ -49,8 +49,16 @@
         <input type="text" name="last_name" class="nsm-field form-control" />
     </div>
     <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Name Suffix</label>
+        <input type="text" name="suffix_name" class="nsm-field form-control" />
+    </div>
+    <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Contact Email</label>
         <input type="email" name="contact_email" class="nsm-field form-control" />
+    </div>
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Date of Birth*</label>
+        <input type="text" name="date_of_birth" class="nsm-field form-control" />
     </div>
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Mobile</label>
@@ -59,6 +67,22 @@
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
         <input type="text" name="contact_phone" class="nsm-field form-control" />
+    </div>
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Social Security Number </label>
+        <input type="text" name="social_security_number" class="nsm-field form-control" />
+    </div>
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+        <!-- <input type="text" name="status" class="nsm-field form-control" /> -->
+        <select id="status" name="status" class="form-control">
+            <option value="New">New</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Follow Up">Follow Up</option>
+            <option value="Assigned">Assigned</option>
+            <option value="Converted">Converted</option>
+            <option value="Closed">Closed</option>
+        </select>
     </div>
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2">Preferred notification method</label>

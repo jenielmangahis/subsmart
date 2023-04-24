@@ -807,7 +807,8 @@ SQL;
 		}
 
 		$files = $_FILES['files'];
-        $count = count($files['name']);
+        // $count = count($files['name']);
+        $count = isset($files) ? count($files) : 0;
 
         for ($i = 0; $i < $count; $i++) {
             if ($files['size'][$i] <= self::ONE_MB * 8) {
@@ -817,8 +818,13 @@ SQL;
             echo json_encode(['success' => false, 'reason' => 'Maximum file size is less than 8MB']);
             return;
         }
-
+		
 		['subject' => $subject, 'message' => $message] = $this->input->post();
+
+		if( !isset($message) && !isset($subject) ) {
+			echo json_encode(['data' => '', 'is_created' => false]);
+			die;
+		}
 
 		$this->db->insert('user_docfile', [
 			'name' => $subject,

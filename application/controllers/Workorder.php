@@ -8093,6 +8093,34 @@ class Workorder extends MY_Controller
 
         $w_acs = $this->workorder_model->save_alarm($solarItemsACS);
 
+        $contact = array(
+            'name'                 => $this->input->post('first_ecn'),
+            'phone'                => $this->input->post('second_ecn'),
+            'customer_id'          => $w_acs,
+            // 'third_ecn'                 => $this->input->post('third_ecn'),
+            // 'first_ecn_no'              => $this->input->post('first_ecn_no'),
+            // 'second_ecn_no'             => $this->input->post('second_ecn_no'),
+            // 'third_ecn_no'              => $this->input->post('third_ecn_no'),
+        );
+
+        $contacts = $this->workorder_model->save_contact($contact);
+
+        $contact1 = array(
+            'name'                 => $this->input->post('second_ecn_no'),
+            'phone'                => $this->input->post('third_ecn_no'),
+            'customer_id'          => $w_acs,
+        );
+
+        $contacts = $this->workorder_model->save_contact($contact1);
+
+        $contact2 = array(
+            'name'                 => $this->input->post('third_ecn'),
+            'phone'                => $this->input->post('first_ecn_no'),
+            'customer_id'          => $w_acs,
+        );
+
+        $contacts2 = $this->workorder_model->save_contact($contact2);
+
 
         $new_data = array(
             'work_order_number'                     => $this->input->post('workorder_number'),

@@ -10793,6 +10793,15 @@ class Accounting_modals extends MY_Controller
             case 'filter-report-item' :
                 $return = $this->get_items_choices($return, $search, 'report');
             break;
+            case 'filter-report-account' :
+                $accTypes = $this->account_model->getAccounts();
+                $accountTypes = [];
+                foreach($accTypes as $accType) {
+                    $accountTypes[] = $accType->account_name;
+                }
+
+                $return = $this->get_account_choices($return, $search, $accountTypes, [], 'report');
+            break;
             case 'custom-report-group' :
                 $return = $this->get_custom_report_group_choices($return, $search);
             break;
@@ -11168,9 +11177,116 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_account_choices($choices, $search = null, $accountTypes = [], $detailTypes = [])
+    private function get_account_choices($choices, $search = null, $accountTypes = [], $detailTypes = [], $field = '')
     {
         $choices['results'] = [];
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'balance-sheet-accounts',
+                'text' => 'All Balance Sheet Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'asset-accounts',
+                'text' => 'All Asset Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'current-asset-accounts',
+                'text' => 'All Current Asset Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'bank-accounts',
+                'text' => 'All Bank Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'accounts-receivable-accounts',
+                'text' => 'All Accounts receivable (A/R) Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'other-current-assets-accounts',
+                'text' => 'All Other Current Assets Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'fixed-assets-accounts',
+                'text' => 'All Fixed Assets Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'other-assets-accounts',
+                'text' => 'All Other Assets Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'liability-accounts',
+                'text' => 'All Liability Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'accounts-payable-accounts',
+                'text' => 'All Accounts payable (A/P) Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'credit-card-accounts',
+                'text' => 'All Credit Card Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'other-current-liabilities-accounts',
+                'text' => 'All Other Current Liabilities Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'long-term-liabilities-accounts',
+                'text' => 'All Long Term Liabilities Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'equity-accounts',
+                'text' => 'All Equity Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'income-expense-accounts',
+                'text' => 'All Income/Expense Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'income-accounts',
+                'text' => 'All Income Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'cost-of-goods-sold-accounts',
+                'text' => 'All Cost of Goods Sold Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'expenses-accounts',
+                'text' => 'All Expenses Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'other-income-accounts',
+                'text' => 'All Other Income Accounts'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'other-expense-accounts',
+                'text' => 'All Other Expense Accounts'
+            ];
+        }
 
         if(count($detailTypes) > 0) {
             $detailTypeIds = [];
