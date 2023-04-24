@@ -63,11 +63,12 @@ class GoogleContactLogs_model extends MY_Model
         return $query;
     }
 
-    public function getByCompanyIdAndObjectId($id)
+    public function getByCompanyIdAndObjectId($company_id, $object_id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('object_id', $object_id);
         
         $query = $this->db->get()->row();
         return $query;
