@@ -68,7 +68,16 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
                     $is_valid = 1;
                     $msg = '';
                 }else{
-                    if( $is_manual_sync == 1 ){
+                    if( $isExists->g_event_id != '' && $isExists->is_with_error == 0 ){
+                        $data = ['is_sync' => 0];
+                        $CI->GoogleCalendarSync_model->update($isExists->id, $data);
+
+                        $is_valid = 1;
+                        $msg = '';
+                    }else{
+                        $msg = 'Google Event data error. Cannot sync data.';
+                    }
+                    /*if( $is_manual_sync == 1 ){
                          $data = [
                             'company_id' => $company_id,
                             'object_id' => $object_id,
@@ -84,7 +93,7 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
                         $msg = '';
                     }else{
                         $msg = 'Already sync to google calendar';    
-                    }
+                    }*/
                     
                 }               
             }else{                      

@@ -56,25 +56,30 @@
                             </a>
                         </div>
                     </div>
-                    <table class="nsm-table mt-5">                        
-                        <thead>
-                            <tr>
-                                <td class="table-icon" style="width:70%;">Resource</td>
-                                <td data-name="TotalRecords">Total</td>
-                                <td data-name="TotalExported">Exported</td>
-                                <td data-name="TotalFailed">Failed</td>       
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Customers</td>
-                                <td><?= $total_customers; ?></td>
-                                <td><?= $companyGoogleContactsApi->google_contacts_total_imported; ?></td>
-                                <td><?= $companyGoogleContactsApi->google_contacts_total_failed; ?></td>
-                            </tr>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <table class="nsm-table mt-5">                        
+                                <thead>
+                                    <tr>
+                                        <td class="table-icon" style="width:70%;">Resource</td>
+                                        <td data-name="TotalRecords">Total</td>
+                                        <td data-name="TotalExported">Exported</td>
+                                        <td data-name="TotalFailed">Failed</td>       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Customers</td>
+                                        <td><?= $total_customers; ?></td>
+                                        <td><?= $companyGoogleContactsApi->google_contacts_total_imported; ?></td>
+                                        <td><?= $companyGoogleContactsApi->google_contacts_total_failed; ?></td>
+                                    </tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a href="<?= base_url('tools/google_contacts_logs') ?>" class="nsm-button default">View Logs</a>
                 <?php }else{ ?>
                     <div class="row">
                         <div class="col-8">
@@ -110,22 +115,32 @@
                 url: url,
                 dataType: 'json',
                 beforeSend: function(data) {
-                    $('#loading_modal').modal('show');
-                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Importing Customer Data to Google Contacts....');
+                    //$('#loading_modal').modal('show');
+                    //$('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Importing Customer Data to Google Contacts....');
                 },
-                success: function(data) {
-                    $('#loading_modal').modal('hide');
-                    Swal.fire({
-                        title: 'Customer Import',
-                        text: "Gmail Contacts was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.reload();
-                        //}
-                    });                    
+                success: function(o) {
+                    //$('#loading_modal').modal('hide');
+                    if( o.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Customer Import',
+                            text: "Gmail import contacts was successfully created.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });  
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: o.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }             
                 },
                 error: function(e) {
                     console.log(e);

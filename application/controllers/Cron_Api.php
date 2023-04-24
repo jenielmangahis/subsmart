@@ -542,13 +542,24 @@ class Cron_Api extends MYF_Controller {
                         $user_timezone = $capi->getUserCalendarTimezone($data['access_token']);
                         $googleCalendar = $this->GoogleCalendar_model->getByCompanyIdAndCalendarType($gs->company_id, $calendar_type);
                         if( $googleCalendar ){
-                          $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, $all_day_event, $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);
+                            if( $gs->g_event_id != '' ){                                
+                                $event_id  = $capi->updateCalendarEvent($gs->g_event_id, $googleCalendar->calendar_id, $calendar_title, $all_day_event, $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);                          
+                                if( $event_id == '' ){
+                                    $is_valid = false;
+                                }
+                            }else{
+                                $event_id  = $capi->createCalendarEvent($googleCalendar->calendar_id, $calendar_title, $all_day_event, $event_time, $user_timezone, $attendees, $location, $reminders, $description, $data['access_token']);                          
+                                if( $event_id == '' ){
+                                    $is_valid = false;
+                                }
+                            }                            
                         }else{
                             $is_valid = false;
                         }
 
                         if( $is_valid ){
                             $googleSyncData = [
+                                'g_event_id' => $event_id,
                                 'is_sync' => 1,
                                 'error_msg' => '',
                                 'is_with_error' => 0,
@@ -598,6 +609,107 @@ class Cron_Api extends MYF_Controller {
         }
 
         echo 'Total Sync : ' . $total_sync;
+    }
+
+    public function syncGoogleContacts()
+    {
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('GoogleContactLogs_model');
+
+        $total_records = 0;
+
+        $filter['search'][] = ['field' => 'is_with_error', 'value' => 0];
+        $googleContactLogs = $this->GoogleContactLogs_model->getAllNotSync($filter, 10);
+        foreach( $googleContactLogs as $log ){
+            $is_sync = 0;
+            $company_id = $log->company_id;
+            $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'google_contacts');
+            if( $companyGoogleContactsApi && $companyGoogleContactsApi->google_access_token != '' ){            
+                $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($log->object_id, $company_id);
+                if( $customer ){
+                    //Set Client
+                    $google_credentials = google_credentials();
+                    $client = new Google_Client();
+                    $client->setClientId($google_credentials['client_id']);
+                    $client->setClientSecret($google_credentials['client_secret']);
+                    $client->setAccessToken($companyGoogleContactsApi->google_access_token);
+                    $client->refreshToken($companyGoogleContactsApi->google_refresh_token);
+                    $client->setScopes(array(
+                        'email',
+                        'profile',
+                        'https://www.googleapis.com/auth/contacts',
+                    ));
+                    $client->setApprovalPrompt('force');
+                    $client->setAccessType('offline');
+
+                    try {                    
+                        $service = new Google_Service_PeopleService($client);            
+                        $person  = new Google_Service_PeopleService_Person();
+
+                        $email   = new Google_Service_PeopleService_EmailAddress();
+                        $email->setValue($customer->email);
+                        $person->setEmailAddresses($email);
+
+                        $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                        $name = new Google_Service_PeopleService_Name();
+                        $name->setDisplayName($customer_name);
+                        $person->setNames($name);
+
+                        if( $customer->phone_m != '' ){
+                            $phoneNumber = new Google_Service_People_PhoneNumber();
+                            $phoneNumber->setType('mobile');
+                            $phoneNumber->setValue(formatPhoneNumber($customer->phone_m));
+                            $person->setPhoneNumbers($phoneNumber);    
+                        }                    
+
+                        $gc = $service->people->createContact($person);
+                        $is_sync = 1;
+
+                        $data_logs = [                            
+                            'google_contact_id' => $gc->resourceName,                            
+                            'action_date' => date("Y-m-d H:i:s"),
+                            'is_with_error' => 0,
+                            'is_sync' => 1,
+                            'error_message' => ''
+                        ];
+
+                        $this->GoogleContactLogs_model->update($log->id, $data_logs);
+
+                    } catch (Exception $e) {
+                        $is_sync   = 0;
+                        $data_logs = [
+                            'is_with_error' => 1,                            
+                            'error_message' => $e->getMessage()
+                        ];
+
+                        $this->GoogleContactLogs_model->update($log->id, $data_logs);
+                    }
+                }
+
+                //Update google contacts api 
+                if( $is_sync == 1 ){
+                    $data_google_contacts = [                        
+                        //'google_contacts_total_imported' => $companyGoogleContactsApi->google_contacts_total_imported + 1,                        
+                        'google_last_sync' => date("Y-m-d H:i:s"),                
+                    ];
+                }else{
+                    $data_google_contacts = [                        
+                        'google_contacts_total_imported' => $companyGoogleContactsApi->google_contacts_total_imported - 1,                        
+                        'google_contacts_total_failed' => $companyGoogleContactsApi->google_contacts_total_failed + 1,
+                        'google_last_sync' => date("Y-m-d H:i:s"),                
+                    ];
+                }
+                
+                $this->CompanyApiConnector_model->update($companyGoogleContactsApi->id, $data_google_contacts);
+            }
+
+            $total_records++;
+        }
+
+        echo "Total Updated : " . $total_records;
     }
         
 }
