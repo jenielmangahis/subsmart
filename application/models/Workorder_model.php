@@ -2146,6 +2146,13 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    // public function save_contact($data)
+    // {
+    //     $vendor = $this->db->insert('contacts', $data);
+	//     $insert_id = $this->db->insert_id();
+	// 	return  $insert_id;
+    // }
+
     public function save_solar_items($data)
     {
         $vendor = $this->db->insert('workorder_solar_items', $data);

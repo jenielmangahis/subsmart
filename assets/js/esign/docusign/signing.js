@@ -69,13 +69,20 @@ function Signing(hash) {
 
   function getRenderField({ field, recipient }) {
     const { field_name, coordinates, id: fieldId, value: fieldValue } = field;
-    const { first_name, last_name, mail_add, city, state, zip_code, contact_phone1, contact_phone2 } = window.__esigndata.auto_populate_data.client;
+
+    const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country
+     } = window.__esigndata.auto_populate_data.client;
+
+    const { access_password } = window.__esigndata.auto_populate_data.acs_access;
+
+    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy } = window.__esigndata.auto_populate_data.billing;
+
+    const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
+    
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
     top = parseInt(top);
     left = parseInt(left);
-
-    console.log(field);
 
     const container = document.querySelector(".signing__documentContainer");
 
@@ -84,7 +91,7 @@ function Signing(hash) {
     }
 
     if ( field_name === "Primary Contact" ) {
-      return contact_phone1;
+      return phone_h;
     }
 
     if ( field_name === "Address" ) {
@@ -92,7 +99,7 @@ function Signing(hash) {
     }
 
     if ( field_name === "Secondary Contact" ) {
-      return contact_phone2;
+      return phone_m;
     }
 
     if ( field_name === "City" ) {
@@ -105,6 +112,53 @@ function Signing(hash) {
 
     if ( field_name === "ZIP" ) {
       return zip_code;
+    }
+
+    if ( field_name === "Subscriber Email" ) {
+      return email;
+    }
+
+    if ( field_name === "Country" ) {
+      return country;
+    }
+
+    // password
+    if ( field_name === "Access Password" ) {
+      return access_password;
+    }
+
+    // billing
+    if ( field_name === "Checking Account Number" ) {
+      return check_num;
+    }
+    if ( field_name === "ABA" ) {
+      return routing_num;
+    }
+    if ( field_name === "Card Account Number" ) {
+      return acct_num;
+    }
+    if ( field_name === "Card Holder Name" ) {
+      return card_fname + ' ' + card_lname;
+    }
+    if ( field_name === "Card Expiration" ) {
+      return credit_card_exp;
+    }
+    if ( field_name === "Card Security Code" ) {
+      return credit_card_exp_mm_yyyy;
+    }
+
+    // Cost due at signing
+    if ( field_name === "Equipment Cost" ) {
+      return equipment_cost;
+    }
+    if ( field_name === "First Month Mon" ) {
+      return first_month_monitoring;
+    }
+    if ( field_name === "One Time Act" ) {
+      return one_time_activation;
+    }
+    if ( field_name === "Total Due" ) {
+      return total_due;
     }
 
     if (field_name === "Date Signed") {

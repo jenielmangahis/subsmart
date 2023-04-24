@@ -464,8 +464,16 @@ class DocuSign extends MYF_Controller
                 break;
 
             case 'deleted':
-                $this->db->where('status', 'Trashed');
-                $this->db->where('trashed_at is NOT NULL', null, false);
+                $this->db->where('status', 'Deleted');
+                break;
+            
+            case 'completed':
+                $this->db->where('status', 'Completed');
+                break;
+
+            case 'inbox':
+                $this->db->where('status !=', 'Deleted');
+                $this->db->where('status !=', 'Trashed');
                 break;
 
             default:
@@ -2297,6 +2305,11 @@ SQL;
             return [];
         }
 
+<<<<<<< HEAD
+=======
+        $this->db->where('status <>', 'Trashed');
+        $this->db->where('status <>', 'Deleted');
+>>>>>>> staging-master
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
