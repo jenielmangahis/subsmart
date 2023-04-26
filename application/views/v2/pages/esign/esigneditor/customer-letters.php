@@ -7,17 +7,24 @@ ini_set('max_input_vars', 30000);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <?=put_header_assets();?>
 
-<div class="wrapper row page-content g-0 wrapper--loading" role="wrapper">
-    <div class="esigneditor__loader">
+<div class="wrapper page-content g-0" role="wrapper">
+       <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+        </div>
+    <!-- <div class="esigneditor__loader">
         <div class="esigneditor__loaderInner">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
             Loading...
         </div>
-    </div>
+    </div> -->
 
-    <div class="container-fluid mt-4">
+    <div class="container mt-4">
+        <div>
+            <h1 class="esigneditor__title">Send Letters (<span></span>)</h1>
+        </div>
+
         <div>
             <div class="statusFilter">
                 <div class="custom-control custom-radio custom-control-inline">
@@ -29,7 +36,7 @@ ini_set('max_input_vars', 30000);
                     <label class="custom-control-label" for="letterStatusFilter1">View Unprinted/Unsent Letters</label>
                 </div>
             </div>
-            <table id="letters" class="nsm-table">
+            <table id="letters" class="table table-striped table-bordered mt-3">
                 <thead>
                     <tr>
                         <th>
@@ -45,26 +52,28 @@ ini_set('max_input_vars', 30000);
             </table>
         </div>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button class="nsm-button primary" data-action="select-send-option">
+        <hr>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" data-action="select-send-option">
                 Send Letter
             </button>
         </div>
+
     </div>
 </div>
 
-<div class="modal fade nsm-modal" id="letterModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="letterModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Preview Letter</h5>
-        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-            <i class="bx bx-fw bx-x m-0"></i>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label>Title</label>
                 <input name="name" class="form-control" readonly>
             </div>
@@ -74,7 +83,7 @@ ini_set('max_input_vars', 30000);
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="nsm-button primary esigneditor__btn">
+        <button type="button" class="btn btn-primary esigneditor__btn">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -85,13 +94,13 @@ ini_set('max_input_vars', 30000);
   </div>
 </div>
 
-<div class="modal fade nsm-modal" id="sendLetterModal" tabindex="-1" role="dialog" data-step-active="select">
+<div class="modal fade" id="sendLetterModal" tabindex="-1" role="dialog" data-step-active="select">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Letter Send Method</h5>
-        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-            <i class="bx bx-fw bx-x m-0"></i>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -145,21 +154,21 @@ ini_set('max_input_vars', 30000);
           </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="nsm-button primary esigneditor__btn" data-action="next">
+        <button type="button" class="btn btn-primary esigneditor__btn" data-action="next">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
             Next
         </button>
 
-        <button type="button" class="nsm-button primary esigneditor__btn" data-action="email">
+        <button type="button" class="btn btn-primary esigneditor__btn" data-action="email">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
             Send Email
         </button>
 
-        <button type="button" class="nsm-button primary esigneditor__btn" data-action="print">
+        <button type="button" class="btn btn-primary esigneditor__btn" data-action="print">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="sr-only">Loading...</span>
             </div>

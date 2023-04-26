@@ -886,15 +886,15 @@ $("#attachment-file").change(function() {
         $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
-            // if(customer_selected !== ""){
-            //     load_customer_data(customer_selected);
-            // }else{
-            //     $('#cust_fullname').text('xxxxx xxxxx');
-            //     $('#cust_address').text('-------------');
-            //     $('#cust_number').text('(xxx) xxx-xxxx');
-            //     $('#cust_email').text('xxxxx@xxxxx.xxx');
-            //     initMap();
-            // }
+            if(customer_selected !== ""){
+                load_customer_data(customer_selected);
+            }else{
+                $('#cust_fullname').text('xxxxx xxxxx');
+                $('#cust_address').text('-------------');
+                $('#cust_number').text('(xxx) xxx-xxxx');
+                $('#cust_email').text('xxxxx@xxxxx.xxx');
+                initMap();
+            }
             initializeCustomerData(customer_selected);
         });
 
@@ -916,7 +916,7 @@ $("#attachment-file").change(function() {
                 let billingAccountNo = (result.acct_num) ? result.acct_num : "" ;
                 let billingCreditCardNo = (result.credit_card_num) ? result.credit_card_num : "" ;
                 let billingCreditCardExpiration = (result.credit_card_exp) ? result.credit_card_exp : "" ;
-                let billingCardAddress = result.card_address + " " + result.city + " " + result.state + ", " + result.zip;
+                let billingCardAddress = result.card_address + " " + result.city + ", " + result.state + " " + result.zip;
                 // let billingEquipment = (result.equipment) ? result.equipment : "" ;
                 // let billingInitialDeposit = (result.initial_dep) ? "$"+result.initial_dep : "" ;
                 // let billingMMR = (result.mmr) ? "$"+result.mmr : "" ;
@@ -925,7 +925,7 @@ $("#attachment-file").change(function() {
                 // let billingContractTerm = (result.contract_term) ? result.contract_term : "" ;
                 // let billingStartDate = (result.bill_start_date) ? result.bill_start_date : "" ;
                 // let billingEndDate = (result.bill_end_date) ? result.bill_end_date : "" ;
-                // let billingMethod = (result.bill_method) ? result.bill_method : "" ;
+                let billingMethod = (result.bill_method) ? result.bill_method : "" ;
                 // let billingCheckNo = (result.check_num) ? result.check_num : "" ;   
                 // let billingRoutingNo = (result.routing_num) ? result.routing_num : "" ;
                 // let billingAccountCredential = (result.account_credential) ? result.account_credential : "" ;
@@ -940,10 +940,16 @@ $("#attachment-file").change(function() {
                 // let billingNextBillingDate = (result.next_billing_date) ? result.next_billing_date : "" ;
                 // =====
                 $("#customerAccountNumber").text(customerAccountNumber);
-                $("#customerBusinessName").text(customerBusinessName);
+
+                // $("#customerBusinessName").text(customerBusinessName);
+                $("#cust_business").text(customerBusinessName);
+
                 $("#customerPassword").text(customerPassword);
-                $("#customerAddress").text(customerAddress);
-                $("#customerPhoneNumber").text(customerPhoneNumber);
+                $("#customerAddress").text(customerAddress);                
+
+                // $("#customerPhoneNumber").text(customerPhoneNumber);
+                $("#cust_number").text(customerPhoneNumber);
+
                 $("#customerEmail").text(customerEmail);
                 $("#customerEquimentAmount").text(customerEquimentAmount);
                 $("#customerActivationStatus").text(customerActivationStatus);
@@ -954,6 +960,7 @@ $("#attachment-file").change(function() {
                 $("#billingCreditCardNo").text(billingCreditCardNo);
                 $("#billingCreditCardExpiration").text(billingCreditCardExpiration);
                 $("#billingCardAddress").text(customerAddress);
+
                 // $("#billingEquipment").text(billingEquipment);
                 // $("#billingInitialDeposit").text(billingInitialDeposit);
                 // $("#billingMMR").text(billingMMR);
@@ -980,7 +987,7 @@ $("#attachment-file").change(function() {
                 $('.MAP_LOADER').fadeIn();
                 $('#TEMPORARY_MAP_VIEW').hide();
                 // =====
-                console.log(result);
+                console.log(billingMethod);
             });
         }
 
@@ -1316,8 +1323,8 @@ $("#attachment-file").change(function() {
                     }
                 }
                 if(data.city || data.state || data.zip_code){
-                    $('#cust_address2').text(data.city + ' ' + ' ' + data.state + ', ' + data.zip_code);
-                    ADDR_2 = data.city + ' ' + ' ' + data.state + ', ' + data.zip_code;
+                    $('#cust_address2').text(data.city + ', ' + ' ' + data.state + ' ' + data.zip_code);
+                    ADDR_2 = data.city + ', ' + ' ' + data.state + ' ' + data.zip_code;
                 }else{
                     $('#cust_address2').text('-------------');
                 }

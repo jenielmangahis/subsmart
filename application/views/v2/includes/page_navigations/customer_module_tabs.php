@@ -43,31 +43,9 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('customer/call/'.$cus_id) ?>">
-                <i class='bx bx-fw bx-phone-call'></i>
-                <span>Call</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <i class='bx bx-fw bx-dollar-circle'></i>
                 <span>Payment</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <!-- <a class="nsm-page-link" href="<?= base_url('customer/messages_list/'.$cus_id); ?>">
-                <i class='bx bx-fw bx-chat'></i>
-                <span>Messages</span>
-            </a> -->
-            <a class="nsm-page-link sent-messages" href="javascript:void(0);" data-cid="<?= $customer_profile_id; ?>">
-                <i class='bx bx-fw bx-chat'></i>
-                <span>Messages</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'Customer Internal Notes'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('customer/internal_notes/'.$cus_id); ?>">
-                <i class='bx bx-fw bx-file'></i>
-                <span>Internal Memo</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Customer Invoice List'): echo 'active'; endif; ?>">
@@ -76,12 +54,12 @@
                 <span>Invoices</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Customer Activity'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Customer Activity'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/activities/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-clipboard'></i>
                 <span>Activity</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" id="esignlink" onclick="window.open('<?= base_url('vault/mylibrary?customer_id=' . $cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-customer-id="<?=$cus_id?>">
                 <i class='bx bx-fw bx-palette'></i>

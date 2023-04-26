@@ -775,7 +775,7 @@ function occupyFields(id, type, action = 'edit') {
             $(`#item-modal #sales_tax_category`).append(`<option value="${item.sales_tax_cat_id}" selected>${item.sales_tax_cat}</option>`);
         }
 
-        if(item.purch_desc !== "") {
+        if(item.expense_account_id !== "") {
             $(`#item-modal #purchasing`).prop('checked', true).trigger('change');
         }
 
@@ -1039,4 +1039,26 @@ function test(){
             }
         }
     }
+}
+
+function changeType(type)
+{
+	var form = $('#item-modal form');
+	itemFormData = new FormData(document.getElementById(form.attr('id')));
+	itemFormData.set('type', type);
+	if(form.attr('id').includes('update')) {
+		var action = form.attr('action');
+		var itemId = action.split('/');
+		itemId = itemId[itemId.length - 1];
+		itemFormData.set('id', itemId);
+	}
+
+	$.get(`/accounting/get-dropdown-modal/item_modal?field=${type}`, function(result) {
+		$('#modal-container .full-screen-modal').append(result);
+
+		itemTypeSelection = $('#modal-container .full-screen-modal .modal-right-side:last-child() .modal').find('.modal-content').html();
+		$('#modal-container .full-screen-modal .modal-right-side:last-child()').remove();
+
+		$('#modal-container #item-modal .modal-content').html(itemTypeSelection);
+	});
 }

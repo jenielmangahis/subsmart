@@ -1,17 +1,17 @@
 <style>
-    .form-control {
+    /*.form-control {
         font-size: 12px;
         height: 30px !important;
         line-height: 150%;
-    }
+    }*/
     label{
         font-size: 12px !important;
         margin-bottom: 1px !important;
     }
-    hr{
+/*    hr{
         border: 2px solid #32243d !important;
         width: 100%;
-    }
+    }*/
     .form-group {
         margin-bottom: 3px !important;
     }

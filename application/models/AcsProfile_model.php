@@ -460,6 +460,17 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_last_id()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->order_by('prof_id', 'DESC');
+        
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file AcsProfile_model.php */

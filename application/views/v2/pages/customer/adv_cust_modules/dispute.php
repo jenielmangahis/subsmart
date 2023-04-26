@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button class="nsm-button w-100 ms-0 mt-2" onclick="location.href='<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>'">
+                    <button class="nsm-button w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-list-check'></i> View/Update All Dispute Items
                     </button>
                 </div>
@@ -168,13 +168,13 @@
                         <i class='bx bx-fw bx-import'></i> Import Online Credit Reports
                     </button>
                 </div>
-                <div class="col-12 col-md-6" onclick="location.href='<?= base_url('EsignEditor/customers/' . $this->uri->segment(3)); ?>'">
+                <div class="col-12 col-md-6" onclick="window.open('<?= base_url('EsignEditor/customers/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                     <button class="nsm-button w-100 ms-0">
                         <i class='bx bx-fw bx-mail-send'></i> Last Letter Sent
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button class="nsm-button w-100 ms-0 primary" onclick="location.href='<?= base_url('EsignEditor/wizard?customer_id=' . $this->uri->segment(3)); ?>'">
+                    <button class="nsm-button w-100 ms-0 primary" onclick="window.open('<?= base_url('EsignEditor/wizard?customer_id=' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-envelope'></i> Letter Wizard
                     </button>
                 </div>

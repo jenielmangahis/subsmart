@@ -12246,7 +12246,10 @@ class Accounting_modals extends MY_Controller
 
     public function get_account_details($accountId)
     {
-        echo json_encode($this->chart_of_accounts_model->getById($accountId));
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $account->detail_type = $this->account_detail_model->getName($account->acc_detail_id);
+        $account->type = $this->account_model->getName($account->account_id);
+        echo json_encode($account);
     }
 
     public function get_item_category_details($categoryId)

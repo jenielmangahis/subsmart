@@ -727,6 +727,9 @@ class Items_model extends MY_Model
     }
 
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
+
+        $user_login = logged('FName') . ' ' . logged('LName');
+
         if ($transactionType == "add") {
             // =====
             $this->db->select('SUM(items_has_storage_loc.qty) AS TOTAL_QUANTITY');
@@ -747,6 +750,7 @@ class Items_model extends MY_Model
                 'item_location' => $locationName,
                 'transaction' => "+$quantity",
                 'running_quantity' => $totalQuantity,
+                'name_transaction' => $user_login,
             ];
             // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
@@ -780,6 +784,7 @@ class Items_model extends MY_Model
                 'item_location' => $itemLocation,
                 'transaction' => "-$quantity",
                 'running_quantity' => $newQuantity,
+                'name_transaction' => $user_login,
             ];
             // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);

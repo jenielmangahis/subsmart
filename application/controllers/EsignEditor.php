@@ -106,6 +106,9 @@ class EsignEditor extends MY_Controller
 
     public function wizard()
     {
+        $this->page_data['page']->title = 'Letters';
+        $this->page_data['page']->parent = 'Letters';
+
         $customerId = $this->input->get('customer_id', true);
         if (is_null($this->getCustomer($customerId))) {
             return show_404();
@@ -130,11 +133,14 @@ class EsignEditor extends MY_Controller
             'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
         ]);
 
-        $this->load->view('esign/esigneditor/wizard2', $this->page_data);
+        $this->load->view('v2/pages/esign/esigneditor/wizard2', $this->page_data);
     }
 
     public function customers($id)
     {
+        $this->page_data['page']->title = 'Letters';
+        $this->page_data['page']->parent = 'Letters';
+
         if (is_null($this->getCustomer($id))) {
             return show_404();
         }
@@ -157,7 +163,7 @@ class EsignEditor extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
         ]);
 
-        $this->load->view('esign/esigneditor/customer-letters', $this->page_data);
+        $this->load->view('v2/pages/esign/esigneditor/customer-letters', $this->page_data);
     }
 
     public function apiGetCategories()

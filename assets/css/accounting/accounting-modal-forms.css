@@ -129,9 +129,9 @@ div.modal.right .modal-content {
     border-radius: 0 !important;
 }
 
-div.modal.right:not(#existing-attachments-modal) .modal-body {
+/* div.modal.right:not(#existing-attachments-modal) .modal-body {
     padding: 0 30px 80px;
-}
+} */
 
 #existing-attachments-modal .modal-body {
     padding: 30px 40px !important;

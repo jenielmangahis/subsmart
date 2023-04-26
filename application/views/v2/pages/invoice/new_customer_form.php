@@ -14,25 +14,25 @@
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2">Customer Type</label>
         <div class="form-check d-inline-block me-2">
-            <input class="form-check-input" type="radio" name="customer_type" checked="checked" id="customer_type_residential" value="Residential">
+            <input class="form-check-input customer_type" type="radio" name="customer_type" checked="checked" id="customer_type_residential" value="Residential">
             <label class="form-check-label" for="customer_type_residential">
                 Residential
             </label>
         </div>
         <div class="form-check d-inline-block me-2">
-            <input class="form-check-input" type="radio" name="customer_type" id="customer_type_commercial" value="Commercial">
+            <input class="form-check-input customer_type" type="radio" name="customer_type" id="customer_type_commercial" value="Commercial">
             <label class="form-check-label" for="customer_type_commercial">
                 Commercial
             </label>
         </div>
         <div class="form-check d-inline-block">
-            <input class="form-check-input" type="radio" name="customer_type" id="customer_type_advance" value="Advance">
+            <input class="form-check-input customer_type" type="radio" name="customer_type" id="customer_type_advance" value="Advance">
             <label class="form-check-label" for="customer_type_advance">
                 Other
             </label>
         </div>
     </div>
-    <div class="col-12 d-none" id="business_name_area">
+    <div class="col-12" id="business_name_area" style="display:none;">
         <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
         <input type="text" name="business_name" class="nsm-field form-control" />
     </div>

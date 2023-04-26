@@ -1,18 +1,24 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-include viewPath('includes/header');
+// include viewPath('includes/header');
+include viewPath('v2/includes/header');
 ini_set('max_input_vars', 30000);
 ?>
 
-<div class="wrapper wrapper--loading" role="wrapper" id="wizard">
-    <div class="esigneditor__loader">
+<!-- <div class="wrapper wrapper--loading" role="wrapper" id="wizard"> -->
+    
+<div class="wrapper page-content g-0" role="wrapper">
+    <div class="col-12 mb-3">
+          <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+        </div>
+    <!-- <div class="esigneditor__loader">
         <div class="esigneditor__loaderInner">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
             Loading...
         </div>
-    </div>
+    </div> -->
 
     <div class="container mt-4">
         <div>

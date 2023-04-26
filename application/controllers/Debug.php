@@ -2133,6 +2133,16 @@ class Debug extends MY_Controller {
         echo "<pre>";
         print_r($result);
     }
+
+    public function testCustomerLastId()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $customer = $this->AcsProfile_model->get_last_id();
+        echo "<pre>";
+        print_r($customer);
+        exit;
+    }
 }
 /* End of file Debug.php */
 

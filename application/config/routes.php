@@ -1190,6 +1190,7 @@ $route['tools/_zapier_regenerate_key'] = 'Tools/ajax_zapier_regenerate_key';
 $route['tools/_google_contact_account_bind'] = 'Tools/ajax_google_contact_account_bind';
 $route['tools/_import_customer_data_to_google_contacts'] = 'Tools/ajax_import_customer_data_to_google_contacts';
 $route['tools/_disconnect_google_contacts'] = 'Tools/ajax_disconnect_google_contacts';
+$route['tools/google_contacts_logs'] = 'Tools/google_contacts_logs';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1331,6 +1332,7 @@ $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 //Cron Api
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
+$route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';

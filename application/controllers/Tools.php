@@ -1041,75 +1041,52 @@ class Tools extends MY_Controller {
 
         $this->load->model('CompanyApiConnector_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('GoogleContactLogs_model');
 
         $is_success = 0;
         $msg = 'Failed to connect to Google.';
 
         $total_imported = 0;
-        $total_failed   = 0;
 
-        $company_id = logged('company_id');
+        $company_id = logged('company_id');        
         $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'google_contacts');
-        if( $companyGoogleContactsApi && $companyGoogleContactsApi->google_access_token != '' ){
+        if( $companyGoogleContactsApi && $companyGoogleContactsApi->google_access_token != '' ){            
             $customers = $this->AcsProfile_model->getCustomerBasicInfoByCompanyId($company_id);
+            foreach($customers as $customer){         
+                //Check if customer id is already in logs
+                $isCustomerExists = $this->GoogleContactLogs_model->getByCompanyIdAndObjectId($company_id, $customer->prof_id);
+                if( !$isCustomerExists ){
+                    $data_logs = [
+                        'company_id' => $company_id,
+                        'company_api_connector_id' => $companyGoogleContactsApi->id,
+                        'object_id' => $customer->prof_id,
+                        'google_contact_id' => '',
+                        'resource_type' => 'customer',
+                        'action' => 'export',
+                        'action_date' => '',
+                        'is_with_error' => 0,
+                        'is_sync' => 0,
+                        'error_message' => ''
+                    ];
 
-            //Set Client
-            $google_credentials = google_credentials();
-            $client = new Google_Client();
-            $client->setClientId($google_credentials['client_id']);
-            $client->setClientSecret($google_credentials['client_secret']);
-            $client->setAccessToken($companyGoogleContactsApi->google_access_token);
-            $client->refreshToken($companyGoogleContactsApi->google_refresh_token);
-            $client->setScopes(array(
-                'email',
-                'profile',
-                'https://www.googleapis.com/auth/contacts',
-            ));
-            $client->setApprovalPrompt('force');
-            $client->setAccessType('offline');
-            
-            foreach($customers as $customer){                
-                try {                    
-                    $service = new Google_Service_PeopleService($client);            
-                    $person  = new Google_Service_PeopleService_Person();
-
-                    $email   = new Google_Service_PeopleService_EmailAddress();
-                    $email->setValue($customer->email);
-                    $person->setEmailAddresses($email);
-
-                    $customer_name = $customer->first_name . ' ' . $customer->last_name;
-                    $name = new Google_Service_PeopleService_Name();
-                    $name->setDisplayName($customer_name);
-                    $person->setNames($name);
-
-                    if( $customer->phone_m != '' ){
-                        $phoneNumber = new Google_Service_People_PhoneNumber();
-                        $phoneNumber->setType('mobile');
-                        $phoneNumber->setValue(formatPhoneNumber($customer->phone_m));
-                        $person->setPhoneNumbers($phoneNumber);    
-                    }                    
-
-                    $exe = $service->people->createContact($person);
+                    $this->GoogleContactLogs_model->create($data_logs);
 
                     $total_imported++;
-                } catch (Exception $e) {
-                    $total_failed++;
-                }
+                }                       
             }
 
-            //Update google contacts api 
             $data_google_contacts = [                        
-                'google_contacts_total_imported' => $total_imported,
-                'google_contacts_total_failed' => $total_failed,
+                'google_contacts_total_imported' => $total_imported,                        
                 'google_last_sync' => date("Y-m-d H:i:s"),                
             ];
+
             $this->CompanyApiConnector_model->update($companyGoogleContactsApi->id, $data_google_contacts);
 
             $is_success = 1;
             $msg = '';
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'total_imported' => $total_imported, 'total_failed' => $total_failed];
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 
@@ -1130,5 +1107,29 @@ class Tools extends MY_Controller {
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'total_imported' => $total_imported, 'total_failed' => $total_failed];
         echo json_encode($return);
+    }
+
+    public function google_contacts_logs(){
+        $this->load->model('GoogleContactLogs_model');
+
+        $company_id = logged('company_id');
+        $filter     = 'all';
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'exported' ){
+                $search['search'][] = ['field' => 'is_with_error', 'value' => 0];
+            }else{
+                $search['search'][] = ['field' => 'is_with_error', 'value' => 1];
+            }
+            $googleContactsLogs = $this->GoogleContactLogs_model->getAllByCompanyId($company_id, $search);    
+        }else{
+            $googleContactsLogs = $this->GoogleContactLogs_model->getAllByCompanyId($company_id);    
+        }
+            
+        $this->page_data['googleContactsLogs'] = $googleContactsLogs;
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Google Contacts';
+        $this->page_data['page']->parent = 'Tools';        
+        $this->load->view('v2/pages/tools/google_contacts_logs', $this->page_data);
     }
 }
