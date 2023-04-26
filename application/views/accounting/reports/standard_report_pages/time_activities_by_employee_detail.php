@@ -119,11 +119,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </select>
                                                 <p class="m-0">Sort in</p>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($order) ? 'checked' : ''?>>
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($sort_in) ? 'checked' : ''?>>
                                                     <label for="sort-asc" class="form-check-label">Ascending order</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($order) && $order === 'desc' ? 'checked' : ''?>>
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($sort_in) && $sort_in === 'desc' ? 'checked' : ''?>>
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">

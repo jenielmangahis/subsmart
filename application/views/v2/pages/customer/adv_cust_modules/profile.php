@@ -184,10 +184,10 @@ div#controls div#call-controls div#volume-indicators > div {
                     </div>
                 </div>
                 <div class="col-12 col-md-5">
-                    <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?php echo base_url("/customer/preview/$profile_info->prof_id"); ?>">
+                    <a role="button" class="nsm-button btn-sm m-0 me-2" onclick="window.open('<?= base_url('/customer/preview/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         View Profile
                     </a>
-                    <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?php echo base_url("/customer/add_advance/$profile_info->prof_id"); ?>">
+                    <a role="button" class="nsm-button btn-sm m-0 me-2"  onclick="window.open('<?= base_url('/customer/add_advance/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         Edit Profile
                     </a>
                 </div>                
@@ -219,9 +219,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         <a href="#" class="nsm-link" id="managequickactions">Manage Quick Actions</a>
                     </div>
 
-                    <div class="nsm-empty empty-message">
+                    <!-- <div class="nsm-empty empty-message">
                         Click Manage Quick Actions to view available shortcuts for this customer.
-                    </div>
+                    </div> -->
+
+                    <button class="nsm-button light w-100 ms-0 mt-3" onclick="window.open('<?= base_url('/tickets/addTicketCust/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw'></i> Submit Service Ticket
+                    </button>
 
                     <div class="actions-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px;"></div>
                     
@@ -991,7 +995,7 @@ $(document).on('submit', '#frm-send-sms-message', function(e){
 
         $(document).on('click', '#button-call', function(){
             var phone_number = $('#phone-number').val();
-            var countryid    = 1;
+            var countryid    = 1;   
 
             $('#button-call').hide();
             $('#button-hangup').show();

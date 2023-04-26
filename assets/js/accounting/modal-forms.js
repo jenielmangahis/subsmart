@@ -5656,13 +5656,13 @@ $(function() {
                 for(var data  of itemFormData.entries()) {
                     if(data[0] !== 'icon') {
                         if(data[0].includes('category') || data[0].includes('account') || data[0].includes('vendor')) {
-                            fillItemDropdownFields(data);
+                            fillItemDropdownFields(data, type);
                         } else {
                             $('#item-modal form').find(`[name="${data[0]}"]`).val(data[1]).trigger('change');
                         }
                     } else {
-                        if(rowData.icon !== null && rowData.icon !== "") {
-                            $('#item-modal form').find('img.image-prev').attr('src', `/uploads/${rowData.icon}`);
+                        if(itemFormData.icon !== null && itemFormData.icon !== "" && itemFormData.icon !== undefined) {
+                            $('#item-modal form').find('img.image-prev').attr('src', `/uploads/${itemFormData.icon}`);
                             $('#item-modal form').find('img.image-prev').parent().addClass('d-flex justify-content-center');
                             $('#item-modal form').find('img.image-prev').parent().removeClass('hide');
                             $('#item-modal form').find('img.image-prev').parent().prev().addClass('hide');
@@ -12281,7 +12281,7 @@ const changeItemType = (type) => {
 	});
 }
 
-const fillItemDropdownFields = (data) => {
+const fillItemDropdownFields = (data, type) => {
     switch(data[0]) {
         case 'vendor' :
             $.get(`/accounting/get-vendor-details/${data[1]}`, function(result) {
@@ -12304,7 +12304,37 @@ const fillItemDropdownFields = (data) => {
         default :
             $.get(`/accounting/get-account-details/${data[1]}`, function(result) {
                 var account = JSON.parse(result);
-                $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${account.name}</option>`);
+
+                var flag = true;
+
+                if(data[0] === 'income_account' && type === 'product' && account.type !== 'Income' && account.detail_type !== 'Sales of Product Income') {
+                    flag = false;
+                }
+
+                var accountTypes = [
+                    'Expenses',
+                    'Bank',
+                    'Accounts receivable (A/R)',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Accounts payable (A/P)',
+                    'Credit Card',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity',
+                    'Income',
+                    'Cost of Goods Sold',
+                    'Other Income',
+                    'Other Expense'
+                ];
+
+                if(data[0] === 'expense_account' && type === 'product' && accountTypes.includes(account.type)) {
+                    flag = false;
+                }
+
+                if(flag) {
+                    $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${account.name}</option>`);
+                }
             });
         break;
     }

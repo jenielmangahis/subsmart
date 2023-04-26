@@ -34,7 +34,7 @@
                                 </button>
                             </div>
                             <div class="col-12 col-md-4">
-                                <button role="button" class="nsm-button w-100 ms-0" onclick="location.href='<?= base_url('customer/internal_notes/'.$cus_id); ?>'">
+                                <button role="button" class="nsm-button w-100 ms-0" onclick="window.open('<?= base_url('customer/internal_notes/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                                     <i class='bx bx-fw bx-history'></i> View History
                                 </button>
                             </div>

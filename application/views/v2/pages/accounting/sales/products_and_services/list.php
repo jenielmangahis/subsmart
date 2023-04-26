@@ -549,7 +549,7 @@
                                 <?php endif; ?>
                             </td>
 							<td>
-                                <div class="dropdown table-management">
+                                <div class="dropdown float-end">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>

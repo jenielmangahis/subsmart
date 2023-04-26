@@ -1413,7 +1413,7 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
-                                                <input type="text" name="ssn" class="nsm-field form-control" placeholder="XXX-XX-XXXX">
+                                                <input type="text" name="ssn" class="nsm-field form-control number-field" placeholder="XXX-XX-XXXX">
                                             </div>
                                         </div>
                                     </div>
@@ -1541,7 +1541,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!(+this.value) && Math.abs(+this.value)>= 0 ? Math.abs(+this.value) : null;" value="0.00">
+                                                    <input type="text" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1550,7 +1550,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
+                                                    <input type="text" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1559,7 +1559,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="0.00">
+                                                    <input type="text" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1749,7 +1749,7 @@ tr {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 d-none" id="paypal_area">
+                                    <div class="col-12 d-none" id="square_area">
                                         <div class="row g-3">
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Account Credential</label>
@@ -1765,7 +1765,7 @@ tr {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 d-none" id="paypal_area">
+                                    <div class="col-12 d-none" id="warranty_area">
                                         <div class="row g-3">
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Account Credential</label>
@@ -2094,7 +2094,7 @@ $(".nsm-subtitle").html(function() {
         $('.number-field').keyup(function() {
             var val = this.value.replace(/\D/g, '');
             val = val.replace(/^(\d{3})/, '$1-');
-            val = val.replace(/-(\d{2})/, '-$1-');
+            val = val.replace(/-(\d{3})/, '-$1-');
             val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
             this.value = val;
         });
@@ -2451,5 +2451,24 @@ $(document).on('click', '.saveCustomer', function() {
 });
 </script>
 
+<script>
+// jQuery(document).ready(function () {
+//     $(document).on('click','#customer_type',function(){
+//         var values = $(this).val();
+//         alert(values);
+//     });
+    $(document).on('click','.customer_type',function(){
+        // alert('test');
+        if ($('input[name=customer_type]:checked').val() == "Commercial") {
+            // alert('test');
+            $('#business_name_area').show();
+
+        } else {
+            $('#business_name_area').hide();
+
+        }
+    });
+// });
+</script>   
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="<?php echo $url->assets ?>js/add.js"></script>

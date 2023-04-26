@@ -349,7 +349,7 @@ class Events extends MY_Controller
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
 
-        echo logged('company_id');
+        //echo logged('company_id');
 
         // get items
         $get_items = array(
@@ -394,9 +394,9 @@ class Events extends MY_Controller
         if($id!=NULL){
             $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
             $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
-            print_r($this->page_data['event_items']);
+            //print_r($this->page_data['event_items']);
         }
-        $this->load->view('events/event_preview', $this->page_data);
+        $this->load->view('v2/pages/events/event_preview', $this->page_data);
     }
 
     public function update_event_status(){

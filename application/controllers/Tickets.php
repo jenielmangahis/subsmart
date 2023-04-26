@@ -820,6 +820,10 @@ class Tickets extends MY_Controller
             $pay = $this->tickets_model->update_Other($payment_data);
         }
 
+        $ticket_id = $this->input->post('ticketID');
+        //Google Calendar
+        createSyncToCalendar($ticket_id, 'service_ticket', $company_id);
+
         // dd($addQuery);
         $delete2 = $this->tickets_model->delete_items($id);
         //if ($addQuery > 0) {        

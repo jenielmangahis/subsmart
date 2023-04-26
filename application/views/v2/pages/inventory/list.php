@@ -159,7 +159,6 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');">History</a>
                                             <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#INV_ITEM_NAME').text('(<?php echo $item[0]; ?>)')">View Transaction</a>
                                             <!-- ITEM_LOCATION_TABLE.columns(1).search('^'+DATA_ID+'$', true, false).draw(); -->
                                         </li>
@@ -347,42 +346,23 @@
   <!-- Modal -->
   <div class="modal fade" id="history_list" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 110%;">
             <div class="modal-header">
-<<<<<<< HEAD
-                <span class="modal-title content-title" style="font-size: 17px;">Item Dispense History</span>
-=======
                 <span class="modal-title content-title" style="font-size: 17px;">Item Transaction History <i id="INV_ITEM_NAME"></i></span>
->>>>>>> ce81d7b3dc1e9c6f14e7f6a588de923abb4e7ebc
                 <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>  
             <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 mb-2 HISTORY_DIV">
-                            <input id="HISTORY_TABLE_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search History...">
+                            <input id="HISTORY_TABLE_SEARCH" style="width: 250px;" class="form-control" type="text" placeholder="Search History...">
                         </div>
                         <div class="col-sm-12">
                                 <table id="HISTORY_TABLE" class="nsm-table">
                                 <thead class="bg-light"> 
                                     <tr>
-                                        <th data-name="Datetime">Datetime</th>
-<<<<<<< HEAD
-                                        <th data-name="Item" class="d-none">Item ID</th>
-                                        <th data-name="Item" style="width: 125px;">Item</th>
-                                        <th data-name="Deduction">Deduction</th>
-                                        <th data-name="Remaining">Remaining</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($items_history as $history) { ?>
-                                    <tr>
-                                        <td><?php echo $history->datetime ?></td>
-                                        <td class="d-none"><?php echo $history->item_id ?></td>
-                                        <td style="width: 125px;"><?php echo $history->item_name ?></td>
-                                        <td>-<?php echo $history->deduction ?></td>
-                                        <td><?php echo $history->remaining_quantity ?></td>
-=======
+                                        <th data-name="Datetime">Date</th>
                                         <th data-name="Item" class="d-none">Search ID</th>
+                                        <th data-name="Name Transaction">Name Transaction</th>
                                         <th data-name="Location">Location</th>
                                         <th data-name="Transaction">Transaction</th>
                                         <th data-name="Running Quantity">Running Quantity</th>
@@ -390,13 +370,13 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($items_transaction_history as $history) { ?>
-                                    <tr>
-                                        <td><?php echo $history->datetime; ?></td>
+                                    <tr style="margin-left: 10px;">
+                                        <td><?php echo date_format(date_create($history->datetime), "m/d/Y"); ?></td>
                                         <td class="d-none"><?php echo $history->search_id; ?></td>
+                                        <td><?php echo $history->name_transaction; ?></td>
                                         <td><?php echo $history->item_location; ?></td>
                                         <td><?php echo $history->transaction; ?></td>
                                         <td><?php echo $history->running_quantity; ?></td>
->>>>>>> ce81d7b3dc1e9c6f14e7f6a588de923abb4e7ebc
                                     </tr>
                                     <?php } ?>
                                 </tbody>

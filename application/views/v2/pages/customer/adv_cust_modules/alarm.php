@@ -174,11 +174,9 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-4">
-                    <a href="https://nsmartrac.com/" target="_blank">
-                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="openNewWindow()">
                             <i class='bx bx-fw bx-link-external'></i> Website Url
                         </button>
-                    </a>
                 </div>
                 <div class="col-12 col-md-4">
                     <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
@@ -189,3 +187,9 @@
         </div>
     </div>
 </div>
+
+<script>
+function openNewWindow() {
+  window.open("https://nsmartrac.com/", "_blank", "location=yes,height=1080,width=1500,scrollbars=yes,status=yes");
+}
+</script>

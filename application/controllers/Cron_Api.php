@@ -634,9 +634,10 @@ class Cron_Api extends MYF_Controller {
                     $google_credentials = google_credentials();
                     $client = new Google_Client();
                     $client->setClientId($google_credentials['client_id']);
-                    $client->setClientSecret($google_credentials['client_secret']);
-                    $client->setAccessToken($companyGoogleContactsApi->google_access_token);
+                    $client->setClientSecret($google_credentials['client_secret']);                    
                     $client->refreshToken($companyGoogleContactsApi->google_refresh_token);
+                    $access_token = $client->getAccessToken();
+                    $client->setAccessToken($access_token);                    
                     $client->setScopes(array(
                         'email',
                         'profile',

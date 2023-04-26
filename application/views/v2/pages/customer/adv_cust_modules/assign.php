@@ -40,11 +40,9 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <a href="#" target="_blank">
-                        <button class="nsm-button primary w-100 ms-0">
+                        <button class="nsm-button primary w-100 ms-0" onclick="window.open('<?= base_url('customer/module/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-fw bx-eraser'></i> Visit Website
                         </button>
-                    </a>
                 </div>
                 <div class="col-12">
                     <button class="nsm-button w-100 ms-0 ">

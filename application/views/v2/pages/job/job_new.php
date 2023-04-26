@@ -745,7 +745,7 @@
                                                         <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
                                                 </select>
-                                                <div class="alert alert-secondary show mt-2" role="alert" style="background: #f9f9f9;">
+                                                <!-- <div class="alert alert-secondary show mt-2" role="alert" style="background: #f9f9f9;">
                                                     <div class="row">
                                                         <div class="col-md-12"><strong>Customer Information</strong></div>
                                                         <div class="col-md-12">- Account Number:&nbsp;&nbsp;<u id="customerAccountNumber"></u></div>
@@ -758,10 +758,9 @@
                                                         <div class="col-md-12">- Activation:&nbsp;&nbsp;<u id="customerActivationStatus"></u></div>
                                                         <div class="col-md-12">- First Month Monitoring:&nbsp;&nbsp;<u id="customerMMR"></u></div>  
                                                     </div>
-                                                  <!-- <div>Banking Details:&nbsp;&nbsp;<u>Show Banking Details</u></div> -->
-                                                </div>
+                                                </div> -->
                                                 
-                                                <table id="customer_info" class="table d-none">
+                                                <table id="customer_info" class="table">
                                                     <thead>
                                                     <tr>
                                                         <td></td>
@@ -773,7 +772,7 @@
                                                         <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
                                                     </tr>
                                                     <tr>
-                                                        <td >
+                                                        <td>
                                                             <div id="cust_address">-------------</div>
                                                             <div id="cust_address2">-------------</div>
                                                         </td>
@@ -787,6 +786,12 @@
                                                         <td id="cust_email">xxxxx@xxxxx.xxx</td>
                                                         <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td id="cust_business"></td>
+                                                    </tr>
+                                                   <!--  <tr>
+                                                        <td id="cust_jobaccountnumber">JOB-0000077</td>
+                                                    </tr> -->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -803,7 +808,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <!-- <div class="col-md-12">
                                                 <div class="alert alert-secondary show mt-2" role="alert" style="background: #f9f9f9;">
                                                     <div class="row">
                                                         <div class="col-md-12"><strong>Banking Details</strong></div>
@@ -812,33 +817,9 @@
                                                         <div class="col-md-4">- Credit Card No:&nbsp;&nbsp;<u id="billingCreditCardNo"></u></div>
                                                         <div class="col-md-4">- Credit Card Expiration:&nbsp;&nbsp;<u id="billingCreditCardExpiration"></u></div>
                                                         <div class="col-md-8">- Card Address:&nbsp;&nbsp;<u id="billingCardAddress"></u></div>
-                                                    <!--
-                                                        <div class="col-md-4">- Equipment:&nbsp;&nbsp;<u id="billingEquipment"></u></div>
-                                                        <div class="col-md-4">- Initial Deposit:&nbsp;&nbsp;<u id="billingInitialDeposit"></u></div>
-                                                        <div class="col-md-4">- MMR:&nbsp;&nbsp;<u id="billingMMR"></u></div>
-                                                        <div class="col-md-4">- Billing Frequency:&nbsp;&nbsp;<u id="billingFrequency"></u></div>
-                                                        <div class="col-md-4">- Billing Day:&nbsp;&nbsp;<u id="billingDay"></u></div>
-                                                        <div class="col-md-4">- Contract Term:&nbsp;&nbsp;<u id="billingContractTerm"></u></div>
-                                                        <div class="col-md-4">- Billing Start Date:&nbsp;&nbsp;<u id="billingStartDate"></u></div>
-                                                        <div class="col-md-4">- Billing End Date:&nbsp;&nbsp;<u id="billingEndDate"></u></div>
-                                                        <div class="col-md-4">- Billing Method:&nbsp;&nbsp;<u id="billingMethod"></u></div>
-                                                        <div class="col-md-4">- Check No:&nbsp;&nbsp;<u id="billingCheckNo"></u></div>
-                                                        <div class="col-md-4">- Routing No:&nbsp;&nbsp;<u id="billingRoutingNo"></u></div>
-                                                        
-                                                        <div class="col-md-4">- Account Credential:&nbsp;&nbsp;<u id="billingAccountCredential"></u></div>
-                                                        <div class="col-md-4">- Account Note:&nbsp;&nbsp;<u id="billingAccountNote"></u></div>
-                                                        <div class="col-md-4">- Confirmation:&nbsp;&nbsp;<u id="billingConfirmation"></u></div>
-                                                        <div class="col-md-4">- Finance Amount:&nbsp;&nbsp;<u id="billingFinanceAmount"></u></div>
-                                                        <div class="col-md-4">- Recurring Start Date:&nbsp;&nbsp;<u id="billingRecurringStartDate"></u></div>
-                                                        <div class="col-md-4">- Recurring End Date:&nbsp;&nbsp;<u id="billingRecurringEndDate"></u></div>
-                                                        <div class="col-md-4">- Transaction Amount:&nbsp;&nbsp;<u id="billingTransactionAmount"></u></div>
-                                                        <div class="col-md-4">- Transaction Category:&nbsp;&nbsp;<u id="billingTransactionCategory"></u></div>
-                                                        <div class="col-md-4">- Last Payment Date:&nbsp;&nbsp;<u id="billingLastPaymentDate"></u></div>
-                                                        <div class="col-md-4">- Next Billing Date:&nbsp;&nbsp;<u id="billingNextBillingDate"></u></div> 
-                                                    -->
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-md-12">
                                                 <hr />
                                                 <table class="table table-hover d-none">
@@ -855,7 +836,13 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-
+                                                <div class="col-md-12">
+                                                        <h6>Job Account Number</h6>
+                                                        <input type="text" class="form-control" name="">
+                                                    </div>
+                                                <div class="col-md-12">
+                                                    <hr>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
@@ -896,7 +883,9 @@
                                                     <div class="col-md-12">
                                                         <h6>Description of Job</h6>
                                                         <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                                                        <hr/>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <hr>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1144,6 +1133,40 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h6>Billing Method</h6>
+                                                        <select class="form-select">
+                                                            <option value hidden>Select Billing Method</option>
+                                                            <option value="CC">Credit Card</option>
+                                                            <option value="DC">Debit Card</option>
+                                                            <option value="CHECK">Check</option>
+                                                            <option value="CASH">Cash</option>
+                                                            <option selected value="ACH">ACH</option>
+                                                            <option value="VENMO">Venmo</option>
+                                                            <option value="PP">Paypal</option>
+                                                            <option value="SQ">Square</option>
+                                                            <option value="WW">Warranty Work</option>
+                                                            <option value="HOF">Home Owner Financing</option>
+                                                            <option value="eT">e-Transfer</option>
+                                                            <option value="Invoicing">Invoicing</option>
+                                                            <option value="OCCP">Other Credit Card Processor</option>
+                                                            <option value="OPT">Other Payment Type</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h6>Routing Number</h6>
+                                                        <input type="text" class="form-control" name="">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h6>Account Number</h6>
+                                                        <input type="text" class="form-control" name="">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <hr>
+                                                    </div>
+
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">
@@ -1471,10 +1494,10 @@
                                     ?>
                                     <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>" <?php echo $item_qty[0]->total_qty <= 0 ? "disabled" : ""; ?>><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "<span class='badge bg-danger'>Empty</span>"; ?></td>
+                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                         <td><?php echo $item->location_name; ?></td>

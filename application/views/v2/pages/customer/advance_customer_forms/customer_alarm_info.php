@@ -447,6 +447,24 @@
 
             <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
+                    <field-custom-name default="Program and Setup" form="alarm_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="monthly_monitoring" id="monthly_monitoring" value="<?= $alarm_info ? ($alarm_info->monthly_monitoring !=0 ? $alarm_info->monthly_monitoring : '') : '';  ?>"/>
+                </div>
+            </div>
+
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
+                    <field-custom-name default="Equipment Cost" form="alarm_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="equipment_cost_alarm" id="equipment_cost_alarm" value="<?= $alarm_info ? ($alarm_info->equipment_cost !=0 ? $alarm_info->equipment_cost : '') : '';  ?>"/>
+                </div>
+            </div>
+
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
                     <field-custom-name default="Account Cost" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">

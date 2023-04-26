@@ -2132,6 +2132,20 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function save_payment_billing($data)
+    {
+        $vendor = $this->db->insert('acs_billing', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_office($data)
+    {
+        $vendor = $this->db->insert('acs_office', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function save_payment_temp($data)
     {
         $vendor = $this->db->insert('work_order_payments_temp', $data);
@@ -2144,6 +2158,24 @@ class Workorder_model extends MY_Model
         $vendor = $this->db->insert('acs_profile', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
+    }
+
+    public function save_alarm_info($data)
+    {
+
+        $vendor = $this->db->insert('acs_alarm', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function getLast()
+    {
+        $this->db->select('*');
+        $this->db->from('acs_profile');        
+        $this->db->order_by('prof_id', 'DESC');
+        
+        $query = $this->db->get()->row();
+        return $query;
     }
 
     // public function save_contact($data)
