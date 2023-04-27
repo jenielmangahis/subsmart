@@ -432,6 +432,11 @@
                                         <p class="m-0 fw-bold"><?=$report_title?></p>
                                     </div>
                                     <?php endif; ?>
+                                    <?php if(!isset($show_report_period)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0"><?=$report_period?></p>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
@@ -473,8 +478,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(count([]) > 0) : ?>
-                                        <?php foreach([] as $index => $account) : ?>
+                                        <?php if(count($accounts) > 0) : ?>
+                                        <?php foreach($accounts as $index => $account) : ?>
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
                                             <td colspan="23"><i class="bx bx-fw bx-caret-right"></i> <b><?=$account['name']?></b></td>
                                             <td><b><?=$account['debit_total']?></b></td>
@@ -488,7 +493,7 @@
                                             <td><b><?=$account['taxable_amount_total']?></b></td>
                                         </tr>
                                         <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
-                                            <td colspan="28"><b>Beginning Balance</b></td>
+                                            <td colspan="27"><b>Beginning Balance</b></td>
                                             <td><b><?=$account['beginning_balance']?></b></td>
                                             <td></td>
                                             <td></td>

@@ -2066,6 +2066,80 @@ class Reports extends MY_Controller {
                     }
                 }
 
+                $compAccs = $this->chart_of_accounts_model->get_by_company_id(logged('company_id'));
+                $accounts = [];
+                foreach($compAccs as $account)
+                {
+                    // $balance = number_format(floatval($account->balance), 2);
+                    // if(!empty(get('divide-by-100'))) {
+                    //     $balance = number_format(floatval($balance) / 100, 2);
+                    // }
+
+                    // if(!empty(get('without-cents'))) {
+                    //     $balance = number_format(floatval($balance), 0);
+                    // }
+
+                    // if(!empty(get('negative-numbers'))) {
+                    //     switch(get('negative-numbers')) {
+                    //         case '(100)' :
+                    //             if(substr($balance, 0, 1) === '-') {
+                    //                 $balance = str_replace('-', '', $balance);
+                    //                 $balance = '('.$balance.')';
+                    //             }
+                    //         break;
+                    //         case '100-' :
+                    //             if(substr($balance, 0, 1) === '-') {
+                    //                 $balance = str_replace('-', '', $balance);
+                    //                 $balance = $balance.'-';
+                    //             }
+                    //         break;
+                    //     }
+                    // }
+
+                    // if(!empty(get('show-in-red'))) {
+                    //     if(empty(get('negative-numbers'))) {
+                    //         if(substr($balance, 0, 1) === '-') {
+                    //             $balance = '<span class="text-danger">'.$balance.'</span>';
+                    //         }
+                    //     } else {
+                    //         switch(get('negative-numbers')) {
+                    //             case '(100)' :
+                    //                 if(substr($balance, 0, 1) === '(' && substr($balance, -1) === ')') {
+                    //                     $balance = '<span class="text-danger">'.$balance.'</span>';
+                    //                 }
+                    //             break;
+                    //             case '100-' :
+                    //                 if(substr($balance, -1) === '-') {
+                    //                     $balance = '<span class="text-danger">'.$balance.'</span>';
+                    //                 }
+                    //             break;
+                    //         }
+                    //     }
+                    // }
+
+                    $amount = '0.00';
+                    $debit = '0.00';
+                    $credit = '0.00';
+                    $taxAmount = '0.00';
+                    $taxableAmount = '0.00';
+                    $beginningBalance = '0.00';
+                    $transactions = [];
+
+                    $accounts[] = [
+                        'account_id' => $account->id,
+                        'name' => $account->name,
+                        'debit_total' => $debit,
+                        'credit_total' => $credit,
+                        'amount_total' => $amount,
+                        'tax_amount_total' => $taxAmount,
+                        'taxable_amount_total' => $taxableAmount,
+                        'beginning_balance' => $beginningBalance,
+                        'transactions' => $transactions
+                    ];
+                }
+
+                $this->page_data['accounts'] = $accounts;
+
                 if(!empty(get('accounting-method'))) {
                     $this->page_data['accounting_method'] = get('accounting-method');
                 }

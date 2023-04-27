@@ -115,7 +115,7 @@
         </tbody>
     </table>
 </div>
-<div class="modal-footer position-absolute w-100 bottom-0">
+<div class="modal-footer position-fixed w-100 bottom-0 bg-white">
     <div class="btn-group dropup float-end" role="group">
         <button type="button" class="nsm-button success" id="save-and-close">
             Save and close
