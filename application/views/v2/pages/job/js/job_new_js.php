@@ -277,7 +277,7 @@ $("#attachment-file").change(function() {
             $("#ITEMLIST_PRODUCT_"+idd).hide();
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
-                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='0' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0' max='"+qty+"'></td>" +
+                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='0' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
                 "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
@@ -903,7 +903,7 @@ $("#attachment-file").change(function() {
                 // =====
                 let result = JSON.parse(data);
                 let customerAccountNumber = (result.monitor_id) ? result.monitor_id : "" ;
-                let customerBusinessName = (result.business_name) ? result.business_name : "" ;
+                let customerBusinessName = (result.ACS_PROFILE_BUSINESS_NAME) ? result.ACS_PROFILE_BUSINESS_NAME : "" ;
                 let customerPassword = (result.access_password) ? result.access_password : "" ;
                 let customerAddress = (result.mail_add) ? result.mail_add + ", " + result.zip_code : result.cross_street + ", " + result.zip_code ;
                 let customerPhoneNumber = (result.phone_h) ? result.phone_h : result.phone_m ;

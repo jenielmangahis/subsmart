@@ -362,7 +362,7 @@
                                     <tr>
                                         <th data-name="Datetime">Date</th>
                                         <th data-name="Item" class="d-none">Search ID</th>
-                                        <th data-name="Name Transaction">Name Transaction</th>
+                                        <th data-name="Name Transaction">Name</th>
                                         <th data-name="Location">Location</th>
                                         <th data-name="Transaction">Transaction</th>
                                         <th data-name="Running Quantity">Running Quantity</th>
@@ -370,7 +370,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($items_transaction_history as $history) { ?>
-                                    <tr style="margin-left: 10px;">
+                                    <tr>
                                         <td><?php echo date_format(date_create($history->datetime), "m/d/Y"); ?></td>
                                         <td class="d-none"><?php echo $history->search_id; ?></td>
                                         <td><?php echo $history->name_transaction; ?></td>

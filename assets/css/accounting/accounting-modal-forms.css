@@ -316,3 +316,59 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     cursor: move;
     background-position: 0 -606px;
 }
+
+#item-modal .modal-dialog {
+    width: 25% !important;
+}
+
+@media (max-width: 767px) {
+    #item-modal .modal-dialog {
+        width: 100% !important;
+    }
+
+    #item-modal #types-table tbody tr td div.row {
+        height: 200px !important;
+    }
+
+    #item-modal #types-table .type-icon {
+        width: 18% !important;
+        margin: auto;
+    }
+
+    #item-modal #types-table .type-description {
+        text-align: center;
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    #item-modal .modal-dialog {
+        width: 60% !important;
+    }
+}
+
+@media (min-width: 992px) {
+    #item-modal .modal-dialog {
+        width: 50% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    #item-modal .modal-dialog {
+        width: 40% !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    #item-modal .modal-dialog {
+        width: 25% !important;
+    }
+
+    #item-modal #types-table .type-icon {
+        height: 100%;
+        background-position: center;
+        border-radius: 100%;
+        background-repeat: no-repeat;
+        background-color: #0077c5;
+    }
+}

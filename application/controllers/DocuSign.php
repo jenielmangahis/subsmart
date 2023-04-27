@@ -13,15 +13,22 @@ class DocuSign extends MYF_Controller
 
     public function signing()
     {
-        $this->load->view('esign/docusign/signing', $this->page_data);
+        $genPDF = $this->input->get('file');
+        
+        if($genPDF == "geratedpdf") {
+            $this->load->view('esign/docusign/geratedpdf', $this->page_data);
+        } else {
+            $this->load->view('esign/docusign/signing', $this->page_data);
+        }
     }
+    
 
     public function apiSigning()
     {
         $decrypted = decrypt($this->input->get('hash', true), $this->password);
         $decrypted = json_decode($decrypted, true);
         
-        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'prof_id' => $prof_id] = $decrypted;
+        ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
 
         $this->db->where('id', $recipientId);
@@ -206,7 +213,9 @@ class DocuSign extends MYF_Controller
             $jobData = $job;
             $jobData->equipment_cost = $job->amount;
         }
-
+        
+        #changes starts here
+        $prof_id = $jobData->customer_id;
         #Clients
         $this->db->where('prof_id', $prof_id);
         $client = $this->db->get('acs_profile')->row();
@@ -276,6 +285,20 @@ class DocuSign extends MYF_Controller
         );
         
         $autoPopulateData['cost_due'] = $_cost;
+
+        // $esign = $this->db->get_where('user_docfile_esign', array('hash' => $this->input->get('hash', true)));
+        // $inDatabase = $esign->num_rows();
+
+        // if ($inDatabase == 0)
+        // {
+        //     $this->db->insert('user_docfile_esign', array(
+        //         'customerId' => $prof_id,
+        //         'hash' => $this->input->get('hash', true),
+        //         'jobId' => $jobId,
+        //         'name' => $document->name
+        //     ));
+        // }
+        
 
         #end of changes
 
@@ -1462,7 +1485,7 @@ SQL;
                 'name' => $file->name,
                 'path' => str_replace(FCPATH, '/', $documentPath),
                 'docfile_id' => $docfileId,
-                'template_id' => $file->id,
+                'template_id' => $file->id
             ]);
         }
 

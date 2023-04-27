@@ -19,6 +19,21 @@
     <!-- <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script> -->
 <?php endif; ?>
 <style>
+    .CC_INPUTS,
+    .DC_INPUTS,
+    .CHECK_INPUTS,
+    .ACH_INPUTS,
+    .VENMO_INPUTS,
+    .PP_INPUTS,
+    .SQ_INPUTS,
+    .WW_INPUTS,
+    .HOF_INPUTS,
+    .ET_INPUTS,
+    .INV_INPUTS,
+    .OCCP_INPUTS,
+    .OPT_INPUTS {
+        display: none;
+    }
     /*.nsm-table {
         display: none;
     }*/
@@ -767,9 +782,12 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
+                                                    <!-- <tr>
                                                         <td id="cust_fullname">xxxxx xxxxx</td>
                                                         <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
+                                                    </tr> -->
+                                                    <tr>
+                                                        <td id="cust_business"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>
@@ -785,9 +803,6 @@
                                                     <tr>
                                                         <td id="cust_email">xxxxx@xxxxx.xxx</td>
                                                         <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="cust_business"></td>
                                                     </tr>
                                                    <!--  <tr>
                                                         <td id="cust_jobaccountnumber">JOB-0000077</td>
@@ -838,7 +853,7 @@
                                                 </table>
                                                 <div class="col-md-12">
                                                         <h6>Job Account Number</h6>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
                                                     </div>
                                                 <div class="col-md-12">
                                                     <hr>
@@ -1135,38 +1150,185 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <h6>Billing Method</h6>
-                                                        <select class="form-select">
+                                                        <select class="form-select" name="BILLING_METHOD">
                                                             <option value hidden>Select Billing Method</option>
                                                             <option value="CC">Credit Card</option>
                                                             <option value="DC">Debit Card</option>
                                                             <option value="CHECK">Check</option>
                                                             <option value="CASH">Cash</option>
-                                                            <option selected value="ACH">ACH</option>
+                                                            <option value="ACH">ACH</option>
                                                             <option value="VENMO">Venmo</option>
                                                             <option value="PP">Paypal</option>
                                                             <option value="SQ">Square</option>
                                                             <option value="WW">Warranty Work</option>
                                                             <option value="HOF">Home Owner Financing</option>
-                                                            <option value="eT">e-Transfer</option>
-                                                            <option value="Invoicing">Invoicing</option>
+                                                            <option value="ET">e-Transfer</option>
+                                                            <option value="INV">Invoicing</option>
                                                             <option value="OCCP">Other Credit Card Processor</option>
                                                             <option value="OPT">Other Payment Type</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Credit Card Number</h6>
+                                                        <input value="<?php echo ($jobs_data->CC_CREDITCARDNUMBER) ? $jobs_data->CC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="CC_CREDITCARDNUMBER">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Expiration</h6>
+                                                        <input value="<?php echo ($jobs_data->CC_EXPIRATION) ? $jobs_data->CC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="CC_EXPIRATION">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>CVC</h6>
+                                                        <input value="<?php echo ($jobs_data->CC_CVC) ? $jobs_data->CC_CVC : ""; ?>" type="text" class="form-control" name="CC_CVC">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Credit Card Number</h6>
+                                                        <input value="<?php echo ($jobs_data->DC_CREDITCARDNUMBER) ? $jobs_data->DC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="DC_CREDITCARDNUMBER">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Expiration</h6>
+                                                        <input value="<?php echo ($jobs_data->DC_EXPIRATION) ? $jobs_data->DC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="DC_EXPIRATION">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>CVC</h6>
+                                                        <input value="<?php echo ($jobs_data->DC_CVC) ? $jobs_data->DC_CVC : ""; ?>" type="text" class="form-control" name="DC_CVC">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Check Number</h6>
+                                                        <input value="<?php echo ($jobs_data->CHECK_CHECKNUMBER) ? $jobs_data->CHECK_CHECKNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_CHECKNUMBER">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Routing Number</h6>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input value="<?php echo ($jobs_data->CHECK_ROUTINGNUMBER) ? $jobs_data->CHECK_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_ROUTINGNUMBER">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-12 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Number</h6>
-                                                        <input type="text" class="form-control" name="">
+                                                        <input value="<?php echo ($jobs_data->CHECK_ACCOUNTNUMBER) ? $jobs_data->CHECK_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_ACCOUNTNUMBER">
                                                     </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Routing Number</h6>
+                                                        <input value="<?php echo ($jobs_data->ACH_ROUTINGNUMBER) ? $jobs_data->ACH_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" name="ACH_ROUTINGNUMBER">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Number</h6>
+                                                        <input value="<?php echo ($jobs_data->ACH_ACCOUNTNUMBER) ? $jobs_data->ACH_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" name="ACH_ACCOUNTNUMBER">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->VENMO_ACCOUNTCREDENTIAL) ? $jobs_data->VENMO_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->VENMO_ACCOUNTNOTE) ? $jobs_data->VENMO_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTNOTE">
+                                                    </div>
+                                                    <div class="col-md-12 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Confirmation</h6>
+                                                        <input value="<?php echo ($jobs_data->VENMO_CONFIRMATION) ? $jobs_data->VENMO_CONFIRMATION : ""; ?>" type="text" class="form-control" name="VENMO_CONFIRMATION">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->PP_ACCOUNTCREDENTIAL) ? $jobs_data->PP_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->PP_ACCOUNTNOTE) ? $jobs_data->PP_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTNOTE">
+                                                    </div>
+                                                    <div class="col-md-12 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Confirmation</h6>
+                                                        <input value="<?php echo ($jobs_data->PP_CONFIRMATION) ? $jobs_data->PP_CONFIRMATION : ""; ?>" type="text" class="form-control" name="PP_CONFIRMATION">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->SQ_ACCOUNTCREDENTIAL) ? $jobs_data->SQ_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->SQ_ACCOUNTNOTE) ? $jobs_data->SQ_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTNOTE">
+                                                    </div>
+                                                    <div class="col-md-12 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Confirmation</h6>
+                                                        <input value="<?php echo ($jobs_data->SQ_CONFIRMATION) ? $jobs_data->SQ_CONFIRMATION : ""; ?>" type="text" class="form-control" name="SQ_CONFIRMATION">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->WW_ACCOUNTCREDENTIAL) ? $jobs_data->WW_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->WW_ACCOUNTNOTE) ? $jobs_data->WW_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTNOTE">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->HOF_ACCOUNTCREDENTIAL) ? $jobs_data->HOF_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->HOF_ACCOUNTNOTE) ? $jobs_data->HOF_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTNOTE">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->ET_ACCOUNTCREDENTIAL) ? $jobs_data->ET_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->ET_ACCOUNTNOTE) ? $jobs_data->ET_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTNOTE">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Term</h6>
+                                                        <select class="form-select" name="INV_TERM">
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Due On Receipt") ? "selected" : ""; ?> value="Due On Receipt">Due On Receipt</option>
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 5") ? "selected" : ""; ?> value="Net 5">Net 5</option>
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 10") ? "selected" : ""; ?> value="Net 10">Net 10</option>
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 15") ? "selected" : ""; ?> value="Net 15">Net 15</option>
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 30") ? "selected" : ""; ?> value="Net 30">Net 30</option>
+                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 60") ? "selected" : ""; ?> value="Net 60">Net 60</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Invoice Date</h6>
+                                                        <input value="<?php echo ($jobs_data->INV_INVOICEDATE) ? $jobs_data->INV_INVOICEDATE : ""; ?>" type="date" class="form-control" name="INV_INVOICEDATE">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Due Date</h6>
+                                                        <input value="<?php echo ($jobs_data->INV_DUEDATE) ? $jobs_data->INV_DUEDATE : ""; ?>" type="date" class="form-control" name="INV_DUEDATE">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Credit Card Number</h6>
+                                                        <input value="<?php echo ($jobs_data->OCCP_CREDITCARDNUMBER) ? $jobs_data->OCCP_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="OCCP_CREDITCARDNUMBER">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Expiration</h6>
+                                                        <input value="<?php echo ($jobs_data->OCCP_EXPIRATION) ? $jobs_data->OCCP_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="OCCP_EXPIRATION">
+                                                    </div>
+                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>CVC</h6>
+                                                        <input value="<?php echo ($jobs_data->OCCP_CVC) ? $jobs_data->OCCP_CVC : ""; ?>" type="text" class="form-control" name="OCCP_CVC">
+                                                    </div>
+                                                    <!-- ======= -->
+                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Credential</h6>
+                                                        <input value="<?php echo ($jobs_data->OPT_ACCOUNTCREDENTIAL) ? $jobs_data->OPT_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTCREDENTIAL">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
+                                                        <h6>Account Note</h6>
+                                                        <input value="<?php echo ($jobs_data->OPT_ACCOUNTNOTE) ? $jobs_data->OPT_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
+                                                    </div>
+
                                                     <div class="col-md-12">
                                                         <hr>
                                                     </div>
-
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">
@@ -1833,6 +1995,28 @@ add_footer_js(array(
 
 
 <script>
+$(document).ready(function() {
+    $('select[name="BILLING_METHOD"]').val("<?php echo $jobs_data->BILLING_METHOD ?>").change();
+});
+
+$('select[name="BILLING_METHOD"]').change(function(event) {
+    let optionValue = $(this).val();
+    if (optionValue == "CC") { $(".HIDE_ALL_INPUTS").hide(); $(".CC_INPUTS").fadeIn('fast'); }
+    if (optionValue == "DC") { $(".HIDE_ALL_INPUTS").hide(); $(".DC_INPUTS").fadeIn('fast'); }
+    if (optionValue == "CHECK") { $(".HIDE_ALL_INPUTS").hide(); $(".CHECK_INPUTS").fadeIn('fast'); }
+    if (optionValue == "CASH") { $(".HIDE_ALL_INPUTS").hide(); $(".CASH_INPUTS").fadeIn('fast'); }
+    if (optionValue == "ACH") { $(".HIDE_ALL_INPUTS").hide(); $(".ACH_INPUTS").fadeIn('fast'); }
+    if (optionValue == "VENMO") { $(".HIDE_ALL_INPUTS").hide(); $(".VENMO_INPUTS").fadeIn('fast'); }
+    if (optionValue == "PP") { $(".HIDE_ALL_INPUTS").hide(); $(".PP_INPUTS").fadeIn('fast'); }
+    if (optionValue == "SQ") { $(".HIDE_ALL_INPUTS").hide(); $(".SQ_INPUTS").fadeIn('fast'); }
+    if (optionValue == "WW") { $(".HIDE_ALL_INPUTS").hide(); $(".WW_INPUTS").fadeIn('fast'); }
+    if (optionValue == "HOF") { $(".HIDE_ALL_INPUTS").hide(); $(".HOF_INPUTS").fadeIn('fast'); }
+    if (optionValue == "ET") { $(".HIDE_ALL_INPUTS").hide(); $(".ET_INPUTS").fadeIn('fast'); }
+    if (optionValue == "INV") { $(".HIDE_ALL_INPUTS").hide(); $(".INV_INPUTS").fadeIn('fast'); }
+    if (optionValue == "OCCP") { $(".HIDE_ALL_INPUTS").hide(); $(".OCCP_INPUTS").fadeIn('fast'); }
+    if (optionValue == "OPT") { $(".HIDE_ALL_INPUTS").hide(); $(".OPT_INPUTS").fadeIn('fast'); }
+});
+
 CKEDITOR.replace( 'Message_Editor', {
     toolbarGroups: [
         { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
