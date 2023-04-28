@@ -12,7 +12,6 @@
       <ul>
         <li class="tabitem">
           <a class="nsm-page-link" href="<?=base_url('esign_v2/Files')?>">
-          <!-- <a class="nsm-page-link" href="#" id="send-envelope"> -->
             <span>Send envelope</span>
           </a>
         </li>
@@ -50,12 +49,6 @@
         <li class="tabitem">
           <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=action_required')?>">
             <span>Action Required</span>
-          </a>
-        </li>
-
-        <li class="tabitem">
-          <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=completed')?>">
-            <span>Completed</span>
           </a>
         </li>
 
@@ -249,29 +242,6 @@
             <div class="modal-body d-flex flex-column"></div>
         </div>
     </div>
-</div>
-
-<!-- send envelope -->
-<div class="modal nsm-modal fade" id="sendEnvelope" tabindex="-1" role="dialog" aria-labelledby="sendEnvelopeLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document" style="max-width: 802px;">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="sendEnvelopeLabel">Add Documents to the Envelope</h5>
-			<button type="button" data-bs-dismiss="modal" aria-label="Close">
-        <i class="bx bx-fw bx-x m-0"></i>
-      </button>
-		</div>
-		<div class="modal-body">
-      <?php
-        // $this->load->view('esign_v2/Files');
-        // $this->load->view('v2/pages/esign/files');
-        $CI =& get_instance();
-        // $CI =& get_instance()->Esign_v2;
-        $CI->Files() ;
-      ?>
-		</div>
-		</div>
-	</div>
 </div>
 
 <style>

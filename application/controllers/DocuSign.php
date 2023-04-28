@@ -404,7 +404,7 @@ class DocuSign extends MYF_Controller
                 if ($isMoreThan24Hours) {
                     $this->db->where('id', $document->id);
                     $this->db->update('user_docfile', ['status' => 'Deleted']);
-                    // continue;
+                    continue;
                 }
             }
 
@@ -464,7 +464,7 @@ class DocuSign extends MYF_Controller
     private function getManageData($view)
     {
         $view = strtolower($view);
-       
+
         if ($view === 'action_required') {
             return $this->getActionRequired();
         }
@@ -501,7 +501,6 @@ class DocuSign extends MYF_Controller
 
             default:
                 $this->db->where('status !=', 'Deleted');
-                break;
         }
 
         return $this->db->get('user_docfile')->result();
@@ -908,7 +907,7 @@ class DocuSign extends MYF_Controller
             'assets/js/esign/docusign/template-create.js',
         ]);
 
-        $this->load->view('v2/pages/esign/docusign/template-create/index', $this->page_data);
+        $this->load->view('esign/docusign/template-create/index', $this->page_data);
     }
 
     public function apiStoreTemplate()
@@ -2329,8 +2328,11 @@ SQL;
             return [];
         }
 
+<<<<<<< HEAD
+=======
         $this->db->where('status <>', 'Trashed');
         $this->db->where('status <>', 'Deleted');
+>>>>>>> staging-master
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();

@@ -615,10 +615,6 @@ span.sc-item {
                                         <td style="text-align: ;">Expiry Date:</td>
                                         <td style="text-align: right;"><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
                                       </tr>
-                                      <tr>
-                                        <td style="text-align: ;">Business Name:</td>
-                                        <td style="text-align: right;"><?= $customer->business_name; ?></td>
-                                      </tr>
                                     </table>
                               </div>
                             </div>

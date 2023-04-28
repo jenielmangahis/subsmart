@@ -115,10 +115,64 @@ class GoogleCalendarApi
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($curlPost));	
 		$data = json_decode(curl_exec($ch), true);
 		$http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);		
-		if($http_code != 200) 
-			throw new Exception('Error : Failed to create event');
 
-		return $data['id'];
+		if($http_code != 200){
+			$gevent_id = '';
+		}else{
+			$gevent_id = $data['id'];
+		}
+
+		return $gevent_id;
+	}
+
+	public function updateCalendarEvent($event_id, $calendar_id, $summary, $all_day, $event_time, $event_timezone, $attendees, $location, $reminders, $description, $access_token) {		
+		$url_events = 'https://www.googleapis.com/calendar/v3/calendars/' . $calendar_id . '/events/' . $event_id;
+
+		$curlPost = array('summary' => $summary);
+		if( !empty($attendees) ){
+			$curlPost['attendees'] = $attendees;				
+		}
+
+		if( $location != '' ){
+			$curlPost['location'] = $location;
+		}
+
+		if( $description != '' ){
+			$curlPost['description'] = $description;	
+		}
+
+		if( !empty($reminders) ){
+			$curlPost['reminders'] = $reminders;
+		}
+
+		if($all_day == 'FIXED-DATE') {
+			$curlPost['start'] = array('date' => $event_time['start_date']);
+			$curlPost['end'] = array('date' => $event_time['end_date']);			
+		}
+		else {
+			$curlPost['start'] = array('dateTime' => $event_time['start_time'], 'timeZone' => $event_timezone);
+			$curlPost['end'] = array('dateTime' => $event_time['end_time'], 'timeZone' => $event_timezone);
+		}
+
+		//$curlPost['colorId'] = 2;
+
+		$ch = curl_init();		
+		curl_setopt($ch, CURLOPT_URL, $url_events);		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);					
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');				
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '. $access_token, 'Content-Type: application/json'));	
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($curlPost));	
+		$data = json_decode(curl_exec($ch), true);
+		$http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);	
+
+		if($http_code != 200){
+			$gevent_id = '';
+		}else{
+			$gevent_id = $data['id'];
+		}
+
+		return $gevent_id;
 	}
 
 	public function createCalendar($api_key, $access_token, $calendar_name) {

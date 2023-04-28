@@ -57,7 +57,6 @@ class Clients_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
-
     
     public function getCompanyCompanyId($id)
     {

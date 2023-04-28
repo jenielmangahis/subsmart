@@ -5,7 +5,7 @@ include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
 <!-- Script for autosaving form -->
-<!-- <script src="<?= base_url("assets/js/estimate/autosave-bundle.js") ?>"></script> -->
+<script src="<?= base_url("assets/js/estimate/autosave-bundle.js") ?>"></script>
 
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
@@ -371,12 +371,6 @@ echo put_header_assets();
                                 <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
                             </div>
                         </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Business Name</b> (optional)</label>
-                                    <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
-                                </div>
-                            </div>
                         <hr>
                         <div class="row mb-3" style="background-color:white;">
                             <div class="col-md-3">
@@ -1274,7 +1268,6 @@ echo put_header_assets();
                     $("#customer_email").val(response['customer'].email);
                     $("#shipping_address").val(response['customer'].mail_add);
                     $("#billing_address").val(response['customer'].mail_add);
-                    $('#business_name').val(response['customer'].business_name);
 
                     if (response.customer.email) {
                         $("#estimate-customer-email").val(response.customer.email);

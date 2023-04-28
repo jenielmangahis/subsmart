@@ -401,12 +401,6 @@ echo put_header_assets();
                                     <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Business Name</b> (optional)</label>
-                                    <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
-                                </div>
-                            </div>
                             <hr>
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-3">
@@ -1110,7 +1104,6 @@ echo put_header_assets();
                     }
 
                     $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
-                    $('#business_name').val(response['customer'].business_name);
 
                 },
                 error: function(response) {

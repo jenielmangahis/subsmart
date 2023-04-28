@@ -29,8 +29,10 @@
 </style>
 
 <div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/customer'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
             </div>
@@ -42,7 +44,7 @@
                             <div class="row margin-bottom-ter align-items-center">
                                 <!-- Nav tabs -->
                                 <div class="col-auto">
-                                    <h2 class="page-title" style="display:inline-block;">Credit Industry</h2>
+                                    <h2 class="page-title" style="display:inline-block;">Credit Industry </h2>
                                     <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
                                 </div>
                                 <div class="col-auto">
@@ -63,6 +65,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
+                                    <div class="banking-tab-container mb-5">
+                                        <div class="rb-01">
+                                            <?php include_once('cus_module_tabs.php'); ?>
+                                        </div>
+                                    </div>
                                     <div class="tab-content mt-4" >
                                         <table class="table table-hover" id="messagesListTable">
                                             <thead>
@@ -184,6 +191,7 @@
     </div>
 </div>
 <!-- page wrapper end -->
+<?php include viewPath('includes/footer'); ?>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
 <?php include viewPath('customer/adv_cust/js_list'); ?>
 <script>

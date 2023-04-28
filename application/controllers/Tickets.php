@@ -1103,8 +1103,6 @@ class Tickets extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
 
-        $this->page_data['cus_id'] = $id;
-        
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/customer_tickets', $this->page_data);
     }

@@ -337,7 +337,7 @@
                                         </div>
                                         <div class="row grid-mb">
                                             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Location</b> <span class='mapping-line'>-----------------</span>
+                                                <b >Quantity On Hand</b> <span class='mapping-line'>-----------------</span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector8" onclick="test()">
@@ -347,20 +347,10 @@
                                         </div>
                                         <div class="row grid-mb">
                                             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Quantity On Hand</b> <span class='mapping-line'>-----------------</span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
                                                 <b >Reorder Point</b> <span class='mapping-line'>-----------------</span>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector10" onclick="test()">
+                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
                                                     <option value="">Select Heading</option>
                                                 </select>
                                             </div>

@@ -1353,10 +1353,7 @@ class Customer extends MY_Controller
         $this->page_data['cus_id']     = $cid;
         $this->page_data['customer']   = $customer;
 
-        $this->page_data['page']->title = 'Credit Industry';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->load->view('v2/pages/customer/credit_industry', $this->page_data);
+        $this->load->view('customer/credit_industry', $this->page_data);
     }
 
     public function add_new_dispute_item($cid)
@@ -1382,10 +1379,7 @@ class Customer extends MY_Controller
         $this->page_data['furnishers'] = $furnishers;
         $this->page_data['reasons'] = $reasons;
 
-        $this->page_data['page']->title = 'Credit Industry';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->load->view('v2/pages/customer/add_new_dispute_item', $this->page_data);
+        $this->load->view('customer/add_new_dispute_item', $this->page_data);
     }
 
     public function ajax_load_company_reason_list()

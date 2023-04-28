@@ -324,11 +324,6 @@
                                 </div>
 
                                 <div class="row <?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
-                                    <?php if(isset($show_logo)) : ?>
-                                    <!-- <div class="position-absolute">
-                                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px"/>
-                                    </div> -->
-                                    <?php endif; ?>
                                     <?php if(!isset($show_company_name)) : ?>
                                     <div class="col-12 grid-mb">
                                         <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>

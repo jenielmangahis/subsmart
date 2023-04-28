@@ -69,7 +69,7 @@
         new Chart(estimates, {
           type: 'pie',
           data: {
-            labels: ['Draft (<?= $draft_percent; ?>)', 'Accepted (<?= $accepted_percent; ?>)', 'Invoiced (<?= $invoiced_percent; ?>)', 'Other (<?= $other_percent; ?>)'],
+            labels: ['Draft', 'Accepted', 'Invoiced', 'Other'],
             datasets: [{
               label: 'Estimates',
               data: [

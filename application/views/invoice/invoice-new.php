@@ -117,21 +117,6 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
                         <table style="border-collapse: collapse;">
                             <tr>
                                 <td colspan="2" style="border: 1px solid; text-align: center;">
-                                    <div><b>Business Name</b></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="border: 1px solid; text-align: center; padding: ;">
-                                    <?php //if(empty($customer->business_name)){ echo 'NA';}else{ echo $customer->business_name; }  
-                                    if(empty($customer->business_name)){ echo 'NA';}else{ echo $customer->business_name; } 
-                                    ?>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <table style="border-collapse: collapse;">
-                            <tr>
-                                <td colspan="2" style="border: 1px solid; text-align: center;">
                                     <div><b>INVOICE NUMBER</b></div>
                                 </td>
                             </tr>

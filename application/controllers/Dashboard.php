@@ -149,6 +149,7 @@ class Dashboard extends Widgets {
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
+            'assets/textEditor/summernote-bs4.js',
             'assets/js/quick_launch.js',
         ));
 

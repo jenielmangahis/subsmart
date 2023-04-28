@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>');">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
             </a>
@@ -36,7 +36,7 @@
                 <span>Tag Pending Report</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Credit Industry'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/credit_industry/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-credit-card'></i>
                 <span>Credit Industry</span>
@@ -66,7 +66,7 @@
                 <span>eSign</span>
             </a>
         </li>
-        <!-- Do not remove the last li --> 
+        <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>
 </div>
@@ -116,6 +116,6 @@
 
         const templateId = json.data.template_id;
         const customerId = $esignLink.dataset.customerId;
-        // $esignLink.setAttribute("href", `${prefixURL}/eSign/templatePrepare?id=${templateId}&customer_id=${customerId}`); 
+        $esignLink.setAttribute("href", `${prefixURL}/eSign/templatePrepare?id=${templateId}&customer_id=${customerId}`); 
     })()
 </script>

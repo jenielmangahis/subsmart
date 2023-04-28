@@ -145,7 +145,7 @@ class DocuSign_v2 extends MYF_Controller
     }
 
     public function manage()
-    {   
+    {
         $this->checkLogin();
 
         add_css([
@@ -1822,75 +1822,6 @@ SQL;
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
     }
-
-    // send envelope
-    public function Files()
-    {
-
-        $this->load->model('User_docflies_model', 'User_docflies_model');
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['file_id'] = $this->input->get('id');
-
-        $queries = array();
-        parse_str($_SERVER['QUERY_STRING'], $queries);
-        $isTemplate = array_key_exists('template_id', $queries);
-        $isSelfSigning = array_key_exists('signing_id', $queries);
-
-        $this->page_data['is_self_signing'] = false;
-        if ($isSelfSigning) {
-            $this->page_data['file_id'] = $queries['signing_id'];
-            $this->page_data['is_self_signing'] = true;
-        }
-
-        $this->page_data['file_url'] = "";
-        if ($this->page_data['file_id'] > 0) {
-            $query = $this->db->from('user_docfile')->where('id', $this->page_data['file_id'])->get();
-            $this->page_data['file_url'] = $query->row()->name;
-        }
-        $this->page_data['next_step'] = ($this->input->get('next_step') == '') ? 0 : $this->input->get('next_step');
-
-        $recipients = [];
-        if ($isTemplate) { // :( this shouldn't be here
-            $this->db->where('template_id', $queries['template_id']);
-            $recipients = $this->db->get('user_docfile_templates_recipients')->result_array();
-        } else if (!$isSelfSigning) {
-            $queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id', $this->page_data['file_id'])->get();
-            $recipients = $queryRecipients->result_array();
-        }
-
-        $recipients = array_map(function ($recipient, $index) {
-            $index += 1;
-            if (empty($recipient['name'])) { // doesnt have name
-                $recipient['name'] = $recipient['role_name'];
-            }
-
-            return $recipient;
-        }, $recipients, array_keys($recipients));
-        $this->page_data['recipients'] = $recipients;
-
-        add_css([
-            'assets/css/esign/esign-builder/esign-builder.css',
-            'assets/css/esign/docusign/docusign.css',
-            'assets/css/esign/docusign/template-create/template-create.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
-            'assets/js/esign/docusign/input.autoresize.js',
-            'assets/js/esign/v2/step1.js',
-            'assets/js/esign/v2/step2.js',
-            'assets/js/esign/v2/step3.js',
-
-            // 'assets/js/v2/bootstrap.bundle.min.js',
-            // 'assets/js/v2/main.js',
-        ]);
-        $this->page_data['page']->title = 'Add Documents to the Envelope';
-        $this->load->view('v2/pages/esign/files2', $this->page_data);
-    }
-
 }
 
 // https://stackoverflow.com/a/50373095/8062659
