@@ -2185,10 +2185,10 @@ class Job extends MY_Controller
                 'BILLING_METHOD' => $input['BILLING_METHOD'],
                 'CC_CREDITCARDNUMBER' => $input['CC_CREDITCARDNUMBER'],
                 'CC_EXPIRATION' => $input['CC_EXPIRATION'],
-                'CC_CVC' => $input['CC_CVC'],
+                'CC_CVV' => $input['CC_CVV'],
                 'DC_CREDITCARDNUMBER' => $input['DC_CREDITCARDNUMBER'],
                 'DC_EXPIRATION' => $input['DC_EXPIRATION'],
-                'DC_CVC' => $input['DC_CVC'],
+                'DC_CVV' => $input['DC_CVV'],
                 'CHECK_CHECKNUMBER' => $input['CHECK_CHECKNUMBER'],
                 'CHECK_ROUTINGNUMBER' => $input['CHECK_ROUTINGNUMBER'],
                 'CHECK_ACCOUNTNUMBER' => $input['CHECK_ACCOUNTNUMBER'],
@@ -2208,7 +2208,15 @@ class Job extends MY_Controller
                 'HOF_ACCOUNTCREDENTIAL' => $input['HOF_ACCOUNTCREDENTIAL'],
                 'HOF_ACCOUNTNOTE' => $input['HOF_ACCOUNTNOTE'],
                 'ET_ACCOUNTCREDENTIAL' => $input['ET_ACCOUNTCREDENTIAL'],
-                'ET_ACCOUNTNOTE' => $input['ET_ACCOUNTNOTE']
+                'ET_ACCOUNTNOTE' => $input['ET_ACCOUNTNOTE'],
+                'INV_TERM' => $input['INV_TERM'],
+                'INV_INVOICEDATE' => $input['INV_INVOICEDATE'],
+                'INV_DUEDATE' => $input['INV_DUEDATE'],
+                'OCCP_CREDITCARDNUMBER' => $input['OCCP_CREDITCARDNUMBER'],
+                'OCCP_EXPIRATION' => $input['OCCP_EXPIRATION'],
+                'OCCP_CVV' => $input['OCCP_CVV'],
+                'OPT_ACCOUNTCREDENTIAL' => $input['OPT_ACCOUNTCREDENTIAL'],
+                'OPT_ACCOUNTNOTE' => $input['OPT_ACCOUNTNOTE']
             );
 
             if (!empty($input['customer_message'])) {

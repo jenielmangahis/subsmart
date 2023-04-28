@@ -25,7 +25,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+            <a class="nsm-page-link" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#NEW_ESTIMATE_MODAL">
                 <i class='bx bx-fw bx-chart'></i>
                 <span>Estimates</span>
             </a>
@@ -70,6 +70,41 @@
         <li><label></label></li>
     </ul>
 </div>
+
+<div class="modal" id="NEW_ESTIMATE_MODAL" data-bs-backdrop="static" role="dialog">
+    <div id="NEW_ESTIMATE_MODAL_DIALOG" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="NEW_ESTIMATE_MODAL_TITLE" style="font-size: 17px;">New Estimate</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body" id="NEW_ESTIMATE_MODAL_BODY">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <center>
+                            <label>Create a regular estimate with items</label>
+                            <button type="button" class="nsm-button primary w-50 ESTIMATE_BUTTON" onclick="window.open('<?php echo base_url('estimate/add?customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Standard Estimate</button>
+                        </center>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <center>
+                            <label>Customers can select all or only certain options</label>
+                            <button type="button" class="nsm-button primary w-50 ESTIMATE_BUTTON" onclick="window.open('<?php echo base_url('estimate/addoptions?type=2&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Options Estimate</button>
+                        </center>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <center>
+                            <label>Customers can select both Bundle Packages to obtain an overall discount</label>
+                            <button type="button" class="nsm-button primary w-50 ESTIMATE_BUTTON" onclick="window.open('<?php echo base_url('estimate/addbundle?type=3&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Bundle Estimate</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     (async () => {
         const $esignLink = document.getElementById("esignlink");

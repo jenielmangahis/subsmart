@@ -1172,50 +1172,50 @@
                                                     </div>
                                                     <div class="col-md-4 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_CREDITCARDNUMBER) ? $jobs_data->CC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="CC_CREDITCARDNUMBER">
+                                                        <input value="<?php echo ($jobs_data->CC_CREDITCARDNUMBER) ? $jobs_data->CC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="CC_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_EXPIRATION) ? $jobs_data->CC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="CC_EXPIRATION">
+                                                        <input value="<?php echo ($jobs_data->CC_EXPIRATION) ? $jobs_data->CC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="CC_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVC</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_CVC) ? $jobs_data->CC_CVC : ""; ?>" type="text" class="form-control" name="CC_CVC">
+                                                        <h6>CVV</h6>
+                                                        <input value="<?php echo ($jobs_data->CC_CVV) ? $jobs_data->CC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="CC_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_CREDITCARDNUMBER) ? $jobs_data->DC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="DC_CREDITCARDNUMBER">
+                                                        <input value="<?php echo ($jobs_data->DC_CREDITCARDNUMBER) ? $jobs_data->DC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="DC_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_EXPIRATION) ? $jobs_data->DC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="DC_EXPIRATION">
+                                                        <input value="<?php echo ($jobs_data->DC_EXPIRATION) ? $jobs_data->DC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="DC_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVC</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_CVC) ? $jobs_data->DC_CVC : ""; ?>" type="text" class="form-control" name="DC_CVC">
+                                                        <h6>CVV</h6>
+                                                        <input value="<?php echo ($jobs_data->DC_CVV) ? $jobs_data->DC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="DC_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Check Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_CHECKNUMBER) ? $jobs_data->CHECK_CHECKNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_CHECKNUMBER">
+                                                        <input value="<?php echo ($jobs_data->CHECK_CHECKNUMBER) ? $jobs_data->CHECK_CHECKNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXX" name="CHECK_CHECKNUMBER">
                                                     </div>
                                                     <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_ROUTINGNUMBER) ? $jobs_data->CHECK_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_ROUTINGNUMBER">
+                                                        <input value="<?php echo ($jobs_data->CHECK_ROUTINGNUMBER) ? $jobs_data->CHECK_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="CHECK_ROUTINGNUMBER">
                                                     </div>
                                                     <div class="col-md-12 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_ACCOUNTNUMBER) ? $jobs_data->CHECK_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" name="CHECK_ACCOUNTNUMBER">
+                                                        <input value="<?php echo ($jobs_data->CHECK_ACCOUNTNUMBER) ? $jobs_data->CHECK_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="CHECK_ACCOUNTNUMBER">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($jobs_data->ACH_ROUTINGNUMBER) ? $jobs_data->ACH_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" name="ACH_ROUTINGNUMBER">
+                                                        <input value="<?php echo ($jobs_data->ACH_ROUTINGNUMBER) ? $jobs_data->ACH_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="ACH_ROUTINGNUMBER">
                                                     </div>
                                                     <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Number</h6>
-                                                        <input value="<?php echo ($jobs_data->ACH_ACCOUNTNUMBER) ? $jobs_data->ACH_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" name="ACH_ACCOUNTNUMBER">
+                                                        <input value="<?php echo ($jobs_data->ACH_ACCOUNTNUMBER) ? $jobs_data->ACH_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="ACH_ACCOUNTNUMBER">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
@@ -1306,15 +1306,15 @@
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_CREDITCARDNUMBER) ? $jobs_data->OCCP_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" name="OCCP_CREDITCARDNUMBER">
+                                                        <input value="<?php echo ($jobs_data->OCCP_CREDITCARDNUMBER) ? $jobs_data->OCCP_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="OCCP_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_EXPIRATION) ? $jobs_data->OCCP_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YYYY" name="OCCP_EXPIRATION">
+                                                        <input value="<?php echo ($jobs_data->OCCP_EXPIRATION) ? $jobs_data->OCCP_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="OCCP_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVC</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_CVC) ? $jobs_data->OCCP_CVC : ""; ?>" type="text" class="form-control" name="OCCP_CVC">
+                                                        <h6>CVV</h6>
+                                                        <input value="<?php echo ($jobs_data->OCCP_CVV) ? $jobs_data->OCCP_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="OCCP_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
@@ -1325,7 +1325,6 @@
                                                         <h6>Account Note</h6>
                                                         <input value="<?php echo ($jobs_data->OPT_ACCOUNTNOTE) ? $jobs_data->OPT_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
                                                     </div>
-
                                                     <div class="col-md-12">
                                                         <hr>
                                                     </div>
@@ -1995,6 +1994,29 @@ add_footer_js(array(
 
 
 <script>
+$('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);
+});
+
+$('input[name="CC_EXPIRATION"], input[name="DC_EXPIRATION"], input[name="OCCP_EXPIRATION"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '$1/$2').substr(0, 5);
+});
+
+$('input[name="CC_CVV"], input[name="DC_CVV"], input[name="OCCP_CVV"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 3);
+});
+
+$('input[name="CHECK_CHECKNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 6);
+});
+$('input[name="CHECK_ROUTINGNUMBER"], input[name="ACH_ROUTINGNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 9);
+});
+$('input[name="CHECK_ACCOUNTNUMBER"], input[name="ACH_ACCOUNTNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 12);
+});
+
+    
 $(document).ready(function() {
     $('select[name="BILLING_METHOD"]').val("<?php echo $jobs_data->BILLING_METHOD ?>").change();
 });
