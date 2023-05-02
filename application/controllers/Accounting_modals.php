@@ -12349,6 +12349,17 @@ class Accounting_modals extends MY_Controller
 
             $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
 
+            $accTransacData = [
+                'account_id' => $adjustmentAcc->id,
+                'transaction_type' => 'Inventory Starting Value',
+                'transaction_id' => $startingValAdjustment->id,
+                'amount' => floatval(str_replace(',', '', $startingValAdjustment->total_amount)),
+                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'type' => 'increase'
+            ];
+
+            $this->accounting_account_transactions_model->create($accTransacData);
+
             $invAssetAcc = $this->chart_of_accounts_model->getById($startingValAdjustment->inv_asset_account);
             $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $startingValAdjustment->total_amount));
             $newBalance = number_format($newBalance, 2, '.', ',');
@@ -12360,6 +12371,17 @@ class Accounting_modals extends MY_Controller
             ];
 
             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+            $accTransacData = [
+                'account_id' => $invAssetAcc->id,
+                'transaction_type' => 'Inventory Starting Value',
+                'transaction_id' => $startingValAdjustment->id,
+                'amount' => floatval(str_replace(',', '', $startingValAdjustment->total_amount)),
+                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'type' => 'decrease'
+            ];
+
+            $this->accounting_account_transactions_model->create($accTransacData);
         }
 
         // $itemData = [

@@ -37,12 +37,12 @@
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo url('survey/add') ?>'">
                                 <i class='bx bx-fw bx-list-check'></i> Add new survey from scratch
                             </button>
-                            <!-- <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('survey/workspace') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('survey/workspace') ?>'">
                                 <i class='bx bx-fw bx-desktop'></i>
                             </button>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('survey/themes') ?>'">
                                 <i class='bx bx-fw bx-brush'></i>
-                            </button> -->
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -56,21 +56,6 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3" id="recently_opened">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <div class="nsm-card">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span>Themes</span>
-                                </div>
-                            </div>
-                            <div class="nsm-card-content">
-                                <div class="row g-3" id="themes-list">
                                 </div>
                             </div>
                         </div>
@@ -415,7 +400,7 @@
                     if (data.id === question.temp_id) return data
                 });
 
-                questionContent += `<div class="col-12 d-flex p-2 align-items-center"><div class="nsm-questions-icon" style="background-color: ${tempQuestion.color}"><i class='${tempQuestion.icon}'></i></div> <label class="content-title fw-normal">${question.question}</label> </div>`;
+                questionContent += `<div class="col-12 d-flex p-2 align-items-center"><div class="nsm-questions-icon" style="background-color: ${tempQuestion.color}"><i class='bx bx-circle'></i></div> <label class="content-title fw-normal">${question.question}</label> </div>`;
             });
             questionContent += `</div>`;
 
@@ -471,23 +456,6 @@
                     </div>
                 `;
         });
-
-        load_themes_list();
-
-        function load_themes_list(){
-            var url = base_url + 'survey/_load_themes_list';
-            $("#themes-list").html('<span class="bx bx-loader bx-spin"></span>');
-            setTimeout(function () {
-              $.ajax({
-                 type: "POST",
-                 url: url,
-                 success: function(o)
-                 {          
-                    $('#themes-list').html(o);
-                 }
-              });
-            }, 800);
-        }
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

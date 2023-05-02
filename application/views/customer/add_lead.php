@@ -46,7 +46,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php
                                                 echo "<option value hidden>Select Type</option>";
                                                 foreach ($lead_types as $lt) {
-                                                    echo "<option value='$lt->lead_id'>$lt->lead_name</option>";
+                                                    if($leads_data->fk_lead_id == $lt->lead_id){
+                                                        echo "<option selected value='$lt->lead_id'>$lt->lead_name</option>";
+                                                    } else {
+                                                        echo "<option value='$lt->lead_id'>$lt->lead_name</option>";   
+                                                    }
                                                 }
                                             ?>
                                         </select>
@@ -56,7 +60,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <select class="form-select" id="fk_sr_id" name="fk_sr_id">
                                             <?php
                                                 foreach ($users as $user) {
+                                                    if($leads_data->fk_sr_id == $user->id){
+                                                    echo "<option selected value='$user->id'>$user->FName $user->LName</option>";
+                                                    } else{
                                                     echo "<option value='$user->id'>$user->FName $user->LName</option>";
+                                                    }
                                                 }
                                             ?>
                                         </select>
@@ -66,7 +74,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <select class="form-select" id="fk_sa_id" name="fk_sa_id">
                                             <?php
                                                 foreach ($sales_area as $sales_areas) {
-                                                    echo "<option value='$sales_areas->sa_id'>$sales_areas->sa_name</option>";
+                                                    if($leads_data->fk_sa_id == $sales_areas->sa_id){
+                                                    echo "<option selected value='$sales_areas->sa_id'>$sales_areas->sa_name</option>";
+                                                    } else{
+                                                    echo "<option value='$sales_areas->sa_id'>$sales_areas->sa_name</option>"; 
+                                                    }
                                                 }
                                             ?>
                                         </select>
@@ -76,7 +88,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <select class="form-select" id="fk_assign_id" name="fk_assign_id">
                                             <?php
                                                 foreach ($users as $user) {
-                                                    echo "<option value='$user->id'>$user->FName $user->LName</option>";
+                                                    if($leads_data->fk_assign_id == $user->id){
+                                                    echo "<option selected value='$user->id'>$user->FName $user->LName</option>";
+                                                    } else{
+                                                        echo "<option value='$user->id'>$user->FName $user->LName</option>";
+                                                    }
                                                 }
                                             ?>
                                         </select>
@@ -279,25 +295,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }
         });
     });
-
-    $(document).on('click', '.btn-convert-customer', function(){
-        var form = $('#new_lead_form');
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url()?>customer/convert_to_customer",
-            dataType:'json',
-            data: form.serialize(), // serializes the form's elements.
-            success: function(data)
-            {
-                if( data.is_success == 1 ){
-                    sucess_add('Good Job!','Successfully Added to Customer!','success');
-                }else{
-                    sucess_add('Sorry!','Something Goes Wrong!','error');
-                }
-            }
-        });
-    });
-
+    
     function sucess_add($title,information,icon){
         Swal.fire({
             title: $title,
@@ -310,6 +308,43 @@ defined('BASEPATH') or exit('No direct script access allowed');
         }).then((result) => {
             if (result.value) {
                 window.location.href='<?= base_url(); ?>customer/leads';
+            }
+        });
+    }
+
+    $(document).on('click', '.btn-convert-customer', function(){
+        var form = $('#new_lead_form');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url()?>customer/convert_to_customer",
+            dataType:'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if( data.is_success == 1 ){
+                    sucess_adds('Good Job!','Successfully Added to Customer!','success', data.last_id);
+                }else{
+                    sucess_adds('Sorry!','Something Goes Wrong!','error');
+                }
+            }
+        });
+    });
+
+    function sucess_adds($title,information,icon, prof_id){
+        Swal.fire({
+            title: $title,
+            text: information,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#32243d',
+            confirmButtonText: 'Back to Leads',
+            cancelButtonText: 'Go to Edit Customer'
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                window.location.href='<?= base_url(); ?>customer/leads';
+            } else if (result.dismiss === Swal.DismissReason.cancel){
+                window.location.href = '<?= base_url("customer/add_advance/"); ?>' + prof_id;  
             }
         });
     }

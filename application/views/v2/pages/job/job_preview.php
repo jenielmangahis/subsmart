@@ -66,7 +66,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td align="right"><strong><?= $jobs_data->name;  ?></strong>
+                                                        <td align="right"><strong><?= $jobs_data->tags;  ?></strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -145,7 +145,14 @@
                                                         $total = $item->cost * $item->qty;
                                                     ?>
                                                     <tr>
-                                                        <td><?= $item->title; ?>
+                                                        <td>
+                                                            <?php 
+                                                                if( $item->title != '' ){
+                                                                    echo $item->title;
+                                                                }else{
+                                                                    echo $item->job_item_name;
+                                                                }
+                                                            ?>
                                                         </td>
                                                         <td><?= $item->qty; ?>
                                                         </td>
@@ -168,6 +175,29 @@
                                             <b>Tax Rate:</b>&nbsp;
                                             <span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span>
                                             <br>
+                                            <?php 
+                                                $installation_cost = 0;
+                                                $monthly_monitoring = 0;
+                                                $program_setup = 0;
+                                            ?>
+                                            <?php if( in_array($cid, exempted_company_ids()) ){ ?>
+                                                <?php 
+                                                    if( $latest_job_payment ){
+                                                        $installation_cost = $latest_job_payment->installation_cost;
+                                                        $monthly_monitoring = $latest_job_payment->monthly_monitoring;
+                                                        $program_setup = $latest_job_payment->program_setup;
+                                                    }
+                                                ?>
+                                                <b>Installation Cost:</b>&nbsp;
+                                                <span class="right-text">$<?= number_format((float)$installation_cost, 2, '.', ','); ?></span>
+                                                <br>
+                                                <b>One time (Program and Setup):</b>&nbsp;
+                                                <span class="right-text">$<?= number_format((float)$program_setup, 2, '.', ','); ?></span>
+                                                <br>
+                                                <b>Monthly Monitoring:</b>&nbsp;
+                                                <span class="right-text">$<?= number_format((float)$monthly_monitoring, 2, '.', ','); ?></span>
+                                                <br>
+                                            <?php } ?>
                                             <hr>
 
                                             <?php if ($jobs_data->tax != null): ?>
@@ -183,7 +213,7 @@
                                             <br>
                                             <hr>
                                             <?php endif; ?>
-
+                                            <?php $GRAND_TOTAL = $GRAND_TOTAL + $installation_cost + $monthly_monitoring + $program_setup; ?>
                                             <b>Grand Total:</b>
                                             <b class="right-text">$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></b>
                                         </div>
@@ -198,26 +228,28 @@
                                             <h6 class="title-border">ASSIGNED TO :</h6>
                                             <div>
                                                 <strong>
-                                                    <span><?= $employee_date = get_employee_name($jobs_data->employee_id); ?></span><br>
-                                                    <span><?= $shared1 = get_employee_name($jobs_data->employee2_id); ?></span><br>
-                                                    <span><?= $shared2 = get_employee_name($jobs_data->employee3_id); ?></span><br>
-                                                    <span><?= $shared3 = get_employee_name($jobs_data->employee4_id); ?></span>
+                                                    <!-- <span><?= $employee_date = get_employee_name($jobs_data->employee_id); ?></span><br> -->
+                                                    <?php if( $jobs_data->employee2_id > 0 ){ ?>
+                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee2_id); ?></span><br>
+                                                    <?php } ?>
+
+                                                    <?php if( $jobs_data->employee3_id > 0 ){ ?>
+                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee3_id); ?></span><br>
+                                                    <?php } ?>
+
+                                                    <?php if( $jobs_data->employee4_id > 0 ){ ?>
+                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee4_id); ?></span><br>
+                                                    <?php } ?>
+
+                                                    <?php if( $jobs_data->employee5_id > 0 ){ ?>
+                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee5_id); ?></span><br>
+                                                    <?php } ?>
+
+                                                    <?php if( $jobs_data->employee6_id > 0 ){ ?>
+                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee6_id); ?></span><br>
+                                                    <?php } ?>
                                                 </strong>
-                                            </div>
-                                            <span><?= $employee_date->FName; ?></span>
-                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
-                                            <?php if (isset($shared1) && !empty($shared1) && $shared1!=null): ?>
-                                            <span><?= $shared1->FName; ?></span>
-                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
-                                            <?php endif; ?>
-                                            <?php if (isset($shared2) && !empty($shared2) && $shared2!=null): ?>
-                                            <span><?= $shared2->FName; ?></span>
-                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
-                                            <?php endif; ?>
-                                            <?php if (isset($shared3) && !empty($shared3) && $shared3!=null): ?>
-                                            <span><?= $shared3->FName; ?></span>
-                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
-                                            <?php endif; ?>
+                                            </div>                                            
                                         </div>
 
                                         <div class="col-md-12">
@@ -233,17 +265,17 @@
                                             <table class="table table-bordered">
                                                 <tbody>
                                                     <tr>
-                                                        <td width="35%">From</td>
-                                                        <td width="40%"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
-                                                        </td>
-                                                        <td width="40%"><?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
+                                                        <td style="width:5%;">From</td>
+                                                        <td>
+                                                            <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
+                                                            <?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>To</td>
-                                                        <td><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->end_date)) : '';  ?>
-                                                        </td>
-                                                        <td><?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
+                                                        <td style="width:5%;">To</td>
+                                                        <td>
+                                                            <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->end_date)) : '';  ?>
+                                                            <?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
                                                         </td>
                                                     </tr>
                                                 </tbody>

@@ -221,7 +221,7 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="city"><b>Business Name</b> (optional)</label>
-                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="<?php echo $companyName->business_name; ?>" />
+                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="" />
                     </div>
                 </div>
                 <div class="row">
@@ -262,7 +262,8 @@ a.btn-primary.btn-md {
                         <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
                         <textarea class="form-control" name="service_description"></textarea>
                     </div>
-                </div><br>
+                </div>
+                <br>
                 <div class="row">
                     <div class="col-md-4 form-group">
                         <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
@@ -1040,14 +1041,18 @@ a.btn-primary.btn-md {
                                         <thead>
                                         <tr>
                                             <td> Name</td>
+                                            <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                        <?php foreach($items as $item){ // print_r($item);
+                                                $item_qty = get_total_item_qty($item->id);    
+                                        ?>
                                             <tr>
-                                                <td><?php echo $item->title; ?></td>                                                
+                                                <td><?php echo $item->title; ?></td>    
+                                                <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>                                            
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">Add
                                                 <span class="fa fa-plus"></span>
@@ -1468,6 +1473,7 @@ $(document).ready(function(){
          $("#customer_state").val(response['customer'].state);
          $("#customer_zip").val(response['customer'].zip_code);
          $("#customer_phone").val(response['customer'].phone_h +' '+ response['customer'].phone_m);
+         $("#business_name").val(response['customer'].business_name);
         //  $("#email").val(response['customer'].email);
         //  $("#date_of_birth").val(response['customer'].date_of_birth);
         //  $("#phone_no").val(test_p);
@@ -1502,7 +1508,7 @@ $('#scheduled_time').timepicker({
   minTime: '8',
   maxTime: '11:00 PM',
   startTime: '8:00 AM',
-  dynamic: false,
+  dynamic: false, 
   dropdown: true,
   scrollbar: true
 });

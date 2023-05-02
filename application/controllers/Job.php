@@ -999,6 +999,8 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
         if (!$id == null) {
+            $this->page_data['cid'] = $comp_id;
+            $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);  
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
@@ -2102,12 +2104,13 @@ class Job extends MY_Controller
                     'hash_id' => $input['job_hash']
                 ),
                 'table' => 'jobs',
-                'select' => 'job_number, id'
+                'select' => 'job_number, id, work_order_id'
             );
             $isJob = $this->general->get_data_with_param($check_job, false);
 
             if (!empty($isJob)) {
                 $job_number = $isJob->job_number;
+                $job_workorder_id = $isJob->work_order_id;
                 $is_update = 1;
             } else {
                 $job_settings = $this->general->get_data_with_param($get_job_settings);
@@ -2127,6 +2130,8 @@ class Job extends MY_Controller
                 }
 
                 $job_number = $prefix . $next_num;
+
+                $job_workorder_id = $input['work_order_id'] != NULL ? $input['work_order_id'] : 0;
             }
 
 
@@ -2172,13 +2177,14 @@ class Job extends MY_Controller
                 // 'message' => $input['message'],
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
-                'created_by' => $input['created_by'],
+                //'created_by' => $input['created_by'],
+                'created_by' => logged('id'),
                 //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
                 'tax_rate' => $input['tax'],
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
-                'work_order_id' => $input['work_order_id'] != NULL ? $input['work_order_id'] : 0,
+                'work_order_id' => $job_workorder_id,
                 'job_account_number' => $input['JOB_ACCOUNT_NUMBER'],
                 'BILLING_METHOD' => $input['BILLING_METHOD'],
                 'CC_CREDITCARDNUMBER' => $input['CC_CREDITCARDNUMBER'],
@@ -2246,9 +2252,31 @@ class Job extends MY_Controller
             if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
                 //Create hash_id
                 $job_hash_id = hashids_encrypt($jobs_id, '', 15);
                 $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+
+                //Create payments data
+                if( $job_workorder_id > 0 ){
+                    $payment_data = [
+                        'amount' =>  $input['total_amount'],
+                        'program_setup' => $input['otps'],
+                        'monthly_monitoring' => $input['monthly_monitoring'],
+                        'installation_cost' => $input['installation_cost'],
+                        'deposit_collected' => 0,
+                        'job_id' => $jobs_id,
+                        'date_created' => date("Y-m-d h:i:s")
+                    ];
+                    $this->general->add_($payment_data, 'job_payments');
+                }else{
+                    // insert data to job payments table
+                    $job_payment_query = array(
+                        'amount' => $input['total_amount'],
+                        'job_id' => $jobs_id,
+                    );
+                    $this->general->add_($job_payment_query, 'job_payments');
+                }
 
                 customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
@@ -2290,14 +2318,7 @@ class Job extends MY_Controller
                 $this->general->add_($jobs_approval_data, 'jobs_approval');
 
                 //subtrac location's qty
-
-
-                // insert data to job payments table
-                $job_payment_query = array(
-                    'amount' => $input['total_amount'],
-                    'job_id' => $jobs_id,
-                );
-                $this->general->add_($job_payment_query, 'job_payments');
+                
 
                 // insert data to job settings table
                 $jobs_settings_data = array(
@@ -2337,7 +2358,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
-                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2437,6 +2458,12 @@ class Job extends MY_Controller
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
+    }
+
+    public function tryFix(){
+        echo "<pre>";
+        print_r ($this->items_model->recordItemTransaction(1, 1, 4, "deduct"));
+        echo "</pre>";
     }
 
     public function delete()
@@ -3850,8 +3877,10 @@ class Job extends MY_Controller
             'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
         );
 
+        $this->page_data['cid'] = $comp_id;
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
         $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+        $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);        
         $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         $this->load->view('v2/pages/job/ajax_quick_view_details', $this->page_data);
     }

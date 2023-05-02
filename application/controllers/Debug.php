@@ -2143,6 +2143,12 @@ class Debug extends MY_Controller {
         print_r($customer);
         exit;
     }
+
+    public function debugCronAutoSms()
+    {
+        debugCreateCronAutoSmsNotification(31, 649, 'job', 'Scheduled', 0, 107, 0);
+        exit;
+    }
 }
 /* End of file Debug.php */
 

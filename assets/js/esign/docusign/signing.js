@@ -9,6 +9,7 @@ if (isMobile()) {
 }
 
 function Signing(hash) {
+  
   const PDFJS = pdfjsLib;
 
   const $documentContainer = $(".signing__documentContainer");
@@ -68,7 +69,7 @@ function Signing(hash) {
   }
 
   function getRenderField({ field, recipient }) {
-    const { field_name, coordinates, id: fieldId, value: fieldValue } = field;
+    const { field_name, coordinates, id: fieldId, value: fieldValue, specs } = field;
 
     const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country
      } = window.__esigndata.auto_populate_data.client;
@@ -85,80 +86,103 @@ function Signing(hash) {
     left = parseInt(left);
 
     const container = document.querySelector(".signing__documentContainer");
-
-    if ( field_name === "Subscriber Name" ) {
-      return first_name + ' ' + last_name;
-    }
-
-    if ( field_name === "Primary Contact" ) {
-      return phone_h;
-    }
-
-    if ( field_name === "Address" ) {
-      return mail_add;
-    }
-
-    if ( field_name === "Secondary Contact" ) {
-      return phone_m;
-    }
-
-    if ( field_name === "City" ) {
-      return city;
-    }
-
-    if ( field_name === "State" ) {
-      return state;
-    }
-
-    if ( field_name === "ZIP" ) {
-      return zip_code;
-    }
-
-    if ( field_name === "Subscriber Email" ) {
-      return email;
-    }
-
-    if ( field_name === "Country" ) {
-      return country;
-    }
-
-    // password
-    if ( field_name === "Access Password" ) {
-      return access_password;
-    }
-
-    // billing
-    if ( field_name === "Checking Account Number" ) {
-      return check_num;
-    }
-    if ( field_name === "ABA" ) {
-      return routing_num;
-    }
-    if ( field_name === "Card Account Number" ) {
-      return acct_num;
-    }
-    if ( field_name === "Card Holder Name" ) {
-      return card_fname + ' ' + card_lname;
-    }
-    if ( field_name === "Card Expiration" ) {
-      return credit_card_exp;
-    }
-    if ( field_name === "Card Security Code" ) {
-      return credit_card_exp_mm_yyyy;
-    }
-
-    // Cost due at signing
-    if ( field_name === "Equipment Cost" ) {
-      return equipment_cost;
-    }
-    if ( field_name === "First Month Mon" ) {
-      return first_month_monitoring;
-    }
-    if ( field_name === "One Time Act" ) {
-      return one_time_activation;
-    }
+    
+    
     if ( field_name === "Total Due" ) {
       return total_due;
+    }
+    
+    if (field_name === "Text" && fieldValue === null ) {
+
+      let specs_field_name = JSON.parse(specs);
+      let unique_key
+      if( specs_field_name.name === "card_number" || specs_field_name.name === "card_account_number" ) {
+        return acct_num;
+      }
+      if( specs_field_name.name === "subscriber_name" ) {
+        return first_name + " " + last_name;
+      }
+      
+      if( specs_field_name.name === "subscriber_fname" ) {
+        return first_name;
+      }
+      
+      if( specs_field_name.name === "subscriber_lname" ) {
+        return last_name;
+      }
+      
+      if( specs_field_name.name === "phone_h" ) {
+        return phone_h;
+      }
+      
+      if( specs_field_name.name === "phone_m" ) {
+        return phone_m;
+      }
+      
+      if( specs_field_name.name === "address" || specs_field_name.name === "Address" ) {
+        return mail_add;
+      }
+      
+      if( specs_field_name.name === "city" || specs_field_name.name === "City" ) {
+        return city;
+      }
+      
+      if( specs_field_name.name === "state" ) {
+        return state;
+      }
+
+      if( specs_field_name.name === "zip_code" || specs_field_name.name === "zip" ) {
+        return zip_code;
+      }
+
+      if( specs_field_name.name === "password" || specs_field_name.name === "Password" ) {
+        return access_password;
+      }
+
+      if( specs_field_name.name === "checking_account_n" ) {
+        return check_num;
+      }
+
+      if( specs_field_name.name === "aba" ) {
+        return routing_num;
+      }
+
+      if( specs_field_name.name === "equipment_cost" ) {
+        return equipment_cost;
+      }
+
+      if( specs_field_name.name === "one_time_activation" ) {
+        return one_time_activation;
+      }
+
+      if( specs_field_name.name === "first_month_monitoring" ) {
+        return first_month_monitoring;
+      }
+
+      if( specs_field_name.name === "card_security_code" ) {
+        return credit_card_exp_mm_yyyy;
+      }
+
+      if( specs_field_name.name === "card_expiration" ) {
+        return credit_card_exp;
+      }
+
+      if( specs_field_name.name === "card_name" ) {
+        return card_fname + ' ' + card_lname;
+      }
+
+      if( specs_field_name.name === "customer_email" ) {
+        return email;
+      }
+
+      if( specs_field_name.name === "country" ) {
+        return country;
+      }
+      
+    }
+
+    if (field_name === "Card Security Code") {
+      return credit_card_exp_mm_yyyy;
     }
 
     if (field_name === "Date Signed") {
@@ -667,6 +691,9 @@ function Signing(hash) {
         customer = autoPopulateData;
       }
 
+      const customer_card = window.__esigndata.auto_populate_data.billing;
+      const customer_cost_due = window.window.__esigndata.auto_populate_data.cost_due;;
+
       if (customer && specs.name && !value) {
         if (String(specs.name.toLowerCase()).startsWith("zip")) {
           value =
@@ -693,8 +720,7 @@ function Signing(hash) {
           value =
             customer[specs.name] ||
             customer[specs.name.toLowerCase()] ||
-            customer["card_expiration"] ||
-            customer["card_expiration_mm_yyyy"];
+            customer["card_expiration"];
         } else if (specs.name.toLowerCase() === "card_name") {
           value =
             customer[specs.name] ||
@@ -708,6 +734,71 @@ function Signing(hash) {
             customer[specs.name.toLowerCase()] ||
             customer["phone_m"] ||
             customer["phone_h"];
+            // added changes\/
+        } else if (specs.name.toLowerCase() === "subscriber_fname") {
+          value =
+            customer[specs.name] ||
+            customer["first_name"];
+        } else if (specs.name.toLowerCase() === "subscriber_lname") {
+          value =
+            customer[specs.name] ||
+            customer["last_name"];
+        } else if (specs.name.toLowerCase() === "phone_h") {
+          value =
+            customer[specs.name] ||
+            customer["phone_h"];
+        } else if (specs.name.toLowerCase() === "phone_m") {
+          value =
+            customer[specs.name] ||
+            customer["phone_m"];
+        } else if (specs.name.toLowerCase() === "city") {
+          value =
+            customer[specs.name] ||
+            customer["city"];
+        } else if (specs.name.toLowerCase() === "state") {
+          value =
+            customer[specs.name] ||
+            customer["state"];
+        } else if (specs.name.toLowerCase() === "zip_code") {
+          value =
+            customer[specs.name] ||
+            customer["zip_code"];
+        } else if (specs.name.toLowerCase() === "customer_email") {
+          value =
+            customer[specs.name] ||
+            customer["email"];
+        } else if (specs.name.toLowerCase() === "country") {
+          value =
+            customer[specs.name] ||
+            customer["country"];
+        } else if (specs.name.toLowerCase() === "checking_account_n") {
+          value =
+            customer[specs.name] ||
+            customer_card['check_num'];
+        } else if (specs.name.toLowerCase() === "aba") {
+          value =
+            customer[specs.name] ||
+            customer_card['routing_num']
+        } else if (specs.name.toLowerCase() === "card_account_number") {
+          value =
+            customer[specs.name] ||
+            customer["card_account_number"];
+        } else if (specs.name.toLowerCase() === "card_security_code") {
+          value =
+            customer[specs.name] ||
+            customer["card_expiration_mm_yyyy"];
+        } else if (specs.name.toLowerCase() === "equipment_cost") {
+          value =
+            customer[specs.name] ||
+            customer_cost_due['equipment_cost'];
+        } else if (specs.name.toLowerCase() === "one_time_activation") {
+          value =
+            customer[specs.name] ||
+            customer_cost_due['one_time_activation'];
+        } else if (specs.name.toLowerCase() === "first_month_monitoring") {
+          value =
+            customer[specs.name] ||
+            customer_cost_due['first_month_monitoring'];
         } else if (specs.name.toLowerCase().startsWith("job_")) {
           if (window.__esigndata.job_data) {
             const jobData = window.__esigndata.job_data;
@@ -818,9 +909,9 @@ function Signing(hash) {
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       if (field_name === "TextString") {
-        $element.addClass("completed");
+        // $element.addClass("completed");
         $input.prop("required", false);
-        $input.prop("readonly", true);
+        // $input.prop("readonly", true);
       }
 
       return $element;
@@ -1277,7 +1368,7 @@ function Signing(hash) {
           ...document.querySelectorAll(".docusignField > [data-key]"),
         ];
         const promises = [];
-
+        
         $inputs.forEach(($input) => {
           if (!$input.value) return;
 
@@ -1381,6 +1472,7 @@ function Signing(hash) {
 
       if (data.hash) {
         window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;
+        // console.log('testging...');
         return;
       }
 
@@ -1462,7 +1554,7 @@ function Signing(hash) {
 
     $(".loader").addClass("d-none");
     if (data.recipient.completed_at) markAsFinished();
-
+    
     if (data.generated_pdf) {
       // download link
       $("[data-action=download]").on("click", function () {

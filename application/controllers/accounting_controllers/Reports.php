@@ -1967,6 +1967,9 @@ class Reports extends MY_Controller {
                     if(get('date') !== 'all-dates') {
                         $this->page_data['start_date'] = str_replace('-', '/', get('from'));
                         $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                    } else {
+                        $this->page_data['start_date'] = null;
+                        $this->page_data['start_date'] = null;
                     }
 
                     switch(get('date')) {
@@ -2092,6 +2095,11 @@ class Reports extends MY_Controller {
                     }
                 }
 
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
                 $compAccs = $this->chart_of_accounts_model->get_by_company_id(logged('company_id'));
                 $accounts = [];
                 foreach($compAccs as $account)
@@ -2099,7 +2107,7 @@ class Reports extends MY_Controller {
                     $transactions = $this->accounting_account_transactions_model->get_account_transactions($account->id);
 
                     usort($transactions, function($a, $b) {
-                        return strtotime($a->transaction_date) - strtotime($b->transaction_date);
+                        return strtotime($a->transaction_date) < strtotime($b->transaction_date);
                     });
 
                     $amountTotal = 0.00;
@@ -2107,21 +2115,30 @@ class Reports extends MY_Controller {
                     $creditTotal = 0.00;
                     $taxAmountTotal = 0.00;
                     $taxableAmountTotal = 0.00;
-                    $beginningBalance = 0.00;
+                    $beginningBalance = floatval(str_replace(',', '', $account->balance));
 
                     $accTransacs = [];
+
                     foreach($transactions as $transaction)
                     {
+                        $balance = $beginningBalance;
+                        if($transaction->type === 'increase') {
+                            $beginningBalance -= floatval(str_replace(',', '', $transaction->amount));
+                        } else {
+                            $beginningBalance += floatval(str_replace(',', '', $transaction->amount));
+                        }
                         $name = '';
                         $customer = '';
                         $vendor = '';
                         $employee = '';
-                        $item = '';
+                        $transacItem = '';
                         $memo = '';
                         $qty = '';
                         $rate = '';
                         $transacAccount = '';
                         $split = '';
+                        $openBalance = '';
+
                         switch($transaction->transaction_type) {
                             case 'Check' :
                                 $check = $this->vendors_model->get_check_by_id($transaction->transaction_id, logged('company_id'));
@@ -2146,6 +2163,20 @@ class Reports extends MY_Controller {
                                         $name = $payee->FName . ' ' . $payee->LName;
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
+                                }
+
+                                if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                                    $split = $this->chart_of_accounts_model->getName($check->bank_account_id);
+
+                                    if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                                        $category = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+
+                                        $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    }
+                                } else {
+                                    $split = $this->account_col($check->id, 'Check');
                                 }
                             break;
                             case 'Expense' :
@@ -2172,6 +2203,20 @@ class Reports extends MY_Controller {
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
                                 }
+
+                                if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                                    $split = $this->chart_of_accounts_model->getName($expense->payment_account_id);
+
+                                    if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                                        $category = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+
+                                        $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    }
+                                } else {
+                                    $split = $this->account_col($expense->id, 'Expense');
+                                }
                             break;
                             case 'Bill' :
                                 $bill = $this->vendors_model->get_bill_by_id($transaction->transaction_id, logged('company_id'));
@@ -2183,6 +2228,21 @@ class Reports extends MY_Controller {
                                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                                 $name = $payee->display_name;
                                 $vendor = $payee->display_name;
+
+                                if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                                    $split = $apAcc->name;
+
+                                    if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                                        $category = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+
+                                        $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    }
+                                } else {
+                                    $split = $this->account_col($bill->id, 'Bill');
+                                }
                             break;
                             case 'Vendor Credit' :
                                 $vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction->transaction_id, logged('company_id'));
@@ -2194,6 +2254,21 @@ class Reports extends MY_Controller {
                                 $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                                 $name = $payee->display_name;
                                 $vendor = $payee->display_name;
+
+                                if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                                    $split = $apAcc->name;
+
+                                    if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                                        $category = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+
+                                        $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    }
+                                } else {
+                                    $split = $this->account_col($vCredit->id, 'Vendor Credit');
+                                }
                             break;
                             case 'CC Credit' :
                                 $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction->transaction_id, logged('company_id'));
@@ -2219,6 +2294,20 @@ class Reports extends MY_Controller {
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
                                 }
+
+                                if($transaction->is_category === '1' || $transaction->is_item_category === '1') {
+                                    $split = $this->chart_of_accounts_model->getName($expense->payment_account_id);
+
+                                    if($transaction->is_category === '1' && $transaction->is_item_category !== '1') {
+                                        $category = $this->expenses_model->get_vendor_transaction_category_by_id($transaction->child_id);
+
+                                        $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    }
+                                } else {
+                                    $split = $this->account_col($ccCredit->id, 'Credit Card Credit');
+                                }
                             break;
                             case 'Bill Payment' :
                                 $billPayment = $this->vendors_model->get_bill_payment_by_id($transaction->transaction_id);
@@ -2230,6 +2319,15 @@ class Reports extends MY_Controller {
                                 $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
                                 $name = $payee->display_name;
                                 $vendor = $payee->display_name;
+
+                                $accountType = $this->account_model->getById($account->account_id);
+
+                                if($accountType->account_name !== 'Accounts payable (A/P)') {
+                                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                                    $split = $apAcc->name;
+                                } else {
+                                    $split = $this->chart_of_accounts_model->getName($billPayment->payment_account_id);
+                                }
                             break;
                             case 'Invoice' :
                                 $invoice = $this->invoice_model->getinvoice($transaction->transaction_id);
@@ -2241,6 +2339,34 @@ class Reports extends MY_Controller {
                                 $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                 $name = $payee->first_name . ' ' . $payee->last_name;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
+
+                                $accountType = $this->account_model->getById($account->account_id);
+                                $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+
+                                if($transaction->is_item_category === '1') {
+                                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                                    $split = $arAcc->name;
+
+                                    $invoiceItem = $this->invoice_model->get_invoice_item_by_id($transaction->child_id, $invoice->id);
+                                    $transacItem = $this->items_model->getItemById($invoiceItem->items_id)[0]->title;
+                                } else {
+                                    if(count($invoiceItems) > 1) {
+                                        $split = '-Split-';
+                                    } else {
+                                        $item = $this->items_model->getItemById($invoiceItems[0]->items_id)[0];
+                                        $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItems[0]->items_id);
+                
+                                        if($itemAccDetails->income_account_id === null) {
+                                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                                        } else {
+                                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        }
+
+                                        $split = $itemAcc->name;
+                                    }
+
+                                    $openBalance = number_format(floatval(str_replace(',', '', $invoice->balance)), 2);
+                                }
                             break;
                             case 'Credit Memo' :
                                 $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction->transaction_id);
@@ -2252,6 +2378,33 @@ class Reports extends MY_Controller {
                                 $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
                                 $name = $payee->first_name . ' ' . $payee->last_name;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
+
+                                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemo->id);
+
+                                if($transaction->is_item_category === '1') {
+                                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                                    $split = $arAcc->name;
+
+                                    $creditMemoItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
+                                    $transacItem = $this->items_model->getItemById($creditMemoItem->item_id)[0]->title;
+                                } else {
+                                    if(count($items) > 1) {
+                                        $split = '-Split-';
+                                    } else {
+                                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
+                                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                
+                                        if($itemAccDetails->income_account_id === null) {
+                                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                                        } else {
+                                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        }
+                
+                                        $split = $account->name;
+                                    }
+
+                                    $openBalance = number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2);
+                                }
                             break;
                             case 'Sales Receipt' :
                                 $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transaction->transaction_id);
@@ -2263,6 +2416,30 @@ class Reports extends MY_Controller {
                                 $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                                 $name = $payee->first_name . ' ' . $payee->last_name;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
+
+                                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceipt->id);
+
+                                if($transaction->is_item_category === '1') {
+                                    $split = $this->chart_of_accounts_model->getName($salesReceipt->deposit_to_account);
+
+                                    $salesReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
+                                    $transacItem = $this->items_model->getItemById($salesReceiptItem->item_id)[0]->title;
+                                } else {
+                                    if(count($items) > 1) {
+                                        $split = '-Split-';
+                                    } else {
+                                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
+                                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                
+                                        if($itemAccDetails->income_account_id === null) {
+                                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                                        } else {
+                                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        }
+                
+                                        $split = $account->name;
+                                    }
+                                }
                             break;
                             case 'Refund Receipt' :
                                 $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transaction->transaction_id);
@@ -2274,6 +2451,30 @@ class Reports extends MY_Controller {
                                 $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
                                 $name = $payee->first_name . ' ' . $payee->last_name;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
+
+                                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceipt->id);
+
+                                if($transaction->is_item_category === '1') {
+                                    $split = $this->chart_of_accounts_model->getName($refundReceipt->refund_from_account);
+
+                                    $refundReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
+                                    $transacItem = $this->items_model->getItemById($refundReceiptItem->item_id)[0]->title;
+                                } else {
+                                    if(count($items) > 1) {
+                                        $split = '-Split-';
+                                    } else {
+                                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
+                                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                
+                                        if($itemAccDetails->income_account_id === null) {
+                                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                                        } else {
+                                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        }
+                
+                                        $split = $account->name;
+                                    }
+                                }
                             break;
                             case 'Payment' :
                                 $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($transaction->transaction_id);
@@ -2285,18 +2486,62 @@ class Reports extends MY_Controller {
                                 $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
                                 $name = $payee->first_name . ' ' . $payee->last_name;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
+
+                                $accountType = $this->account_model->getById($account->account_id);
+                                
+                                if($accountType->account_name !== 'Accounts receivable (A/R)') {
+                                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                                    $split = $arAcc->name;
+                                } else {
+                                    $split = $this->chart_of_accounts_model->getName($payment->deposit_to);
+                                }
                             break;
                             case 'Deposit' :
                                 $deposit = $this->accounting_bank_deposit_model->getById($transaction->transaction_id, logged('company_id'));
                                 $date = date("m/d/Y", strtotime($deposit->date));
                                 $createDate = date("m/d/Y H:i:s A", strtotime($deposit->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($deposit->updated_at));
+
+                                $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+                                if($transaction->is_category === '1') {
+                                    $fund = $this->accounting_bank_deposit_model->get_fund($transaction->child_id);
+                    
+                                    switch($fund->received_from_key) {
+                                        case 'vendor':
+                                            $payee = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                                            $vendor = $payee->display_name;
+                                        break;
+                                        case 'customer':
+                                            $payee = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                                            $customer = $payee->first_name . ' ' . $payee->last_name;
+                                        break;
+                                        case 'employee':
+                                            $payee = $this->users_model->getUser($fund->received_from_id);
+                                            $employee = $payee->FName . ' ' . $payee->LName;
+                                        break;
+                                    }
+
+                                    $split = $this->chart_of_accounts_model->getName($deposit->account_id);
+                                } else {
+                                    if(count($funds) > 1) {
+                                        $split = '-Split-';
+                                    } else {
+                                        $split = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                                    }
+                                }
                             break;
                             case 'Transfer' :
                                 $transfer = $this->accounting_transfer_funds_model->getById($transaction->transaction_id, logged('company_id'));
                                 $date = date("m/d/Y", strtotime($transfer->transfer_date));
                                 $createDate = date("m/d/Y H:i:s A", strtotime($transfer->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($transfer->updated_at));
+
+                                if($account->id === $transfer->transfer_from_account_id) {
+                                    $split = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+                                } else {
+                                    $split = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+                                }
                             break;
                             case 'Journal' :
                                 $journalEntry = $this->accounting_journal_entries_model->getById($transaction->transaction_id, logged('company_id'));
@@ -2304,6 +2549,31 @@ class Reports extends MY_Controller {
                                 $num = $journalEntry->journal_no;
                                 $createDate = date("m/d/Y H:i:s A", strtotime($journalEntry->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($journalEntry->updated_at));
+
+                                $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+                                foreach($entries as $entry) {
+                                    if($entry->id === $transaction->child_id) {
+                                        $journalEntryItem = $entry;
+                                    }
+                                }
+
+                                switch($journalEntryItem->name_key) {
+                                    case 'vendor':
+                                        $payee = $this->vendors_model->get_vendor_by_id($journalEntryItem->name_id);
+                                        $vendor = $payee->display_name;
+                                    break;
+                                    case 'customer':
+                                        $payee = $this->accounting_customers_model->get_by_id($journalEntryItem->name_id);
+                                        $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    break;
+                                    case 'employee':
+                                        $payee = $this->users_model->getUser($journalEntryItem->name_id);
+                                        $employee = $payee->FName . ' ' . $payee->LName;
+                                    break;
+                                }
+
+                                $split = '-Split-';
                             break;
                             case 'Inventory Qty Adjust' :
                                 $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($transaction->transaction_id);
@@ -2311,6 +2581,12 @@ class Reports extends MY_Controller {
                                 $num = $adjustment->adjustment_no;
                                 $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
+
+                                if($account->id !== $adjustment->inventory_adjustment_account_id) {
+                                    $split = $this->chart_of_accounts_model->getName($adjustment->inventory_adjustment_account_id);
+                                } else {
+                                    
+                                }
                             break;
                             case 'Inventory Starting Value' :
                                 $adjustment = $this->starting_value_model->get_by_id($transaction->transaction_id);
@@ -2319,23 +2595,40 @@ class Reports extends MY_Controller {
                                 $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
 
-                                $rate = number_format(floatval($adjustment->initial_cost), 2);
+                                $rate = number_format(floatval(str_replace(',', '', $adjustment->initial_cost)), 2);
+
+                                $split = $this->chart_of_accounts_model->getName($adjustment->inv_asset_account);
                             break;
                             case 'CC Payment' :
                                 $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transaction->transaction_id);
                                 $date = date("m/d/Y", strtotime($ccPayment->date));
                                 $createDate = date("m/d/Y H:i:s A", strtotime($ccPayment->created_at));
                                 $lastModified = date("m/d/Y H:i:s A", strtotime($ccPayment->updated_at));
+
+                                $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                                $name = !is_null($payee) ? $payee->display_name : "";
+                                $vendor = !is_null($payee) ? $payee->display_name : "";
+
+                                $split = $ccPayment->credit_card_id === $account->id ? $this->chart_of_accounts_model->getName($ccPayment->bank_account_id) : $this->chart_of_accounts_model->getName($ccPayment->credit_card_id);
                             break;
                         }
 
-                        // $balance = number_format(floatval($account->balance), 2);
+                        $debit = $transaction->type === 'increase' ? number_format($transaction->amount, 2) : '';
+                        $credit = $transaction->type === 'decrease' ? number_format($transaction->amount, 2) : '';
+                        $amount = number_format($transaction->amount, 2);
+
+                        $debitTotal += floatval($debit);
+                        $creditTotal += floatval($credit);
+                        $amountTotal += floatval($amount);
+
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $amount = number_format(floatval($amount) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $amount = number_format(floatval($amount), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -2345,11 +2638,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = '('.$amount.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = $amount.'-';
                                     }
                                 break;
                             }
@@ -2360,16 +2663,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
                                         }
                                     break;
                                 }
@@ -2389,11 +2704,11 @@ class Reports extends MY_Controller {
                             'customer' => $customer,
                             'vendor' => $vendor,
                             'employee' => $employee,
-                            'product_service' => $item,
+                            'product_service' => $transacItem,
                             'memo_description' => $memo,
                             'qty' => $qty,
                             'rate' => $rate,
-                            'account' => $transacAccount,
+                            'account' => $account->name,
                             'split' => $split,
                             'invoice_date' => '',
                             'ar_paid' => '',
@@ -2404,13 +2719,17 @@ class Reports extends MY_Controller {
                             'credit' => $credit,
                             'open_balance' => $openBalance,
                             'amount' => $amount,
-                            'balance' => $balance,
+                            'balance' => number_format($balance, 2),
                             'online_banking' => '',
                             'tax_name' => '',
                             'tax_amount' => $taxAmount,
                             'taxable_amount' => $taxableAmount
                         ];
                     }
+
+                    $accTransacs = array_filter($accTransacs, function($v, $k) use ($dateFilter) {
+                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
 
                     $accounts[] = [
                         'account_id' => $account->id,
@@ -2420,7 +2739,7 @@ class Reports extends MY_Controller {
                         'amount_total' => number_format($amountTotal, 2),
                         'tax_amount_total' => number_format($taxAmountTotal, 2),
                         'taxable_amount_total' => number_format($taxableAmountTotal, 2),
-                        'beginning_balance' => $beginningBalance,
+                        'beginning_balance' => number_format($beginningBalance, 2),
                         'transactions' => $accTransacs
                     ];
                 }
@@ -2505,6 +2824,37 @@ class Reports extends MY_Controller {
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
+    }
+
+    private function account_col($transactionId, $transactionType)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        $totalCount = count($categories) + count($items);
+
+        if ($totalCount > 1) {
+            $category = '-Split-';
+        } else {
+            if ($totalCount === 1) {
+                if (count($categories) === 1 && count($items) === 0) {
+                    $accountId = $categories[0]->expense_account_id;
+                } else {
+                    $itemId = $items[0]->item_id;
+                    $item = $this->items_model->getByID($itemId);
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+                    if($item->type === 'Product' || $item->type === 'product') {
+                        $accountId = $itemAccDetails->inv_asset_acc_id;
+                    } else {
+                        $accountId = $itemAccDetails->expense_account_id;
+                    }
+                }
+
+                $category = $this->chart_of_accounts_model->getName($accountId);
+            }
+        }
+
+        return $category;
     }
 
     public function export_report(){

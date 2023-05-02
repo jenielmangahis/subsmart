@@ -735,12 +735,12 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td colspan="" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format(floatval($workorder->subtotal),2); ?></span>
+                                            <td colspan="" align="center"><span id="span_sub_total_invoice"><?php echo $workorder->subtotal; ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td colspan="" align="center">$ <span id="total_tax_"><?php echo number_format(floatval($workorder->taxes),2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <td colspan="" align="center"><span id="total_tax_"><?php echo $workorder->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
@@ -766,7 +766,7 @@ border: none;
                                         <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td colspan="" align="center"><b><span id="grand_total"><?php echo number_format((Float)$workorder->grand_total,2); ?></span>
+                                            <td colspan="" align="center"><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>

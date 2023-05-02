@@ -492,7 +492,7 @@
                                             <td><b><?=$account['tax_amount_total']?></b></td>
                                             <td><b><?=$account['taxable_amount_total']?></b></td>
                                         </tr>
-                                        <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
+                                        <tr class="clickable collapse-row collapse starting-balance-row" id="accordion-<?=$index?>">
                                             <td colspan="27"><b>Beginning Balance</b></td>
                                             <td><b><?=$account['beginning_balance']?></b></td>
                                             <td></td>
@@ -536,7 +536,7 @@
                                             <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['taxable_amount']?></td>
                                         </tr>
                                         <?php endforeach; ?>
-                                        <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
+                                        <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
                                             <td colspan="23">Total for <?=$account['name']?></td>
                                             <td><b><?=$account['debit_total']?></b></td>
                                             <td><b><?=$account['credit_total']?></b></td>
