@@ -332,6 +332,7 @@ function TemplateCreate() {
       const data = await response.json();
       let nextUrl = `${prefixURL}/eSign_v2/manage?view=sent`;
       if (data.hash) {
+        // console.log('hash...'); return; //jobs to esign
         nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
 
@@ -567,35 +568,13 @@ function TemplateCreate() {
         return r;
       }
 
-      // for admin, get workorder or job admin
-      if (r.role_name.toUpperCase() === "ADMIN") {
-        const { admin } = workorder || job;
-
-        if (admin) {
-          const { first_name, last_name, email } = admin;
-          if (email) {
-            r.email = email;
-          }
-
-          if (first_name && last_name) {
-            r.name = `${first_name} ${last_name}`;
-          }
-        }
-
-        return r;
+      const { first_name, last_name, email } = workorder || job;
+      if (email) {
+        r.email = email;
       }
 
-      if (!["CLIENT", "CUSTOMER"].includes(r.role_name.toUpperCase())) {
-        const { first_name, last_name, email } = workorder || job;
-        if (email) {
-          r.email = email;
-        }
-
-        if (first_name && last_name) {
-          r.name = `${first_name} ${last_name}`;
-        }
-
-        return r;
+      if (first_name && last_name) {
+        r.name = `${first_name} ${last_name}`;
       }
 
       return r;

@@ -386,7 +386,7 @@ class Items_model extends MY_Model
             }
         }
 
-        // $this->db->update($this->table_has_location);
+        $this->db->update($this->table_has_location);
     }
     public function getLocationById($id)
     {
@@ -726,7 +726,6 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
 
         $user_login = logged('FName') . ' ' . logged('LName');
@@ -757,7 +756,6 @@ class Items_model extends MY_Model
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
             // =====
         }
-
         if ($transactionType == "deduct") {
             // =====
             $this->db->select('items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "'.$item_id.'") AS TOTAL_QUANTITY');
@@ -770,7 +768,7 @@ class Items_model extends MY_Model
             $totalQuantity = $itemStorageLocationQuery1->result()[0]->TOTAL_QUANTITY;
             // =====
             $newQuantity = $currentQuantity - $quantity;
-            if ($newQuantity <= 0) { $newQuantity = 0; }
+            // if ($newQuantity <= 0) { $newQuantity = 0; }
             // =====
             $updateItem = $this->db->update('items_has_storage_loc', 
                 ['qty' => $newQuantity], array(
@@ -784,7 +782,7 @@ class Items_model extends MY_Model
                 'item_id' => $item_id,
                 'item_location' => $itemLocation,
                 'transaction' => "-$quantity",
-                'running_quantity' => $newQuantity,
+                'running_quantity' => $totalQuantity - $quantity,
                 'name_transaction' => $user_login,
             ];
             // =====

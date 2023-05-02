@@ -83,7 +83,7 @@ class Customer extends MY_Controller
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
-        
+
         $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/list', $this->page_data);
@@ -1096,6 +1096,9 @@ class Customer extends MY_Controller
         if($id!=null){
             $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+
+            $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
+
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_billing");
@@ -1353,7 +1356,10 @@ class Customer extends MY_Controller
         $this->page_data['cus_id']     = $cid;
         $this->page_data['customer']   = $customer;
 
-        $this->load->view('customer/credit_industry', $this->page_data);
+        $this->page_data['page']->title = 'Credit Industry';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->load->view('v2/pages/customer/credit_industry', $this->page_data);
     }
 
     public function add_new_dispute_item($cid)
@@ -1379,7 +1385,10 @@ class Customer extends MY_Controller
         $this->page_data['furnishers'] = $furnishers;
         $this->page_data['reasons'] = $reasons;
 
-        $this->load->view('customer/add_new_dispute_item', $this->page_data);
+        $this->page_data['page']->title = 'Credit Industry';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->load->view('v2/pages/customer/add_new_dispute_item', $this->page_data);
     }
 
     public function ajax_load_company_reason_list()
@@ -1810,7 +1819,7 @@ class Customer extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
         $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
-
+    
         // fetch customer statuses
         $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
 
@@ -2566,6 +2575,8 @@ class Customer extends MY_Controller
         if(isset($lead_id)){
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
+        $leadId = $this->page_data['leads_data']->fk_sa_id;
+      
         $input = $this->input->post();
         $convert_lead = $this->input->post('convert_customer');
         if(isset($convert_lead)){
@@ -2575,8 +2586,8 @@ class Customer extends MY_Controller
                 unset($input['convert_customer']);
                 $this->customer_ad_model->add($input, "ac_leads");
             }
-
-            $input_profile = array();
+   
+            $input_profile = array();   
             $input_profile['fk_user_id'] = logged('id');
             //$input_profile['fk_sa_id'] = $input['fk_sa_id'];
             $input_profile['first_name'] = $input['firstname'];
@@ -2618,7 +2629,7 @@ class Customer extends MY_Controller
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
-    }
+    }   
 
     public function save_new_lead()
     {
@@ -2661,20 +2672,22 @@ class Customer extends MY_Controller
             $customer_data = [
                 'company_id' => logged('company_id'),
                 'fk_user_id' => logged('id'),
-                'fk_sa_id' => 0,
+                'fk_sa_id' => $input['fk_sa_id'],
                 'contact_name' => '',
                 'status' => 'New',
                 'customer_type' => 'Residential',
                 'first_name' => $input['firstname'],
                 'middle_name' => $input['middle_initial'],
                 'last_name' => $input['lastname'],
+                'suffix' => $input['suffix'],
                 'mail_add' => $input['address'],
                 'city' => $input['city'],
                 'state' => $input['state'],
-                'zip_code' => $input['zip_code'],
+                'zip_code' => $input['zip'],
                 'country' => $input['country'],
                 'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
                 'email' => $input['email_add'],
+                'ssn' => $input['sss_num'],
                 'phone_h' => $input['phone_home']
             ];
             if ($lastid = $this->customer_ad_model->add($customer_data, "acs_profile")) {
@@ -2688,7 +2701,7 @@ class Customer extends MY_Controller
             }
         }
 
-        $json = ['is_success' => $is_success, 'msg' => $msg];
+        $json = ['is_success' => $is_success, 'msg' => $msg, 'last_id' => $lastid];
         echo json_encode($json);
     }
 

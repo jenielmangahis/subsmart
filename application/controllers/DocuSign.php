@@ -14,7 +14,6 @@ class DocuSign extends MYF_Controller
     public function signing()
     {
         $genPDF = $this->input->get('file');
-        
         if($genPDF == "geratedpdf") {
             $this->load->view('esign/docusign/geratedpdf', $this->page_data);
         } else {
@@ -28,7 +27,7 @@ class DocuSign extends MYF_Controller
         $decrypted = decrypt($this->input->get('hash', true), $this->password);
         $decrypted = json_decode($decrypted, true);
         
-        ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
+        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'prof_id' => $prof_id] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
 
         $this->db->where('id', $recipientId);
@@ -112,7 +111,10 @@ class DocuSign extends MYF_Controller
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
         $autoPopulateData = [];
-
+        $acscustomer_first_name;
+        $acscustomer_last_name;
+        $acscustomer_prof_id;
+        
         foreach ($fields as $field) {
             if (!$field->specs) {
                 continue;
@@ -134,13 +136,15 @@ class DocuSign extends MYF_Controller
             $this->db->where('color', $specs['auto_populate_with']);
             $this->db->where('docfile_id', $documentId);
             $currAutoPopulateData = $this->db->get('user_docfile_recipients')->row();
-
+            
             $this->db->where('user_docfile_recipient_id', $currAutoPopulateData->id);
             $jobRecipient = $this->db->get('user_docfile_job_recipients')->row();
 
             if ($jobRecipient) {
                 $jobRecipientJobId = $jobRecipient->job_id;
                 $currAutoPopulateData = $this->_getJobCustomer($jobRecipient->job_id);
+
+                $acscustomer_prof_id = $currAutoPopulateData->prof_id;
 
                 $this->db->select('access_password');
                 $this->db->where('fk_prof_id', $currAutoPopulateData->prof_id);
@@ -157,7 +161,9 @@ class DocuSign extends MYF_Controller
                 $currAutoPopulateData->card_expiration = $accessData->credit_card_exp;
                 $currAutoPopulateData->card_expiration_mm_yyyy = $accessData->credit_card_exp_mm_yyyy;
             }
-
+            $acscustomer_first_name = $accessData->card_fname;
+            $acscustomer_last_name = $currAutoPopulateData;
+            $acscustomer_job = $jobRecipient;
             $autoPopulateData[$specs['auto_populate_with']] = $currAutoPopulateData;
         }
 
@@ -215,18 +221,12 @@ class DocuSign extends MYF_Controller
         }
         
         #changes starts here
-        $prof_id = $jobData->customer_id;
+
         #Clients
+        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country');
         $this->db->where('prof_id', $prof_id);
         $client = $this->db->get('acs_profile')->row();
-
-        $clientKeys = [
-            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country'
-        ];
-        $filteredClient = array_filter( (array)$client , function($v) use ($clientKeys) {
-            return in_array($v, $clientKeys);
-        }, ARRAY_FILTER_USE_KEY);
-        $autoPopulateData['client'] = $filteredClient;
+        $autoPopulateData['client'] = $client;
 
         #password
         $this->db->where('fk_prof_id', $prof_id);
@@ -404,7 +404,7 @@ class DocuSign extends MYF_Controller
                 if ($isMoreThan24Hours) {
                     $this->db->where('id', $document->id);
                     $this->db->update('user_docfile', ['status' => 'Deleted']);
-                    continue;
+                    // continue;
                 }
             }
 
@@ -464,7 +464,7 @@ class DocuSign extends MYF_Controller
     private function getManageData($view)
     {
         $view = strtolower($view);
-
+       
         if ($view === 'action_required') {
             return $this->getActionRequired();
         }
@@ -501,6 +501,7 @@ class DocuSign extends MYF_Controller
 
             default:
                 $this->db->where('status !=', 'Deleted');
+                break;
         }
 
         return $this->db->get('user_docfile')->result();
@@ -907,7 +908,7 @@ class DocuSign extends MYF_Controller
             'assets/js/esign/docusign/template-create.js',
         ]);
 
-        $this->load->view('esign/docusign/template-create/index', $this->page_data);
+        $this->load->view('v2/pages/esign/docusign/template-create/index', $this->page_data);
     }
 
     public function apiStoreTemplate()
@@ -2328,11 +2329,8 @@ SQL;
             return [];
         }
 
-<<<<<<< HEAD
-=======
         $this->db->where('status <>', 'Trashed');
         $this->db->where('status <>', 'Deleted');
->>>>>>> staging-master
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();

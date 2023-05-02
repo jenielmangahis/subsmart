@@ -49,7 +49,7 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
                                         <input type="text" name="workorder_number" id="workorder_number" class="nsm-field form-control" value="<?php echo "WO-";
                                                                                                                                                 foreach ($number as $num) :
@@ -63,7 +63,7 @@
                                                                                                                                                 echo str_pad($val, 7, "0", STR_PAD_LEFT);
                                                                                                                                                 ?>" readonly required />
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
                                             <option value="0">- none -</option>
@@ -103,6 +103,10 @@
                                                 <option value="<?php echo $jb->id; ?>"><?php echo $jb->name; ?></option>
                                             <?php } ?>
                                         </select>
+                                    </div>
+                                    <div class="col-12 col-md-2">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
+                                        <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?php echo $clients->business_name; ?>" />
                                     </div>
                                 </div>
                             </div>

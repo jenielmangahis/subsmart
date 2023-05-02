@@ -551,6 +551,14 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->count_all_results();
         //$query = $this->db->get($this->table);
         return $query;
-    
+    }
+
+    public function getCustomerActivityLogs($customer_id){
+        $this->db->select('*');
+        $this->db->from("customer_activity_logs");       
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id DESC');
+        $query = $this->db->get(); 
+        return $query->result();
     }
 }

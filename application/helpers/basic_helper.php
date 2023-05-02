@@ -4761,13 +4761,13 @@ if(!function_exists('set_expense_graph_data')) {
                     $itemCreator = $CI->Users_model->getUserByID($user_id);
                     if( $itemCreator ){
                         if( $itemCreator->mobile != '' ){
+                            $mobile_number = formatSmSNumber($itemCreator->mobile);
                             $filter = array();
                             $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                             $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                            $filter[] = ['field' => 'mobile_number', 'value' => $itemCreator->mobile];
+                            $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                             $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                            if( !$isExists ){
-                               $mobile_number = formatSmSNumber($itemCreator->mobile);
+                            if( !$isExists ){                               
                                $cron_data = [
                                     'company_auto_sms_id' => $autoSms->id,
                                     'obj_id' => $object_id,
@@ -4792,13 +4792,13 @@ if(!function_exists('set_expense_graph_data')) {
                 if( $autoSms->send_to_assigned_user == 1 && $assigned_to_user_id > 0 ){
                     $assignedUser = $CI->Users_model->getUserByID($assigned_to_user_id);
                     if( $assignedUser->mobile != '' ){
+                        $mobile_number = formatSmSNumber($assignedUser->mobile);
                         $filter = array();
                         $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                         $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                        $filter[] = ['field' => 'mobile_number', 'value' => $assignedUser->mobile];
+                        $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                        if( !$isExists ){
-                            $mobile_number = formatSmSNumber($assignedUser->mobile);
+                        if( !$isExists ){                            
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
@@ -4820,13 +4820,13 @@ if(!function_exists('set_expense_graph_data')) {
                 if( $autoSms->send_to_assigned_agent == 1 && $agent_id > 0 ){
                     $assignedAgent = $CI->Users_model->getUserByID($agent_id);
                     if( $assignedAgent->mobile != '' ){
+                        $mobile_number = formatSmSNumber($assignedAgent->mobile);
                         $filter = array();
                         $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                         $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                        $filter[] = ['field' => 'mobile_number', 'value' => $assignedAgent->mobile];
+                        $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                        if( !$isExists ){
-                            $mobile_number = formatSmSNumber($assignedAgent->mobile);
+                        if( !$isExists ){                            
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
@@ -4850,13 +4850,13 @@ if(!function_exists('set_expense_graph_data')) {
                 $companyAdminUsers = $CI->Users_model->getAllAdminByCompanyID($company_id);
                 foreach($companyAdminUsers as $u){
                     if( $u->mobile != '' ){
+                        $mobile_number = formatSmSNumber($u->mobile);
                         $filter = array();
                         $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                         $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                        $filter[] = ['field' => 'mobile_number', 'value' => $u->mobile];
+                        $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                        if( !$isExists ){
-                            $mobile_number = formatSmSNumber($u->mobile);
+                        if( !$isExists ){                            
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
@@ -4880,13 +4880,13 @@ if(!function_exists('set_expense_graph_data')) {
                 $users = $CI->Users_model->getAllUsersByCompanyID($company_id);
                 foreach($users as $u){
                     if( $u->mobile != '' ){
+                        $mobile_number = formatSmSNumber($u->mobile);
                         $filter = array();
                         $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                         $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                        $filter[] = ['field' => 'mobile_number', 'value' => $u->mobile];
+                        $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                         $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                        if( !$isExists ){
-                            $mobile_number = formatSmSNumber($u->mobile);
+                        if( !$isExists ){                            
                             $cron_data = [
                                 'company_auto_sms_id' => $autoSms->id,
                                 'obj_id' => $object_id,
@@ -4911,13 +4911,13 @@ if(!function_exists('set_expense_graph_data')) {
                         $user = $CI->Users_model->getUserByID($uid);
                         if( $user ){
                             if( $user->mobile != '' ){
+                                $mobile_number = formatSmSNumber($user->mobile);
                                 $filter = array();
                                 $filter[] = ['field' => 'module_name', 'value' => $module_name];            
                                 $filter[] = ['field' => 'company_auto_sms_id', 'value' => $autoSms->id];
-                                $filter[] = ['field' => 'mobile_number', 'value' => $user->mobile];
+                                $filter[] = ['field' => 'mobile_number', 'value' => $mobile_number];
                                 $isExists = $CI->CronAutoSmsNotification_model->getByObjectId($object_id, $filter);
-                                if( !$isExists ){  
-                                    $mobile_number = formatSmSNumber($user->mobile);                        
+                                if( !$isExists ){                                      
                                     $cron_data = [
                                         'company_auto_sms_id' => $autoSms->id,
                                         'obj_id' => $object_id,

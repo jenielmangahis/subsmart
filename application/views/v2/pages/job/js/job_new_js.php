@@ -207,7 +207,7 @@ $("#attachment-file").change(function() {
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>/job/save_job",
+                    url: "<?= base_url() ?>job/save_job",
                     data: form.serialize(), // serializes the form's elements.
                     dataType:'json',
                     success: function(data) {
@@ -272,16 +272,17 @@ $("#attachment-file").change(function() {
             var item_type = $(this).data('item_type');
             // var total_ = price * qty;
             var total_ = 0;
-            var total = parseFloat(total_).toFixed(2);
+            var total_price = price + total_;
+            var total = parseFloat(total_price).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
             $("#ITEMLIST_PRODUCT_"+idd).hide();
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
-                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='0' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
+                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
                 "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
-                "<td><small>Amount</small><br><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
+                "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
                 "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
                 "</tr>";
             tableBody = $("#jobs_items");
@@ -318,7 +319,17 @@ $("#attachment-file").change(function() {
                 "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
                 "<option>Select Location</option>" +
                 "<option value='" +location_id+ "' selected>" +location_name+ "</option>" +
-                "<?php if ($getAllLocation) { foreach ($getAllLocation as $getAllLocations) { echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>"; } } ?>" +
+                "<?php 
+                    if ($getAllLocation) { 
+                        foreach ($getAllLocation as $getAllLocations) {
+                            if ($getAllLocations->default == "true") {
+                                echo "<option selected value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                            } else {
+                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                            }
+                        } 
+                    } 
+                ?>" +
                 "</select>" +
                 "</td>";
 

@@ -183,11 +183,11 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
                                                 <input type="text" name="workorder_number" id="workorder-number" class="nsm-field form-control" value="<?= $prefix . $next_num; ?>" readonly required />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <div class="row g-3">
                                                     <div class="col-6">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Select Customer</label>
@@ -203,32 +203,33 @@
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Security Number</label>
                                                 <input type="text" name="security_number" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" required />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
                                                 <input type="date" name="birthdate" id="birthdate" class="nsm-field form-control datepicker" required />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
                                                 <input type="text" name="phone_number" id="phone_no" class="nsm-field form-control number-field" />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
                                                 <input type="text" name="mobile_number" id="mobile_no" class="nsm-field form-control number-field" />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                                                 <input type="email" name="email" id="email" class="nsm-field form-control" required />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password</label>
                                                 <input type="text" name="password" id="password" class="nsm-field form-control" required />
                                             </div>
-                                            <div class="col-12">
-                                                <hr>
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
+                                                <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
@@ -255,10 +256,12 @@
                                                 <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name . ' ' . $companyDet->last_name; ?>">
                                                 <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
                                                 <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
-                                                <hr>
+                                                <!-- <hr> -->
                                             </div>
 
-                                            <?php foreach ($fields as $field) { ?>
+                                            <?php 
+                                            // print_r($fieldsName);
+                                            foreach ($fieldsName as $field) { ?>
                                                 <div class="col-12 col-md-6">
                                                     <div class="row g-3">
                                                         <div class="col-6">
@@ -3883,6 +3886,7 @@ $(document).ready(function(){
             $("#zip").val(response['customer'].zip_code);
             $("#cross_street").val(response['customer'].cross_street);
             $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+            $("#business_name").val(response['customer'].business_name);
 
             $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
 

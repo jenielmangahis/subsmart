@@ -18,21 +18,6 @@
     display: inline-block;
     text-align: right;
 }
-.custom-accordion-button {
-    position: relative;
-    display: block;
-    align-items: center;
-    width: 100%;
-    padding: 1rem 1.25rem;
-    font-size: 19px;
-    color: #212529;
-    text-align: left;
-    background-color: #fff;
-    border: 0;
-    border-radius: 0;
-    overflow-anchor: none;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,border-radius .15s ease;
-}
 </style>
 <?php if($is_valid == 1){ ?>
     <?php foreach($plaidBankAccounts as $pa){ ?>
@@ -62,9 +47,8 @@
     <div class="accordion">
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="custom-accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bank-recent-transactions" aria-expanded="true" aria-controls="bank-recent-transactions">
+                <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#bank-recent-transactions" aria-expanded="true" aria-controls="bank-recent-transactions">
                     <i class='bx bxs-spreadsheet drawer-icon'></i> Recent Transactions
-                    <i class='bx bxs-chevron-up toggle-icon' style="float: right;"></i>
                 </button>
             </h2>
             <div id="bank-recent-transactions" class="accordion-collapse collapse">
@@ -93,11 +77,3 @@
     <span>Invalid Plaid Account</span>
 </div>
 <?php } ?>
-<script>
-$(function(){
-    $('.custom-accordion-button').click(function() {
-        var toggle_icon = $('.toggle-icon');
-        toggle_icon.toggleClass('bx bxs-chevron-up bx bxs-chevron-down');
-    });
-});
-</script>

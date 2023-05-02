@@ -75,7 +75,7 @@ $('input[name="col_chk"]').on('change', function() {
     var dataName = $(this).next().text();
 
     var index = $(`#reports-table thead td[data-name="${dataName}"]`).index();
-    $(`#reports-table tr`).each(function() {
+    $(`#reports-table tr:not([data-bs-toggle="collapse"], .group-total, .starting-balance-row)`).each(function() {
         if(chk.prop('checked')) {
             $($(this).find('td')[index]).show();
         } else {
@@ -83,7 +83,41 @@ $('input[name="col_chk"]').on('change', function() {
         }
     });
 
-    $(`#print_report_modal table tr`).each(function() {
+    $(`#reports-table tr[data-bs-toggle="collapse"], #reports-table tr.group-total`).each(function() {
+        if(index > 22) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 22]).show();
+            } else {
+                $($(this).find('td')[index - 22]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
+        }
+    });
+
+    $('#reports-table tr.starting-balance-row').each(function() {
+        if(index > 26) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 26]).show();
+            } else {
+                $($(this).find('td')[index - 26]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
+        }
+    });
+
+    $(`#print_report_modal table tr:not(.group-header, .group-total, .starting-balance-row)`).each(function() {
         if(chk.prop('checked')) {
             $($(this).find('td')[index]).show();
         } else {
@@ -91,11 +125,79 @@ $('input[name="col_chk"]').on('change', function() {
         }
     });
 
-    $(`#print_preview_report_modal #report_table_print tr`).each(function() {
+    $(`#print_report_modal table tr.group-header, #print_report_modal table tr.group-total`).each(function() {
+        if(index > 22) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 22]).show();
+            } else {
+                $($(this).find('td')[index - 22]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
+        }
+    });
+
+    $(`#print_report_modal table tr.starting-balance-row`).each(function() {
+        if(index > 26) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 26]).show();
+            } else {
+                $($(this).find('td')[index - 26]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
+        }
+    });
+
+    $(`#print_preview_report_modal #report_table_print tr:not(.group-header, .group-total, .starting-balance-row)`).each(function() {
         if(chk.prop('checked')) {
             $($(this).find('td')[index]).show();
         } else {
             $($(this).find('td')[index]).hide();
+        }
+    });
+
+    $(`#print_preview_report_modal #report_table_print tr.group-header, #print_preview_report_modal #report_table_print tr.group-total`).each(function() {
+        if(index > 22) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 22]).show();
+            } else {
+                $($(this).find('td')[index - 22]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
+        }
+    });
+
+    $(`#print_preview_report_modal #report_table_print tr.starting-balance-row`).each(function() {
+        if(index > 26) {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index - 26]).show();
+            } else {
+                $($(this).find('td')[index - 26]).hide();
+            }
+        } else {
+            var colspan = $(this).children('td:first-child').attr('colspan');
+            if(chk.prop('checked')) {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+            } else {
+                $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
+            }
         }
     });
 });

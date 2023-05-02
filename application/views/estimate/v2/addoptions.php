@@ -5,7 +5,7 @@ include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
 <!-- Script for autosaving form -->
-<script src="<?= base_url("assets/js/estimate/autosave-options.js") ?>"></script>
+<!-- <script src="<?= base_url("assets/js/estimate/autosave-options.js") ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
 
@@ -376,6 +376,12 @@ echo put_header_assets();
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="job_name"><b>Business Name</b> (optional)</label>
+                                    <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
                                 </div>
                             </div>
                             <hr>
@@ -1169,6 +1175,7 @@ echo put_header_assets();
                     $("#customer_email").val(response['customer'].email);
                     $("#shipping_address").val(response['customer'].mail_add);
                     $("#billing_address").val(response['customer'].mail_add);
+                    $('#business_name').val(response['customer'].business_name);
 
                     if (response.customer.email) {
                         $("#estimate-customer-email").val(response.customer.email);

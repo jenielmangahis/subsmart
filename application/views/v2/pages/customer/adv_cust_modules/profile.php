@@ -246,6 +246,71 @@ div#controls div#call-controls div#volume-indicators > div {
         </div>
     </div>
 </div>
+<div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
+    <div class="nsm-card nsm-grid">
+        <div class="nsm-card-header d-block">
+            <div class="nsm-card-title">
+                <span>Activities</span>
+            </div>
+        </div>
+        <div class="nsm-card-content">
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="CUSTOMER_LOG_TABLE" class="table table-hover w-100">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th style="width: 0%;">Date</th>
+                                    <th>Logs</th>
+                                    <a href="#"></a>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    foreach ($log_info as $log_infos) {
+                                ?>
+                                <tr>
+                                    <td><span class="badge bg-secondary"><?php echo $log_infos->date; ?></span></td>
+                                    <td><?php echo $log_infos->logs; ?></td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    #CUSTOMER_LOG_TABLE_length, 
+    #CUSTOMER_LOG_TABLE_filter, 
+    #CUSTOMER_LOG_TABLE_info {
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 5px;
+    }
+    table.dataTable.no-footer {
+        border: 1px solid lightgray;
+    }
+    table.dataTable, table.dataTable th, table.dataTable td {
+        box-sizing: border-box;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function() {
+       var CUSTOMER_LOG_TABLE = $("#CUSTOMER_LOG_TABLE").DataTable({
+            "ordering": false,
+            pageLength : 5,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        }); 
+    });
+</script>
 
 <div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="managequickactionsmodal">
   <div class="modal-dialog" role="document">

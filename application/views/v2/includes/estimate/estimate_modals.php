@@ -12,15 +12,15 @@
                     </div>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('estimate/add?customer=' . $profile_info->prof_id) ?>'">Standard Estimate</button>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/add?customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Standard Estimate</button>
                     </div>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('estimate/addoptions?type=2&customer=' . $profile_info->prof_id) ?>'">Options Estimate</button>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/addoptions?type=2&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Options Estimate</button>
                     </div>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('estimate/addbundle?type=3&customer=' . $profile_info->prof_id) ?>'">Bundle Estimate</button>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/addbundle?type=3&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Bundle Estimate</button>
                     </div>
                 </div>
             </div>

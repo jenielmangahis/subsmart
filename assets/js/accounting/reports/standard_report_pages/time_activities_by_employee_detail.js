@@ -1,6 +1,12 @@
+const currUrl = window.location.href;
+const urlSplit = currUrl.includes('?') ? currUrl.split('?')[0].split('/') : currUrl.split('/');
+const reportId = urlSplit[urlSplit.length - 1].replace('#', '');
+
 $('.date').each(function() {
     $(this).datepicker({
-        uiLibrary: 'bootstrap'
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 

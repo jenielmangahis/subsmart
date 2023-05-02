@@ -22,14 +22,17 @@ class CreditorFurnisher extends MY_Controller
 
         $creditorFurnishers = $this->Furnisher_model->getAllByCompanyId($cid);
 
+        $this->page_data['page']->title = 'Credit Industry';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->page_data['creditorFurnishers'] = $creditorFurnishers;
-        $this->load->view('furnishers/list', $this->page_data);
+        $this->load->view('v2/pages/furnishers/list', $this->page_data);
     }
 
     public function add_new()
     {
 
-        $this->load->view('furnishers/add', $this->page_data);
+        $this->load->view('v2/pages/furnishers/add', $this->page_data);
     }
 
     public function ajax_create_furnisher()

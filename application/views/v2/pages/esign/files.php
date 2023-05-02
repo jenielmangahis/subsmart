@@ -381,11 +381,18 @@ echo put_header_assets();
                                                     <span class="u-ellipsis ng-binding">Title</span>
                                                 </div>
                                             </li>
+                                            <!-- <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_security_code"></i></span>
+                                                    <i class="esign-fa fas fa-fingerprint"></i>
+                                                    <span class="u-ellipsis ng-binding">Card Security Code</span>
+                                                </div>
+                                            </li> -->
                                         </ul>
                                     </div>
                                 </div>
 
-                                <div class="sidebar_item">
+                                <!-- <div class="sidebar_item">
                                     <div class="menu-fields">
                                         <ul class="menu_list">
 
@@ -455,14 +462,6 @@ echo put_header_assets();
                                                 </div>
                                             </li>                                            
 
-                                            <!-- <li class="menu_listItem">
-                                                <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-country"></i></span>
-                                                    <i class="esign-fa fas fa-globe-americas"></i>
-                                                    <span class="u-ellipsis ng-binding">Country</span>
-                                                </div>
-                                            </li> -->
-
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-access_password"></i></span>
@@ -472,9 +471,9 @@ echo put_header_assets();
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
 
-                                <div>
+                                <!-- <div>
                                     <p class="fw-bold"><small>Account Details</small></p>
                                 </div>
                                 <div class="sidebar_item">
@@ -529,9 +528,9 @@ echo put_header_assets();
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
 
-                                <div>
+                                <!-- <div>
                                     <p class="fw-bold"><small>Billing</small></p>
                                 </div>
                                 <div class="sidebar_item">
@@ -570,7 +569,7 @@ echo put_header_assets();
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                                 
 
                                 <div class="sidebar_item">
@@ -765,12 +764,17 @@ echo put_header_assets();
                         <?php endforeach;?>
                     </select>
                     <small class="form-text text-muted" style="line-height: 1.3; display: block;">If the data is associated with this role exists, the input field will be automatically filled in.</small>
+                    <hr>
+                    <small class="form-text text-muted">
+                        <b>Lists of reusable client Field name</b> <a href="javascript:void(0);" data-bs-toggle="tooltip" title="Select Client from the Auto-populate with"><i class="far fa-question-circle"></i></a> <br>
+                        subscriber_fname, subscriber_lname, phone_h, phone_m, address, city, state, zip_code, password, customer_email, country, card_number, equipment_cost, checking_account_n, aba, card_name, card_account_number, card_expiration, card_security_code
+                    </small>
                 </div>
 
                 <hr/>
 
                 <div>
-                    <label for="textFieldName">Field name</label>
+                    <label for="textFieldName"><span>Field name</span></label>
                     <input type="text" name="textFieldName" id="textFieldName" class="w-100">
                 </div>
 

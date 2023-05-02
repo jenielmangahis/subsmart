@@ -115,8 +115,8 @@ tr {
                                 <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
                             <div class="nsm-card-content">
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-3 d-none">
+                                <div class="row g-2">
+                                    <div class="col-12 col-md-2 d-none">
                                         <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
                                         <input type="text" name="workorder_number" id="workorder_number" class="nsm-field form-control" value="<?php echo "WO-";
                                                                                                                                                 foreach ($number as $num) :
@@ -130,7 +130,7 @@ tr {
                                                                                                                                                 echo str_pad($val, 7, "0", STR_PAD_LEFT);
                                                                                                                                                 ?>" readonly required />
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
                                             <option value="0">- none -</option>
@@ -139,7 +139,7 @@ tr {
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Account Type</label>
                                         <select class="nsm-field form-select" name="account_type" id="account_type">
                                             <option value="">- none -</option>
@@ -312,6 +312,10 @@ tr {
                                             <?php } ?>
                                         </select>
                                     </div>
+                                    <!-- <div class="col-12 col-md-2">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
+                                        <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?php echo $clients->business_name; ?>" />
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -1445,9 +1449,9 @@ tr {
                                                 <label class="content-subtitle fw-bold d-block mb-2">Last name</label>
                                                 <input type="text" name="lastname" id="lastname" class="nsm-field form-control name-field">
                                             </div>
-                                            <div class="col-12 d-none" id="commercial_account">
+                                            <div class="col-12 col-md-12" id="commercial_account">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
-                                                <input type="text" name="businessname" class="nsm-field form-control">
+                                                <input type="text" name="businessname"  id="businessname" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">First name (Spouse)</label>
@@ -1567,7 +1571,7 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-3 text-end">
                                                 <label class="content-title">$ <span id="totalDue">0.00</span></label>
-                                                <input type="hidden" name="totalDue" value="0">
+                                                <input type="hidden" name="totalDue" id="payment_amount_grand" value="0">
                                             </div>
                                         </div>
                                     </div>
@@ -2326,6 +2330,7 @@ $(".nsm-subtitle").html(function() {
         let val4 = $('#totalDue').html(val3.toFixed(2));
         console.log(val3);
         $('.totalDue').val(val3.toFixed(2));
+        $('#payment_amount_grand').val(val3.toFixed(2));
         $('#payment_amount').val(val3.toFixed(2));
     }
 </script>
@@ -2386,6 +2391,7 @@ $(".nsm-subtitle").html(function() {
                     $("[name=mobile]").val(customer.phone_m);
                     $("[name=email]").val(customer.email);
                     $("[name=state]").val(customer.state);
+                    $("[name=businessname]").val(customer.business_name);
                 }
             });
         }

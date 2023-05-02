@@ -8,7 +8,6 @@ class Event_Types extends MY_Controller {
 		parent::__construct();
 		$this->checkLogin();
 		$this->page_data['page']->title = 'Event Types';
-        $this->page_data['page']->tab = 'Event Types';
         $this->page_data['page']->parent = 'Sales';
         $this->hasAccessModule(4);
 		$this->load->model('EventType_model');
@@ -20,7 +19,7 @@ class Event_Types extends MY_Controller {
 	}
 
 
-	public function index(){        
+	public function index(){
 		$user_id = logged('id');
         $role_id = logged('role');
         $company_id = logged('company_id');
@@ -34,7 +33,7 @@ class Event_Types extends MY_Controller {
 		$this->load->view('v2/pages/events/event_types/index', $this->page_data);
 	}
 
-    public function add_new_event_type(){        
+    public function add_new_event_type(){
         $this->load->model('Icons_model');
 
         add_css(array(
@@ -44,7 +43,7 @@ class Event_Types extends MY_Controller {
         $icons = $this->Icons_model->getAll();
 
         $this->page_data['icons'] = $icons;
-        $this->load->view('v2/pages/events/event_types/add_new', $this->page_data);
+        $this->load->view('event_types/add_new', $this->page_data);
     }
 
     public function create_event_type(){
@@ -141,7 +140,7 @@ class Event_Types extends MY_Controller {
 
         $this->page_data['eventType'] = $eventType;
         $this->page_data['icons'] = $icons;
-        $this->load->view('v2/pages/events/event_types/edit', $this->page_data);
+        $this->load->view('event_types/edit', $this->page_data);
     }
 
     public function update_event_type() {

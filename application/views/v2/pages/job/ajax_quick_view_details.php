@@ -5,6 +5,21 @@
     font-size: 15px;
     padding: 10px;
 }
+.total-summary{
+    list-style: none;
+    padding: 0px;
+}
+.total-summary li{
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 6px;
+}
+.total-summary li span{
+    display: block;
+}
+.total-summary li .right-text{
+    text-align: right;
+}
 </style>
 <div class="">
     <div class="row">
@@ -39,9 +54,23 @@
                             </td>
                         </tr>
                         <tr>
-                            <td align="right">Date :</td>
+                            <td align="right">From :</td>
                             <td align="right">
-                                <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
+                                <?php 
+                                    $job_start_date = $jobs_data->start_date . ' ' . $jobs_data->start_time;                                    
+                                    $job_date = date('m/d/Y g:i a', strtotime($job_start_date));
+                                    echo $job_date;
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">To :</td>
+                            <td align="right">
+                                <?php
+                                    $job_end_date   = $jobs_data->end_date . ' ' . $jobs_data->end_time;
+                                    $job_date = date('m/d/Y g:i a', strtotime($job_end_date));
+                                    echo $job_date;
+                                ?>
                             </td>
                         </tr>
                         <tr>
@@ -75,7 +104,7 @@
                     <span> Contact Number: <?= formatPhoneNumber($company_info->business_phone); ?></span>
                 </div>
                 <br>
-                <h6 class="title-border">TO : <?= $jobs_data->customer_id; ?></h6>
+                <h6 class="title-border">TO : </h6>
                 <div style="padding:0px 9px; font-size: 14px;">
                     <?php if( $jobs_data->customer_type == 'Business' && $jobs_data->acs_business_name != '' ){ ?>
                         <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
@@ -100,7 +129,7 @@
                 <h6 class="title-border">TECHNICIANS :</h6>
                 <?php 
                     $assigned_employees = array();
-                    $assigned_employees[] = $jobs_data->e_employee_id;
+                    //$assigned_employees[] = $jobs_data->e_employee_id;
                     if( $jobs_data->employee2_id > 0 ){
                         $assigned_employees[] = $jobs_data->employee2_id;
                     }
@@ -110,10 +139,10 @@
                     if( $jobs_data->employee4_id > 0 ){
                         $assigned_employees[] = $jobs_data->employee4_id;
                     }
-                    if( $jobs_data->employee5_employee_id > 0 ){
+                    if( $jobs_data->employee5_id > 0 ){
                         $assigned_employees[] = $jobs_data->employee5_id;
                     }
-                    if( $jobs_data->employee6_employee_id > 0 ){
+                    if( $jobs_data->employee6_id > 0 ){
                         $assigned_employees[] = $jobs_data->employee6_id;
                     }
                 ?>
@@ -125,13 +154,18 @@
             </div>
             <div class="col-md-12" style="margin-top: 16px;">
                 <h6 class="title-border">JOB DETAILS :</h6>
+                <?php 
+                    $installation_cost = 0;
+                    $monthly_monitoring = 0;
+                    $program_setup = 0;
+                ?>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <td>Items</td>
                             <td>Qty</td>
                             <td>Price</td>
-                            <td>Total</td>
+                            <td style="text-align:right;">Total</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,47 +175,75 @@
                             $total = $item->cost * $item->qty;
                         ?>
                         <tr>
-                            <td><?= $item->title; ?>
+                            <td>
+                                <?= $item->title; ?>
+                                <?php 
+                                    if( $item->title != '' ){
+                                        echo $item->title;
+                                    }else{
+                                        echo $item->job_item_name;
+                                    }
+                                ?>        
                             </td>
-                            <td><?= $item->qty; ?>
-                            </td>
-                            <td>$<?= $item->cost; ?>
-                            </td>
-                            <td>$<?= number_format((float)$total, 2, '.', ','); ?>
-                            </td>
+                            <td><?= $item->qty; ?></td>
+                            <td>$<?= $item->cost; ?></td>
+                            <td style="text-align:right;">$<?= number_format((float)$total, 2, '.', ','); ?></td>
                         </tr>
                         <?php
                         $subtotal = $subtotal + $total;
                         endforeach;
                         $GRAND_TOTAL = $subtotal + $jobs_data->tax_rate;
-                    ?>
+                    ?>                    
                     </tbody>
                 </table>
-                <hr>
-                <b>Sub Total:</b>
-                <span class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></span>
-                <br>
-                <b>Tax Rate:</b>&nbsp;
-                <span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span>
-                <br>
-                <hr>
+                <hr />                
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-5 p-4">
+                        <center>
+                            <strong>Our Team will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
+                            <small style="text-align: center;">Thank you for your business, Please
+                                call <?= $company_info->business_name; ?>
+                                at <?= $company_info->business_phone; ?>
+                                for quality customer service.</small>
+                        </center>
+                    </div>
+                    <div class="col-7">
+                        <?php 
+                            $installation_cost = 0;
+                            $monthly_monitoring = 0;
+                            $program_setup = 0;
+                        ?>
+                        <ul class="total-summary">
+                            <li>Sub Total</li>
+                            <li><span class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></span></li>
 
-                <?php if ($jobs_data->tax != null): ?>
-                <b>Tax </b>
-                <i class="right-text">$0.00</i>
-                <br>
-                <hr>
-                <?php endif; ?>
+                            <li>Sales Tax</li>
+                            <li><span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span></li>
+                            <?php if( in_array($cid, exempted_company_ids()) ){ ?>
+                                <?php 
+                                    if( $latest_job_payment ){
+                                        $installation_cost = $latest_job_payment->installation_cost;
+                                        $monthly_monitoring = $latest_job_payment->monthly_monitoring;
+                                        $program_setup = $latest_job_payment->program_setup;
+                                    }
+                                ?>
+                                <li>Installation Cost</li>
+                                <li><span class="right-text">$<?= number_format((float)$installation_cost, 2, '.', ','); ?></span></li>
 
-                <?php if ($jobs_data->discount != null): ?>
-                <b>Discount </b>
-                <i class="right-text">$0.00</i>
-                <br>
-                <hr>
-                <?php endif; ?>
+                                <li>One time (Program and Setup)</li>
+                                <li><span class="right-text">$<?= number_format((float)$program_setup, 2, '.', ','); ?></span></li>
 
-                <b>Grand Total:</b>
-                <b class="right-text">$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></b>
+                                <li>Monthly Monitoring</li>
+                                <li><span class="right-text">$<?= number_format((float)$monthly_monitoring, 2, '.', ','); ?></span></li>
+                            <?php } ?>
+                            <?php $GRAND_TOTAL = $GRAND_TOTAL + $installation_cost + $monthly_monitoring + $program_setup; ?>
+                            <li><b>Total Due</b></li>
+                            <li><span class="right-text"><b>$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></span></b></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

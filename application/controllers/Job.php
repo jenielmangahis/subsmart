@@ -2259,16 +2259,25 @@ class Job extends MY_Controller
                 $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
 
                 //Create payments data
-                $payment_data = [
-                    'amount' =>  $input['total_amount'],
-                    'program_setup' => $input['otps'],
-                    'monthly_monitoring' => $input['monthly_monitoring'],
-                    'installation_cost' => $input['installation_cost'],
-                    'deposit_collected' => 0,
-                    'job_id' => $jobs_id,
-                    'date_created' => date("Y-m-d h:i:s")
-                ];
-                $this->general->add_($payment_data, 'job_payments');
+                if( $job_workorder_id > 0 ){
+                    $payment_data = [
+                        'amount' =>  $input['total_amount'],
+                        'program_setup' => $input['otps'],
+                        'monthly_monitoring' => $input['monthly_monitoring'],
+                        'installation_cost' => $input['installation_cost'],
+                        'deposit_collected' => 0,
+                        'job_id' => $jobs_id,
+                        'date_created' => date("Y-m-d h:i:s")
+                    ];
+                    $this->general->add_($payment_data, 'job_payments');
+                }else{
+                    // insert data to job payments table
+                    $job_payment_query = array(
+                        'amount' => $input['total_amount'],
+                        'job_id' => $jobs_id,
+                    );
+                    $this->general->add_($job_payment_query, 'job_payments');
+                }
 
                 customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
@@ -2352,7 +2361,7 @@ class Job extends MY_Controller
                         } else {
                             $this->general->update_job_items($job_items_data, $where);
                         }
-                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], null, "deduct");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
                         unset($job_items_data);
                     }
                 }
@@ -2452,6 +2461,12 @@ class Job extends MY_Controller
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
+    }
+
+    public function tryFix(){
+        echo "<pre>";
+        print_r ($this->items_model->recordItemTransaction(1, 1, 4, "deduct"));
+        echo "</pre>";
     }
 
     public function delete()

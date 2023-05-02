@@ -86,7 +86,7 @@ class Inventory extends MY_Controller
         );
         $this->page_data['locations'] = $this->general->get_data_with_param($location_param);
         $this->page_data['items_location'] = $ITEM_LOCATION_ARRAY;
-        $this->page_data['items_history'] = $this->items_model->getAllDeductionHistory();
+        $this->page_data['items_transaction_history'] = $this->items_model->getAllRecordItemTransaction();
         $this->load->view('v2/pages/inventory/list', $this->page_data);
     }
 
@@ -1024,6 +1024,7 @@ class Inventory extends MY_Controller
         echo json_encode($result);
     }
     public function addNewItemLocation() {
+        $executeOnce = 0;
         postAllowed();
 
         $comp_id = logged('company_id');
@@ -1039,6 +1040,10 @@ class Inventory extends MY_Controller
         $this->items_model->checkAndSaveItemLocation($this->input->post('item_id'), $this->input->post('loc_id'), $this->input->post('qty'), $data);
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
 
+        if ($executeOnce == 0) {
+            $executeOnce = 1;
+            $this->items_model->recordItemTransaction($this->input->post('item_id'), $this->input->post('qty'), $this->input->post('loc_id'), "add");
+        }
         echo json_encode($result);
     }
     public function editLocation() {
