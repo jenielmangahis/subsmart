@@ -438,6 +438,11 @@ $("#attachment-file").change(function() {
                 $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
             }
 
+            var installation_cost = $('#installation_cost').val();
+            var otps = $('#otps').val();
+            var monthly_monitoring = $('#monthly_monitoring').val();
+            total = Number(total) + Number(installation_cost) + Number(otps) + Number(monthly_monitoring);
+
             const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
             adjustmentIdSelectors.forEach(selector => {
                 const $element = document.getElementById(selector);
@@ -531,7 +536,17 @@ $("#attachment-file").change(function() {
             calculate_subtotal();
         });
 
-        
+        $("body").delegate("#installation_cost", "change", function(){            
+            calculate_subtotal();
+        });
+
+        $("body").delegate("#otps", "change", function(){            
+            calculate_subtotal();
+        });
+
+        $("body").delegate("#monthly_monitoring", "change", function(){            
+            calculate_subtotal();
+        });
 
         $("body").delegate(".edit_item_list", "click", function(){
             var id = this.id;

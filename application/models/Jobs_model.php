@@ -168,7 +168,7 @@ class Jobs_model extends MY_Model
 
     public function get_specific_job_items($id)
     {
-        $this->db->select('items.id as fk_item_id, items.id, items.title, items.price, items.type, job_items.cost, job_items.qty, items_has_storage_loc.name as location_name, items_has_storage_loc.id as location_id, job_items.points, job_items.tax');
+        $this->db->select('items.id as fk_item_id, items.id, items.title, items.price, items.type, job_items.cost, job_items.qty, items_has_storage_loc.name as location_name, items_has_storage_loc.id as location_id, job_items.points, job_items.tax, job_items.item_name AS job_item_name');
         $this->db->from($this->table_items);
         $this->db->where("job_items.job_id", $id);
         $this->db->join('items', 'items.id = job_items.items_id', 'left');
@@ -759,11 +759,9 @@ class Jobs_model extends MY_Model
     public function get_all_company_scheduled_jobs($company_id)
     {
         $this->db->from($this->table);
-        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
-        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');                
         $this->db->where("jobs.company_id", $company_id);
         $this->db->where("jobs.status", 'Scheduled');
         $this->db->order_by('id', "DESC");
@@ -779,6 +777,16 @@ class Jobs_model extends MY_Model
         $this->db->order_by('date_created', 'DESC');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function get_latest_job_payment_by_job_id($job_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_job_payments);
+        $this->db->where("job_id", $job_id);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->row();
     }
 
     public function getSelectedCustomerInfo($customerID) {

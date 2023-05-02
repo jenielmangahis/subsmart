@@ -285,7 +285,10 @@ foreach ($jobs as $job) {
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a></li>
+                                        <li>
+                                            <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
+                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">Preview</a>
+                                        </li>
                                         
                                         <?php if( $user_type == 7 || $user_type == 1 ){ //Admin ?>
                                         <li><a class="dropdown-item" href="<?php echo base_url('job/new_job1/') . $job->id; ?>">Edit</a></li>
@@ -303,6 +306,21 @@ foreach ($jobs as $job) {
                     </tbody>
                 </table>
             </div>
+
+            <div class="modal fade nsm-modal fade" id="modal-quick-view-job" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">View Job</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" style="max-height:700px; overflow: auto;">
+                            <div class="view-schedule-container row"></div>
+                        </div>                                    
+                    </div>        
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -417,6 +435,26 @@ $(document).ready(function() {
 
         _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter by " + _this.html());
         loadJobs(_this.attr("data-id"));
+    });
+
+    $('.view-job-row').on('click', function(){
+        var appointment_id = $(this).attr('data-id');
+        var url = base_url + "job/_quick_view_details";  
+
+        $('#modal-quick-view-job').modal('show');
+        showLoader($(".view-schedule-container")); 
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {appointment_id:appointment_id},
+             success: function(o)
+             {          
+                $(".view-schedule-container").html(o);
+             }
+          });
+        }, 500);
     });
 });
 

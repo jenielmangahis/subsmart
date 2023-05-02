@@ -748,9 +748,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <h6 class='card_header'>Job Items Listing</h6>
-                                        <table class="table table-hover d-none">
+                                        <hr>                                        
+                                        <table class="table table-hover">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -762,8 +761,16 @@
                                                         <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <small>Description of Job</small>
+                                                        <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
+                                        <hr />
+                                        <h6 class='card_header'>Job Items Listing</h6>
                                         <table class="table table-hover">
                                             <tbody id="jobs_items">
                                             <?php if(isset($jobs_data)): ?>
@@ -804,13 +811,9 @@
                                             <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
+                                        <hr />
                                         <br>
-                                        <br>
-                                        <div class="col-sm-12">
-                                            <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                                            <hr/>
-                                        </div>
+                                        
                                         <div class="col-sm-12">
                                             <input type="text" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>" hidden>
                                         </div>
@@ -892,7 +895,7 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>$<?= number_format((float) $jobs_data->installation_cost, 2) ?></label>
-                                                                <input id="adjustment_ic" type="hidden" value="<?= $jobs_data->installation_cost; ?>">
+                                                                <input id="adjustment_ic" name="installation_cost" type="hidden" value="<?= $jobs_data->installation_cost; ?>">
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
@@ -905,7 +908,7 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>$<?= number_format((float) $jobs_data->otp_setup, 2) ?></label>
-                                                                <input id="adjustment_otps" type="hidden" value="<?= $jobs_data->otp_setup; ?>">
+                                                                <input id="adjustment_otps" name="otps" type="hidden" value="<?= $jobs_data->otp_setup; ?>">
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
@@ -918,7 +921,7 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label>$<?= number_format((float) $jobs_data->monthly_monitoring, 2) ?></label>
-                                                                <input id="adjustment_mm" type="hidden" value="<?= $jobs_data->monthly_monitoring; ?>">
+                                                                <input id="adjustment_mm" name="monthly_monitoring" type="hidden" value="<?= $jobs_data->monthly_monitoring; ?>">
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
@@ -932,7 +935,7 @@
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
-                                                            <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                            <input type="hidden" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>">
                                                         </div>
                                                     </div>
                                                     <!-- <div class="col-sm-6"> -->
@@ -964,7 +967,7 @@
                                                     <!-- </div> -->
                                                     <!-- <div class="col-sm-6 text-right pr-3"> -->
                                                         <!-- <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label> -->
-                                                        <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                        <!-- <input step="any" type="number" name="total_amount" id="total2test" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
                                                     <!-- </div> -->
                                                 </div>
                                                 <div class="col-sm-12">

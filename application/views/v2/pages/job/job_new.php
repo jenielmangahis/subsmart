@@ -1058,6 +1058,32 @@
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
+                                                    <?php if( in_array($cid, exempted_company_ids()) ){ ?>
+                                                        <div class="row mt-3">
+                                                            <div class="col-sm-6">
+                                                                <label>Installation Cost</label>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="number" step="any" class="form-control" id="installation_cost" name="installation_cost" value="0.00" required="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-sm-6">
+                                                                <label>One time (Program and Setup)</label>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="number" step="any" class="form-control" id="otps" name="otps" value="0.00" required="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2 mb-2">
+                                                            <div class="col-sm-6">
+                                                                <label>Monthly Monitoring</label>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="number" step="any" class="form-control" id="monthly_monitoring" name="monthly_monitoring" value="0.00" required="" />
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
                                                     <div class="row">
                                                         <hr>
                                                     </div>                                                    
