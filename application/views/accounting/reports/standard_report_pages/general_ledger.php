@@ -72,7 +72,7 @@
                                 </div>
                                 <?php endif; ?>
                                 <div class="row grid-mb">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12">
                                         <label for="" class="w-100">Accounting method</label>
                                         <div class="form-check d-inline-block">
                                             <input type="radio" id="cash-method" class="form-check-input" name="accounting_method" <?=isset($accounting_method) && $accounting_method === 'cash' ? 'checked' : ''?>>

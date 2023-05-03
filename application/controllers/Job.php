@@ -131,6 +131,7 @@ class Job extends MY_Controller
 
     public function new_job1($id = null)
     {
+        $this->load->model('AcsProfile_model');
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -282,7 +283,7 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        $estimate_dp_amount = 0;
+        $estimate_dp_amount = 0;        
         if (!$id == null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
             if ($jobs_data->estimate_id > 0) {
@@ -327,6 +328,9 @@ class Job extends MY_Controller
                 $workorderQuery = $this->db->get('work_orders');
                 $this->page_data['workorder'] = $workorderQuery->row();
             }
+
+            $job_latest_payment = $this->jobs_model->get_latest_job_payment_by_job_id($id);
+            $this->page_data['job_latest_payment'] = $job_latest_payment;
         }
 
         $this->page_data['job_created_by'] = $created_by;
@@ -334,12 +338,11 @@ class Job extends MY_Controller
         $default_customer_id = 0;
         $default_customer_name = '';
 
-        if ($this->input->get('cus_id')) {
-            $this->load->model('AcsProfile_model');
+        if ($this->input->get('cus_id')) {            
             $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
             if ($customer) {
                 $default_customer_id = $customer->prof_id;
-                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;                
             }
             $default_customer_id = $this->input->get('cus_id');
         }
@@ -383,6 +386,7 @@ class Job extends MY_Controller
             $redirect_calendar = 1;
         }
 
+        $this->page_data['cid'] = $comp_id;        
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
@@ -758,6 +762,7 @@ class Job extends MY_Controller
             'assets/js/esign/fill-and-sign/step2.js',
         ]);
 
+        $this->page_data['cid'] = $comp_id;
         $this->load->view('v2/pages/job/job_workorder', $this->page_data);
     }
 
@@ -2294,6 +2299,7 @@ class Job extends MY_Controller
                         $job_items_data['qty'] = $input['item_qty'][$xx];
                         $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
+                        $job_items_data['item_name'] = $input['item_name'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
                         $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
                         unset($job_items_data);
@@ -2352,6 +2358,7 @@ class Job extends MY_Controller
                         $where['job_id'] = $isJob->id;
                         $where['items_id'] = $input['item_id'][$xx];
                         if (empty($isItem)) {
+                            $job_items_data['item_name'] = $input['item_name'][$xx];
                             $job_items_data['items_id'] = $input['item_id'][$xx];
                             $job_items_data['job_id'] = $isJob->id; //from jobs table
                             $this->general->add_($job_items_data, 'job_items');
@@ -2376,11 +2383,21 @@ class Job extends MY_Controller
                     'datetime_signed' => $input['datetime_signed'],
                 );
                 $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
-
-                // insert data to job payments table
-                $job_payment_query = array(
-                    'amount' => $input['total_amount'],
-                );
+                
+                // Update payments
+                if( in_array($comp_id, adi_company_ids()) ){
+                    $job_payment_query = [
+                        'amount' =>  $input['total_amount'],
+                        'program_setup' => $input['otps'],
+                        'monthly_monitoring' => $input['monthly_monitoring'],
+                        'installation_cost' => $input['installation_cost']
+                    ];
+                }else{
+                    $job_payment_query = [
+                        'amount' =>  $input['total_amount']                        
+                    ]; 
+                }
+                
                 $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
 
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');

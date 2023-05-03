@@ -2174,6 +2174,9 @@ class Reports extends MY_Controller {
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    } else {
+                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                     }
                                 } else {
                                     $split = $this->account_col($check->id, 'Check');
@@ -2213,6 +2216,9 @@ class Reports extends MY_Controller {
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    } else {
+                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                     }
                                 } else {
                                     $split = $this->account_col($expense->id, 'Expense');
@@ -2239,9 +2245,14 @@ class Reports extends MY_Controller {
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    } else {
+                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                     }
                                 } else {
                                     $split = $this->account_col($bill->id, 'Bill');
+
+                                    $openBalance = number_format(floatval(str_replace(',', '', $bill->remaining_balance)), 2);
                                 }
                             break;
                             case 'Vendor Credit' :
@@ -2265,9 +2276,14 @@ class Reports extends MY_Controller {
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    } else {
+                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                     }
                                 } else {
                                     $split = $this->account_col($vCredit->id, 'Vendor Credit');
+
+                                    $openBalance = number_format(floatval(str_replace(',', '', $vCredit->remaining_balance)), 2);
                                 }
                             break;
                             case 'CC Credit' :
@@ -2304,6 +2320,9 @@ class Reports extends MY_Controller {
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
+                                    } else {
+                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transaction->child_id);
+                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                     }
                                 } else {
                                     $split = $this->account_col($ccCredit->id, 'Credit Card Credit');
@@ -2349,6 +2368,8 @@ class Reports extends MY_Controller {
 
                                     $invoiceItem = $this->invoice_model->get_invoice_item_by_id($transaction->child_id, $invoice->id);
                                     $transacItem = $this->items_model->getItemById($invoiceItem->items_id)[0]->title;
+
+                                    $rate = number_format(floatval(str_replace(',', '', $invoiceItem->cost)), 2);
                                 } else {
                                     if(count($invoiceItems) > 1) {
                                         $split = '-Split-';
@@ -2387,6 +2408,8 @@ class Reports extends MY_Controller {
 
                                     $creditMemoItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
                                     $transacItem = $this->items_model->getItemById($creditMemoItem->item_id)[0]->title;
+
+                                    $rate = number_format(floatval(str_replace(',', '', $creditMemoItem->price)), 2);
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
@@ -2403,7 +2426,7 @@ class Reports extends MY_Controller {
                                         $split = $account->name;
                                     }
 
-                                    $openBalance = number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2);
+                                    $openBalance = '-'.number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2);
                                 }
                             break;
                             case 'Sales Receipt' :
@@ -2424,6 +2447,8 @@ class Reports extends MY_Controller {
 
                                     $salesReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
                                     $transacItem = $this->items_model->getItemById($salesReceiptItem->item_id)[0]->title;
+
+                                    $rate = number_format(floatval(str_replace(',', '', $salesReceiptItem->price)), 2);
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
@@ -2459,6 +2484,8 @@ class Reports extends MY_Controller {
 
                                     $refundReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transaction->child_id);
                                     $transacItem = $this->items_model->getItemById($refundReceiptItem->item_id)[0]->title;
+
+                                    $rate = number_format(floatval(str_replace(',', '', $refundReceiptItem->price)), 2);
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
