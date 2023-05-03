@@ -218,14 +218,14 @@ $('#filter-activity-date').on('change', function() {
                 </div>
             </div>`).insertAfter($(this).closest('.row'));
 
-            $('#filter-from, #filter-to').datepicker({
+            $('#filter-activity-date-from, #filter-activity-date-to').datepicker({
                 format: 'mm/dd/yyyy',
                 orientation: 'bottom',
                 autoclose: true
             });
         }
     } else {
-        $('#filter-from').closest('.row').remove();
+        $('#filter-activity-date-from').closest('.row').remove();
     }
 });
 

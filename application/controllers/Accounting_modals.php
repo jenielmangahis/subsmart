@@ -6546,6 +6546,56 @@ class Accounting_modals extends MY_Controller
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
+
+                                    $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                                    $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + $amount;
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $expenseAccData = [
+                                        'id' => $expenseAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                                    $accTransacData = [
+                                        'account_id' => $expenseAcc->id,
+                                        'transaction_type' => 'Invoice',
+                                        'transaction_id' => $invoiceId,
+                                        'amount' => $amount,
+                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'type' => 'increase',
+                                        'is_item_category' => 1,
+                                        'child_id' => $addInvoiceItem
+                                    ];
+        
+                                    $this->accounting_account_transactions_model->create($accTransacData);
+
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + floatval(str_replace(',', '', $data['item_amount'][$key]));
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+
+                                    $accTransacData = [
+                                        'account_id' => $incomeAcc->id,
+                                        'transaction_type' => 'Invoice',
+                                        'transaction_id' => $invoiceId,
+                                        'amount' => floatval(str_replace(',', '', $data['item_amount'][$key])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'type' => 'increase',
+                                        'is_item_category' => 1,
+                                        'child_id' => $addInvoiceItem
+                                    ];
+        
+                                    $this->accounting_account_transactions_model->create($accTransacData);
                                 } else {
                                     $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
                                     $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
@@ -6615,6 +6665,56 @@ class Accounting_modals extends MY_Controller
                                             'type' => 'decrease',
                                             'is_item_category' => 1,
                                             'is_in_package' => 1,
+                                            'child_id' => $addInvoiceItem
+                                        ];
+            
+                                        $this->accounting_account_transactions_model->create($accTransacData);
+
+                                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                                        $newBalance = floatval(str_replace(',', '', $expenseAcc->balance)) + $amount;
+                                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                        $expenseAccData = [
+                                            'id' => $expenseAcc->id,
+                                            'company_id' => logged('company_id'),
+                                            'balance' => floatval(str_replace(',', '', $newBalance))
+                                        ];
+
+                                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                                        $accTransacData = [
+                                            'account_id' => $expenseAcc->id,
+                                            'transaction_type' => 'Invoice',
+                                            'transaction_id' => $invoiceId,
+                                            'amount' => $amount,
+                                            'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                            'type' => 'increase',
+                                            'is_item_category' => 1,
+                                            'child_id' => $addInvoiceItem
+                                        ];
+            
+                                        $this->accounting_account_transactions_model->create($accTransacData);
+
+                                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + floatval(str_replace(',', '', $data['item_amount'][$key]));
+                                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                        $incomeAccData = [
+                                            'id' => $incomeAcc->id,
+                                            'company_id' => logged('company_id'),
+                                            'balance' => floatval(str_replace(',', '', $newBalance))
+                                        ];
+
+                                        $this->chart_of_accounts_model->updateBalance($incomeAccData);
+
+                                        $accTransacData = [
+                                            'account_id' => $incomeAcc->id,
+                                            'transaction_type' => 'Invoice',
+                                            'transaction_id' => $invoiceId,
+                                            'amount' => floatval(str_replace(',', '', $data['item_amount'][$key])),
+                                            'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                            'type' => 'increase',
+                                            'is_item_category' => 1,
                                             'child_id' => $addInvoiceItem
                                         ];
             
