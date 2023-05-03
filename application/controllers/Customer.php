@@ -1271,15 +1271,27 @@ class Customer extends MY_Controller
 
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('Tickets_model');
 
         $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
         $inventory = array();
         foreach( $jobs as $j ){
             $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-            $inventory[$j->id]['job'] = $j;
+            $inventory[$j->id]['job']  = $j;
+            $inventory[$j->id]['type'] = 'job';
             if( $jobItems ){
                 $inventory[$j->id]['items'] = $jobItems;
             }            
+        }
+
+        $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
+        foreach( $tickets as $t ){
+            $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
+            $inventory[$t->id]['ticket'] = $t;
+            $inventory[$t->id]['type'] = 'ticket';
+            if( $ticketItems ){
+                $inventory[$t->id]['items'] = $ticketItems;
+            }
         }
 
         $customer  = $this->AcsProfile_model->getByProfId($cid);

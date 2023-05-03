@@ -32,7 +32,7 @@
                                         </div>
                                         <label class="content-subtitle mb-2">Contact Connectors</label>
                                         <label class="nsm-subtitle d-block">
-                                            Export your Markate Customers to Google Contacts so you can identify the customers on your phone Caller ID or on sending emails from Gmail.
+                                            Export your nSmarTrac Customers to Google Contacts so you can identify the customers on your phone Caller ID or on sending emails from Gmail.
                                         </label>
                                     </div>
                                     <div class="col-12 text-center">
@@ -59,7 +59,7 @@
                                         </div>
                                         <label class="content-subtitle mb-2">Payroll Connectors</label>
                                         <label class="nsm-subtitle d-block">
-                                            The connector allows you to automatically push employee hours tracked through Markate time cards to your Quickbooks account.
+                                            The connector allows you to automatically push employee hours tracked through nSmarTrac time cards to your Quickbooks account.
                                         </label>
                                     </div>
                                     <div class="col-12 text-center">

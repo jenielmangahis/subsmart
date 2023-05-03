@@ -45,7 +45,15 @@
                                 <?php foreach($googleContactsLogs as $log){ ?>
                                     <tr>
                                         <Td><?= ucfirst($log->resource_type); ?></Td>
-                                        <Td><?= $log->first_name . ' ' . $log->first_name; ?></Td>
+                                        <Td>                                            
+                                            <?php 
+                                                if( $log->first_name == '' && $log->last_name == '' ){
+                                                    echo '---';
+                                                }else{
+                                                    echo $log->first_name . ' ' . $log->last_name;
+                                                }
+                                            ?>        
+                                        </Td>
                                         <Td><?= $log->action; ?></Td>
                                         <Td><?= date("F j, Y g:i A", strtotime($log->action_date)); ?></Td>
                                         <Td><?= $log->error_message; ?></Td>
