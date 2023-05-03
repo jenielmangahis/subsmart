@@ -449,18 +449,10 @@ $("#attachment-file").change(function() {
                 $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
             }
 
-            var installation_cost = $('#installation_cost').val();
+            /*var installation_cost = $('#installation_cost').val();
             var otps = $('#otps').val();
             var monthly_monitoring = $('#monthly_monitoring').val();
-            total = Number(total) + Number(installation_cost) + Number(otps) + Number(monthly_monitoring);
-
-            const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
-            adjustmentIdSelectors.forEach(selector => {
-                const $element = document.getElementById(selector);
-                if ($element) {
-                    total = parseFloat(parseFloat(total) + parseFloat($element.value)).toFixed(2);                
-                }
-            })
+            total = Number(total) + Number(installation_cost) + Number(otps) + Number(monthly_monitoring);*/
 
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
@@ -468,9 +460,17 @@ $("#attachment-file").change(function() {
             }
             if(discount > 0){
                 $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
-            }
-            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
+            }            
 
+            const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
+            adjustmentIdSelectors.forEach(selector => {
+                const $element = document.getElementById(selector);
+                if ($element) {
+                    total = parseFloat(parseFloat(total) + parseFloat($element.value)).toFixed(2);                
+                }
+            });
+
+            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
             $('#total2').val(total);
@@ -547,15 +547,15 @@ $("#attachment-file").change(function() {
             calculate_subtotal();
         });
 
-        $("body").delegate("#installation_cost", "change", function(){            
+        $("body").delegate("#adjustment_ic", "change", function(){            
             calculate_subtotal();
         });
 
-        $("body").delegate("#otps", "change", function(){            
+        $("body").delegate("#adjustment_otps", "change", function(){            
             calculate_subtotal();
         });
 
-        $("body").delegate("#monthly_monitoring", "change", function(){            
+        $("body").delegate("#adjustment_mm", "change", function(){            
             calculate_subtotal();
         });
 

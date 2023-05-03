@@ -4522,6 +4522,11 @@ if (!function_exists('is_admin_logged')) {
         return $exempted_company_ids;
     }
 
+    function adi_company_ids(){
+        $adi_company_ids = [24,31,58];
+        return $adi_company_ids;
+    }
+
     function customerAuditLog($user_id, $prof_id, $obj_id, $module, $remarks){
         $CI =& get_instance();
         $CI->load->model('CustomerAuditLog_model');
