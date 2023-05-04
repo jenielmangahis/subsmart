@@ -1033,7 +1033,7 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-3 text-end">
                                                 <label class="content-title">$ <span id="totalDue"><?php echo number_format((float)$workorder->grand_total,2); ?></span></label>
-                                                <input type="hidden" name="totalDue" value="<?php echo number_format($workorder->grand_total,2); ?>">
+                                                <input type="hidden" name="totalDue" id="payment_amount_grand" value="<?php echo number_format($workorder->grand_total,2); ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -2023,6 +2023,7 @@ $(".nsm-subtitle").html(function() {
         let val4 = $('#totalDue').html(val3.toFixed(2));
         console.log(val3);
         $('.totalDue').val(val3.toFixed(2));
+        $('#payment_amount_grand').val(val3.toFixed(2));
         $('#payment_amount').val(val3.toFixed(2));
     }
 </script>
