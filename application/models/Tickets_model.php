@@ -593,6 +593,27 @@ class Tickets_model extends MY_Model
         $this->db->delete('tickets_items');
         return true;
     }
+
+    public function get_tickets_by_customer_id($customer_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);     
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_ticket_items_by_ticket_id($ticket_id)
+    {
+
+        $this->db->select('tickets_items.*,items.title AS item_name');
+        $this->db->from('tickets_items');
+        $this->db->join('items', 'tickets_items.items_id  = items.id');
+        $this->db->where('tickets_items.ticket_id', $ticket_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 ?>

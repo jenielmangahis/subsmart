@@ -356,7 +356,7 @@ div#controls div#call-controls div#volume-indicators > div {
 </div>
 
 <!--Send Message Modal-->
-<div class="modal fade nsm-modal fade" id="modalSendMessage" tabindex="-1" aria-labelledby="modalSendMessageLabel" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="modalSendMessageOld" tabindex="-1" aria-labelledby="modalSendMessageLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -591,7 +591,7 @@ $(document).on('click', '.send-sms-message', function(){
         $('#customer-name').val(customer_name);
         $('#customer-phone').val(customer_phone);
         $('#modalSendMessage').modal('show');
-        $('#modalMessagesSent').modal('hide');
+        //$('#modalMessagesSent').modal('hide');
     }else{
         var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
         Swal.fire({
@@ -635,7 +635,7 @@ $(document).on('click', '.btn-set-customer-mobile', function(){
     $('#modalSetCustomerMobile').modal('show');
 });
 
-$(document).on('submit', '#frm-send-sms-message', function(e){
+/*$(document).on('submit', '#frm-send-sms-message', function(e){
     e.preventDefault();
     var url = base_url + 'messages/_company_send';
     $(".btn-send-message").html('<span class="bx bx-loader bx-spin"></span>');
@@ -678,7 +678,7 @@ $(document).on('submit', '#frm-send-sms-message', function(e){
          }
       });
     }, 800);
-});
+});*/
 </script>
 
 <!-- Call Script -->

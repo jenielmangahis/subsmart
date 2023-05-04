@@ -77,7 +77,7 @@
                                             </div>
                                         </div>
                                         <div class="nsm-card-content">
-                                            <label class="content-subtitle fw-bold">Gmail Account <span style="color:red;">(Unbind Account)</span></label>
+                                            <label class="content-subtitle fw-bold"><?= $googleAccount->google_email; ?> <span style="color:red;">(Unbind Account)</span></label>
                                             <label class="content-subtitle">Note : This will check or create NsmarTrac calendar for auto add events to google calendar</label>
                                         </div>
                                     </div>

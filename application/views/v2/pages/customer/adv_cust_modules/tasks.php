@@ -50,7 +50,7 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTaskk" onclick="window.open('<?= base_url('taskhub/entry') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTaskk" onclick="window.open('<?= base_url('taskhub/entry?cus_id='.$customer_profile_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-list-plus'></i> Add Task
                     </button>
                 </div>

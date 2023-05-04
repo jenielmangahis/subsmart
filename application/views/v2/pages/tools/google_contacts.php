@@ -115,11 +115,10 @@
                 url: url,
                 dataType: 'json',
                 beforeSend: function(data) {
-                    //$('#loading_modal').modal('show');
-                    //$('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Importing Customer Data to Google Contacts....');
+                    $('#loading_modal').modal('show');
+                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Importing Customer Data to Google Contacts....');
                 },
-                success: function(o) {
-                    //$('#loading_modal').modal('hide');
+                success: function(o) {                    
                     if( o.is_success == 1 ){
                         Swal.fire({
                             title: 'Customer Import',
@@ -142,6 +141,9 @@
                         });
                     }             
                 },
+                complete : function(){
+                    $('#loading_modal').modal('hide');
+                },
                 error: function(e) {
                     console.log(e);
                 }
@@ -150,6 +152,7 @@
 
         $('.btn-disconnect-google-account').on('click', function(){
             var url = base_url + "tools/_disconnect_google_contacts";
+            
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -158,10 +161,9 @@
                     $('#loading_modal').modal('show');
                     $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Disconnecting Google Account....');
                 },
-                success: function(data) {
-                    $('#loading_modal').modal('hide');
+                success: function(data) {                    
                     Swal.fire({                        
-                        text: "Gmail Contacts was successfully disconnected.",
+                        text: "Gmail account was successfully disconnected.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -170,6 +172,9 @@
                             location.reload();
                         //}
                     });                    
+                },
+                complete : function(){
+                    $('#loading_modal').modal('hide');
                 },
                 error: function(e) {
                     console.log(e);
@@ -192,9 +197,7 @@
         //console.log(authResult);        
         var url = base_url + "tools/_google_contact_account_bind";
         var auth_code = authResult['code'];
-        if (typeof auth_code !== "undefined") {
-            $('#loading_modal').modal('show');
-            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting your google account....');
+        if (typeof auth_code !== "undefined") {            
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -203,10 +206,10 @@
                 },
                 dataType: 'json',
                 beforeSend: function(data) {
-
+                    $('#loading_modal').modal('show');
+                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Connecting your google account....');
                 },
-                success: function(data) {
-                    $('#loading_modal').modal('hide');
+                success: function(data) {                    
                     Swal.fire({
                         title: 'Gmail Connect',
                         text: "Gmail account connected successfully.",
@@ -218,6 +221,9 @@
                             location.reload();
                         //}
                     });                    
+                },
+                complete : function(){
+                    $('#loading_modal').modal('hide');
                 },
                 error: function(e) {
                     console.log(e);

@@ -852,7 +852,7 @@ table input.form-control {
 														</tr>
 														</tr>
 															<td align="left"><div style=""><b>Security Number:</b> </div></td>
-															<td align="right"> <span id="view_ssn"><?php echo $workorder->security_number ?></span><input type="hidden" id="view_ssn_input" value="<?php echo $workorder->security_number ?>"></td>
+															<td align="right"> <span id="view_ssn"><?php echo $customer->ssn ?></span><input type="hidden" id="view_ssn_input" value="<?php echo $customer->ssn ?>"></td>
 														</tr>
 														<?php } ?>
 														<?php if($workorder->work_order_type_id == '4'){ ?>
@@ -873,10 +873,19 @@ table input.form-control {
 															<td align="left"><div style=""><b>Source:</b> </div></td>
 															<td align="right"><?php echo $lead->ls_name ?></td>
 														</tr>
+														<?php 
+														if($workorder->account_type == 'Business'){
+														?>
 														</tr>
 															<td align="left"><div style=""><b>Business Name:</b> </div></td>
 															<td align="right"><?php echo $customer->business_name ?></td>
 														</tr>
+														<?php }elseif($workorder->account_type == 'Commercial'){ ?>
+														</tr>
+															<td align="left"><div style=""><b>Business Name:</b> </div></td>
+															<td align="right"><?php echo $customer->business_name ?></td>
+														</tr>
+														<?php } ?>
 														<!-- </tr>
 															<td align="left"><div style=""><b>Agent:</b> </div></td>
 															<td align="right"><?php //echo $first->FName.' '.$first->LName; ?></td>
@@ -1426,10 +1435,16 @@ table input.form-control {
 											
 											<div class="form-group col-md-2">
 												<div class="select-wrap_">
-													<label for="lead_source">Jobs Tags</label>
-														<?php foreach($job_tags as $jb){ ?>
+													<label for="lead_source"><b>Jobs Tags</b></label><br>
+														<?php 
+														if (is_numeric($workorder->job_tags)){
+														foreach($job_tags as $jb){ ?>
 														<?php if($workorder->job_tags == $jb->id){ echo $jb->name; }else{ echo ''; } ?>
-														<?php } if(empty($workorder->job_tags)){ echo 'N/A<br>'; }?>
+														<?php } if(empty($workorder->job_tags)){ echo 'N/A<br>'; }
+														}else{
+															echo $workorder->job_tags;
+														}
+														?>
 												</div>    
 											</div> 
 										</div>
