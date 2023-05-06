@@ -72,7 +72,7 @@ textarea{
                                                 <?php 
                                                     $url = base_url('/booking/products/' . $eid);
                                                 ?>
-                                                <textarea style="min-height: 200px !important;" class="input-focus form-control" rows="3" readonly="" id="code-iframe">&lt;iframe id="markate-widget-booking-iframe" src="<?= $url; ?>" width="100%" height="1000" scrolling="no" frameborder="0" allowTransparency="true" style="border:none;overflow:hidden"&gt;&lt;/iframe&gt;</textarea>   
+                                                <textarea style="min-height: 200px !important;" class="input-focus form-control" rows="3" readonly="" id="code-iframe">&lt;iframe id="booking-iframe" src="<?= $url; ?>" width="100%" height="1000" scrolling="no" frameborder="0" allowTransparency="true" style="border:none;overflow:hidden"&gt;&lt;/iframe&gt;</textarea>   
                                                 <br />
                                                     
                                             </div>

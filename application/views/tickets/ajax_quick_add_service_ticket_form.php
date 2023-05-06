@@ -13,6 +13,7 @@
         <div class="nsm-card primary">
             <div class="nsm-card-content">
                 <label for="customers" class="required"><b>Customer</b></label>
+                    <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
                         <?php foreach($customers as $c){ ?>
@@ -296,6 +297,28 @@
     </div>
 </div>
 
+
+
+        <!-- Modal New Customer -->
+        <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bx bx-fw bx-x m-0"></i>
+
+                        </button>
+                    </div>
+                    <div class="modal-body pt-0 pl-3 pb-3"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary saveCustomer">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <!-- Modal -->
 <div class="modal fade" id="quick-add-service-ticket-item-list" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" style="margin-top:8%;">
@@ -321,17 +344,15 @@
                                 <?php foreach($items as $item){ ?>
                                     <?php $item_qty = get_total_item_qty($item->id); ?>
                                     <?php //if ($item_qty[0]->total_qty > 0) { ?>
-                                        <tr>
-                                            <td style="width: 0% !important;">
-                                                <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="nsm-button primary btn btn-sm btn-default quick-add-service-ticket-item">
-                                                    <span class="bx bx-plus-medical"></span>
-                                                </button>
-                                            </td>
-                                            <td><?php echo $item->title; ?></td>
-                                            <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
-                                            <td><?php echo $item->price; ?></td>
-                                            <td><?php echo $item->type; ?></td>
-                                        </tr>
+                                        <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td style="width: 0% !important;">
+                                                        <button type="button"  data-dismiss="modal" class='btn btn-sm btn-light border-1 quick-add-service-ticket-item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    </td>
+                                                    <td><?php echo $item->title; ?></td>
+                                                    <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                                    <td><?php echo $item->price; ?></td>
+                                                    <td><?php echo $item->type; ?></td>
+                                                </tr>
                                     <?php //} ?>
                                 <?php } ?>
                                 </tbody>
@@ -426,10 +447,10 @@ $(document).ready(function(){
         var price = $(this).data('price');
         
         if(!$(this).data('quantity')){
-          var qty = 0;
+          var qty = 1;
         }else{
           //var qty = $(this).data('quantity');
-          var qty = 0;
+          var qty = 1;
         }
 
         var count = parseInt($("#service-ticket-item-count").val()) + 1;
@@ -440,13 +461,13 @@ $(document).ready(function(){
         var total = parseFloat(total_).toFixed(2);
         var withCommas = Number(total).toLocaleString('en');
         total = '$' + withCommas + '.00';
-
+        $("#ITEMLIST_PRODUCT_"+idd).hide();
         markup = "<tr id=\"ss\">" +
             "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
             "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
             "<td width=\"10%\"><input data-itemid='"+idd+"' min='0' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
             // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-            "<td width=\"10%\"><input data-itemid='"+idd+"' min='0' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'></td>\n" +
+            "<td width=\"10%\"><input data-itemid='"+idd+"' min='0' id='price_"+count+"' value='"+price+"'  type=\"text\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'></td>\n" +
             // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
             // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
             "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
@@ -463,6 +484,7 @@ $(document).ready(function(){
         tableBody.append(markup);   
 
         $('#quick-add-service-ticket-item-list').modal('hide');
+        quickAddServiceTicketItemCalculation(count);
     });
 
     $(document).on("focusout", ".quantity", function () {
@@ -593,3 +615,63 @@ $(document).ready(function(){
     }
 });
 </script>
+<script>
+$(document).on('click', '.saveCustomer', function() {
+
+    var first_name      = $('[name="first_name"]').val();
+    var middle_name     = $('[name="middle_name"]').val();
+    var last_name       = $('[name="last_name"]').val();
+    var contact_email   = $('[name="contact_email"]').val();
+    var contact_mobile  = $('[name="contact_mobile"]').val();
+    var contact_phone   = $('[name="contact_phone"]').val();
+    var customer_type   = $('[name="customer_type"]').val();
+    var street_address  = $('[name="street_address"]').val();
+    var suite_unit      = $('[name="suite_unit"]').val();
+    var city            = $('[name="city"]').val();
+    var postcode        = $('[name="postcode"]').val();
+    var state           = $('[name="state"]').val();
+
+    //new added
+    var suffix_name             = $('[name="suffix_name"]').val();
+    var date_of_birth           = $('[name="date_of_birth"]').val();
+    var social_security_number  = $('[name="social_security_number"]').val();
+    var status                  = $('[name="status"]').val();
+
+    // alert(first_name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+                    data: {
+                        first_name: first_name,
+                        middle_name: middle_name,
+                        last_name: last_name,
+                        contact_email: contact_email,
+                        contact_mobile: contact_mobile,
+                        contact_phone: contact_phone,
+                        customer_type: customer_type,
+                        street_address: street_address,
+                        suite_unit: suite_unit,
+                        city: city,
+                        postcode: postcode,
+                        state: state,
+                        suffix_name: suffix_name,
+                        date_of_birth: date_of_birth,
+                        social_security_number: social_security_number,
+                        status: status
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // alert('success');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        location.reload();
+
+                    }
+                });
+
+});
+</script>
+
+<script src="<?php echo $url->assets ?>js/add.js"></script>

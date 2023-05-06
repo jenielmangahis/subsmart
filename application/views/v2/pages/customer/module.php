@@ -24,11 +24,14 @@
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container" style="width:250px;">
+                            <select class="" id="search-customer" style="width: 100%"></select>
+                        </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
                                 <i class='bx bx-fw bx-cog'></i>
                             </button>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
                 <div class="row h-100 g-3 grid-row-mb nsm-draggable-container" id="customer_modules">
@@ -83,6 +86,56 @@
                 }
             });
         });
+
+        $('#search-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Search Customer',            
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $('#search-customer').on('change', function(){
+            var selected = $(this).val();
+            location.href = base_url + 'customer/module/' + selected;
+        });
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            var $container = $(
+                '<div>' + repo.first_name + ' ' + repo.last_name + '</div>'
+            );
+
+            return $container;
+        }
+
+        function formatRepoCustomerSelection(repo) {
+            if (repo.first_name != null) {
+                return repo.first_name + ' ' + repo.last_name;
+            } else {
+                return repo.text;
+            }
+        }
     });
 
     $(document).on('click', '.sent-messages', function(){

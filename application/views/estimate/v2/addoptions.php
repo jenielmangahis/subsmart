@@ -521,7 +521,7 @@ echo put_header_assets();
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr> -->
-                                            <tr>
+                                            <!-- <tr>
                                                 <td width="30%">
                                                     <input type="text" class="form-control getItems" onKeyup="getItems(this)" name="items[]">
                                                     <ul class="suggestions"></ul>
@@ -538,25 +538,21 @@ echo put_header_assets();
                                                         </select>
                                                     </div>
 
-                                                    <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
                                                 <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
                                                 <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]" data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0">
                                                     <div class="show_mobile_view"><span class="price">0</span>
-                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
                                                     </div><input id="priceM_qty0" value="0" type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
                                                 </td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0" readonly></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="0" id="tax1_0" min="0" value="0">
-                                                    <!-- <span id="span_tax_0">0.0</span> -->
                                                 </td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="0" id="item_total_0" min="0" value="0">
                                                     $<span id="span_total_0">0.00</span></td>
                                                 <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                     </table>
-                                    <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
                                     <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 </div>
                             </div>
@@ -646,7 +642,7 @@ echo put_header_assets();
                                             </tr>
                                         </thead>
                                         <tbody id="table_body_option2">
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>
                                                     <input type="text" class="form-control getItems2" onKeyup="getItemsOption2(this)" name="items2[]">
                                                     <ul class="suggestions"></ul>
@@ -659,17 +655,15 @@ echo put_header_assets();
                                                         <option value="fee">Fee</option>
                                                     </select></td>
                                                 <td><input type="number" class="form-control quantity2" name="quantity2[]" data-counter="0" id="quantity2_0" value="1"></td>
-                                                <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                                 <td><input type="number" class="form-control price2" name="price2[]" data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0" value="0"></td>
                                                 <td><input type="number" class="form-control discount2" name="discount2[]" data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
                                                 <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]" data-counter="0" id="tax2_1_0" min="0" value="0"></td>
                                                 <td><input type="hidden" class="form-control " name="total2[]" data-counter="0" id="item_total2_0" min="0" value="0">
                                                     $<span id="span_total2_0">0.00</span></td>
                                                 <td><a href="#" class="remove2 btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                     </table>
-                                    <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
                                     <a class="link-modal-open" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 </div>
                             </div>
@@ -845,9 +839,10 @@ echo put_header_assets();
                 </div>
             </div>
 
+            
             <!-- Modal -->
             <div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                <div class="modal-dialog modal-lg" role="document" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -856,45 +851,33 @@ echo put_header_assets();
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="row mb-3">
+                            <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                    <table id="items_table" class="table table-hover" style="width: 100%;">
                                         <thead>
                                             <tr>
+                                                <td></td>
                                                 <td> Name</td>
-                                                <td>Rebate</td>
                                                 <td> Qty</td>
                                                 <td> Price</td>
-                                                <td> Action</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($items as $item) { // print_r($item);
-                                            ?>
-                                                <tr>
+                                            <?php foreach ($items as $item) { ?>
+                                                <!-- <tr>
                                                     <td><?php echo $item->title; ?></td>
-                                                    <td><?php if ($item->rebate == 1) { ?>
-                                                            <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                            <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="1" data-bs-toggle="toggle" data-size="xs" checked>
-                                                            </label>
-                                                        <?php } else { ?>
-                                                            <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                            <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                            <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-bs-toggle="toggle" data-size="xs">
-
-                                                        <?php  } ?>
-                                                    </td>
-                                                    <td></td>
                                                     <td><?php echo $item->price; ?></td>
                                                     <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                             <span class="fa fa-plus"></span>
                                                         </button></td>
+                                                </tr> -->
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td style="width: 0% !important;">
+                                                        <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    </td>
+                                                    <td><?php echo $item->title; ?></td>
+                                                    <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                                    <td><?php echo $item->price; ?></td>
                                                 </tr>
 
                                             <?php } ?>
@@ -955,7 +938,7 @@ echo put_header_assets();
                                         <tbody>
                                             <?php foreach ($items as $item) { // print_r($item);
                                             ?>
-                                                <tr>
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT2_$item->id"; ?>">
                                                     <td><?php echo $item->title; ?></td>
                                                     <td><?php if ($item->rebate == 1) { ?>
                                                             <!-- <label class="switch">
@@ -1368,7 +1351,13 @@ echo put_header_assets();
         console.log($(this).data('itemname'));
         var title = $(this).data('itemname');
         var price = $(this).data('price');
-        var qty = $(this).data('quantity');
+        // var qty = $(this).data('quantity');
+        var quan = $(this).data('quantity');
+        if (quan == '') {
+            var qty = 1;
+        } else {
+            var qty = $(this).data('quantity');
+        }
 
         var count = parseInt($("#count").val()) + 1;
         $("#count").val(count);
@@ -1376,6 +1365,8 @@ echo put_header_assets();
         var total = parseFloat(total_).toFixed(2);
         var withCommas = Number(total).toLocaleString('en');
         total = '$' + withCommas + '.00';
+        
+        $("#ITEMLIST_PRODUCT2_"+idd).hide();
         // console.log(total);
         // alert(total);
         markup = "<tr id=\"ss\">" +
@@ -2371,5 +2362,183 @@ $(document).on('click', '.saveCustomer', function() {
                 });
 
 });
+</script>
+<script>
+    
+    $(".select_item2a").click(function () {
+            var idd = this.id;
+            var title = $(this).data('itemname');
+            var price = parseInt($(this).attr('data-price'));
+            // var qty = parseInt($(this).attr('data-quantity'));
+            var location_name = $(this).data('location_name');
+            var location_id = $(this).data('location_id');
+            var item_type = $(this).data('item_type');
+            // var total_ = price * qty;
+            // var total_ = 0;
+            // var total_price = price + total_;
+            // var total = parseFloat(total_price).toFixed(2);
+            // var withCommas = Number(total).toLocaleString('en');
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 1;
+            }else{
+              // alert('0');
+              var qty = $(this).data('data-quantity');
+            }
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
+            var taxes_t = parseFloat(tax_).toFixed(2);
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            $("#ITEMLIST_PRODUCT_"+idd).hide();
+            // markup = "<tr id='ss'>" +
+            //     "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
+            //     "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
+            //     "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
+            //     "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
+            //     // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
+            //     "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
+            //     "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
+            //     "</tr>";
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
+                "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
+                "<td>\n" +
+                "<a href=\"#\" class=\"remove nsm-button danger\" id='"+idd+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+                "</td>\n" +
+                "</tr>";
+            tableBody = $("#jobs_items_table_body");
+            tableBody.append(markup);
+            // markup2 = "<tr id=\"sss\">" +
+            //     "<td >"+title+"</td>\n" +
+            //     "<td >0</td>\n" +
+            //     "<td >"+price+"</td>\n" +
+            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
+            //     "<td ></td>\n" +
+            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
+            //     "</tr>";
+            markup2 = "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>";
+
+            //device audit
+            markup3 ="<tr id='ss'>" +
+                "<td>" + title + "</td>" +
+                "<td>" + item_type + "</td>" +
+                "<td></td>" +
+                "<td>" + price + "</td>" +
+                "<td id='device_qty"+idd+"'>"+ qty + "</td>" +
+                "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
+                "<td>" +
+                "<input hidden name='item_id1[]' value='"+ idd +"'>" +
+                "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
+                "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
+                "<option>Select Location</option>" +
+                "<option value='" +location_id+ "' selected>" +location_name+ "</option>" +
+                "<?php 
+                    if ($getAllLocation) { 
+                        foreach ($getAllLocation as $getAllLocations) {
+                            if ($getAllLocations->default == "true") {
+                                echo "<option selected value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                            } else {
+                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                            }
+                        } 
+                    } 
+                ?>" +
+                "</select>" +
+                "</td>";
+
+            tableBody3 = $("#device_audit_append");
+            tableBody3.append(markup3);
+            calculation(count);
+
+
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            calculate_subtotal();
+            $(".location").select2({
+                placeholder: "Choose Location"
+            });
+        });
+
+        async function getLoc(id, qty) {
+            var postData = new FormData();
+            postData.append('id', id);
+            postData.append('qty', qty);
+            fetch('<?= base_url('job/getItemLocation') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { locations } = response;
+                var select = document.querySelector('#location'+id);
+                const locations_len = Object.keys(locations);
+                // Avoid TypeError: Cannot set properties of null (setting 'innerHTML')
+                if (select === null) return;
+                console.log(locations);
+                select.innerHTML = '';
+                // Loop through each location and append a new option element to the select
+                if(locations_len.length > 1){
+                    var options = document.createElement('option');
+                    options.text = "Select Location";
+                    options.value = "0";
+                    select.appendChild(options);
+                }
+                
+
+                // Get all the location name promises
+                var promises = locations.map(function(location) {
+                    return getLocName(location.loc_id);
+                });
+
+                // Wait for all the promises to resolve
+                Promise.all(promises).then(function(names) {
+                    // Loop through each location and append a new option element to the select
+                    locations.forEach(function(location, index) {
+                        var option = document.createElement('option');
+                        option.text = names[index];
+                        option.value = location.id;
+                        select.appendChild(option);
+                    }); 
+                });
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
+
+        function getLocName(id){
+            var postData = new FormData();
+            postData.append('id', id);
+            return fetch('<?= base_url('inventory/getLocationNameById') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { location } = response;
+                return location.location_name;
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
 </script>
 <!-- <script src="<?php //base_url("assets/js/custom.js") ?>"></script> -->

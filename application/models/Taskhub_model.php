@@ -209,6 +209,14 @@ class Taskhub_model extends MY_Model {
         $this->db->update();
     }
 
+    public function completeAllTasksByProfId($prof_id)
+    {
+        $this->db->from($this->table);
+        $this->db->set(['status_id' => 6]);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update();
+    }
+
     public function deleteByTaskId($task_id){
         $this->db->delete($this->table, array('task_id' => $task_id));
     }

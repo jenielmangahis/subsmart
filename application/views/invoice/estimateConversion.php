@@ -405,8 +405,9 @@ input:checked + .slider:before {
                                         </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
-                                            <input type="email" value="<?= !empty($w_customer) ? $w_customer->email : ''; ?>" class="form-control" name="customer_email" id="customer_email">
-                                            <p><input type="checkbox"> Send later </p>
+                                            <input type="email" value="<?php print_r($w_customer);
+                                            $w_customer->email; ?>" class="form-control" name="customer_email" id="customer_email">
+                                            <!-- <p><input type="checkbox"> Send later </p> -->
                                         </div>
                                         <div class="col-md-3">
                                             <label>Location of sale</label>

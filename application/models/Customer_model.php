@@ -518,9 +518,9 @@ class Customer_model extends MY_Model
     }
 
     public function recordActivityLogs($data = array()) {
-        if(!empty($data)){     
-            $insert = $this->db->insert('customer_activity_logs', $data);
-            return $insert ? $this->db->insert_id() : false;
+        $INSERT = $this->db->insert('customer_activity_logs', $data);
+        if ($INSERT) {
+            return true;
         }
     }
 

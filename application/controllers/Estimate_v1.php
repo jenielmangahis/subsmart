@@ -18,6 +18,8 @@ class Estimate_v1 extends MY_Controller
         $this->load->model('items_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('General_model', 'general');
+        $this->load->model('Customer_model', 'customer_model');
         
         $this->checkLogin();
 
@@ -181,6 +183,31 @@ class Estimate_v1 extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        // GET CUSTOMER AND USER INFO
+            $getUserInfo = array(
+                'where' => array('id' => logged('id')),
+                'table' => 'users'
+            );
+            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+            $getCustomerInfo = array(
+                'where' => array('prof_id' => $this->input->post('customer_id')),
+                'table' => 'acs_profile'
+            );
+            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+            // STANDARD ESTIMATE CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName created a standard estimate with you. <a href='#' onclick='window.open(`".base_url('estimate/view/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('estimate_number')."</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+
+
         if ($addQuery > 0) {
             customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Estimate', 'Created estimate #'.$this->input->post('estimate_number'));
 
@@ -733,6 +760,29 @@ class Estimate_v1 extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
+        // GET CUSTOMER AND USER INFO
+            $getUserInfo = array(
+                'where' => array('id' => logged('id')),
+                'table' => 'users'
+            );
+            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+            $getCustomerInfo = array(
+                'where' => array('prof_id' => $this->input->post('customer_id')),
+                'table' => 'acs_profile'
+            );
+            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+            // STANDARD ESTIMATE CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName created an option estimate with you. <a href='#' onclick='window.open(`".base_url('estimate/view/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('estimate_number')."</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+
         // if ($addQuery > 0) {
         //     $a = $this->input->post('items');
         //     $b = $this->input->post('item_type');
@@ -1216,6 +1266,30 @@ class Estimate_v1 extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->update_estimate($new_data);
+
+
+        // GET CUSTOMER AND USER INFO
+            $getUserInfo = array(
+                'where' => array('id' => logged('id')),
+                'table' => 'users'
+            );
+            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+            $getCustomerInfo = array(
+                'where' => array('prof_id' => $this->input->post('customer_id')),
+                'table' => 'acs_profile'
+            );
+            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+            // STANDARD ESTIMATE CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName updated a standard estimate. <a href='#' onclick='window.open(`".base_url('estimate/view/').$id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('estimate_number')."</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
 
         //SMS Notification
         createCronAutoSmsNotification($company_id, $id, 'estimate', $this->input->post('status'), $user_id);

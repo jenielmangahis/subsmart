@@ -275,15 +275,10 @@ $('#run-report').on('click', function(e) {
 });
 
 $('#sort-by, [name="sort_order"]').on('change', function() {
-    var filterDate = $('#filter-activity-date').val();
-    var groupBy = $('#group-by').val();
     var sortBy = $('#sort-by').val();
     var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
-    url += filterDate !== 'this-month-to-date' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'this-month-to-date' && filterDate !== 'all-dates' ? `from=${$('#filter-from').val().replaceAll('/', '-')}&to=${$('#filter-to').val().replaceAll('/', '-')}` : '';
-    url += groupBy !== 'employee' ? `group-by=${groupBy}&` : '';
     url += sortBy !== 'default' ? `column=${sortBy}` : '';
     url += sortIn !== 'asc' ? `order=${sortIn}` : '';
 
@@ -295,10 +290,6 @@ $('#sort-by, [name="sort_order"]').on('change', function() {
         var querySplit = query.split('&');
 
         var notIncluded = [
-            'date',
-            'from',
-            'to',
-            'group-by',
             'column',
             'order'
         ];

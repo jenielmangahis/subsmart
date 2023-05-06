@@ -1002,15 +1002,23 @@
                                                                 </a>
                                                             </div>
                                                             <select id="tax_rate" name="tax_rate" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
-                                                                <option value="">None</option>
+                                                                <option value="0.0">None</option>
                                                                 <?php 
                                                                     $SELECTED_TAX = (isset($jobs_data->tax_rate)) ? $jobs_data->tax_rate : '0.00';
                                                                     foreach ($tax_rates as $rate) {
-                                                                        if ($SELECTED_TAX == number_format(($rate->percentage / 100) * $subtotal, 2,'.',',') && $SELECTED_TAX != "0.00") {
-                                                                            echo "<option selected value='".($rate->percentage / 100)."'>".$rate->name."</option>";
+                                                                        if ($SELECTED_TAX !== "0.00") {
+                                                                            if ($subtotal * ($rate->rate / 100) == $jobs_data->tax_rate) {
+                                                                                echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                            } else {
+                                                                                echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                            }
                                                                         } else {
-                                                                            echo "<option value='".($rate->percentage / 100)."'>".$rate->name."</option>";
-                                                                        }
+                                                                            if ($rate->is_default == "1") {
+                                                                                echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                            } else {
+                                                                                echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                            } 
+                                                                        } 
                                                                     } 
                                                                 ?>
                                                             </select>
@@ -2221,6 +2229,10 @@ $(function() {
 
         $("#inputState").select2({
             placeholder: "Select Timezone..."
+        });
+
+        $("#tax_rate").select2({
+            placeholder: "Select Rate..."
         });
 
         // $("#job_type_option").select2({

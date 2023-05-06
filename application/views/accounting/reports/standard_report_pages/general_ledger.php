@@ -75,11 +75,11 @@
                                     <div class="col-12">
                                         <label for="" class="w-100">Accounting method</label>
                                         <div class="form-check d-inline-block">
-                                            <input type="radio" id="cash-method" class="form-check-input" name="accounting_method" <?=isset($accounting_method) && $accounting_method === 'cash' ? 'checked' : ''?>>
+                                            <input type="radio" id="cash-method" class="form-check-input" name="accounting_method" value="cash" <?=isset($accounting_method) && $accounting_method === 'cash' ? 'checked' : ''?>>
                                             <label for="cash-method" class="form-check-label">Cash</label>
                                         </div>
                                         <div class="form-check d-inline-block">
-                                            <input type="radio" id="accrual-method" class="form-check-input" name="accounting_method" <?=!isset($accounting_method) ? 'checked' : ''?>>
+                                            <input type="radio" id="accrual-method" class="form-check-input" name="accounting_method" value="accrual" <?=!isset($accounting_method) ? 'checked' : ''?>>
                                             <label for="accrual-method" class="form-check-label">Accrual</label>
                                         </div>
                                     </div>
@@ -576,7 +576,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-footer <?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <p class="m-0"><?=date($prepared_timestamp)?></p>
+                                <p class="m-0"><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
