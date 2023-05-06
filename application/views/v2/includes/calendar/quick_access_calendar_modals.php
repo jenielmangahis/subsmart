@@ -223,6 +223,8 @@
     </div>
 </div>
 
+
+
 <div class="modal fade nsm-modal fade" id="modal-quick-add-event" aria-labelledby="modal-quick-add-event-label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form method="post" id="quick-add-event-form">   

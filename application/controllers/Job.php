@@ -18,6 +18,7 @@ class Job extends MY_Controller
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Items_model', 'items_model');
+        $this->load->model('Customer_model', 'customer_model');
     }
 
     public function loadStreetView($address = null)
@@ -275,7 +276,10 @@ class Job extends MY_Controller
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
 
         $get_settings = array(
-            'table' => 'job_tax_rates',
+            'where' => array(
+                'company_id' => $comp_id,
+            ),
+            'table' => 'tax_rates',
             'select' => '*',
         );
         $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
@@ -1955,7 +1959,16 @@ class Job extends MY_Controller
     {
         $input = $this->input->post();
         $input['company_id'] =  logged('company_id');
-        if ($this->general->add_($input, "tax_rates")) {
+        $input['is_default'] = ($input['DEFAULT_TAXRATE'] == "true") ? 1 : 0;
+        $data = array(
+            'name' =>  $input['name'],
+            'rate' =>  $input['rate'],
+            'is_default' =>  $input['is_default'],
+            'company_id' =>  $input['company_id'],
+        );
+
+        $INSERT = $this->jobs_model->recordTaxRate("add", $data);
+        if ($INSERT) {
             echo "1";
         } else {
             echo "0";
@@ -1966,27 +1979,42 @@ class Job extends MY_Controller
     {
         $is_success = 0;
         $msg = "";
-
         $input = $this->input->post();
-
-        $get_tax_rate = array(
-            'where' => array(
-                'id' => $input['tid']
-            ),
-            'table' => 'tax_rates',
-            'select' => '*',
+        $input['company_id'] =  logged('company_id');
+        $input['is_default'] = ($input['UPDATE_DEFAULT_TAXRATE'] == "true") ? 1 : 0;
+        $data = array(
+            'id' =>  $input['tid'],
+            'name' =>  $input['tax_name'],
+            'rate' =>  $input['tax_rate'],
+            'is_default' =>  $input['is_default'],
+            'company_id' =>  $input['company_id'],
         );
-        $taxRate = $this->general->get_data_with_param($get_tax_rate, false);
-        if ($taxRate) {
-            $data = ['name' => $input['tax_name'], 'rate' => $input['tax_rate'], 'is_default' => 0];
-            $this->general->update_with_key_field($data, $input['tid'], 'tax_rates', 'id');
 
-            $is_success = 1;
-        } else {
-            $msg = 'Cannot find data';
-        }
+        $UPDATE = $this->jobs_model->recordTaxRate("update", $data);
+        // if ($UPDATE) {
+        //     echo "1";
+        // } else {
+        //     echo "0";
+        // }
 
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        // $get_tax_rate = array(
+        //     'where' => array(
+        //         'id' => $input['tid']
+        //     ),
+        //     'table' => 'tax_rates',
+        //     'select' => '*',
+        // );
+        // $taxRate = $this->general->get_data_with_param($get_tax_rate, false);
+        // if ($taxRate) {
+        //     $data = ['name' => $input['tax_name'], 'rate' => $input['tax_rate'], 'is_default' => 0];
+        //     $this->general->update_with_key_field($data, $input['tid'], 'tax_rates', 'id');
+
+        //     $is_success = 1;
+        // } else {
+        //     $msg = 'Cannot find data';
+        // }
+
+        $json_data = ['is_success' => 1, 'msg' => $msg];
         echo json_encode($json_data);
     }
 
@@ -2048,7 +2076,7 @@ class Job extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'or_where' => ['is_default' => 1],
+            // 'or_where' => ['is_default' => 1],
             'table' => 'tax_rates',
             'select' => '*',
         );
@@ -2462,6 +2490,39 @@ class Job extends MY_Controller
                 $data_arr = array("data" => "Success", "qty" => $input['item_qty']);
                 exit(json_encode($data_arr));
             }*/
+
+
+        $getUserInfoPayload = array(
+            'where' => array('id' => logged('id')),
+            'table' => 'users'
+        );
+        $getUserInfo = $this->general->get_data_with_param($getUserInfoPayload, false);
+
+        $getCustomerInfoPayload = array(
+            'where' => array('prof_id' => $input['customer_id']),
+            'table' => 'acs_profile'
+        );
+        $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfoPayload, false);
+
+        if ($is_update == 0) {
+            $customerLogPayload = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $input['customer_id'],
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
+            );
+        } else {
+            $customerLogPayload = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $input['customer_id'],
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
+            );
+        }
+
+        $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
+
 
         $return = [
             'is_success' => $is_success,

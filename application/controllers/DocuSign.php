@@ -27,7 +27,7 @@ class DocuSign extends MYF_Controller
         $decrypted = decrypt($this->input->get('hash', true), $this->password);
         $decrypted = json_decode($decrypted, true);
         
-        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'prof_id' => $prof_id] = $decrypted;
+        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customer_id] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
 
         $this->db->where('id', $recipientId);
@@ -221,15 +221,22 @@ class DocuSign extends MYF_Controller
         }
         
         #changes starts here
-
         #Clients
         $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country');
-        $this->db->where('prof_id', $prof_id);
-        $client = $this->db->get('acs_profile')->row();
-        $autoPopulateData['client'] = $client;
+        $this->db->where('prof_id', $customer_id);
+        $acs_client = $this->db->get('acs_profile')->row();
+
+        $acs_clientKeys = [
+            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country'
+        ];
+
+        $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
+            return in_array($v, $acs_clientKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['client'] = $filteredClient;
 
         #password
-        $this->db->where('fk_prof_id', $prof_id);
+        $this->db->where('fk_prof_id', $customer_id);
         $acs_access = $this->db->get('acs_access')->row();
 
         $acs_accessKeys = [
@@ -242,7 +249,7 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['acs_access'] = $filteredAcs_access;
         
         #billing
-        $this->db->where('fk_prof_id', $prof_id);
+        $this->db->where('fk_prof_id', $customer_id);
         $billing = $this->db->get('acs_billing')->row();
         
         /*
@@ -269,10 +276,10 @@ class DocuSign extends MYF_Controller
         #cost due at signing
         $cost_due = $this->db->select('o.equipment_cost, b.initial_dep as one_time_activation, b.mmr as first_month_monitoring')->from('acs_office as o')
                         ->join('acs_billing as b','o.fk_prof_id = b.fk_prof_id')
-                        ->where('o.fk_prof_id', $prof_id)
+                        ->where('o.fk_prof_id', $customer_id)
                         ->get()->row();
 
-        $equipment_cost = $cost_due->equipment_cost == '' ? 0 : number_format((float)$cost_due->equipment_cost, 2, '.', '');                  
+        $equipment_cost = $cost_due->equipment_cost == '' ? 0 : number_format((float)$cost_due->equipment_cost, 2, '.', '');           
         $first_month_monitoring = $cost_due->first_month_monitoring == '' ? 0 : number_format((float)$cost_due->first_month_monitoring, 2, '.', '');                  
         $equipment_one_time_activationcost = $cost_due->one_time_activation == '' ? 0 :number_format((float)$cost_due->one_time_activation, 2, '.', ''); 
         $total_due = number_format($equipment_cost + $first_month_monitoring + $equipment_one_time_activationcost, 2, '.', ''); 
@@ -1415,8 +1422,7 @@ SQL;
         return $this->templateCreate();
     }
 
-
-    public function sendTemplate($templateId, $customerId, $userId, $companyId, $jobIdParam = null)
+    public function sendTemplate($templateId, $userId, $companyId, $jobIdParam = null, $customer_id)
     {
         header('content-type: application/json');
 
@@ -1627,7 +1633,7 @@ SQL;
             ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
             $response = json_encode(['success' => is_null($error), 'error' => $error]);
         } else if ($recipient['role'] === 'Signs in Person') {
-            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'prof_id' => $customerId]); // add customer id here
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'customer_id' => $customer_id]); // add customer id here
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
 
@@ -1708,12 +1714,13 @@ SQL;
         $userId = (int) $this->input->get('user_id', true);
         $companyId = (int) $this->input->get('company_id', true);
         $jobId = (int) $this->input->get('job_id', true);
-        $this->sendTemplate($templateId, $userId, $companyId, $jobId);
+        $customer_id = (int) $this->input->get('customer_id', true);
+        $this->sendTemplate($templateId, $userId, $companyId, $jobId, $customer_id);
     }
 
-    public function apiSendTemplate($templateId, $customerId)
+    public function apiSendTemplate($templateId, $customer_id)
     {
-        $this->sendTemplate($templateId, $customerId, logged('id'), logged('company_id'));
+        $this->sendTemplate($templateId, logged('id'), logged('company_id'), $job_id, $customer_id, );
     }
 
     private function getSigningUrl()

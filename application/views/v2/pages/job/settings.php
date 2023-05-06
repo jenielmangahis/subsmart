@@ -87,6 +87,7 @@ table.dataTable.no-footer {
                             <td data-name="Tax Rate Name">Tax Rate Name</td>
                             <td data-name="Percent">Percent</td>
                             <td data-name="Date Created">Date Created</td>
+                            <td data-name="Default">Default</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -104,25 +105,27 @@ table.dataTable.no-footer {
                             <td class="fw-bold nsm-text-primary"><?php echo $rate->name; ?></td>
                             <td><?php echo $rate->rate; ?> %</td>
                             <td><?php echo date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
+                            <td><?php echo ($rate->is_default == 1) ? "<i style='font-size: 31px;' class='bx bx-check text-success'></i>" : ""?></td>
                             <td>
-                                <?php if( $rate->is_default != 1 ){ ?>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?php echo $rate->name; ?>" data-percentage="<?php echo $rate->rate; ?>" data-id="<?php echo $rate->id; ?>">Edit</a>
+                                            <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?php echo $rate->name; ?>" data-percentage="<?php echo $rate->rate; ?>" data-id="<?php echo $rate->id; ?>" data-default="<?php echo $rate->is_default; ?>">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $rate->id; ?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>
-                                <?php } ?>                                        
                             </td>
                         </tr>
-                        <?php } } ?>
+                        <?php 
+                            } 
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -131,6 +134,7 @@ table.dataTable.no-footer {
 </div>
 
 <script type="text/javascript">
+    
 var TAX_SETTINGS_TABLE = $("#TAX_SETTINGS_TABLE").DataTable({
     "ordering": false,
     language: {
@@ -150,6 +154,14 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
             var ID = $(this).attr("data-id");
             var rateName = $(this).attr("data-name");
             var ratePercentage = $(this).attr("data-percentage");
+
+            if ($(this).attr("data-default") == "1") {
+                $("#UPDATE_DEFAULT_TAXRATE").attr("checked", "");  
+                $("input[name='UPDATE_DEFAULT_TAXRATE']").val("true");  
+            } else {
+                $("#UPDATE_DEFAULT_TAXRATE").removeAttr("checked");  
+                $("input[name='UPDATE_DEFAULT_TAXRATE']").val("false");  
+            }
 
             $("#edit-tax-name").val(rateName);
             $("#edit-tax-rate").val(ratePercentage);

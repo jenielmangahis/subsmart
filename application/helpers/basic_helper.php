@@ -5100,3 +5100,22 @@ function formatSmSNumber($to_number, $extension = '+1')
 
     return $to_number;
 }
+
+if (!function_exists('getAcsProfileCustomerName')) {
+
+    function getAcsProfileCustomerName($prof_id)
+    {
+        $CI =& get_instance();
+        $CI->db->select('first_name,last_name');
+        $CI->db->from('acs_profile');
+        $CI->db->where('prof_id', $prof_id);
+        $customer = $CI->db->get()->row();
+        
+        $customer_name = '---';
+        if ($customer) {
+            $customer_name = ucwords($customer->first_name . ' ' . $customer->last_name);
+        }
+
+        return $customer_name;
+    }
+}

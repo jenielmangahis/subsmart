@@ -30,6 +30,7 @@ class Tickets extends MY_Controller
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
+        $this->load->model('Customer_model', 'customer_model');
         
         $user_id = getLoggedUserID();
 
@@ -126,7 +127,6 @@ class Tickets extends MY_Controller
         
 
         $addQuery = $this->tickets_model->save_tickets($new_data);
-
         
         $this->load->helper(array('hashids_helper'));
         // $hasID = bin2hex(random_bytes(18));
@@ -442,22 +442,30 @@ class Tickets extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        if ($job_settings) {    
-            $prefix   = $job_settings[0]->job_num_prefix;
-            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
-            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+
+        // if ($job_settings) {    
+        //     $prefix   = $job_settings[0]->job_num_prefix;
+        //     $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+        // } else {
+        //     $prefix = 'JOB-';
+        //     $lastId = $this->jobs_model->getlastInsert($comp_id);
+        //     if ($lastId) {
+        //         $next_num = $lastId->id + 1;
+        //         $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        //     } else {
+        //         $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+        //     }
+        // }
+        $JOB_PREFIX = "JOB-";
+        $JOB_NEXT_NUMBER = $this->jobs_model->getLastJobNumber();
+        if ($JOB_NEXT_NUMBER !== "") {
+            $JOB_NEXT_NUMBER = str_replace("JOB-", "", $this->jobs_model->getLastJobNumber()) + 1;
+            $JOB_NEXT_NUMBER = str_pad($JOB_NEXT_NUMBER, 5, '0', STR_PAD_LEFT);
         } else {
-            $prefix = 'JOB-';
-            $lastId = $this->jobs_model->getlastInsert($comp_id);
-            if ($lastId) {
-                $next_num = $lastId->id + 1;
-                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-            } else {
-                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-            }
+            $JOB_NEXT_NUMBER = str_pad(1, 5, '0', STR_PAD_LEFT);
         }
 
-        $job_number = $prefix . $next_num;
+        $job_number = $JOB_PREFIX . $JOB_NEXT_NUMBER;
 
         // get customer info
         
@@ -551,21 +559,53 @@ class Tickets extends MY_Controller
 
         createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
 
+        // GET CUSTOMER AND USER INFO
+        $getUserInfo = array(
+            'where' => array('id' => logged('id')),
+            'table' => 'users'
+        );
+        $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+        $getCustomerInfo = array(
+            'where' => array('prof_id' => $this->input->post('customer_id')),
+            'table' => 'acs_profile'
+        );
+        $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+        // JOB CUSTOMER ACTIVITY LOG RECORDING
+        $customerLogsRecording = array(
+            'date' => date('m/d/Y')."<br>".date('h:i A'),
+            'customer_id' => $this->input->post('customer_id'),
+            'user_id' => logged('id'),
+            'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
+        );
+        $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+        // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
+        $customerLogsRecording = array(
+            'date' => date('m/d/Y')."<br>".date('h:i A'),
+            'customer_id' => $this->input->post('customer_id'),
+            'user_id' => logged('id'),
+            'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
+        );
+        $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
 
 
-
-            if( $this->input->post('redirect_calendar') == 1){
-                redirect('workcalender');
-            }else{
-                redirect('job/new_job1/'.$jobs_id);
-            }
+        if( $this->input->post('redirect_calendar') == 1){
+            redirect('workcalender');
+        }else{
+            redirect('job/new_job1/'.$jobs_id);
+        }
             
         } else {
             echo json_encode(0);
         }
     }
-
     
+
+
+
+
     public function saveUpdateTicket()
     {
         $id = $this->input->post('ticketID');
@@ -872,6 +912,28 @@ class Tickets extends MY_Controller
             //     );
     
             //     $notification = $this->tickets_model->save_notification($notif);
+
+            // GET CUSTOMER AND USER INFO
+            $getUserInfo = array(
+                'where' => array('id' => logged('id')),
+                'table' => 'users'
+            );
+            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+            $getCustomerInfo = array(
+                'where' => array('prof_id' => $this->input->post('customer_id')),
+                'table' => 'acs_profile'
+            );
+            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+            // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName updated a service ticket. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$this->input->post('ticketID')."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
 
 
             if( $this->input->post('redirect_calendar') == 1){

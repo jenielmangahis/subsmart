@@ -711,9 +711,17 @@ class Jobs_model extends MY_Model
         $this->db->where('company_id', $comp_id);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
-        
         $result = $this->db->get();
         return $result->result();
+    }
+
+    public function getLastJobNumber() {
+    	$this->db->select('job_number');
+        $this->db->from($this->table);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        $result = $this->db->get();
+        return $result->result()[0]->job_number;
     }
 
     /**
@@ -801,7 +809,38 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result()[0];
     }
-    
+
+    public function recordTaxRate($type, $data = array()) {
+        if ($type == "add") {
+		// ===============
+        	if ($data['is_default'] == 1) {
+        		$removeDefault = [ 'is_default' => 0 ];
+       			$this->db->where('company_id', $data['company_id']);
+       			$this->db->update('tax_rates', $removeDefault);
+        	}
+        // ===============
+            $INSERT = $this->db->insert('tax_rates', $data);
+        // ===============
+            return true;
+        // ===============
+        }
+
+        if ($type == "update") {
+        // ===============
+        	if ($data['is_default'] == 1) {
+        		$removeDefault = [ 'is_default' => 0 ];
+       			$this->db->where('company_id', $data['company_id']);
+       			$this->db->update('tax_rates', $removeDefault);
+        	}
+        // ===============
+       		$this->db->where('id', $data['id']);
+            $UPDATE = $this->db->update('tax_rates', $data);
+        // ===============
+            return true;
+        // ===============
+        }
+    }
+
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */

@@ -322,11 +322,7 @@ $("#attachment-file").change(function() {
                 "<?php 
                     if ($getAllLocation) { 
                         foreach ($getAllLocation as $getAllLocations) {
-                            if ($getAllLocations->default == "true") {
-                                echo "<option selected value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                            } else {
-                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                            }
+                            echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
                         } 
                     } 
                 ?>" +

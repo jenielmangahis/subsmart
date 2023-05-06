@@ -86,25 +86,25 @@ function initTaxRates(selector = "#tax_rate") {
     return;
   }
 
-  $($select).select2({
-    placeholder: "Select Tax Rate",
-    ajax: {
-      url: base_url + "job/apiGetJobTaxRates",
-      dataType: "json",
-      data: (params) => {
-        return { search: params.term };
-      },
-      processResults: (response) => {
-        return {
-          results: response.data.map((item) => ({
-            ...item,
-            id: item.rate,
-            text: `${item.name} (${item.rate}%)`,
-          })),
-        };
-      },
-    },
-  });
+  // $($select).select2({
+  //   placeholder: "Select Tax Rate",
+  //   ajax: {
+  //     url: base_url + "job/apiGetJobTaxRates",
+  //     dataType: "json",
+  //     data: (params) => {
+  //       return { search: params.term };
+  //     },
+  //     processResults: (response) => {
+  //       return {
+  //         results: response.data.map((item) => ({
+  //           ...item,
+  //           id: item.rate,
+  //           text: `${item.name} (${item.rate}%)`,
+  //         })),
+  //       };
+  //     },
+  //   },
+  // });
 
   if ($select.get(0).dataset.value) {
     const value = Number($select.get(0).dataset.value);
@@ -112,15 +112,15 @@ function initTaxRates(selector = "#tax_rate") {
     total = Number(total.replace(/[^0-9.-]+/g, ""));
     const percentage = (value / total) * 100;
 
-    fetch("/job/apiGetJobTaxRates").then(async (response) => {
-      const { data } = await response.json();
-      const match = data.find((tax) => tax.rate === percentage.toFixed(2));
-      if (match) {
-        $($select).append(`
-          <option selected="true">${match.name} (${match.rate}%)</option>
-        `);
-      }
-    });
+    // fetch("/job/apiGetJobTaxRates").then(async (response) => {
+    //   const { data } = await response.json();
+    //   const match = data.find((tax) => tax.rate === percentage.toFixed(2));
+    //   if (match) {
+    //     $($select).append(`
+    //       <option selected="true">${match.name} (${match.rate}%)</option>
+    //     `);
+    //   }
+    // });
   }
 }
 

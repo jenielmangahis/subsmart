@@ -43,27 +43,49 @@ $('select').each(function() {
         });
     }
 
-    // if($(this).attr('id') === 'filter-account') {
-    //     $(this).select2({
-    //         ajax: {
-    //             url: '/accounting/get-dropdown-choices',
-    //             dataType: 'json',
-    //             data: function(params) {
-    //                 var query = {
-    //                     search: params.term,
-    //                     type: 'public',
-    //                     field: 'filter-report-account'
-    //                 }
+    if($(this).attr('id') === 'filter-distribution-account') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-account'
+                    }
 
-    //                 // Query parameters will be ?search=[term]&type=public&field=[type]
-    //                 return query;
-    //             }
-    //         },
-    //         templateResult: formatResult,
-    //         templateSelection: optionSelect,
-    //         dropdownParent: $(this).closest('.modal')
-    //     });
-    // }
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
+
+    if($(this).attr('id') === 'filter-account') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-account'
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
@@ -271,6 +293,265 @@ $('#report-period-date').on('change', function() {
             });
         }
     }
+});
+
+
+$('#add-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $(this).parent().next().removeClass('d-none');
+});
+
+$('#new-custom-report-group').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-group-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/add-custom-report-group`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
+            $('#custom-group-name').val('');
+        }
+    });
+});
+
+$('#save-custom-report').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/check-custom-report-name`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.exists) {
+                Swal.fire({
+                    // title: 'Delete Invoice',
+                    text: 'A custom report with this name already exists. Enter a new name, or click Replace to replace the existing report.',
+                    icon: 'warning',
+                    confirmButtonText: 'Replace',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        save_custom_report(res.data);
+                    }
+                });
+            } else {
+                save_custom_report();
+            }
+        }
+    });
+});
+
+$('#sort-by, [name="sort_order"]').on('change', function() {
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += sortBy !== 'default' ? `column=${sortBy}` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}` : '';
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'column',
+            'order'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+$('#run-report').on('click', function(e) {
+    e.preventDefault();
+
+    var filterDate = $('#filter-report-period').val();
+    var accountingMethod = $('input[name="accounting_method"]:checked').val();
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += filterDate !== 'this-month-to-date' ? `date=${filterDate}&` : '';
+    url += filterDate !== 'this-month-to-date' && filterDate !== 'all-dates' ? `from=${$('#filter-report-period-from').val().replaceAll('/', '-')}&to=${$('#filter-report-period-to').val().replaceAll('/', '-')}&` : '';
+    url += accountingMethod !== 'accrual' ? `accounting-method=${accountingMethod}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'date',
+            'from',
+            'to',
+            'accounting-method',
+            'column',
+            'order'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+$('#run-report-button').on('click', function() {
+    var date = $('#report-period-date').val();
+    var accountingMethod = $('input[name="custom_accounting_method"]:checked').val();
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += date !== 'this-month-to-date' ? `date=${date}&` : '';
+    url += date !== 'this-month-to-date' && date !== 'all-dates' ? `from=${$('#report-period-date-from').val().replaceAll('/', '-')}&to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
+    url += accountingMethod !== 'accrual' ? `accounting-method=${accountingMethod}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
+    url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
+    url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
+    url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
+
+    var columns = [];
+    $('input[name="select_columns"]:checked').each(function() {
+        columns.push($(this).next().text().trim());
+    });
+
+    if(columns.length < $('#reports-table thead tr td:visible').length) {
+        url += `columns=${columns}`;
+    }
+
+    url += $('#allow-filter-distribution-account').prop('checked') && $('#filter-distribution-account').val() !== 'all' ? `distribution-account=${$('#filter-distribution-account').val()}&` : '';
+    url += $('#allow-filter-account').prop('checked') && $('#filter-account').val() !== 'all' ? `account=${$('#filter-account').val()}&` : '';
+
+    url += $('#show-logo').prop('checked') ? `show-logo=yes&` : '';
+    url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
+    url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
+    url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'General Ledger' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
+    url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
+    url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
+    url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
 });
 
 function get_start_and_end_dates(val, el)

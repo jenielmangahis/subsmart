@@ -44,15 +44,18 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
+                            <?php if( $selected_customer_id == 0 ){ ?>
                             <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button>
-                            <!-- <button name="btn_search" type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-search'></i> Search Task
-                            </button> -->
                             <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
+                            <?php } ?>
+                            <!-- <button name="btn_search" type="button" class="nsm-button">
+                                <i class='bx bx-fw bx-search'></i> Search Task
+                            </button> -->
+                            
                         </div>
                     </div>
                 </div>
@@ -96,15 +99,7 @@
                                         ?>
                                         <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($row->priority); ?></span>
                                     </td>
-                                    <td>
-                                        <?php 
-                                            if( $row->customer_name != '' ){
-                                                echo $row->customer_name;
-                                            }else{
-                                                echo '---';
-                                            }
-                                        ?>        
-                                    </td>
+                                    <td><?= getAcsProfileCustomerName($row->prof_id); ?></td>
                                     <td><?= getTaskAssignedUser($row->task_id); ?></td>
                                     <td>
                                     <?php
@@ -185,6 +180,7 @@
         $(".btn-clear-all").on("click", function() {
             let id = $(this).attr('data-id');
             let name = $(this).attr("data-name");
+            let selected_customer_id = '<?= $selected_customer_id; ?>';
 
             Swal.fire({
                 title: 'Clear All',
@@ -199,6 +195,7 @@
                         type: 'POST',
                         url: "<?php echo base_url('taskhub/_mark_all_completed'); ?>",
                         dataType: 'json',
+                        data: {selected_customer_id:selected_customer_id},
                         success: function(result) {
                             if (result.is_success == 1) {
                                 Swal.fire({

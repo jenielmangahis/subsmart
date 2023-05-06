@@ -149,7 +149,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="32" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <?=date($prepared_timestamp)?>
+                                <?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
                     </tfoot>
@@ -314,7 +314,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="32" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <?=date($prepared_timestamp)?>
+                                <?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
                     </tfoot>
@@ -384,13 +384,13 @@
                                             <div class="col-12 col-md-4">
                                                 <label for="from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="report-period-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="report-period-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label for="to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="report-period-to">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="report-period-date-to">
                                                 </div>
                                             </div>
                                             <?php endif; ?>
@@ -399,11 +399,11 @@
                                             <div class="col-12">
                                                 <label for="accounting-method" class="w-100">Accounting method</label>
                                                 <div class="form-check d-inline-block">
-                                                    <input type="radio" id="custom-cash-method" class="form-check-input" name="custom_accounting_method" <?=isset($accounting_method) && $accounting_method === 'cash' ? 'checked' : ''?>>
+                                                    <input type="radio" id="custom-cash-method" class="form-check-input" name="custom_accounting_method" value="cash" <?=isset($accounting_method) && $accounting_method === 'cash' ? 'checked' : ''?>>
                                                     <label for="custom-cash-method" class="form-check-label">Cash</label>
                                                 </div>
                                                 <div class="form-check d-inline-block">
-                                                    <input type="radio" id="custom-accrual-method" class="form-check-input" name="custom_accounting_method" <?=!isset($accounting_method) ? 'checked' : ''?>>
+                                                    <input type="radio" id="custom-accrual-method" class="form-check-input" name="custom_accounting_method" value="accrual" <?=!isset($accounting_method) ? 'checked' : ''?>>
                                                     <label for="custom-accrual-method" class="form-check-label">Accrual</label>
                                                 </div>
                                             </div>

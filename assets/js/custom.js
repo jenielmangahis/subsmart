@@ -686,7 +686,7 @@ $(".select_item").click(function () {
             
             if(!$(this).data('quantity')){
               // alert($(this).data('quantity'));
-              var qty = 0;
+              var qty = 1;
             }else{
               // alert('0');
               var qty = $(this).data('quantity');

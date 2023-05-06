@@ -260,7 +260,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         <table id="CUSTOMER_LOG_TABLE" class="table table-hover w-100">
                             <thead class="bg-light">
                                 <tr>
-                                    <th style="width: 0%;">Date</th>
+                                    <th style="width: 0%;">Datetime</th>
                                     <th>Logs</th>
                                     <a href="#"></a>
                                 </tr>
@@ -270,7 +270,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     foreach ($log_info as $log_infos) {
                                 ?>
                                 <tr>
-                                    <td><span class="badge bg-secondary"><?php echo $log_infos->date; ?></span></td>
+                                    <td><?php echo $log_infos->date; ?></td>
                                     <td><?php echo $log_infos->logs; ?></td>
                                 </tr>
                                 <?php } ?>
