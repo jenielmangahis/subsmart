@@ -154,14 +154,33 @@
                                                 <p class="m-0">Sort by</p>
                                                 <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                     <option value="default" <?=empty($sort_by) || $sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                    <option value="ap-paid" <?=$sort_by === 'ap-paid' ? 'selected' : ''?>>A/P Paid</option>
+                                                    <option value="ar-paid" <?=$sort_by === 'ar-paid' ? 'selected' : ''?>>A/R Paid</option>
                                                     <option value="account" <?=$sort_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                    <option value="adj" <?=$sort_by === 'adj' ? 'selected' : ''?>>Adj</option>
+                                                    <option value="check-printed" <?=$sort_by === 'check-printed' ? 'selected' : ''?>>Check Printed</option>
+                                                    <option value="clr" <?=$sort_by === 'clr' ? 'selected' : ''?>>Clr</option>
                                                     <option value="create-date" <?=$sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
                                                     <option value="created-by" <?=$sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
-                                                    <option value="description" <?=$sort_by === 'description' ? 'selected' : ''?>>Description</option>
-                                                    <option value="detail-type" <?=$sort_by === 'detail-type' ? 'selected' : ''?>>Detail Type</option>
+                                                    <option value="customer" <?=$sort_by === 'customer' ? 'selected' : ''?>>Customer</option>
+                                                    <option value="date" <?=$sort_by === 'date' ? 'selected' : ''?>>Date</option>
+                                                    <option value="employee" <?=$sort_by === 'employee' ? 'selected' : ''?>>Employee</option>
+                                                    <option value="invoice-date" <?=$sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
                                                     <option value="last-modified" <?=$sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
                                                     <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
-                                                    <option value="type" <?=$sort_by === 'type' ? 'selected' : ''?>>Type</option>
+                                                    <option value="memo-description" <?=$sort_by === 'memo-description' ? 'selected' : ''?>>Memo/Description</option>
+                                                    <option value="name" <?=$sort_by === 'name' ? 'selected' : ''?>>Name</option>
+                                                    <option value="num" <?=$sort_by === 'num' ? 'selected' : ''?>>Num</option>
+                                                    <option value="online-banking" <?=$sort_by === 'online-banking' ? 'selected' : ''?>>Online Banking</option>
+                                                    <option value="product-service" <?=$sort_by === 'product-service' ? 'selected' : ''?>>Product/Service</option>
+                                                    <option value="qty" <?=$sort_by === 'qty' ? 'selected' : ''?>>Qty</option>
+                                                    <option value="rate" <?=$sort_by === 'rate' ? 'selected' : ''?>>Rate</option>
+                                                    <option value="split" <?=$sort_by === 'split' ? 'selected' : ''?>>Split</option>
+                                                    <option value="tax-amount" <?=$sort_by === 'tax-amount' ? 'selected' : ''?>>Tax Amount</option>
+                                                    <option value="tax-name" <?=$sort_by === 'tax-name' ? 'selected' : ''?>>Tax Name</option>
+                                                    <option value="taxable-amount" <?=$sort_by === 'taxable-amount' ? 'selected' : ''?>>Taxable Amount</option>
+                                                    <option value="transaction-type" <?=$sort_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
+                                                    <option value="vendor" <?=$sort_by === 'vendor' ? 'selected' : ''?>>Vendor</option>
                                                 </select>
                                                 <p class="m-0">Sort in</p>
                                                 <div class="form-check">
