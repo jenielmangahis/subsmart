@@ -514,7 +514,8 @@ $(function(){
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Ok'
                     }).then((result) => {
-                        reloadQuickAccessCalendarSchedule();
+                        //reloadQuickAccessCalendarSchedule();
+                        location.href = base_url + 'job/new_job1/' + data.job_id
                     });    
                 }else{
                     Swal.fire({
