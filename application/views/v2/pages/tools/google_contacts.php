@@ -74,7 +74,6 @@
                                         <td><?= $companyGoogleContactsApi->google_contacts_total_imported; ?></td>
                                         <td><?= $companyGoogleContactsApi->google_contacts_total_failed; ?></td>
                                     </tr>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>

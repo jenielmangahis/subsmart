@@ -367,8 +367,6 @@
 
 <script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
 <?php //include viewPath('tickets/add_modal'); ?>
-<?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
-<?php include viewPath('v2/includes/calendar/quick_access_calendar_modals'); ?>
 <script>
     $(document).on('click', '#btn-quick-add-service-ticket', function(){
        var url = base_url + "ticket/_quick_add_service_ticket_form";

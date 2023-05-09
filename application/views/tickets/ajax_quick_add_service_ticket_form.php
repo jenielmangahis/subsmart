@@ -195,7 +195,7 @@
                     </div>
                     <div class="col-md-12 form-group">
                         <label for="zip"><b>Job Description</b></label>                        
-                        <textarea name="job_description" class="form-control"></textarea>
+                        <textarea name="job_description" class="form-control" required=""></textarea>
                     </div>
                     
                 </div>
@@ -639,37 +639,37 @@ $(document).on('click', '.saveCustomer', function() {
 
     // alert(first_name);
 
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
-                    data: {
-                        first_name: first_name,
-                        middle_name: middle_name,
-                        last_name: last_name,
-                        contact_email: contact_email,
-                        contact_mobile: contact_mobile,
-                        contact_phone: contact_phone,
-                        customer_type: customer_type,
-                        street_address: street_address,
-                        suite_unit: suite_unit,
-                        city: city,
-                        postcode: postcode,
-                        state: state,
-                        suffix_name: suffix_name,
-                        date_of_birth: date_of_birth,
-                        social_security_number: social_security_number,
-                        status: status
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        // alert('success');
-                        location.reload();
-                    },
-                    error: function(response) {
-                        location.reload();
+    $.ajax({
+        type: 'POST',
+        url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+        data: {
+            first_name: first_name,
+            middle_name: middle_name,
+            last_name: last_name,
+            contact_email: contact_email,
+            contact_mobile: contact_mobile,
+            contact_phone: contact_phone,
+            customer_type: customer_type,
+            street_address: street_address,
+            suite_unit: suite_unit,
+            city: city,
+            postcode: postcode,
+            state: state,
+            suffix_name: suffix_name,
+            date_of_birth: date_of_birth,
+            social_security_number: social_security_number,
+            status: status
+        },
+        dataType: 'json',
+        success: function(response) {
+            // alert('success');
+            location.reload();
+        },
+        error: function(response) {
+            location.reload();
 
-                    }
-                });
+        }
+    });
 
 });
 </script>

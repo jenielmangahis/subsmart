@@ -1534,6 +1534,7 @@ class Tickets extends MY_Controller
     {
         $this->load->helper(array('hashids_helper', 'form'));
 
+        $jobs_id  = 0;
         $is_valid = 1;
         $msg = '';
 
@@ -1658,10 +1659,172 @@ class Tickets extends MY_Controller
                     $i++;
                 }
             }
-        }
-        
 
-        $json_data = ['is_success' => $is_valid, 'msg' => $msg];
+            //Auto create job 
+            $get_job_settings = array(
+                'where' => array(
+                    'company_id' => $company_id
+                ),
+                'table' => 'job_settings',
+                'select' => '*',
+            );
+            $job_settings = $this->general->get_data_with_param($get_job_settings);
+            $JOB_PREFIX = "JOB-";
+            $JOB_NEXT_NUMBER = $this->jobs_model->getLastJobNumber();
+            if ($JOB_NEXT_NUMBER !== "") {
+                $JOB_NEXT_NUMBER = str_replace("JOB-", "", $this->jobs_model->getLastJobNumber()) + 1;
+                $JOB_NEXT_NUMBER = str_pad($JOB_NEXT_NUMBER, 5, '0', STR_PAD_LEFT);
+            } else {
+                $JOB_NEXT_NUMBER = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }
+
+            $job_number = $JOB_PREFIX . $JOB_NEXT_NUMBER;
+
+            // get customer info
+            $get_customer_info = array(
+                'where' => array(
+                    'prof_id' => $this->input->post('customer_id'),
+                ),
+                'table' => 'acs_profile',
+                'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
+            );
+            $customer = $this->general->get_data_with_param($get_customer_info, false);
+            $job_location = $customer->mail_add;
+            $job_description = $this->input->post('job_description');
+            
+            $jobs_data = array(
+                'job_number' => $job_number,
+                'customer_id' => $this->input->post('customer_id'),
+                'ticket_id' => $addQuery,
+                'employee_id' => $this->input->post('employee_id'),
+                'job_location' => $job_location,
+                'job_description' => $job_description,
+                'created_by' => logged('id'),
+                'start_date' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
+                'end_date' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
+                'start_time' => $this->input->post('scheduled_time'),
+                'event_color' => 0,
+                'end_time' => $this->input->post('scheduled_time_to'),
+                'tags' => $this->input->post('job_tag'),
+                'status' => $this->input->post('ticket_status'),
+                'company_id' => $company_id,
+                'date_created' => date('Y-m-d H:i:s'),
+                'tax_rate' => $this->input->post('taxes'),
+                'employee_id' => $this->input->post('employee_id'),
+                'job_type' => $this->input->post('service_type'),
+                'date_issued' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
+                'work_order_id' => 0
+            );
+            
+            $assign_techs =  $this->input->post('assign_tech');
+            if(!empty($assign_techs)){
+                for($x = 0; $x < (count($assign_techs)); $x++){
+                    $jobs_data['employee'.($x+2).'_id'] = $assign_techs[$x];
+                }
+            }
+            if (!empty($this->input->post('message'))) {
+                $jobs_data['message'] = $this->input->post('message');
+            }
+            
+            $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+            //Create hash_id
+            $job_hash_id = hashids_encrypt($jobs_id, '', 15);
+            $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
+            
+            customerAuditLog(logged('id'), $this->input->post('customer_id'), $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
+
+            //Google Calendar
+            createSyncToCalendar($jobs_id, 'job', $company_id);
+
+            // insert data to job items table (items_id, qty, jobs_id)
+            $item_id    = $this->input->post('item_id');
+            $item_type  = $this->input->post('item_type');
+            $quantity   = $this->input->post('quantity');
+            $price      = $this->input->post('price');
+            $discount   = $this->input->post('discount');
+            $h          = $this->input->post('tax');
+            $gtotal     = $this->input->post('total');
+            $item_name  = $this->input->post('items');
+            $i = 0;
+            foreach($item_id as $row){
+                $job_items_data = array();
+                $job_items_data['items_id']   = $item_id[$i];
+                $job_items_data['qty']        = $quantity[$i];
+                $job_items_data['cost']       = $price[$i];
+                $job_items_data['tax']        = $h[$i];
+                $job_items_data['discount']   = 0;
+                $job_items_data['total']      = $gtotal[$i];
+                $job_items_data['job_id']     = $jobs_id;
+                $job_items_data['location']   = '';
+                $job_items_data['points']     = 0;
+                $job_items_data['item_name']  = $item_name[$i];
+                $this->general->add_($job_items_data, 'job_items');
+                $i++;
+            }
+
+            // insert data to job url links table
+            $link = isset($input['link']) ? $input['link'] : 'none';
+            $jobs_links_data = array(
+                'link' => 'none',
+                'job_id' => $jobs_id,
+            );
+            $this->general->add_($jobs_links_data, 'job_url_links');
+
+            // insert data to jobs approval table
+            /*$jobs_approval_data = array(
+                'authorize_name' => $input['authorize_name'],
+                'signature_link' => $input['signature_link'],
+                'datetime_signed' => $input['datetime_signed'],
+                'jobs_id' => $jobs_id,
+            );
+            $this->general->add_($jobs_approval_data, 'jobs_approval');*/
+
+            // insert data to job payments table
+            $job_payment_query = array(
+                'amount' => $this->input->post('grandtotal'),
+                'job_id' => $jobs_id,
+            );
+            $this->general->add_($job_payment_query, 'job_payments');
+
+            createCronAutoSmsNotification($company_id, $jobs_id, 'job', 'Scheduled', $this->input->post('employee_id'), $this->input->post('employee_id'), 0);
+            foreach($assign_techs as $uid){
+                createCronAutoSmsNotification($company_id, $jobs_id, 'job', 'Scheduled', 0, $uid, 0);
+            }
+
+            // GET CUSTOMER AND USER INFO
+            $getUserInfo = array(
+                'where' => array('id' => logged('id')),
+                'table' => 'users'
+            );
+            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
+
+            $getCustomerInfo = array(
+                'where' => array('prof_id' => $this->input->post('customer_id')),
+                'table' => 'acs_profile'
+            );
+            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
+
+            // JOB CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+            // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
+            $customerLogsRecording = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $this->input->post('customer_id'),
+                'user_id' => logged('id'),
+                'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id];
         echo json_encode($json_data);       
 
         exit;

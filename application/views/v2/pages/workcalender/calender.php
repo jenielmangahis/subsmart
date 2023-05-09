@@ -2826,7 +2826,7 @@
             dataType:'json',
             data: form.serialize(),
             success: function(data) {
-                if( data.is_success == 1 ){
+                if( data.is_success == 1 && data.job_id > 0 ){
                     $('#modal-quick-add-service-ticket').modal('hide');                   
 
                     Swal.fire({
@@ -2837,8 +2837,9 @@
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Ok'
                     }).then((result) => {
-                        reloadCalendar(selected_calendar_view);
-                        loadUpcomingSchedules();
+                        //reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                        location.href = base_url + 'job/new_job1/' + data.job_id
                     });    
                 }else{
                     Swal.fire({
