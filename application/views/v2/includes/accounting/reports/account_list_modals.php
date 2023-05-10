@@ -337,9 +337,7 @@
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_account" id="filter-account" class="nsm-field form-control">
                                                     <?php if(isset($filter_account)) : ?>
-                                                    <?php if(!in_array($filter_account->id, ['all', 'not-specified', 'specified'])) : ?>
                                                     <option value="<?=$filter_account->id?>" selected><?=$filter_account->name?></option>
-                                                    <?php endif; ?>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>
