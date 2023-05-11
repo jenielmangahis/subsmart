@@ -263,16 +263,16 @@
         });
         // rucurring monthly revenue(RMR)
 
-        $("#businessName").hide("slow");
-        $("#fax_").hide("slow");
+        //$("#businessName").hide("slow");
+        //$("#fax_").hide("slow");
        $("#customer_type").on( 'change', function () {
             var c_type = this.value;
             if(c_type === 'Residential'){
                 $("#businessName").hide("slow");
                 $("#fax_").hide("slow");
             }else{
-                $("#businessName").show('slow');
-                $("#fax_").show('slow');
+                $("#businessName").show('slow').css("display","");
+                $("#fax_").show('slow').css("display","");
             }
         });
 

@@ -315,4 +315,11 @@ class Accounting_receive_payment_model extends MY_Model
         $query = $this->db->get('accounting_receive_payment');
         return $query->result();
     }
+
+    public function get_payments_by_company_id($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get('accounting_receive_payment');
+        return $query->result();
+    }
 }

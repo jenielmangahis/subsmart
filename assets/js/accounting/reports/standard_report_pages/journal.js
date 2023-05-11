@@ -43,27 +43,27 @@ $('select').each(function() {
         });
     }
 
-    // if($(this).attr('id') === 'filter-distribution-account') {
-    //     $(this).select2({
-    //         ajax: {
-    //             url: '/accounting/get-dropdown-choices',
-    //             dataType: 'json',
-    //             data: function(params) {
-    //                 var query = {
-    //                     search: params.term,
-    //                     type: 'public',
-    //                     field: 'filter-report-account'
-    //                 }
+    if($(this).attr('id') === 'filter-name') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-name'
+                    }
 
-    //                 // Query parameters will be ?search=[term]&type=public&field=[type]
-    //                 return query;
-    //             }
-    //         },
-    //         templateResult: formatResult,
-    //         templateSelection: optionSelect,
-    //         dropdownParent: $(this).closest('.modal')
-    //     });
-    // }
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 
     if($(this).attr('id') === 'filter-account') {
         $(this).select2({

@@ -90,7 +90,13 @@
                 <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>
         </div>
-        <div class="row form_line" id="businessName">
+        <?php 
+            $business_name_css = 'display: none;';
+            if(isset($profile_info) && $profile_info->customer_type == 'Business' ) { 
+                $business_name_css = ''; 
+            }
+        ?>
+        <div class="row" id="businessName" style="<?= $business_name_css; ?>">
             <div class="col-md-4" id="businessNameLabel">
                 <label for="" >Business Name
             </div>

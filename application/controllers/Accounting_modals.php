@@ -11202,6 +11202,11 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes, [], 'report');
             break;
+            case 'filter-report-name' :
+                $return = $this->get_customer_choices($return, $search, 'report');
+                $return = $this->get_vendor_choices($return, $search, 'report');
+                $return = $this->get_employee_choices($return, $search, 'report');
+            break;
             case 'custom-report-group' :
                 $return = $this->get_custom_report_group_choices($return, $search);
             break;
@@ -11445,7 +11450,7 @@ class Accounting_modals extends MY_Controller
             $choices['results'] = [];
         }
 
-        if($field === 'report') {
+        if($field === 'report'  && count($choices['results']) < 1) {
             $choices['results'][] = [
                 'id' => 'all',
                 'text' => 'All'
