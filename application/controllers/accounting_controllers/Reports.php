@@ -1770,9 +1770,9 @@ class Reports extends MY_Controller {
                         'name' => $account->name,
                         'type' => $this->account_model->getName($account->account_id),
                         'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
-                        'create_date' => date("m/d/Y H:i:s", strtotime($account->created_at)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($account->created_at)),
                         'created_by' => '',
-                        'last_modified' => date("m/d/Y H:i:s", strtotime($account->updated_at)),
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($account->updated_at)),
                         'last_modified_by' => '',
                         'description' => $account->description,
                         'balance' => $balance,
@@ -2148,8 +2148,8 @@ class Reports extends MY_Controller {
                                     $check = $this->vendors_model->get_check_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($check->payment_date));
                                     $num = $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no);
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($check->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($check->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($check->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($check->updated_at));
     
                                     switch($check->payee_type) {
                                         case 'vendor':
@@ -2194,8 +2194,8 @@ class Reports extends MY_Controller {
                                     $expense = $this->vendors_model->get_expense_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($expense->payment_date));
                                     $num = $expense->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($expense->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($expense->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($expense->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($expense->updated_at));
     
                                     switch($expense->payee_type) {
                                         case 'vendor':
@@ -2236,8 +2236,8 @@ class Reports extends MY_Controller {
                                     $bill = $this->vendors_model->get_bill_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($bill->bill_date));
                                     $num = $bill->bill_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($bill->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($bill->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($bill->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($bill->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                                     $name = $payee->display_name;
@@ -2273,8 +2273,8 @@ class Reports extends MY_Controller {
                                     $vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($vCredit->payment_date));
                                     $num = $vCredit->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($vCredit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($vCredit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($vCredit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($vCredit->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                                     $name = $payee->display_name;
@@ -2310,8 +2310,8 @@ class Reports extends MY_Controller {
                                     $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($ccCredit->payment_date));
                                     $num = $ccCredit->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($ccCredit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($ccCredit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($ccCredit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at));
     
                                     switch($ccCredit->payee_type) {
                                         case 'vendor':
@@ -2352,8 +2352,8 @@ class Reports extends MY_Controller {
                                     $billPayment = $this->vendors_model->get_bill_payment_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($billPayment->payment_date));
                                     $num = $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no);
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($billPayment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($billPayment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($billPayment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($billPayment->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
                                     $name = $payee->display_name;
@@ -2378,8 +2378,8 @@ class Reports extends MY_Controller {
                                     $invoice = $this->invoice_model->getinvoice($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($invoice->date_issued));
                                     $num = $invoice->invoice_number;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($invoice->date_created));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($invoice->date_updated));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($invoice->date_created));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($invoice->date_updated));
     
                                     $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -2425,8 +2425,8 @@ class Reports extends MY_Controller {
                                     $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($creditMemo->credit_memo_date));
                                     $num = $creditMemo->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($creditMemo->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($creditMemo->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($creditMemo->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -2471,8 +2471,8 @@ class Reports extends MY_Controller {
                                     $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($salesReceipt->sales_receipt_date));
                                     $num = $salesReceipt->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($salesReceipt->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($salesReceipt->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -2508,8 +2508,8 @@ class Reports extends MY_Controller {
                                     $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($refundReceipt->refund_receipt_date));
                                     $num = $refundReceipt->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($refundReceipt->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($refundReceipt->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -2545,8 +2545,8 @@ class Reports extends MY_Controller {
                                     $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($payment->payment_date));
                                     $num = $payment->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($payment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($payment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($payment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($payment->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -2566,8 +2566,8 @@ class Reports extends MY_Controller {
                                 case 'Deposit' :
                                     $deposit = $this->accounting_bank_deposit_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($deposit->date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($deposit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($deposit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($deposit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($deposit->updated_at));
     
                                     $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
     
@@ -2601,8 +2601,8 @@ class Reports extends MY_Controller {
                                 case 'Transfer' :
                                     $transfer = $this->accounting_transfer_funds_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($transfer->transfer_date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($transfer->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($transfer->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($transfer->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($transfer->updated_at));
     
                                     if($account->id === $transfer->transfer_from_account_id) {
                                         $split = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
@@ -2614,8 +2614,8 @@ class Reports extends MY_Controller {
                                     $journalEntry = $this->accounting_journal_entries_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($journalEntry->journal_date));
                                     $num = $journalEntry->journal_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($journalEntry->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($journalEntry->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($journalEntry->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at));
     
                                     $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
     
@@ -2646,8 +2646,8 @@ class Reports extends MY_Controller {
                                     $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($adjustment->adjustment_date));
                                     $num = $adjustment->adjustment_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
     
                                     if($account->id !== $adjustment->inventory_adjustment_account_id) {
                                         $split = $this->chart_of_accounts_model->getName($adjustment->inventory_adjustment_account_id);
@@ -2659,8 +2659,8 @@ class Reports extends MY_Controller {
                                     $adjustment = $this->starting_value_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($adjustment->as_of_date));
                                     $num = $adjustment->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
     
                                     $rate = number_format(floatval(str_replace(',', '', $adjustment->initial_cost)), 2);
     
@@ -2669,8 +2669,8 @@ class Reports extends MY_Controller {
                                 case 'CC Payment' :
                                     $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($ccPayment->date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($ccPayment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($ccPayment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($ccPayment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
                                     $name = !is_null($payee) ? $payee->display_name : "";
@@ -3365,6 +3365,210 @@ class Reports extends MY_Controller {
 
                 $transactions = [];
 
+                $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+                foreach($invoices as $invoice)
+                {
+                    $employee = $this->users_model->getUser($invoice->user_id);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $payments = $this->invoice_model->getPayments($invoice->invoice_number);
+
+                    usort($payments, function($a, $b) {
+                        return strtotime($a->payment_date) < strtotime($b->payment_date);
+                    });
+
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                        'transaction_type' => 'Invoice',
+                        'num' => $invoice->invoice_number,
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($invoice->date_updated)),
+                        'open_balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                        'payment_date' => date("m/d/Y", strtotime($payments[0]->payment_date)),
+                        'method' => 'Invoice',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($invoice->date_created)),
+                        'name' => $name,
+                        'customer' => $name,
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $invoice->message_to_customer,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $arAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $filters = [
+                    'company_id' => logged('company_id'),
+                    'start-date' => date("Y-m-d", strtotime($this->page_data['start_date'])),
+                    'end-date' => date("Y-m-d", strtotime($this->page_data['end_date']))
+                ];
+                $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+                foreach($expenses as $expense)
+                {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                    if($paymentAccType->account_name === 'Credit Card') {
+                        switch($expense->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                $name = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                                $name = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($expense->payee_id);
+                                $name = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+
+                        $transactions[] = [
+                            'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                            'transaction_type' => 'Credit Card Expense',
+                            'num' => $expense->ref_no,
+                            'created_by' => '',
+                            'last_modified_by' => '',
+                            'due_date' => '',
+                            'last_modified' => date("m/d/Y h:i:s A", strtotime($expense->updated_at)),
+                            'open_balance' => '',
+                            'payment_date' => '',
+                            'method' => 'Credit Card Expense',
+                            'adj' => '',
+                            'created' => date("m/d/Y h:i:s A", strtotime($expense->created_at)),
+                            'name' => $name,
+                            'customer' => $expense->payee_type === 'customer' ? $name : '',
+                            'vendor' => $expense->payee_type === 'vendor' ? $name : '',
+                            'employee' => $expense->payee_type === 'employee' ? $name : '',
+                            'product_service' => '',
+                            'memo_description' => $expense->memo,
+                            'qty' => '',
+                            'rate' => '',
+                            'account' => $paymentAcc->name,
+                            'ar_paid' => '',
+                            'ap_paid' => '',
+                            'clr' => '',
+                            'check_printed' => '',
+                            'debit' => '',
+                            'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
+                            'online_banking' => ''
+                        ];
+                    }
+                }
+
+                $checks = $this->expenses_model->get_company_check_transactions($filters);
+                foreach($checks as $check)
+                {
+                    $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+                    switch($check->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($check->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($check->payment_date)),
+                        'transaction_type' => 'Check',
+                        'num' => $check->check_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($check->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Check',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($check->created_at)),
+                        'name' => $name,
+                        'customer' => $check->payee_type === 'customer' ? $name : '',
+                        'vendor' => $check->payee_type === 'vendor' ? $name : '',
+                        'employee' => $check->payee_type === 'employee' ? $name : '',
+                        'product_service' => '',
+                        'memo_description' => $check->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $bankAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                $payments = $this->accounting_receive_payment_model->get_payments_by_company_id($filters['company_id']);
+                foreach($payments as $payment)
+                {
+                    $depositToAcc = $this->chart_of_accounts_model->getById($payment->deposit_to);
+
+                    $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                        'transaction_type' => 'Payment',
+                        'num' => $payment->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($payment->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Payment',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($payment->created_at)),
+                        'name' => $name,
+                        'customer' => $name,
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $payment->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $depositToAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                usort($transactions, function($a, $b) {
+                    return strtotime($a['date']) > strtotime($b['date']);
+                });
+
                 $this->page_data['transactions'] = $transactions;
 
                 $dateFilter = [
@@ -3940,9 +4144,9 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
-                        'create_date' => date("m/d/Y H:i:s A", strtotime($timeActivity->created_at)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($timeActivity->created_at)),
                         'created_by' => '',
-                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($timeActivity->updated_at)),
                         'last_modified_by' => '',
                         'customer_id' => $timeActivity->customer_id,
                         'customer' => $customerName,
@@ -4429,9 +4633,9 @@ class Reports extends MY_Controller {
 
                     $activities[] = [
                         'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
-                        'create_date' => date("m/d/Y H:i:s A", strtotime($timeActivity->created_at)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($timeActivity->created_at)),
                         'created_by' => '',
-                        'last_modified' => date("m/d/Y H:i:s A", strtotime($timeActivity->updated_at)),
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($timeActivity->updated_at)),
                         'last_modified_by' => '',
                         'customer_id' => $timeActivity->customer_id,
                         'customer' => $customerName,
@@ -5359,9 +5563,9 @@ class Reports extends MY_Controller {
                         'account' => $account->name,
                         'type' => $this->account_model->getName($account->account_id),
                         'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
-                        'create_date' => date("m/d/Y H:i:s", strtotime($account->created_at)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($account->created_at)),
                         'created_by' => '',
-                        'last_modified' => date("m/d/Y H:i:s", strtotime($account->updated_at)),
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($account->updated_at)),
                         'last_modified_by' => '',
                         'description' => $account->description,
                         'balance' => $balance,
@@ -5878,8 +6082,8 @@ class Reports extends MY_Controller {
                                     $check = $this->vendors_model->get_check_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($check->payment_date));
                                     $num = $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no);
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($check->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($check->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($check->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($check->updated_at));
     
                                     switch($check->payee_type) {
                                         case 'vendor':
@@ -5924,8 +6128,8 @@ class Reports extends MY_Controller {
                                     $expense = $this->vendors_model->get_expense_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($expense->payment_date));
                                     $num = $expense->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($expense->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($expense->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($expense->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($expense->updated_at));
     
                                     switch($expense->payee_type) {
                                         case 'vendor':
@@ -5966,8 +6170,8 @@ class Reports extends MY_Controller {
                                     $bill = $this->vendors_model->get_bill_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($bill->bill_date));
                                     $num = $bill->bill_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($bill->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($bill->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($bill->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($bill->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                                     $name = $payee->display_name;
@@ -6003,8 +6207,8 @@ class Reports extends MY_Controller {
                                     $vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($vCredit->payment_date));
                                     $num = $vCredit->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($vCredit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($vCredit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($vCredit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($vCredit->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                                     $name = $payee->display_name;
@@ -6040,8 +6244,8 @@ class Reports extends MY_Controller {
                                     $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($ccCredit->payment_date));
                                     $num = $ccCredit->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($ccCredit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($ccCredit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($ccCredit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at));
     
                                     switch($ccCredit->payee_type) {
                                         case 'vendor':
@@ -6082,8 +6286,8 @@ class Reports extends MY_Controller {
                                     $billPayment = $this->vendors_model->get_bill_payment_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($billPayment->payment_date));
                                     $num = $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no);
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($billPayment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($billPayment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($billPayment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($billPayment->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
                                     $name = $payee->display_name;
@@ -6108,8 +6312,8 @@ class Reports extends MY_Controller {
                                     $invoice = $this->invoice_model->getinvoice($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($invoice->date_issued));
                                     $num = $invoice->invoice_number;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($invoice->date_created));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($invoice->date_updated));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($invoice->date_created));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($invoice->date_updated));
     
                                     $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -6155,8 +6359,8 @@ class Reports extends MY_Controller {
                                     $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($creditMemo->credit_memo_date));
                                     $num = $creditMemo->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($creditMemo->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($creditMemo->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($creditMemo->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -6201,8 +6405,8 @@ class Reports extends MY_Controller {
                                     $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($salesReceipt->sales_receipt_date));
                                     $num = $salesReceipt->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($salesReceipt->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($salesReceipt->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -6238,8 +6442,8 @@ class Reports extends MY_Controller {
                                     $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($refundReceipt->refund_receipt_date));
                                     $num = $refundReceipt->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($refundReceipt->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($refundReceipt->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -6275,8 +6479,8 @@ class Reports extends MY_Controller {
                                     $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($payment->payment_date));
                                     $num = $payment->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($payment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($payment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($payment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($payment->updated_at));
     
                                     $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
                                     $name = $payee->first_name . ' ' . $payee->last_name;
@@ -6296,8 +6500,8 @@ class Reports extends MY_Controller {
                                 case 'Deposit' :
                                     $deposit = $this->accounting_bank_deposit_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($deposit->date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($deposit->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($deposit->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($deposit->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($deposit->updated_at));
     
                                     $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
     
@@ -6331,8 +6535,8 @@ class Reports extends MY_Controller {
                                 case 'Transfer' :
                                     $transfer = $this->accounting_transfer_funds_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($transfer->transfer_date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($transfer->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($transfer->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($transfer->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($transfer->updated_at));
     
                                     if($account->id === $transfer->transfer_from_account_id) {
                                         $split = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
@@ -6344,8 +6548,8 @@ class Reports extends MY_Controller {
                                     $journalEntry = $this->accounting_journal_entries_model->getById($transaction->transaction_id, logged('company_id'));
                                     $date = date("m/d/Y", strtotime($journalEntry->journal_date));
                                     $num = $journalEntry->journal_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($journalEntry->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($journalEntry->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($journalEntry->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at));
     
                                     $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
     
@@ -6376,8 +6580,8 @@ class Reports extends MY_Controller {
                                     $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($adjustment->adjustment_date));
                                     $num = $adjustment->adjustment_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
     
                                     if($account->id !== $adjustment->inventory_adjustment_account_id) {
                                         $split = $this->chart_of_accounts_model->getName($adjustment->inventory_adjustment_account_id);
@@ -6389,8 +6593,8 @@ class Reports extends MY_Controller {
                                     $adjustment = $this->starting_value_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($adjustment->as_of_date));
                                     $num = $adjustment->ref_no;
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($adjustment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($adjustment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
     
                                     $rate = number_format(floatval(str_replace(',', '', $adjustment->initial_cost)), 2);
     
@@ -6399,8 +6603,8 @@ class Reports extends MY_Controller {
                                 case 'CC Payment' :
                                     $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transaction->transaction_id);
                                     $date = date("m/d/Y", strtotime($ccPayment->date));
-                                    $createDate = date("m/d/Y H:i:s A", strtotime($ccPayment->created_at));
-                                    $lastModified = date("m/d/Y H:i:s A", strtotime($ccPayment->updated_at));
+                                    $createDate = date("m/d/Y h:i:s A", strtotime($ccPayment->created_at));
+                                    $lastModified = date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at));
     
                                     $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
                                     $name = !is_null($payee) ? $payee->display_name : "";
