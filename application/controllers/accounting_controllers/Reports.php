@@ -3565,6 +3565,311 @@ class Reports extends MY_Controller {
                     ];
                 }
 
+                $journalEntries = $this->accounting_journal_entries_model->get_company_journal_entries($filters);
+                foreach($journalEntries as $journalEntry)
+                {
+                    $employee = $this->users_model->getUser($journalEntry->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+                    switch($entries[0]->name_key) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($entries[0]->name_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($entries[0]->name_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($entries[0]->name_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $account = $this->chart_of_accounts_model->getById($entries[0]->account_id);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                        'transaction_type' => 'Journal Entry',
+                        'num' => $journalEntry->journal_no,
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Journal Entry',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($journalEntry->created_at)),
+                        'name' => $name,
+                        'customer' => $entries[0]->name_key === 'customer' ? $name : '',
+                        'vendor' => $entries[0]->name_key === 'vendor' ? $name : '',
+                        'employee' => $entries[0]->name_key === 'employee' ? $name : '',
+                        'product_service' => '',
+                        'memo_description' => $entries[0]->description,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => !empty($entries[0]->debit) ? number_format(floatval(str_replace(',', '', $entries[0]->debit)), 2, '.', ',') : '',
+                        'credit' => !empty($entries[0]->credit) ? number_format(floatval(str_replace(',', '', $entries[0]->credit)), 2, '.', ',') : '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $bills = $this->expenses_model->get_company_bill_transactions($filters);
+                foreach($bills as $bill)
+                {
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                    $name = $payee->display_name;
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                        'transaction_type' => 'Bill',
+                        'num' => $bill->bill_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($bill->updated_at)),
+                        'open_balance' => number_format(floatval(str_replace(',', '', $bill->remaining_balance)), 2, '.', ','),
+                        'payment_date' => '',
+                        'method' => 'Bill',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($bill->created_at)),
+                        'name' => $name,
+                        'customer' => '',
+                        'vendor' => $name,
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $bill->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $apAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                $ccCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
+                foreach($ccCredits as $ccCredit)
+                {
+                    $account = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+                    switch($ccCredit->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($ccCredit->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                        'transaction_type' => 'Credit Card Credit',
+                        'num' => $ccCredit->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Credit Card Credit',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($ccCredit->created_at)),
+                        'name' => $name,
+                        'customer' => $ccCredit->payee_type === 'customer' ? $name : '',
+                        'vendor' => $ccCredit->payee_type === 'vendor' ? $name : '',
+                        'employee' => $ccCredit->payee_type === 'employee' ? $name : '',
+                        'product_service' => '',
+                        'memo_description' => $ccCredit->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
+                foreach($vendorCredits as $vCredit)
+                {
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+
+                    $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                    $name = $payee->display_name;
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                        'transaction_type' => 'Vendor Credit',
+                        'num' => $vCredit->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($vCredit->updated_at)),
+                        'open_balance' => '-'.number_format(floatval(str_replace(',', '', $vCredit->remaining_balance)), 2, '.', ','),
+                        'payment_date' => '',
+                        'method' => 'Vendor Credit',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($vCredit->created_at)),
+                        'name' => $name,
+                        'customer' => '',
+                        'vendor' => $name,
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $vCredit->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $apAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
+                foreach($billPayments as $billPayment)
+                {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                    $type = $paymentAccType->account_name === 'Credit Card' ? 'Bill Payment (Credit Card)' : 'Bill Payment (Check)';
+
+                    $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+                    $name = $payee->display_name;
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                        'transaction_type' => $type,
+                        'num' => $billPayment->check_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($billPayment->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => $type,
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($billPayment->created_at)),
+                        'name' => $name,
+                        'customer' => '',
+                        'vendor' => $name,
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $billPayment->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $paymentAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                $transfers = $this->expenses_model->get_company_transfers($filters);
+                foreach($transfers as $transfer)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
+                        'transaction_type' => 'Transfer',
+                        'num' => '',
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($transfer->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Transfer',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($transfer->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $transfer->transfer_memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $deposits = $this->accounting_bank_deposit_model->get_company_deposits($filters);
+                foreach($deposits as $deposit)
+                {
+                    $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($deposit->date)),
+                        'transaction_type' => 'Deposit',
+                        'num' => '',
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($deposit->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Deposit',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($deposit->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $deposit->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
                 usort($transactions, function($a, $b) {
                     return strtotime($a['date']) > strtotime($b['date']);
                 });
