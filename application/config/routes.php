@@ -1191,6 +1191,9 @@ $route['tools/_google_contact_account_bind'] = 'Tools/ajax_google_contact_accoun
 $route['tools/_import_customer_data_to_google_contacts'] = 'Tools/ajax_import_customer_data_to_google_contacts';
 $route['tools/_disconnect_google_contacts'] = 'Tools/ajax_disconnect_google_contacts';
 $route['tools/google_contacts_logs'] = 'Tools/google_contacts_logs';
+$route['tools/quickbooks_connect'] = 'Tools/quickbooks_connect';
+$route['tools/_load_attendance_list'] = 'Tools/ajax_load_attendance_list';
+$route['tools/_export_qb_timesheet'] = 'Tools/ajax_export_qb_timesheet';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

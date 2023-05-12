@@ -54,8 +54,10 @@ class Tickets extends MY_Controller
 
     
     public function savenewTicket()
-    {
+    {        
         $this->load->helper(array('hashids_helper', 'form'));
+        $this->load->model('JobSettings_model');
+
         $input = $this->input->post();
         $comp_id = logged('company_id');
 
@@ -64,22 +66,10 @@ class Tickets extends MY_Controller
         
         $action = $this->input->post('action');
         $status = $this->input->post('ticket_status');
-        /*if($action == 'Scheduled') 
-        {
-            $status = 'Scheduled';
-        }else{
-            $status = $this->input->post('ticket_status');
-        }*/
 
-        // implode(",", $this->input->post('assign_tech'));
         $techni = serialize($this->input->post('assign_tech'));
         $tDate = date("Y-m-d",strtotime($this->input->post('ticket_date')));
 
-        // dd($status);
-
-        // dd($this->input->post());
-        
-        
         $new_data = array(
             'customer_id'               => $this->input->post('customer_id'),
             'business_name'             => $this->input->post('business_name'),
@@ -335,7 +325,6 @@ class Tickets extends MY_Controller
 
         if ($addQuery > 0) {
 
-            
             $temp_items             = $this->input->post('temp_items');
             $temp_item_type         = $this->input->post('temp_item_type');
             $temp_quantity          = $this->input->post('temp_quantity');
@@ -344,7 +333,6 @@ class Tickets extends MY_Controller
             $temp_total             = $this->input->post('temp_total');
             $temp_discount          = $this->input->post('temp_discount');
             $saveForFuture          = $this->input->post('saveForFuture');
-
             
             if($temp_items)
             {
@@ -396,9 +384,6 @@ class Tickets extends MY_Controller
                 $discount   = $this->input->post('discount');
                 $h          = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
-                
-        
-            // dd( $this->input->post('item_id'));
 
                 $i = 0;
                 foreach($item_id as $row){
@@ -416,23 +401,6 @@ class Tickets extends MY_Controller
                     $i++;
                 }
 
-            // // }
-            // $userid = logged('id');
-
-            // $getname = $this->tickets_model->getname($userid);
-
-            //     $notif = array(
-            
-            //         'user_id'               => $userid,
-            //         'title'                 => 'New Ticket',
-            //         'content'               => $getname->FName. ' has created new Ticket.'. $this->input->post('ticket_number'),
-            //         'date_created'          => date("Y-m-d H:i:s"),
-            //         'status'                => '1',
-            //         'company_id'            => getLoggedCompanyID()
-            //     );
-    
-            //     $notification = $this->tickets_model->save_notification($notif);
-
         // setting job number
         $get_job_settings = array(
             'where' => array(
@@ -441,32 +409,24 @@ class Tickets extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
-        $job_settings = $this->general->get_data_with_param($get_job_settings);
-
-        // if ($job_settings) {    
-        //     $prefix   = $job_settings[0]->job_num_prefix;
-        //     $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
-        // } else {
-        //     $prefix = 'JOB-';
-        //     $lastId = $this->jobs_model->getlastInsert($comp_id);
-        //     if ($lastId) {
-        //         $next_num = $lastId->id + 1;
-        //         $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-        //     } else {
-        //         $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-        //     }
-        // }
-        $JOB_PREFIX = "JOB-";
-        $JOB_NEXT_NUMBER = $this->jobs_model->getLastJobNumber();
-        if ($JOB_NEXT_NUMBER !== "") {
-            $JOB_NEXT_NUMBER = str_replace("JOB-", "", $this->jobs_model->getLastJobNumber()) + 1;
-            $JOB_NEXT_NUMBER = str_pad($JOB_NEXT_NUMBER, 5, '0', STR_PAD_LEFT);
-        } else {
-            $JOB_NEXT_NUMBER = str_pad(1, 5, '0', STR_PAD_LEFT);
+        $job_settings     = $this->general->get_data_with_param($get_job_settings);
+        $is_with_settings = 0;
+        if ($job_settings) {
+            $is_with_settings = 1;    
+            $prefix   = $job_settings[0]->job_num_prefix;
+            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+        }else{
+             $prefix = 'JOB-';
+             $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $next_num = $lastId->id + 1;
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+            }else {
+                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }
         }
 
-        $job_number = $JOB_PREFIX . $JOB_NEXT_NUMBER;
-
+        $job_number = $prefix . $next_num;
         // get customer info
         
         $get_customer_info = array(
@@ -518,6 +478,22 @@ class Tickets extends MY_Controller
         // insert data to job
         
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        //Update job settings
+        if( $is_with_settings == 1 ){
+            $jobs_settings_data = array(
+                'job_num_next' => $job_settings[0]->job_num_next + 1
+            );
+            $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+        }else{
+            $data_job_settings = [
+                'job_num_prefix' => $prefix,
+                'job_num_next' => $lastId->id + 1,
+                'company_id' => $comp_id
+            ];
+
+            $this->JobSettings_model->create($data_job_settings);
+        }
 
         //Create hash_id
         $job_hash_id = hashids_encrypt($jobs_id, '', 15);
@@ -617,10 +593,6 @@ class Tickets extends MY_Controller
             echo json_encode(0);
         }
     }
-    
-
-
-
 
     public function saveUpdateTicket()
     {
@@ -1549,6 +1521,7 @@ class Tickets extends MY_Controller
     public function ajax_create_service_ticket()
     {
         $this->load->helper(array('hashids_helper', 'form'));
+        $this->load->model('JobSettings_model');
 
         $jobs_id  = 0;
         $is_valid = 1;
@@ -1676,25 +1649,31 @@ class Tickets extends MY_Controller
                 }
             }
 
-            //Auto create job 
+            //Auto create job             
             $get_job_settings = array(
                 'where' => array(
-                    'company_id' => $company_id
+                    'company_id' => $comp_id
                 ),
                 'table' => 'job_settings',
                 'select' => '*',
             );
-            $job_settings = $this->general->get_data_with_param($get_job_settings);
-            $JOB_PREFIX = "JOB-";
-            $JOB_NEXT_NUMBER = $this->jobs_model->getLastJobNumber();
-            if ($JOB_NEXT_NUMBER !== "") {
-                $JOB_NEXT_NUMBER = str_replace("JOB-", "", $this->jobs_model->getLastJobNumber()) + 1;
-                $JOB_NEXT_NUMBER = str_pad($JOB_NEXT_NUMBER, 5, '0', STR_PAD_LEFT);
-            } else {
-                $JOB_NEXT_NUMBER = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $job_settings     = $this->general->get_data_with_param($get_job_settings);
+            $is_with_settings = 0;
+            if ($job_settings) {
+                $is_with_settings = 1;    
+                $prefix   = $job_settings[0]->job_num_prefix;
+                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+            }else{
+                 $prefix = 'JOB-';
+                 $lastId = $this->jobs_model->getlastInsert($comp_id);
+                if ($lastId) {
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                }else {
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }
             }
-
-            $job_number = $JOB_PREFIX . $JOB_NEXT_NUMBER;
+            $job_number = $prefix . $next_num;
 
             // get customer info
             $get_customer_info = array(
@@ -1743,6 +1722,22 @@ class Tickets extends MY_Controller
             }
             
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+            //Update job settings
+            if( $is_with_settings == 1 ){
+                $jobs_settings_data = array(
+                    'job_num_next' => $job_settings[0]->job_num_next + 1
+                );
+                $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+            }else{
+                $data_job_settings = [
+                    'job_num_prefix' => $prefix,
+                    'job_num_next' => $lastId->id + 1,
+                    'company_id' => $comp_id
+                ];
+
+                $this->JobSettings_model->create($data_job_settings);
+            }
 
             //Create hash_id
             $job_hash_id = hashids_encrypt($jobs_id, '', 15);
