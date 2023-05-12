@@ -51,7 +51,7 @@ class Job extends MY_Controller
         if (!empty($jobIds)) {
             // Calculate job amount based on saved job's items.
 
-            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.cost,job_items.qty,job_items.tax');
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
             $this->db->from('job_items');
             $this->db->join('items', 'items.id = job_items.items_id', 'left');
             $this->db->where_in('job_items.job_id', $jobIds);
@@ -64,7 +64,8 @@ class Job extends MY_Controller
                     $jobAmounts[$item->job_id] = 0;
                 }
 
-                $total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
+                //$total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
+                $total = (float) $item->total; // include tax? (float) $item->tax
                 $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
             }
 
@@ -74,7 +75,8 @@ class Job extends MY_Controller
                 }
 
                 // make sure to calculate amount from items
-                $job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                //$job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                $job->amount = $jobAmounts[$job->id];
                 return $job;
             }, $jobs);
         }
@@ -2324,8 +2326,10 @@ class Job extends MY_Controller
                         $job_items_data = array();
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
-                        $job_items_data['qty'] = $input['item_qty'][$xx];
-                        $job_items_data['cost'] = $input['item_price'][$xx];
+                        $job_items_data['qty']  = $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
+                        $job_items_data['tax']      = 0;
+                        $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
                         $job_items_data['item_name'] = $input['item_name'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
@@ -2361,42 +2365,24 @@ class Job extends MY_Controller
                 $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
             } else {
                 $jobs_id = $isJob->id;
-                // update data to job items table (items_id, qty, jobs_id)
+                $this->jobs_model->deleteJobItemsByJobId($jobs_id);
                 if (isset($input['item_id'])) {
                     $devices = count($input['item_id']);
                     for ($xx = 0; $xx < $devices; $xx++) {
-
-                        // Deduct Quantity in inventory
-
-                        $check_item = array(
-                            'where' => array(
-                                'job_id' => $isJob->id,
-                                'items_id' => $input['item_id'][$xx]
-                            ),
-                            'table' => 'job_items',
-                            'select' => 'job_id'
-                        );
-                        $isItem = $this->general->get_data_with_param($check_item, false);
-
                         $job_items_data = array();
-                        $job_items_data['qty'] = $input['item_qty'][$xx];
-                        $job_items_data['tax'] = $input['tax'];
+                        $job_items_data['job_id'] = $jobs_id; //from jobs table
+                        $job_items_data['items_id'] = $input['item_id'][$xx];
+                        $job_items_data['qty']  = $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
+                        $job_items_data['tax']      = 0;
+                        $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
-                        $job_items_data['cost'] = $input['item_price'][$xx];
-                        $where['job_id'] = $isJob->id;
-                        $where['items_id'] = $input['item_id'][$xx];
-                        if (empty($isItem)) {
-                            $job_items_data['item_name'] = $input['item_name'][$xx];
-                            $job_items_data['items_id'] = $input['item_id'][$xx];
-                            $job_items_data['job_id'] = $isJob->id; //from jobs table
-                            $this->general->add_($job_items_data, 'job_items');
-                        } else {
-                            $this->general->update_job_items($job_items_data, $where);
-                        }
+                        $job_items_data['item_name'] = $input['item_name'][$xx];
+                        $this->general->add_($job_items_data, 'job_items');
                         $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
                         unset($job_items_data);
                     }
-                }
+                }                
 
                 // update data to job url links table
                 $jobs_links_data = array(

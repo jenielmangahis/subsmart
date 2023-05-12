@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class JobSettings_model extends MY_Model
 {
 
-    public $table = 'jobs_settings';
+    public $table = 'job_settings';
 
     public function getAllByCompany($company_id)
     {

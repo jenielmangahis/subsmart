@@ -1191,6 +1191,9 @@ $route['tools/_google_contact_account_bind'] = 'Tools/ajax_google_contact_accoun
 $route['tools/_import_customer_data_to_google_contacts'] = 'Tools/ajax_import_customer_data_to_google_contacts';
 $route['tools/_disconnect_google_contacts'] = 'Tools/ajax_disconnect_google_contacts';
 $route['tools/google_contacts_logs'] = 'Tools/google_contacts_logs';
+$route['tools/quickbooks_connect'] = 'Tools/quickbooks_connect';
+$route['tools/_load_attendance_list'] = 'Tools/ajax_load_attendance_list';
+$route['tools/_export_qb_timesheet'] = 'Tools/ajax_export_qb_timesheet';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1333,6 +1336,7 @@ $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
 $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
+$route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayroll';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';

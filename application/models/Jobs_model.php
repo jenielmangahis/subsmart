@@ -455,6 +455,14 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
+    public function deleteJobItemsByJobId($job_id)
+    {
+        $this->db->delete('job_items', array("job_id" => $job_id));
+    }
+
+    /**
+     * @return mixed
+     */
     public function deleteJobType($id)
     {
         $this->db->delete($this->table_job_settings, array("job_settings_id" => $id));
