@@ -105,7 +105,7 @@
                                         <td>Employees</td>
                                         <td><?= $companyQuickBooksPayroll->qb_total_employee; ?></td>
                                         <td><?= $companyQuickBooksPayroll->qb_total_employee_synced; ?></td>
-                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_faild_synced; ?></td>                                        
+                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_faild_synced; ?></td>   
                                     </tr>
                                     <tr>
                                         <td>Timesheet Entries Exported</td>
