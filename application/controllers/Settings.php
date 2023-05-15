@@ -138,7 +138,7 @@ class Settings extends MY_Controller {
 
             $args = array('company_id' => $company_id);
             $colorSettings = $this->ColorSettings_model->getByWhere($args);
-
+            $this->page_data['googleAccount'] = $googleAccount;
             $this->page_data['colorSettings'] = $colorSettings;
             $this->page_data['is_glink'] = $is_glink;
             $this->page_data['page']->menu = 'settings';

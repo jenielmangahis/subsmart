@@ -511,10 +511,11 @@ class Tickets extends MY_Controller
                 $job_items_data['job_id']   = $jobs_id; //from jobs table
                 $job_items_data['items_id'] = $input['item_id'][$xx];
                 $job_items_data['qty']      = $input['quantity'][$xx];
-                $job_items_data['cost']     = $input['price'][$xx];
+                $job_items_data['cost']     = $input['price'][$xx] * $input['quantity'][$xx];
                 $job_items_data['location'] = $input['location'][$xx];
                 $job_items_data['discount'] = 0;
                 $job_items_data['total']    = $input['total'][$xx];
+                //$job_items_data['tax']      = $input['tax'][$xx];
                 $job_items_data['tax']      = $input['tax'][$xx];
                 $job_items_data['item_name'] = $input['items'][$xx];
                 $this->general->add_($job_items_data, 'job_items');
@@ -541,7 +542,7 @@ class Tickets extends MY_Controller
 
         // insert data to job payments table
         $job_payment_query = array(
-            'amount' => $input['payment_amount: '],
+            'amount' => $this->input->post('grandtotal'),
             'job_id' => $jobs_id,
         );
         $this->general->add_($job_payment_query, 'job_payments');
@@ -1630,7 +1631,7 @@ class Tickets extends MY_Controller
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
                 $discount   = $this->input->post('discount');
-                $h          = $this->input->post('tax');
+                $tax        = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
 
                 $i = 0;
@@ -1638,12 +1639,11 @@ class Tickets extends MY_Controller
                     $data['items_id']   = $item_id[$i];
                     $data['qty']        = $quantity[$i];
                     $data['cost']       = $price[$i];
-                    $data['tax']        = $h[$i];
+                    $data['tax']        = $tax[$i];
                     $data['item_type']  = $item_type[$i];
                     $data['discount']   = $discount[$i];
                     $data['total']      = $gtotal[$i];
                     $data['ticket_id '] = $addQuery;
-
                     $addQuery2 = $this->tickets_model->add_ticket_items($data);
                     $i++;
                 }
@@ -1652,7 +1652,7 @@ class Tickets extends MY_Controller
             //Auto create job             
             $get_job_settings = array(
                 'where' => array(
-                    'company_id' => $comp_id
+                    'company_id' => $company_id
                 ),
                 'table' => 'job_settings',
                 'select' => '*',
@@ -1665,7 +1665,7 @@ class Tickets extends MY_Controller
                 $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
             }else{
                  $prefix = 'JOB-';
-                 $lastId = $this->jobs_model->getlastInsert($comp_id);
+                 $lastId = $this->jobs_model->getlastInsert($company_id);
                 if ($lastId) {
                     $next_num = $lastId->id + 1;
                     $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
@@ -1731,9 +1731,9 @@ class Tickets extends MY_Controller
                 $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
             }else{
                 $data_job_settings = [
+                    'company_id' => $company_id,
                     'job_num_prefix' => $prefix,
-                    'job_num_next' => $lastId->id + 1,
-                    'company_id' => $comp_id
+                    'job_num_next' => $lastId->id + 1
                 ];
 
                 $this->JobSettings_model->create($data_job_settings);
@@ -1754,7 +1754,7 @@ class Tickets extends MY_Controller
             $quantity   = $this->input->post('quantity');
             $price      = $this->input->post('price');
             $discount   = $this->input->post('discount');
-            $h          = $this->input->post('tax');
+            $tax        = $this->input->post('tax');
             $gtotal     = $this->input->post('total');
             $item_name  = $this->input->post('items');
             $i = 0;
@@ -1762,8 +1762,8 @@ class Tickets extends MY_Controller
                 $job_items_data = array();
                 $job_items_data['items_id']   = $item_id[$i];
                 $job_items_data['qty']        = $quantity[$i];
-                $job_items_data['cost']       = $price[$i];
-                $job_items_data['tax']        = $h[$i];
+                $job_items_data['cost']       = $price[$i] * $quantity[$i];
+                $job_items_data['tax']        = $tax[$i];
                 $job_items_data['discount']   = 0;
                 $job_items_data['total']      = $gtotal[$i];
                 $job_items_data['job_id']     = $jobs_id;

@@ -1336,6 +1336,7 @@ $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
 $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
+$route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayroll';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';

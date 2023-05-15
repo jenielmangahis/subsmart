@@ -3380,6 +3380,76 @@ class Reports extends MY_Controller {
                         return strtotime($a->payment_date) < strtotime($b->payment_date);
                     });
 
+                    $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+                    $subRows = [];
+                    foreach($invoiceItems as $invoiceItem)
+                    {
+                        $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $invoiceItem->cost));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($invoiceItem->qty), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $incomeAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($invoiceItem->qty), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                        ];
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($invoiceItem->qty), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                        ];
+                    }
+
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
 
                     $transactions[] = [
@@ -3410,7 +3480,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
                         'credit' => '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3425,53 +3496,113 @@ class Reports extends MY_Controller {
                     $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
                     $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-                    if($paymentAccType->account_name === 'Credit Card') {
-                        switch($expense->payee_type) {
-                            case 'vendor':
-                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
-                                $name = $payee->display_name;
-                            break;
-                            case 'customer':
-                                $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
-                                $name = $payee->first_name . ' ' . $payee->last_name;
-                            break;
-                            case 'employee':
-                                $payee = $this->users_model->getUser($expense->payee_id);
-                                $name = $payee->FName . ' ' . $payee->LName;
-                            break;
+                    $type = $paymentAccType->account_name === 'Credit Card' ? 'Credit Card Expense' : 'Expense';
+
+                    switch($expense->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($expense->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+                    $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
                         }
 
-                        $transactions[] = [
-                            'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                            'transaction_type' => 'Credit Card Expense',
-                            'num' => $expense->ref_no,
-                            'created_by' => '',
-                            'last_modified_by' => '',
-                            'due_date' => '',
-                            'last_modified' => date("m/d/Y h:i:s A", strtotime($expense->updated_at)),
-                            'open_balance' => '',
-                            'payment_date' => '',
-                            'method' => 'Credit Card Expense',
-                            'adj' => '',
-                            'created' => date("m/d/Y h:i:s A", strtotime($expense->created_at)),
-                            'name' => $name,
-                            'customer' => $expense->payee_type === 'customer' ? $name : '',
-                            'vendor' => $expense->payee_type === 'vendor' ? $name : '',
-                            'employee' => $expense->payee_type === 'employee' ? $name : '',
-                            'product_service' => '',
-                            'memo_description' => $expense->memo,
-                            'qty' => '',
-                            'rate' => '',
-                            'account' => $paymentAcc->name,
-                            'ar_paid' => '',
-                            'ap_paid' => '',
-                            'clr' => '',
-                            'check_printed' => '',
-                            'debit' => '',
-                            'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
-                            'online_banking' => ''
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expense->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
                         ];
                     }
+
+                    foreach($items as $expenseItem)
+                    {
+                        $item = $this->items_model->getItemById($expenseItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expense->id,
+                            'is_item_category' => 1,
+                            'child_id' => $expenseItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $expenseItem->rate));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($expenseItem->quantity), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                        'transaction_type' => $type,
+                        'num' => $expense->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($expense->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => $type,
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($expense->created_at)),
+                        'name' => $name,
+                        'customer' => $expense->payee_type === 'customer' ? $name : '',
+                        'vendor' => $expense->payee_type === 'vendor' ? $name : '',
+                        'employee' => $expense->payee_type === 'employee' ? $name : '',
+                        'product_service' => '',
+                        'memo_description' => $expense->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $paymentAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
+                    ];
                 }
 
                 $checks = $this->expenses_model->get_company_check_transactions($filters);
@@ -3491,6 +3622,65 @@ class Reports extends MY_Controller {
                             $payee = $this->users_model->getUser($check->payee_id);
                             $name = $payee->FName . ' ' . $payee->LName;
                         break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
+                    $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $check->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
+                        ];
+                    }
+
+                    foreach($items as $checkItem)
+                    {
+                        $item = $this->items_model->getItemById($checkItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $check->id,
+                            'is_item_category' => 1,
+                            'child_id' => $checkItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $checkItem->rate));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($checkItem->quantity), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
                     }
 
                     $transactions[] = [
@@ -3521,7 +3711,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3532,6 +3723,23 @@ class Reports extends MY_Controller {
 
                     $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                    $where = [
+                        'account_id' => $arAcc->id,
+                        'transaction_type' => 'Payment',
+                        'transaction_id' => $payment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $subRows = [
+                        [
+                            'account' => $arAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $name
+                        ]
+                    ];
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($payment->payment_date)),
@@ -3561,7 +3769,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3589,6 +3798,38 @@ class Reports extends MY_Controller {
                     }
 
                     $account = $this->chart_of_accounts_model->getById($entries[0]->account_id);
+
+                    $subRows = [];
+                    foreach($entries as $index => $entry)
+                    {
+                        if($index > 0) {
+                            $entryAcc = $this->chart_of_accounts_model->getById($entry->account_id);
+
+                            switch($entry->name_key) {
+                                case 'vendor':
+                                    $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
+                                    $name = $vendor->display_name;
+                                break;
+                                case 'customer':
+                                    $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
+                                    $name = $customer->first_name . ' ' . $customer->last_name;
+                                break;
+                                case 'employee':
+                                    $employee = $this->users_model->getUser($entry->name_id);
+                                    $name = $employee->FName . ' ' . $employee->LName;
+                                break;
+                            }
+
+                            $subRows[] = [
+                                'account' => $entryAcc->name,
+                                'customer' => $entry->name_key === 'customer' ? $name : '',
+                                'vendor' => $entry->name_key === 'vendor' ? $name : '',
+                                'employee' => $entry->name_key === 'employee' ? $name : '',
+                                'debit' => !empty($entry->debit) ? number_format(floatval(str_replace(',', '', $entry->debit)), 2, '.', ',') : '',
+                                'credit' => !empty($entry->credit) ? number_format(floatval(str_replace(',', '', $entry->credit)), 2, '.', ',') : ''
+                            ];
+                        }
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
@@ -3618,7 +3859,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => !empty($entries[0]->debit) ? number_format(floatval(str_replace(',', '', $entries[0]->debit)), 2, '.', ',') : '',
                         'credit' => !empty($entries[0]->credit) ? number_format(floatval(str_replace(',', '', $entries[0]->credit)), 2, '.', ',') : '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3628,6 +3870,65 @@ class Reports extends MY_Controller {
                     $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
                     $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                     $name = $payee->display_name;
+
+                    $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
+                    $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $bill->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
+                        ];
+                    }
+
+                    foreach($items as $billItem)
+                    {
+                        $item = $this->items_model->getItemById($billItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $bill->id,
+                            'is_item_category' => 1,
+                            'child_id' => $billItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $billItem->rate));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($billItem->quantity), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -3657,7 +3958,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3679,6 +3981,65 @@ class Reports extends MY_Controller {
                             $payee = $this->users_model->getUser($ccCredit->payee_id);
                             $name = $payee->FName . ' ' . $payee->LName;
                         break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
+                    $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $ccCredit->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
+                        ];
+                    }
+
+                    foreach($items as $ccCreditItem)
+                    {
+                        $item = $this->items_model->getItemById($ccCreditItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $ccCredit->id,
+                            'is_item_category' => 1,
+                            'child_id' => $ccCreditItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $ccCreditItem->rate));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($ccCreditItem->quantity), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
                     }
 
                     $transactions[] = [
@@ -3709,7 +4070,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ','),
                         'credit' => '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3720,6 +4082,65 @@ class Reports extends MY_Controller {
 
                     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                     $name = $payee->display_name;
+
+                    $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
+                    $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vCredit->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
+                        ];
+                    }
+
+                    foreach($items as $vCreditItem)
+                    {
+                        $item = $this->items_model->getItemById($vCreditItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vCredit->id,
+                            'is_item_category' => 1,
+                            'child_id' => $vCreditItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $vCreditItem->rate));
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($vCreditItem->quantity), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
@@ -3749,7 +4170,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ','),
                         'credit' => '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -3866,6 +4288,238 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ','),
                         'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $salesReceipts = $this->accounting_sales_receipt_model->get_all_by_company_id(logged('company_id'));
+                foreach($salesReceipts as $salesReceipt)
+                {
+                    $account = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                        'transaction_type' => 'Sales Receipt',
+                        'num' => $salesReceipt->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Sales Receipt',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $salesReceipt->message_on_statement,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $creditMemos = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
+                foreach($creditMemos as $creditMemo)
+                {
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                        'transaction_type' => 'Sales Receipt',
+                        'num' => $creditMemo->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at)),
+                        'open_balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                        'payment_date' => '',
+                        'method' => 'Sales Receipt',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($creditMemo->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $creditMemo->message_on_statement,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $arAcc->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                $refundReceipts = $this->accounting_refund_receipt_model->get_company_refund_receipts(['company_id' => logged('company_id')]);
+                foreach($refundReceipts as $refundReceipt)
+                {
+                    $account = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                        'transaction_type' => 'Refund Receipt',
+                        'num' => $refundReceipt->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Refund Receipt',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $refundReceipt->message_on_statement,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
+                        'online_banking' => ''
+                    ];
+                }
+
+                $qtyAdjustments = $this->accounting_inventory_qty_adjustments_model->get_company_quantity_adjustments($filters);
+                foreach($qtyAdjustments as $adjustment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
+                        'transaction_type' => 'Inventory Qty Adjust',
+                        'num' => $adjustment->adjustment_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Inventory Qty Adjust',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $adjustment->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+                foreach($purchOrders as $purchOrder)
+                {
+                    $categories = $this->expenses_model->get_transaction_categories($purchOrder->id, 'Purchase Order');
+                    $items = $this->expenses_model->get_transaction_items($purchOrder->id, 'Purchase Order');
+
+                    $totalCount = count($categories) + count($items);
+
+                    if(count($categories) > 0) {
+                        $account = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
+                    } else {
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                        $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
+                        'transaction_type' => 'Purchase Order',
+                        'num' => $purchOrder->purchase_order_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($purchOrder->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Purchase Order',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($purchOrder->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $purchOrder->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => '',
+                        'online_banking' => ''
+                    ];
+                }
+
+                $adjustments = $this->starting_value_model->get_by_company_id(logged('company_id'));
+                foreach($adjustments as $adjustment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
+                        'transaction_type' => 'Inventory Starting Value',
+                        'num' => $adjustment->ref_no,
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Inventory Starting Value',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'name' => '',
+                        'customer' => '',
+                        'vendor' => '',
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $adjustment->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
                         'online_banking' => ''
                     ];
                 }

@@ -7,83 +7,129 @@ if(isset($jobs_data)){
 ?>
 
 <script>
+<?php 
+$ALERT_SESSION = $this->session->userdata('CREATE_INITIAL_INVOICE_ALERT');
+if ($jobs_data && $jobs_data->status == "Scheduled" && $ALERT_SESSION == "true") { ?>
+    Swal.fire({
+        title: 'Job has been scheduled',
+        text: 'An initial invoice can now be created',
+        icon: 'success',
+        confirmButtonText: 'Create Initial Invoice',
+    }).then((result) => {
+        var redirect_calendar = $('#redirect-calendar').val();
+        if (redirect_calendar == 1) {
+            window.location.href = '<?= base_url(); ?>workcalender';
+        } else {
+            <?php $this->session->set_userdata('CREATE_INITIAL_INVOICE_ALERT', 'false'); ?>
+            window.open("<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>", '_blank', 'location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+            return;
+        }
+        <?php $this->session->set_userdata('CREATE_INITIAL_INVOICE_ALERT', 'false'); ?>
+    });
+<?php } ?>
+
+
+$(".REMOVE_THUMBNAIL").click(function(event) {
+    event.preventDefault();
+    $("#attachment-file").val(null);
+    $("#attachment-image").attr("src", null);
+    $("#attachment").val(null);
+    $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+    $(".THUMBNAIL_BOX").removeClass("d-none");
+});
+$("#attachment-file").change(function() {
+    var input = document.getElementById('attachment-file');
+    var fileName = document.getElementById("attachment-file").value;
+    var idxDot = fileName.lastIndexOf(".") + 1;
+    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+    if (extFile != "") {
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png" || extFile == "bmp" || extFile == "ico" || extFile == ".jfif" || extFile == ".pjpeg" || extFile == ".pjp") {
+            $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").removeClass("d-none");
+            $(".THUMBNAIL_BOX").addClass("d-none");
+            var fileInput = document.getElementById('attachment-file');
+            var file = fileInput.files[0];
+            var formDatas = new FormData();
+            formDatas.append('file', file);
+            // console.log(formDatas);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "<?= base_url() ?>/job/add_job_attachments",
+                data: formDatas,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: function(data) {
+                    if (data.search("png") != -1 || data.search("jpeg") != -1 || data.search("jpg") != -1 || data.search("bmp") != -1 || data.search("ico") != -1 || data.search("jfif") != -1 || data.search("pjpeg") != -1 || data.search("pjp") != -1) {
+                        $('#attachment').val('/' + data);
+                        $("#attachment-image").attr("src", base_url + data);
+                    } else {
+                        $(".IMG_PREVIEW, .REMOVE_THUMBNAIL").addClass("d-none");
+                        $(".THUMBNAIL_BOX").removeClass("d-none");
+                    }
+                },
+                error: function(e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        } else {
+            error('', 'Only png, jpg, jpeg, bmp or ico files are allowed for Thumbnails!', 'error');
+        }
+    }
+});
+
+
+    $( window ).on( "load", function() {
     var cust_id = <?php echo $customer  ?>;
-    window.onload = function() { // same as window.addEventListener('load', (event) => {
-        $.ajax({
-            type: "GET",
-            url: "<?= base_url() ?>/job/get_customers",
-            success: function(data)
-            {
-                //console.log(data);
-                var template_data = JSON.parse(data).data;
+      fetch('<?= base_url() ?>/job/get_customers', {
+                method: 'GET',
+            }) .then(response => response.json() ).then(response => {
+              var { message, data } = response;
+              if(message){
                 var toAppend = '';
-                $.each(template_data,function(i,o){
+                $.each(data,function(i,o){
                     var selected = '';
                     if(o.prof_id == cust_id){
                         selected = "selected";
                     }
-                    //console.log(cust_id);
                     toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
-                //console.log(template_data);
-            }
-        });
-        if(cust_id != null && cust_id !== 0 && cust_id !== ''){
-            //alert(cust_id);
-            load_customer_data(cust_id);
-        }
-    };
+              }
+            })
+            
+    });
 
-    function get_customers($id=null){
-        $.ajax({
-            type: "GET",
-            url: "<?= base_url() ?>/job/get_customers",
-            success: function(data)
-            {
-                //console.log(data);
-                var template_data = JSON.parse(data).data;
-                var toAppend = '';
-                $.each(template_data,function(i,o){
-                    var selected = '';
-                    if(o.prof_id == $id){
-                        selected = "selected";
-                    }
-                    //console.log(cust_id);
-                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
-                });
-                $('#customer_id').append(toAppend);
-                //console.log(template_data);
-            }
-        });
-        if($id != null){
-            load_customer_data($id);
-        }
-    }
+    // function get_customers($id=null){
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "<?= base_url() ?>/job/get_customers",
+    //         success: function(data)
+    //         {
+    //             //console.log(data);
+    //             var template_data = JSON.parse(data);
+    //             var toAppend = '';
+    //             $.each(template_data,function(i,o){
+    //                 var selected = '';
+    //                 if(o.prof_id == $id){
+    //                     selected = "selected";
+    //                 }
+    //                 //console.log(cust_id);
+    //                 toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
+    //             });
+    //             $('#customer_id').append(toAppend);
+    //             //console.log(template_data);
+    //         }
+    //     });
+    //     if($id != null){
+    //         load_customer_data($id);
+    //     }
+    // }
 
-    function load_customer_data($id){
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url() ?>/job/get_customer_selected",
-            data: {id : $id}, // serializes the form's elements.
-            success: function(data)
-            {
-                var customer_data = JSON.parse(data);
-                console.log(customer_data);
-                $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                if(customer_data.mail_add !== null){
-                    $('#cust_address').text(customer_data.mail_add + ' ');
-                }
-                $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
-                $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                $('#cust_number').text(customer_data.phone_h);
-                $('#cust_email').text(customer_data.email);
-                $('#mail_to').attr("href","mailto:"+customer_data.email);
-                initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-                loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-            }
-        });
-    }
+    
 
     function loadStreetView(address)
     {
@@ -97,60 +143,91 @@ if(isset($jobs_data)){
             }
         });
     }
+    
 
     $(document).ready(function() {
+        load_customer_data(<?= $customer  ?>);
+        // var id1 = <?php echo $customer  ?>;
+        // var postData1 = new FormData();
+        // postData1.append('id', id1);
+
+        // fetch('<?= base_url('job/get_customer_selected') ?>', {
+        //     method: 'POST',
+        //     body: postData1
+        // }).then(response => response.json()).then(response => {
+        //     console.log(response);
+        //     var {success, data} = response;
+
+        //     if(success){
+        //         var phone_h = '(xxx) xxx-xxxx';
+        //         $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+        //         if(data.mail_add !== null){
+        //             $('#cust_address').text(data.mail_add + ' ');
+        //         }
+        //         if(data.phone_h){
+        //             if(data.phone_h.includes('Mobile:')){
+        //             phone_h = ((data.phone_h).slice(0,13))
+        //         }else{
+        //             phone_h = data.phone_h;
+        //         }
+        //         }
+        //         if(data.city || data.state || data.zip_code){
+        //             $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+        //         }else{
+        //             $('#cust_address2').text('-------------');
+        //         }
+
+        //         if(data.email){
+        //             $('#cust_email').text(data.email);
+        //         }else{
+        //             $('#cust_email').text('xxxxx@xxxxx.xxx');
+        //         }
+        //         $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+        //         $('#cust_number').text(phone_h);
+        //         $('#mail_to').attr("href","mailto:"+data.email);
+        //         initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+        //         loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+            
+        //     }
+        // })
+        //JOB
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
+            $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
             if($('#job_color_id').val()=== ""){
-                error('Sorry!','Event Color is required!','warning');
+                error('Error','Event Color is required','error');
+            }else if( $('#EMPLOYEE_SELECT_2').val() === "" ){
+                error('Error','Assigned To is required','error');
             }else{
 
                 var form = $(this);
+                console.log(form);
                 const $overlay = document.getElementById('overlay');
  
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>/job/save_job",
+                    url: "<?= base_url() ?>job/save_job",
                     data: form.serialize(), // serializes the form's elements.
+                    dataType:'json',
                     success: function(data) {
-                        if ($overlay) $overlay.style.display = "none";
-                        console.log(data);
-                        sucess_add_job(data);
+                        if( data.is_success == 1 ){
+                            if ($overlay) $overlay.style.display = "none";
+                            sucess_add_job(data);
+                            if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
+                                $.get("<?= base_url('job/sendCustomerJobScheduled/').$jobs_data->id; ?>"+data.job_id); 
+                            }
+                        }else{
+                            error('Error',data.msg,'error');
+                        }
+                        
                     }, beforeSend: function() {
                         if ($overlay) $overlay.style.display = "flex";
                     }
                 });
             }
         });
-        function sucess_add_job(){
-            Swal.fire({
-                title: 'Nice!',
-                text: 'Job has been added!',
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/';
-                }
-            });
-        }
-        function error(title,text,icon){
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
-            });
-        }
+        
         $("#fill_esign_btn").click(function () {
             $.ajax({
                 type: "GET",
@@ -163,7 +240,6 @@ if(isset($jobs_data)){
                         toAppend += '<option value='+o.esignLibraryTemplateId+'>'+o.title+'</option>';
                     });
                     $('#library_template').append(toAppend);
-                    //console.log(template_data);
                 }
             });
         });
@@ -188,70 +264,218 @@ if(isset($jobs_data)){
 
         $(".select_item").click(function () {
             var idd = this.id;
-            console.log(idd);
-            console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
-            var price = $(this).data('price');
-            var qty = $(this).data('quantity');
+            var price = parseInt($(this).attr('data-price'));
+            var qty = parseInt($(this).attr('data-quantity'));
+            var location_name = $(this).data('location_name');
+            var location_id = $(this).data('location_id');
             var item_type = $(this).data('item_type');
-
-            var total_ = price * qty;
-            var total = parseFloat(total_).toFixed(2);
+            // var total_ = price * qty;
+            var total_ = 0;
+            var total_price = price + total_;
+            var total = parseFloat(total_price).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
-            console.log(total);
-            markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\" maxlength=\"1\"></td>\n" +
-                "<td width=\"20%\"><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"20%\"><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
-                //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
-                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
+            $("#ITEMLIST_PRODUCT_"+idd).hide();
+            markup = "<tr id='ss'>" +
+                "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
+                "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
+                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
+                "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
+                // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
+                "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
+                "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
                 "</tr>";
             tableBody = $("#jobs_items");
             tableBody.append(markup);
-            markup2 = "<tr id=\"sss\">" +
-                "<td >"+title+"</td>\n" +
-                "<td >0</td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
-                "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
-                "</tr>";
+            // markup2 = "<tr id=\"sss\">" +
+            //     "<td >"+title+"</td>\n" +
+            //     "<td >0</td>\n" +
+            //     "<td >"+price+"</td>\n" +
+            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
+            //     "<td ></td>\n" +
+            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
+            //     "</tr>";
+            markup2 = "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>" +
+                      "<td></td>";
+
+            //device audit
+            markup3 ="<tr id='ss'>" +
+                "<td>" + title + "</td>" +
+                "<td>" + item_type + "</td>" +
+                "<td>0</td>" +
+                "<td id='device_price"+idd+"'>" + price + "</td>" +
+                "<td id='device_qty"+idd+"'>"+ 1 + "</td>" +
+                "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
+                "<td>" +
+                "<input hidden name='item_id1[]' value='"+ idd +"'>" +
+                "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
+                "<select id='location"+idd+"' name='location[]' class='form-control location'>" +
+                "<option>Select Location</option>" +
+                "<option value='" +location_id+ "' selected>" +location_name+ "</option>" +
+                "<?php 
+                    if ($getAllLocation) { 
+                        foreach ($getAllLocation as $getAllLocations) {
+                            echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                        } 
+                    } 
+                ?>" +
+                "</select>" +
+                "</td>";
+
+            tableBody3 = $("#device_audit_append");
+            tableBody3.append(markup3);
+
+
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
             calculate_subtotal();
+            $(".location").select2({
+                placeholder: "Choose Location"
+            });
         });
 
-        function calculate_subtotal(tax=0){
+        async function getLoc(id, qty) {
+            var postData = new FormData();
+            postData.append('id', id);
+            postData.append('qty', qty);
+            fetch('<?= base_url('job/getItemLocation') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { locations } = response;
+                var select = document.querySelector('#location'+id);
+                const locations_len = Object.keys(locations);
+                // Avoid TypeError: Cannot set properties of null (setting 'innerHTML')
+                if (select === null) return;
+                console.log(locations);
+                select.innerHTML = '';
+                // Loop through each location and append a new option element to the select
+                if(locations_len.length > 1){
+                    var options = document.createElement('option');
+                    options.text = "Select Location";
+                    options.value = "0";
+                    select.appendChild(options);
+                }
+                
+
+                // Get all the location name promises
+                var promises = locations.map(function(location) {
+                    return getLocName(location.loc_id);
+                });
+
+                // Wait for all the promises to resolve
+                Promise.all(promises).then(function(names) {
+                    // Loop through each location and append a new option element to the select
+                    locations.forEach(function(location, index) {
+                        var option = document.createElement('option');
+                        option.text = names[index];
+                        option.value = location.id;
+                        select.appendChild(option);
+                    }); 
+                });
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
+
+        function getLocName(id){
+            var postData = new FormData();
+            postData.append('id', id);
+            return fetch('<?= base_url('inventory/getLocationNameById') ?>',{
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var { location } = response;
+                return location.location_name;
+            }).catch((error) =>{
+                console.log(error);
+            })
+        }
+
+        function calculate_subtotal(tax=0, def=false, discount=0){
+            console.log("Calculating subtotal...");
             var subtotal = 0 ;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
                 // var idd = this.id;
                 subtotal = Number(subtotal) + Number(idd);
+
             });
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total=0;
-            if(tax !== 0 || tax !== ''){
-                tax_total = Number(total) *  Number(tax);
-                total = Number(total) - Number(tax_total);
+
+            if( tax == 0 ){
+                //For tax selected
+                if( $('#tax_rate').val() != '' ){
+                    var tax = $('#tax_rate').val();
+                    var discount = $('#invoice_discount_total').text();
+                }
+            }
+
+            if((tax !== 0 || tax !== '') && def == false){
+                tax_total = (Number(tax) / 100) * Number(total);
+                total = Number(total) + Number(tax_total) - Number(discount);
                 total = parseFloat(total).toFixed(2);
                 tax_total =  parseFloat(tax_total).toFixed(2);
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
                 $('#invoice_tax_total').html('$' + tax_with_comma);
+                $('#tax_total_form_input').val(tax_with_comma);
+            }else if((tax !== 0 || tax !== '') && def == true){
+                total = Number(total)+ Number(tax) - Number(discount);
+                total = parseFloat(total).toFixed(2);
+                tax_total =  parseFloat(tax).toFixed(2);
+
+                var tax_with_comma = Number(tax_total).toLocaleString('en');
+
+                $('#invoice_tax_total').html('$' + tax_total);
             }
+                        
+            const $requestedDeposit = document.getElementById("invoice_requested_deposit");
+            if ($requestedDeposit && $requestedDeposit.dataset.value) {
+                const value = parseFloat($requestedDeposit.dataset.value);
+                const invoiceTotal = parseFloat(parseFloat(total) - value);
+                total = parseFloat(invoiceTotal).toFixed(2);                
+                $("#invoice_overall_total_without_deposited_amount").html('$' + formatNumber(total));
+            }
+
+            /*var installation_cost = $('#installation_cost').val();
+            var otps = $('#otps').val();
+            var monthly_monitoring = $('#monthly_monitoring').val();
+            total = Number(total) + Number(installation_cost) + Number(otps) + Number(monthly_monitoring);*/
+
             var withCommas = Number(total).toLocaleString('en');
             if(tax_total < 1){
                 $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             }
+            if(discount > 0){
+                $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
+            }            
+
+            const adjustmentIdSelectors = ["adjustment_ic", "adjustment_otps", "adjustment_mm"];
+            adjustmentIdSelectors.forEach(selector => {
+                const $element = document.getElementById(selector);
+                if ($element) {
+                    total = parseFloat(parseFloat(total) + parseFloat($element.value)).toFixed(2);                
+                }
+            });
+
             $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
+            $('#total2').val(total);
         }
+        window.__calculate_subtotal = calculate_subtotal;
         //$(".color-scheme").on( 'click', function () {});
         function formatNumber(num) {
-            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            num = num.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+            return num;
         }
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -267,6 +491,8 @@ if(isset($jobs_data)){
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
+            $('#location_qty'+id).val(qty);
+            // getLoc(id, qty);
             calculate_subtotal();
         });
 
@@ -280,25 +506,54 @@ if(isset($jobs_data)){
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
+            $('#location_qty'+id).val(qty);
+            // getLoc(id, qty);
+            calculate_subtotal();
+        });
+
+        $("body").delegate(".item-price", "change", function(){
+            //console.log( "Handler for .keyup() called." );
+            var id   = $(this).attr('data-id');
+            var qty  = $('.item-qty-'+id).val();
+            var cost = $(this).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            $('#sub_total'+id).data('subtotal',new_sub_total);
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
+            $('#device_price'+id).text(cost);
             calculate_subtotal();
         });
 
         $("body").delegate(".remove_item_row", "click", function(){
-            $(this).parent().parent().remove();
+            var row = $(this).closest('tr');
+            var index = row.index();
+            $('.job_items_tbl tr').filter(function() {
+                return $(this).index() === index;
+            }).remove();
+            $('#device_audit tr').filter(function() {
+                return $(this).index() === index;
+            }).remove();
+            // $(this).parent().parent().remove();
+            console.log(row);
             calculate_subtotal();
         });
 
         $("body").delegate(".remove_audit_item_row", "click", function(){
-            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().parent().remove();
             calculate_subtotal();
         });
 
-        $("body").delegate(".color-scheme", "click", function(){
-            var id = this.id;
-            $('[id="job_color_id"]').val(id);
-            console.log(id);
-            $( "#"+id ).append( "<i class=\"fa fa-check calendar_button\" aria-hidden=\"true\"></i>" );
-            remove_others(id);
+        $("body").delegate("#adjustment_ic", "change", function(){            
+            calculate_subtotal();
+        });
+
+        $("body").delegate("#adjustment_otps", "change", function(){            
+            calculate_subtotal();
+        });
+
+        $("body").delegate("#adjustment_mm", "change", function(){            
+            calculate_subtotal();
         });
 
         $("body").delegate(".edit_item_list", "click", function(){
@@ -324,7 +579,6 @@ if(isset($jobs_data)){
                     var template_data = JSON.parse(data);
                     $('#description').val(template_data.description);
                     $('#brand').val(template_data.brand);
-                    console.log(template_data);
                 }
             });
         }
@@ -346,21 +600,19 @@ if(isset($jobs_data)){
         }
 
         // get the tax value and deduct it to subtotal then display over all total
+        var taxRate = $('#invoice_tax_total').text();
+        var discount = $('#invoice_discount_total').text();
+        calculate_subtotal(taxRate, true, discount);
+
         $("#tax_rate").on( 'change', function () {
             var tax = this.value;
-            calculate_subtotal(tax);
+            var discount = $('#invoice_discount_total').text();
+            calculate_subtotal(tax, false, discount);
         });
 
         // get the tax value and deduct it to subtotal then display over all total
 
-        function remove_others (color_id){
-            $('.color-scheme').each(function(index) {
-                var idd = this.id;
-                if(idd !== color_id){
-                    $( "#"+idd ).empty();
-                }
-            });
-        }
+        
 
         $("#library_template").on( 'change', function () {
             var lib_id = this.value;
@@ -372,7 +624,6 @@ if(isset($jobs_data)){
                 {
                     var template_data = JSON.parse(data);
                     $('#summernote').summernote('code', template_data.content);
-                    //console.log(data);
                 }
             });
         });
@@ -388,14 +639,12 @@ if(isset($jobs_data)){
                 {
                     var template_data = JSON.parse(data);
                     $('#job_tags_right').val(template_data.name);
-                    //console.log(data);
                 }
             });
         });
 
         $("#start_time").on( 'change', function () {
             var tag_id = this.value;
-            console.log(tag_id);
             var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
 
             if(end_time === 'Invalid date') {
@@ -403,12 +652,20 @@ if(isset($jobs_data)){
             }else{
                $('#end_time').val(end_time);
             }
-            console.log(end_time);
         });
 
         $("#job_type_option").on( 'change', function () {
-            var type = this.value;
-            $('#job_type').val(type);
+            var type_id = this.value;
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/get_type_selected",
+                data: {id : type_id}, // serializes the form's elements.
+                success: function(data)
+                {
+                    var template_data = JSON.parse(data);
+                    $('#job_type').val(template_data.title);
+                }
+            });
         });
 
         //$('#summernote').summernote('code', '');
@@ -417,34 +674,34 @@ if(isset($jobs_data)){
             tabsize: 2,
             height: 250,
         });
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-        $('#click').click(function(e){
-            e.preventDefault();
-            var data = signaturePad.toDataURL('image/png');
-            $('#output').val(data);
-            var url = '<?= base_url() ?>/job/save_esign';
-            $.ajax({
-                url: url,
-                type: "POST",
-                data:{base64: data}
-            }).done(function(e){
-                //$('#updateSignature').modal('hide');
-                var name = $('#authorizer_name').val();
-                $('#authorizer').html(name);
-                $('#appoval_name_right').html(name);
-                $('#date_signed').html(e);
-                $('#datetime_signed').val(e);
-                $('#name').val(name);
-                $('#signature_link').val(data);
-                $("#customer-signature").attr("src",data);
-                $("#customer_signature_right").attr("src",data);
-                //location.reload();
-            });
-        });
+        // var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+        // $('#click').click(function(e){
+        //     e.preventDefault();
+        //     var data = signaturePad.toDataURL('image/png');
+        //     $('#output').val(data);
+        //     var url = '<?= base_url() ?>/job/save_esign';
+        //     $.ajax({
+        //         url: url,
+        //         type: "POST",
+        //         data:{base64: data}
+        //     }).done(function(e){
+        //         //$('#updateSignature').modal('hide');
+        //         var name = $('#authorizer_name').val();
+        //         $('#authorizer').html(name);
+        //         $('#appoval_name_right').html(name);
+        //         $('#date_signed').html(e);
+        //         $('#datetime_signed').val(e);
+        //         $('#name').val(name);
+        //         $('#signature_link').val(data);
+        //         $("#customer-signature").attr("src",data);
+        //         $("#customer_signature_right").attr("src",data);
+        //         //location.reload();
+        //     });
+        // });
 
-        $('#clear-signature').click(function(e){
-            signaturePad.clear();
-        });
+        // $('#clear-signature').click(function(e){
+        //     signaturePad.clear();
+        // });
 
         <?php if(isset($jobs_data) && $jobs_data->status == 'Started') : ?>
             document.getElementById('check_form').style.display = "none";
@@ -576,47 +833,6 @@ if(isset($jobs_data)){
             document.getElementById('attach_right_card').style.display = "block";
         });
 
-        $("#attachment-file").change(function(){
-            console.log("A file has been selected.");
-            // var form = $('form')[0]; // You need to use standard javascript object here
-            // var formData = new FormData(form);
-            // var form = $('#upload_library_form').serialize();
-            // var formData = new FormData($(form)[0]);
-            var input = document.getElementById('attachment-file');
-            //  console.log(formData);
-            // console.log(input.files);
-            // for (var i = 0; i < input.files.length; i++) {
-            //     console.log(input.files[i]);
-            // }
-            // The Javascript
-            var fileInput = document.getElementById('attachment-file');
-            var file = fileInput.files[0];
-            var formDatas = new FormData();
-            formDatas.append('file', file);
-            //console.log(formDatas);
-            $.ajax({
-                type: "POST",
-                enctype: 'multipart/form-data',
-                url: "<?= base_url() ?>/job/add_job_attachments",
-                data: formDatas,
-                processData: false,
-                contentType: false,
-                cache: false,
-                beforeSend: function() {
-
-                },
-                success: function (data) {
-                    $('#attachment').val('/'+data);
-                    $("#attachment-image").attr("src",'/'+data);
-                },
-                error: function (e) {
-                    //$("#result").text(e.responseText);
-                    console.log("ERROR : ", e);
-                    // $("#btnSubmit").prop("disabled", false);
-                }
-            });
-        });
-
         $("#save_memo").on( "click", function( event ) {
             var note = $('#note_txt').val();
             $('#notes_edit_btn').text(note);
@@ -647,7 +863,6 @@ if(isset($jobs_data)){
         $("#fillAndSignNext").on( "click", function( event ) {
             return; // moved implementation to script.js@onClickNext
 
-            console.log('fsdfd');
             var formData = {
                 'status': $(this).data('status'),
                 'id': $(this).data('id'),
@@ -660,22 +875,19 @@ if(isset($jobs_data)){
                 //encode : true,
                 success: function(data)
                 {
-                    console.log(data);
                     if(data === "Success"){
                         sucess_add('Job is now Approved!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 },
                 error : function(data) {
-                    console.log(data);
                 }
             });
         });
 
         $("#new_customer_form").submit(function(e) {
-            //alert("asf");
+            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
             //var url = form.attr('action');
@@ -689,91 +901,14 @@ if(isset($jobs_data)){
                         sucess_add('Customer Added Successfully!',1);
                     }else {
                         warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
                     }
                 }
             });
         });
 
-        $("#update_status_to_omw").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
-        });
-
-        $("#update_status_to_started").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_jobs_status",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        //window.location.reload();
-                        sucess_add('Job Status Updated!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                        console.log(data);
-                    }
-                }
-            });
-        });
-
-        function sucess_add(information,is_reload){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(is_reload === 1){
-                    if (result.value) {
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-
-        function warning(information){
-            Swal.fire({
-                title: 'Warning!',
-                text: information,
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
-            });
-        }
-
-        $("#customer_id").on( 'change', function () {
+        $("#customer_id").on('change', function () {
+            
             var customer_selected = this.value;
-            //console.log(customer_selected);
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -783,10 +918,105 @@ if(isset($jobs_data)){
                 $('#cust_email').text('xxxxx@xxxxx.xxx');
                 initMap();
             }
+            initializeCustomerData(customer_selected);
         });
 
+        function initializeCustomerData(customerID){
+            $.post('<?php echo base_url("job/getCustomerInfo/"); ?>'+customerID, {param1: 'value1'}, function(data) {
+                // =====
+                let result = JSON.parse(data);
+                let customerAccountNumber = (result.monitor_id) ? result.monitor_id : "" ;
+                let customerBusinessName = (result.ACS_PROFILE_BUSINESS_NAME) ? result.ACS_PROFILE_BUSINESS_NAME : "" ;
+                let customerPassword = (result.access_password) ? result.access_password : "" ;
+                let customerAddress = (result.mail_add) ? result.mail_add + ", " + result.zip_code : result.cross_street + ", " + result.zip_code ;
+                let customerPhoneNumber = (result.phone_h) ? result.phone_h : result.phone_m ;
+                let customerEmail = (result.email) ? result.email : "" ;
+                let customerEquimentAmount = (result.equipment_cost) ? result.equipment_cost : "" ;
+                let customerActivationStatus = (result.activated == 1) ? "Yes" : "No" ;
+                let customerMMR = (result.mmr) ? "$"+result.mmr : "" ;
+                // ====
+                let billingAccountName = (result.card_fname) ? result.card_fname + " " + result.card_lname : "" ;
+                let billingAccountNo = (result.acct_num) ? result.acct_num : "" ;
+                let billingCreditCardNo = (result.credit_card_num) ? result.credit_card_num : "" ;
+                let billingCreditCardExpiration = (result.credit_card_exp) ? result.credit_card_exp : "" ;
+                let billingCardAddress = result.card_address + " " + result.city + ", " + result.state + " " + result.zip;
+                // let billingEquipment = (result.equipment) ? result.equipment : "" ;
+                // let billingInitialDeposit = (result.initial_dep) ? "$"+result.initial_dep : "" ;
+                // let billingMMR = (result.mmr) ? "$"+result.mmr : "" ;
+                // let billingFrequency = (result.bill_freq) ? result.bill_freq : "" ;
+                // let billingDay = (result.bill_day) ? result.bill_day : "" ;
+                // let billingContractTerm = (result.contract_term) ? result.contract_term : "" ;
+                // let billingStartDate = (result.bill_start_date) ? result.bill_start_date : "" ;
+                // let billingEndDate = (result.bill_end_date) ? result.bill_end_date : "" ;
+                let billingMethod = (result.bill_method) ? result.bill_method : "" ;
+                // let billingCheckNo = (result.check_num) ? result.check_num : "" ;   
+                // let billingRoutingNo = (result.routing_num) ? result.routing_num : "" ;
+                // let billingAccountCredential = (result.account_credential) ? result.account_credential : "" ;
+                // let billingAccountNote = (result.account_note) ? result.account_note : "" ;
+                // let billingConfirmation = (result.confirmation) ? result.confirmation : "" ;
+                // let billingFinanceAmount = (result.finance_amount) ? "$"+result.finance_amount : "" ;
+                // let billingRecurringStartDate = (result.recurring_start_date) ? result.recurring_start_date : "" ;
+                // let billingRecurringEndDate = (result.recurring_end_date) ? result.recurring_end_date : "" ;
+                // let billingTransactionAmount = (result.transaction_amount) ? "$"+result.transaction_amount : "" ;
+                // let billingTransactionCategory = (result.transaction_category) ? result.transaction_category : "" ;
+                // let billingLastPaymentDate = (result.last_payment_date) ? result.last_payment_date : "" ;
+                // let billingNextBillingDate = (result.next_billing_date) ? result.next_billing_date : "" ;
+                // =====
+                $("#customerAccountNumber").text(customerAccountNumber);
+
+                // $("#customerBusinessName").text(customerBusinessName);
+                $("#cust_business").text(customerBusinessName);
+
+                $("#customerPassword").text(customerPassword);
+                $("#customerAddress").text(customerAddress);                
+
+                // $("#customerPhoneNumber").text(customerPhoneNumber);
+                $("#cust_number").text(customerPhoneNumber);
+
+                $("#customerEmail").text(customerEmail);
+                $("#customerEquimentAmount").text(customerEquimentAmount);
+                $("#customerActivationStatus").text(customerActivationStatus);
+                $("#customerMMR").text(customerMMR);
+                // =====
+                $("#billingAccountName").text(billingAccountName);
+                $("#billingAccountNo").text(billingAccountNo);
+                $("#billingCreditCardNo").text(billingCreditCardNo);
+                $("#billingCreditCardExpiration").text(billingCreditCardExpiration);
+                $("#billingCardAddress").text(customerAddress);
+
+                // $("#billingEquipment").text(billingEquipment);
+                // $("#billingInitialDeposit").text(billingInitialDeposit);
+                // $("#billingMMR").text(billingMMR);
+                // $("#billingFrequency").text(billingFrequency);
+                // $("#billingDay").text(billingDay);
+                // $("#billingContractTerm").text(billingContractTerm);
+                // $("#billingStartDate").text(billingStartDate);
+                // $("#billingEndDate").text(billingEndDate);
+                // $("#billingMethod").text(billingMethod);
+                // $("#billingCheckNo").text(billingCheckNo);
+                // $("#billingRoutingNo").text(billingRoutingNo);
+                // $("#billingAccountCredential").text(billingAccountCredential);
+                // $("#billingAccountNote").text(billingAccountNote);
+                // $("#billingConfirmation").text(billingConfirmation);
+                // $("#billingFinanceAmount").text(billingFinanceAmount);
+                // $("#billingRecurringStartDate").text(billingRecurringStartDate);
+                // $("#billingRecurringEndDate").text(billingRecurringEndDate);
+                // $("#billingTransactionAmount").text(billingTransactionAmount);
+                // $("#billingTransactionCategory").text(billingTransactionCategory);
+                // $("#billingLastPaymentDate").text(billingLastPaymentDate);
+                // $("#billingNextBillingDate").text(billingNextBillingDate);
+                // =====
+                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+customerAddress+'&output=embed');
+                $('.MAP_LOADER').fadeIn();
+                $('#TEMPORARY_MAP_VIEW').hide();
+                // =====
+                console.log(billingMethod);
+            });
+        }
+
+        initializeCustomerData(<?php echo $customer; ?>);
+
         function get_employee_name($this){
-            //console.log($this.value);
             $.ajax({
                 type: "POST",
                 data: {id : $this.value},
@@ -800,50 +1030,39 @@ if(isset($jobs_data)){
                     }else if($this.id === 'employee4' ){
                         $('#emp4_id').val(emp_data.FName);
                     }
-                    console.log(emp_data);
                 }
             });
         }
 
         $("#employee2").on( 'change', function () {
             $('#employee2_id').val(this.value);
-            console.log(get_employee_name(this));
         });
         $("#employee3").on( 'change', function () {
             $('#employee3_id').val(this.value);
-            console.log(get_employee_name(this));
         });
         $("#employee4").on( 'change', function () {
             $('#employee4_id').val(this.value);
-            console.log(get_employee_name(this));
-        });
-        $("#employee5").on( 'change', function () {
-            $('#employee5_id').val(this.value);
-            console.log(get_employee_name(this));
-        });
-        $("#employee6").on( 'change', function () {
-            $('#employee6_id').val(this.value);
-            console.log(get_employee_name(this));
         });
 
         $("#start_date").on("change", function(){
             $('#end_date').val(this.value);
         });
 
-        $('#items_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 5,
-            "order": [],
+        var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
         });
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
+        });
+        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
 
-        $('#device_audit').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5,
-            "paging" : false,
-            "order": [],
-        });
+        // $('#device_audit').DataTable({
+        //     "lengthChange": false,
+        //     "searching" : false,
+        //     "pageLength": 5,
+        //     "paging" : false,
+        //     "ordering" : false,
+        // });
 
         $('#estimates_table').DataTable({
             "lengthChange": false,
@@ -867,5 +1086,306 @@ if(isset($jobs_data)){
         });
 
     });
+
+    $("#update_status_to_omw").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var job_id = $('#jobid').val();
+            var omw_time = $('#omw_time').val();
+            var status = $('#status').val();
+            var omw_date = $('#omw_date').val();
+
+            const fd = new FormData();
+            fd.append('id', job_id);
+            fd.append('status', status);
+            fd.append('omw_time', omw_time);
+            fd.append('omw_date', omw_date);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd
+            }).then(response => response.json()).then(response => {
+                var { success, message} = response;
+                if(success){
+                    $('#omw_modal').modal('hide');
+                    sucess_add(message,1);
+                }else{
+                    warning(message)
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+            // $.ajax({
+            //     type: "POST",
+            //     url: "<?= base_url() ?>/job/update_jobs_status",
+            //     data: form.serialize(), // serializes the form's elements.
+            //     success: function(data)
+            //     {
+            //         console.log(data);
+            //         if(data === "Success"){
+            //             //window.location.reload();
+            //             sucess_add('Job Status Updated!',1);
+            //         }else {
+            //             warning('There is an error adding Customer. Contact Administrator!');
+            //         }
+            //     }
+            // });
+        });
+
+        $("#update_status_to_started").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var job_id = $('#jobid').val();
+            var job_start_time = $('#job_start_time').val();
+            var status = $('#start_status').val();
+            var job_start_date = $('#job_start_date').val();
+
+            const fd1 = new FormData();
+            fd1.append('id', job_id);
+            fd1.append('status', status);
+            fd1.append('job_start_time', job_start_time);
+            fd1.append('job_start_date', job_start_date);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd1
+            }).then(response => response.json()).then(response => {
+                var { success, message} = response;
+                if(success){
+                    $('#start_modal').modal('hide');
+
+                    // console.log(response);
+                    sucess_add(message, 1);
+                }else{
+                    warning(message);
+                    // console.log(response);
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>/job/update_jobs_status",
+        //         data: form.serialize(), // serializes the form's elements.
+        //         success: function(data)
+        //         {
+        //             if(data === "Success"){
+        //                 //window.location.reload();
+        //                 sucess_add('Job Status Updated!',1);
+        //             }else {
+        //                 warning('There is an error adding Customer. Contact Administrator!');
+        //             }
+        //         }
+        //     });
+        });
+    $("#update_status_to_approved").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var job_id = $('#jobid').val();
+            var status = $('#approved_status').val();
+
+            const fd2 = new FormData();
+            fd2.append('id', job_id);
+            fd2.append('status', status);
+            
+            fetch('<?= base_url('job/update_jobs_status') ?>',{
+                method: 'POST',
+                body: fd2
+            }).then(response => response.json()).then(response => {
+                var { success, message} = response;
+                if(success){
+                    $('#approved_modal').modal('hide');
+                    // console.log(response);
+                    sucess_add(message);
+                }else{
+                    warning(message);
+                    // console.log(response);
+                }
+            }).catch((error) =>{
+                console.log(error);
+            })
+            //var url = form.attr('action');
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>/job/update_jobs_status",
+        //         data: form.serialize(), // serializes the form's elements.
+        //         success: function(data)
+        //         {
+        //             if(data === "Success"){
+        //                 //window.location.reload();
+        //                 sucess_add('Job Status Updated!',1);
+        //             }else {
+        //                 warning('There is an error adding Customer. Contact Administrator!');
+        //             }
+        //         }
+        //     });
+        });
+        function sucess_add(message){
+            Swal.fire({
+                title: 'Nice!',
+                text: message,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+        function sucess_add_job(data) {
+            if( data.is_update == 1 ){ //Update
+                Swal.fire({
+                    text: 'Job has been updated',                    
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    location.href = base_url + 'job';
+                });
+            }else{ //Create
+                Swal.fire({
+                    title: 'Job has been added',
+                    text: 'An initial invoice can now be created',
+                    icon: 'success',
+                    confirmButtonText: 'Create Initial Invoice',
+                    confirmButtonColor: '#32243d',
+                }).then((result) => {
+                    var redirect_calendar = $('#redirect-calendar').val();
+                    if (redirect_calendar == 1) {
+                        window.location.href = '<?= base_url(); ?>workcalender';
+                    } else {
+                        // console.log({ data });
+                        if (data.job_id) {
+                            window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+                            window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
+                            return;
+                        }
+                    }
+                });
+            }
+            
+    }
+        function error(title,text,icon){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+
+            });
+        }
+    <?php if( $default_customer_id > 0 ){ ?>
+            $('#customer_id').click();
+            load_customer_data('<?= $default_customer_id; ?>');
+        <?php } ?>
+    function load_customer_data($id){
+        // $.ajax({
+        //     type: "POST",
+        //     url: "<?= base_url() ?>/job/get_customer_selected",
+        //     data: {id : $id}, // serializes the form's elements.
+        //     success: function(data)
+        //     {
+        //         console.log(data);
+        //         var customer_data = JSON.parse(data);
+        //         $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
+        //         if(customer_data.mail_add !== null){
+        //             $('#cust_address').text(customer_data.mail_add + ' ');
+        //         }
+        //         $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
+        //         $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         $('#cust_number').text(customer_data.phone_h);
+        //         $('#cust_email').text(customer_data.email);
+        //         $('#mail_to').attr("href","mailto:"+customer_data.email);
+        //         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+        //     }
+        // });
+        var ADDR_1 = "";
+        var ADDR_2 = "";
+        var postData = new FormData();
+        postData.append('id', $id);
+        
+        fetch('<?= base_url('job/get_customer_selected') ?>', {
+            method: 'POST',
+            body: postData
+        }).then(response => response.json()).then(response => {
+            var {success, data} = response;
+
+            if(success){
+                var phone_m = '(xxx) xxx-xxxx';
+                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+                // if(data.mail_add !== null){
+                //     $('#cust_address').text(data.mail_add + ' ');
+                // }
+                if(data.cross_street != null){
+                    $('#cust_address').text(data.cross_street + ' ');
+                    ADDR_1 = data.cross_street;
+                } else {
+                    $('#cust_address').text(data.mail_add + ' ');
+                    ADDR_1 = data.mail_add;
+                }
+                if(data.phone_m){
+                    if(data.phone_m.includes('Mobile:')){
+                        phone_m = ((data.phone_m).slice(0,13))
+                    }else{
+                        //phone_h = data.phone_h;
+                        phone_m = formatPhoneNumber(data.phone_m);
+                    }
+                }
+                if(data.city || data.state || data.zip_code){
+                    $('#cust_address2').text(data.city + ', ' + ' ' + data.state + ' ' + data.zip_code);
+                    ADDR_2 = data.city + ', ' + ' ' + data.state + ' ' + data.zip_code;
+                }else{
+                    $('#cust_address2').text('-------------');
+                }
+                if(data.email){
+                    $('#cust_email').text(data.email);
+                }else{
+                    $('#cust_email').text('Email is not available.');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+                $('#cust_number').text(phone_m);
+                $('#mail_to').attr("href","mailto:"+data.email);
+                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
+                $('.MAP_LOADER').fadeIn();
+                $('#TEMPORARY_MAP_VIEW').hide();
+                // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
+                // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+            }
+        })
+    }
+
+    function formatPhoneNumber(phoneNumberString) {
+      var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+      var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+      }else{
+        return phoneNumberString;
+      }      
+    }
+
+// $('#TEMPORARY_MAP_VIEW').load(function(){
+//     alert('loaded!');
+// });
+
+$('#TEMPORARY_MAP_VIEW').on("load", function() {
+   $('.MAP_LOADER').hide();
+   $('#TEMPORARY_MAP_VIEW').fadeIn();
+});
 
 </script>

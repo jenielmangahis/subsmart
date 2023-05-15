@@ -103,9 +103,9 @@
                                 <tbody>
                                     <tr>
                                         <td>Employees</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>                                        
+                                        <td><?= $companyQuickBooksPayroll->qb_total_employee; ?></td>
+                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_synced; ?></td>
+                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_faild_synced; ?></td>   
                                     </tr>
                                     <tr>
                                         <td>Timesheet Entries Exported</td>
@@ -159,42 +159,43 @@ $(function(){
         var url = base_url + "tools/_export_qb_timesheet";
         var date_from = $('#date-from').val();
         var date_to   = $('#date-to').val();
-        $.ajax({
-            type: 'POST',
-            url: url,          
-            data:{date_from:date_from,date_to:date_to},  
-            beforeSend: function(data) {                
-                $('#loading_modal').modal('show');
-                $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending Timesheet to Quickbooks....');
-            },
-            success: function(o) {                    
-                if( o.is_success == 1 ){
-                    Swal.fire({
-                        title: 'Customer Import',
-                        text: "Gmail import contacts was successfully created.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.reload();
-                        //}
-                    });  
-                }else{
-                    Swal.fire({
-                        title: 'Error',
-                        text: o.msg,
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                }    
-            },
-            complete : function(){
-                $('#loading_modal').modal('hide');
-            },
-            error: function(e) {
-                console.log(e);
+
+        Swal.fire({
+            title: 'Export Timesheet',
+            html: "The synchronization process will run in background. You can monitor the progress here.",
+            icon: 'question',
+            confirmButtonText: 'Sync Now',
+            showCancelButton: true,
+            cancelButtonText: "Close"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {date_from:date_from,date_to:date_to},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Export Timesheet',
+                                text: "Export timesheet was successfully created.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
             }
         });
     });

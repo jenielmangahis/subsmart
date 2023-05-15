@@ -496,6 +496,43 @@
                                             <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><?=$transaction['credit']?></td>
                                             <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>><?=$transaction['online_banking']?></td>
                                         </tr>
+                                        <?php if(isset($transaction['sub_rows']) && count($transaction['sub_rows']) > 0) : ?>
+                                        <?php foreach($transaction['sub_rows'] as $subRow) : ?>
+                                        <tr>
+                                            <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$subRow['customer']?></td>
+                                            <td <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$subRow['vendor']?></td>
+                                            <td <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$subRow['employee']?></td>
+                                            <td <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$subRow['product_service']?></td>
+                                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>><?=$subRow['qty']?></td>
+                                            <td <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>><?=$subRow['rate']?></td>
+                                            <td <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$subRow['account']?></td>
+                                            <td <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>><?=$subRow['ar_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('A/P Paid', $columns) ? 'style="display: none"' : ''?>><?=$subRow['ap_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><?=$subRow['debit']?></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><?=$subRow['credit']?></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php endif; ?>
                                         <?php endforeach; ?>
                                         <?php else : ?>
                                         <tr>

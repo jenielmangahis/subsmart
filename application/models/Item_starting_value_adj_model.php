@@ -32,6 +32,14 @@ class Item_starting_value_adj_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+    public function get_by_company_id($companyId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }
 
 /* End of file Item_starting_value_adj_model.php */

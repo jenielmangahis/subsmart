@@ -912,7 +912,8 @@
                                                 <?php
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
-                                                    $total = $item->cost * $item->qty;
+                                                    $item_price = $item->cost / $item->qty;
+                                                    $total = $item->cost;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -924,7 +925,7 @@
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item_price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->

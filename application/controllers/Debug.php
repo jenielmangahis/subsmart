@@ -2149,6 +2149,62 @@ class Debug extends MY_Controller {
         debugCreateCronAutoSmsNotification(31, 649, 'job', 'Scheduled', 0, 107, 0);
         exit;
     }
+
+    public function quickbooks()
+    {
+        
+    }
+
+    public function ajax_export_qb_timesheet()
+    {
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('QbImportEmployeeLogs_model');
+        $this->load->model('Users_model');
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+        $date_from = date("Y-m-d", strtotime($post['date_from']));
+        $date_to   = date("Y-m-d", strtotime($post['date_to']));  
+        $attendance_logs = $this->attendance_logs($date_from, $date_to);  
+        if( $attendance_logs ){
+            foreach($attendance_logs as $logs){
+                $importEmployeeLog = $this->QbImportEmployeeLogs_model->getByUserId($logs['user_id']);
+                if( !$importEmployeeLog ){
+                    $user = $this->Users_model->getUserByID($logs['user_id']);
+                    if( $user ){                        
+                        $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll'); 
+                        $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+
+                        //Update company refresh token
+                        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+                        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+
+                        $user_data = [
+                            "GivenName" => $user->FName,
+                            "SSN" => "444-55-6666",
+                            "PrimaryAddr" => [
+                                "CountrySubDivisionCode" => $user->state,
+                                "City" => $user->city,
+                                "PostalCode" => $user->postal_code,
+                            ],
+                            "PrimaryPhone" => ["FreeFormNumber" =>  formatPhoneNumber($user->mobile)],
+                            "FamilyName" => $user->LName
+                        ];
+                        $employee = $this->quickbooksapi->create_employee($user_data, $token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);
+                    }                    
+                }
+            }
+        }
+
+        $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);                         
+        //Update company refresh token
+        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+
+        
+        exit;
+    }
 }
 /* End of file Debug.php */
 

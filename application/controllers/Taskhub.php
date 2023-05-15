@@ -33,14 +33,16 @@ class Taskhub extends MY_Controller {
 
 		$this->hasAccessModule(6); 
 		$cid = logged('company_id');
+		$selected_customer_id = 0;
 		if( $this->input->get('status') && $this->input->get('cus_id') ){
+			$selected_customer_id = $this->input->get('cus_id');
 			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
 		}else{
 			$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
 		}
 		
-		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
-
+		$this->page_data['selected_customer_id'] = $selected_customer_id;
+		$this->page_data['status_selection']     = $this->taskhub_status_model->get();
 		// $this->load->view('workcalender/taskhub/list', $this->page_data);
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
 	}
@@ -571,15 +573,30 @@ class Taskhub extends MY_Controller {
         $is_success = 0;
         $msg = '';
 
-        $uncompletedTasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($cid);
-        if( count($uncompletedTasks) > 0 ){
-        	$this->Taskhub_model->completeAllTasksByCompanyId($cid);
+        $post = $this->input->post();          
+        if( $post['selected_customer_id'] > 0 ){
+        	$uncompletedTasks = $this->Taskhub_model->getAllNotCompletedTasksByCustomerId($post['selected_customer_id']);
+	        if( count($uncompletedTasks) > 0 ){
+	        	$this->Taskhub_model->completeAllTasksByProfId($post['selected_customer_id']);
 
-        	$is_success = 1;
-        	$msg = '';
+	        	$is_success = 1;
+	        	$msg = '';
+	        }else{
+	        	$msg = 'All tasks are already completed. No task to update.';
+	        }
         }else{
-        	$msg = 'All tasks are already completed. No task to update.';
+        	$uncompletedTasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($cid);
+	        if( count($uncompletedTasks) > 0 ){
+	        	$this->Taskhub_model->completeAllTasksByCompanyId($cid);
+
+	        	$is_success = 1;
+	        	$msg = '';
+	        }else{
+	        	$msg = 'All tasks are already completed. No task to update.';
+	        }	
         }
+
+        
  
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 

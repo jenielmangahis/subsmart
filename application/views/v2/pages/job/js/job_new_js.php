@@ -309,9 +309,9 @@ $("#attachment-file").change(function() {
             markup3 ="<tr id='ss'>" +
                 "<td>" + title + "</td>" +
                 "<td>" + item_type + "</td>" +
-                "<td></td>" +
-                "<td>" + price + "</td>" +
-                "<td id='device_qty"+idd+"'>"+ qty + "</td>" +
+                "<td>0</td>" +
+                "<td id='device_price"+idd+"'>" + price + "</td>" +
+                "<td id='device_qty"+idd+"'>"+ 1 + "</td>" +
                 "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
                 "<td>" +
                 "<input hidden name='item_id1[]' value='"+ idd +"'>" +
@@ -521,6 +521,7 @@ $("#attachment-file").change(function() {
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
+            $('#device_price'+id).text(cost);
             calculate_subtotal();
         });
 

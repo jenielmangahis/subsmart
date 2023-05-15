@@ -61,4 +61,11 @@ class Accounting_account_transactions_model extends MY_Model {
 		$update = $this->db->update($this->table, $data);
 		return $update;
 	}
+
+	public function get_with_custom_where($where)
+	{
+		$this->db->where($where);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

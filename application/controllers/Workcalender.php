@@ -2498,7 +2498,8 @@ class Workcalender extends MY_Controller
             $jobItems = $this->Jobs_model->get_specific_job_items($job->id);
             $total_amount = 0;
             foreach($jobItems as $jt){
-                $total_amount += $jt->cost * $jt->qty;
+                //$total_amount += $jt->cost * $jt->qty;
+                $total_amount += $jt->cost;
             }
 
             $get_estimate_query = array(

@@ -198,7 +198,7 @@
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
                             $schedule_description = '';
-                            $schedule_invoice_amount = number_format($schedule['data']->grandtotal,2);
+                            $schedule_invoice_amount = $schedule['data']->grandtotal;
 
                             $assigned_employees = array();
                             $emp_ids = unserialize($schedule['data']->technicians);
