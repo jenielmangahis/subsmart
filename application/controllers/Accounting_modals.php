@@ -7304,13 +7304,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $expenseAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Credit Memo',
+                                        'transaction_id' => $creditMemoId,
                                         'amount' => $amount,
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['credit_memo_date'])),
                                         'type' => 'decrease',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
@@ -7329,13 +7329,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $incomeAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Credit Memo',
+                                        'transaction_id' => $creditMemoId,
                                         'amount' => floatval(str_replace(',', '', $data['item_amount'][$key])),
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['credit_memo_date'])),
                                         'type' => 'decrease',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
@@ -7815,13 +7815,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $expenseAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Sales Receipt',
+                                        'transaction_id' => $salesReceiptId,
                                         'amount' => $amount,
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['sales_receipt_date'])),
                                         'type' => 'increase',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
@@ -7840,13 +7840,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $incomeAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Sales Receipt',
+                                        'transaction_id' => $salesReceiptId,
                                         'amount' => floatval(str_replace(',', '', $data['item_amount'][$key])),
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['sales_receipt_date'])),
                                         'type' => 'increase',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
@@ -8321,13 +8321,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $expenseAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Refund Receipt',
+                                        'transaction_id' => $refundReceiptId,
                                         'amount' => $amount,
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['refund_receipt_date'])),
                                         'type' => 'decrease',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);
@@ -8346,13 +8346,13 @@ class Accounting_modals extends MY_Controller
 
                                     $accTransacData = [
                                         'account_id' => $incomeAcc->id,
-                                        'transaction_type' => 'Invoice',
-                                        'transaction_id' => $invoiceId,
+                                        'transaction_type' => 'Refund Receipt',
+                                        'transaction_id' => $refundReceiptId,
                                         'amount' => floatval(str_replace(',', '', $data['item_amount'][$key])),
-                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['refund_receipt_date'])),
                                         'type' => 'decrease',
                                         'is_item_category' => 1,
-                                        'child_id' => $addInvoiceItem
+                                        'child_id' => $itemId
                                     ];
         
                                     $this->accounting_account_transactions_model->create($accTransacData);

@@ -156,6 +156,10 @@ $('input[name="col_chk"]').on('change', function() {
     });
 });
 
+$("#btn_print_report").on("click", function() {
+    $("#report_table_print").printThis();
+});
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {
