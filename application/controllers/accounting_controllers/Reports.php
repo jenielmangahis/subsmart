@@ -3377,13 +3377,15 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $invoiceItem->cost));
 
-                        $subRows[] = [
-                            'product_service' => $item->title,
-                            'qty' => number_format(floatval($invoiceItem->qty), 2),
-                            'rate' => number_format(floatval($rate), 2),
-                            'account' => $incomeAcc->name,
-                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
-                        ];
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($invoiceItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            ];
+                        }
 
                         $where = [
                             'account_id' => $invAssetAcc->id,
@@ -3397,13 +3399,15 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
 
-                        $subRows[] = [
-                            'product_service' => $item->title,
-                            'qty' => number_format(floatval($invoiceItem->qty), 2),
-                            'rate' => number_format(floatval($rate), 2),
-                            'account' => $invAssetAcc->name,
-                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
-                        ];
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($invoiceItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                            ];
+                        }
 
                         $where = [
                             'account_id' => $expenseAcc->id,
@@ -3415,13 +3419,16 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $subRows[] = [
-                            'product_service' => $item->title,
-                            'qty' => number_format(floatval($invoiceItem->qty), 2),
-                            'rate' => number_format(floatval($rate), 2),
-                            'account' => $expenseAcc->name,
-                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
-                        ];
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($invoiceItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'ar_paid' => floatval(str_replace(',', '', $invoice->balance)) > 0.00 ? 'Unpaid' : 'Paid'
+                            ];
+                        }
                     }
 
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
@@ -3448,7 +3455,7 @@ class Reports extends MY_Controller {
                         'qty' => '',
                         'rate' => '',
                         'account' => $arAcc->name,
-                        'ar_paid' => '',
+                        'ar_paid' => floatval(str_replace(',', '', $invoice->balance)) > 0.00 ? 'Unpaid' : 'Paid',
                         'ap_paid' => '',
                         'clr' => '',
                         'check_printed' => '',
@@ -3711,7 +3718,9 @@ class Reports extends MY_Controller {
                         [
                             'account' => $arAcc->name,
                             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
-                            'customer' => $name
+                            'customer' => $name,
+                            'payment_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                            'ar_paid' => 'Paid'
                         ]
                     ];
 
@@ -3737,7 +3746,7 @@ class Reports extends MY_Controller {
                         'qty' => '',
                         'rate' => '',
                         'account' => $depositToAcc->name,
-                        'ar_paid' => '',
+                        'ar_paid' => 'Paid',
                         'ap_paid' => '',
                         'clr' => '',
                         'check_printed' => '',
@@ -4160,6 +4169,25 @@ class Reports extends MY_Controller {
                     $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
                     $name = $payee->display_name;
 
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $where = [
+                        'account_id' => $apAcc->id,
+                        'transaction_type' => 'Bill Payment',
+                        'transaction_id' => $billPayment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $subRows = [
+                        [
+                            'account' => $apAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'vendor' => $name,
+                            'payment_date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                            'ap_paid' => 'Paid'
+                        ]
+                    ];
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
                         'transaction_type' => $type,
@@ -4183,12 +4211,13 @@ class Reports extends MY_Controller {
                         'rate' => '',
                         'account' => $paymentAcc->name,
                         'ar_paid' => '',
-                        'ap_paid' => '',
+                        'ap_paid' => 'Paid',
                         'clr' => '',
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4196,6 +4225,22 @@ class Reports extends MY_Controller {
                 foreach($transfers as $transfer)
                 {
                     $account = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+
+                    $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+                    $where = [
+                        'account_id' => $transferToAcc->id,
+                        'transaction_type' => 'Transfer',
+                        'transaction_id' => $transfer->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $subRows = [
+                        [
+                            'account' => $transferToAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ]
+                    ];
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
@@ -4223,9 +4268,10 @@ class Reports extends MY_Controller {
                         'ap_paid' => '',
                         'clr' => '',
                         'check_printed' => '',
-                        'debit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
-                        'credit' => '',
-                        'online_banking' => ''
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4233,6 +4279,29 @@ class Reports extends MY_Controller {
                 foreach($deposits as $deposit)
                 {
                     $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+
+                    $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+                    $subRows = [];
+                    foreach($funds as $fund)
+                    {
+                        $fundAcc = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                        $where = [
+                            'account_id' => $fundAcc->id,
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $deposit->id,
+                            'is_category' => 1,
+                            'child_id' => $fund->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $fundAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($deposit->date)),
@@ -4262,7 +4331,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ','),
                         'credit' => '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4270,6 +4340,86 @@ class Reports extends MY_Controller {
                 foreach($salesReceipts as $salesReceipt)
                 {
                     $account = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
+
+                    $salesReceiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceipt->id);
+
+                    $subRows = [];
+                    foreach($salesReceiptItems as $salesReceiptItem)
+                    {
+                        $item = $this->items_model->getItemById($salesReceiptItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $salesReceiptItem->cost));
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->qty);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
@@ -4299,7 +4449,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
                         'credit' => '',
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4308,9 +4459,89 @@ class Reports extends MY_Controller {
                 {
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
 
+                    $creditMemoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemo->id);
+
+                    $subRows = [];
+                    foreach($creditMemoItems as $creditMemoItem)
+                    {
+                        $item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $creditMemoItem->cost));
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->qty);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
-                        'transaction_type' => 'Sales Receipt',
+                        'transaction_type' => 'Credit Memo',
                         'num' => $creditMemo->ref_no,
                         'created_by' => '',
                         'last_modified_by' => '',
@@ -4318,7 +4549,7 @@ class Reports extends MY_Controller {
                         'last_modified' => date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at)),
                         'open_balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
                         'payment_date' => '',
-                        'method' => 'Sales Receipt',
+                        'method' => 'Credit Memo',
                         'adj' => '',
                         'created' => date("m/d/Y h:i:s A", strtotime($creditMemo->created_at)),
                         'name' => '',
@@ -4330,7 +4561,7 @@ class Reports extends MY_Controller {
                         'qty' => '',
                         'rate' => '',
                         'account' => $arAcc->name,
-                        'ar_paid' => '',
+                        'ar_paid' => floatval(str_replace(',', '', $creditMemo->balance)) > 0.00 ? 'Unpaid' : 'Paid',
                         'ap_paid' => '',
                         'clr' => '',
                         'check_printed' => '',
