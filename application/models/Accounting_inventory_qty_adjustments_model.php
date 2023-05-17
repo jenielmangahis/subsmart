@@ -31,6 +31,12 @@ class Accounting_inventory_qty_adjustments_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
+	public function add_adjustment_product($data)
+	{
+		$this->db->insert('accounting_inventory_qty_adjustment_items', $data);
+		return $this->db->insert_id();
+	}
+
 	public function update($id, $data)
 	{
 		$this->db->where('company_id', logged('company_id'));

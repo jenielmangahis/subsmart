@@ -4576,6 +4576,86 @@ class Reports extends MY_Controller {
                 {
                     $account = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
 
+                    $refundReceiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceipt->id);
+
+                    $subRows = [];
+                    foreach($refundReceiptItems as $refundReceiptItem)
+                    {
+                        $item = $this->items_model->getItemById($refundReceiptItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $refundReceiptItem->cost));
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $incomeAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->qty);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $invAssetAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $expenseAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
                         'transaction_type' => 'Refund Receipt',
@@ -4604,7 +4684,8 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4612,6 +4693,40 @@ class Reports extends MY_Controller {
                 foreach($qtyAdjustments as $adjustment)
                 {
                     $account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+
+                    $adjustmentItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+                    $subRows = [];
+                    foreach($adjustmentItems as $adjustmentItem)
+                    {
+                        $item = $this->items_model->getItemById($adjustmentItem->product_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Inventory Qty Adjust',
+                            'transaction_id' => $adjustment->id,
+                            'is_item_category' => 1,
+                            'child_id' => $adjustmentItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost));
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => number_format(floatval($adjustmentItem->change_in_quantity), 2),
+                                'rate' => number_format(floatval($rate), 2),
+                                'account' => $invAssetAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $customer
+                            ];
+                        }
+                    }
 
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
@@ -4640,8 +4755,9 @@ class Reports extends MY_Controller {
                         'clr' => '',
                         'check_printed' => '',
                         'debit' => '',
-                        'credit' => '',
-                        'online_banking' => ''
+                        'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -4697,6 +4813,33 @@ class Reports extends MY_Controller {
                 {
                     $account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
 
+                    $item = $this->items_model->getItemById($adjustment->item_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                    $where = [
+                        'account_id' => $invAssetAcc->id,
+                        'transaction_type' => 'Inventory Starting Value',
+                        'transaction_id' => $adjustment->id,
+                        'is_item_category' => 1,
+                        'child_id' => $adjustmentItem->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $rate = floatval(str_replace(',', '', $adjustment->initial_cost));
+
+                    if(!empty($accTransacData)) {
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => number_format(floatval($adjustmentItem->initial_qty), 2),
+                            'rate' => number_format(floatval($rate), 2),
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
+                        ];
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                         'transaction_type' => 'Inventory Starting Value',
@@ -4730,6 +4873,9 @@ class Reports extends MY_Controller {
                 }
 
                 usort($transactions, function($a, $b) {
+                    if($a['date'] === $b['date']) {
+                        return strtotime($a['created']) > strtotime($b['created']);
+                    }
                     return strtotime($a['date']) > strtotime($b['date']);
                 });
 
