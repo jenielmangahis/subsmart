@@ -2524,6 +2524,8 @@ class Accounting_modals extends MY_Controller
                         'qty' => $data['new_qty'][$key]
                     ];
 
+                    $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->add_adjustment_product($adjustmentProducts);
+
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
                     $startingValAdj = $this->starting_value_model->get_by_item_id($value);
                     $item = $this->items_model->getItemById($value)[0];
@@ -2553,14 +2555,15 @@ class Accounting_modals extends MY_Controller
                         'amount' => $amount,
                         'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
                         'type' => 'increase',
-                        'is_item_category' => 1
+                        'is_item_category' => 1,
+                        'child_id' => $adjustmentItemId
                     ];
     
                     $this->accounting_account_transactions_model->create($accTransacData);
                 }
 
                 $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
-                $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+                // $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
 
                 $adjustmentAcc = $this->chart_of_accounts_model->getById($data['inventory_adj_account']);
                 $newBalance = floatval(str_replace(',', '', $adjustmentAcc->balance)) - $total;
@@ -8269,6 +8272,8 @@ class Accounting_modals extends MY_Controller
                         'total' => floatval(str_replace(',', '', $data['item_total'][$key]))
                     ];
 
+                    $itemId = $this->accounting_credit_memo_model->insert_transaction_item($item);;
+
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {
                             $item = $this->items_model->getItemById($explode[1])[0];
@@ -8521,7 +8526,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $this->accounting_credit_memo_model->insert_transaction_items($items);
+                // $this->accounting_credit_memo_model->insert_transaction_items($items);
             }
     
             $return['data'] = $refundReceiptId;
