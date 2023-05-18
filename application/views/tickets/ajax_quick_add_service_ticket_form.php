@@ -534,6 +534,9 @@ $(document).ready(function(){
           $("#item_total").val(fixedSubtotal);
           $("#item_total_text").html(fixedSubtotal);
           $("#span_sub_total_invoice").text(fixedSubtotal);
+          
+          var idd = this.id;
+          $("#ITEMLIST_PRODUCT_"+idd).show();
 
           var fixedTaxes = calculateTaxes();
           $("#total_tax_").text(fixedTaxes);

@@ -226,6 +226,10 @@
                                                 </li>
 
                                                 <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('workorder/estimateConversionWorkorder/'. $estimate->id) ?>">Convert to Workorder</a>
+                                                </li>
+
+                                                <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" target="_new">Print</a>
                                                 </li>
 

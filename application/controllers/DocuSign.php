@@ -29,7 +29,7 @@ class DocuSign extends MYF_Controller
         
         ['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customer_id] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
-
+        
         $this->db->where('id', $recipientId);
         $this->db->where('docfile_id', $documentId);
         $recipient = $this->db->get('user_docfile_recipients')->row();

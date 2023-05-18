@@ -365,8 +365,8 @@ $('#sort-by, [name="sort_order"]').on('change', function() {
     var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
-    url += sortBy !== 'default' ? `column=${sortBy}` : '';
-    url += sortIn !== 'asc' ? `order=${sortIn}` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
 
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');

@@ -236,15 +236,31 @@ $('#run-report').on('click', function(e) {
 });
 
 $('#sort-by, [name="sort_order"]').on('change', function() {
-    var filterDate = $('#filter-activity-date').val();
     var sortBy = $('#sort-by').val();
     var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
-    url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'all-dates' ? `from=${$('#filter-from').val().replaceAll('/', '-')}&to=${$('#filter-to').val().replaceAll('/', '-')}` : '';
-    url += sortBy !== 'default' ? `column=${sortBy}` : '';
-    url += sortIn !== 'asc' ? `order=${sortIn}` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'column',
+            'order'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
