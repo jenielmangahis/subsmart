@@ -2846,6 +2846,7 @@ $(document).on("click", ".remove", function (e) {
   // alert( 'yeah' + total);
 
   
+  $("#ITEMLIST_PRODUCT_"+idd).show();
   $("#priceqty_" + in_id).val(total_wo_tax);
   $("#span_total_" + in_id).text(total);
   $("#sub_total_text" + in_id).val(total);

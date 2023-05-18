@@ -3365,6 +3365,84 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
+                        $incomeRate = floatval(str_replace(',', '', $invoiceItem->cost));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($invoiceItem->qty), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
                         $where = [
                             'account_id' => $incomeAcc->id,
                             'transaction_type' => 'Invoice',
@@ -3375,13 +3453,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $invoiceItem->cost));
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($invoiceItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'qty' => $qty,
+                                'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                             ];
@@ -3397,13 +3473,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($invoiceItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'qty' => $qty,
+                                'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
                             ];
@@ -3422,8 +3496,8 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($invoiceItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'qty' => $qty,
+                                'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'ar_paid' => floatval(str_replace(',', '', $invoice->balance)) > 0.00 ? 'Unpaid' : 'Paid'
@@ -3543,11 +3617,58 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $expenseItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($expenseItem->quantity), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                         ];
@@ -3654,11 +3775,58 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $checkItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($checkItem->quantity), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                         ];
@@ -3903,11 +4071,58 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $billItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($billItem->quantity), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                         ];
@@ -4015,11 +4230,58 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $ccCreditItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($ccCreditItem->quantity), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                         ];
@@ -4115,11 +4377,58 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $vCreditItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($vCreditItem->quantity), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                         ];
@@ -4353,6 +4662,81 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
+                        $incomeRate = floatval(str_replace(',', '', $salesReceiptItem->cost));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->qty);
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
                         $where = [
                             'account_id' => $incomeAcc->id,
                             'transaction_type' => 'Sales Receipt',
@@ -4363,13 +4747,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $salesReceiptItem->cost));
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($salesReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4386,13 +4768,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->qty);
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($salesReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4413,7 +4793,7 @@ class Reports extends MY_Controller {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($salesReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4471,6 +4851,81 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
+                        $incomeRate = floatval(str_replace(',', '', $creditMemoItem->cost));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->qty);
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
                         $where = [
                             'account_id' => $incomeAcc->id,
                             'transaction_type' => 'Credit Memo',
@@ -4481,13 +4936,12 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $creditMemoItem->cost));
 
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($creditMemoItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4504,13 +4958,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->qty);
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($creditMemoItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4531,7 +4983,7 @@ class Reports extends MY_Controller {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($creditMemoItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4588,6 +5040,81 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
+                        $incomeRate = floatval(str_replace(',', '', $refundReceiptItem->cost));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->qty);
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
                         $where = [
                             'account_id' => $incomeAcc->id,
                             'transaction_type' => 'Refund Receipt',
@@ -4598,13 +5125,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $refundReceiptItem->cost));
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($refundReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4621,13 +5146,11 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->qty);
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($refundReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4648,7 +5171,7 @@ class Reports extends MY_Controller {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($refundReceiptItem->qty), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4715,12 +5238,63 @@ class Reports extends MY_Controller {
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                         $rate = floatval(str_replace(',', '', $item->cost));
+                        $rate = number_format(floatval($rate), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
 
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
                                 'qty' => number_format(floatval($adjustmentItem->change_in_quantity), 2),
-                                'rate' => number_format(floatval($rate), 2),
+                                'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
                                 'customer' => $customer
@@ -4761,52 +5335,52 @@ class Reports extends MY_Controller {
                     ];
                 }
 
-                $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
-                foreach($purchOrders as $purchOrder)
-                {
-                    $categories = $this->expenses_model->get_transaction_categories($purchOrder->id, 'Purchase Order');
-                    $items = $this->expenses_model->get_transaction_items($purchOrder->id, 'Purchase Order');
+                // $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+                // foreach($purchOrders as $purchOrder)
+                // {
+                //     $categories = $this->expenses_model->get_transaction_categories($purchOrder->id, 'Purchase Order');
+                //     $items = $this->expenses_model->get_transaction_items($purchOrder->id, 'Purchase Order');
 
-                    $totalCount = count($categories) + count($items);
+                //     $totalCount = count($categories) + count($items);
 
-                    if(count($categories) > 0) {
-                        $account = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
-                    } else {
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
-                        $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    }
+                //     if(count($categories) > 0) {
+                //         $account = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
+                //     } else {
+                //         $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                //         $account = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                //     }
 
-                    $transactions[] = [
-                        'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
-                        'transaction_type' => 'Purchase Order',
-                        'num' => $purchOrder->purchase_order_no,
-                        'created_by' => '',
-                        'last_modified_by' => '',
-                        'due_date' => '',
-                        'last_modified' => date("m/d/Y h:i:s A", strtotime($purchOrder->updated_at)),
-                        'open_balance' => '',
-                        'payment_date' => '',
-                        'method' => 'Purchase Order',
-                        'adj' => '',
-                        'created' => date("m/d/Y h:i:s A", strtotime($purchOrder->created_at)),
-                        'name' => '',
-                        'customer' => '',
-                        'vendor' => '',
-                        'employee' => '',
-                        'product_service' => '',
-                        'memo_description' => $purchOrder->memo,
-                        'qty' => '',
-                        'rate' => '',
-                        'account' => $account->name,
-                        'ar_paid' => '',
-                        'ap_paid' => '',
-                        'clr' => '',
-                        'check_printed' => '',
-                        'debit' => '',
-                        'credit' => '',
-                        'online_banking' => ''
-                    ];
-                }
+                //     $transactions[] = [
+                //         'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
+                //         'transaction_type' => 'Purchase Order',
+                //         'num' => $purchOrder->purchase_order_no,
+                //         'created_by' => '',
+                //         'last_modified_by' => '',
+                //         'due_date' => '',
+                //         'last_modified' => date("m/d/Y h:i:s A", strtotime($purchOrder->updated_at)),
+                //         'open_balance' => '',
+                //         'payment_date' => '',
+                //         'method' => 'Purchase Order',
+                //         'adj' => '',
+                //         'created' => date("m/d/Y h:i:s A", strtotime($purchOrder->created_at)),
+                //         'name' => '',
+                //         'customer' => '',
+                //         'vendor' => '',
+                //         'employee' => '',
+                //         'product_service' => '',
+                //         'memo_description' => $purchOrder->memo,
+                //         'qty' => '',
+                //         'rate' => '',
+                //         'account' => $account->name,
+                //         'ar_paid' => '',
+                //         'ap_paid' => '',
+                //         'clr' => '',
+                //         'check_printed' => '',
+                //         'debit' => '',
+                //         'credit' => '',
+                //         'online_banking' => ''
+                //     ];
+                // }
 
                 $adjustments = $this->starting_value_model->get_by_company_id(logged('company_id'));
                 foreach($adjustments as $adjustment)
@@ -4829,12 +5403,63 @@ class Reports extends MY_Controller {
                     $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                     $rate = floatval(str_replace(',', '', $adjustment->initial_cost));
+                    $rate = number_format(floatval($rate), 2);
+
+                    if(!empty(get('divide-by-100'))) {
+                        $rate = number_format(floatval($rate) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $rate = number_format(floatval($rate), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = str_replace('-', '', $rate);
+                                    $rate = '('.$rate.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = str_replace('-', '', $rate);
+                                    $rate = $rate.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($rate, 0, 1) === '-') {
+                                $rate = '<span class="text-danger">'.$rate.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                        $rate = '<span class="text-danger">'.$rate.'</span>';
+                                    }
+
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, -1) === '-') {
+                                        $rate = '<span class="text-danger">'.$rate.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
 
                     if(!empty($accTransacData)) {
                         $subRows[] = [
                             'product_service' => $item->title,
                             'qty' => number_format(floatval($adjustmentItem->initial_qty), 2),
-                            'rate' => number_format(floatval($rate), 2),
+                            'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
                         ];
@@ -4872,19 +5497,62 @@ class Reports extends MY_Controller {
                     ];
                 }
 
-                usort($transactions, function($a, $b) {
-                    if($a['date'] === $b['date']) {
-                        return strtotime($a['created']) > strtotime($b['created']);
-                    }
-                    return strtotime($a['date']) > strtotime($b['date']);
-                });
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'date',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
 
-                $this->page_data['transactions'] = $transactions;
+                usort($transactions, function($a, $b) use ($sort) {
+                    switch($sort['column']) {
+                        case 'date' :
+                            if($sort['order'] === 'asc') {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['created']) > strtotime($b['created']);
+                                }
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            } else {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['created']) < strtotime($b['created']);
+                                }
+                                return strtotime($a['date']) < strtotime($b['date']);
+                            }
+                        break;
+                        case 'created' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['created']) > strtotime($b['created']);
+                            } else {
+                                return strtotime($a['created']) < strtotime($b['created']);
+                            }
+                        break;
+                        case 'last-modified' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['last_modified']) > strtotime($b['last_modified']);
+                            } else {
+                                return strtotime($a['last_modified']) < strtotime($b['last_modified']);
+                            }
+                        break;
+                        default :
+                            if($sort['order'] === 'asc') {
+                                return strcmp($a[$sort['column']], $a[$sort['column']]);
+                            } else {
+                                return strcmp($b[$sort['column']], $b[$sort['column']]);
+                            }
+                        break;
+                    }
+                });
 
                 $dateFilter = [
                     'start_date' => $this->page_data['start_date'],
                     'end_date' => $this->page_data['end_date']
                 ];
+
+                if($this->page_data['filter_date'] !== 'all-dates') {
+                    $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
+                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $this->page_data['transactions'] = $transactions;
 
                 if(!empty(get('column'))) {
                     $this->page_data['sort_by'] = get('column');
