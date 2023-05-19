@@ -352,6 +352,22 @@ $('#run-report-button').on('click', function() {
     location.href = url;
 });
 
+$('#filter-transaction-type, #filter-account, #filter-name, #filter-check-printed').on('change', function() {
+    if($(this).val() !== 'all') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+    }
+});
+
+$('#filter-num').on('change', function() {
+    if($(this).val() !== '') {
+        $('#allow-filter-num').prop('checked', true);
+    } else {
+        $('#allow-filter-num').prop('checked', false);
+    }
+});
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {

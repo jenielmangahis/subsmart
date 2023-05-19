@@ -124,8 +124,7 @@ function Signing(hash) {
       }
       
       if( specs_field_name.name === "city" || specs_field_name.name === "City" ) {
-        //return city;
-        return 'test';
+        return city;        
       }
       
       if( specs_field_name.name === "state" ) {

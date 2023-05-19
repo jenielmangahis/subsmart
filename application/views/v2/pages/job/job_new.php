@@ -1913,7 +1913,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Approve Job</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Send Esign</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
@@ -1946,7 +1946,7 @@
                     <div class="d-flex justify-content-end">
                         <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
                         <i class="bx bx-loader-alt bx-spin"></i>
-                        <span>Approve and eSign</span>
+                        <span>Send eSign</span>
                         </button>
                         <button type="button" class="nsm-button" data-action="approve">Approve</button>
                     </div>

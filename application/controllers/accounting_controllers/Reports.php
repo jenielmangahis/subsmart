@@ -3396,17 +3396,21 @@ class Reports extends MY_Controller {
                         $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
                         $rate = number_format(floatval($rate), 2);
 
-                        $qty = number_format(floatval($invoiceItem->qty), 2);
+                        $qty = '-'.number_format(floatval($invoiceItem->qty), 2);
+                        $expenseQty = number_format(floatval($invoiceItem->qty), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $incomeRate = number_format(floatval($incomeRate) / 100, 2);
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $incomeRate = number_format(floatval($incomeRate), 0);
                             $rate = number_format(floatval($rate), 0);
                             $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -3421,6 +3425,16 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($incomeRate, 0, 1) === '-') {
@@ -3431,6 +3445,16 @@ class Reports extends MY_Controller {
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
                                     }
                                 break;
                             }
@@ -3445,6 +3469,14 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
@@ -3455,6 +3487,14 @@ class Reports extends MY_Controller {
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($incomeRate, -1) === '-') {
@@ -3463,6 +3503,14 @@ class Reports extends MY_Controller {
 
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
                                         }
                                     break;
                                 }
@@ -3522,7 +3570,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => $qty,
+                                'qty' => $expenseQty,
                                 'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -3644,13 +3692,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $expenseItem->rate));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($expenseItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -3660,11 +3711,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -3675,16 +3736,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -3693,7 +3766,7 @@ class Reports extends MY_Controller {
 
                         $subRows[] = [
                             'product_service' => $item->title,
-                            'qty' => number_format(floatval($expenseItem->quantity), 2),
+                            'qty' => $qty,
                             'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -3802,13 +3875,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $checkItem->rate));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($checkItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -3818,11 +3894,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -3833,16 +3919,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -3851,7 +3949,7 @@ class Reports extends MY_Controller {
 
                         $subRows[] = [
                             'product_service' => $item->title,
-                            'qty' => number_format(floatval($checkItem->quantity), 2),
+                            'qty' => $qty,
                             'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4098,13 +4196,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $billItem->rate));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($billItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -4114,11 +4215,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -4129,16 +4240,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -4147,7 +4270,7 @@ class Reports extends MY_Controller {
 
                         $subRows[] = [
                             'product_service' => $item->title,
-                            'qty' => number_format(floatval($billItem->quantity), 2),
+                            'qty' => $qty,
                             'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4257,13 +4380,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $ccCreditItem->rate));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($ccCreditItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -4273,11 +4399,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -4288,16 +4424,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -4306,7 +4454,7 @@ class Reports extends MY_Controller {
 
                         $subRows[] = [
                             'product_service' => $item->title,
-                            'qty' => number_format(floatval($ccCreditItem->quantity), 2),
+                            'qty' => $qty,
                             'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4404,13 +4552,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $vCreditItem->rate));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($vCreditItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -4420,11 +4571,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -4435,16 +4596,28 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -4453,7 +4626,7 @@ class Reports extends MY_Controller {
 
                         $subRows[] = [
                             'product_service' => $item->title,
-                            'qty' => number_format(floatval($vCreditItem->quantity), 2),
+                            'qty' => $qty,
                             'rate' => $rate,
                             'account' => $invAssetAcc->name,
                             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4688,19 +4861,26 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
-                        $incomeRate = floatval(str_replace(',', '', $salesReceiptItem->cost));
+                        $incomeRate = floatval(str_replace(',', '', $salesReceiptItem->price));
                         $incomeRate = number_format(floatval($incomeRate), 2);
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->qty);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->quantity);
                         $rate = number_format(floatval($rate), 2);
+
+                        $qty = '-'.number_format(floatval($salesReceiptItem->quantity), 2);
+                        $expenseQty = number_format(floatval($salesReceiptItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $incomeRate = number_format(floatval($incomeRate) / 100, 2);
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $incomeRate = number_format(floatval($incomeRate), 0);
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -4715,6 +4895,16 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($incomeRate, 0, 1) === '-') {
@@ -4725,6 +4915,16 @@ class Reports extends MY_Controller {
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
                                     }
                                 break;
                             }
@@ -4739,6 +4939,14 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
@@ -4749,6 +4957,14 @@ class Reports extends MY_Controller {
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($incomeRate, -1) === '-') {
@@ -4757,6 +4973,14 @@ class Reports extends MY_Controller {
 
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
                                         }
                                     break;
                                 }
@@ -4776,7 +5000,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4797,7 +5021,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4818,7 +5042,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($salesReceiptItem->qty), 2),
+                                'qty' => $expenseQty,
                                 'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4877,19 +5101,26 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
-                        $incomeRate = floatval(str_replace(',', '', $creditMemoItem->cost));
+                        $incomeRate = floatval(str_replace(',', '', $creditMemoItem->price));
                         $incomeRate = number_format(floatval($incomeRate), 2);
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->qty);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->quantity);
                         $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($creditMemo->quantity), 2);
+                        $expenseQty = '-'.number_format(floatval($creditMemo->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $incomeRate = number_format(floatval($incomeRate) / 100, 2);
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $incomeRate = number_format(floatval($incomeRate), 0);
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -4904,6 +5135,16 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($incomeRate, 0, 1) === '-') {
@@ -4914,6 +5155,16 @@ class Reports extends MY_Controller {
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
                                     }
                                 break;
                             }
@@ -4928,6 +5179,14 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
@@ -4938,6 +5197,14 @@ class Reports extends MY_Controller {
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($incomeRate, -1) === '-') {
@@ -4946,6 +5213,14 @@ class Reports extends MY_Controller {
 
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
                                         }
                                     break;
                                 }
@@ -4962,11 +5237,10 @@ class Reports extends MY_Controller {
 
                         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
-
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -4987,7 +5261,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5008,7 +5282,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($creditMemoItem->qty), 2),
+                                'qty' => $expenseQty,
                                 'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5066,19 +5340,26 @@ class Reports extends MY_Controller {
                         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                         $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
-                        $incomeRate = floatval(str_replace(',', '', $refundReceiptItem->cost));
+                        $incomeRate = floatval(str_replace(',', '', $refundReceiptItem->price));
                         $incomeRate = number_format(floatval($incomeRate), 2);
-                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->qty);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->quantity);
                         $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($refundReceiptItem->quantity), 2);
+                        $expenseQty = '-'.number_format(floatval($refundReceiptItem->quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $incomeRate = number_format(floatval($incomeRate) / 100, 2);
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $incomeRate = number_format(floatval($incomeRate), 0);
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -5093,6 +5374,16 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($incomeRate, 0, 1) === '-') {
@@ -5103,6 +5394,16 @@ class Reports extends MY_Controller {
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
                                     }
                                 break;
                             }
@@ -5117,6 +5418,14 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
@@ -5127,6 +5436,14 @@ class Reports extends MY_Controller {
                                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
                                     break;
                                     case '100-' :
                                         if(substr($incomeRate, -1) === '-') {
@@ -5135,6 +5452,14 @@ class Reports extends MY_Controller {
 
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
                                         }
                                     break;
                                 }
@@ -5154,7 +5479,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $incomeRate,
                                 'account' => $incomeAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5175,7 +5500,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'qty' => $qty,
                                 'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5196,7 +5521,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($refundReceiptItem->qty), 2),
+                                'qty' => $expenseQty,
                                 'rate' => $rate,
                                 'account' => $expenseAcc->name,
                                 'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5265,13 +5590,16 @@ class Reports extends MY_Controller {
 
                         $rate = floatval(str_replace(',', '', $item->cost));
                         $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($adjustmentItem->change_in_quantity), 2);
 
                         if(!empty(get('divide-by-100'))) {
                             $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
                         if(!empty(get('without-cents'))) {
                             $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
                         }
 
                         if(!empty(get('negative-numbers'))) {
@@ -5281,11 +5609,21 @@ class Reports extends MY_Controller {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = '('.$rate.')';
                                     }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
                                 break;
                                 case '100-' :
                                     if(substr($rate, 0, 1) === '-') {
                                         $rate = str_replace('-', '', $rate);
                                         $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
                                     }
                                 break;
                             }
@@ -5296,6 +5634,10 @@ class Reports extends MY_Controller {
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = '<span class="text-danger">'.$rate.'</span>';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
                             } else {
                                 switch(get('negative-numbers')) {
                                     case '(100)' :
@@ -5303,13 +5645,17 @@ class Reports extends MY_Controller {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
                                         }
 
-                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
-                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                     case '100-' :
                                         if(substr($rate, -1) === '-') {
                                             $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
                                         }
                                     break;
                                 }
@@ -5319,7 +5665,7 @@ class Reports extends MY_Controller {
                         if(!empty($accTransacData)) {
                             $subRows[] = [
                                 'product_service' => $item->title,
-                                'qty' => number_format(floatval($adjustmentItem->change_in_quantity), 2),
+                                'qty' => $qty,
                                 'rate' => $rate,
                                 'account' => $invAssetAcc->name,
                                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
@@ -5430,13 +5776,16 @@ class Reports extends MY_Controller {
 
                     $rate = floatval(str_replace(',', '', $adjustment->initial_cost));
                     $rate = number_format(floatval($rate), 2);
+                    $qty = number_format(floatval($adjustmentItem->initial_qty), 2);
 
                     if(!empty(get('divide-by-100'))) {
                         $rate = number_format(floatval($rate) / 100, 2);
+                        $qty = number_format(floatval($qty) / 100, 2);
                     }
 
                     if(!empty(get('without-cents'))) {
                         $rate = number_format(floatval($rate), 0);
+                        $qty = number_format(floatval($qty), 0);
                     }
 
                     if(!empty(get('negative-numbers'))) {
@@ -5446,11 +5795,21 @@ class Reports extends MY_Controller {
                                     $rate = str_replace('-', '', $rate);
                                     $rate = '('.$rate.')';
                                 }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = str_replace('-', '', $qty);
+                                    $qty = '('.$qty.')';
+                                }
                             break;
                             case '100-' :
                                 if(substr($rate, 0, 1) === '-') {
                                     $rate = str_replace('-', '', $rate);
                                     $rate = $rate.'-';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = str_replace('-', '', $qty);
+                                    $qty = $qty.'-';
                                 }
                             break;
                         }
@@ -5461,6 +5820,10 @@ class Reports extends MY_Controller {
                             if(substr($rate, 0, 1) === '-') {
                                 $rate = '<span class="text-danger">'.$rate.'</span>';
                             }
+
+                            if(substr($qty, 0, 1) === '-') {
+                                $qty = '<span class="text-danger">'.$qty.'</span>';
+                            }
                         } else {
                             switch(get('negative-numbers')) {
                                 case '(100)' :
@@ -5468,13 +5831,17 @@ class Reports extends MY_Controller {
                                         $rate = '<span class="text-danger">'.$rate.'</span>';
                                     }
 
-                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
-                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                        $qty = '<span class="text-danger">'.$qty.'</span>';
                                     }
                                 break;
                                 case '100-' :
                                     if(substr($rate, -1) === '-') {
                                         $rate = '<span class="text-danger">'.$rate.'</span>';
+                                    }
+
+                                    if(substr($qty, -1) === '-') {
+                                        $qty = '<span class="text-danger">'.$qty.'</span>';
                                     }
                                 break;
                             }
@@ -5482,12 +5849,14 @@ class Reports extends MY_Controller {
                     }
 
                     if(!empty($accTransacData)) {
-                        $subRows[] = [
-                            'product_service' => $item->title,
-                            'qty' => number_format(floatval($adjustmentItem->initial_qty), 2),
-                            'rate' => $rate,
-                            'account' => $invAssetAcc->name,
-                            'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
+                        $subRows = [
+                            [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
+                            ]
                         ];
                     }
 
@@ -5519,7 +5888,71 @@ class Reports extends MY_Controller {
                         'check_printed' => '',
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
-                        'online_banking' => ''
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
+                    ];
+                }
+
+                $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+                foreach($ccPayments as $ccPayment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+                    $ccAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
+
+                    $employee = $this->users_model->getUser($ccPayment->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $where = [
+                        'account_id' => $ccAcc->id,
+                        'transaction_type' => 'CC Payment',
+                        'transaction_id' => $ccPayment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    if(!empty($accTransacData)) {
+                        $subRows = [
+                            [
+                                'account' => $ccAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'vendor' => $name
+                            ]
+                        ];
+                    }
+
+                    $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                    $name = $vendor->display_name;
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                        'transaction_type' => 'Credit Card Payment',
+                        'num' => '',
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'due_date' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at)),
+                        'open_balance' => '',
+                        'payment_date' => '',
+                        'method' => 'Credit Card Payment',
+                        'adj' => '',
+                        'created' => date("m/d/Y h:i:s A", strtotime($ccPayment->created_at)),
+                        'name' => $name,
+                        'customer' => '',
+                        'vendor' => $name,
+                        'employee' => '',
+                        'product_service' => '',
+                        'memo_description' => $ccPayment->memo,
+                        'qty' => '',
+                        'rate' => '',
+                        'account' => $account->name,
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $ccPayment->amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -5575,6 +6008,83 @@ class Reports extends MY_Controller {
                 if($this->page_data['filter_date'] !== 'all-dates') {
                     $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
                         return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('transaction-type'))) {
+                    $transacType = get('transaction-type');
+                    $transactions = array_filter($transactions, function($v, $k) use ($transacType) {
+                        switch($transacType) {
+                            case 'credit-card-expense' :
+                                return $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'check' :
+                                return $v['transaction_type'] === 'Check';
+                            break;
+                            case 'invoice' :
+                                return $v['transaction_type'] === 'Invoice';
+                            break;
+                            case 'payment' :
+                                return $v['transaction_type'] === 'Payment';
+                            break;
+                            case 'journal-entry' :
+                                return $v['transaction_type'] === 'Journal Entry';
+                            break;
+                            case 'bill' :
+                                return $v['transaction_type'] === 'Bill';
+                            break;
+                            case 'credit-card-credit' :
+                                return $v['transaction_type'] === 'Credit Card Credit';
+                            break;
+                            case 'vendor-credit' :
+                                return $v['transaction_type'] === 'Vendor Credit';
+                            break;
+                            case 'bill-payment-check' :
+                                return $v['transaction_type'] === 'Bill Payment (Check)';
+                            break;
+                            case 'bill-payment-credit-card' :
+                                return $v['transaction_type'] === 'Bill Payment (Credit Card)';
+                            break;
+                            case 'transfer' :
+                                return $v['transaction_type'] === 'Transfer';
+                            break;
+                            case 'deposit' :
+                                return $v['transaction_type'] === 'Deposit';
+                            break;
+                            case 'billable-expense-charge' :
+
+                            break;
+                            case 'time-charge' :
+
+                            break;
+                            case 'cash-expense' :
+                                return $v['transaction_type'] === 'Expense';
+                            break;
+                            case 'sales-receipt' :
+                                return $v['transaction_type'] === 'Sales Receipt';
+                            break;
+                            case 'credit-memo' :
+                                return $v['transaction_type'] === 'Credit Memo';
+                            break;
+                            case 'refund' :
+                                return $v['transaction_type'] === 'Refund';
+                            break;
+                            case 'estimate' :
+
+                            break;
+                            case 'inventory-qty-adjust' :
+                                return $v['transaction_type'] === 'Inventory Qty Adjust';
+                            break;
+                            case 'expense' :
+                                return $v['transaction_type'] === 'Expense' || $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'inventory-starting-value' :
+                                return $v['transaction_type'] === 'Inventory Starting Value';
+                            break;
+                            case 'credit-card-payment' :
+                                return $v['transaction_type'] === 'Credit Card Payment';
+                            break;
+                        }
                     }, ARRAY_FILTER_USE_BOTH);
                 }
 
