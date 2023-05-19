@@ -732,7 +732,7 @@
                                         <div class="row grid-mb g-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_transaction_type) ? 'checked' : '' ?> name="allow_filter_transaction_type" value="1" id="allow-filter-distribution-account">
+                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_transaction_type) ? 'checked' : '' ?> name="allow_filter_transaction_type" value="1" id="allow-filter-transaction-type">
                                                     <label class="form-check-label" for="allow-filter-transaction-type">
                                                         Transaction Type
                                                     </label>

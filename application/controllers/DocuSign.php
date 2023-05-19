@@ -689,8 +689,9 @@ class DocuSign extends MYF_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $decrypted = decrypt($payload['hash'], $this->password);
+
         $decrypted = json_decode($decrypted, true);
-        ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
+        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'object_id' => $object_id, 'type' => $type] = $decrypted;
 
         $this->db->where('id', $recipientId);
         $this->db->update('user_docfile_recipients', ['completed_at' => date('Y-m-d H:i:s')]);
@@ -726,13 +727,18 @@ class DocuSign extends MYF_Controller
         $envelope = $this->db->get('user_docfile')->row_array();
         $attachToCustomer = null;
 
-        if (!is_null($nextRecipient)) {
+        if (!is_null($nextRecipient)) {            
             if ($nextRecipient['role'] === 'Signs in Person') {
-                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id']]);
+                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id'], 'object_id' => $object_id, 'type' => $type]);
                 $hash = encrypt($message, $this->password);
 
                 $this->db->where('id', $nextRecipient['id']);
                 $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
+
+                if( $type == 'job' && $object_id > 0 ){
+                    $this->db->where('id', $object_id);
+                    $this->db->update('jobs', ['status' => 'Approved']);
+                }
 
                 echo json_encode(['hash' => $hash]);
                 return;
@@ -767,10 +773,15 @@ class DocuSign extends MYF_Controller
                         'customer_id' => $job->customer_id,
                         'esign_id' => $documentId
                     ];
+
+                    if( $type == 'job' && $object_id > 0 ){
+                        $this->db->where('id', $job->id);
+                        $this->db->update('jobs', ['status' => 'Approved']);
+                    }
                 }
             }
+            
         }
-
         echo json_encode([
             'data' => $record,
             'next_recipient' => $nextRecipient,
@@ -1445,6 +1456,18 @@ SQL;
         $workorderId = $payload['workorder_id'] ?? null;
         $jobId = $payload['job_id'] ?? null;
 
+        $type = '';
+        $object_id = 0;
+        if( $payload['job_id'] > 0 ){
+            $type = 'job';
+            $object_id = $payload['job_id']; 
+        }
+
+        if( $payload['workorder_id'] > 0 ){
+            $type = 'workorder';
+            $object_id = $payload['workorder_id'];
+        }
+
         if (is_null($jobId) && is_numeric($jobIdParam)) {
             $jobId = $jobIdParam;
         }
@@ -1634,7 +1657,7 @@ SQL;
             ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
             $response = json_encode(['success' => is_null($error), 'error' => $error]);
         } else if ($recipient['role'] === 'Signs in Person') {
-            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'customer_id' => $customer_id]); // add customer id here
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'customer_id' => $customer_id, 'object_id' => $object_id, 'type' => $type]); // add customer id here
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
 

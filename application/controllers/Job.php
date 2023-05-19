@@ -1580,11 +1580,18 @@ class Job extends MY_Controller
         if ($input) {
             $id = $input['id'];
             $input['company_id'] = logged('company_id');
-
+            $status = $input['status'];
             if ($input['status'] == "Arrival") {
                 $input['omw_date'] = date("Y-m-d");
                 $input['omw_time'] = date("H:i A");
             }
+
+            $send_sms = 1;
+            if( $input['status'] == 'Approved' ){
+                unset($input['status']);
+                $send_sms = 0;
+            }
+
             unset($input['id']);
             $up = $this->general->update_with_key($input, $id, "jobs");
 
@@ -1596,6 +1603,7 @@ class Job extends MY_Controller
                 unset($input['job_start_time']);
                 unset($input['job_start_date']);
             }
+
             $ticket_data = array(
                 'where' => array(
                     'id' => $id
@@ -1613,10 +1621,13 @@ class Job extends MY_Controller
                 //Log audit trail
 
                 $job = $this->jobs_model->get_specific_job($id);
-                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #' . $job->job_number . ' to ' . $input['status']);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #' . $job->job_number . ' to ' . $status);
 
-                //SMS Notification
-                createCronAutoSmsNotification($job->company_id, $job->id, 'job', $input['status'], $job->employee_id);
+                if( $send_sms == 1 ){
+                    //SMS Notification
+                    createCronAutoSmsNotification($job->company_id, $job->id, 'job', $status, $job->employee_id);    
+                }
+                
                 $data_arr = array("success" => true, "message" => "Updated Successfully", "input" => $input);
             } else {
                 $data_arr = array("success" => false, "message" => "Something went wrong");
