@@ -276,25 +276,6 @@
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label for="col-created-by" class="form-check-label">Created By</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
                                                             <input type="checkbox" name="col_chk" id="col-name" class="form-check-input" <?=isset($columns) && in_array('Name', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-name" class="form-check-label">Name</label>
                                                         </div>
@@ -430,6 +411,7 @@
                                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
+                                            <td data-name="Created" <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>>CREATED</td>
                                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
                                             <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
                                             <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>>DUE DATE</td>
@@ -438,10 +420,6 @@
                                             <td data-name="Payment Date" <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>>PAYMENT DATE</td>
                                             <td data-name="Method" <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>>METHOD</td>
                                             <td data-name="Adj" <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>>ADJ</td>
-                                            <td data-name="Created" <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>>CREATED</td>
-                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
-                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
-                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
                                             <td data-name="Name" <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>>NAME</td>
                                             <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
                                             <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>VENDOR</td>
@@ -467,6 +445,7 @@
                                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
                                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
                                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created']?></td>
                                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
                                             <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
                                             <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['due_date']?></td>
@@ -475,10 +454,6 @@
                                             <td <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['payment_date']?></td>
                                             <td <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>><?=$transaction['method']?></td>
                                             <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
-                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created']?></td>
-                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
                                             <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>><?=$transaction['name']?></td>
                                             <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer']?></td>
                                             <td <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$transaction['vendor']?></td>
@@ -502,6 +477,7 @@
                                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>></td>
@@ -510,10 +486,6 @@
                                             <td <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$subRow['customer']?></td>
                                             <td <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$subRow['vendor']?></td>

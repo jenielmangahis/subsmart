@@ -91,6 +91,14 @@ function Signing(hash) {
     if ( field_name === "Total Due" ) {
       return total_due;
     }
+
+    if( field_name == "City" ) {
+      return city;
+    }
+
+    if( field_name == "State" ) {
+      return state;
+    }
     
     if (field_name === "Text" && fieldValue === null ) {
 

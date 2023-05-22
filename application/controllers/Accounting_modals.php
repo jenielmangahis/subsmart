@@ -11325,13 +11325,10 @@ class Accounting_modals extends MY_Controller
             $choices['results'] = [];
         }
         foreach ($vendors as $vendor) {
-            if($field === 'report') {
-                $vendor->display_name .= ' - Vendor';
-            }
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
                 if ($stripos !== false) {
-                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact') {
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact' || $field === 'report') {
                         $searched = substr($vendor->display_name, $stripos, strlen($search));
                         $choices['results'][] = [
                             'id' => 'vendor-'.$vendor->id,
@@ -11350,7 +11347,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
             } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact' || $field === 'report') {
                     if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Vendors') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Vendors';
                     } else {
@@ -11407,7 +11404,7 @@ class Accounting_modals extends MY_Controller
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
                     $searched = substr($name, $stripos, strlen($search));
-                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact') {
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
                         if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
                             $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
                         } else {
@@ -11425,7 +11422,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
             } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
                     if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
                     } else {
@@ -11474,9 +11471,6 @@ class Accounting_modals extends MY_Controller
 
         foreach ($employees as $employee) {
             $name = $employee->FName . ' ' . $employee->LName;
-            if($field === 'report') {
-                $name .= ' - Employee';
-            }
             if ($search !== null && $search !== '') {
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
@@ -11487,7 +11481,7 @@ class Accounting_modals extends MY_Controller
                     //     'text' => str_replace($searched, "<strong>$searched</strong>", $name)
                     // ];
 
-                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'report') {
                         if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
                             $choices['results'][array_key_last($choices['results'])]['text'] = 'Employees';
                         } else {
@@ -11509,7 +11503,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
             } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'report') {
                     if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Employees';
                     } else {

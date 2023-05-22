@@ -1103,7 +1103,7 @@ class DocuSign extends MYF_Controller
 
         $getOwned = function () {
             $this->db->where('company_id', logged('company_id'));
-            $this->db->where('user_id', logged('id'));
+            //$this->db->where('user_id', logged('id'));
             $this->db->order_by('created_at', 'DESC');
             return $this->db->get('user_docfile_templates')->result();
         };
