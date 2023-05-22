@@ -139,7 +139,145 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button">
+                                                <i class='bx bx-fw bx-envelope'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
+                                                <i class='bx bx-fw bx-printer'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-export"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
+                                            </ul>
+                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-cog"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
+                                                <p class="m-0">Display density</p>
+                                                <div class="form-check">
+                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <label for="compact-display" class="form-check-label">Compact</label>
+                                                </div>
+                                                <p class="m-0">Change columns</p>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-date" class="form-check-input" <?=isset($columns) && in_array('Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-date" class="form-check-label">Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-transaction-type" class="form-check-input" <?=isset($columns) && in_array('Transaction Type', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-transaction-type" class="form-check-label">Transaction Type</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-num" class="form-check-input" <?=isset($columns) && in_array('Num', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-num" class="form-check-label">Num</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-created-by" class="form-check-label">Created By</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-due-date" class="form-check-input" <?=isset($columns) && in_array('Due Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-due-date" class="form-check-label">Due Date</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-open-balance" class="form-check-input" <?=isset($columns) && in_array('Open Balance', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-open-balance" class="form-check-label">Open Balance</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-payment-date" class="form-check-input" <?=isset($columns) && in_array('Payment Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-payment-date" class="form-check-label">Payment Date</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-method" class="form-check-input" <?=isset($columns) && in_array('Method', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-method" class="form-check-label">Method</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-adj" class="form-check-input" <?=isset($columns) && in_array('Adj', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-adj" class="form-check-label">Adj</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-created" class="form-check-input" <?=isset($columns) && in_array('Created', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-created" class="form-check-label">Created</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-name" class="form-check-input" <?=isset($columns) && in_array('Name', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-name" class="form-check-label">Name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-customer" class="form-check-input" <?=isset($columns) && in_array('Customer', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-customer" class="form-check-label">Customer</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-vendor" class="form-check-input" <?=isset($columns) && in_array('Vendor', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-vendor" class="form-check-label">Vendor</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-employee" class="form-check-input" <?=isset($columns) && in_array('Employee', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-employee" class="form-check-label">Employee</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-product-service" class="form-check-input" <?=isset($columns) && in_array('Product/Service', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-product-service" class="form-check-label">Product/Service</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-memo-description" class="form-check-input" <?=isset($columns) && in_array('Memo/Description', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-memo-description" class="form-check-label">Memo/Description</label>
+                                                        </div>
+                                                    </div>
 
                                 <div class="row report-container">
                                     <div class="col">
@@ -459,6 +597,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
+                                            <td data-name="Created" <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>>CREATED</td>
                                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
                                             <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
                                             <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>>DUE DATE</td>
@@ -467,10 +606,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td data-name="Payment Date" <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>>PAYMENT DATE</td>
                                             <td data-name="Method" <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>>METHOD</td>
                                             <td data-name="Adj" <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>>ADJ</td>
-                                            <td data-name="Created" <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>>CREATED</td>
-                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
-                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
-                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
                                             <td data-name="Name" <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>>NAME</td>
                                             <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
                                             <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>VENDOR</td>
@@ -496,6 +631,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
                                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
                                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created']?></td>
                                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
                                             <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
                                             <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['due_date']?></td>
@@ -504,10 +640,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['payment_date']?></td>
                                             <td <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>><?=$transaction['method']?></td>
                                             <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
-                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created']?></td>
-                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
                                             <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>><?=$transaction['name']?></td>
                                             <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer']?></td>
                                             <td <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$transaction['vendor']?></td>
@@ -531,6 +663,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>></td>
@@ -539,10 +672,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td <?=isset($columns) && !in_array('Payment Date', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Method', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Created', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>></td>
                                             <td <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$subRow['customer']?></td>
                                             <td <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$subRow['vendor']?></td>

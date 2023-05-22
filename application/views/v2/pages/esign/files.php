@@ -381,6 +381,21 @@ echo put_header_assets();
                                                     <span class="u-ellipsis ng-binding">Title</span>
                                                 </div>
                                             </li>
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-city"></i></span>
+                                                    <i class="esign-fa fas fa-building"></i>
+                                                    <span class="u-ellipsis ng-binding">City</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-state"></i></span>
+                                                    <i class="esign-fa far fa-flag"></i>
+                                                    <span class="u-ellipsis ng-binding">State</span>
+                                                </div>
+                                            </li>
                                             <!-- <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_security_code"></i></span>
