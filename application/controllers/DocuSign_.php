@@ -29,7 +29,7 @@ class DocuSign extends MYF_Controller
         
         ['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customer_id] = $decrypted;
         $isSelfSigned = $decrypted['is_self_signed'] ?? false;
-        
+
         $this->db->where('id', $recipientId);
         $this->db->where('docfile_id', $documentId);
         $recipient = $this->db->get('user_docfile_recipients')->row();
@@ -265,7 +265,7 @@ class DocuSign extends MYF_Controller
         *   1st Month Monitoring: Rate Plan
         */        
         $billingKeys = [
-            'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+            'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
         ];
 
         $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
@@ -689,9 +689,8 @@ class DocuSign extends MYF_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $decrypted = decrypt($payload['hash'], $this->password);
-
         $decrypted = json_decode($decrypted, true);
-        ['recipient_id' => $recipientId, 'document_id' => $documentId, 'object_id' => $object_id, 'type' => $type] = $decrypted;
+        ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
 
         $this->db->where('id', $recipientId);
         $this->db->update('user_docfile_recipients', ['completed_at' => date('Y-m-d H:i:s')]);
@@ -727,24 +726,13 @@ class DocuSign extends MYF_Controller
         $envelope = $this->db->get('user_docfile')->row_array();
         $attachToCustomer = null;
 
-        if (!is_null($nextRecipient)) {            
+        if (!is_null($nextRecipient)) {
             if ($nextRecipient['role'] === 'Signs in Person') {
-                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id'], 'object_id' => $object_id, 'type' => $type]);
+                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id']]);
                 $hash = encrypt($message, $this->password);
 
                 $this->db->where('id', $nextRecipient['id']);
                 $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
-
-                if( $type == 'job' && $object_id > 0 ){
-                    $this->db->where('id', $object_id);
-                    $this->db->update('jobs', ['status' => 'Approved']);
-
-                    //SMS Notification
-                    $this->db->where('id', $object_id);
-                    $job = $this->db->get('user_docfile_recipients')->row();
-                    createCronAutoSmsNotification($job->company_id, $job->id, 'job', 'Approved', $job->employee_id);    
-
-                }
 
                 echo json_encode(['hash' => $hash]);
                 return;
@@ -770,7 +758,7 @@ class DocuSign extends MYF_Controller
             $jobId = is_null($jobId) ? null : $jobId->job_id;
 
             if (!is_null($jobId)) {
-                $this->db->select('id,employee_id,company_id,customer_id');
+                $this->db->select('customer_id');
                 $this->db->where('id', $jobId);
                 $job = $this->db->get('jobs')->row();
 
@@ -779,16 +767,10 @@ class DocuSign extends MYF_Controller
                         'customer_id' => $job->customer_id,
                         'esign_id' => $documentId
                     ];
-
-                    $this->db->where('id', $job->id);
-                    $this->db->update('jobs', ['status' => 'Approved']);
-
-                    //SMS Notification
-                    createCronAutoSmsNotification($job->company_id, $job->id, 'job', 'Approved', $job->employee_id);    
                 }
             }
-            
         }
+
         echo json_encode([
             'data' => $record,
             'next_recipient' => $nextRecipient,
@@ -1110,7 +1092,7 @@ class DocuSign extends MYF_Controller
 
         $getOwned = function () {
             $this->db->where('company_id', logged('company_id'));
-            //$this->db->where('user_id', logged('id'));
+            $this->db->where('user_id', logged('id'));
             $this->db->order_by('created_at', 'DESC');
             return $this->db->get('user_docfile_templates')->result();
         };
@@ -1463,18 +1445,6 @@ SQL;
         $workorderId = $payload['workorder_id'] ?? null;
         $jobId = $payload['job_id'] ?? null;
 
-        $type = '';
-        $object_id = 0;
-        if( $payload['job_id'] > 0 ){
-            $type = 'job';
-            $object_id = $payload['job_id']; 
-        }
-
-        if( $payload['workorder_id'] > 0 ){
-            $type = 'workorder';
-            $object_id = $payload['workorder_id'];
-        }
-
         if (is_null($jobId) && is_numeric($jobIdParam)) {
             $jobId = $jobIdParam;
         }
@@ -1497,7 +1467,6 @@ SQL;
 
         $this->db->insert('user_docfile', [
             'user_id' => $userId,
-            'job_id' => $jobId,
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
             'status' => 'Draft',
@@ -1665,7 +1634,7 @@ SQL;
             ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
             $response = json_encode(['success' => is_null($error), 'error' => $error]);
         } else if ($recipient['role'] === 'Signs in Person') {
-            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'customer_id' => $customer_id, 'object_id' => $object_id, 'type' => $type]); // add customer id here
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id'], 'customer_id' => $customer_id]); // add customer id here
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
 
@@ -1748,20 +1717,6 @@ SQL;
         $jobId = (int) $this->input->get('job_id', true);
         $customer_id = (int) $this->input->get('customer_id', true);
         $this->sendTemplate($templateId, $userId, $companyId, $jobId, $customer_id);
-    }
-    
-    public function apiGetDocumentHash() {
-        $recipientId = (int) $this->input->get('recipient_id', true);
-        $documentId = (int) $this->input->get('document_id', true);
-        $customerId = (int) $this->input->get('customer_id', true);
-        $jobId = (int) $this->input->get('job_id', true);
-        $type = "job";
-
-        $message = json_encode(['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customerId, 'object_id' => $jobId, 'type' => $type]); // add customer id here
-        $hash = encrypt($message, $this->password);
-        $response = json_encode(['hash' => $hash]);
-
-        echo $response;
     }
 
     public function apiSendTemplate($templateId, $customer_id)

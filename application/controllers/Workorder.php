@@ -10355,6 +10355,25 @@ class Workorder extends MY_Controller
             redirect('estimate');
         }
     }
+
+    public function getTaxRate()
+    {
+
+        $company_id = logged('company_id');
+        $get_settings  =  array(
+            'where' => array(
+                'company_id' => $company_id,
+                'is_default' => 1,
+            ),
+            'table' => 'tax_rates',
+            'select' => '*',
+        );
+        // $query = $this->workorder_model->getTaxRate($company_id);
+        $query = $this->general->get_data_with_param($get_settings);
+
+        // return $query;
+        echo json_encode($query);
+    }
 }
 
 

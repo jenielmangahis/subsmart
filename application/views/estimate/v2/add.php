@@ -1678,6 +1678,7 @@ $(document).on('click', '.saveCustomer', function() {
 <script>
     
     $(".select_item2a").click(function () {
+        // taxRate();
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));
@@ -1697,11 +1698,39 @@ $(document).on('click', '.saveCustomer', function() {
               // alert('0');
               var qty = $(this).data('data-quantity');
             }
+            var return_first = function () {
+                var tax_rate = null;
+                $.ajax({
+                    'async': false,
+                    type : 'POST',
+                    url: "<?php echo base_url(); ?>/workorder/getTaxRate",
+                    success: function(result){
+                    //   console.log('test '+result);
+                    // return result;
+                        // var json = $.parseJSON(result);
+                        // for (var i=0;i<json.length;++i)
+                        // {
+                        //     tax_rate = json[i].rate;
+                        // }
+                        tax_rate = result;
+                    }
+                });
+            return tax_rate;
+            }();
+
+            // alert(return_first);
+            var json = $.parseJSON(return_first);
+            for (var i=0;i<json.length;++i)
+            {
+                tax_rate_ = json[i].rate;
+            }
+            // alert(tax_rate_);
+            var taxRate = tax_rate_;
 
             var count = parseInt($("#count").val()) + 1;
             $("#count").val(count);
             var total_ = price * qty;
-            var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
+            var tax_ =(parseFloat(total_).toFixed(2) * taxRate) / 100;
             var taxes_t = parseFloat(tax_).toFixed(2);
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
@@ -1795,6 +1824,7 @@ $(document).on('click', '.saveCustomer', function() {
             });
         });
 
+
         async function getLoc(id, qty) {
             var postData = new FormData();
             postData.append('id', id);
@@ -1852,6 +1882,27 @@ $(document).on('click', '.saveCustomer', function() {
                 console.log(error);
             })
         }
+        
+        
+function taxRate()
+{
+  $.ajax({
+    type : 'POST',
+    url: "<?php echo base_url(); ?>/workorder/getTaxRate",
+    success: function(result){
+    //   console.log('test '+result);
+    return result;
+    // var json = $.parseJSON(result);
+    // for (var i=0;i<json.length;++i)
+    // {
+    //     tax_rate = json[i].rate;
+    // }
+    },
+        error: function() {
+            alert('Error occured');
+        }
+  });
+}
 </script>
 
 <!-- <script src="<?php //base_url("assets/js/custom.js") ?>"></script> -->
