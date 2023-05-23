@@ -2168,6 +2168,21 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function getTaxRate($company_id)
+    {
+        $where = array(
+            'company_id' => $company_id,
+            'is_default'   => 1
+          );
+
+        $this->db->select('*');
+		$this->db->from('tax_rates');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+
+        return $query2;
+    }
+
     public function getLast()
     {
         $this->db->select('*');

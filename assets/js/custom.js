@@ -741,6 +741,7 @@ $(".select_item").click(function () {
             // var counter = $(this).data("counter");
             // calculation(idd);
   calculation(count);
+  taxRate();
 });
 
 
@@ -2341,6 +2342,18 @@ function calculation(counter) {
   const fixedTaxes = calculateTaxes();
   $("#total_tax_").text(fixedTaxes);
   $("#total_tax_input").val(fixedTaxes);
+}
+
+function taxRate()
+{
+  $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>workorder/getTaxRate",
+    dataType: 'json',
+    success: function(response){
+      alert(response);
+    }
+  });
 }
 
 function calculateSubtotal() {

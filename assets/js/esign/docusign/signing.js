@@ -76,7 +76,7 @@ function Signing(hash) {
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
-    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy } = window.__esigndata.auto_populate_data.billing;
+    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
     
@@ -98,6 +98,46 @@ function Signing(hash) {
 
     if( field_name == "State" ) {
       return state;
+    }
+
+    if( field_name == "Address" ) {
+      return mail_add;
+    }
+
+    if( field_name == "Subscriber Name" ) {
+      return first_name + " " + last_name;
+    }
+
+    if( field_name == "Primary Contact" ){
+      return phone_m;
+    }
+
+    if( field_name == "Access Password" ){
+      return access_password;
+    }
+
+    if( field_name == "Card Holder Name" ){
+      return card_fname + " " + card_lname;
+    }
+
+    if( field_name == "Card Number" ){
+      return credit_card_num;
+    }
+
+    if( field_name == "Checking Account Number" ){
+      return check_num;
+    }
+
+    if( field_name == "Card Expiration" ){
+      return credit_card_exp;
+    }
+
+    if( field_name == "ABA" ){
+      return routing_num;
+    }
+
+    if( field_name == 'Account Number' ){
+      return acct_num;
     }
     
     if (field_name === "Text" && fieldValue === null ) {

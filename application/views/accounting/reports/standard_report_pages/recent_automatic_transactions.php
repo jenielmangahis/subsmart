@@ -1,511 +1,668 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style type="text/css">
-    .hide-toggle::after {
-        display: none !important;
-    }
+<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath("v2/includes/accounting/reports/$modalsView"); ?>
 
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
-
-    .action-bar ul li a:after {
-        width: 0 !important;
-    }
-    .action-bar ul li a > i {
-        font-size: 20px !important;
-    }
-    .action-bar ul li {
-        margin-right: 5px !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item {
-        font-size: 1rem;
-        padding-right: 0 !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
-       background-color: revert;
-    }
-    .report-container .action-bar li a {
-        font-size: 14px !important;
-    }
-    .report-container .action-bar li a i {
-        font-size: unset !important;
-    }
-    .report-container #report-table {
-        font-size: 12px !important;
-    }
-    .report-container .report-footer {
-        font-size: 10px;
-    }
-</style>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Recent Automatic Transactions Report</h3>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div> -->
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                <div class="row grid-mb">
+                                    <div class="col-12">
+                                        <label for="filter-activity-date">Time Activity Date</label>
+                                        <select class="nsm-field form-select" name="filter_activity_date" id="filter-activity-date">
+                                            <option value="all-dates" <?=empty($filter_date) || $filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                            <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="today" <?=$filter_date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="this-week" <?=$filter_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                            <option value="this-week-to-date" <?=$filter_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
+                                            <option value="this-month-to-date" <?=$filter_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="this-quarter-to-date" <?=$filter_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
+                                            <option value="this-year-to-date" <?=$filter_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                            <option value="this-year-to-last-month" <?=$filter_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                            <option value="yesterday" <?=$filter_date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                            <option value="recent" <?=$filter_date === 'recent' ? 'selected' : ''?>>Recent</option>
+                                            <option value="last-week" <?=$filter_date === 'last-week' ? 'selected' : ''?>>Last Week</option>
+                                            <option value="last-week-to-date" <?=$filter_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last Month</option>
+                                            <option value="last-month-to-date" <?=$filter_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                            <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                            <option value="last-quarter-to-date" <?=$filter_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                            <option value="last-year-to-date" <?=$filter_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                            <option value="since-30-days-ago" <?=$filter_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                            <option value="since-60-days-ago" <?=$filter_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                            <option value="since-90-days-ago" <?=$filter_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                            <option value="since-365-days-ago" <?=$filter_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
+                                            <option value="next-week" <?=$filter_date === 'next-week' ? 'selected' : ''?>>Next Week</option>
+                                            <option value="next-4-weeks" <?=$filter_date === 'next-4-weeks' ? 'selected' : ''?>>Next 4 Weeks</option>
+                                            <option value="next-month" <?=$filter_date === 'next-month' ? 'selected' : ''?>>Next Month</option>
+                                            <option value="next-quarter" <?=$filter_date === 'next-quarter' ? 'selected' : ''?>>Next Quarter</option>
+                                            <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-sm-6">
-                                    <h6><a href="/accounting/reports" class="text-info"><i class="fa fa-chevron-left"></i> Back to report list</a></h6>
+                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
+                                <div class="row grid-mb">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-activity-date-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-activity-date-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-activity-date-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-activity-date-to">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <a href="javascript:void(0);" id="add-new-account-button" class="btn btn-success float-right">
-                                        Save customization
-                                    </a>
-                                    <a href="#" class="btn btn-transparent mr-2 float-right" style="padding: 10px 12px !important">
-                                        Customize
-                                    </a>
+                                <?php endif; ?>
+                                <div class="row grid-mb">
+                                    <div class="col-12">
+                                        <label for="rows-columns"><b>Rows/Columns</b></label>
+                                    </div>
+                                    <div class="col-12 col-md-4 d-flex align-items-center">
+                                        <label for="group-by">Group by</label>
+                                    </div>
+                                    <div class="col-12 col-md-8">
+                                        <select id="group-by" class="form-control nsm-field">
+                                            <option value="none" <?=$group_by === 'none' ? 'selected' : ''?>>None</option>
+                                            <option value="account" <?=$group_by === 'account' ? 'selected' : ''?>>Account</option>
+                                            <option value="transaction-type" <?=empty($group_by) || $group_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
+                                            <option value="customer" <?=$group_by === 'customer' ? 'selected' : ''?>>Customer</option>
+                                            <option value="vendor" <?=$group_by === 'vendor' ? 'selected' : ''?>>Vendor</option>
+                                            <option value="employee" <?=$group_by === 'employee' ? 'selected' : ''?>>Employee</option>
+                                            <option value="day" <?=$group_by === 'day' ? 'selected' : ''?>>Day</option>
+                                            <option value="week" <?=$group_by === 'week' ? 'selected' : ''?>>Week</option>
+                                            <option value="month" <?=$group_by === 'month' ? 'selected' : ''?>>Month</option>
+                                            <option value="quarter" <?=$group_by === 'quarter' ? 'selected' : ''?>>Quarter</option>
+                                            <option value="year" <?=$group_by === 'year' ? 'selected' : ''?>>Year</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="button" class="nsm-button primary" id="run-report">
+                                            Run Report
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
+                                <i class='bx bx-fw bx-customize'></i> Customize
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class='bx bx-fw bx-save'></i> Save customization
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: 20%">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="custom-report-name">Custom report name</label>
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Time Activities by Employee Detail">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="custom-report-group">Add this report to a group</label>
+                                        <select name="custom_report_group" id="custom-report-group" class="nsm-field form-control"></select>
+                                        <a href="#" class="text-decoration-none" id="add-new-custom-report-group">Add new group</a>
+                                    </div>
+                                    <div class="col-12 d-none">
+                                        <form id="new-custom-report-group">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <label for="custom-group-name">New group name</label>
+                                                    <input type="text" class="nsm-field form-control" name="new_custom_group_name" id="custom-group-name">
+                                                </div>
+                                                <div class="col-4 d-flex align-items-end">
+                                                    <button type="submit" class="nsm-button success">Add</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="share-with">Share with</label>
+                                        <select name="share_with" id="share-with" class="nsm-field form-control">
+                                            <option value="all">All</option>
+                                            <option value="none" selected>None</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="button" class="nsm-button primary" id="save-custom-report">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3">
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-2">
-                                                    <label for="report-period">Report period</label>
-                                                    <select name="report_period" id="report-period" class="form-control">
-                                                        <option value="all-dates" selected>All Dates</option>
-                                                        <option value="custom">Custom</option>
-                                                        <option value="today">Today</option>
-                                                        <option value="this-week">This Week</option>
-                                                        <option value="this-week-to-date">This Week-to-date</option>
-                                                        <option value="this-month">This Month</option>
-                                                        <option value="this-month-to-date">This Month-to-date</option>
-                                                        <option value="this-quarter">This Quarter</option>
-                                                        <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                                        <option value="this-year">This Year</option>
-                                                        <option value="this-year-to-date">This Year-to-date</option>
-                                                        <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                                        <option value="yesterday">Yesterday</option>
-                                                        <option value="recent">Recent</option>
-                                                        <option value="last-week">Last Week</option>
-                                                        <option value="last-week-to-date">Last Week-to-date</option>
-                                                        <option value="last-month">Last Month</option>
-                                                        <option value="last-month-to-date">Last Month-to-date</option>
-                                                        <option value="last-quarter">Last Quarter</option>
-                                                        <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                                        <option value="last-year">Last Year</option>
-                                                        <option value="last-year-to-date">Last Year-to-date</option>
-                                                        <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                                        <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                                        <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                                        <option value="since-365-days-ago">Since 365 Days Ago</option>
-                                                        <option value="next-week">Next Week</option>
-                                                        <option value="next-4-weeks">Next 4 Weeks</option>
-                                                        <option value="next-month">Next Month</option>
-                                                        <option value="next-quarter">Next Quarter</option>
-                                                        <option value="next-year">Next Year</option>
-                                                    </select>
+                <div class="row g-3 justify-content-center">
+                    <div class="col-auto">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 grid-mb">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-3">
+                                                <p class="m-0">Sort by</p>
+                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                    <option value="default" <?=empty($sort_by) || $sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                    <option value="ap-paid" <?=$sort_by === 'ap-paid' ? 'selected' : ''?>>A/P Paid</option>
+                                                    <option value="ar-paid" <?=$sort_by === 'ar-paid' ? 'selected' : ''?>>A/R Paid</option>
+                                                    <option value="account" <?=$sort_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                    <option value="check-printed" <?=$sort_by === 'check-printed' ? 'selected' : ''?>>Check Printed</option>
+                                                    <option value="clr" <?=$sort_by === 'clr' ? 'selected' : ''?>>Clr</option>
+                                                    <option value="create-date" <?=$sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                    <option value="created-by" <?=$sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
+                                                    <option value="customer-vendor-message" <?=$sort_by === 'customer-vendor-message' ? 'selected' : ''?>>Customer/Vendor Message</option>
+                                                    <option value="date" <?=$sort_by === 'date' ? 'selected' : ''?>>Date</option>
+                                                    <option value="due-date" <?=$sort_by === 'due-date' ? 'selected' : ''?>>Due Date</option>
+                                                    <option value="invoice-date" <?=$sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
+                                                    <option value="last-modified" <?=$sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
+                                                    <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
+                                                    <option value="memo-desc" <?=$sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
+                                                    <option value="name" <?=$sort_by === 'name' ? 'selected' : ''?>>Name</option>
+                                                    <option value="num" <?=$sort_by === 'num' ? 'selected' : ''?>>Num</option>
+                                                    <option value="online-banking" <?=$sort_by === 'online-banking' ? 'selected' : ''?>>Online Banking</option>
+                                                    <option value="po-number" <?=$sort_by === 'po-number' ? 'selected' : ''?>>P.O. Number</option>
+                                                    <option value="po-status" <?=$sort_by === 'po-status' ? 'selected' : ''?>>PO Status</option>
+                                                    <option value="paid-by-mas" <?=$sort_by === 'paid-by-mas' ? 'selected' : ''?>>Paid by MAS</option>
+                                                    <option value="payment-method" <?=$sort_by === 'payment-method' ? 'selected' : ''?>>Payment Method</option>
+                                                    <option value="posting" <?=$sort_by === 'posting' ? 'selected' : ''?>>Posting</option>
+                                                    <option value="ref-no" <?=$sort_by === 'ref-no' ? 'selected' : ''?>>Ref #</option>
+                                                    <option value="sales-rep" <?=$sort_by === 'sales-rep' ? 'selected' : ''?>>Sales Rep</option>
+                                                    <option value="ship-via" <?=$sort_by === 'ship-via' ? 'selected' : ''?>>Ship Via</option>
+                                                    <option value="split" <?=$sort_by === 'split' ? 'selected' : ''?>>Split</option>
+                                                    <option value="tax-amount" <?=$sort_by === 'tax-amount' ? 'selected' : ''?>>Tax Amount</option>
+                                                    <option value="taxable-amount" <?=$sort_by === 'taxable-amount' ? 'selected' : ''?>>Taxable Amount</option>
+                                                    <option value="terms" <?=$sort_by === 'terms' ? 'selected' : ''?>>Terms</option>
+                                                    <option value="transaction-type" <?=$sort_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
+                                                </select>
+                                                <p class="m-0">Sort in</p>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="asc" <?=!isset($sort_in) ? 'checked' : ''?>>
+                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
                                                 </div>
-                                            </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="desc" <?=isset($sort_in) && $sort_in === 'desc' ? 'checked' : ''?>>
+                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
+                                                </div>
+                                            </ul>
+                                            <button type="button" class="nsm-button" id="<?=is_null($reportNote) ? 'add-notes' : 'edit-notes'?>">
+                                                <?php if(is_null($reportNote) || empty($reportNote->notes)) : ?>
+                                                <span>Add notes</span>
+                                                <?php else : ?>
+                                                <span>Edit notes</span>
+                                                <?php endif; ?>
+                                            </button>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-3">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label for="row-columns">Rows/columns</label>
+                                    </div>
+                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button">
+                                                <i class='bx bx-fw bx-envelope'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
+                                                <i class='bx bx-fw bx-printer'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-export"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
+                                            </ul>
+                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-cog"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
+                                                <p class="m-0">Display density</p>
+                                                <div class="form-check">
+                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <label for="compact-display" class="form-check-label">Compact</label>
+                                                </div>
+                                                <p class="m-0">Change columns</p>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-date" class="form-check-input" <?=isset($columns) && in_array('Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-date" class="form-check-label">Date</label>
                                                         </div>
-                                                        <div class="col-12">
-                                                            <div class="form-row">
-                                                                <div class="col-4 d-flex align-items-center">
-                                                                    <label>Group by</label>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <select id="row-columns" class="form-control">
-                                                                        <option value="none">None</option>
-                                                                        <option value="account">Account</option>
-                                                                        <option value="transaction-type" selected>Transaction Type</option>
-                                                                        <option value="customer">Customer</option>
-                                                                        <option value="vendor">Vendor</option>
-                                                                        <option value="employee">Employee</option>
-                                                                        <option value="day">Day</option>
-                                                                        <option value="week">Week</option>
-                                                                        <option value="month">Month</option>
-                                                                        <option value="quarter">Quarter</option>
-                                                                        <option value="year">Year</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-transaction-type" class="form-check-input" <?=isset($columns) && in_array('Transaction Type', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-transaction-type" class="form-check-label">Transaction Type</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-num" class="form-check-input" <?=isset($columns) && in_array('Num', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-num" class="form-check-label">Num</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-posting" class="form-check-input" <?=isset($columns) && in_array('Posting', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-posting" class="form-check-label">Posting</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-create-date" class="form-check-input" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-create-date" class="form-check-label">Create Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-created-by" class="form-check-input" <?=isset($columns) && in_array('Created By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-created-by" class="form-check-label">Created By</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified" class="form-check-input" <?=isset($columns) && in_array('Last Modified', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-last-modified-by" class="form-check-input" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-name" class="form-check-input" <?=isset($columns) && in_array('Name', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-name" class="form-check-label">Name</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-memo-description" class="form-check-input" <?=isset($columns) && in_array('Memo/Description', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-memo-description" class="form-check-label">Memo/Description</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-account" class="form-check-input" <?=isset($columns) && in_array('Account', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-account" class="form-check-label">Account</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-split" class="form-check-input" <?=isset($columns) && in_array('Split', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-split" class="form-check-label">Split</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-ref-no" class="form-check-input" <?=isset($columns) && in_array('Ref #', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-ref-no" class="form-check-label">Ref #</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-sales-rep" class="form-check-input" <?=isset($columns) && in_array('Sales Rep', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-sales-rep" class="form-check-label">Sales Rep</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-po-number" class="form-check-input" <?=isset($columns) && in_array('P.O. Number', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-po-number" class="form-check-label">P.O. Number</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-po-status" class="form-check-input" <?=isset($columns) && in_array('PO Status', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-po-status" class="form-check-label">PO Status</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-ship-via" class="form-check-input" <?=isset($columns) && in_array('Ship Via', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-ship-via" class="form-check-label">Ship Via</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-payment-method" class="form-check-input" <?=isset($columns) && in_array('Payment Method', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-payment-method" class="form-check-label">Payment Method</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-terms" class="form-check-input" <?=isset($columns) && in_array('Terms', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-terms" class="form-check-label">Terms</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-due-date" class="form-check-input" <?=isset($columns) && in_array('Due Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-due-date" class="form-check-label">Due Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-customer-vendor-message" class="form-check-input" <?=isset($columns) && in_array('Customer/Vendor Message', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-customer-vendor-message" class="form-check-label">Customer/Vendor Message</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-invoice-date" class="form-check-input" <?=isset($columns) && in_array('Invoice Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-invoice-date" class="form-check-label">Invoice Date</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-ar-paid" class="form-check-input" <?=isset($columns) && in_array('A/R Paid', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-ar-paid" class="form-check-label">A/R Paid</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-ap-paid" class="form-check-input" <?=isset($columns) && in_array('A/P Paid', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-ap-paid" class="form-check-label">A/P Paid</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-clr" class="form-check-input" <?=isset($columns) && in_array('Clr', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-clr" class="form-check-label">Clr</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-check-printed" class="form-check-input" <?=isset($columns) && in_array('Check Printed', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-check-printed" class="form-check-label">Check Printed</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-paid-by-mas" class="form-check-input" <?=isset($columns) && in_array('Paid by MAS', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-paid-by-mas" class="form-check-label">Paid by MAS</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-amount" class="form-check-input" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-amount" class="form-check-label">Amount</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-open-balance" class="form-check-input" <?=isset($columns) && in_array('Open Balance', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-open-balance" class="form-check-label">Open Balance</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-debit" class="form-check-input" <?=isset($columns) && in_array('Debit', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-debit" class="form-check-label">Debit</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-credit" class="form-check-input" <?=isset($columns) && in_array('Credit', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-credit" class="form-check-label">Credit</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-online-banking" class="form-check-input" <?=isset($columns) && in_array('Online Banking', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-online-banking" class="form-check-label">Online Banking</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-tax-amount" class="form-check-input" <?=isset($columns) && in_array('Tax Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-tax-amount" class="form-check-label">Tax Amount</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" name="col_chk" id="col-taxable-amount" class="form-check-input" <?=isset($columns) && in_array('Taxable Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-taxable-amount" class="form-check-label">Taxable Amount</label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-2 border-left d-flex align-items-center justify-content-center">
-                                                    <button class="btn btn-transparent">Run Report</button>
-                                                </div>
-                                            </div>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row report-container">
-                                    <div class="col">
-                                        <div class="m-auto border" style="width: 60%">
-                                            <div class="container-fluid">
-                                                <div class="row border-bottom">
-                                                    <div class="col-md-6" style="font-size: 10px !important">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle text-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Sort <i class="fa fa-caret-down text-info"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <p class="m-0">Sort by</p>
-                                                                            <select name="sort_by" id="sort-by" class="form-control">
-                                                                                <option value="default" selected>Default</option>
-                                                                                <option value="ap-paid">A/P Paid</option>
-                                                                                <option value="ar-paid">A/R Paid</option>
-                                                                                <option value="account">Account</option>
-                                                                                <option value="check-printed">Check Printed</option>
-                                                                                <option value="clr">Clr</option>
-                                                                                <option value="create-date">Create Date</option>
-                                                                                <option value="created-by">Created By</option>
-                                                                                <option value="customer-message">Customer/Vendor Message</option>
-                                                                                <option value="date">Date</option>
-                                                                                <option value="due-date">Due Date</option>
-                                                                                <option value="invoice-date">Invoice Date</option>
-                                                                                <option value="last-modified">Last Modified</option>
-                                                                                <option value="last-modified-by">Last Modified By</option>
-                                                                                <option value="memo-desc">Memo/Description</option>
-                                                                                <option value="name">Name</option>
-                                                                                <option value="num">Num</option>
-                                                                                <option value="online-banking">Online Banking</option>
-                                                                                <option value="po-number">P.O. Number</option>
-                                                                                <option value="po-status">P.O. Status</option>
-                                                                                <option value="paid-by-mas">Paid by MAS</option>
-                                                                                <option value="payment-method">Payment Method</option>
-                                                                                <option value="posting">Posting</option>
-                                                                                <option value="ref-no">Ref #</option>
-                                                                                <option value="sales-rep">Sales Rep</option>
-                                                                                <option value="ship-via">Ship Via</option>
-                                                                                <option value="split">Split</option>
-                                                                                <option value="tax-amount">Tax Amount</option>
-                                                                                <option value="taxable-amount">Taxable Amount</option>
-                                                                                <option value="terms">Terms</option>
-                                                                                <option value="transaction-type">Transaction Type</option>
-                                                                            </select>
-                                                                            <p class="m-0">Sort in</p>
-                                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                                <input type="radio" id="sort-asc" name="sort_order">
-                                                                                <label for="sort-asc">Ascending order</label>
-                                                                            </div>
-                                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                                <input type="radio" id="sort-desc" name="sort_order">
-                                                                                <label for="sort-desc">Descending order</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li><a href="#" class="text-info">Add notes</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul class="ml-auto">
-                                                                <li><a href="#"><i class="fa fa-envelope"></i></a></li>
-                                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-download"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                                        <a class="dropdown-item" href="#">Export to Excel</a>
-                                                                        <a class="dropdown-item" href="#">Export to PDF</a>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-cog"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <p class="m-0">Display density</p>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="checkbox" checked="checked" id="compact-display">
-                                                                            <label for="compact-display">Compact</label>
-                                                                        </div>
-                                                                        <p class="m-0">Change columns</p>
-                                                                        <div class="row">
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-date">
-                                                                                    <label for="col-date">Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-posting">
-                                                                                    <label for="col-posting">Posting</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified">
-                                                                                    <label for="col-last-modified">Last Modified</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-transaction-type">
-                                                                                    <label for="col-transaction-type">Transaction Type</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-create-date">
-                                                                                    <label for="col-create-date">Create Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified-by">
-                                                                                    <label for="col-last-modified-by">Last Modified By</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-num">
-                                                                                    <label for="col-num">Num</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-created-by">
-                                                                                    <label for="col-created-by">Created By</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-name">
-                                                                                    <label for="col-name">Name</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row hidden-cols" style="display: none">
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-memo-desc">
-                                                                                    <label for="col-memo-desc">Memo/Description</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-ref-no">
-                                                                                    <label for="col-ref-no">Ref #</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-po-status">
-                                                                                    <label for="col-po-status">PO Status</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-terms">
-                                                                                    <label for="col-terms">Terms</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-invoice-date">
-                                                                                    <label for="col-invoice-date">Invoice Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-clr">
-                                                                                    <label for="col-clr">Clr</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-amount">
-                                                                                    <label for="col-amount">Amount</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-credit">
-                                                                                    <label for="col-credit">Credit</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-taxable-amount">
-                                                                                    <label for="col-taxable-amount">Taxable Amount</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-account">
-                                                                                    <label for="col-account">Account</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-sales-rep">
-                                                                                    <label for="col-sales-rep">Sales Rep</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-ship-via">
-                                                                                    <label for="col-ship-via">Ship Via</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-due-date">
-                                                                                    <label for="col-due-date">Due Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-ar-paid">
-                                                                                    <label for="col-ar-paid">A/R Paid</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-check-printed">
-                                                                                    <label for="col-check-printed">Check Printed</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-open-balance">
-                                                                                    <label for="col-open-balance">Open Balance</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-online-banking">
-                                                                                    <label for="col-online-banking">Online Banking</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-split">
-                                                                                    <label for="col-split">Split</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-po-number">
-                                                                                    <label for="col-po-number">P.O. Number</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-payment-method">
-                                                                                    <label for="col-payment-method">Payment Method</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-customer-message">
-                                                                                    <label for="col-customer-message">Customer/Vendor Message</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-ap-paid">
-                                                                                    <label for="col-ap-paid">A/P Paid</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-paid-by-mas">
-                                                                                    <label for="col-paid-by-mas">Paid by MAS</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-debit">
-                                                                                    <label for="col-debit">Debit</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-tax-amount">
-                                                                                    <label for="col-tax-amount">Tax Amount</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="m-0"><a href="#" class="text-info" id="show-cols"><i class="fa fa-caret-down text-info"></i> Show More</a></p>
-                                                                        <p class="m-0"><a href="#" class="text-info">Reorder columns</a></p>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+                                <div class="row <?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                                    <?php if(isset($show_logo)) : ?>
+                                    <!-- <div class="position-absolute">
+                                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px"/>
+                                    </div> -->
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_company_name)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_report_title)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0 fw-bold"><?=$report_title?></p>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if(!isset($show_report_period)) : ?>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0"><?=$report_period?></p>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content h-auto grid-mb">
+                                <table class="nsm-table grid-mb" id="reports-table">
+                                    <thead>
+                                        <tr>
+                                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
+                                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
+                                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
+                                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>>POSTING</td>
+                                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
+                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
+                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
+                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
+                                            <td data-name="Name" <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>>NAME</td>
+                                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
+                                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>ACCOUNT</td>
+                                            <td data-name="Split" <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>>SPLIT</td>
+                                            <td data-name="Ref No." <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>>REF #</td>
+                                            <td data-name="Sales Rep" <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>>SALES REP</td>
+                                            <td data-name="P.O. Number" <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>>P.O. NUMBER</td>
+                                            <td data-name="PO Status" <?=isset($columns) && !in_array('PO Status', $columns) ? 'style="display: none"' : ''?>>PO STATUS</td>
+                                            <td data-name="Ship Via" <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>>SHIP VIA</td>
+                                            <td data-name="Payment Method" <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>>PAYMENT METHOD</td>
+                                            <td data-name="Terms" <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>>TERMS</td>
+                                            <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>>DUE DATE</td>
+                                            <td data-name="Customer/Vendor Message" <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>>CUSTOMER/VENDOR MESSAGE</td>
+                                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
+                                            <td data-name="A/R Paid" <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>>A/R PAID</td>
+                                            <td data-name="A/P Paid" <?=isset($columns) && !in_array('A/P Paid', $columns) ? 'style="display: none"' : ''?>>A/P PAID</td>
+                                            <td data-name="Clr" <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>>CLR</td>
+                                            <td data-name="Check Printed" <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>>CHECK PRINTED</td>
+                                            <td data-name="Paid by MAS" <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>>PAID BY MAS</td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
+                                            <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>>OPEN BALANCE</td>
+                                            <td data-name="Debit" <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>>DEBIT</td>
+                                            <td data-name="Credit" <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>>CREDIT</td>
+                                            <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>>ONLINE BANKING</td>
+                                            <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>>TAX AMOUNT</td>
+                                            <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>>TAXABLE AMOUNT</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(count($transactions) > 0) : ?>
+                                        <?php foreach($transactions as $index => $transaction) : ?>
+                                        <?php if($group_by === 'none') : ?>
+                                        <tr>
+                                            <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
+                                            <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
+                                            <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                                            <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
+                                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>><?=$transaction['name']?></td>
+                                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$transaction['memo_desc']?></td>
+                                            <td <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$transaction['account']?></td>
+                                            <td <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>><?=$transaction['split']?></td>
+                                            <td <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ref_no']?></td>
+                                            <td <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>><?=$transaction['sales_rep']?></td>
+                                            <td <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>><?=$transaction['po_number']?></td>
+                                            <td <?=isset($columns) && !in_array('PO Status', $columns) ? 'style="display: none"' : ''?>><?=$transaction['po_status']?></td>
+                                            <td <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ship_via']?></td>
+                                            <td <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>><?=$transaction['payment_method']?></td>
+                                            <td <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>><?=$transaction['terms']?></td>
+                                            <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['due_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>><?=$transaction['cust_vendor_message']?></td>
+                                            <td <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['invoice_date']?></td>
+                                            <td <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ar_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('A/P Paid', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ap_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>><?=$transaction['clr']?></td>
+                                            <td <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>><?=$transaction['check_printed']?></td>
+                                            <td <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>><?=$transaction['paid_by_mas']?></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><?=$transaction['open_balance']?></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><?=$transaction['debit']?></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><?=$transaction['credit']?></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>><?=$transaction['online_banking']?></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['tax_amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['taxable_amount']?></td>
+                                        </tr>
+                                        <?php else : ?>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
+                                            <td colspan="27"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                                            <td><b><?=$transaction['amount_total']?></b></td>
+                                            <td></td>
+                                            <td><b><?=$transaction['debit_total']?></b></td>
+                                            <td><b><?=$transaction['credit_total']?></b></td>
+                                            <td></td>
+                                            <td><b><?=$transaction['tax_amount_total']?></b></td>
+                                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                                        </tr>
+                                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                                        <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
+                                            <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
+                                            <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
+                                            <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
+                                            <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
+                                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified']?></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified_by']?></td>
+                                            <td <?=isset($columns) && !in_array('Name', $columns) ? 'style="display: none"' : ''?>><?=$tran['name']?></td>
+                                            <td <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$tran['memo_desc']?></td>
+                                            <td <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$tran['account']?></td>
+                                            <td <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>><?=$tran['split']?></td>
+                                            <td <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>><?=$tran['ref_no']?></td>
+                                            <td <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>><?=$tran['sales_rep']?></td>
+                                            <td <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>><?=$tran['po_number']?></td>
+                                            <td <?=isset($columns) && !in_array('PO Status', $columns) ? 'style="display: none"' : ''?>><?=$tran['po_status']?></td>
+                                            <td <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>><?=$tran['ship_via']?></td>
+                                            <td <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>><?=$tran['payment_method']?></td>
+                                            <td <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>><?=$tran['terms']?></td>
+                                            <td <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['due_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>><?=$tran['cust_vendor_message']?></td>
+                                            <td <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['invoice_date']?></td>
+                                            <td <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>><?=$tran['ar_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('A/P Paid', $columns) ? 'style="display: none"' : ''?>><?=$tran['ap_paid']?></td>
+                                            <td <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>><?=$tran['clr']?></td>
+                                            <td <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>><?=$tran['check_printed']?></td>
+                                            <td <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>><?=$tran['paid_by_mas']?></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><?=$tran['open_balance']?></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><?=$tran['debit']?></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><?=$tran['credit']?></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>><?=$tran['online_banking']?></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['tax_amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['taxable_amount']?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
+                                            <td colspan="27"><b>Total for <?=$transaction['name']?></b></td>
+                                            <td><b><?=$transaction['amount_total']?></b></td>
+                                            <td></td>
+                                            <td><b><?=$transaction['debit_total']?></b></td>
+                                            <td><b><?=$transaction['credit_total']?></b></td>
+                                            <td></td>
+                                            <td><b><?=$transaction['tax_amount_total']?></b></td>
+                                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                                        </tr>
+                                        <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <?php else : ?>
+                                        <tr>
+                                            <td colspan="34">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
                                                 </div>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
 
-                                                <div class="row">
-                                                    <div class="col-12 text-center">
-                                                        <h4><span class="company-name">nSmarTrac</span> <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Recent Automatic Transactions<br> Created: <?=date("F j", strtotime("-4 days")).'-'.date("j, Y")?></p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <table class="table" style="width: 100%;" id="report-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>DATE</th>
-                                                                    <th>TRANSACTION TYPE</th>
-                                                                    <th>NUM</th>
-                                                                    <th>POSTING</th>
-                                                                    <th>NAME</th>
-                                                                    <th>MEMO/DESCRIPTION</th>
-                                                                    <th>ACCOUNT</th>
-                                                                    <th>SPLIT</th>
-                                                                    <th>PAID BY MAS</th>
-                                                                    <th class="text-right">AMOUNT</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                                                    <td><i class="fa fa-caret-right"></i> Payment</td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                                </tr>
-                                                                <tr class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;06/15/2022</td>
-                                                                    <td>Payment</td>
-                                                                    <td></td>
-                                                                    <td>Yes</td>
-                                                                    <td>Test Customer</td>
-                                                                    <td></td>
-                                                                    <td>Test Account</td>
-                                                                    <td>Split Account</td>
-                                                                    <td>Yes</td>
-                                                                    <td class="text-right">22,544.77</td>
-                                                                </tr>
-                                                                <tr class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td><b>Total for Test Account</b></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row report-footer">
-                                                    <div class="col-12 text-center">
-                                                        <p><?=date("l, F j, Y h:i A eP")?></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- end of container fluid -->
-                                        </div>
+                                <div class="row">
+                                    <div class="col-12 d-none" id="report-note-form">
+                                        <textarea name="report_note" id="report-note" maxlength="4000" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
+                                        <label for="report-note">4000 characters max</label>
+                                        <button class="nsm-button primary float-end" id="save-note">Save</button>
+                                        <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
+                                    </div>
+                                    <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
+                                        <?php if(!is_null($reportNote)) : ?>
+                                        <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="nsm-card-footer <?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                                <p class="m-0"><?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
-                    <!-- end card -->
                 </div>
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container-fluid -->
     </div>
 </div>
 
-
-<!-- page wrapper end -->
-<?php include viewPath('includes/footer_accounting'); ?>
+<script>
+    const companyName = "<?=$clients->business_name?>"
+</script>
+<?php include viewPath('v2/includes/footer'); ?>

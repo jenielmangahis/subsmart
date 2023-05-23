@@ -368,6 +368,205 @@ $('#filter-num').on('change', function() {
     }
 });
 
+$('#reset-columns-to-default').on('click', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', true);
+});
+
+$(document).on('click', '#change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().removeClass('d-none');
+    $(this).html('Hide change columns');
+    $(this).attr('id', 'hide-change-columns');
+});
+
+$(document).on('click', '#hide-change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().addClass('d-none');
+    $(this).html('Change columns');
+    $(this).attr('id', 'change-columns');
+});
+
+$('#add-notes').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').removeClass('d-none');
+});
+
+$('#edit-notes').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').removeClass('d-none');
+    $('#report-note-cont').addClass('d-none');
+});
+
+$('#cancel-note-update').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').addClass('d-none');
+    $('#report-note-cont').removeClass('d-none');
+
+    $('#report-note').val($('#report-note-cont').html().trim().replaceAll('<br>', ''));
+});
+
+$('#save-note').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('note', $('#report-note').val());
+   
+    $.ajax({
+        url: `/accounting/reports/${reportId}/update-note`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+
+            if($('#report-note').val().trim() === '') {
+                $('#add-notes, #edit-notes').text('Add notes');
+                $('#add-notes, #edit-notes').attr('id', 'add-notes');
+            } else {
+                $('#add-notes, #edit-notes').text('Edit notes');
+                $('#add-notes, #edit-notes').attr('id', 'edit-notes');
+            }
+
+            $('#report-note-cont').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
+            $('#report-note-form').addClass('d-none');
+            $('#report-note-cont').removeClass('d-none');
+        }
+    });
+});
+
+$('#add-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $(this).parent().next().removeClass('d-none');
+});
+
+$('#new-custom-report-group').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-group-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/add-custom-report-group`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
+            $('#custom-group-name').val('');
+        }
+    });
+});
+
+$('#save-custom-report').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/check-custom-report-name`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.exists) {
+                Swal.fire({
+                    // title: 'Delete Invoice',
+                    text: 'A custom report with this name already exists. Enter a new name, or click Replace to replace the existing report.',
+                    icon: 'warning',
+                    confirmButtonText: 'Replace',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        save_custom_report(res.data);
+                    }
+                });
+            } else {
+                save_custom_report();
+            }
+        }
+    });
+});
+
+function save_custom_report(customReport = {})
+{
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('report_id', reportId);
+    data.set('custom_report_group_id', $('#custom-report-group').val());
+    data.set('share_with', $('#share-with').val());
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(selectedVal[0] !== 'date') {
+                data.append(`settings[${selectedVal[0]}]`, selectedVal[1]);
+            } else {
+                data.set('date_range', selectedVal[1]);
+            }
+        });
+    }
+
+    if(data.has('date_range') === false) {
+        data.set('date_range', $('#report-period-date').find('option:selected').text().trim());
+    }
+
+    if(Object.keys(customReport).length > 0) {
+        data.append('custom_report_id', customReport.id);
+    }
+
+    $.ajax({
+        url: `/accounting/reports/save-custom-report`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+}
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {

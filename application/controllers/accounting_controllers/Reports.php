@@ -6502,6 +6502,220 @@ class Reports extends MY_Controller {
                     $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
                 }
             break;
+            case 'recent_automatic_transactions' :
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
+                }
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'last_modified',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                $this->page_data['report_period'] = "All Dates";
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+
+                    switch(get('date')) {
+                        default :
+                            $this->page_data['report_period'] = 'All Dates';
+                        break;
+                        case 'today' :
+                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'yesterday' :
+                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'this-month' :
+                            $this->page_data['report_period'] = date("F Y");
+                        break;
+                        case 'this-month-to-date' : 
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $startYear = date("Y", strtotime($startDate));
+                            $endYear = date("Y", strtotime($endDate));
+
+                            if($startMonth === $endMonth && $startYear === $endYear) {
+                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
+                            } else if($startYear !== $endYear) {
+                                $this->page_data['report_period'] = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            } else {
+                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            }
+                        break;
+                        case 'last-month' :
+                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'next-month' :
+                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'this-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'next-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'this-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'next-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'this-year-to-last-month' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'since-30-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-60-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-90-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-365-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                    }
+                }
+
+                $transactions = [];
+
+                $this->page_data['transactions'] = $transactions;
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Recent Automatic Transactions';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                if(!empty(get('show-report-period'))) {
+                    $this->page_data['show_report_period'] = false;
+                }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -10196,7 +10410,6 @@ class Reports extends MY_Controller {
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_General_Ledger.pdf', 'D');
                 }
             break;
-// 123
             case 'Journal' :
                 $start_date = date("m/01/Y");
                 $end_date = date("m/d/Y");
