@@ -19,8 +19,8 @@
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row grid-mb">
                                     <div class="col-12">
-                                        <label for="filter-activity-date">Time Activity Date</label>
-                                        <select class="nsm-field form-select" name="filter_activity_date" id="filter-activity-date">
+                                        <label for="filter-report-period">Report period</label>
+                                        <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates" <?=empty($filter_date) || $filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
                                             <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                             <option value="today" <?=$filter_date === 'today' ? 'selected' : ''?>>Today</option>
@@ -55,18 +55,18 @@
                                         </select>
                                     </div>
                                 </div>
-                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
+                                <?php if(!empty($filter_date)) : ?>
                                 <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-activity-date-from">From</label>
+                                        <label for="filter-report-period-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-activity-date-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-report-period-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-activity-date-to">To</label>
+                                        <label for="filter-report-period-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-activity-date-to">
+                                            <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-report-period-to">
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                                 <div class="row g-3">
                                     <div class="col-12">
                                         <label for="custom-report-name">Custom report name</label>
-                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Time Activities by Employee Detail">
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Recent Automatic Transactions">
                                     </div>
                                     <div class="col-12">
                                         <label for="custom-report-group">Add this report to a group</label>

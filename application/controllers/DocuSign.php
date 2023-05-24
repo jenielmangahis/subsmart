@@ -236,6 +236,19 @@ class DocuSign extends MYF_Controller
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['client'] = $filteredClient;
 
+        #acs alarm details
+        $this->db->where('fk_prof_id', $customer_id);
+        $acs_alarm = $this->db->get('acs_alarm')->row();
+
+        $acs_alarm_accessKeys = [
+            'alarm_cs_account'
+        ];
+        
+        $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
+            return in_array($v, $acs_alarm_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
+
         #password
         $this->db->where('fk_prof_id', $customer_id);
         $acs_access = $this->db->get('acs_access')->row();

@@ -1720,6 +1720,7 @@ $(document).on('click', '.saveCustomer', function() {
 
             // alert(return_first);
             var json = $.parseJSON(return_first);
+            var tax_rate_ = 0;
             for (var i=0;i<json.length;++i)
             {
                 tax_rate_ = json[i].rate;

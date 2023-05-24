@@ -76,6 +76,8 @@ function Signing(hash) {
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
+    const { alarm_cs_account } = window.__esigndata.auto_populate_data.acs_alarm;
+
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
@@ -112,6 +114,10 @@ function Signing(hash) {
       return phone_m;
     }
 
+    if( field_name == "Secondary Contact" ){
+      return phone_h;
+    }
+
     if( field_name == "Access Password" ){
       return access_password;
     }
@@ -134,6 +140,10 @@ function Signing(hash) {
 
     if( field_name == "ABA" ){
       return routing_num;
+    }
+
+    if( field_name == "CS Account Number" ){
+      return alarm_cs_account;
     }
 
     if( field_name == 'Account Number' ){
