@@ -24,6 +24,39 @@ $('#show-cols').on('click', function(e) {
     }
 });
 
+$('#report-period-date').on('change', function() {
+    if($(this).val() === 'all-dates') {
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
+    } else {
+        var dates = get_start_and_end_dates($(this).val(), $(this));
+
+        if($(`#${$(this).attr('id')}-from`).length > 0) {
+            $(`#${$(this).attr('id')}-from`).val(dates.start_date);
+            $(`#${$(this).attr('id')}-to`).val(dates.end_date);
+        } else {
+            $(`<div class="col-12 col-md-4">
+                <label for="${$(this).attr('id')}-from">From</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="${$(this).attr('id')}-from">
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="${$(this).attr('id')}-to">To</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="${$(this).attr('id')}-to">
+                </div>
+            </div>`).insertAfter($(this).parent());
+
+            $(`#${$(this).attr('id')}-from, #${$(this).attr('id')}-to`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
+    }
+});
+
 $('input[name="col_chk"]').on('change', function() {
     var chk = $(this);
     var dataName = $(this).next().text();
