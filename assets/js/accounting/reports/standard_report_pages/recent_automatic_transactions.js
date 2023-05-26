@@ -86,6 +86,50 @@ $('select').each(function() {
             dropdownParent: $(this).closest('.modal')
         });
     }
+
+    if($(this).attr('id') === 'filter-payment-method') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-payment-method'
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
+
+    if($(this).attr('id') === 'filter-terms') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-terms'
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
@@ -368,6 +412,116 @@ $('#save-note').on('click', function(e) {
 
 $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
+});
+
+$('#sort-by, [name="sort_order"]').on('change', function() {
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'column',
+            'order'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+
+$('#reset-columns-to-default').on('click', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', true);
+});
+
+$(document).on('click', '#change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().removeClass('d-none');
+    $(this).html('Hide change columns');
+    $(this).attr('id', 'hide-change-columns');
+});
+
+$(document).on('click', '#hide-change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().addClass('d-none');
+    $(this).html('Change columns');
+    $(this).attr('id', 'change-columns');
+});
+
+$('#filter-create-date, #filter-last-modified-date, #filter-due-date').on('change', function() {
+    $(this).parent().prev().find('input[type="checkbox"]').prop('checked', true);
+
+    if($(this).val() === 'all-dates') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+        var dates = get_start_and_end_dates($(this).val(), $(this));
+
+        if($(`#${$(this).attr('id')}-from`).length > 0) {
+            $(`#${$(this).attr('id')}-from`).val(dates.start_date);
+            $(`#${$(this).attr('id')}-to`).val(dates.end_date);
+        } else {
+            $(`<div class="col-12 col-md-6">
+                <label for="${$(this).attr('id')}-from">From</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="${$(this).attr('id')}-from">
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="${$(this).attr('id')}-to">To</label>
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="${$(this).attr('id')}-to">
+                </div>
+            </div>`).insertAfter($(this).parent());
+
+            $(`#${$(this).attr('id')}-from, #${$(this).attr('id')}-to`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
+    }
+});
+
+$('#filter-transaction-type, #filter-account, #filter-name, #filter-payment-method, #filter-terms, #filter-cleared, #filter-ar-paid, #filter-ap-paid, #filter-check-printed').on('change', function() {
+    if($(this).val() !== 'all') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+    }
+});
+
+$('#filter-memo, #filter-num, #filter-amount, #filter-ship-via, #filter-po-number, #filter-sales-rep').on('change', function() {
+    if($(this).val().trim() !== '') {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', true);
+    } else {
+        $(`#allow-${$(this).attr('id')}`).prop('checked', false);
+    }
 });
 
 function save_custom_report(customReport = {})

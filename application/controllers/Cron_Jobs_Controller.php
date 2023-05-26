@@ -933,6 +933,7 @@ class Cron_Jobs_Controller extends CI_Controller
     private function cron_recurring_transactions()
     {
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('accounting_automatic_transactions_model');
         $transactions = $this->accounting_recurring_transactions_model->get_by_next_date(date('Y-m-d'));
 
         foreach ($transactions as $transaction) {
@@ -983,6 +984,14 @@ class Cron_Jobs_Controller extends CI_Controller
                     $success = $this->occur_delayed_charge($transaction->txn_id);
                     break;
             }
+
+            $autoTransacData = [
+                'transaction_type' => ucwords($transaction->txn_type),
+                'transaction_id' => $success,
+                'company_id' => $transaction->company_id
+            ];
+
+            $autoTransac = $this->accounting_automatic_transactions_model->create($autoTransacData);
 
             $currentOccurrence = intval($transaction->current_occurrence) + 1;
             $every = $transaction->recurr_every;

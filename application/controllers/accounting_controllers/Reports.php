@@ -65,6 +65,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_account_transactions_model');
+        $this->load->model('accounting_automatic_transactions_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -6432,32 +6433,6 @@ class Reports extends MY_Controller {
                 if(!empty(get('columns'))) {
                     $columns = explode(',', get('columns'));
                     $this->page_data['columns'] = $columns;
-
-                    // $index = array_search('Debit', $columns);
-                    // if($index === false) {
-                    //     $index = array_search('Credit', $columns);
-                    // }
-
-                    // if($index === false) {
-                    //     $index = array_search('Amount', $columns);
-                    // }
-
-                    // if($index === false) {
-                    //     $index = array_search('Tax Amount', $columns);
-                    // }
-
-                    // if($index === false) {
-                    //     $index = array_search('Taxable Amount', $columns);
-                    // }
-
-                    // $this->page_data['total_index'] = $index === false ? count($columns) : $index;
-
-                    // $balanceIndex = array_search('Balance', $columns);
-                    // if($balanceIndex === false) {
-                    //     $balanceIndex = count($columns);
-                    // }
-
-                    // $this->page_data['balance_index'] = $balanceIndex;
                 }
 
                 if(!empty(get('show-company-name'))) {
@@ -6667,12 +6642,211 @@ class Reports extends MY_Controller {
                 }
 
                 $transactions = [];
+                $automaticTransacs = $this->accounting_automatic_transactions_model->get_by_company_id(logged('company_id'));
+
+                foreach($automaticTransacs as $automaticTransac)
+                {
+                    $date = null;
+                    $transactionType = null;
+                    $num = null;
+                    $posting = null;
+                    $createDate = null;
+                    $createdBy = null;
+                    $lastModified = null;
+                    $lastModifiedBy = null;
+                    $name = null;
+                    $memoDesc = null;
+                    $account = null;
+                    $split = null;
+                    $refNo = null;
+                    $salesRep = null;
+                    $poNumber = null;
+                    $poStatus = null;
+                    $shipVia = null;
+                    $paymentMethod = null;
+                    $terms = null;
+                    $dueDate = null;
+                    $customerVendorMess = null;
+                    $invoiceDate = null;
+                    $arPaid = null;
+                    $apPaid = null;
+                    $clr = null;
+                    $checkPrinted = null;
+                    $paidByMas = null;
+                    $amount = null;
+                    $openBalance = null;
+                    $debit = null;
+                    $credit = null;
+                    $onlineBanking = null;
+                    $taxAmount = null;
+                    $taxableAmount = null;
+
+                    switch(strtolower($automaticTransac->transaction_type)) {
+                        case 'deposit':
+                            $deposit = $this->accounting_bank_deposit_model->getById($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($deposit->date));
+                            $transactionType = 'Deposit';
+                            $createDate = date("m/d/Y h:i:s A", strtotime($deposit->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($deposit->updated_at));
+                        break;
+                        case 'transfer':
+                            $transfer = $this->accounting_transfer_funds_model->getById($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($transfer->transfer_date));
+                            $transactionType = 'Transfer';
+                            $createDate = date("m/d/Y h:i:s A", strtotime($transfer->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($transfer->updated_at));
+                        break;
+                        case 'journal entry':
+                            $journalEntry = $this->accounting_journal_entries_model->getById($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($journalEntry->journal_date));
+                            $transactionType = 'Journal Entry';
+                            $num = $journalEntry->journal_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($journalEntry->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at));
+                        break;
+                        case 'expense':
+                            $expense = $this->vendors_model->get_expense_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($expense->payment_date));
+                            $transactionType = 'Expense';
+                            $num = $expense->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($expense->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($expense->updated_at));
+                        break;
+                        case 'check':
+                            $check = $this->vendors_model->get_check_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($check->payment_date));
+                            $transactionType = 'Check';
+                            $num = $check->check_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($check->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($check->updated_at));
+                        break;
+                        case 'bill':
+                            $bill = $this->vendors_model->get_bill_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($bill->bill_date));
+                            $transactionType = 'Bill';
+                            $num = $bill->bill_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($bill->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($bill->updated_at));
+                        break;
+                        case 'purchase order':
+                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($purchaseOrder->purchase_order_date));
+                            $transactionType = 'Purchase Order';
+                            $num = $purchaseOrder->purchase_order_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($purchaseOrder->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($purchaseOrder->updated_at));
+                        break;
+                        case 'vendor credit':
+                            $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
+                            $transactionType = 'Vendor Credit';
+                            $num = $vendorCredit->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($vendorCredit->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($vendorCredit->updated_at));
+                        break;
+                        case 'credit card credit':
+                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($automaticTransac->transaction_id, logged('company_id'));
+                            $date = date("m/d/Y", strtotime($ccCredit->payment_date));
+                            $transactionType = 'CC Credit';
+                            $num = $ccCredit->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($ccCredit->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at));
+                        break;
+                        case 'invoice' :
+                            $invoice = $this->invoice_model->getinvoice($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($invoice->date_issued));
+                            $transactionType = 'Invoice';
+                            $num = $invoice->invoice_number;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($invoice->date_created));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($invoice->date_updated));
+                        break;
+                        case 'credit memo' :
+                            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($creditMemo->credit_memo_date));
+                            $transactionType = 'Credit Memo';
+                            $num = $creditMemo->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($creditMemo->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at));
+                        break;
+                        case 'sales receipt' :
+                            $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($salesReceipt->sales_receipt_date));
+                            $transactionType = 'Sales Receipt';
+                            $num = $salesReceipt->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at));
+                        break;
+                        case 'refund' :
+                            $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($refundReceipt->refund_receipt_date));
+                            $transactionType = 'Refund Receipt';
+                            $num = $refundReceipt->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at));
+                        break;
+                        case 'npcredit' :
+                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($delayedCredit->delayed_credit_date));
+                            $transactionType = 'Delayed Credit';
+                            $num = $delayedCredit->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($delayedCredit->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($delayedCredit->updated_at));
+                        break;
+                        case 'npcharge' :
+                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($automaticTransac->transaction_id);
+                            $date = date("m/d/Y", strtotime($delayedCharge->delayed_charge_date));
+                            $transactionType = 'Delayed Charge';
+                            $num = $delayedCharge->ref_no;
+                            $createDate = date("m/d/Y h:i:s A", strtotime($delayedCharge->created_at));
+                            $lastModified = date("m/d/Y h:i:s A", strtotime($delayedCharge->updated_at));
+                        break;
+                    }
+
+                    $transactions[] = [
+                        'date' => $date,
+                        'transaction_type' => $transactionType,
+                        'num' => $num,
+                        'posting' => $posting,
+                        'create_date' => $createDate,
+                        'created_by' => $createdBy,
+                        'last_modified' => $lastModified,
+                        'last_modified_by' => $lastModifiedBy,
+                        'name' => $name,
+                        'memo_description' => $memoDesc,
+                        'account' => $account,
+                        'split' => $split,
+                        'ref_no' => $refNo,
+                        'sales_rep' => $salesRep,
+                        'po_number' => $poNumber,
+                        'po_status' => $poStatus,
+                        'ship_via' => $shipVia,
+                        'payment_method' => $paymentMethod,
+                        'terms' => $terms,
+                        'due_date' => $dueDate,
+                        'customer_vendor_message' => $customerVendorMess,
+                        'invoice_date' => $invoiceDate,
+                        'ar_paid' => $arPaid,
+                        'ap_paid' => $apPaid,
+                        'clr' => $clr,
+                        'check_printed' => $checkPrinted,
+                        'paid_by_mas' => $paidByMas,
+                        'amount' => $amount,
+                        'open_balance' => $openBalance,
+                        'debit' => $debit,
+                        'credit' => $credit,
+                        'online_banking' => $onlineBanking,
+                        'tax_amount' => $taxAmount,
+                        'taxable_amount' => $taxableAmount
+                    ];
+                }
 
                 $this->page_data['transactions'] = $transactions;
 
                 if(!empty(get('group-by'))) {
                     $this->page_data['group_by'] = get('group-by');
                 }
+
+                $this->page_data['group_by'] = 'none';
 
                 if(!empty(get('show-company-name'))) {
                     $this->page_data['show_company_name'] = false;
