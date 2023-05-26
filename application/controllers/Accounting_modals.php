@@ -11207,6 +11207,17 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes, [], 'report');
             break;
+            case 'filter-report-name' :
+                $return = $this->get_customer_choices($return, $search, 'report');
+                $return = $this->get_vendor_choices($return, $search, 'report');
+                $return = $this->get_employee_choices($return, $search, 'report');
+            break;
+            case 'filter-report-terms' :
+                $return = $this->get_terms_choices($return, $search, 'report');
+            break;
+            case 'filter-report-payment-method' :
+                $return = $this->get_payment_method_choices($return, $search, 'report');
+            break;
             case 'custom-report-group' :
                 $return = $this->get_custom_report_group_choices($return, $search);
             break;
@@ -11524,11 +11535,18 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_payment_method_choices($choices, $search = null)
+    private function get_payment_method_choices($choices, $search = null, $field = '')
     {
         $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
 
         $choices['results'] = [];
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+        }
         foreach ($paymentMethods as $paymentMethod) {
             if ($search !== null && $search !== '') {
                 $stripos = stripos($paymentMethod['name'], $search);
@@ -11550,11 +11568,28 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_terms_choices($choices, $search = null)
+    private function get_terms_choices($choices, $search = null, $field = '')
     {
         $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
         $choices['results'] = [];
+
+        if($field === 'report') {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'not-specified',
+                'text' => 'Not Specified'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'specified',
+                'text' => 'Specified'
+            ];
+        }
         foreach ($terms as $term) {
             if($search !== null && $search !== '') {
                 $stripos = stripos($term->name, $search);

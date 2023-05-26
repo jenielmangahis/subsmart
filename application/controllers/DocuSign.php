@@ -249,6 +249,21 @@ class DocuSign extends MYF_Controller
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
 
+        #emergency contacts
+        $this->db->select('name AS emergency_contact_name, phone AS emergency_contact_phone');
+        $this->db->where('customer_id', $customer_id);
+        $contacts = $this->db->get('contacts')->row();
+
+        $contacts_accessKeys = [
+            'emergency_contact_name',
+            'emergency_contact_phone'
+        ];
+        
+        $filteredContacts = array_filter( (array)$contacts , function($v) use ($contacts_accessKeys) {
+            return in_array($v, $contacts_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['contacts'] = $filteredContacts;
+
         #password
         $this->db->where('fk_prof_id', $customer_id);
         $acs_access = $this->db->get('acs_access')->row();
@@ -306,6 +321,21 @@ class DocuSign extends MYF_Controller
         );
         
         $autoPopulateData['cost_due'] = $_cost;
+
+        #docusign envelope id
+        $this->db->select('docusign_envelope_id');
+        $this->db->where('docfile_id', $documentId);        
+        $user_customer_docfile = $this->db->get('user_customer_docfile')->row();
+
+        $userCustomerDocFileKeys = [
+            'docusign_envelope_id'
+        ];
+
+        $filteredUserCustomerDocFile = array_filter( (array)$user_customer_docfile , function($v) use ($userCustomerDocFileKeys) {
+            return in_array($v, $userCustomerDocFileKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        
+        $autoPopulateData['user_customer_docfile'] = $filteredUserCustomerDocFile;
 
         // $esign = $this->db->get_where('user_docfile_esign', array('hash' => $this->input->get('hash', true)));
         // $inDatabase = $esign->num_rows();
@@ -1391,6 +1421,10 @@ SQL;
         $record = $this->db->get('user_docfile_templates_fields')->row();
         $isCreated = false;
 
+        if( $field == 'DocuSign Envelope ID' ){
+            $specs = '{"is_read_only":true}';
+        }
+
         if (is_null($record)) {
             $isCreated = true;
             $this->db->insert('user_docfile_templates_fields', [
@@ -1508,6 +1542,8 @@ SQL;
         $this->db->where('id', $templateId);
         $template = $this->db->get('user_docfile_templates')->row();
 
+        $unique_key = guidv4();
+
         $this->db->insert('user_docfile', [
             'user_id' => $userId,
             'job_id' => $jobId,
@@ -1518,9 +1554,18 @@ SQL;
             'message' => $message,
             'completed_message' => $completedMessage,
             'company_id' => $companyId,
-            'unique_key' => guidv4()
+            'unique_key' => $unique_key
         ]);
         $docfileId = $this->db->insert_id();
+
+        //Record customer user docfile
+        $this->db->insert('user_customer_docfile', [
+            'docfile_id' => $docfileId,
+            'customer_id' => $customer_id,
+            'user_id' => $userId,
+            'docusign_envelope_id' => $unique_key,
+            'date_created' => date("Y-m-d H:i:s")
+        ]);
 
         // copy template document to user_docfile_documents
 

@@ -468,21 +468,38 @@ echo put_header_assets();
                                                     <i class="esign-fa fas fa-mobile-alt"></i>
                                                     <span class="u-ellipsis ng-binding">Secondary Contact</span>
                                                 </div>
-                                            </li>
-
-                                            <li class="menu_listItem">
-                                                <div class="fields menu_item">
-                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact"></i></span>
-                                                    <i class="esign-fa fas fa-address-book"></i>
-                                                    <span class="u-ellipsis ng-binding">Emergency Contact</span>
-                                                </div>
-                                            </li>                                                                                        
+                                            </li>                                                                                      
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-access_password"></i></span>
                                                     <i class="esign-fa fas fa-key"></i>
                                                     <span class="u-ellipsis ng-binding">Access Password</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="fw-bold"><small>Emergency Contacts</small></p>
+                                </div>
+                                <div class="sidebar_item">
+                                    <div class="menu-fields">
+                                        <ul class="menu_list">
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Contact Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_number"></i></span>
+                                                    <i class="esign-fa fas fa-mobile-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Contact Number</span>
                                                 </div>
                                             </li>
                                         </ul>

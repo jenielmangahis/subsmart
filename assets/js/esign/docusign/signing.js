@@ -74,9 +74,11 @@ function Signing(hash) {
     const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country
      } = window.__esigndata.auto_populate_data.client;
 
-    const { access_password } = window.__esigndata.auto_populate_data.acs_access;
+    const { emergency_contact_name, emergency_contact_phone } = window.__esigndata.auto_populate_data.contacts;
 
-    const { alarm_cs_account } = window.__esigndata.auto_populate_data.acs_alarm;
+    const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
+
+    const { alarm_cs_account } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
@@ -110,6 +112,14 @@ function Signing(hash) {
       return first_name + " " + last_name;
     }
 
+    if( field_name == "Contact Name" ){
+      return emergency_contact_name;
+    }
+
+    if( field_name == "Contact Number" ){
+      return emergency_contact_phone;
+    }
+
     if( field_name == "Primary Contact" ){
       return phone_m;
     }
@@ -120,6 +130,10 @@ function Signing(hash) {
 
     if( field_name == "Access Password" ){
       return access_password;
+    }
+
+    if( field_name == "DocuSign Envelope ID" ){
+      return docusign_envelope_id;
     }
 
     if( field_name == "Card Holder Name" ){
@@ -148,6 +162,18 @@ function Signing(hash) {
 
     if( field_name == 'Account Number' ){
       return acct_num;
+    }
+
+    if( field_name == "Equipment Cost" ){
+      return equipment_cost;
+    }
+
+    if( field_name == "One Time Activation (OTP)" ){
+      return one_time_activation;
+    }
+
+    if( field_name == "Emergency Contact" ){
+      return 
     }
     
     if (field_name === "Text" && fieldValue === null ) {
@@ -880,7 +906,7 @@ function Signing(hash) {
       const placeholder = specs.placeholder || specs.name || field_name;
 
       const html = `
-            <div class="docusignField" style="position: relative; display: flex; align-items: center;">
+            <div class="docusignField ${field_name}" style="position: relative; display: flex; align-items: center;">
               <input type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
               <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
                 <span class="sr-only">Loading...</span>

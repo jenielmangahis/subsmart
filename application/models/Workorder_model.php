@@ -2280,6 +2280,76 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function update_alarm($data)
+    {
+        extract($data);
+        $this->db->where('prof_id', $customer_id);
+        $this->db->update('acs_profile', array(
+            'last_name'       => $last_name,
+            'first_name'      => $first_name,
+            'phone_h'         => $phone_h,
+            'phone_m'         => $phone_m,
+            'email'           => $email,
+            'mail_add'        => $mail_add,
+            'city'            => $city,
+            'country'         => $country,
+            'zip_code'        => $zip_code,
+        ));
+        return true;
+    }
+
+    public function update_office($data)
+    {
+        extract($data);
+        $this->db->where('fk_prof_id', $customer_id);
+        $this->db->update('acs_office', array(
+            'lead_source'           => $lead_source,
+            'save_by'               => $save_by,
+            'equipment_cost'        => $equipment_cost,
+            'monthly_monitoring'    => $monthly_monitoring,
+        ));
+        return true;
+    }
+
+    public function update_alarm_adi($data)
+    {
+        extract($data);
+        $this->db->where('fk_prof_id', $customer_id);
+        $this->db->update('acs_alarm', array(
+            'equipment_cost'            => $equipment_cost,
+            'monthly_monitoring'        => $monthly_monitoring,
+            'panel_type'                => $panel_type,
+        ));
+        return true;
+    }
+    
+    public function delete_contact($customer_id){
+
+        $this->db->where('customer_id',$customer_id);
+        $this->db->delete('contacts');
+        return true;
+    }
+
+
+    public function delete_payment_billing($customer_id)
+    {
+
+        $this->db->where('fk_prof_id',$customer_id);
+        $this->db->delete('acs_billing');
+        return true;
+    }
+
+    
+    public function getCustByComp($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('acs_profile');
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
 }
 
 /* End of file Workorder_model.php */

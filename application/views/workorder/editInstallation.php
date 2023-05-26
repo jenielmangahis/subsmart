@@ -890,16 +890,12 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
-                                                <select id="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                <select id="customer_id_" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
                                                     <!-- <option selected hidden>Select Customer</option> -->
                                                     <option hidden>Select Customer</option>
-                                                    <?php foreach ($customers as $customer) : ?>
-                                                        <option <?php if (isset($workorder)) {
-                                                                    if ($workorder->customer_id == $customer->prof_id) {
-                                                                        echo "selected";
-                                                                    }
-                                                                } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                    <?php endforeach; ?>
+                                                    <?php foreach ($customers as $customer) { ?>
+                                                        <option value="<?php echo $customer->prof_id; ?>" <?php if($customer->prof_id == $workorder->customer_id){ echo 'selected'; } ?>><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
 
@@ -1750,38 +1746,38 @@ $(".nsm-subtitle").html(function() {
             $('.dcam_check').val(this.value);
         });
 
-        $("#form_new_adi_workorder").on("submit", function(e) {
-            let _this = $(this);
-            e.preventDefault();
+        // $("#form_new_adi_workorder").on("submit", function(e) {
+        //     let _this = $(this);
+        //     e.preventDefault();
 
-            var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";
-            _this.find("button[type=submit]").html("Submitting");
-            _this.find("button[type=submit]").prop("disabled", true);
+        //     var url = "<?php //echo base_url('workorder/savenewWorkorderAgreement'); ?>";
+        //     _this.find("button[type=submit]").html("Submitting");
+        //     _this.find("button[type=submit]").prop("disabled", true);
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Workorder has been saved successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: url,
+        //         data: _this.serialize(),
+        //         success: function(result) {
+        //             Swal.fire({
+        //                 title: 'Save Successful!',
+        //                 text: "Workorder has been saved successfully.",
+        //                 icon: 'success',
+        //                 showCancelButton: false,
+        //                 confirmButtonText: 'Okay'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     location.reload();
+        //                 }
+        //             });
 
-                    _this.trigger("reset");
+        //             _this.trigger("reset");
 
-                    _this.find("button[type=submit]").html("Submit");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });
+        //             _this.find("button[type=submit]").html("Submit");
+        //             _this.find("button[type=submit]").prop("disabled", false);
+        //         },
+        //     });
+        // });
 
         $(".datepicker").datepicker({
             format: 'mm/dd/yyyy',
