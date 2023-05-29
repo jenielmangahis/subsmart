@@ -385,6 +385,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-docusign_envelope_id"></i></span>
+                                                    <i class="esign-fa fas fa-wallet"></i>
                                                     <span class="u-ellipsis ng-binding">DocuSign Envelope ID</span>
                                                 </div>
 
@@ -590,6 +591,13 @@ echo put_header_assets();
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-equipment_cost"></i></span>
                                                     <i class="esign-fa fas fa-dollar-sign"></i>
                                                     <span class="u-ellipsis ng-binding">Equipment Cost</span>
+                                                </div>
+                                            </li>
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-equipment_cost"></i></span>
+                                                    <i class="esign-fa fas fa-dollar-sign"></i>
+                                                    <span class="u-ellipsis ng-binding">Monthly Monitoring Rate</span>
                                                 </div>
                                             </li>
 

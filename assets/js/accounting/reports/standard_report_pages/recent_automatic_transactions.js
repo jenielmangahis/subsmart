@@ -524,6 +524,126 @@ $('#filter-memo, #filter-num, #filter-amount, #filter-ship-via, #filter-po-numbe
     }
 });
 
+$('#run-report').on('click', function(e) {
+    e.preventDefault();
+
+    var filterDate = $('#filter-report-period').val();
+    var groupBy = $('#group-by').val();
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
+    url += filterDate !== 'all-dates' ? `from=${$('#filter-report-period-from').val().replaceAll('/', '-')}&to=${$('#filter-report-period-to').val().replaceAll('/', '-')}&` : '';
+    url += groupBy !== 'transaction-type' ? `group-by=${groupBy}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'date',
+            'from',
+            'to',
+            'group-by',
+            'column',
+            'order'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+$('#run-report-button').on('click', function() {
+    $('#filter-report-period-date').val($('#report-period-date').val()).trigger('change');
+    if($('#report-period-date').val() !== 'all-dates') {
+        $('#filter-report-period-date-from').val($('#report-period-date-from').val());
+        $('#filter-report-period-date-to').val($('#report-period-date-to').val());
+    }
+
+    var filterDate = $('#report-period-date').val();
+    var sortBy = $('#sort-by').val();
+    var sortIn = $('input[name="sort_order"]:checked').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += filterDate !== 'all-dates' ? `date=${filterDate}&` : '';
+    url += filterDate !== 'all-dates' ? `from=${$('#report-period-date-from').val().replaceAll('/', '-')}&to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
+    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
+    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
+
+    url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
+    url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
+    url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
+    url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
+    url += $('#custom-group-by').val() !== 'transaction-type' ? `group-by=${$('#custom-group-by').val()}&` : '';
+
+    var columns = [];
+    $('input[name="select_columns"]:checked').each(function() {
+        columns.push($(this).next().text().trim());
+    });
+
+    if(columns.length < $('#reports-table thead tr td').length) {
+        url += `columns=${columns}&`;
+    }
+
+    url += $('#allow-filter-transaction-type').prop('checked') && $('#filter-transaction-type').val() !== 'all' ? `transaction-type=${$('#filter-transaction-type').val()}&` : '';
+    url += $('#allow-filter-account').prop('checked') && $('#filter-account').val() !== 'all' ? `account=${$('#filter-account').val()}&` : '';
+    url += $('#allow-filter-name').prop('checked') && $('#filter-name').val() !== 'all' ? `name=${$('#filter-name').val()}&` : '';
+    url += $('#allow-filter-payment-method').prop('checked') && $('#filter-payment-method').val() !== 'all' ? `payment-method=${$('#filter-payment-method').val()}&` : '';
+    url += $('#allow-filter-terms').prop('checked') && $('#filter-terms').val() !== 'all' ? `terms=${$('#filter-terms').val()}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date=${$('#filter-due-date').val()}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-from=${$('#filter-due-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-to=${$('#filter-due-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date=${$('#filter-create-date').val()}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-from=${$('#filter-create-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-to=${$('#filter-create-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date=${$('#filter-last-modified-date').val()}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-from=${$('#filter-last-modified-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-last-modified-date').prop('checked') && $('#filter-last-modified-date').val() !== 'all-dates' ? `last-modified-date-to=${$('#filter-last-modified-date-to').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-cleared').prop('checked') && $('#filter-cleared').val() !== 'all' ? `cleared=${$('#filter-cleared').val()}&` : '';
+    url += $('#allow-filter-ar-paid').prop('checked') && $('#filter-ar-paid').val() !== 'all' ? `ar-paid=${$('#filter-ar-paid').val()}&` : '';
+    url += $('#allow-filter-ap-paid').prop('checked') && $('#filter-ap-paid').val() !== 'all' ? `ap-paid=${$('#filter-ap-paid').val()}&` : '';
+    url += $('#allow-filter-check-printed').prop('checked') && $('#filter-check-printed').val() !== 'all' ? `check-printed=${$('#filter-check-printed').val()}&` : '';
+    url += $('#allow-filter-memo').prop('checked') && $('#filter-memo').val().trim() !== '' ? `memo=${$('#filter-memo').val().trim()}&` : '';
+    url += $('#allow-filter-num').prop('checked') && $('#filter-num').val().trim() !== '' ? `num=${$('#filter-num').val().trim()}&` : '';
+    url += $('#allow-filter-amount').prop('checked') && $('#filter-amount').val().trim() !== '' ? `amount=${$('#filter-amount').val().trim()}&` : '';
+    url += $('#allow-filter-ship-via').prop('checked') && $('#filter-ship-via').val().trim() !== '' ? `ship-via=${$('#filter-ship-via').val().trim()}&` : '';
+    url += $('#allow-filter-po-number').prop('checked') && $('#filter-po-number').val().trim() !== '' ? `po-number=${$('#filter-po-number').val().trim()}&` : '';
+    url += $('#allow-filter-sales-rep').prop('checked') && $('#filter-sales-rep').val().trim() !== '' ? `sales-rep=${$('#filter-sales-rep').val().trim()}&` : '';
+
+    url += $('#show-logo').prop('checked') ? `show-logo=yes&` : '';
+    url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
+    url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
+    url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Time Activities by Employee Detail' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
+    url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
+    url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
+    url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
 function save_custom_report(customReport = {})
 {
     var data = new FormData();

@@ -280,5 +280,12 @@ select.docusignField__dropdown--isRequired {
   font-family: Verdana;
   font-size: 10px;
   white-space: nowrap; }
-
+.docusign-envelope-id-field{  
+    width: 300px !important;
+    border: none;
+    padding: 10px !important;
+    background-color: transparent !important;
+    font-size: 14px !important;
+    font-weight: bold;
+}
 /*# sourceMappingURL=docusign.css.map */

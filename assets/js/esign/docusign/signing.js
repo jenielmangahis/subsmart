@@ -78,7 +78,7 @@ function Signing(hash) {
 
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
@@ -89,8 +89,8 @@ function Signing(hash) {
     top = parseInt(top);
     left = parseInt(left);
 
-    const container = document.querySelector(".signing__documentContainer");
-    
+    const container = document.querySelector(".signing__documentContainer");    
+    const a_field_name = field_name;
     
     if ( field_name === "Total Due" ) {
       return total_due;
@@ -132,8 +132,8 @@ function Signing(hash) {
       return access_password;
     }
 
-    if( field_name == "DocuSign Envelope ID" ){
-      return docusign_envelope_id;
+    if( field_name == "DocuSign Envelope ID" ){      
+      return "DocuSign Envelope ID : " + docusign_envelope_id;
     }
 
     if( field_name == "Card Holder Name" ){
@@ -169,11 +169,11 @@ function Signing(hash) {
     }
 
     if( field_name == "One Time Activation (OTP)" ){
-      return one_time_activation;
+      return otps;
     }
 
-    if( field_name == "Emergency Contact" ){
-      return 
+    if( field_name == "Monthly Monitoring Rate" ){
+      return monthly_monitoring;
     }
     
     if (field_name === "Text" && fieldValue === null ) {
@@ -904,15 +904,19 @@ function Signing(hash) {
       }
 
       const placeholder = specs.placeholder || specs.name || field_name;
-
+      let custom_class  = "";
+      if( placeholder == "DocuSign Envelope ID" ){
+        custom_class = "docusign-envelope-id-field";
+      }
       const html = `
-            <div class="docusignField ${field_name}" style="position: relative; display: flex; align-items: center;">
-              <input type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
-              <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
-                <span class="sr-only">Loading...</span>
-              </div>
-            </div>
-          `;
+        <div class="docusignField" style="position: relative; display: flex; align-items: center;">
+          <input class="${custom_class}" type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
+          <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      `;
+      
 
       const $element = createElementFromHTML(html);
       const $input = $element.find("input");
