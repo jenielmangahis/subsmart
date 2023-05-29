@@ -1754,7 +1754,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9);
 
         $userid = $id;
-        $user_id = logged('id');
+        $user_id = logged('id');        
         $this->page_data['test']= getLoggedUserID();
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
@@ -2389,6 +2389,8 @@ class Customer extends MY_Controller
         $input_alarm['comm_type'] = $input['comm_type'];
         $input_alarm['account_cost'] = $input['account_cost'];
         $input_alarm['pass_thru_cost'] = $input['pass_thru_cost'];
+        $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'];
+        $input_alarm['otps'] = $input['otps'];
 
         $check = array(
             'where' => array(

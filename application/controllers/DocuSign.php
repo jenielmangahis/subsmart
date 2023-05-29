@@ -241,7 +241,9 @@ class DocuSign extends MYF_Controller
         $acs_alarm = $this->db->get('acs_alarm')->row();
 
         $acs_alarm_accessKeys = [
-            'alarm_cs_account'
+            'alarm_cs_account',
+            'monthly_monitoring',
+            'otps'
         ];
         
         $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
@@ -1422,7 +1424,7 @@ SQL;
         $isCreated = false;
 
         if( $field == 'DocuSign Envelope ID' ){
-            $specs = '{"is_read_only":true}';
+            $specs = '{"is_read_only":true, "placeholder":"DocuSign Envelope ID"}';
         }
 
         if (is_null($record)) {
