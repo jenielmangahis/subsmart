@@ -281,7 +281,7 @@ select.docusignField__dropdown--isRequired {
   font-size: 10px;
   white-space: nowrap; }
 .docusign-envelope-id-field{  
-    width: 300px !important;
+    /*width: 300px !important;*/
     border: none;
     padding: 10px !important;
     background-color: transparent !important;

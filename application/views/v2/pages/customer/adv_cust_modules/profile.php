@@ -289,13 +289,13 @@ div#controls div#call-controls div#volume-indicators > div {
     #CUSTOMER_LOG_TABLE_info {
         display: none;
     }
-    table.dataTable thead th, table.dataTable thead td {
+    #CUSTOMER_LOG_TABLE.dataTable thead th, #CUSTOMER_LOG_TABLE.dataTable thead td {
         padding: 5px;
     }
-    table.dataTable.no-footer {
+    #CUSTOMER_LOG_TABLE.dataTable.no-footer {
         border: 1px solid lightgray;
     }
-    table.dataTable, table.dataTable th, table.dataTable td {
+    #CUSTOMER_LOG_TABLE.dataTable, #CUSTOMER_LOG_TABLE.dataTable th, #CUSTOMER_LOG_TABLE.dataTable td {
         box-sizing: border-box;
     }
 </style>

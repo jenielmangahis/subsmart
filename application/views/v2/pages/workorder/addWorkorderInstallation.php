@@ -1436,12 +1436,12 @@ tr {
                                                 <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
                                                 
                                                 <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
-                                                <select id="customer_id_" name="customer_id" data-customer-source="dropdown_" class="form-control searchable-dropdown_">
-                                                    <option>Select Customer</option>
-                                                    <!-- <option selected hidden>Select Customer</option> -->
-                                                    <?php foreach($customers as $customer){ ?>
-                                                    <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name.' '.$customer->last_name; ?></option>
-                                                    <?php } ?>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                                    <!-- <option selected value hidden>- Select Customer -</option> -->
+                                                    <option value="" selected> Select Customer</option>
+                                                    <?php foreach( $customers as $customer ){ ?>
+                                                        <option value="<?= $customer->prof_id; ?>" selected><?= $customer->first_name.' '.$customer->last_name; ?></option>
+                                                    <?php } ?>                                        
                                                 </select>
                                             </div>
 
@@ -2371,7 +2371,7 @@ $(".nsm-subtitle").html(function() {
             );
         }
 
-        $("#customer_id_").on( 'change', function () {
+        $("#customer_id").on( 'change', function () {
             if(this.value !== ""){
                 autoFillCustomer(this.value);
             }

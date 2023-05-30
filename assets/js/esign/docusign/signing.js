@@ -76,6 +76,8 @@ function Signing(hash) {
 
     const { emergency_contact_name, emergency_contact_phone } = window.__esigndata.auto_populate_data.contacts;
 
+    const { access_password } = window.__esigndata.auto_populate_data.acs_access;
+
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
     const { alarm_cs_account, monthly_monitoring, otps } = window.__esigndata.auto_populate_data.acs_alarm;    

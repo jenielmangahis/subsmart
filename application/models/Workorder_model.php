@@ -2320,6 +2320,7 @@ class Workorder_model extends MY_Model
             'equipment_cost'            => $equipment_cost,
             'monthly_monitoring'        => $monthly_monitoring,
             'panel_type'                => $panel_type,
+            'otps'                      => $otps,
         ));
         return true;
     }
