@@ -630,7 +630,7 @@ $('#run-report-button').on('click', function() {
     url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
     url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
     url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
-    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Time Activities by Employee Detail' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Recent Automatic Transactions' ? `report-title=${$('#report-title').val()}&` : '';
     url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
     url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
     url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';

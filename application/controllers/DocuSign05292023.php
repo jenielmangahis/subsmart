@@ -1549,7 +1549,6 @@ SQL;
         $this->db->insert('user_docfile', [
             'user_id' => $userId,
             'job_id' => $jobId,
-            'customer_id' => $customer_id,
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
             'status' => 'Draft',

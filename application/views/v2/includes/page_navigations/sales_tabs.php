@@ -36,10 +36,10 @@
                 <span>Service Tickets</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Credit Notes'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Marketing'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('credit_notes') ?>">
                 <i class='bx bx-fw bx-file'></i>
-                <span>Credit Notes</span>
+                <span>Marketing</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">

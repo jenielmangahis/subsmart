@@ -10,7 +10,7 @@ class Credit_Notes extends MY_Controller
     {
         parent::__construct();
 
-        $this->page_data['page']->title = 'Credit Notes';
+        $this->page_data['page']->title = 'Marketing';
         $this->page_data['page']->menu = 'credit_notes';
         $this->load->model('CreditNote_model');
         $this->load->model('CreditNoteItem_model');

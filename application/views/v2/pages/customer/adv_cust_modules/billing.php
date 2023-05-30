@@ -14,7 +14,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                            <?php if(isset($billing_info)){ echo $billing_info->bill_method; }; ?>
+                            <?php 
+                            if(isset($billing_info)){ 
+                                if($billing_info->bill_method){
+                                    echo $billing_info->bill_method; 
+                                    }else{
+                                        echo "n/a";
+                                    }
+                                 }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +38,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $profile_info->cross_street; }; ?>
+                                <?php 
+                                      if(isset($billing_info)){
+                                         echo "$profile_info->mail_add $profile_info->city, $profile_info->state $profile_info->zip_code"; 
+                                        }else{ 
+                                        echo "n/a";
+                                        }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +52,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->acct_num; }; ?>
+                                <?php 
+                                if(isset($billing_info)){ 
+                                if($billing_info->acct_num){
+                                    echo "$billing_info->acct_num"; 
+                                }else{
+                                    echo "n/a";
+                                }
+                            }
+                                 ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -46,7 +68,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->routing_num; }; ?>
+                                <?php 
+                                  if(isset($billing_info)){ 
+                                    if($billing_info->routing_num){
+                                    echo $billing_info->routing_num; 
+                                    }else{
+                                        echo "n/a";
+                                    } 
+                                  }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -54,7 +84,14 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->credit_card_num; }; ?>
+                                <?php if(isset($billing_info)){ 
+                                    if($billing_info->credit_card_num){
+                                    echo $billing_info->credit_card_num; 
+                                    }else{
+                                        echo "n/a";
+                                    }
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -62,7 +99,14 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; }; ?>
+                                <?php if(isset($billing_info)){ 
+                                    if($billing_info->credit_card_exp){
+                                    echo $billing_info->credit_card_exp; 
+                                    }else{
+                                        echo "n/a";
+                                    }
+                                  }
+                                  ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -70,7 +114,14 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; }; ?>
+                                <?php if(isset($billing_info)){ 
+                                    if($billing_info->credit_card_exp_mm_yyyy){
+                                        echo $billing_info->credit_card_exp_mm_yyyy; 
+                                    }else{
+                                        echo "n/a";
+                                    }
+                                    }
+                                  ?>
                             </span>
                         </div>
                     </div>
@@ -90,7 +141,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->bill_freq; }; ?>
+                                <?php 
+                                if(isset($billing_info)){ 
+                                    if($billing_info->bill_freq){
+                                        echo $billing_info->bill_freq; 
+                                        }else{
+                                            echo "n/a";
+                                        }
+                                     }
+                                      ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -98,7 +157,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->bill_day; }; ?>
+                                <?php 
+                                if(isset($billing_info)){ 
+                                    if($billing_info->bill_day){
+                                        echo $billing_info->bill_day; 
+                                    }else{
+                                     echo "n/a";
+                                    }
+                                }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">

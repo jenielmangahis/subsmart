@@ -8123,6 +8123,7 @@ class Workorder extends MY_Controller
                 'equipment_cost'            => $this->input->post('equipmentCost'),
                 'monthly_monitoring'        => $this->input->post('otps'),
                 'panel_type'                => $this->input->post('panel_type'),
+                'otps'                      => $this->input->post('otps'),
                 // 'system_type'               => $this->input->post('otps'),
                 // 'warranty_type'             => $this->input->post('otps'),
                 // 'comm_type'                 => $this->input->post('otps'),
@@ -8851,8 +8852,9 @@ class Workorder extends MY_Controller
             $alarmInfoData = array(
                 'customer_id'                => $customer_id,
                 'equipment_cost'            => $this->input->post('equipmentCost'),
-                'monthly_monitoring'        => $this->input->post('otps'),
+                'monthly_monitoring'        => $this->input->post('monthlyMonitoring'),
                 'panel_type'                => $this->input->post('panel_type'),
+                'otps'                      => $this->input->post('otps'),
             );
 
             $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);
