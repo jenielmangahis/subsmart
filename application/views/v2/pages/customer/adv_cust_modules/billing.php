@@ -19,7 +19,7 @@
                                 if($billing_info->bill_method){
                                     echo $billing_info->bill_method; 
                                     }else{
-                                        echo "n/a";
+                                        echo "&mdash;";
                                     }
                                  }
                                 ?>
@@ -42,7 +42,7 @@
                                       if(isset($billing_info)){
                                          echo "$profile_info->mail_add $profile_info->city, $profile_info->state $profile_info->zip_code"; 
                                         }else{ 
-                                        echo "n/a";
+                                        echo "&mdash;";
                                         }
                                 ?>
                             </span>
@@ -57,7 +57,7 @@
                                 if($billing_info->acct_num){
                                     echo "$billing_info->acct_num"; 
                                 }else{
-                                    echo "n/a";
+                                    echo "&mdash;";
                                 }
                             }
                                  ?>
@@ -73,7 +73,7 @@
                                     if($billing_info->routing_num){
                                     echo $billing_info->routing_num; 
                                     }else{
-                                        echo "n/a";
+                                        echo "&mdash;";
                                     } 
                                   }
                                 ?>
@@ -88,7 +88,7 @@
                                     if($billing_info->credit_card_num){
                                     echo $billing_info->credit_card_num; 
                                     }else{
-                                        echo "n/a";
+                                        echo "&mdash;";
                                     }
                                     }
                                 ?>
@@ -103,7 +103,7 @@
                                     if($billing_info->credit_card_exp){
                                     echo $billing_info->credit_card_exp; 
                                     }else{
-                                        echo "n/a";
+                                        echo "&mdash;";
                                     }
                                   }
                                   ?>
@@ -118,7 +118,7 @@
                                     if($billing_info->credit_card_exp_mm_yyyy){
                                         echo $billing_info->credit_card_exp_mm_yyyy; 
                                     }else{
-                                        echo "n/a";
+                                        echo "&mdash;";
                                     }
                                     }
                                   ?>
@@ -146,7 +146,7 @@
                                     if($billing_info->bill_freq){
                                         echo $billing_info->bill_freq; 
                                         }else{
-                                            echo "n/a";
+                                            echo "&mdash;";
                                         }
                                      }
                                       ?>
@@ -162,7 +162,7 @@
                                     if($billing_info->bill_day){
                                         echo $billing_info->bill_day; 
                                     }else{
-                                     echo "n/a";
+                                     echo "&mdash;";
                                     }
                                 }
                                 ?>

@@ -14,7 +14,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($access_info)){  if($access_info->portal_status == 1){echo "On";}else{echo "Off";}; }; ?>
+                                <?php 
+                                    if($access_info->portal_status == 1){
+                                        echo "On";
+                                    } else {
+                                        echo "Off";
+                                    }; 
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -22,7 +28,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($access_info)){ echo $access_info->access_login; }; ?>
+                                <?php 
+                                    if ($access_info->access_login) {
+                                        echo $access_info->access_login; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +42,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->cancel_date; }; ?>
+                                <?php 
+                                    if ($office_info->cancel_date) {
+                                        echo $office_info->cancel_date; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +56,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->cancel_reason; }; ?>
+                                <?php 
+                                    if ($office_info->cancel_reason) {
+                                        echo $office_info->cancel_reason; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>
@@ -50,7 +74,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->collect_date; }; ?>
+                                <?php 
+                                    if ($office_info->collect_date) {
+                                        echo $office_info->collect_date; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -58,7 +88,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->collect_amount; }; ?>
+                                <?php 
+                                    if ($office_info->collect_amount) {
+                                        echo $office_info->collect_amount; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>

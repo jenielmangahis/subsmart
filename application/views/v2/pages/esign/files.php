@@ -386,7 +386,7 @@ echo put_header_assets();
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-docusign_envelope_id"></i></span>
                                                     <i class="esign-fa fas fa-wallet"></i>
-                                                    <span class="u-ellipsis ng-binding">DocuSign Envelope ID</span>
+                                                    <span class="u-ellipsis ng-binding">Esign Envelope ID</span>
                                                 </div>
 
                                             </li>

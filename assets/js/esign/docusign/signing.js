@@ -106,12 +106,20 @@ function Signing(hash) {
       return state;
     }
 
+    if( field_name == "ZIP" ) {
+      return zip_code;
+    }
+
     if( field_name == "Address" ) {
       return mail_add;
     }
 
     if( field_name == "Subscriber Name" ) {
       return first_name + " " + last_name;
+    }
+
+    if( field_name == "Subscriber Email" ) {
+      return email;
     }
 
     if( field_name == "Contact Name" ){
@@ -134,8 +142,8 @@ function Signing(hash) {
       return access_password;
     }
 
-    if( field_name == "DocuSign Envelope ID" ){      
-      return "DocuSign Envelope ID : " + docusign_envelope_id;
+    if( field_name == "Esign Envelope ID" ){      
+      return "Esign Envelope ID : " + docusign_envelope_id;
     }
 
     if( field_name == "Card Holder Name" ){
@@ -238,11 +246,15 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "one_time_activation" ) {
-        return one_time_activation;
+        return otps;
+      }
+
+      if( specs_field_name.name === "total_due" ) {
+        return total_due;
       }
 
       if( specs_field_name.name === "first_month_monitoring" ) {
-        return first_month_monitoring;
+        return monthly_monitoring;
       }
 
       if( specs_field_name.name === "card_security_code" ) {
@@ -907,7 +919,7 @@ function Signing(hash) {
 
       const placeholder = specs.placeholder || specs.name || field_name;
       let custom_class  = "";
-      if( placeholder == "DocuSign Envelope ID" ){
+      if( placeholder == "Esign Envelope ID" ){
         custom_class = "docusign-envelope-id-field";
       }
       const html = `
@@ -926,6 +938,34 @@ function Signing(hash) {
       if (field.original_field_name === "Date Signed") {
         $input.attr("data-field-type", "dateSigned");
         $input.attr("data-field-id", fieldId);
+      }
+
+      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password") {
+        $input.attr("data-field-type", "autoPopulateCustomerDetails");
+        $input.attr("data-field-id", fieldId);
+      }
+
+      if( field.original_field_name === "Contact Name" || field.original_field_name === "Contact Number" ){
+        $input.attr("data-field-type", "autoPopulateEmergencyContact");
+        $input.attr("data-field-id", fieldId); 
+      }
+
+      if( field.original_field_name === "Checking Account Number" || field.original_field_name === "Account Number" || field.original_field_name === "CS Account Number" || field.original_field_name === "ABA" || field.original_field_name === "Card Number" || field.original_field_name === "Card Holder Name" || field.original_field_name === "Card Expiration" || field.original_field_name === "Card Security Code" ){
+        $input.attr("data-field-type", "autoPopulateAccountDetails");
+        $input.attr("data-field-id", fieldId); 
+      }
+
+      if( field.original_field_name === "Equipment Cost" || field.original_field_name === "Monthly Monitoring Rate" || field.original_field_name === "One Time Activation (OTP)" || field.original_field_name === "Total Due" ){
+        $input.attr("data-field-type", "autoPopulateBilling");
+        $input.attr("data-field-id", fieldId); 
+      }
+
+      if (field.original_field_name === "Text" ) {
+        let specs_field_name = specs;
+        if( specs_field_name.name === "equipment_cost" || specs_field_name.name === "one_time_activation" || specs_field_name.name === "first_month_monitoring" || specs_field_name.name === 'total_due' ) {
+          $input.attr("data-field-type", "autoPopulateBilling");
+          $input.attr("data-field-id", fieldId); 
+        }
       }
 
       // requires assets/js/esign/docusign/input.autoresize.js
@@ -1507,6 +1547,58 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      const $autoPopulateCustomerDetails = $("[data-field-type=autoPopulateCustomerDetails]");
+      const autoPopulateCustomerDetailsPromises = [...$autoPopulateCustomerDetails].map((autoPopulateCustomerDetails) => {
+        const $element = $(autoPopulateCustomerDetails);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
+      const $autoPopulateEmergencyContact = $("[data-field-type=autoPopulateEmergencyContact]");
+      const autoPopulateEmergencyContactPromises = [...$autoPopulateEmergencyContact].map((autoPopulateEmergencyContact) => {
+        const $element = $(autoPopulateEmergencyContact);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
+      const $autoPopulateAccountDetails = $("[data-field-type=autoPopulateAccountDetails]");
+      const autoPopulateAccountDetailsPromises = [...$autoPopulateAccountDetails].map((autoPopulateAccountDetails) => {
+        const $element = $(autoPopulateAccountDetails);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
+      const $autoPopulateBilling = $("[data-field-type=autoPopulateBilling]");
+      const autoPopulateBillingPromises = [...$autoPopulateBilling].map((autoPopulateBilling) => {
+        const $element = $(autoPopulateBilling);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
       const $formulas = $("[data-field-type=formula]");
       const formulaPromises = [...$formulas].map((formula) => {
         const $element = $(formula);
@@ -1522,6 +1614,11 @@ function Signing(hash) {
 
       await Promise.all(dateSignedPromises);
       await Promise.all(formulaPromises);
+
+      await Promise.all(autoPopulateCustomerDetailsPromises);
+      await Promise.all(autoPopulateEmergencyContactPromises);
+      await Promise.all(autoPopulateAccountDetailsPromises);
+      await Promise.all(autoPopulateBillingPromises);
 
       const response = await fetch(`${prefixURL}/DocuSign/apiComplete`, {
         method: "POST",

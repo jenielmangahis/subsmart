@@ -48,7 +48,7 @@
                         endforeach;
                     endif;
                     $datas['module_sort'] = $module_sort;
-                    $this->load->view('v2/pages/customer/adv_cust_modules/alarm-com', $datas);
+                    //$this->load->view('v2/pages/customer/adv_cust_modules/alarm-com', $datas);
                     ?>
                 </div>
                 <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />

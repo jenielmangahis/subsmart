@@ -138,7 +138,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->ssn; }; ?>
+                                <?php 
+                                    if ($profile_info->ssn) {
+                                        echo $profile_info->ssn; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -146,7 +152,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->first_name; }; ?>
+                                <?php 
+                                    if ($profile_info->first_name) {
+                                        echo $profile_info->first_name; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -154,7 +166,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->last_name; }; ?>
+                                <?php 
+                                    if ($profile_info->last_name) {
+                                        echo $profile_info->last_name; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -162,7 +180,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->cross_street; }; ?>
+                                <?php 
+                                    if ($profile_info->mail_add) {
+                                        echo $profile_info->mail_add; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -170,7 +194,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->state; }; ?>
+                                <?php 
+                                    if ($profile_info->state) {
+                                        echo $profile_info->state; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -178,7 +208,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->pay_history; }; ?>
+                                <?php 
+                                    if ($profile_info->pay_history) {
+                                        echo $profile_info->pay_history; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -186,7 +222,13 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($profile_info)){ echo $profile_info->date_of_birth; }; ?>
+                                <?php 
+                                    if ($profile_info->date_of_birth) {
+                                        echo $profile_info->date_of_birth; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>

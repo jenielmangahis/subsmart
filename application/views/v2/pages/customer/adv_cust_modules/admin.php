@@ -14,7 +14,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->entered_by; }; ?>
+                                <?php 
+                                    if ($office_info->entered_by) {
+                                        echo $office_info->entered_by; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -22,7 +28,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->time_entered; }; ?>
+                                <?php 
+                                    if ($office_info->time_entered) {
+                                        echo $office_info->time_entered; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +42,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->assign_to; }; ?>
+                                <?php 
+                                    if ($office_info->assign_to) {
+                                        echo $office_info->assign_to; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +56,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->pre_install_survey; }; ?>
+                                <?php 
+                                    if ($office_info->pre_install_survey) {
+                                        echo $office_info->pre_install_survey; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>
@@ -50,7 +74,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo (!empty($office_info->language)) ? $office_info->language : 'English'; }; ?>
+                                <?php 
+                                    if ($office_info->language) {
+                                        echo $office_info->language; 
+                                    } else {
+                                        echo "English";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -58,7 +88,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->sales_date; }; ?>
+                                <?php 
+                                    if ($office_info->sales_date) {
+                                        echo $office_info->sales_date; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -66,7 +102,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                            <?php if(isset($office_info)){ echo getUser($office_info->fk_sales_rep_office); }; ?>
+                                <?php 
+                                    if ($office_info->fk_sales_rep_office) {
+                                        echo getUser($office_info->fk_sales_rep_office); 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
 
                                 <?php
                                     //$sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
@@ -79,7 +121,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->post_install_survey; }; ?>
+                                <?php 
+                                    if ($office_info->post_install_survey) {
+                                        echo $office_info->post_install_survey; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>
