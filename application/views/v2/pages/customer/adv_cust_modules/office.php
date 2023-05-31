@@ -30,7 +30,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rep_comm; }; ?>
+                                <?php 
+                                    if ($office_info->rep_comm) {
+                                        echo $office_info->rep_comm; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +44,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; }; ?>
+                                <?php 
+                                    if ($office_info->rep_upfront_pay) {
+                                        echo $office_info->rep_upfront_pay; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -46,7 +58,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->tech_comm; }; ?>
+                                <?php 
+                                    if ($office_info->tech_comm) {
+                                        echo $office_info->tech_comm; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -54,14 +72,28 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; }; ?>
+                                <?php 
+                                    if ($office_info->tech_upfront_pay) {
+                                        echo $office_info->tech_upfront_pay; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-title">Panel Type</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle"><?= $alarm_info->panel_type;  ?></span>
+                            <span class="content-subtitle">
+                                <?php 
+                                    if ($alarm_info->panel_type) {
+                                        echo $alarm_info->panel_type; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -72,7 +104,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rep_charge_back; }; ?>
+                                <?php 
+                                    if ($office_info->rep_charge_back) {
+                                        echo $office_info->rep_charge_back; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -80,7 +118,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->pso; }; ?>
+                                <?php 
+                                    if ($office_info->pso) {
+                                        echo $office_info->pso; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -88,7 +132,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->points_include; }; ?>
+                                <?php 
+                                    if ($office_info->points_include) {
+                                        echo $office_info->points_include; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -96,7 +146,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->price_per_point; }; ?>
+                                <?php 
+                                    if ($office_info->price_per_point) {
+                                        echo $office_info->price_per_point; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -104,7 +160,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->purchase_price; }; ?>
+                                <?php 
+                                    if ($office_info->purchase_price) {
+                                        echo $office_info->purchase_price; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -112,7 +174,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->purchase_multiple; }; ?>
+                                <?php 
+                                    if ($office_info->purchase_multiple) {
+                                        echo $office_info->purchase_multiple; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>

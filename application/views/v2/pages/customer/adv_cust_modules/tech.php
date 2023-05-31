@@ -14,7 +14,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->tech_arrive_time; }; ?>
+                                <?php 
+                                    if ($office_info->tech_arrive_time) {
+                                        echo $office_info->tech_arrive_time; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -22,7 +28,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->tech_depart_time; }; ?>
+                                <?php 
+                                    if ($office_info->tech_depart_time) {
+                                        echo $office_info->tech_depart_time; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +42,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo getUser($office_info->technician); }; ?>
+                                <?php 
+                                    if ($office_info->technician) {
+                                        echo getUser($office_info->technician);
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +56,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->save_date; }; ?>
+                                <?php 
+                                    if ($office_info->save_date) {
+                                        echo $office_info->save_date; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -46,7 +70,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->office_custom_field1; }; ?>
+                                <?php 
+                                    if ($office_info->office_custom_field1) {
+                                        echo $office_info->office_custom_field1; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -54,7 +84,13 @@
                         </div>
                         <div class="col-12 col-md-6 text-end">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo string_max_length($office_info->url,20); }; ?>
+                                <?php 
+                                    if ($office_info->url) {
+                                        echo string_max_length($office_info->url,20);
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>

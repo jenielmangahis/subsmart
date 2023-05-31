@@ -1041,10 +1041,10 @@ a.btn-primary.btn-md {
                                     <table id="modal_items_list" class="table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
-                                            <td> Name</td>
-                                            <td> Qty</td>
-                                            <td> Price</td>
                                             <td> Action</td>
+                                            <td> Name</td>
+                                            <td> On Hand</td>
+                                            <td> Price</td>
                                         </tr>
                                         </thead>
                                         <tbody>

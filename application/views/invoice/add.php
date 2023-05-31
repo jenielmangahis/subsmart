@@ -1187,7 +1187,7 @@ input:checked + .slider:before {
                                         <tr>
                                             <td> Name</td>
                                             <td> Rebatable</td>
-                                            <td> Qty</td>
+                                            <td> On Hand</td>
                                             <td> Price</td>
                                             <td> Action</td>
                                         </tr>

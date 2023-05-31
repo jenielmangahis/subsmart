@@ -7514,6 +7514,51 @@ class Reports extends MY_Controller {
                     }, ARRAY_FILTER_USE_BOTH);
                 }
 
+                if(!empty(get('due-date'))) {
+                    $this->page_data['due_date'] = get('due-date');
+                    $this->page_data['due_date_from'] = str_replace('-', '/', get('due-date-from'));
+                    $this->page_data['due_date_to'] = str_replace('-', '/', get('due-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('due-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('due-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['due_date']) >= strtotime($filters['start-date']) && strtotime($v['due_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('create-date'))) {
+                    $this->page_data['create_date'] = get('create-date');
+                    $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
+                    $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-to')))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('last-modified-date'))) {
+                    $this->page_data['last_modified_date'] = get('last-modified-date');
+                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                    ];
+
+                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
                 if(!empty(get('check-printed'))) {
                     $checkPrinted = get('check-printed');
 
@@ -7527,6 +7572,16 @@ class Reports extends MY_Controller {
                     $this->page_data['filter_check_printed'] = get('check-printed');
                 }
 
+                if(!empty(get('memo'))) {
+                    $memo = get('memo');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($memo) {
+                        return $v['memo_description'] === $memo;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_memo'] = get('memo');
+                }
+
                 if(!empty(get('num'))) {
                     $num = get('num');
 
@@ -7535,6 +7590,54 @@ class Reports extends MY_Controller {
                     }, ARRAY_FILTER_USE_BOTH);
 
                     $this->page_data['filter_num'] = get('num');
+                }
+
+                if(!empty(get('amount'))) {
+                    $amount = get('amount');
+
+                    if(!empty(get('divide-by-100'))) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($amount) {
+                        return strpos($v['amount'], $amount) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_amount'] = get('amount');
+                }
+
+                if(!empty(get('ship-via'))) {
+                    $shipVia = get('ship-via');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($shipVia) {
+                        return $v['ship_via'] === $shipVia;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_ship_via'] = get('ship-via');
+                }
+
+                if(!empty(get('po-number'))) {
+                    $poNumber = get('po-number');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($poNumber) {
+                        return $v['po_number'] === $poNumber;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_po_number'] = get('po-number');
+                }
+
+                if(!empty(get('sales-rep'))) {
+                    $salesRep = get('sales-rep');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($salesRep) {
+                        return $v['sales_rep'] === $salesRep;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_sales_rep'] = get('sales-rep');
                 }
 
                 usort($transactions, function($a, $b) use ($sort) {

@@ -847,7 +847,7 @@ echo put_header_assets();
                                             <tr>
                                                 <td></td>
                                                 <td> Name</td>
-                                                <td> Qty</td>
+                                                <td> On Hand</td>
                                                 <td> Price</td>
                                             </tr>
                                         </thead>

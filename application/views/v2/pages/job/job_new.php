@@ -1638,7 +1638,7 @@
                                     <tr>
                                         <td style="width: 0% !important;"></td>
                                         <td><strong>Name</strong></td>
-                                        <td><strong>Qty</strong></td>
+                                        <td><strong>On Hand</strong></td>
                                         <td><strong>Price</strong></td>
                                         <td><strong>Type</strong></td>
                                         <td><strong>Location</strong></td>

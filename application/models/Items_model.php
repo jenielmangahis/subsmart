@@ -363,10 +363,12 @@ class Items_model extends MY_Model
         return $query->result_array();
     }
     public function _updateLocationQty($params){
+        $is_valid = 0;
         if(array_key_exists("set", $params)){
             foreach($params['set'] as $key => $val){
                 if ($key === 'qty' && is_numeric($val)) {
                     $this->db->set($key, $key.' - '.$val, false);
+                    $is_valid = 1;
                 }
             }
         }
@@ -386,7 +388,9 @@ class Items_model extends MY_Model
             }
         }
 
-        $this->db->update($this->table_has_location);
+        if( $is_valid == 1 ){
+            $this->db->update($this->table_has_location);
+        }        
     }
     public function getLocationById($id)
     {

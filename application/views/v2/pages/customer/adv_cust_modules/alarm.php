@@ -14,7 +14,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->monitor_comp; } ?>
+                                <?php 
+                                    if ($alarm_info->monitor_comp) {
+                                        echo $alarm_info->monitor_comp; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -22,7 +28,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->install_date; } ?>
+                                <?php 
+                                    if ($office_info->install_date) {
+                                        echo $office_info->install_date; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -30,7 +42,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->acct_type; } ?>
+                                <?php 
+                                    if ($alarm_info->acct_type) {
+                                        echo $alarm_info->acct_type; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,7 +56,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>
+                                <?php 
+                                    if ($alarm_info->passcode) {
+                                        echo $alarm_info->passcode; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         
@@ -47,7 +71,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->monitoring_waived; } ?>
+                                <?php 
+                                    if ($office_info->monitoring_waived) {
+                                        echo $office_info->monitoring_waived; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -55,7 +85,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rebate_check1; } ?>
+                                <?php 
+                                    if ($office_info->rebate_check1) {
+                                        echo $office_info->rebate_check1; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -63,7 +99,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->warranty_type; } ?>
+                                 <?php 
+                                    if ($alarm_info->warranty_type) {
+                                        echo $alarm_info->warranty_type; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -71,7 +113,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->mcn; } ?>
+                                <?php 
+                                    if ($alarm_info->mcn) {
+                                        echo $alarm_info->mcn; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -79,7 +127,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                            $<?php if(isset($alarm_info)){ echo $alarm_info->account_cost; } ?>
+                                <?php 
+                                    if ($alarm_info->account_cost) {
+                                        echo "$".$alarm_info->account_cost; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>
@@ -91,7 +145,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->monitor_id; } ?>
+                                <?php 
+                                    if ($alarm_info->monitor_id) {
+                                        echo $alarm_info->monitor_id; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -99,7 +159,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->credit_score; } ?>
+                                <?php 
+                                    if ($office_info->credit_score) {
+                                        echo $office_info->credit_score; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -107,7 +173,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->acct_info; } ?>
+                                <?php 
+                                    if ($alarm_info->acct_info) {
+                                        echo $alarm_info->acct_info; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -115,7 +187,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->install_code; } ?>
+                                <?php 
+                                    if ($alarm_info->install_code) {
+                                        echo $alarm_info->install_code; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -123,7 +201,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->system_type; } ?>
+                                <?php 
+                                    if ($alarm_info->system_type) {
+                                        echo $alarm_info->system_type; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -131,7 +215,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rebate_offer; } ?>
+                                <?php 
+                                    if ($office_info->rebate_offer) {
+                                        echo $office_info->rebate_offer; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -139,7 +229,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->verification; } ?>
+                                <?php 
+                                    if ($office_info->verification) {
+                                        echo $office_info->verification; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -147,7 +243,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($office_info)){ echo $office_info->rebate_check2; } ?>
+                                <?php 
+                                    if ($office_info->rebate_check2) {
+                                        echo $office_info->rebate_check2; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -155,7 +257,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->scn; } ?>
+                                <?php 
+                                    if ($alarm_info->scn) {
+                                        echo $alarm_info->scn; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -163,7 +271,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                $<?php if(isset($alarm_info)){ echo $alarm_info->pass_thru_cost; } ?>
+                                <?php 
+                                    if ($alarm_info->pass_thru_cost) {
+                                        echo "$".$alarm_info->pass_thru_cost; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
                             </span>
                         </div>
                     </div>
