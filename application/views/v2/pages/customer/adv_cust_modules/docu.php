@@ -41,7 +41,7 @@
                 <div class="nsm-callout error d-none"></div>
 
                 <div class="upload-wrapper">
-                    <div class="col-12" data-document-type="client_agreement">
+                    <!-- <div class="col-12" data-document-type="client_agreement">
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
@@ -63,7 +63,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- <div class="col-12" data-document-type="photo_id_copy">
                         <div class="row g-2 align-items-center">
@@ -137,9 +137,9 @@
                         </div>
                     </div> -->
 
-                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
+                    <!-- <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
                         <div class="spinner-border" role="status"></div>
-                    </div>
+                    </div> -->
 
                     <template>
                         <div class="col-12">
@@ -166,49 +166,29 @@
                     </template>
                 </div>
 
-                <?php if (!empty($esign_documents)): ?>
-                    <div class="upload-wrapper" id="generatedpdfwrapper">
-                    <h6>Generated eSigns</h6>
-
-                    <?php foreach ($esign_documents as $esign_document): ?>
-                        <div class="col-12" data-document-type="esign">
-                            <div class="row g-2 align-items-center">
-                                <div class="col-12 col-md-6 position-relative">
-                                    <div class="form-check d-inline-block" style="padding: 0;">
-                                        <input class="form-check-input d-none" type="checkbox" id="esign<?= $esign_document['id']; ?>">
-                                        <label class="form-check-label" for="esign<?= $esign_document['id']; ?>">
-                                            <?= $esign_document['label']; ?>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 text-end buttons has-document">
-                                    <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $esign_document['docfile_id']; ?>">
-                                        Download
-                                    </button>
-
-                                    <button type="button" class="nsm-button btn-sm" data-action="view_esign" data-id="<?= $esign_document['docfile_id']; ?>">
-                                        View details
-                                    </button>
-                                    <?php if($esign_document['attached_generated_pdf_entry']): ?>
-                                        <button type="button" class="nsm-button error btn-sm" data-action="delete_attached_generated_pdf_entry" data-attached-generated-pdf-entry-id="<?= $esign_document['attached_generated_pdf_entry']->id; ?>">
-                                            Delete
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                <div class="upload-wrapper" id="generatedpdfwrapper">
+                    <div class="row">
+                        <div class="col-5"></div>
+                        <div class="col-7">
+                            <div class="input-group rounded">
+                              <input type="search" class="form-control rounded" placeholder="Search eSign ID" aria-label="Search" aria-describedby="search-addon" />
+                              <span class="input-group-text border-0" id="search-addon">
+                                <i class='bx bx-search-alt-2'></i>
+                              </span>
+                            </div>    
                         </div>
-                    <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                    </div>                
+                    <div class="mt-4" id="esign-container"></div>
+                </div>
 
-                <div class="col-12 col-12 col-md-6">
+<!--                 <div class="col-12 col-12 col-md-6">
                     <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
                     </button>
-                </div>
+                </div> -->
 
                 <div class="col-12 col-12 col-md-6">
-                    <button type="button" class="nsm-button w-100 ms-0 mt-3" id="managecustomerdocumentsbtn--download">
+                    <button type="button" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
                         <i class='bx bx-fw bx-import'></i> Download Selected
                     </button>
                 </div>
@@ -220,12 +200,12 @@
                     </button>
                 </div>
 
-                <div class="col-12 col-12 col-md-6">
+<!--                 <div class="col-12 col-12 col-md-6">
                     <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
                         <i class='bx bx-fw bx-import'></i>
                         <span class="text">Import eSign</span>
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -497,5 +477,28 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    load_esign_doc();
+    function load_esign_doc(){
+        var cid = "<?= $customer_id; ?>";
+        var url = "<?= base_url('customer/_load_esign_doc') ?>";
+        var _container = $("#esign-container");
+
+        showLoader(_container);
+
+        $.ajax({
+            async:false,
+            type: 'POST',
+            url: url,
+            data: {cid:cid},
+            success: function(result) {
+                _container.html(result);                
+            },
+        });
+    }
+    
+});
+</script>
 
 <script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>" type="module"></script>

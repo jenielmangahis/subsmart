@@ -1350,6 +1350,8 @@ $route['customer/_load_completed_subscriptions'] = 'Customer/ajax_load_completed
 $route['customer/_load_billing_error_subscriptions'] = 'Customer/ajax_load_billing_error_subscriptions';
 $route['customer/_load_subscription_list_counter'] = 'Customer/ajax_load_subscription_list_counter';
 $route['customer/_load_subscription_payment_history'] = 'Customer/ajax_load_subscription_payment_history';
+$route['customer/_load_esign_doc'] = 'Customer/ajax_load_esign_doc';
+$route['customer/_check_customer_esign_pdf'] = 'Customer/ajax_check_customer_esign_pdf';
 
 //Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

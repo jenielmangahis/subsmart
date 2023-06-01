@@ -1054,7 +1054,7 @@ class Customer extends MY_Controller
     {
         $this->load->helper('sms_helper');
         
-        $this->load->model('Clients_model');
+        $this->load->model('Clients_model');        
 
         error_reporting(0);        
         $this->page_data['page']->title = 'Customer Dashboard';
@@ -1121,8 +1121,9 @@ class Customer extends MY_Controller
 
 
             $this->db->where('customer_id', $id);
+            $this->page_data['customer_id'] = $id;
             $this->page_data['customer_documents'] = $this->db->get('acs_customer_documents')->result_array();
-            $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
+            //$this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
         }else{
             redirect(base_url('customer/'));
         }
@@ -6484,5 +6485,36 @@ class Customer extends MY_Controller
         );
         $updateStatus = $this->customer_ad_model->update_data($data,"acs_cust_status","id");
         if ($updateStatus) { echo "true"; } else { echo "false"; }
+    }
+
+    public function ajax_load_esign_doc(){
+        $this->load->model('UserCustomerDocfile_model');
+
+        $post     = $this->input->post();
+        $esignDoc = $this->UserCustomerDocfile_model->getAllByCustomerId($post['cid']);
+        $this->page_data['esignDoc'] = $esignDoc;
+        $this->load->view('v2/pages/customer/ajax_load_esign_doc', $this->page_data);
+    }
+
+    public function ajax_check_customer_esign_pdf(){
+        $this->load->model('UserCustomerDocfile_model');
+
+        $msg = 'Cannot find data';
+        $is_valid = 0;
+        $path = '';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $esignPDF = $this->UserCustomerDocfile_model->getByUserDocfileGeneratedPdfId($post['pid']);
+        if( $esignPDF && $esignPDF->company_id == $cid ){
+            $path = ltrim($esignPDF->path, '/');
+            $is_valid = 1;
+            $msg = '';
+        }
+
+        $json = ['is_valid' => $is_valid, 'msg' => $msg, 'path' => $path];
+        echo json_encode($json);
+        exit;
     }
 }
