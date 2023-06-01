@@ -43,8 +43,8 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($office_info->assign_to) {
-                                        echo $office_info->assign_to; 
+                                    if ($office_info->technician) {
+                                        echo getUser($office_info->technician);
                                     } else {
                                         echo "&mdash;";
                                     }

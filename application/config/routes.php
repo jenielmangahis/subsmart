@@ -1525,3 +1525,5 @@ $route['event/_quick_view_event'] = 'Events/ajax_quick_view_event';
 $route['event/_quick_add_event_form'] = 'Events/ajax_quick_add_event_form';
 $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
+
+$route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';

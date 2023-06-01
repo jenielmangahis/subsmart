@@ -209,8 +209,12 @@ div#controls div#call-controls div#volume-indicators > div {
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($profile_info->pay_history) {
-                                        echo $profile_info->pay_history; 
+                                    if ($office_info->pay_history) {
+                                        if ($office_info->pay_history == "1") { echo "Excellent"; }
+                                        if ($office_info->pay_history == "2") { echo "Good"; }
+                                        if ($office_info->pay_history == "3") { echo "Fair"; }
+                                        if ($office_info->pay_history == "4") { echo "Poor"; }
+                                        if ($office_info->pay_history == "5") { echo "Very Poor"; }
                                     } else {
                                         echo "&mdash;";
                                     }
