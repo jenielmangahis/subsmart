@@ -780,7 +780,7 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-ref-no" <?=isset($columns) && in_array('Ref #', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-ref-no" <?=isset($columns) && in_array('Ref No.', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-ref-no">
                                                                 Ref #
                                                             </label>
@@ -838,7 +838,7 @@
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-due-date" <?=isset($columns) && in_array('Terms', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-due-date">
-                                                                Terms
+                                                                Due Date
                                                             </label>
                                                         </div>
                                                     </div>

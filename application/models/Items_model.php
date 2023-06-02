@@ -715,7 +715,7 @@ class Items_model extends MY_Model
     public function getAllItemWithLocation()
     {
         $company_id = logged('company_id');
-        $this->db->select('items.id, items.title, items.price, items.type, items_has_storage_loc.name AS location_name, items_has_storage_loc.id AS location_id');
+        $this->db->select('items.id, items.title, items.price, items.type, items_has_storage_loc.name AS location_name, items_has_storage_loc.loc_id AS location_id');
         $this->db->from('items');
         $this->db->where('items.company_id', $company_id);
         $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
@@ -730,9 +730,7 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType) {
-
-        $user_login = logged('FName') . ' ' . logged('LName');
+    public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType, $name_transaction, $name_type) {
 
         if ($transactionType == "add") {
             // =====
@@ -754,7 +752,8 @@ class Items_model extends MY_Model
                 'item_location' => $locationName,
                 'transaction' => "+$quantity",
                 'running_quantity' => $totalQuantity,
-                'name_transaction' => $user_login,
+                'name_transaction' => $name_transaction,
+                'name_type' => $name_type,
             ];
             // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
@@ -774,21 +773,35 @@ class Items_model extends MY_Model
             $newQuantity = $currentQuantity - $quantity;
             // if ($newQuantity <= 0) { $newQuantity = 0; }
             // =====
-            $updateItem = $this->db->update('items_has_storage_loc', 
-                ['qty' => $newQuantity], array(
+            if ($name_type == "USER") {
+                $updateItem = $this->db->update('items_has_storage_loc', 
+                    ['qty' => $newQuantity], array(
+                        'item_id' => $item_id,
+                        'loc_id' => $location_id,
+                    )
+                );
+
+                $transactionDetails = [
+                    'search_id' => md5($item_id),
                     'item_id' => $item_id,
-                    'loc_id' => $location_id,
-                )
-            );
-            // =====
-            $transactionDetails = [
-                'search_id' => md5($item_id),
-                'item_id' => $item_id,
-                'item_location' => $itemLocation,
-                'transaction' => "-$quantity",
-                'running_quantity' => $totalQuantity - $quantity,
-                'name_transaction' => $user_login,
-            ];
+                    'item_location' => $itemLocation,
+                    'transaction' => "-$quantity",
+                    'running_quantity' => $totalQuantity - $quantity,
+                    'name_transaction' => $name_transaction,
+                    'name_type' => $name_type,
+                ];
+
+            } else {
+                $transactionDetails = [
+                    'search_id' => md5($item_id),
+                    'item_id' => $item_id,
+                    'item_location' => $itemLocation,
+                    'transaction' => "-$quantity",
+                    'running_quantity' => $totalQuantity,
+                    'name_transaction' => $name_transaction,
+                    'name_type' => $name_type,
+                ];
+            }
             // =====
             $recordTransaction = $this->db->insert('items_transaction_history', $transactionDetails);
             // =====
@@ -796,8 +809,10 @@ class Items_model extends MY_Model
         return "true";
     }
 
-    public function getAllRecordItemTransaction() {
-        $this->db->select('*')->from('items_transaction_history')->order_by('id', "DESC");
+    public function getItemTransactionHistory($TYPE) {
+        $this->db->select('*');
+        $this->db->from('items_transaction_history');
+        $this->db->where('name_type', $TYPE);
         $query = $this->db->get();
         return $query->result();
     }

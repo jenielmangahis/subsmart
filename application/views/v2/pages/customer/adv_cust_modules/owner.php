@@ -228,7 +228,7 @@ div#controls div#call-controls div#volume-indicators > div {
                             <span class="content-subtitle">
                                 <?php 
                                     if ($profile_info->date_of_birth) {
-                                        echo $profile_info->date_of_birth; 
+                                        echo date_format(date_create($profile_info->date_of_birth),"m/d/Y");
                                     } else {
                                         echo "&mdash;";
                                     }

@@ -115,7 +115,7 @@
                 <div class="col-12 col-md-6">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Language</label>
+                            <label class="content-title">Provider</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">

@@ -318,7 +318,7 @@
 
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-ref-no" class="form-check-input" <?=isset($columns) && in_array('Ref #', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <input type="checkbox" name="col_chk" id="col-ref-no" class="form-check-input" <?=isset($columns) && in_array('Ref No.', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-ref-no" class="form-check-label">Ref #</label>
                                                         </div>
                                                     </div>
@@ -566,14 +566,14 @@
                                         </tr>
                                         <?php else : ?>
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
-                                            <td colspan="27"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
-                                            <td><b><?=$transaction['amount_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$transaction['debit_total']?></b></td>
-                                            <td><b><?=$transaction['credit_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '27'?>" <?=isset($columns) && $total_index === 0 ? 'style="display: none"' : ''?>><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                                         </tr>
                                         <?php foreach($transaction['transactions'] as $tran) : ?>
                                         <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
@@ -614,14 +614,14 @@
                                         </tr>
                                         <?php endforeach; ?>
                                         <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
-                                            <td colspan="27"><b>Total for <?=$transaction['name']?></b></td>
-                                            <td><b><?=$transaction['amount_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$transaction['debit_total']?></b></td>
-                                            <td><b><?=$transaction['credit_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '27'?>" <?=isset($columns) && $total_index === 0 ? 'style="display: none"' : ''?>><b>Total for <?=$transaction['name']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                                         </tr>
                                         <?php endif; ?>
                                         <?php endforeach; ?>

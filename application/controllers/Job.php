@@ -2117,7 +2117,7 @@ class Job extends MY_Controller
     {
         $this->load->helper(array('hashids_helper'));
         $this->load->model('JobTags_model');
-
+        $user_login = logged('FName') . ' ' . logged('LName');
         $is_success = 1;
         $msg = '';
 
@@ -2344,7 +2344,8 @@ class Job extends MY_Controller
                         $job_items_data['location'] = $input['location'][$xx];
                         $job_items_data['item_name'] = $input['item_name'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
-                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct", $user_login, "USER");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct", $customer->first_name.' '.$customer->last_name, "CUSTOMER");
                         unset($job_items_data);
                     }
                 }
@@ -2390,7 +2391,8 @@ class Job extends MY_Controller
                         $job_items_data['location'] = $input['location'][$xx];
                         $job_items_data['item_name'] = $input['item_name'][$xx];
                         $this->general->add_($job_items_data, 'job_items');
-                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct", $user_login, "USER");
+                        $this->items_model->recordItemTransaction($input['item_id'][$xx], $input['item_qty'][$xx], $input['location'][$xx], "deduct", $customer->first_name.' '.$customer->last_name, "CUSTOMER");
                         unset($job_items_data);
                     }
                 }                
