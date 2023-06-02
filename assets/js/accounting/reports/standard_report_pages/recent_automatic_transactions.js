@@ -160,6 +160,7 @@ $('input[name="col_chk"]').on('change', function() {
             var colspan = $(this).children('td:first-child').attr('colspan');
             if(chk.prop('checked')) {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+                $(this).children('td:first-child').show();
             } else {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
             }
@@ -185,6 +186,7 @@ $('input[name="col_chk"]').on('change', function() {
             var colspan = $(this).children('td:first-child').attr('colspan');
             if(chk.prop('checked')) {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+                $(this).children('td:first-child').show();
             } else {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
             }
@@ -594,7 +596,7 @@ $('#run-report-button').on('click', function() {
 
     var columns = [];
     $('input[name="select_columns"]:checked').each(function() {
-        columns.push($(this).next().text().trim());
+        columns.push($(this).next().text().trim().replace('#', 'No.'));
     });
 
     if(columns.length < $('#reports-table thead tr td').length) {

@@ -2485,7 +2485,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(846);
+        $pdf = $this->debugGeneratePDFMaker(852);
         echo 'Finish';
     }
 
@@ -2736,11 +2736,20 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
-                        $topAdjusted = (31.5 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
+                        if( $left >= 750 ){
+                            $topAdjusted = (31.5 / 100) * $top;
+                            $topAdjusted = $top - $topAdjusted;
 
-                        $leftAdjusted = (32 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
+                            $leftAdjusted = (29 / 100) * $left;
+                            $leftAdjusted = $left - $leftAdjusted;
+                        }else{
+                            $topAdjusted = (31.5 / 100) * $top;
+                            $topAdjusted = $top - $topAdjusted;
+
+                            $leftAdjusted = (30 / 100) * $left;
+                            $leftAdjusted = $left - $leftAdjusted;
+                        }
+                        
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
@@ -2749,7 +2758,9 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    if ($field->field_name === 'Subscriber Name' || $field->field_name === 'City' || $field->field_name === 'State' || $field->field_name === 'One Time Activation (OTP)' || $field->field_name === 'Monthly Monitoring Rate') {
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+
+                    if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
@@ -3089,6 +3100,32 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
+                        if( $left >= 750 ){
+                            $topAdjusted = (31.5 / 100) * $top;
+                            $topAdjusted = $top - $topAdjusted;
+
+                            $leftAdjusted = (29 / 100) * $left;
+                            $leftAdjusted = $left - $leftAdjusted;
+                        }else{
+                            $topAdjusted = (31.5 / 100) * $top;
+                            $topAdjusted = $top - $topAdjusted;
+
+                            $leftAdjusted = (30 / 100) * $left;
+                            $leftAdjusted = $left - $leftAdjusted;
+                        }
+                        
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+
+                        $pdf->SetFont('Courier', '', 10);
+                        $pdf->Write(0, $value->value);
+                    }
+
+                    if ($field->field_name === 'Subscriber Name') {
+                        $top = (int) $coordinates->pageTop;
+                        $left = (int) $coordinates->left;
+
                         $topAdjusted = (31.5 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
@@ -3102,7 +3139,9 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    if ($field->field_name === 'Subscriber Name') {
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+
+                    if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 

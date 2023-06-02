@@ -4,7 +4,7 @@
     table {
         width: 100% !important;
     }
-    #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter, #HISTORY_TABLE_length, #HISTORY_TABLE_filter, #HISTORY_TABLE_info, .HISTORY_DIV{
+    #INVENTORY_TABLE_filter, #INVENTORY_TABLE_length, #ITEM_LOCATION_TABLE_info, #ITEM_LOCATION_TABLE_paginate, #ITEM_LOCATION_TABLE_length, #ITEM_LOCATION_TABLE_filter, #HISTORY_TABLE_length, #HISTORY_TABLE_filter, #HISTORY_TABLE_info, .HISTORY_DIV, #CUSTOMER_HISTORY_TABLE_length, #CUSTOMER_HISTORY_TABLE_filter, #CUSTOMER_HISTORY_TABLE_info, #LOCATION_STATUS_TABLE_length, #LOCATION_STATUS_TABLE_filter, #LOCATION_STATUS_TABLE_info {
         display: none;
     }
     #INV_ITEM_NAME {
@@ -159,7 +159,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#INV_ITEM_NAME').text('(<?php echo $item[0]; ?>)')">View Transaction</a>
+                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#CUSTOMER_HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#LOCATION_STATUS_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#INV_ITEM_NAME').text('(<?php echo $item[0]; ?>)')">View Transaction</a>
                                             <!-- ITEM_LOCATION_TABLE.columns(1).search('^'+DATA_ID+'$', true, false).draw(); -->
                                         </li>
                                         <li>
@@ -352,35 +352,123 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>  
             <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 mb-2 HISTORY_DIV">
-                            <input id="HISTORY_TABLE_SEARCH" style="width: 250px;" class="form-control" type="text" placeholder="Search History...">
+                    <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="true">User</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="customer-tab" data-bs-toggle="tab" data-bs-target="#customer" type="button" role="tab" aria-controls="customer" aria-selected="false">Customer</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location_status" type="button" role="tab" aria-controls="location_status" aria-selected="false">Location Status</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2 HISTORY_DIV">
+                                    <input id="HISTORY_TABLE_SEARCH" style="width: 250px;" class="form-control" type="text" placeholder="Search History...">
+                                </div>
+                                <div class="col-sm-12">
+                                        <table id="HISTORY_TABLE" class="nsm-table">
+                                        <thead class="bg-light"> 
+                                            <tr>
+                                                <th data-name="ID" class="d-none">ID</th>
+                                                <th data-name="Datetime">Date</th>
+                                                <th data-name="Item" class="d-none">Search ID</th>
+                                                <th data-name="Name Transaction">User&nbsp;</th>
+                                                <th data-name="Location">Location</th>
+                                                <th data-name="Transaction">Transaction</th>
+                                                <th data-name="Running Quantity">Running Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($user_item_transaction_history as $history) { ?>
+                                            <tr>
+                                                <td class="d-none"><?php echo $history->id; ?></td>
+                                                <td><?php echo date_format(date_create($history->datetime), "m/d/Y"); ?></td>
+                                                <td class="d-none"><?php echo $history->search_id; ?></td>
+                                                <td><?php echo $history->name_transaction; ?></td>
+                                                <td><?php echo $history->item_location; ?></td>
+                                                <td><?php echo $history->transaction; ?></td>
+                                                <td><?php echo $history->running_quantity; ?></td>
+                                            </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-12">
-                                <table id="HISTORY_TABLE" class="nsm-table">
-                                <thead class="bg-light"> 
-                                    <tr>
-                                        <th data-name="Datetime">Date</th>
-                                        <th data-name="Item" class="d-none">Search ID</th>
-                                        <th data-name="Name Transaction">Name</th>
-                                        <th data-name="Location">Location</th>
-                                        <th data-name="Transaction">Transaction</th>
-                                        <th data-name="Running Quantity">Running Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($items_transaction_history as $history) { ?>
-                                    <tr>
-                                        <td><?php echo date_format(date_create($history->datetime), "m/d/Y"); ?></td>
-                                        <td class="d-none"><?php echo $history->search_id; ?></td>
-                                        <td><?php echo $history->name_transaction; ?></td>
-                                        <td><?php echo $history->item_location; ?></td>
-                                        <td><?php echo $history->transaction; ?></td>
-                                        <td><?php echo $history->running_quantity; ?></td>
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                        <div class="tab-pane fade" id="customer" role="tabpanel" aria-labelledby="customer-tab">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2 HISTORY_DIV">
+                                    <input id="CUSTOMER_HISTORY_TABLE_SEARCH" style="width: 250px;" class="form-control" type="text" placeholder="Search History...">
+                                </div>
+                                <div class="col-sm-12">
+                                        <table id="CUSTOMER_HISTORY_TABLE" class="nsm-table">
+                                        <thead class="bg-light"> 
+                                            <tr>
+                                                <th data-name="ID" class="d-none">ID</th>
+                                                <th data-name="Datetime">Date</th>
+                                                <th data-name="Item" class="d-none">Search ID</th>
+                                                <th data-name="Name Transaction">Customer</th>
+                                                <th data-name="Location">Location</th>
+                                                <th data-name="Transaction">Transaction</th>
+                                                <th data-name="Running Quantity">Running Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($customer_transaction_history as $history) { ?>
+                                            <tr>
+                                                <td class="d-none"><?php echo $history->id; ?></td>
+                                                <td><?php echo date_format(date_create($history->datetime), "m/d/Y"); ?></td>
+                                                <td class="d-none"><?php echo $history->search_id; ?></td>
+                                                <td><?php echo $history->name_transaction; ?></td>
+                                                <td><?php echo $history->item_location; ?></td>
+                                                <td><?php echo $history->transaction; ?></td>
+                                                <td><?php echo $history->running_quantity; ?></td>
+                                            </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="location_status" role="tabpanel" aria-labelledby="location-tab">
+                            <div class="row">
+                                <!-- <?php
+                                    echo "<pre>";
+                                    print_r ($items_location);
+                                    echo "</pre>";
+                                ?> -->
+                                <div class="col-sm-12 mb-2 HISTORY_DIV">
+                                    <input id="LOCATION_STATUS_TABLE_SEARCH" style="width: 250px;" class="form-control" type="text" placeholder="Search History...">
+                                </div>
+                                <div class="col-sm-12">
+                                        <table id="LOCATION_STATUS_TABLE" class="nsm-table">
+                                        <thead class="bg-light"> 
+                                            <tr>
+                                                <th data-name="Item" class="d-none">Search ID</th>
+                                                <th data-name="Location">Location</th>
+                                                <th data-name="Running Quantity">Remaining Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                                foreach ($items_location as $items_locations) {
+                                                    for ($i = 0; $i < count($items_locations); $i++) { 
+                                                        echo "<tr>";
+                                                        echo "<td class='d-none'>".md5($items_locations[$i]['item_id'])."</td>";
+                                                        echo "<td>".$items_locations[$i]['name']."</td>";
+                                                        echo "<td>".$items_locations[$i]['qty']."</td>";
+                                                        echo "</tr>";
+                                                    }
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
             </div>
@@ -401,7 +489,31 @@
         });
 
         $("#HISTORY_TABLE_SEARCH").keyup(function() {
-            HISTORY_TABLE.columns(1).search($(this).val()).draw();
+            HISTORY_TABLE.columns(2).search($(this).val()).draw();
+        });
+
+        var CUSTOMER_HISTORY_TABLE = $("#CUSTOMER_HISTORY_TABLE").DataTable({
+            order: [[0, 'desc']],
+            // "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        });
+
+        $("#CUSTOMER_HISTORY_TABLE_SEARCH").keyup(function() {
+            CUSTOMER_HISTORY_TABLE.columns(2).search($(this).val()).draw();
+        });
+
+        var LOCATION_STATUS_TABLE = $("#LOCATION_STATUS_TABLE").DataTable({
+            order: [[0, 'desc']],
+            // "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        });
+
+        $("#LOCATION_STATUS_TABLE_SEARCH").keyup(function() {
+            LOCATION_STATUS_TABLE.columns(0).search($(this).val()).draw();
         });
     });
 

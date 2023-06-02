@@ -754,8 +754,8 @@
                                             <div class="col-md-5">
                                                 <h6>Customer</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                                    <!-- <option selected value hidden>- Select Customer -</option> -->
-                                                    <option value="4801" selected>Test</option>
+                                                    <option value="">- Select Customer -</option>
+                                                    <!-- <option value="4801" selected>Test</option> -->
                                                     <?php if( $default_customer_id > 0 ){ ?>
                                                         <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        

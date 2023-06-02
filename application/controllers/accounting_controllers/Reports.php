@@ -6505,6 +6505,25 @@ class Reports extends MY_Controller {
                 if(!empty(get('columns'))) {
                     $columns = explode(',', get('columns'));
                     $this->page_data['columns'] = $columns;
+
+                    $index = array_search('Amount', $columns);
+                    if($index === false) {
+                        $index = array_search('Debit', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Credit', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Tax Amount', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Taxable Amount', $columns);
+                    }
+
+                    $this->page_data['total_index'] = $index === false ? count($columns) : $index;
                 }
 
                 $sort = [
