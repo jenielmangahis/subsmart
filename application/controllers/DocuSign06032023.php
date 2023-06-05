@@ -34,13 +34,6 @@ class DocuSign extends MYF_Controller
         $this->db->where('docfile_id', $documentId);
         $recipient = $this->db->get('user_docfile_recipients')->row();
 
-        $this->db->where('id', $documentId);
-        $document = $this->db->get('user_docfile')->row();
-
-        if( $customer_id == 0 ){
-            $customer_id = $document->customer_id;
-        }
-
         $this->db->where('docfile_id', $documentId);
         if (!$isSelfSigned) {
             $this->db->where('user_docfile_recipients_id', $recipientId);
@@ -75,6 +68,9 @@ class DocuSign extends MYF_Controller
                 'fields' => $_fields,
             ];
         }
+
+        $this->db->where('id', $documentId);
+        $document = $this->db->get('user_docfile')->row();
 
         $this->db->where('docfile_id', $documentId);
         $this->db->order_by('id', 'ASC');
@@ -1427,13 +1423,9 @@ SQL;
         $record = $this->db->get('user_docfile_templates_fields')->row();
         $isCreated = false;
 
-        if( $field == 'Esign Envelope ID' ){
-            $specs = '{"is_read_only":true, "placeholder":"Esign Envelope ID"}';
-        }/*elseif( $field == 'Subscriber Name' || $field == 'Address' || $field == 'City' || $field == 'State'){
-            $name = strtolower($field);
-            $name = str_replace(" ", "_", $name);
-            $specs = '{"is_required":true, "name":"'.$name.'"}';
-        }*/
+        if( $field == 'DocuSign Envelope ID' ){
+            $specs = '{"is_read_only":true, "placeholder":"DocuSign Envelope ID"}';
+        }
 
         if (is_null($record)) {
             $isCreated = true;
@@ -1498,7 +1490,7 @@ SQL;
         return $this->templateCreate();
     }
 
-    public function sendTemplate($templateId, $userId, $companyId, $jobIdParam = null, $ticketIdParam = null, $customer_id)
+    public function sendTemplate($templateId, $userId, $companyId, $jobIdParam = null, $customer_id)
     {
         header('content-type: application/json');
 
@@ -1519,19 +1511,12 @@ SQL;
         $recipients = $payload['recipients'];
         $workorderId = $payload['workorder_id'] ?? null;
         $jobId = $payload['job_id'] ?? null;
-        $ticketId = $payload['ticket_id'] ?? null;
 
         $type = '';
         $object_id = 0;
-
         if( $payload['job_id'] > 0 ){
             $type = 'job';
             $object_id = $payload['job_id']; 
-        }
-
-        if( $payload['ticket_id'] > 0 ){
-            $type = 'ticket';
-            $object_id = $payload['ticket_id']; 
         }
 
         if( $payload['workorder_id'] > 0 ){
@@ -1541,10 +1526,6 @@ SQL;
 
         if (is_null($jobId) && is_numeric($jobIdParam)) {
             $jobId = $jobIdParam;
-        }
-
-        if (is_null($ticketId) && is_numeric($ticketIdParam)) {
-            $ticketId = $ticketIdParam;
         }
 
         foreach ($recipients as $recipient) {
@@ -1568,7 +1549,6 @@ SQL;
         $this->db->insert('user_docfile', [
             'user_id' => $userId,
             'job_id' => $jobId,
-            'ticket_id' => $ticketId,
             'customer_id' => $customer_id,
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
@@ -1586,7 +1566,6 @@ SQL;
             'docfile_id' => $docfileId,
             'customer_id' => $customer_id,
             'user_id' => $userId,
-            'user_docfile_generated_pdfs_id' => 0,
             'docusign_envelope_id' => $unique_key,
             'date_created' => date("Y-m-d H:i:s")
         ]);
@@ -1828,9 +1807,8 @@ SQL;
         $userId = (int) $this->input->get('user_id', true);
         $companyId = (int) $this->input->get('company_id', true);
         $jobId = (int) $this->input->get('job_id', true);
-        $ticketId = (int) $this->input->get('ticket_id', true);
         $customer_id = (int) $this->input->get('customer_id', true);
-        $this->sendTemplate($templateId, $userId, $companyId, $jobId, $ticketId, $customer_id);
+        $this->sendTemplate($templateId, $userId, $companyId, $jobId, $customer_id);
     }
     
     public function apiGetDocumentHash() {
@@ -1838,18 +1816,9 @@ SQL;
         $documentId = (int) $this->input->get('document_id', true);
         $customerId = (int) $this->input->get('customer_id', true);
         $jobId = (int) $this->input->get('job_id', true);
-        $ticketId = (int) $this->input->get('ticket_id', true);
         $type = "job";
-        $objectId = $jobId;
 
-        // check
-        if (is_numeric($ticketId)) {
-            $type = "ticket";
-            $objectId = $ticketId;
-        }
-
-
-        $message = json_encode(['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customerId, 'object_id' => $objectId, 'type' => $type]);
+        $message = json_encode(['recipient_id' => $recipientId, 'document_id' => $documentId, 'customer_id' => $customerId, 'object_id' => $jobId, 'type' => $type]); // add customer id here
         $hash = encrypt($message, $this->password);
         $response = json_encode(['hash' => $hash]);
 
@@ -2506,375 +2475,6 @@ SQL;
         return $filePath;
     }
 
-    public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(852);
-        echo 'Finish';
-    }
-
-    public function debugGeneratePDFMaker($documentId)
-    {
-
-        $this->db->where('id', $documentId);
-        $document = $this->db->get('user_docfile')->row();
-
-        /*if (is_null($document)) {
-            return;
-        }
-
-        if ($document->status !== 'Completed') {
-            return;
-        }*/
-
-        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
-        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
-
-        $this->db->where('docfile_id', $document->id);
-        $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
-
-        /*if ($generatedPDF) {
-            $generatedPDFPath = FCPATH . ltrim($generatedPDF->path, '/');
-
-            if (file_exists($generatedPDFPath)) {
-                $pdf = new FPDI('P', 'px');
-                $pageCount = $pdf->setSourceFile($generatedPDFPath);
-
-                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                    $pageIndex = $pdf->importPage($pageNo);
-                    $pdf->AddPage();
-                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
-                }
-
-                return $pdf->Output(null, 'S');
-            } else {
-                $this->db->where('id', $generatedPDF->id);
-                $this->db->delete('user_docfile_generated_pdfs');
-            }
-        }*/
-
-        $this->db->where('docfile_id', $document->id);
-        $this->db->order_by('id', 'ASC');
-        $files = $this->db->get('user_docfile_documents')->result();
-
-        $this->db->where('docfile_id', $document->id);
-        $fields = $this->db->get('user_docfile_fields')->result();
-
-        $this->db->where('docfile_id', $document->id);
-        $recipients = $this->db->get('user_docfile_recipients')->result();
-
-        foreach ($fields as $field) {
-            if (in_array($field->field_name, ['Email', 'Name'])) {
-                $recipientMatch = null;
-
-                foreach ($recipients as $recipient) {
-                    if ($recipient->id === $field->user_docfile_recipients_id) {
-                        $recipientMatch = $recipient;
-                        break;
-                    }
-                }
-
-                if (!is_null($recipientMatch)) {
-                    $field->value = $recipientMatch;
-                    continue;
-                }
-            }
-
-
-            $this->db->where('recipient_id', $field->user_docfile_recipients_id);
-            $this->db->where('field_id', $field->id);
-            $field->value = $this->db->get('user_docfile_recipient_field_values')->row();
-        }
-
-        $pdf = new FPDI('P', 'px');
-
-        $envelopId = null;
-        if ($document->unique_key) {
-            $envelopId = 'eSign Envelope ID: ' . $document->unique_key;
-        }
-
-        foreach ($files as $file) {
-            $filepath = FCPATH . ltrim($file->path, '/');
-            $pageCount = 0;
-
-            try {
-                // version not supported
-                // https://www.setasign.com/support/faq/fpdi/error-document-compression-technique-not-supported/
-                // Manual fix. Make sure all PDF are version 1.4.
-                $pageCount = $pdf->setSourceFile($filepath);
-            } catch (\Throwable $th) {
-                continue;
-            }
-
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $pageIndex = $pdf->importPage($pageNo);
-                $pdf->AddPage();
-                $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
-
-                if (!is_null($envelopId)) {
-                    $pdf->setY(5);
-                    $pdf->setX(5);
-                    $pdf->SetFont('Courier', '', 10);
-                    $pdf->SetFillColor(255, 255, 255);
-                    $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
-                }
-
-
-                foreach ($fields as $field) {
-                    if ((int) $field->doc_page !== $pageNo) {
-                        continue;
-                    }
-
-                    if ($field->docfile_document_id !== $file->id) {
-                        continue;
-                    }
-
-                    if (!$field->value) {
-                        continue;
-                    }
-
-                    $value = $field->value;
-                    $coordinates = json_decode($field->coordinates);
-
-                    if ($field->field_name === 'Name') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (29 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32.666666666666664 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->name);
-                    }
-
-                    if ($field->field_name === 'Email') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.6 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32.666666666666664 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->email);
-                    }
-
-                    if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
-                        $value = json_decode($value->value);
-
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.3 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (31.5 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        if (is_array($value->subCheckbox)) {
-                            foreach ($value->subCheckbox as $subItem) {
-                                if ($subItem->isChecked) {
-                                    $myTop = (int) $subItem->top;
-                                    $myLeft = (int) $subItem->left;
-
-                                    $myTopAdjusted = (39.5 / 100) * $myTop;
-                                    $myTopAdjusted = $myTop - $myTopAdjusted;
-                                    $myTopAdjusted = $topAdjusted + $myTopAdjusted;
-
-                                    $myLeftAdjusted = (-35 / 100) * $myLeft;
-                                    $myLeftAdjusted = $myLeft + $myLeftAdjusted;
-                                    $myLeftAdjusted = $leftAdjusted + $myLeftAdjusted;
-
-                                    $pdf->setY($myTopAdjusted);
-                                    $pdf->setX($myLeftAdjusted);
-
-                                    $pdf->SetFont('Courier', '', 10);
-                                    $pdf->Write(0, 'x');
-                                }
-                            }
-                        }
-
-                        if ($value->isChecked) {
-                            $pdf->setY($topAdjusted);
-                            $pdf->setX($leftAdjusted);
-
-                            $pdf->SetFont('Courier', '', 10);
-                            $pdf->Write(0, 'x');
-                        }
-                    }
-
-                    if ($field->field_name === 'Signature') {
-                        $dataURI = $value->value;
-                        $dataPieces = explode(',', $dataURI);
-                        $encodedImg = $dataPieces[1];
-                        $decodedImg = base64_decode($encodedImg);
-
-                        if ($decodedImg !== false) {
-                            $temporaryPath = FCPATH . ltrim($field->unique_key, '/');
-                            $signatureHeight = 30;
-
-                            if (file_put_contents($temporaryPath, $decodedImg) !== false) {
-                                $top = (int) $coordinates->pageTop;
-                                $left = (int) $coordinates->left;
-
-                                $topAdjusted = (32.5 / 100) * $top;
-                                $topAdjusted = $top - $topAdjusted;
-
-                                $leftAdjusted = (38 / 100) * $left;
-                                $leftAdjusted = $left - $leftAdjusted;
-
-                                $pdf->setY($topAdjusted);
-                                $pdf->setX($leftAdjusted);
-
-                                $pdf->Image($temporaryPath, null, null, null,  $signatureHeight);
-                                unlink($temporaryPath);
-
-                                if ($value->created_at) {
-                                    $date = new DateTime($value->created_at);
-                                    $formattedDate = $date->format('F jS Y, g:i:s A');
-
-                                    $pdf->setY($topAdjusted +  $signatureHeight);
-                                    $pdf->setX($leftAdjusted);
-                                    $pdf->SetFont('Courier', '', 7);
-                                    // $pdf->SetTextColor(255, 255, 255);
-                                    // $pdf->SetFillColor(0, 0, 0);
-                                    // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
-                                    $pdf->Write(0, $formattedDate);
-                                }
-                            }
-                        }
-                    }
-
-                    if ($field->field_name === 'Text') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }
-                        
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
-
-                    if ( in_array($field->field_name, $custom_fields) ) {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.5 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    if ($field->field_name === 'Date Signed') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.9 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32.3 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    if ($field->field_name === 'Formula') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.9 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32.3 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    if ($field->field_name === 'Dropdown') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.9 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32.3 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-                }
-            }
-        }
-
-        $uploadPath = $this->getGeneratedPDFUploadPath();
-        $fileName = uniqid($document->id . rand(1, 9999999)) . '.pdf';
-        $uploadFilePath = $uploadPath . $fileName;
-
-        $this->db->insert('user_docfile_generated_pdfs', [
-            'path' => str_replace(FCPATH, '/', $uploadFilePath),
-            'docfile_id' => $document->id,
-            'label' => $document->name
-        ]);
-
-        $docfileGeneratedPdfId = $this->db->insert_id();
-        
-        $this->db->where('docfile_id', $document->id);
-        $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
-
-        // Display in browser
-        // $pdf->Output('I');
-
-        $pdf->Output($uploadFilePath, 'F');
-        return $pdf->Output(null, 'S');
-    }
-
     public function generatePDF($documentId)
     {
 
@@ -3122,51 +2722,6 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
-                        if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }
-                        
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    if ($field->field_name === 'Subscriber Name') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
-                        $topAdjusted = (31.5 / 100) * $top;
-                        $topAdjusted = $top - $topAdjusted;
-
-                        $leftAdjusted = (32 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-
-                        $pdf->setY($topAdjusted);
-                        $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }
-
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
-
-                    if ( in_array($field->field_name, $custom_fields) ) {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
-
                         $topAdjusted = (31.5 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
@@ -3243,10 +2798,6 @@ SQL;
             'docfile_id' => $document->id,
             'label' => $document->name
         ]);
-
-        $docfileGeneratedPdfId = $this->db->insert_id();
-        $this->db->where('docfile_id', $document->id);
-        $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
 
         // Display in browser
         // $pdf->Output('I');

@@ -116,12 +116,13 @@
                                 <?php
                                 $subtotal = 0.00;
                                 foreach ($jobs_data_items as $item):
-                                    $total = ($item->cost * $item->qty);
+                                    //$total = ($item->cost * $item->qty);
+                                    $total = $item->cost;
                                     ?>
                                     <tr>
                                         <td><?= $item->title; ?></td>
                                         <td><?= $item->qty; ?></td>
-                                        <td>$<?= $item->cost; ?></td>
+                                        <td>$<?= $item->cost / $item->qty; ?></td>
                                         <td>$<?= number_format((float)$total,2,'.',','); ?></td>
                                     </tr>
                                     <?php
