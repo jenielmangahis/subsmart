@@ -30,6 +30,9 @@
                         </tr>
                         <?php endif; ?>
                         <tr>
+                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <td data-name=""></td>
+                            <?php endif; ?>
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
@@ -108,7 +111,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="27"><b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -119,6 +122,9 @@
                         </tr>
                         <?php foreach($transaction['transactions'] as $tran) : ?>
                         <tr>
+                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <td></td>
+                            <?php endif; ?>
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
@@ -156,7 +162,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="27"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -226,6 +232,9 @@
                         </tr>
                         <?php endif; ?>
                         <tr>
+                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <td data-name=""></td>
+                            <?php endif; ?>
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
@@ -304,7 +313,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="27"><b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -315,6 +324,9 @@
                         </tr>
                         <?php foreach($transaction['transactions'] as $tran) : ?>
                         <tr>
+                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <td></td>
+                            <?php endif; ?>
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
@@ -352,7 +364,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="27"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>

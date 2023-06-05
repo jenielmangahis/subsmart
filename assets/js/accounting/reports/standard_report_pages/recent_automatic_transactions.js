@@ -141,6 +141,30 @@ $('input[name="col_chk"]').on('change', function() {
     var dataName = $(this).next().text();
 
     var index = $(`#reports-table thead td[data-name="${dataName}"]`).index();
+    if(index < 27 && chk.prop('checked') && $('#reports-table thead td[data-name=""]').length > 0) {
+        $('#reports-table thead td[data-name=""]').remove();
+        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total) td:first-child').remove();
+
+        $(`#print_report_modal table thead td[data-name=""]`).remove();
+        $('#print_report_modal table tbody tr:not(.group-header, .group-total) td:first-child').remove();
+        $(`#print_preview_report_modal #report_table_print thead td[data-name=""]`).remove();
+        $(`#print_preview_report_modal #report_table_print tr:not(.group-header, .group-total) td:first-child`).remove();
+
+        index--;
+    }
+
+    if(index < 27 && chk.prop('checked') === false && $('#reports-table thead td[data-name=""]').length < 1 && $('#reports-table thead tr td:visible').index() > 26) {
+        $('#reports-table thead tr').prepend(`<td data-name=""></td>`);
+        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total)').prepend(`<td></td>`);
+
+        $('#print_report_modal table thead tr').prepend(`<td data-name=""></td>`);
+        $('#print_report_modal table tbody tr:not(.group-header, .group-total)').prepend(`<td></td>`);
+        $('#print_preview_report_modal #report_table_print thead tr').prepend(`<td data-name=""></td>`);
+        $('#print_preview_report_modal #report_table_print tbody tr:not(.group-header, .group-total)').prepend(`<td></td>`);
+
+        index++;
+    }
+
     $(`#reports-table tr:not([data-bs-toggle="collapse"], .group-total)`).each(function() {
         if(chk.prop('checked')) {
             $($(this).find('td')[index]).show();
@@ -644,6 +668,74 @@ $('#run-report-button').on('click', function() {
     }
 
     location.href = url;
+});
+
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
 });
 
 function save_custom_report(customReport = {})
