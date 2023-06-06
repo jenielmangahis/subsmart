@@ -165,40 +165,42 @@
                         </div>
                     </template>
                 </div>
+                <form id="frm-esign-doc" action="<?= base_url('customer/download_esign_doc'); ?>" method="POST">
+                    <div class="upload-wrapper" id="generatedpdfwrapper">
+                        <div class="row">
+                            <div class="col-5"></div>
+                            <div class="col-7">
+                                <div class="input-group rounded">
+                                  <input type="search" class="form-control rounded" id="esign-search" placeholder="Search eSign ID" aria-label="Search" aria-describedby="search-addon" />
+                                  <span class="input-group-text border-0" id="search-addon">
+                                    <i class='bx bx-search-alt-2'></i>
+                                  </span>
+                                </div>    
+                            </div>
+                        </div>                
+                        <div class="mt-4" id="esign-container"></div>
+                    </div>
 
-                <div class="upload-wrapper" id="generatedpdfwrapper">
-                    <div class="row">
-                        <div class="col-5"></div>
-                        <div class="col-7">
-                            <div class="input-group rounded">
-                              <input type="search" class="form-control rounded" placeholder="Search eSign ID" aria-label="Search" aria-describedby="search-addon" />
-                              <span class="input-group-text border-0" id="search-addon">
-                                <i class='bx bx-search-alt-2'></i>
-                              </span>
-                            </div>    
+    <!--                 <div class="col-12 col-12 col-md-6">
+                        <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
+                            <i class='bx bx-fw bx-list-minus'></i> Customize List
+                        </button>
+                    </div> -->
+                    <div class="row mt-5">
+                        <div class="col-6 col-md-6">
+                            <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
+                                <i class='bx bx-fw bx-import'></i> Download Selected
+                            </button>
                         </div>
-                    </div>                
-                    <div class="mt-4" id="esign-container"></div>
-                </div>
 
-<!--                 <div class="col-12 col-12 col-md-6">
-                    <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
-                        <i class='bx bx-fw bx-list-minus'></i> Customize List
-                    </button>
-                </div> -->
-
-                <div class="col-12 col-12 col-md-6">
-                    <button type="button" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
-                        <i class='bx bx-fw bx-import'></i> Download Selected
-                    </button>
-                </div>
-
-                <div class="col-12 col-12 col-md-6">
-                    <button type="button" class="nsm-button w-100 ms-0" id="managecustomerdocumentsbtn--delete">
-                        <i class='bx bx-fw bx-trash'></i>
-                        <span class="text">Delete Selected</span>
-                    </button>
-                </div>
+                        <div class="col-6 col-md-6">
+                            <button type="button" class="nsm-button w-100 ms-0" id="managecustomerdocumentsbtn--delete">
+                                <i class='bx bx-fw bx-trash'></i>
+                                <span class="text">Delete Selected</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
 <!--                 <div class="col-12 col-12 col-md-6">
                     <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
@@ -480,7 +482,7 @@
 <script>
 $(function(){
     load_esign_doc();
-    function load_esign_doc(){
+    function load_esign_doc(search_query){
         var cid = "<?= $customer_id; ?>";
         var url = "<?= base_url('customer/_load_esign_doc') ?>";
         var _container = $("#esign-container");
@@ -491,13 +493,19 @@ $(function(){
             async:false,
             type: 'POST',
             url: url,
-            data: {cid:cid},
+            data: {cid:cid,search_query:search_query},
             success: function(result) {
                 _container.html(result);                
             },
         });
     }
-    
+
+    $(document).on("keyup", "#esign-search", function(e){
+        //if(e.which == 13){
+            var inputVal = $(this).val();
+            load_esign_doc(inputVal);
+        //}
+    });       
 });
 </script>
 

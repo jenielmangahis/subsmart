@@ -28,6 +28,8 @@
                 </td>                
                 <td>
                     <span class="row-details">Doc Name : <b><?= $e->docfile_name; ?></b></span>
+                    <span class="row-details">Date Created : <?= date("F j, Y g:i A", strtotime($e->date_created)); ?></span>
+                    <br />
                     <span class="row-details">eSign ID : <?= $e->docusign_envelope_id; ?></span>
                         
                 </td>

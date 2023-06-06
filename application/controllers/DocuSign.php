@@ -1858,7 +1858,7 @@ SQL;
 
     public function apiSendTemplate($templateId, $customer_id)
     {
-        $this->sendTemplate($templateId, logged('id'), logged('company_id'), $job_id, $customer_id, );
+        $this->sendTemplate($templateId, logged('id'), logged('company_id'), $job_id,0, $customer_id );        
     }
 
     private function getSigningUrl()
@@ -2507,7 +2507,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(852);
+        $pdf = $this->debugGeneratePDFMaker(880);
         echo 'Finish';
     }
 
@@ -2755,8 +2755,8 @@ SQL;
                     }
 
                     if ($field->field_name === 'Text') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
+                        $top = (int) str_replace("px", "", $coordinates->pageTop);
+                        $left = (int) str_replace("px", "", $coordinates->left);
 
                         if( $left >= 750 ){
                             $topAdjusted = (31.5 / 100) * $top;
@@ -3122,7 +3122,7 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
 
-                        if( $left >= 750 ){
+                        /*if( $left >= 750 ){
                             $topAdjusted = (31.5 / 100) * $top;
                             $topAdjusted = $top - $topAdjusted;
 
@@ -3134,7 +3134,13 @@ SQL;
 
                             $leftAdjusted = (30 / 100) * $left;
                             $leftAdjusted = $left - $leftAdjusted;
-                        }
+                        }*/
+
+                        $topAdjusted = (31.5 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (30 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
                         
 
                         $pdf->setY($topAdjusted);

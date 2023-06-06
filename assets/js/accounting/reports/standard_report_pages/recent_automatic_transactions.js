@@ -241,6 +241,11 @@ $('input[name="col_chk"]').on('change', function() {
             }
         }
     });
+
+    // if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name === 'Open Balance' || $($('#reports-table thead tr td:visible')[0]).data().name === 'Open Balance' ||
+    // $($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name === 'Online Banking' || $($('#reports-table thead tr td:visible')[0]).data().name === 'Online Banking') {
+    //     $('#reports-table thead tr td[data-name=""]').remove();
+    // }
 });
 
 

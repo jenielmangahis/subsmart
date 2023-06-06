@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class UserCustomerDocfile_model extends MY_Model
 {
     public $table = 'user_customer_docfile';
+    public $table_generated_pdf = 'user_docfile_generated_pdfs';
 
     public function getAll($filters=array(), $limit = 0)
     {
@@ -29,7 +30,7 @@ class UserCustomerDocfile_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCustomerId($customer_id, $filters=array(), $limit = 0)
+    public function getAllByCustomerId($customer_id, $search = '', $limit = 0)
     {
         $this->db->select('user_customer_docfile.*,user_docfile.name AS docfile_name,jobs.job_number');
         $this->db->from($this->table);  
@@ -37,11 +38,9 @@ class UserCustomerDocfile_model extends MY_Model
         $this->db->join('jobs', 'user_docfile.job_id = jobs.id', 'left');
         $this->db->where('user_customer_docfile.customer_id', $customer_id);      
 
-        if ( !empty($filters['search']) ){
+        if ( $search != '' ){
             $this->db->group_start();
-            foreach($filters['search'] as $f){                
-                $this->db->or_like($f['field'], $f['value'], 'both');            
-            } 
+            $this->db->or_like('docusign_envelope_id', $search);   
             $this->db->group_end();
         }
 
@@ -55,13 +54,24 @@ class UserCustomerDocfile_model extends MY_Model
         return $query->result();
     }
 
-    public function getByUserDocfileGeneratedPdfId($pdf_id)
+    public function getByUserDocfileGeneratedPdfId($pdf_id, $search = '')
     {        
         $this->db->select('user_customer_docfile.*,acs_profile.company_id,user_docfile_generated_pdfs.path');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'user_customer_docfile.customer_id = acs_profile.prof_id', 'left');
         $this->db->join('user_docfile_generated_pdfs', 'user_customer_docfile.user_docfile_generated_pdfs_id = user_docfile_generated_pdfs.id', 'left');
         $this->db->where('user_customer_docfile.user_docfile_generated_pdfs_id', $pdf_id);
+        $this->db->order_by('user_customer_docfile.id', 'DESC');
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getEsignPdfById($id)
+    {
+        $path = '';
+        $this->db->select('id,path');
+        $this->db->from($this->table_generated_pdf);
+        $this->db->where('id', $id);
         
         $query = $this->db->get()->row();
         return $query;
