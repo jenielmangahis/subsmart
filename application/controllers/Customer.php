@@ -6491,7 +6491,13 @@ class Customer extends MY_Controller
         $this->load->model('UserCustomerDocfile_model');
 
         $post     = $this->input->post();
-        $esignDoc = $this->UserCustomerDocfile_model->getAllByCustomerId($post['cid']);
+
+        $search_query = '';
+        if( isset($post['search_query']) && $post['search_query'] != '' ){
+            $search_query = $post['search_query'];
+        }
+
+        $esignDoc = $this->UserCustomerDocfile_model->getAllByCustomerId($post['cid'], $search_query);
         $this->page_data['esignDoc'] = $esignDoc;
         $this->load->view('v2/pages/customer/ajax_load_esign_doc', $this->page_data);
     }
@@ -6516,5 +6522,55 @@ class Customer extends MY_Controller
         $json = ['is_valid' => $is_valid, 'msg' => $msg, 'path' => $path];
         echo json_encode($json);
         exit;
+    }
+
+    public function downloadEsignDoc(){
+        $this->load->model('UserCustomerDocfile_model');
+
+        $post = $this->input->post();
+        $esignFiles = array();
+
+        foreach($post['esignPdf'] as $pdfid){            
+            $esignPdf = $this->UserCustomerDocfile_model->getEsignPdfById($pdfid);
+            if( $esignPdf ){
+                $a_file = explode("/", $esignPdf->path);                                           
+                $esignFiles[] = $a_file[3];                
+            }
+        }
+        $filesPath = 'uploads/docusigngeneratedpdfs';
+        $zipName = 'esign.zip';
+
+        echo $this->createZipAndDownload($esignFiles, $filesPath, $zipName);
+        exit;
+        
+    }
+
+    public function createZipAndDownload($files, $filesPath, $zipFileName)
+    {
+        // Create instance of ZipArchive. and open the zip folder.
+        $zip_file = "./uploads/".$zipFileName; 
+        touch($zip_file); // just create a zip file        
+
+        $zip = new \ZipArchive();
+        if ($zip->open($zip_file, \ZipArchive::CREATE) !== TRUE) {
+            exit("cannot open <$zipFileName>\n");
+        }
+
+        foreach ($files as $file) {            
+            $zip->addFile($filesPath.'/'.$file, $file);
+        }
+        $zip->close();
+
+        // Download the created zip file
+        header("Content-Type: application/force-download");
+        header("Content-type: application/zip");
+        header("Content-Disposition: attachment; filename = $zipFileName");
+        header("Content-length: " . filesize($zip_file));
+        header("Pragma: no-cache");
+        header("Expires: 0");        
+        ob_clean();
+        flush();
+        readfile("$zip_file");
+        unlink($zip_file);
     }
 }

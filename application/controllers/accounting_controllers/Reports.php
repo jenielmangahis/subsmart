@@ -16749,21 +16749,49 @@ class Reports extends MY_Controller {
                                     $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
                                 }
                                 $html .= '</tr>';
-    
-                                foreach($transaction['sub_rows'] as $subRow)
-                                {
-                                    $html .= '<tr>';
-                                    foreach($post['fields'] as $field)
-                                    {
-                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                                    }
-                                    $html .= '</tr>';
-                                }
                             }
                         } else {
                             foreach($transactions as $group)
                             {
+                                $totalFields = [
+                                    'Amount',
+                                    'Debit',
+                                    'Credit',
+                                    'Tax Amount',
+                                    'Taxable Amount'
+                                ];
                                 
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td><b>'.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
+
+                                foreach($group['transactions'] as $transaction)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
                             }
                         }
                     
