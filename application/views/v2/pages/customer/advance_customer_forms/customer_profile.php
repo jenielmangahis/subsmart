@@ -164,6 +164,14 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
+                Country
+            </div>
+            <div class="col-md-8">
+                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
                 Address <span class="required"> *</span>
             </div>
             <div class="col-md-8">
@@ -176,6 +184,14 @@
             </div>
             <div class="col-md-8">
                 <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                County <span class="required"> *</span>
+            </div>
+            <div class="col-md-8">
+                <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">
@@ -202,10 +218,10 @@
             <div class="col-md-8">
                 <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
             </div>
-        </div>
+        </div>        
         <div class="row form_line">
             <div class="col-md-4">
-                County
+                Country
             </div>
             <div class="col-md-8">
                 <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />

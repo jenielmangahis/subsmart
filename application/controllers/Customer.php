@@ -1997,6 +1997,7 @@ class Customer extends MY_Controller
             $input_profile['suffix'] = $input['suffix'];
             $input_profile['mail_add'] = $input['mail_add'];
             $input_profile['city'] = $input['city'];
+            $input_profile['county'] = $input['county'];
             $input_profile['state'] = $input['state'];
             $input_profile['country'] = $input['country'];
             $input_profile['industry_type_id'] = $input['industry_type'];
@@ -2246,12 +2247,13 @@ class Customer extends MY_Controller
     {
         $payload = [];
         $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
-            if (empty(trim($postData['contact_name' . $customerNumber]))) {
+            if (empty(trim($postData['contact_first_name' . $customerNumber]))) {
                 return; // ignore empty contact with empty name
             }
 
             array_push($payload, [
-                'name' => trim($postData['contact_name' . $customerNumber]),
+                'first_name' => trim($postData['contact_first_name' . $customerNumber]),
+                'last_name' => trim($postData['contact_last_name' . $customerNumber]),
                 'relation' => $postData['contact_relationship' . $customerNumber],
                 'phone' => $postData['contact_phone' . $customerNumber],
                 'customer_id' => $customerId,
