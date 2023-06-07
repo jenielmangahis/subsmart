@@ -4099,13 +4099,13 @@ class Workorder extends MY_Controller
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
 
         $org_id = array('58','31');
-            if($company_id == 58 || $company_id == 31)
-            {
-                // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
-                $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
-            }else{
+            // if($company_id == 58 || $company_id == 31)
+            // {
+            //     // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+            //     $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
+            // }else{
                 $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-            }
+            // }
         
 
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
@@ -8076,6 +8076,8 @@ class Workorder extends MY_Controller
 
 
         $customer_id = $this->input->post('customer_id');
+
+        // dd($customer_id);
         ///
         if(empty($customer_id)) {
 
@@ -8105,7 +8107,7 @@ class Workorder extends MY_Controller
                 'fk_prof_id'                => $w_acs,
                 'lead_source'               => $this->input->post('lead_source'),
                 'save_by'                   => $user_id,
-                'equipment_cost'            => $this->input->post('equipmentCost'),
+                'equipment'                 => $this->input->post('equipmentCost'),
             );
 
             $solarItemsOffices = $this->workorder_model->save_office($solarItemsOffice);
@@ -8843,21 +8845,36 @@ class Workorder extends MY_Controller
                 'customer_id'               => $customer_id,
                 'lead_source'               => $this->input->post('lead_source'),
                 'save_by'                   => $user_id,
-                'equipment_cost'            => $this->input->post('equipmentCost'),
-                'monthly_monitoring'        => $this->input->post('otps'),
+                'equipment'                 => $this->input->post('equipmentCost'),
+                'mmr'                       => $this->input->post('otps'),
+                'initial_dep'               => $this->input->post('payment_amount'),
+                'sales_date'                => date("m/d/Y"),
             );
 
             $solarItemsOffices = $this->workorder_model->update_office($solarItemsOffice);
 
             $alarmInfoData = array(
-                'customer_id'                => $customer_id,
+                'fk_prof_id'                => $customer_id,
                 'equipment_cost'            => $this->input->post('equipmentCost'),
                 'monthly_monitoring'        => $this->input->post('monthlyMonitoring'),
                 'panel_type'                => $this->input->post('panel_type'),
                 'otps'                      => $this->input->post('otps'),
+                'system_type'               => $this->input->post('communication_type'),
+                'monitor_comp'              => 'Stanley',
+                'acct_type'                 => 'In-House',
+                'equipment'                 => 'Installed',
+                'passcode'                  => $this->input->post('password'),
+                'comm_type'                 => $this->input->post('communication_type'),
             );
 
             $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);
+
+            $notesInfoData = array(
+                'fk_prof_id'                => $customer_id,
+                'note'                      => $this->input->post('notes'),
+            );
+
+            $notesInfoDatas = $this->workorder_model->update_notes_adi($notesInfoData);
             
 
             $deleteContacts = $this->workorder_model->delete_contact($customer_id);
@@ -9067,6 +9084,10 @@ class Workorder extends MY_Controller
                         'city'                  => $this->input->post('city'),
                         'state'                 => $this->input->post('state'),
                         'zip'                   => $this->input->post('postcode'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                         'bill_method'           => 'CASH',
                     );
     
@@ -9102,6 +9123,10 @@ class Workorder extends MY_Controller
                         'check_num'             => $this->input->post('check_number'),
                         'routing_num'           => $this->input->post('routing_number'),
                         'acct_num'              => $this->input->post('account_number'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay2 = $this->workorder_model->save_payment_billing($payment_datab);
@@ -9136,6 +9161,10 @@ class Workorder extends MY_Controller
                         'state'                 => $this->input->post('state'),
                         'zip'                   => $this->input->post('postcode'),
                         'bill_method'           => 'Invoicing',
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay3 = $this->workorder_model->save_payment_billing($payment_datac);
@@ -9171,6 +9200,10 @@ class Workorder extends MY_Controller
                         'credit_card_num'           => $this->input->post('credit_number'),
                         'credit_card_exp'           => $this->input->post('credit_expiry'),
                         'credit_card_exp_mm_yyyy'   => $this->input->post('credit_cvc'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay4 = $this->workorder_model->save_payment_billing($payment_datad);
@@ -9206,6 +9239,10 @@ class Workorder extends MY_Controller
                         'credit_card_num'           => $this->input->post('debit_credit_number'),
                         'credit_card_exp'           => $this->input->post('debit_credit_expiry'),
                         'credit_card_exp_mm_yyyy'   => $this->input->post('debit_credit_cvc'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay5 = $this->workorder_model->save_payment_billing($payment_datae);
@@ -9238,6 +9275,10 @@ class Workorder extends MY_Controller
                         'bill_method'               => 'ACH',
                         'routing_num'               => $this->input->post('ach_routing_number'),
                         'acct_num'                  => $this->input->post('ach_account_number'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay6 = $this->workorder_model->save_payment_billing($payment_dataf);
@@ -9272,6 +9313,10 @@ class Workorder extends MY_Controller
                         'account_credential'        => $this->input->post('account_credentials'),
                         'account_note'              => $this->input->post('account_note'),
                         'confirmation'              => $this->input->post('confirmation'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay7 = $this->workorder_model->save_payment_billing($payment_datag);
@@ -9306,6 +9351,10 @@ class Workorder extends MY_Controller
                         'account_credential'        => $this->input->post('paypal_account_credentials'),
                         'account_note'              => $this->input->post('paypal_account_note'),
                         'confirmation'              => $this->input->post('paypal_confirmation'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay8 = $this->workorder_model->save_payment_billing($payment_datah);
@@ -9340,6 +9389,10 @@ class Workorder extends MY_Controller
                         'account_credential'        => $this->input->post('square_account_credentials'),
                         'account_note'              => $this->input->post('square_account_note'),
                         'confirmation'              => $this->input->post('square_confirmation'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay9 = $this->workorder_model->save_payment_billing($payment_datai);
@@ -9372,6 +9425,10 @@ class Workorder extends MY_Controller
                         'bill_method'               => 'WW',
                         'account_credential'        => $this->input->post('warranty_account_credentials'),
                         'account_note'              => $this->input->post('warranty_account_note'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay10 = $this->workorder_model->save_payment_billing($payment_dataj);
@@ -9404,6 +9461,10 @@ class Workorder extends MY_Controller
                         'bill_method'               => 'HOF',
                         'account_credential'        => $this->input->post('home_account_credentials'),
                         'account_note'              => $this->input->post('home_account_note'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay11 = $this->workorder_model->save_payment_billing($payment_datak);
@@ -9436,6 +9497,10 @@ class Workorder extends MY_Controller
                         'bill_method'               => 'eT',
                         'account_credential'        => $this->input->post('e_account_credentials'),
                         'account_note'              => $this->input->post('e_account_note'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay12 = $this->workorder_model->save_payment_billing($payment_datal);
@@ -9470,6 +9535,10 @@ class Workorder extends MY_Controller
                         'credit_card_num'           => $this->input->post('other_credit_number'),
                         'credit_card_exp'           => $this->input->post('other_credit_expiry'),
                         'credit_card_exp_mm_yyyy'   => $this->input->post('other_credit_cvc'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay13 = $this->workorder_model->save_payment_billing($payment_datam);
@@ -9502,6 +9571,10 @@ class Workorder extends MY_Controller
                         'bill_method'               => 'OPT',
                         'account_credential'        => $this->input->post('other_payment_account_credentials'),
                         'account_note'              => $this->input->post('other_payment_account_note'),
+                        'equipment'             => $this->input->post('equipmentCost'),
+                        'initial_dep'           => $this->input->post('payment_amount'),
+                        'mmr'                   => $this->input->post('monthlyMonitoring'),
+                        'bill_freq'             => 'Every 1 Month',
                     );
     
                     $pay14 = $this->workorder_model->save_payment_billing($payment_datan);

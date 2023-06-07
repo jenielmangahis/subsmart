@@ -1,10 +1,10 @@
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 
 <style>
     body {
@@ -426,7 +426,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-city"></i></span>
-                                                    <i class="esign-fa fas fa-building"></i>
+                                                    <i class="esign-fa fas fa-map-marker-alt"></i>
                                                     <span class="u-ellipsis ng-binding">City</span>
                                                 </div>
                                             </li>
@@ -434,7 +434,15 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-state"></i></span>
-                                                    <i class="esign-fa far fa-flag"></i>
+                                                    <i class="esign-fa fas fa-map-marker-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">County</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-state"></i></span>
+                                                    <i class="esign-fa fas fa-map-marker-alt"></i>
                                                     <span class="u-ellipsis ng-binding">State</span>
                                                 </div>
                                             </li>
@@ -442,7 +450,7 @@ echo put_header_assets();
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-zip"></i></span>
-                                                    <i class="esign-fa far fa-address-card"></i>
+                                                    <i class="esign-fa fas fa-map-marker-alt"></i>
                                                     <span class="u-ellipsis ng-binding">ZIP</span>
                                                 </div>
                                             </li>
@@ -478,6 +486,14 @@ echo put_header_assets();
                                                     <span class="u-ellipsis ng-binding">Access Password</span>
                                                 </div>
                                             </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-access_password"></i></span>
+                                                    <i class="esign-fa fas fa-key"></i>
+                                                    <span class="u-ellipsis ng-binding">Abort Code</span>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -493,6 +509,22 @@ echo put_header_assets();
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
                                                     <i class="esign-fa fas fa-user"></i>
                                                     <span class="u-ellipsis ng-binding">Contact Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Contact First Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Contact Last Name</span>
                                                 </div>
                                             </li>
 
@@ -937,7 +969,6 @@ echo put_header_assets();
 
     <?php include viewPath('v2/includes/footer');?>
 <?php endif;?>
-
 <!-- <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>

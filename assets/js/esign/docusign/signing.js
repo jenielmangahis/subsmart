@@ -940,12 +940,12 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId);
       }
 
-      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password") {
+      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code") {
         $input.attr("data-field-type", "autoPopulateCustomerDetails");
         $input.attr("data-field-id", fieldId);
       }
 
-      if( field.original_field_name === "Contact Name" || field.original_field_name === "Contact Number" ){
+      if( field.original_field_name === "Contact Name" || field.original_field_name === "Contact Number" || field.original_field_name === "Contact First Name" || field.original_field_name === "Contact Last Name" ){
         $input.attr("data-field-type", "autoPopulateEmergencyContact");
         $input.attr("data-field-id", fieldId); 
       }

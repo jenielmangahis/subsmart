@@ -2307,7 +2307,8 @@ class Workorder_model extends MY_Model
             'lead_source'           => $lead_source,
             'save_by'               => $save_by,
             'equipment_cost'        => $equipment_cost,
-            'monthly_monitoring'    => $monthly_monitoring,
+            'monthly_monitoring'    => $mmr,
+            'sales_date'            => $sales_date,
         ));
         return true;
     }
@@ -2315,14 +2316,44 @@ class Workorder_model extends MY_Model
     public function update_alarm_adi($data)
     {
         extract($data);
-        $this->db->where('fk_prof_id', $customer_id);
+        $this->db->where('fk_prof_id', $fk_prof_id);
         $this->db->update('acs_alarm', array(
             'equipment_cost'            => $equipment_cost,
             'monthly_monitoring'        => $monthly_monitoring,
             'panel_type'                => $panel_type,
             'otps'                      => $otps,
+            'system_type'               => $system_type,
+            'monitor_comp'              => $monitor_comp,
+            'acct_type'                 => $acct_type,
+            'equipment'                 => $equipment,
+            'passcode'                  => $passcode,
+            'comm_type'                 => $comm_type,
         ));
         return true;
+    }
+
+    public function update_notes_adi($data)
+    {
+        extract($data);
+        $this->db->select('*');
+		$this->db->from('acs_notes');
+        $this->db->where($fk_prof_id);
+        $query2 = $this->db->get();
+        $query3 = $query2->result();
+
+        if(empty($query3))
+        {
+            $vendor = $this->db->insert('acs_notes', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+
+        }else{
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_notes', array(
+                'note'            => $note,
+            ));
+            return true;
+        }
     }
     
     public function delete_contact($customer_id){
