@@ -2515,15 +2515,7 @@ SQL;
     {
 
         $this->db->where('id', $documentId);
-        $document = $this->db->get('user_docfile')->row();
-
-        /*if (is_null($document)) {
-            return;
-        }
-
-        if ($document->status !== 'Completed') {
-            return;
-        }*/
+        $document = $this->db->get('user_docfile')->row();        
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
@@ -2780,7 +2772,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Contact First Name','Contact Last Name','Abort Code','County'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
@@ -3167,7 +3159,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Contact First Name','Contact Last Name','Abort Code','County'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;

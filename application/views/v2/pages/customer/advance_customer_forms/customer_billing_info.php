@@ -71,7 +71,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" name="equipment" >
+                    <input type="number" step="0.01" class="form-control input_select" name="equipment" value="<?php if(isset($billing_info)){ echo $billing_info->equipment != null ? $billing_info->equipment : $profile_info->equipment; } ?>">
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" name="initial_dep"  >
+                    <input type="number" step="0.01" class="form-control input_select" name="initial_dep" value="<?php if(isset($billing_info)){ echo $billing_info->initial_dep != null ? $billing_info->initial_dep : $profile_info->initial_dep; } ?>" >
                 </div>
             </div>
         </div>

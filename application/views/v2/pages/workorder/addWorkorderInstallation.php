@@ -135,7 +135,7 @@ tr {
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
                                             <option value="0">- none -</option>
                                             <?php foreach ($lead_source as $lead) { ?>
-                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                                <option value="<?php echo $lead->ls_name; ?>"><?php echo $lead->ls_name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -1413,11 +1413,11 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password <span class="nsm-text-error">*</span></label>
-                                                <input type="text" name="password" class="nsm-field form-control">
+                                                <input type="text" name="password" class="nsm-field form-control" required>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
-                                                <input type="text" name="ssn" class="nsm-field form-control number-field" placeholder="XXX-XX-XXXX">
+                                                <input type="text" name="ssn" class="nsm-field form-control number-field_two" placeholder="XXX-XX-XXXX">
                                             </div>
                                         </div>
                                     </div>
@@ -1440,7 +1440,7 @@ tr {
                                                     <!-- <option selected value hidden>- Select Customer -</option> -->
                                                     <option value="" selected> Select Customer</option>
                                                     <?php foreach( $customers as $customer ){ ?>
-                                                        <option value="<?= $customer->prof_id; ?>" selected><?= $customer->first_name.' '.$customer->last_name; ?></option>
+                                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name.' '.$customer->last_name; ?></option>
                                                     <?php } ?>                                        
                                                 </select>
                                             </div>
@@ -1604,7 +1604,7 @@ tr {
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
-                                        <select name="payment_method" id="payment_method" class="nsm-field form-select">
+                                        <select name="payment_method" id="payment_method" class="nsm-field form-select" required>
                                             <option value="">Choose method</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Check">Check</option>
@@ -1925,8 +1925,8 @@ tr {
                     </div>
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
-                        <button type="submit" class="nsm-button">Send to Customer</button>
-                        <button type="submit" class="nsm-button primary" value="submit">Submit</button>
+                        <!-- <button type="submit" class="nsm-button">Send to Customer</button> -->
+                        <button type="submit" class="nsm-button primary">Submit</button>
                     </div>
                 </div>
                 <?php echo form_close(); ?>
@@ -2103,6 +2103,14 @@ $(".nsm-subtitle").html(function() {
             var val = this.value.replace(/\D/g, '');
             val = val.replace(/^(\d{3})/, '$1-');
             val = val.replace(/-(\d{3})/, '-$1-');
+            val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+            this.value = val;
+        });
+
+        $('.number-field_two').keyup(function() {
+            var val = this.value.replace(/\D/g, '');
+            val = val.replace(/^(\d{3})/, '$1-');
+            val = val.replace(/-(\d{2})/, '-$1-');
             val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
             this.value = val;
         });

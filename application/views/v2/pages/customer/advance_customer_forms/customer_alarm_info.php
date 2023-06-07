@@ -639,7 +639,11 @@
     </div>
     <div class="nsm-card-content"><hr>
         <div class="row form-line">
-            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"></textarea>
+            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5">
+            <?php foreach ($customer_notes as $notes) : ?>
+                <?= $notes->note; ?>
+            <?php endforeach; ?>
+            </textarea>
         </div>
     </div>
 </div>
@@ -704,7 +708,14 @@
                 Contact Name 1
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?= isset($contact1) ? $contact1->name : "" ?>"/>
+                <div class="row">
+                    <div class="col-6" style="padding-right:2px !important;">
+                        <input type="text" class="form-control" placeholder="First Name" name="contact_first_name1" id="contact_first_name1" value="<?= isset($contact1) ? $contact1->first_name : "" ?>" style="margin-bottom: 5px;"/>
+                    </div>
+                    <div class="col-6" style="padding-left:2px !important;">
+                        <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name1" id="contact_last_name1" value="<?= isset($contact1) ? $contact1->last_name : "" ?>" style="margin-bottom: 5px;" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -725,12 +736,19 @@
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?= isset($contact1) ? $contact1->phone : "" ?>"/>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line mt-3">
             <div class="col-md-4">
                 Contact Name 2
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?= isset($contact2) ? $contact2->name : "" ?>"/>
+                <div class="row">
+                    <div class="col-6" style="padding-right:2px !important;">
+                        <input type="text" class="form-control" placeholder="First Name" name="contact_first_name2" id="contact_first_name2" value="<?= isset($contact2) ? $contact2->first_name : "" ?>" style="margin-bottom: 5px;"/>
+                    </div>
+                    <div class="col-6" style="padding-left:2px !important;">
+                        <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name2" id="contact_last_name2" value="<?= isset($contact2) ? $contact2->last_name : "" ?>" style="margin-bottom: 5px;" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -751,12 +769,19 @@
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?= isset($contact2) ? $contact2->phone : "" ?>"/>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line mt-3">
             <div class="col-md-4">
                 Contact Name 3
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?= isset($contact3) ? $contact3->name : "" ?>" />
+                <div class="row">
+                    <div class="col-6" style="padding-right:2px !important;">
+                        <input type="text" class="form-control" placeholder="First Name" name="contact_first_name3" id="contact_first_name3" value="<?= isset($contact3) ? $contact3->first_name : "" ?>" style="margin-bottom: 5px;"/>
+                    </div>
+                    <div class="col-6" style="padding-left:2px !important;">
+                        <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name3" id="contact_last_name3" value="<?= isset($contact3) ? $contact3->last_name : "" ?>" style="margin-bottom: 5px;" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row form_line">
