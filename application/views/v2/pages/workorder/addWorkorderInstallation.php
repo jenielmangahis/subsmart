@@ -1497,25 +1497,49 @@ tr {
                                                 <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                                                 <input type="email" name="email" class="nsm-field form-control">
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">1st Emergency Contact Name</label>
-                                                <input type="text" name="first_ecn" class="nsm-field form-control">
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Emergency Contact</label>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">1st Emergency Contact</label>
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">First Name</label>
+                                                <input type="text" name="first_ecn_first" class="nsm-field form-control">
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Last Name</label>
+                                                <input type="text" name="first_ecn_last" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
                                                 <input type="text" name="first_ecn_no" class="nsm-field form-control number-field">
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">2nd Emergency Contact Name</label>
-                                                <input type="text" name="second_ecn" class="nsm-field form-control">
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">2nd Emergency Contact</label>
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">First Name</label>
+                                                <input type="text" name="second_ecn_first" class="nsm-field form-control">
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Last Name</label>
+                                                <input type="text" name="second_ecn_last" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
                                                 <input type="text" name="second_ecn_no" class="nsm-field form-control number-field">
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">3rd Emergency Contact Name</label>
-                                                <input type="text" name="third_ecn" class="nsm-field form-control">
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">3rd Emergency Contact</label>
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">First Name</label>
+                                                <input type="text" name="third_ecn_first" class="nsm-field form-control">
+                                            </div>
+                                            <div class="col-12 col-md-3">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Last Name</label>
+                                                <input type="text" name="third_ecn_last" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>

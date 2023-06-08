@@ -2736,9 +2736,17 @@ class Customer extends MY_Controller
                 'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
                 'email' => $input['email_add'],
                 'ssn' => $input['sss_num'],
-                'phone_h' => $input['phone_home']
+                'phone_h' => $input['phone_home'],
+                'phone_m' => $input['phone_cell']
             ];
             if ($lastid = $this->customer_ad_model->add($customer_data, "acs_profile")) {
+                $customerOfficePayload = [
+                    'fk_prof_id' => $lastid,
+                    'sales_date' => date('m/d/Y'),
+                    'fk_sales_rep_office' => $input['fk_sr_id'],
+                ];
+                $this->customer_ad_model->add($customerOfficePayload, "acs_office");
+                
                 $lead = $this->customer_ad_model->get_data_by_id('leads_id',$this->input->post('leads_id'),"ac_leads");
                 //SMS Notification
                 createCronAutoSmsNotification(logged('company_id'), $lead->leads_id, 'lead', 'Converted', 0, $lead->fk_assign_id);

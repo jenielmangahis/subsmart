@@ -714,3 +714,17 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function calculateJobProfit() {
+        let purchase_price = parseFloat($("input[name='purchase_price']").val());
+        let equipment_cost = parseFloat($("input[name='equipment_cost']").val());
+        let labor_cost = parseFloat($("input[name='labor_cost']").val());
+        let job_profit_calculation = (purchase_price - (equipment_cost + labor_cost)).toFixed(2);
+        $("input[name='job_profit']").val(job_profit_calculation);
+    } calculateJobProfit();   
+
+    $("input[name='purchase_price'], input[name='equipment_cost'], input[name='labor_cost'], input[name='job_profit_calculation']").on('change', function(event) {
+        calculateJobProfit();
+    });
+</script>
