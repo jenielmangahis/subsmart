@@ -71,16 +71,16 @@ function Signing(hash) {
   function getRenderField({ field, recipient }) {
     const { field_name, coordinates, id: fieldId, value: fieldValue, specs } = field;
 
-    const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country
+    const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name
      } = window.__esigndata.auto_populate_data.client;
 
-    const { emergency_contact_name, emergency_contact_phone } = window.__esigndata.auto_populate_data.contacts;
+    const { emergency_contact_fname, emergency_contact_lname, emergency_contact_phone } = window.__esigndata.auto_populate_data.contacts;
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account, monthly_monitoring, otps } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps, passcode } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
@@ -106,7 +106,11 @@ function Signing(hash) {
       return state;
     }
 
-    if( field_name == "ZIP" ) {
+    if( field_name == "County" ) {
+      return county_name;
+    }
+
+    if( field_name == "County" ) {
       return zip_code;
     }
 
@@ -123,7 +127,15 @@ function Signing(hash) {
     }
 
     if( field_name == "Contact Name" ){
-      return emergency_contact_name;
+      return emergency_contact_fname + " " + emergency_contact_lname;
+    }
+
+    if( field_name == "Contact First Name" ){
+      return emergency_contact_fname;
+    }
+
+    if( field_name == "Contact Last Name" ){
+      return emergency_contact_lname;
     }
 
     if( field_name == "Contact Number" ){
@@ -168,6 +180,10 @@ function Signing(hash) {
 
     if( field_name == "CS Account Number" ){
       return alarm_cs_account;
+    }
+
+    if( field_name == "Abort Code" ){
+      return passcode;
     }
 
     if( field_name == 'Account Number' ){

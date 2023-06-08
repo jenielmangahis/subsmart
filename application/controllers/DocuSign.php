@@ -226,13 +226,13 @@ class DocuSign extends MYF_Controller
         
         #changes starts here
         #Clients
-        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country');
+        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country, county AS county_name');
         $this->db->where('prof_id', $customer_id);
         //$this->db->where('prof_id', 20797);
         $acs_client = $this->db->get('acs_profile')->row();
 
         $acs_clientKeys = [
-            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country'
+            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name'
         ];
 
         $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
@@ -247,7 +247,8 @@ class DocuSign extends MYF_Controller
         $acs_alarm_accessKeys = [
             'alarm_cs_account',
             'monthly_monitoring',
-            'otps'
+            'otps',
+            'passcode'
         ];
         
         $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
@@ -256,12 +257,13 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
 
         #emergency contacts
-        $this->db->select('name AS emergency_contact_name, phone AS emergency_contact_phone');
+        $this->db->select('first_name AS emergency_contact_fname, last_name AS emergency_contact_lname, phone AS emergency_contact_phone');
         $this->db->where('customer_id', $customer_id);
         $contacts = $this->db->get('contacts')->row();
 
         $contacts_accessKeys = [
-            'emergency_contact_name',
+            'emergency_contact_fname',
+            'emergency_contact_lname',
             'emergency_contact_phone'
         ];
         
@@ -2507,7 +2509,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(880);
+        $pdf = $this->debugGeneratePDFMaker(882);
         echo 'Finish';
     }
 
@@ -2749,26 +2751,22 @@ SQL;
                     if ($field->field_name === 'Text') {
                         $top = (int) str_replace("px", "", $coordinates->pageTop);
                         $left = (int) str_replace("px", "", $coordinates->left);
-
-                        if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
+                        if( $left > 800 ){
+                            $left = 773;
                         }
+
+                        $topAdjusted = (31.8 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (30 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
                         
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
                         $pdf->SetFont('Courier', '', 10);
+                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
                         $pdf->Write(0, $value->value);
                     }
 
@@ -3111,24 +3109,13 @@ SQL;
                     }
 
                     if ($field->field_name === 'Text') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
+                        $top = (int) str_replace("px", "", $coordinates->pageTop);
+                        $left = (int) str_replace("px", "", $coordinates->left);
+                        if( $left > 800 ){
+                            $left = 773;
+                        }
 
-                        /*if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }*/
-
-                        $topAdjusted = (31.5 / 100) * $top;
+                        $topAdjusted = (31.8 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
                         $leftAdjusted = (30 / 100) * $left;
@@ -3139,6 +3126,7 @@ SQL;
                         $pdf->setX($leftAdjusted);
 
                         $pdf->SetFont('Courier', '', 10);
+                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
                         $pdf->Write(0, $value->value);
                     }
 

@@ -7738,10 +7738,6 @@ class Reports extends MY_Controller {
                     }
                 });
 
-                if(!empty(get('transaction-type'))) {
-                    $transactions = array_filter();
-                }
-
                 $grouped = [];
                 if(get('group-by') !== 'none')
                 {
@@ -8008,7 +8004,7 @@ class Reports extends MY_Controller {
                 }
 
                 $this->page_data['transactions'] = $grouped;
-//
+
                 if(!empty(get('group-by'))) {
                     $this->page_data['group_by'] = get('group-by');
                 }
@@ -8022,6 +8018,319 @@ class Reports extends MY_Controller {
                 }
 
                 $this->page_data['report_title'] = 'Recent Automatic Transactions';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                if(!empty(get('show-report-period'))) {
+                    $this->page_data['show_report_period'] = false;
+                }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+            break;
+            case 'recent_transactions' :
+                $this->page_data['page']->title = "Transaction Report";
+
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
+                }
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
+
+                    $index = array_search('Amount', $columns);
+                    if($index === false) {
+                        $index = array_search('Debit', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Credit', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Tax Amount', $columns);
+                    }
+
+                    if($index === false) {
+                        $index = array_search('Taxable Amount', $columns);
+                    }
+
+                    $this->page_data['total_index'] = $index === false ? count($columns) : $index;
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'date',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                $this->page_data['report_period'] = "All Dates";
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+
+                    switch(get('date')) {
+                        default :
+                            $this->page_data['report_period'] = 'All Dates';
+                        break;
+                        case 'today' :
+                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'yesterday' :
+                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'this-month' :
+                            $this->page_data['report_period'] = date("F Y");
+                        break;
+                        case 'this-month-to-date' : 
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $startYear = date("Y", strtotime($startDate));
+                            $endYear = date("Y", strtotime($endDate));
+
+                            if($startMonth === $endMonth && $startYear === $endYear) {
+                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
+                            } else if($startYear !== $endYear) {
+                                $this->page_data['report_period'] = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            } else {
+                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            }
+                        break;
+                        case 'last-month' :
+                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'next-month' :
+                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
+                        break;
+                        case 'this-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'next-quarter' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'this-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'next-year' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'this-year-to-last-month' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'since-30-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-60-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-90-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                        case 'since-365-days-ago' :
+                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
+
+                            $this->page_data['report_period'] = 'Since '.$startDate;
+                        break;
+                    }
+                }
+
+                $transactions = [];
+
+                $filters = [
+                    'company_id' => logged('company_id')
+                ];
+
+                $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+
+                foreach($expenses as $expense)
+                {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                    $type = $paymentAccType->account_name === 'Credit Card' ? 'Credit Card Expense' : 'Expense';
+
+                    switch($expense->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($expense->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+                    $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                        'transaction_type' => $type,
+                        'num' => $expense->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($expense->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($expense->updated_at)),
+                        'last_modified_by' => '',
+                        'name_type' => $expense->payee_type,
+                        'name_id' => $expense->payee_id,
+                        'name' => $name,
+                        'memo_description' => $expense->memo,
+                        'account_id' => $paymentAcc->id,
+                        'account' => $paymentAcc->name,
+                        'split' => $this->account_col($expense->id, 'Expense'),
+                        'ref_no' => $expense->ref_no,
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => $expense->payment_method_id,
+                        'payment_method' => $this->accounting_payment_methods_model->getById($expense->payment_method_id)->name,
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $grouped = $transactions;
+
+                $this->page_data['transactions'] = $grouped;
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
+                $this->page_data['group_by'] = 'none';
+
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Transaction Report';
                 if(!empty(get('show-report-title'))) {
                     $this->page_data['show_report_title'] = false;
                 }

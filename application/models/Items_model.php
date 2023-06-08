@@ -722,6 +722,16 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    
+    public function getLocationStorage()
+    {
+        $company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from('items_has_storage_loc');
+        $this->db->where('items_has_storage_loc.company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getAllLocation() {
         $this->db->select('*');

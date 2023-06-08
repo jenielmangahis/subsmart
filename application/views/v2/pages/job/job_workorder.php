@@ -606,7 +606,7 @@
                                                 <option value="">Select Tags</option>
                                                 <?php if(!empty($tags)): ?>
                                                     <?php foreach ($tags as $tag): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
+                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select>
@@ -748,8 +748,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>                                        
-                                        <table class="table table-hover">
+                                        <hr>     <div class="col-md-12">
+                                                        <h6>Job Account Number</h6>
+                                                        <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
+                                                    </div>                             
+                                        <table class="table table-hover d-none">
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -764,11 +767,16 @@
                                                 <tr>
                                                     <td colspan="2">
                                                         <small>Description of Job</small>
-                                                        <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                        <textarea name="job_description_" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <hr>     
+                                            <div class="col-md-12">
+                                                <h6>Description of Job</h6>
+                                                <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                            </div>            
                                         <hr />
                                         <h6 class='card_header'>Job Items Listing</h6>
                                         <table class="table table-hover">

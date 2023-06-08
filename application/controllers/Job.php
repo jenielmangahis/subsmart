@@ -246,8 +246,8 @@ class Job extends MY_Controller
         //     'select' => 'items.id,title,price,type',
         // );
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
-
-        // get estimates
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+      
         $get_estimates = array(
             'where' => array(
                 'company_id' => $comp_id,
@@ -1928,6 +1928,7 @@ class Job extends MY_Controller
 
     public function delete_job()
     {
+        $user_login = logged('FName') . ' ' . logged('LName');
         $remove_job = array(
             'where' => array(
                 'id' => $_POST['job_id'],
@@ -1938,6 +1939,18 @@ class Job extends MY_Controller
         $job = $this->jobs_model->get_specific_job($_POST['job_id']);
         if ($job) {
             if ($this->general->delete_($remove_job)) {
+
+                // Record Job delete to Customer Activities Module in Customer Dashboard
+                $action = "$user_login deleted a job. $job->job_number";
+
+                $customerLogPayload = array(
+                    'date' => date('m/d/Y')."<br>".date('h:i A'),
+                    'customer_id' => $job->customer_id,
+                    'user_id' => logged('id'),
+                    'logs' => "$action"
+                );
+                $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
                 customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #' . $job->job_number);
                 echo '1';
             }
@@ -2491,37 +2504,20 @@ class Job extends MY_Controller
             }*/
 
 
-        $getUserInfoPayload = array(
-            'where' => array('id' => logged('id')),
-            'table' => 'users'
-        );
-        $getUserInfo = $this->general->get_data_with_param($getUserInfoPayload, false);
-
-        $getCustomerInfoPayload = array(
-            'where' => array('prof_id' => $input['customer_id']),
-            'table' => 'acs_profile'
-        );
-        $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfoPayload, false);
-
+        // Record Job save and Update to Customer Activities Module in Customer Dashboard
         if ($is_update == 0) {
-            $customerLogPayload = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $input['customer_id'],
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
-            );
+            $action = "$user_login scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
         } else {
-            $customerLogPayload = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $input['customer_id'],
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
-            );
+            $action = "$user_login updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
         }
 
+        $customerLogPayload = array(
+            'date' => date('m/d/Y')."<br>".date('h:i A'),
+            'customer_id' => $input['customer_id'],
+            'user_id' => logged('id'),
+            'logs' => "$action"
+        );
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
-
-
 
         $return = [
             'is_success' => $is_success,

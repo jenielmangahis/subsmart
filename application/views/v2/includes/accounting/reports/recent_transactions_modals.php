@@ -36,6 +36,7 @@
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
+                            <td data-name="Adj" <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>>ADJ</td>
                             <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>>POSTING</td>
                             <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
@@ -77,6 +78,7 @@
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                            <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
                             <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
@@ -111,7 +113,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b><?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -128,6 +130,7 @@
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
+                            <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
                             <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
@@ -162,7 +165,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -175,7 +178,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="34">
+                            <td colspan="35">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -185,7 +188,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="34" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="35" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -238,6 +241,7 @@
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
+                            <td data-name="Adj" <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>>ADJ</td>
                             <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>>POSTING</td>
                             <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
@@ -278,7 +282,7 @@
                         <tr>
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
-                            <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                            <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
                             <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
@@ -313,7 +317,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b><?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -330,6 +334,7 @@
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
                             <td <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
+                            <td <?=isset($columns) && !in_array('Adj', $columns) ? 'style="display: none"' : ''?>><?=$transaction['adj']?></td>
                             <td <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
@@ -364,7 +369,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td><b><?=$transaction['amount_total']?></b></td>
                             <td></td>
                             <td><b><?=$transaction['debit_total']?></b></td>
@@ -377,7 +382,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="34">
+                            <td colspan="35">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -387,7 +392,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="34" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="35" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -531,6 +536,7 @@
                                                 <select id="custom-group-by" class="form-control nsm-field">
                                                     <option value="none" <?=$group_by === 'none' ? 'selected' : ''?>>None</option>
                                                     <option value="account" <?=$group_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                    <option value="name" <?=$group_by === 'name' ? 'selected' : ''?>>Name</option>
                                                     <option value="transaction-type" <?=empty($group_by) || $group_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
                                                     <option value="customer" <?=$group_by === 'customer' ? 'selected' : ''?>>Customer</option>
                                                     <option value="vendor" <?=$group_by === 'vendor' ? 'selected' : ''?>>Vendor</option>
@@ -569,6 +575,14 @@
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-num" <?=isset($columns) && in_array('Num', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-num">
                                                                 Num
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-adj" <?=isset($columns) && in_array('Adj', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-adj">
+                                                                Adj
                                                             </label>
                                                         </div>
                                                     </div>

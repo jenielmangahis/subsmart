@@ -1282,6 +1282,21 @@ class Tickets extends MY_Controller
     public function deleteTicket()
     {
         $ticketID = $this->input->post('tkID');
+        
+        $user_login = logged('FName') . ' ' . logged('LName');
+        
+        $ticketInfo = $this->tickets_model->getTicketInfo($ticketID);
+        // Record Job delete to Customer Activities Module in Customer Dashboard
+            $action = "$user_login deleted a service ticket. $ticketInfo->ticket_no";
+
+            $customerLogPayload = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $ticketInfo->customer_id,
+                'user_id' => logged('id'),
+                'logs' => "$action"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
         $is_success =  $this->tickets_model->delete_tickets($ticketID);
         echo json_encode($is_success);
     }

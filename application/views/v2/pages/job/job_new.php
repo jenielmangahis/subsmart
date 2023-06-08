@@ -1641,7 +1641,7 @@
                                         <td><strong>On Hand</strong></td>
                                         <td><strong>Price</strong></td>
                                         <td><strong>Type</strong></td>
-                                        <td><strong>Location</strong></td>
+                                        <td class='d-none'><strong>Location</strong></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1655,10 +1655,17 @@
                                             <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                        <td><?php foreach($itemsLocation as $itemLoc){
+                                            if($itemLoc->item_id == $item->id){
+                                                echo "<div class='data-block'>";
+                                                echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                echo "</div>";
+                                            } 
+                                        }
+                                        ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
-                                        <td><?php echo $item->location_name; ?></td>
+                                        <td class='d-none'><?php echo $item->location_name; ?></td>
                                     </tr>
                                     <?php } } ?>
                                 </tbody>
