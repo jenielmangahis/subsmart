@@ -837,7 +837,48 @@ function Step3() {
     $formSubmit.on("click", async function (event) {
       event.preventDefault();
 
-      if (userInfo !== undefined) {
+      Swal.fire({
+            title: 'Confirmation',
+            html: "Save changes?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+              if (userInfo !== undefined) {
+                return handleSelfSigningOnSubmit({ event, evenlopeId: fileId, files });
+              }
+
+              if (isTemplate) {
+                window.location = `${prefixURL}/vault_v2/mylibrary`;
+                return;
+              }
+
+              const $button = $(this);
+              const $loader = $button.find(".spinner-border");
+
+              $loader.removeClass("d-none");
+              $button.attr("disabled", true);
+
+              let url = `${prefixURL}/DocuSign/send`;
+              $.ajax({
+                  type: 'POST',
+                  url: url,
+                  dataType: 'json',
+                  data: {document_id: fileId},
+                  success: function(data) {
+                    let nextUrl = `${prefixURL}/eSign/manage?view=sent`;
+                    if (data.hash) {
+                      nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
+                    }
+                    window.location = nextUrl;                           
+                  },
+              });
+            }
+        }); 
+
+      /*if (userInfo !== undefined) {
         return handleSelfSigningOnSubmit({ event, evenlopeId: fileId, files });
       }
 
@@ -868,7 +909,7 @@ function Step3() {
         nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
 
-      window.location = nextUrl;
+      window.location = nextUrl;*/
     });
 
     const $addOption = $optionsSidebar.find("#addDropdownOption");

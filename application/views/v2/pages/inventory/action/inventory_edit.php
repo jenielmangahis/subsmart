@@ -46,7 +46,7 @@
                                             <input value="<?php echo $item->brand; ?>" type="text" class="form-control " name="brand" id="brand" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <strong>Price</strong>
+                                            <strong>Price/Cost</strong>
                                             <input value="<?php echo $item->price; ?>" type="number" step="any" class="form-control " name="price" id="price" required/>
                                         </div>
                                         <div class="col-lg-2 mb-2">

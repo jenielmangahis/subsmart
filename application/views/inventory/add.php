@@ -48,7 +48,7 @@
                                         </div>
                                     </div>
                                     <div class="row form_line">
-                                        <div class="col-md-4">Price</div>
+                                        <div class="col-md-4">Price/Cost</div>
                                         <div class="col-md-8">
                                             <input type="number" step="any" class="form-control " name="price" id="price" required/>
                                         </div>

@@ -398,6 +398,70 @@ $('#run-report-button').on('click', function() {
     location.href = url;
 });
 
+$('#add-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $(this).parent().next().removeClass('d-none');
+});
+
+$('#new-custom-report-group').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-group-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/add-custom-report-group`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
+            $('#custom-group-name').val('');
+        }
+    });
+});
+
+$('#save-custom-report').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/check-custom-report-name`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.exists) {
+                Swal.fire({
+                    // title: 'Delete Invoice',
+                    text: 'A custom report with this name already exists. Enter a new name, or click Replace to replace the existing report.',
+                    icon: 'warning',
+                    confirmButtonText: 'Replace',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        save_custom_report(res.data);
+                    }
+                });
+            } else {
+                save_custom_report();
+            }
+        }
+    });
+});
+
 $('#sort-by, [name="sort_order"]').on('change', function() {
     var sortBy = $('#sort-by').val();
     var sortIn = $('input[name="sort_order"]:checked').val();
@@ -494,6 +558,74 @@ $('#save-note').on('click', function(e) {
 
 $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
+});
+
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
 });
 
 $('input[name="col_chk"]').on('change', function() {
@@ -619,6 +751,59 @@ $('input[name="col_chk"]').on('change', function() {
         $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
     }
 });
+
+function save_custom_report(customReport = {})
+{
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('report_id', reportId);
+    data.set('custom_report_group_id', $('#custom-report-group').val());
+    data.set('share_with', $('#share-with').val());
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(selectedVal[0] !== 'date') {
+                data.append(`settings[${selectedVal[0]}]`, selectedVal[1]);
+            } else {
+                data.set('date_range', selectedVal[1]);
+            }
+        });
+    }
+
+    if(data.has('date_range') === false) {
+        data.set('date_range', $('#report-period-date').find('option:selected').text().trim());
+    }
+
+    if(Object.keys(customReport).length > 0) {
+        data.append('custom_report_id', customReport.id);
+    }
+
+    $.ajax({
+        url: `/accounting/reports/save-custom-report`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+}
 
 function get_start_and_end_dates(val, el)
 {

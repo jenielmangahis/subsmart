@@ -26,6 +26,7 @@ echo put_header_assets();
         border-color: #6a4a86;
     }
 
+
     .fileupload .custome-fileup .btn span {
         background-color: #6a4a86 !important;
         color: #fff !important;
@@ -477,6 +478,22 @@ echo put_header_assets();
                                                     <i class="esign-fa fas fa-mobile-alt"></i>
                                                     <span class="u-ellipsis ng-binding">Secondary Contact</span>
                                                 </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
+                                                    <i class="esign-fa fas fa-mobile-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Date of Birth</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
+                                                    <i class="esign-fa fas fa-mobile-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Social Security Number</span>
+                                                </div>
                                             </li>                                                                                      
 
                                             <li class="menu_listItem">
@@ -508,7 +525,7 @@ echo put_header_assets();
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
                                                     <i class="esign-fa fas fa-user"></i>
-                                                    <span class="u-ellipsis ng-binding">Contact Name</span>
+                                                    <span class="u-ellipsis ng-binding">Primary Contact Name</span>
                                                 </div>
                                             </li>
 
@@ -516,7 +533,7 @@ echo put_header_assets();
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
                                                     <i class="esign-fa fas fa-user"></i>
-                                                    <span class="u-ellipsis ng-binding">Contact First Name</span>
+                                                    <span class="u-ellipsis ng-binding">Primary Contact First Name</span>
                                                 </div>
                                             </li>
 
@@ -524,7 +541,7 @@ echo put_header_assets();
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
                                                     <i class="esign-fa fas fa-user"></i>
-                                                    <span class="u-ellipsis ng-binding">Contact Last Name</span>
+                                                    <span class="u-ellipsis ng-binding">Primary Contact Last Name</span>
                                                 </div>
                                             </li>
 
@@ -532,7 +549,39 @@ echo put_header_assets();
                                                 <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_number"></i></span>
                                                     <i class="esign-fa fas fa-mobile-alt"></i>
-                                                    <span class="u-ellipsis ng-binding">Contact Number</span>
+                                                    <span class="u-ellipsis ng-binding">Primary Contact Number</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Secondary Contact Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Secondary Contact First Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                    <i class="esign-fa fas fa-user"></i>
+                                                    <span class="u-ellipsis ng-binding">Secondary Contact Last Name</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_number"></i></span>
+                                                    <i class="esign-fa fas fa-mobile-alt"></i>
+                                                    <span class="u-ellipsis ng-binding">Secondary Contact Number</span>
                                                 </div>
                                             </li>
                                         </ul>
@@ -1010,6 +1059,7 @@ echo put_header_assets();
     .content_sidebar.content_sidebar-left {
         position: absolute !important;
         padding-top: 0 !important;
+        width: 450px !important;
     }
     [id^=pdf-render] {
         border: 1px solid #d8d8d8;
