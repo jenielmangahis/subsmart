@@ -616,7 +616,7 @@
                                             <div class="row">
                                                 <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
                                                     <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
-                                                    <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
+                                                    <select id="EMPLOYEE_SELECT_2" name="EMPLOYEE_SELECT_2" class="form-control">
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>

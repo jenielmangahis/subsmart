@@ -1054,6 +1054,7 @@ $("#attachment-file").change(function() {
         $("#ITEM_CUSTOM_SEARCH").keyup(function() {
             ITEMS_TABLE.search($(this).val()).draw()
         });
+        
         ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
 
         // $('#device_audit').DataTable({

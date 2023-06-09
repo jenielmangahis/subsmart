@@ -153,13 +153,13 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
-    public function getUsersByRole($role=[3])
+    public function getUsersByRole()
     {
         $cid=logged('company_id');
         $this->db->select('*');
         $this->db->from('users');
         //$this->db->where('parent_id', $parent_id);
-        $this->db->where_in('users.role', $role);
+        // $this->db->where_in('users.role', $role);
         //$this->db->where('role', $role);
         $this->db->where('company_id', $cid);
         $query = $this->db->get();
@@ -941,6 +941,16 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getCommissionHistory($user_id) {
+        $this->db->select('*');
+        $this->db->from('employee_commission_history');
+        $this->db->where_in('user_id', $user_id);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query->result(); 
+    }
+
 }
 
 

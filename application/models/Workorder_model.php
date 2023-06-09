@@ -2327,7 +2327,7 @@ class Workorder_model extends MY_Model
             return  $insert_id;
 
         }else{
-            $this->db->where('fk_prof_id', $customer_id);
+            $this->db->where('fk_prof_id', $fk_prof_id);
             $this->db->update('acs_office', array(
                 'lead_source'           => $lead_source,
                 'save_by'               => $save_by,
@@ -2338,6 +2338,37 @@ class Workorder_model extends MY_Model
             ));
             return true;
         }
+    }
+
+    public function update_office_job($data)
+    {
+        // extract($data);
+        // $this->db->where('fk_prof_id', $customer_id);
+        // $this->db->update('acs_office', array(
+        //     'lead_source'           => $lead_source,
+        //     'save_by'               => $save_by,
+        //     'equipment_cost'        => $equipment_cost,
+        //     'monthly_monitoring'    => $mmr,
+        //     'sales_date'            => $sales_date,
+        // ));
+        // return true;
+        extract($data);
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_office', array(
+                'fk_sales_rep_office'   => $fk_sales_rep_office,
+                'technician'            => $technician,
+            ));
+            return true;
+    }
+
+    public function update_alarm_adi_job($data)
+    {
+        extract($data);
+        $this->db->where('fk_prof_id', $fk_prof_id);
+        $this->db->update('acs_alarm', array(
+            'monitor_id'   => $monitor_id,
+        ));
+        return true;
     }
 
     public function update_alarm_adi($data)
