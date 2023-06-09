@@ -2674,6 +2674,7 @@ class Customer extends MY_Controller
                 $this->page_data['users'] = $this->users_model->getUsers();
                 $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
                 $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_salesarea", "sa_id");
+
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
@@ -2687,7 +2688,13 @@ class Customer extends MY_Controller
         
         if ($input) {
             unset($input['credit_report']);
-            unset($input['report_history']);            
+            unset($input['report_history']);    
+            $input['country'] = ucwords($input['country']);
+            $input['state']   = ucwords($input['state']);
+            $input['city']    = ucwords($input['city']);
+            $input['address'] = ucwords($input['address']);   
+            $input['phone_home'] = formatPhoneNumber($input['phone_home']);   
+            $input['phone_cell'] = formatPhoneNumber($input['phone_cell']);   
             if( isset($input['leads_id']) ){                
                 if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
                     //SMS Notification
@@ -2733,6 +2740,7 @@ class Customer extends MY_Controller
                 'state' => $input['state'],
                 'zip_code' => $input['zip'],
                 'country' => $input['country'],
+                'county' => $input['county'],
                 'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
                 'email' => $input['email_add'],
                 'ssn' => $input['sss_num'],

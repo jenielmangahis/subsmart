@@ -145,9 +145,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <span>Birthdate</span>
                                         <input class="form-control" type="date" name="date_of_birth" id="date_of_birt" value="<?php if(isset($leads_data)){ echo $leads_data->date_of_birth; } ?>">
                                     </div>
-                                    <div class="col-md-9 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <span>Address</span>
                                         <input class="form-control" type="text" name="address" id="customer_address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span>Country</span>
+                                        <input class="form-control" type="text" name="country" id="country" value="<?php if(isset($leads_data)){ echo $leads_data->country; } ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span>State</span>
@@ -158,8 +162,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input class="form-control" type="text" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <span>Country</span>
-                                        <input class="form-control" type="text" name="country" id="country" value="<?php if(isset($leads_data)){ echo $leads_data->country; } ?>" required>
+                                        <span>County</span>
+                                        <input class="form-control" type="text" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>" required>
                                     </div>
                                     <div class="col-md-2 mb-3">
                                         <span>Zip</span>
