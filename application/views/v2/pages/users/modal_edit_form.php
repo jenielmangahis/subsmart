@@ -107,6 +107,14 @@
                     <?php } ?>
                 </select>
             </div>
+            <div class="col-12">
+                <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
+                <select class="nsm-field form-select" name="empCommission" required>
+                    <option value="" disabled>Select Type</option>
+                    <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option>
+                    <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option>
+                </select>
+            </div>
         </div>
     </div>
     <div class="col-12 col-md-6">

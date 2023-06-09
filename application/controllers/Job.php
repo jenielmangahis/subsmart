@@ -19,6 +19,8 @@ class Job extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Items_model', 'items_model');
         $this->load->model('Customer_model', 'customer_model');
+        $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('Users_model', 'users_model');
     }
 
     public function loadStreetView($address = null)
@@ -2282,6 +2284,14 @@ class Job extends MY_Controller
                 'OPT_ACCOUNTNOTE' => $input['OPT_ACCOUNTNOTE']
             );
 
+            $commission_history_payload = [
+                'datetime' => date("M d, Y")."<br>".date("h:i a"), 
+                'user_id' => $input['employee_id'], 
+                'location' => "Job<br><small class='text-muted'>($job_number)</small>", 
+                'type' => $input['commission_type'], 
+                'commission' => $input['commission_amount']
+            ];
+
             if (!empty($input['customer_message'])) {
                 $jobs_data['message'] = $input['customer_message'];
             }
@@ -2311,6 +2321,7 @@ class Job extends MY_Controller
             if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+                $commission_history_returnID = $this->general->add_return_id($commission_history_payload, 'employee_commission_history');
 
                 //Create hash_id
                 $job_hash_id = hashids_encrypt($jobs_id, '', 15);
@@ -2518,6 +2529,22 @@ class Job extends MY_Controller
             'logs' => "$action"
         );
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
+        $itemsOffice = array(
+            'fk_prof_id'                => $input['customer_id'],
+            'fk_sales_rep_office'       => $input['employee_id'],
+            'technician'                => $input['EMPLOYEE_SELECT_2'],
+        );
+
+        $solarItemsOffices = $this->workorder_model->update_office_job($itemsOffice);
+
+        $alarmInfoData = array(
+            'fk_prof_id'                => $input['customer_id'],
+            'monitor_id'                => $input['JOB_ACCOUNT_NUMBER'],
+        );
+
+        $alarmInfoDatas = $this->workorder_model->update_alarm_adi_job($alarmInfoData);
+
 
         $return = [
             'is_success' => $is_success,
