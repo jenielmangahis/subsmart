@@ -639,7 +639,11 @@
     </div>
     <div class="nsm-card-content"><hr>
         <div class="row form-line">
-            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"></textarea>
+            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5">
+            <?php foreach ($customer_notes as $notes) : ?>
+                <?= $notes->note; ?>
+            <?php endforeach; ?>
+            </textarea>
         </div>
     </div>
 </div>

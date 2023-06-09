@@ -1898,7 +1898,8 @@ class Workorder_model extends MY_Model
 
     public function  getlead_source($company_id)
     {
-        $this->db->select('*');
+        $this->db->distinct();
+        $this->db->select('ls_name');
 		$this->db->from('ac_leadsource');
 		// $this->db->where('fk_company_id', $company_id);
         $query = $this->db->get();
@@ -2295,34 +2296,139 @@ class Workorder_model extends MY_Model
             'city'            => $city,
             'country'         => $country,
             'zip_code'        => $zip_code,
+            'ssn'             => $ssn,
         ));
         return true;
     }
 
     public function update_office($data)
     {
+        // extract($data);
+        // $this->db->where('fk_prof_id', $customer_id);
+        // $this->db->update('acs_office', array(
+        //     'lead_source'           => $lead_source,
+        //     'save_by'               => $save_by,
+        //     'equipment_cost'        => $equipment_cost,
+        //     'monthly_monitoring'    => $mmr,
+        //     'sales_date'            => $sales_date,
+        // ));
+        // return true;
         extract($data);
-        $this->db->where('fk_prof_id', $customer_id);
-        $this->db->update('acs_office', array(
-            'lead_source'           => $lead_source,
-            'save_by'               => $save_by,
-            'equipment_cost'        => $equipment_cost,
-            'monthly_monitoring'    => $monthly_monitoring,
+        $this->db->select('*');
+		$this->db->from('acs_office');
+        $this->db->where($fk_prof_id);
+        $query2 = $this->db->get();
+        $query3 = $query2->result();
+
+        if(empty($query3))
+        {
+            $vendor = $this->db->insert('acs_office', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+
+        }else{
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_office', array(
+                'lead_source'           => $lead_source,
+                'save_by'               => $save_by,
+                'fk_sales_rep_office'   => $fk_sales_rep_office,
+                'equipment_cost'        => $equipment_cost,
+                'monthly_monitoring'    => $monthly_monitoring,
+                'sales_date'            => $sales_date,
+            ));
+            return true;
+        }
+    }
+
+    public function update_office_job($data)
+    {
+        // extract($data);
+        // $this->db->where('fk_prof_id', $customer_id);
+        // $this->db->update('acs_office', array(
+        //     'lead_source'           => $lead_source,
+        //     'save_by'               => $save_by,
+        //     'equipment_cost'        => $equipment_cost,
+        //     'monthly_monitoring'    => $mmr,
+        //     'sales_date'            => $sales_date,
+        // ));
+        // return true;
+        extract($data);
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_office', array(
+                'fk_sales_rep_office'   => $fk_sales_rep_office,
+                'technician'            => $technician,
+            ));
+            return true;
+    }
+
+    public function update_alarm_adi_job($data)
+    {
+        extract($data);
+        $this->db->where('fk_prof_id', $fk_prof_id);
+        $this->db->update('acs_alarm', array(
+            'monitor_id'   => $monitor_id,
         ));
         return true;
     }
 
     public function update_alarm_adi($data)
     {
+        // extract($data);
+        
+
         extract($data);
-        $this->db->where('fk_prof_id', $customer_id);
-        $this->db->update('acs_alarm', array(
-            'equipment_cost'            => $equipment_cost,
-            'monthly_monitoring'        => $monthly_monitoring,
-            'panel_type'                => $panel_type,
-            'otps'                      => $otps,
-        ));
-        return true;
+        $this->db->select('*');
+		$this->db->from('acs_alarm');
+        $this->db->where($fk_prof_id);
+        $query2 = $this->db->get();
+        $query3 = $query2->result();
+
+        if(empty($query3))
+        {
+            $vendor = $this->db->insert('acs_alarm', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+
+        }else{
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_alarm', array(
+                'equipment_cost'            => $equipment_cost,
+                'monthly_monitoring'        => $monthly_monitoring,
+                'panel_type'                => $panel_type,
+                'otps'                      => $otps,
+                'system_type'               => $system_type,
+                'monitor_comp'              => $monitor_comp,
+                'acct_type'                 => $acct_type,
+                'equipment'                 => $equipment,
+                'passcode'                  => $passcode,
+                'comm_type'                 => $comm_type,
+            ));
+            return true;
+        }
+    }
+
+    public function update_notes_adi($data)
+    {
+        extract($data);
+        $this->db->select('*');
+		$this->db->from('acs_notes');
+        $this->db->where($fk_prof_id);
+        $query2 = $this->db->get();
+        $query3 = $query2->result();
+
+        if(empty($query3))
+        {
+            $vendor = $this->db->insert('acs_notes', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+
+        }else{
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_notes', array(
+                'note'            => $note,
+            ));
+            return true;
+        }
     }
     
     public function delete_contact($customer_id){

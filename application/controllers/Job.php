@@ -19,6 +19,8 @@ class Job extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Items_model', 'items_model');
         $this->load->model('Customer_model', 'customer_model');
+        $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('Users_model', 'users_model');
     }
 
     public function loadStreetView($address = null)
@@ -246,8 +248,8 @@ class Job extends MY_Controller
         //     'select' => 'items.id,title,price,type',
         // );
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
-
-        // get estimates
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+      
         $get_estimates = array(
             'where' => array(
                 'company_id' => $comp_id,
@@ -1928,6 +1930,7 @@ class Job extends MY_Controller
 
     public function delete_job()
     {
+        $user_login = logged('FName') . ' ' . logged('LName');
         $remove_job = array(
             'where' => array(
                 'id' => $_POST['job_id'],
@@ -1938,6 +1941,18 @@ class Job extends MY_Controller
         $job = $this->jobs_model->get_specific_job($_POST['job_id']);
         if ($job) {
             if ($this->general->delete_($remove_job)) {
+
+                // Record Job delete to Customer Activities Module in Customer Dashboard
+                $action = "$user_login deleted a job. $job->job_number";
+
+                $customerLogPayload = array(
+                    'date' => date('m/d/Y')."<br>".date('h:i A'),
+                    'customer_id' => $job->customer_id,
+                    'user_id' => logged('id'),
+                    'logs' => "$action"
+                );
+                $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
                 customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #' . $job->job_number);
                 echo '1';
             }
@@ -2269,6 +2284,14 @@ class Job extends MY_Controller
                 'OPT_ACCOUNTNOTE' => $input['OPT_ACCOUNTNOTE']
             );
 
+            $commission_history_payload = [
+                'datetime' => date("M d, Y")."<br>".date("h:i a"), 
+                'user_id' => $input['employee_id'], 
+                'location' => "Job<br><small class='text-muted'>($job_number)</small>", 
+                'type' => $input['commission_type'], 
+                'commission' => $input['commission_amount']
+            ];
+
             if (!empty($input['customer_message'])) {
                 $jobs_data['message'] = $input['customer_message'];
             }
@@ -2298,6 +2321,7 @@ class Job extends MY_Controller
             if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+                $commission_history_returnID = $this->general->add_return_id($commission_history_payload, 'employee_commission_history');
 
                 //Create hash_id
                 $job_hash_id = hashids_encrypt($jobs_id, '', 15);
@@ -2491,36 +2515,35 @@ class Job extends MY_Controller
             }*/
 
 
-        $getUserInfoPayload = array(
-            'where' => array('id' => logged('id')),
-            'table' => 'users'
-        );
-        $getUserInfo = $this->general->get_data_with_param($getUserInfoPayload, false);
-
-        $getCustomerInfoPayload = array(
-            'where' => array('prof_id' => $input['customer_id']),
-            'table' => 'acs_profile'
-        );
-        $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfoPayload, false);
-
+        // Record Job save and Update to Customer Activities Module in Customer Dashboard
         if ($is_update == 0) {
-            $customerLogPayload = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $input['customer_id'],
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
-            );
+            $action = "$user_login scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
         } else {
-            $customerLogPayload = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $input['customer_id'],
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
-            );
+            $action = "$user_login updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
         }
 
+        $customerLogPayload = array(
+            'date' => date('m/d/Y')."<br>".date('h:i A'),
+            'customer_id' => $input['customer_id'],
+            'user_id' => logged('id'),
+            'logs' => "$action"
+        );
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
+        $itemsOffice = array(
+            'fk_prof_id'                => $input['customer_id'],
+            'fk_sales_rep_office'       => $input['employee_id'],
+            'technician'                => $input['EMPLOYEE_SELECT_2'],
+        );
+
+        $solarItemsOffices = $this->workorder_model->update_office_job($itemsOffice);
+
+        $alarmInfoData = array(
+            'fk_prof_id'                => $input['customer_id'],
+            'monitor_id'                => $input['JOB_ACCOUNT_NUMBER'],
+        );
+
+        $alarmInfoDatas = $this->workorder_model->update_alarm_adi_job($alarmInfoData);
 
 
         $return = [

@@ -226,13 +226,13 @@ class DocuSign extends MYF_Controller
         
         #changes starts here
         #Clients
-        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country');
+        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country, county AS county_name');
         $this->db->where('prof_id', $customer_id);
         //$this->db->where('prof_id', 20797);
         $acs_client = $this->db->get('acs_profile')->row();
 
         $acs_clientKeys = [
-            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country'
+            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name'
         ];
 
         $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
@@ -247,7 +247,8 @@ class DocuSign extends MYF_Controller
         $acs_alarm_accessKeys = [
             'alarm_cs_account',
             'monthly_monitoring',
-            'otps'
+            'otps',
+            'passcode'
         ];
         
         $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
@@ -256,12 +257,13 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
 
         #emergency contacts
-        $this->db->select('name AS emergency_contact_name, phone AS emergency_contact_phone');
+        $this->db->select('first_name AS emergency_contact_fname, last_name AS emergency_contact_lname, phone AS emergency_contact_phone');
         $this->db->where('customer_id', $customer_id);
         $contacts = $this->db->get('contacts')->row();
 
         $contacts_accessKeys = [
-            'emergency_contact_name',
+            'emergency_contact_fname',
+            'emergency_contact_lname',
             'emergency_contact_phone'
         ];
         
@@ -2507,7 +2509,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(880);
+        $pdf = $this->debugGeneratePDFMaker(882);
         echo 'Finish';
     }
 
@@ -2515,15 +2517,7 @@ SQL;
     {
 
         $this->db->where('id', $documentId);
-        $document = $this->db->get('user_docfile')->row();
-
-        /*if (is_null($document)) {
-            return;
-        }
-
-        if ($document->status !== 'Completed') {
-            return;
-        }*/
+        $document = $this->db->get('user_docfile')->row();        
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
@@ -2757,30 +2751,26 @@ SQL;
                     if ($field->field_name === 'Text') {
                         $top = (int) str_replace("px", "", $coordinates->pageTop);
                         $left = (int) str_replace("px", "", $coordinates->left);
-
-                        if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
+                        if( $left > 800 ){
+                            $left = 773;
                         }
+
+                        $topAdjusted = (31.8 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (30 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;
                         
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
                         $pdf->SetFont('Courier', '', 10);
+                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Contact First Name','Contact Last Name','Abort Code','County'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
@@ -3119,24 +3109,13 @@ SQL;
                     }
 
                     if ($field->field_name === 'Text') {
-                        $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
+                        $top = (int) str_replace("px", "", $coordinates->pageTop);
+                        $left = (int) str_replace("px", "", $coordinates->left);
+                        if( $left > 800 ){
+                            $left = 773;
+                        }
 
-                        /*if( $left >= 750 ){
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (29 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }else{
-                            $topAdjusted = (31.5 / 100) * $top;
-                            $topAdjusted = $top - $topAdjusted;
-
-                            $leftAdjusted = (30 / 100) * $left;
-                            $leftAdjusted = $left - $leftAdjusted;
-                        }*/
-
-                        $topAdjusted = (31.5 / 100) * $top;
+                        $topAdjusted = (31.8 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
                         $leftAdjusted = (30 / 100) * $left;
@@ -3147,6 +3126,7 @@ SQL;
                         $pdf->setX($leftAdjusted);
 
                         $pdf->SetFont('Courier', '', 10);
+                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
                         $pdf->Write(0, $value->value);
                     }
 
@@ -3167,7 +3147,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Contact First Name','Contact Last Name','Abort Code','County'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;

@@ -1861,7 +1861,8 @@ class Customer extends MY_Controller
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
+        // $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
+        $this->page_data['technicians'] = $this->users_model->getUsersByRole();
         $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
     
         // fetch customer statuses
@@ -2744,9 +2745,17 @@ class Customer extends MY_Controller
                 'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
                 'email' => $input['email_add'],
                 'ssn' => $input['sss_num'],
-                'phone_h' => $input['phone_home']
+                'phone_h' => $input['phone_home'],
+                'phone_m' => $input['phone_cell']
             ];
             if ($lastid = $this->customer_ad_model->add($customer_data, "acs_profile")) {
+                $customerOfficePayload = [
+                    'fk_prof_id' => $lastid,
+                    'sales_date' => date('m/d/Y'),
+                    'fk_sales_rep_office' => $input['fk_sr_id'],
+                ];
+                $this->customer_ad_model->add($customerOfficePayload, "acs_office");
+                
                 $lead = $this->customer_ad_model->get_data_by_id('leads_id',$this->input->post('leads_id'),"ac_leads");
                 //SMS Notification
                 createCronAutoSmsNotification(logged('company_id'), $lead->leads_id, 'lead', 'Converted', 0, $lead->fk_assign_id);

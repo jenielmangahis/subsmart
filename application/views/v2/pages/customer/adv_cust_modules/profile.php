@@ -193,19 +193,19 @@ div#controls div#call-controls div#volume-indicators > div {
                 </div>                
                 <div class="col-12 col-md-7 text-end">
                     <div class="form-check d-inline-block me-3">
-                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_sms" name="notify_by_sms" checked>
+                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_sms" name="notify_by_sms">
                         <label class="form-check-label" for="notify_by_sms">
                             Notify by SMS
                         </label>
                     </div>
                     <div class="form-check d-inline-block">
-                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_email" name="notify_by_email" checked>
+                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_email" name="notify_by_email">
                         <label class="form-check-label" for="notify_by_email">
                             Notify by Email
                         </label>
                     </div>
                 </div>
-                <div class="col-12 col-md-12 mt-5">
+                <!-- <div class="col-12 col-md-12 mt-5">
                     <a role="button" class="nsm-button primary w-100 ms-0 mt-5 send-sms-message" href="javascript:void(0);" data-customer-name="<?= ucwords($profile_info->first_name) . ' ' . ucwords($profile_info->last_name) ?>" data-id="<?= $profile_info->prof_id; ?>" data-phone="<?= $profile_info->phone_m; ?>" style="width:100px !important;">
                         Send SMS
                     </a>
@@ -213,7 +213,7 @@ div#controls div#call-controls div#volume-indicators > div {
                     <a role="button" class="nsm-button primary w-100 ms-0 mt-5 call-customer" href="javascript:void(0);" data-id="<?= $profile_info->prof_id; ?>" data-phone="<?= $phone; ?>" style="width:100px !important;">
                         Call
                     </a>
-                </div>
+                </div> -->
                 <div class="col-12 mb-2" id="customerquickactions">
                     <div class="d-flex justify-content-end mb-3">
                         <a href="#" class="nsm-link" id="managequickactions">Manage Quick Actions</a>

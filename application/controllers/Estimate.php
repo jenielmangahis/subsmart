@@ -421,11 +421,24 @@ class Estimate extends MY_Controller
     public function delete_estimate()
     {
         $id = $this->input->post('id');
+        $user_login = logged('FName') . ' ' . logged('LName');
+        $estimateInfo = $this->estimate_model->getEstimate($id);
 
         $data = array(
             'id' => $id,
             'view_flag' => '1',
         );
+
+        // Record Job delete to Customer Activities Module in Customer Dashboard
+            $action = "$user_login deleted an estimate. $estimateInfo->estimate_number";
+
+            $customerLogPayload = array(
+                'date' => date('m/d/Y')."<br>".date('h:i A'),
+                'customer_id' => $estimateInfo->customer_id,
+                'user_id' => logged('id'),
+                'logs' => "$action"
+            );
+            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
         $delete = $this->estimate_model->deleteEstimate($data);
 

@@ -1095,6 +1095,16 @@
                                                             </div>
                                                         </div>
                                                     <?php } ?>
+                                                    <div class="row mt-3">
+                                                            <div class="col-sm-6">
+                                                                <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <label id="invoice_overall_total">$0</label>
+                                                                <input type="text" name="commission_type" value="" hidden>
+                                                                <input step="any" type="number" name="commission_amount" value="" hidden>
+                                                            </div>
+                                                        </div>
                                                     <!-- <div class="col-sm-6"> -->
                                                         <!-- <small>Tax Rate</small> -->
                                                         <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
@@ -1641,7 +1651,7 @@
                                         <td><strong>On Hand</strong></td>
                                         <td><strong>Price</strong></td>
                                         <td><strong>Type</strong></td>
-                                        <td><strong>Location</strong></td>
+                                        <td class='d-none'><strong>Location</strong></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1655,10 +1665,17 @@
                                             <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                        <td><?php foreach($itemsLocation as $itemLoc){
+                                            if($itemLoc->item_id == $item->id){
+                                                echo "<div class='data-block'>";
+                                                echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                echo "</div>";
+                                            } 
+                                        }
+                                        ?></td>
                                         <td><?php echo $item->price; ?></td>
                                         <td><?php echo $item->type; ?></td>
-                                        <td><?php echo $item->location_name; ?></td>
+                                        <td class='d-none'><?php echo $item->location_name; ?></td>
                                     </tr>
                                     <?php } } ?>
                                 </tbody>
@@ -1991,6 +2008,27 @@ add_footer_js(array(
 
 
 <script>
+$("#employee_id").on('change', function(event) {
+    let employee_id = $(this).val();
+
+    $.ajax({
+        url: '<?php echo base_url('users/getUserInfo'); ?>',
+        type: 'POST',
+        data: {employee_id: employee_id},
+        success: function (data) {
+            let json = $.parseJSON(data);
+            let commission_type = "";
+
+            (json.commission_id == 0) ? commission_type = "Percentage (Gross, Net)" : "" ;
+            (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
+
+            $("input[name='commission_type']").val(commission_type);
+            $(".COMMISSION_TYPE").text(commission_type);
+        }
+    });
+});
+
+
 $('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
   this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);
 });

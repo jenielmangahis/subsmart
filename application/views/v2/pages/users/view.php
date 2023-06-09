@@ -1,4 +1,26 @@
 <?php include viewPath('v2/includes/header'); ?>
+<style type="text/css">
+    #COMMISSION_HISTORY_SEARCH {
+        width: 200px;
+    }
+
+    #COMMISSION_HISTORY_TABLE_length, 
+    #COMMISSION_HISTORY_TABLE_filter, 
+    #COMMISSION_HISTORY_TABLE_info {
+        display: none;
+    }
+    #COMMISSION_HISTORY_TABLE.dataTable thead th, #COMMISSION_HISTORY_TABLE.dataTable thead td {
+        padding: 5px;
+    }
+    #COMMISSION_HISTORY_TABLE.dataTable.no-footer {
+        border: 1px solid lightgray;
+    }
+    #COMMISSION_HISTORY_TABLE.dataTable, #COMMISSION_HISTORY_TABLE.dataTable th, #COMMISSION_HISTORY_TABLE.dataTable td {
+        box-sizing: border-box;
+    }
+</style>
+
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/employees_tabs'); ?>
@@ -14,7 +36,7 @@
                     </div>                    
                 </div>
                 <div class="row">
-                    <div class="col-2 grid-mb">
+                    <div class="col-3 grid-mb">
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                               <div class="d-flex flex-column align-items-center text-center">
@@ -25,12 +47,14 @@
                                   <br />
                                   <a class="nsm-button primary" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
                                   <a class="nsm-button primary" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);" style="width: 100%;">Edit Profile</a>
+                                  <br />
+                                  <button class="nsm-button mt-3 COMMISSION_HISTORY" data-bs-toggle="modal" data-bs-target="#commission_history_modal">Commission History</button>
                                 </div>
                               </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row mb-4">
@@ -99,6 +123,45 @@
         </div>
     </div>
 
+<div class="modal fade" id="commission_history_modal" role="dialog">
+    <div class="modal-dialog" style="max-width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Commission History</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <input id="COMMISSION_HISTORY_SEARCH" class="form-control mb-2" type="text" name="" placeholder="Search History...">
+                        <table id="COMMISSION_HISTORY_TABLE" class="table table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Datetime</th>
+                                    <th>Location</th>
+                                    <th>Type</th>
+                                    <th>Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($commission_info as $commission_infos): ?>
+                                <tr>
+                                    <td><?php echo $commission_infos->datetime; ?></td>
+                                    <td><?php echo $commission_infos->location; ?></td>
+                                    <td><?php echo $commission_infos->type; ?></td>
+                                    <td><?php echo ($commission_infos->commission) ? "$".$commission_infos->commission : "$0" ?></td>   
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <div class="modal fade nsm-modal fade" id="modalEditEmployee" aria-labelledby="modalEditEmployeelabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -162,9 +225,15 @@
     </div>
 
 </div>
-
 <script type="text/javascript">
 $(document).ready(function(){
+    var COMMISSION_HISTORY_TABLE = $('#COMMISSION_HISTORY_TABLE').DataTable({
+        "ordering": false,
+    });
+    $("#COMMISSION_HISTORY_SEARCH").keyup(function() {
+        COMMISSION_HISTORY_TABLE.search($(this).val()).draw()
+    });
+
     $('#modalEditEmployee').modal({backdrop: 'static', keyboard: false});
     $(".nsm-table").nsmPagination();
 

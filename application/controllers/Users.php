@@ -1297,6 +1297,7 @@ class Users extends MY_Controller
 			'user' => $id
 		], ['order' => ['id', 'desc']]);
 
+		$this->page_data['commission_info'] = $this->users_model->getCommissionHistory($id);
 		$this->load->view('v2/pages/users/view', $this->page_data);
 	}
 
@@ -1799,6 +1800,7 @@ class Users extends MY_Controller
 					'has_app_access' => $has_app_access,
 					'postal_code' => $post['postal_code'],
 					'payscale_id' => $post['empPayscale'],
+					'commission_id' => $post['empCommission'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number']
 				);
@@ -2525,6 +2527,12 @@ class Users extends MY_Controller
         ];
 
         echo json_encode($json_data);
+	}
+
+	public function getUserInfo() {
+		$employee_id = $this->input->post('employee_id');
+		$getInfo = $this->Users_model->getUser($employee_id);
+		echo json_encode($getInfo);
 	}
 }
 

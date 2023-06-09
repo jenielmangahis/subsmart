@@ -138,32 +138,9 @@ $('.dropdown-menu').on('click', function(e) {
 
 $('input[name="col_chk"]').on('change', function() {
     var chk = $(this);
-    var dataName = $(this).next().text();
+    var dataName = $(this).next().text().replace('#', 'No.');
 
     var index = $(`#reports-table thead td[data-name="${dataName}"]`).index();
-    if(index < 27 && chk.prop('checked') && $('#reports-table thead td[data-name=""]').length > 0) {
-        $('#reports-table thead td[data-name=""]').remove();
-        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total) td:first-child').remove();
-
-        $(`#print_report_modal table thead td[data-name=""]`).remove();
-        $('#print_report_modal table tbody tr:not(.group-header, .group-total) td:first-child').remove();
-        $(`#print_preview_report_modal #report_table_print thead td[data-name=""]`).remove();
-        $(`#print_preview_report_modal #report_table_print tr:not(.group-header, .group-total) td:first-child`).remove();
-
-        index--;
-    }
-
-    if(index < 27 && chk.prop('checked') === false && $('#reports-table thead td[data-name=""]').length < 1 && $('#reports-table thead tr td:visible').index() > 26) {
-        $('#reports-table thead tr').prepend(`<td data-name=""></td>`);
-        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total)').prepend(`<td></td>`);
-
-        $('#print_report_modal table thead tr').prepend(`<td data-name=""></td>`);
-        $('#print_report_modal table tbody tr:not(.group-header, .group-total)').prepend(`<td></td>`);
-        $('#print_preview_report_modal #report_table_print thead tr').prepend(`<td data-name=""></td>`);
-        $('#print_preview_report_modal #report_table_print tbody tr:not(.group-header, .group-total)').prepend(`<td></td>`);
-
-        index++;
-    }
 
     $(`#reports-table tr:not([data-bs-toggle="collapse"], .group-total)`).each(function() {
         if(chk.prop('checked')) {
@@ -173,12 +150,13 @@ $('input[name="col_chk"]').on('change', function() {
         }
     });
 
+    var newIndex = $('#reports-table thead tr td[data-name=""]').length > 0 ? 27 : 26
     $(`#reports-table tr[data-bs-toggle="collapse"], #reports-table tr.group-total`).each(function() {
-        if(index > 26) {
+        if(index > newIndex) {
             if(chk.prop('checked')) {
-                $($(this).find('td')[index - 26]).show();
+                $($(this).find('td')[index - newIndex]).show();
             } else {
-                $($(this).find('td')[index - 26]).hide();
+                $($(this).find('td')[index - newIndex]).hide();
             }
         } else {
             var colspan = $(this).children('td:first-child').attr('colspan');
@@ -200,11 +178,11 @@ $('input[name="col_chk"]').on('change', function() {
     });
 
     $(`#print_report_modal table tr.group-header, #print_report_modal table tr.group-total`).each(function() {
-        if(index > 26) {
+        if(index > newIndex) {
             if(chk.prop('checked')) {
-                $($(this).find('td')[index - 26]).show();
+                $($(this).find('td')[index - newIndex]).show();
             } else {
-                $($(this).find('td')[index - 26]).hide();
+                $($(this).find('td')[index - newIndex]).hide();
             }
         } else {
             var colspan = $(this).children('td:first-child').attr('colspan');
@@ -226,26 +204,60 @@ $('input[name="col_chk"]').on('change', function() {
     });
 
     $(`#print_preview_report_modal #report_table_print tr.group-header, #print_preview_report_modal #report_table_print tr.group-total`).each(function() {
-        if(index > 26) {
+        if(index > newIndex) {
             if(chk.prop('checked')) {
-                $($(this).find('td')[index - 26]).show();
+                $($(this).find('td')[index - newIndex]).show();
             } else {
-                $($(this).find('td')[index - 26]).hide();
+                $($(this).find('td')[index - newIndex]).hide();
             }
         } else {
             var colspan = $(this).children('td:first-child').attr('colspan');
             if(chk.prop('checked')) {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) + 1);
+                $(this).children('td:first-child').show();
             } else {
                 $(this).children('td:first-child').attr('colspan', parseInt(colspan) - 1);
             }
         }
     });
 
-    // if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name === 'Open Balance' || $($('#reports-table thead tr td:visible')[0]).data().name === 'Open Balance' ||
-    // $($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name === 'Online Banking' || $($('#reports-table thead tr td:visible')[0]).data().name === 'Online Banking') {
-    //     $('#reports-table thead tr td[data-name=""]').remove();
-    // }
+    var totalColumns = [
+        'Amount',
+        'Debit',
+        'Credit',
+        'Tax Amount',
+        'Taxable Amount'
+    ];
+
+    if($($('#reports-table thead tr td:visible')[0]).data().name === '') {
+        if($($('#reports-table thead tr td:visible')[1]).data().name === 'Open Balance' || $($('#reports-table thead tr td:visible')[1]).data().name === 'Online Banking' ||
+        totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name) === false && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Open Balance' && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Online Banking') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td:first-child').remove();
+            $(`#print_report_modal table thead td[data-name=""]`).remove();
+            $('#print_report_modal table tbody tr:not(.group-header, .group-total) td:first-child').remove();
+            $(`#print_preview_report_modal #report_table_print thead td[data-name=""]`).remove();
+            $(`#print_preview_report_modal #report_table_print tr:not(.group-header, .group-total) td:first-child`).remove();
+
+            var colspan = 0;
+            $('#reports-table thead tr td:visible').each(function() {
+                colspan = $(this).index() < 27 && $(this).data().name !== '' ? colspan + 1 : colspan;
+            });
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', colspan);
+        }
+    }
+
+    if(totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name) && $('#reports-table thead tr td[data-name=""]').length < 1) {
+        $('#reports-table thead tr').prepend(`<td data-name=""></td>`);
+        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse').prepend(`<td></td>`);
+
+        $('#print_report_modal table thead tr').prepend(`<td data-name=""></td>`);
+        $('#print_report_modal table tbody tr:not(.group-header, .group-total).collapse').prepend(`<td></td>`);
+        $('#print_preview_report_modal #report_table_print thead tr').prepend(`<td data-name=""></td>`);
+        $('#print_preview_report_modal #report_table_print tbody tr:not(.group-header, .group-total)').prepend(`<td></td>`);
+
+        $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    }
 });
 
 
