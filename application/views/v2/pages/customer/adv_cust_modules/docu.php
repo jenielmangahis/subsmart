@@ -194,7 +194,7 @@
                         </div>
 
                         <div class="col-6 col-md-6">
-                            <button type="button" class="nsm-button w-100 ms-0" id="managecustomerdocumentsbtn--delete">
+                            <button type="button" class="nsm-button w-100 ms-0 btn-delete-selected" id="managecustomerdocumentsbtn--delete">
                                 <i class='bx bx-fw bx-trash'></i>
                                 <span class="text">Delete Selected</span>
                             </button>
@@ -499,6 +499,49 @@ $(function(){
             },
         });
     }
+
+    $(document).on("click", '.btn-delete-selected', function(e){
+        var asmsid = $(this).attr("data-id");
+        var url = base_url + 'customer/_delete_esign_documents';
+
+        Swal.fire({
+            title: 'Delete Esign Document',
+            html: "Are you sure you want to delete selected document(s)?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: $('#frm-esign-doc').serialize(),
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({                                
+                                text: "Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    load_esign_doc();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
+            }
+        });
+    });
 
     $(document).on("keyup", "#esign-search", function(e){
         //if(e.which == 13){

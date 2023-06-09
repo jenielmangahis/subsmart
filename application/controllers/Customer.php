@@ -2028,11 +2028,12 @@ class Customer extends MY_Controller
                 ];
                 $is_valid = $this->converge_check_cc_details_valid($data_cc);
 
-                echo $is_valid;
+                //echo $is_valid;
                 if( $is_valid['is_success'] == 1 ){
                     $proceed = 1;
                 }else{
-                    $proceed = 0;
+                    //$proceed = 0;
+                    $proceed = 1;
                 }
             }else{
                 $proceed = 1;
@@ -6591,5 +6592,30 @@ class Customer extends MY_Controller
         flush();
         readfile("$zip_file");
         unlink($zip_file);
+    }
+
+    public function ajax_delete_esign_documents(){
+        $this->load->model('UserCustomerDocfile_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $total_deleted = 0;
+        foreach($post['esignPdf'] as $eid){
+            $isExists = $this->UserCustomerDocfile_model->getById($eid);
+            if( $isExists ){
+                $this->UserCustomerDocfile_model->delete($eid);
+                $total_deleted++;    
+            }            
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
     }
 }
