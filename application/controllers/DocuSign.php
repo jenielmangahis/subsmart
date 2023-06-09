@@ -226,13 +226,13 @@ class DocuSign extends MYF_Controller
         
         #changes starts here
         #Clients
-        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country, county AS county_name');
+        $this->db->select('first_name, last_name, mail_add, city, state, zip_code, email, phone_h, phone_m, country, county AS county_name, date_of_birth, ssn');
         $this->db->where('prof_id', $customer_id);
         //$this->db->where('prof_id', 20797);
         $acs_client = $this->db->get('acs_profile')->row();
 
         $acs_clientKeys = [
-            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name'
+            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name', 'date_of_birth', 'ssn'
         ];
 
         $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
@@ -256,21 +256,44 @@ class DocuSign extends MYF_Controller
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
 
-        #emergency contacts
-        $this->db->select('first_name AS emergency_contact_fname, last_name AS emergency_contact_lname, phone AS emergency_contact_phone');
+        #emergency primary contact
+        $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone');
         $this->db->where('customer_id', $customer_id);
-        $contacts = $this->db->get('contacts')->row();
+        $this->db->order_by('id', 'ASC');
+        $emergencyPrimaryContact = $this->db->get('contacts')->row();
 
         $contacts_accessKeys = [
-            'emergency_contact_fname',
-            'emergency_contact_lname',
-            'emergency_contact_phone'
+            'emergency_primary_contact_fname',
+            'emergency_primary_contact_lname',
+            'emergency_primary_contact_phone'
         ];
+
+        /*$primary_econtact_id = 0;
+        if( $emergencyPrimaryContact ){
+            $primary_econtact_id = $contact->id;
+        }*/
         
-        $filteredContacts = array_filter( (array)$contacts , function($v) use ($contacts_accessKeys) {
+        $filteredContacts = array_filter( (array)$emergencyPrimaryContact , function($v) use ($contacts_accessKeys) {
             return in_array($v, $contacts_accessKeys);
         }, ARRAY_FILTER_USE_KEY);
-        $autoPopulateData['contacts'] = $filteredContacts;
+        $autoPopulateData['primary_emergency_contacts'] = $filteredContacts;
+
+        #emergency secondary contact
+        $this->db->select('first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone');
+        $this->db->where('customer_id', $customer_id);        
+        $this->db->order_by('id', 'DESC');
+        $emergencySecondaryContact = $this->db->get('contacts')->row();
+
+        $contacts_accessKeys = [
+            'emergency_secondary_contact_fname',
+            'emergency_secondary_contact_lname',
+            'emergency_secondary_contact_phone'
+        ];
+        
+        $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
+            return in_array($v, $contacts_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['secondary_emergency_contacts'] = $filteredContacts;
 
         #password
         $this->db->where('fk_prof_id', $customer_id);
@@ -859,12 +882,15 @@ class DocuSign extends MYF_Controller
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
         $template = file_get_contents($templatePath);
 
+        //Change document status to Complted
+        $this->db->where('id', $envelope['id']);
+        $this->db->update('user_docfile', ['status' => 'Completed']);
+
         $attachmentName = preg_replace('/\s+/', '_', $envelope['subject']);
         $attachment = $this->generatePDF($envelope['id']);
         $mail->addStringAttachment($attachment, $attachmentName . '.pdf');
 
-        $companyLogo = $this->getCompanyProfile();
-
+        $companyLogo = $this->getCompanyProfile();        
         $errors = [];
         foreach ($recipients as $recipient) {
             $message = json_encode([
@@ -900,8 +926,6 @@ class DocuSign extends MYF_Controller
             }
         }
 
-        $this->db->where('id', $envelope['id']);
-        $this->db->update('user_docfile', ['status' => 'Completed']);
         return ['errors' => $errors];
     }
 
@@ -1860,6 +1884,14 @@ SQL;
 
     public function apiSendTemplate($templateId, $customer_id)
     {
+        if( $customer_id === null ){
+            $customer_id = 0;
+        }
+
+        if( $job_id === null ){
+            $job_id = 0;
+        }
+
         $this->sendTemplate($templateId, logged('id'), logged('company_id'), $job_id,0, $customer_id );        
     }
 
@@ -2509,7 +2541,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(882);
+        $pdf = $this->debugGeneratePDFMaker(894);
         echo 'Finish';
     }
 
@@ -2586,7 +2618,7 @@ SQL;
         }
 
         foreach ($files as $file) {
-            $filepath = FCPATH . ltrim($file->path, '/');
+            $filepath = FCPATH . ltrim($file->path, '/');            
             $pageCount = 0;
 
             try {
@@ -3147,7 +3179,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Contact First Name','Contact Last Name','Abort Code','County'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;

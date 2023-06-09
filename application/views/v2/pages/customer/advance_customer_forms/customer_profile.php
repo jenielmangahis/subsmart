@@ -218,15 +218,7 @@
             <div class="col-md-8">
                 <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
             </div>
-        </div>        
-        <div class="row form_line">
-            <div class="col-md-4">
-                Country
-            </div>
-            <div class="col-md-8">
-                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
-            </div>
-        </div>
+        </div>                
         <div class="row form_line">
             <div class="col-md-4">
                 Subdivision

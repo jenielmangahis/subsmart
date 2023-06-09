@@ -68,9 +68,18 @@ class UserCustomerDocfile_model extends MY_Model
 
     public function getEsignPdfById($id)
     {
-        $path = '';
         $this->db->select('id,path');
         $this->db->from($this->table_generated_pdf);
+        $this->db->where('id', $id);
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);  
         $this->db->where('id', $id);
         
         $query = $this->db->get()->row();

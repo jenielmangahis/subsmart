@@ -71,10 +71,12 @@ function Signing(hash) {
   function getRenderField({ field, recipient }) {
     const { field_name, coordinates, id: fieldId, value: fieldValue, specs } = field;
 
-    const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name
+    const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name, date_of_birth, ssn
      } = window.__esigndata.auto_populate_data.client;
 
-    const { emergency_contact_fname, emergency_contact_lname, emergency_contact_phone } = window.__esigndata.auto_populate_data.contacts;
+    const { emergency_primary_contact_fname, emergency_primary_contact_lname, emergency_primary_contact_phone } = window.__esigndata.auto_populate_data.primary_emergency_contacts;
+
+    const { emergency_secondary_contact_fname, emergency_secondary_contact_lname, emergency_secondary_contact_phone } = window.__esigndata.auto_populate_data.secondary_emergency_contacts;
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
@@ -110,12 +112,20 @@ function Signing(hash) {
       return county_name;
     }
 
-    if( field_name == "County" ) {
+    if( field_name == "ZIP" ) {
       return zip_code;
     }
 
     if( field_name == "Address" ) {
       return mail_add;
+    }
+
+    if( field_name == "Date of Birth" ) {
+      return date_of_birth;
+    }
+
+    if( field_name == "Social Security Number" ) {
+      return ssn;
     }
 
     if( field_name == "Subscriber Name" ) {
@@ -126,21 +136,39 @@ function Signing(hash) {
       return email;
     }
 
-    if( field_name == "Contact Name" ){
-      return emergency_contact_fname + " " + emergency_contact_lname;
+    if( field_name == "Primary Contact Name" ){
+      return emergency_primary_contact_fname + " " + emergency_primary_contact_lname;
     }
 
-    if( field_name == "Contact First Name" ){
-      return emergency_contact_fname;
+    if( field_name == "Primary Contact First Name" ){
+      return emergency_primary_contact_fname;
     }
 
-    if( field_name == "Contact Last Name" ){
-      return emergency_contact_lname;
+    if( field_name == "Primary Contact Last Name" ){
+      return emergency_primary_contact_lname;
     }
 
-    if( field_name == "Contact Number" ){
-      return emergency_contact_phone;
+    if( field_name == "Primary Contact Number" ){
+      return emergency_primary_contact_phone;
     }
+
+
+    if( field_name == "Secondary Contact Name" ){
+      return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+    }
+
+    if( field_name == "Secondary Contact First Name" ){
+      return emergency_secondary_contact_fname;
+    }
+
+    if( field_name == "Secondary Contact Last Name" ){
+      return emergency_secondary_contact_lname;
+    }
+
+    if( field_name == "Secondary Contact Number" ){
+      return emergency_secondary_contact_phone;
+    }
+
 
     if( field_name == "Primary Contact" ){
       return phone_m;
@@ -956,12 +984,17 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId);
       }
 
-      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code") {
+      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code" || field.original_field_name === 'Social Security Number' || field.original_field_name === 'Date of Birth') {
         $input.attr("data-field-type", "autoPopulateCustomerDetails");
         $input.attr("data-field-id", fieldId);
       }
 
-      if( field.original_field_name === "Contact Name" || field.original_field_name === "Contact Number" || field.original_field_name === "Contact First Name" || field.original_field_name === "Contact Last Name" ){
+      if( field.original_field_name === "Primary Contact Name" || field.original_field_name === "Primary Contact Number" || field.original_field_name === "Primary Contact First Name" || field.original_field_name === "Primary Contact Last Name" ){
+        $input.attr("data-field-type", "autoPopulateEmergencyContact");
+        $input.attr("data-field-id", fieldId); 
+      }
+
+      if( field.original_field_name === "Secondary Contact Name" || field.original_field_name === "Secondary Contact Number" || field.original_field_name === "Secondary Contact First Name" || field.original_field_name === "Secondary Contact Last Name" ){
         $input.attr("data-field-type", "autoPopulateEmergencyContact");
         $input.attr("data-field-id", fieldId); 
       }

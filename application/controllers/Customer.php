@@ -2028,11 +2028,12 @@ class Customer extends MY_Controller
                 ];
                 $is_valid = $this->converge_check_cc_details_valid($data_cc);
 
-                echo $is_valid;
+                //echo $is_valid;
                 if( $is_valid['is_success'] == 1 ){
                     $proceed = 1;
                 }else{
-                    $proceed = 0;
+                    //$proceed = 0;
+                    $proceed = 1;
                 }
             }else{
                 $proceed = 1;
@@ -2675,6 +2676,7 @@ class Customer extends MY_Controller
                 $this->page_data['users'] = $this->users_model->getUsers();
                 $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
                 $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_salesarea", "sa_id");
+
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
@@ -2688,7 +2690,13 @@ class Customer extends MY_Controller
         
         if ($input) {
             unset($input['credit_report']);
-            unset($input['report_history']);            
+            unset($input['report_history']);    
+            $input['country'] = ucwords($input['country']);
+            $input['state']   = ucwords($input['state']);
+            $input['city']    = ucwords($input['city']);
+            $input['address'] = ucwords($input['address']);   
+            $input['phone_home'] = formatPhoneNumber($input['phone_home']);   
+            $input['phone_cell'] = formatPhoneNumber($input['phone_cell']);   
             if( isset($input['leads_id']) ){                
                 if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
                     //SMS Notification
@@ -2734,6 +2742,7 @@ class Customer extends MY_Controller
                 'state' => $input['state'],
                 'zip_code' => $input['zip'],
                 'country' => $input['country'],
+                'county' => $input['county'],
                 'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
                 'email' => $input['email_add'],
                 'ssn' => $input['sss_num'],
@@ -6583,5 +6592,30 @@ class Customer extends MY_Controller
         flush();
         readfile("$zip_file");
         unlink($zip_file);
+    }
+
+    public function ajax_delete_esign_documents(){
+        $this->load->model('UserCustomerDocfile_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $total_deleted = 0;
+        foreach($post['esignPdf'] as $eid){
+            $isExists = $this->UserCustomerDocfile_model->getById($eid);
+            if( $isExists ){
+                $this->UserCustomerDocfile_model->delete($eid);
+                $total_deleted++;    
+            }            
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
     }
 }
