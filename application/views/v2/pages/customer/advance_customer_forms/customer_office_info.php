@@ -456,7 +456,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
+                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>">
                 </div>
             </div>
         </div>

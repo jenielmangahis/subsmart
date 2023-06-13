@@ -266,20 +266,27 @@ $("#attachment-file").change(function() {
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));
+            var retail = parseInt($(this).attr('data-retail'));
             var qty = parseInt($(this).attr('data-quantity'));
             var location_name = $(this).data('location_name');
             var location_id = $(this).data('location_id');
             var item_type = $(this).data('item_type');
             // var total_ = price * qty;
             var total_ = 0;
-            var total_price = price + total_;
+            var total_price = retail + total_;
             var total = parseFloat(total_price).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
+
+            var commission_percentage = parseFloat($("input[name='commission_percentage']").val());
+
+            var commission = ((retail - price) * commission_percentage).toFixed(2);
             $("#ITEMLIST_PRODUCT_"+idd).hide();
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
                 "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
-                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
+                "<td class='d-none'><small>Original Price</small><input data-id='"+idd+"' id='cost"+idd+"' value='"+price+"'  type='number' name='item_cost[]' class='form-control item-cost' step='any' placeholder='Original Price'></td>" +
+                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+retail+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
+                "<td class='d-none'><small>Commission</small><input data-id='"+idd+"' id='commission"+idd+"' value='"+commission+"'  type='number' name='item_commission[]' class='form-control item-commission' step='any' placeholder='Commission'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
                 "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
@@ -310,7 +317,7 @@ $("#attachment-file").change(function() {
                 "<td>" + title + "</td>" +
                 "<td>" + item_type + "</td>" +
                 "<td>0</td>" +
-                "<td id='device_price"+idd+"'>" + price + "</td>" +
+                "<td id='device_price"+idd+"'>" + retail + "</td>" +
                 "<td id='device_qty"+idd+"'>"+ 1 + "</td>" +
                 "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
                 "<td>" +
@@ -500,8 +507,12 @@ $("#attachment-file").change(function() {
             //console.log( "Handler for .keyup() called." );
             var id = this.id;
             var qty=this.value;
+            var commission_percentage = parseFloat($("input[name='commission_percentage']").val());
+            var retail = $("#cost"+id).val();
             var cost = $('#price'+id).val();
             var new_sub_total = Number(qty) * Number(cost);
+            var commission = (((cost - retail) * commission_percentage) * qty).toFixed(2);
+            $('#commission'+id).val(commission);
             $('#sub_total'+id).data('subtotal',new_sub_total);
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));

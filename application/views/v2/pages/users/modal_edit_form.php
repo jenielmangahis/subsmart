@@ -107,12 +107,45 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="col-12">
+            <div class="col-9">
                 <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
                 <select class="nsm-field form-select" name="empCommission" required>
                     <option value="" disabled>Select Type</option>
                     <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option>
                     <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                <select class="nsm-field form-select" name="empCommissionPercentage" required>
+                    <option <?php echo $user->commission_percentage == 0.01 ? 'selected="selected"' : '';?> value="0.01">1%</option>
+                    <option <?php echo $user->commission_percentage == 0.02 ? 'selected="selected"' : '';?> value="0.02">2%</option>
+                    <option <?php echo $user->commission_percentage == 0.03 ? 'selected="selected"' : '';?> value="0.03">3%</option>
+                    <option <?php echo $user->commission_percentage == 0.04 ? 'selected="selected"' : '';?> value="0.04">4%</option>
+                    <option <?php echo $user->commission_percentage == 0.05 ? 'selected="selected"' : '';?> value="0.05">5%</option>
+                    <option <?php echo $user->commission_percentage == 0.06 ? 'selected="selected"' : '';?> value="0.06">6%</option>
+                    <option <?php echo $user->commission_percentage == 0.07 ? 'selected="selected"' : '';?> value="0.07">7%</option>
+                    <option <?php echo $user->commission_percentage == 0.08 ? 'selected="selected"' : '';?> value="0.08">8%</option>
+                    <option <?php echo $user->commission_percentage == 0.09 ? 'selected="selected"' : '';?> value="0.09">9%</option>
+                    <option <?php echo $user->commission_percentage == 0.10 ? 'selected="selected"' : '';?> value="0.10">10%</option>
+                    <option <?php echo $user->commission_percentage == 0.11 ? 'selected="selected"' : '';?> value="0.11">11%</option>
+                    <option <?php echo $user->commission_percentage == 0.12 ? 'selected="selected"' : '';?> value="0.12">12%</option>
+                    <option <?php echo $user->commission_percentage == 0.13 ? 'selected="selected"' : '';?> value="0.13">13%</option>
+                    <option <?php echo $user->commission_percentage == 0.14 ? 'selected="selected"' : '';?> value="0.14">14%</option>
+                    <option <?php echo $user->commission_percentage == 0.15 ? 'selected="selected"' : '';?> value="0.15">15%</option>
+                    <option <?php echo $user->commission_percentage == 0.16 ? 'selected="selected"' : '';?> value="0.16">16%</option>
+                    <option <?php echo $user->commission_percentage == 0.17 ? 'selected="selected"' : '';?> value="0.17">17%</option>
+                    <option <?php echo $user->commission_percentage == 0.18 ? 'selected="selected"' : '';?> value="0.18">18%</option>
+                    <option <?php echo $user->commission_percentage == 0.19 ? 'selected="selected"' : '';?> value="0.19">19%</option>
+                    <option <?php echo $user->commission_percentage == 0.20 ? 'selected="selected"' : '';?> value="0.20">20%</option>
+                    <option <?php echo $user->commission_percentage == 0.25 ? 'selected="selected"' : '';?> value="0.25">25%</option>
+                    <option <?php echo $user->commission_percentage == 0.30 ? 'selected="selected"' : '';?> value="0.30">30%</option>
+                    <option <?php echo $user->commission_percentage == 0.35 ? 'selected="selected"' : '';?> value="0.35">35%</option>
+                    <option <?php echo $user->commission_percentage == 0.40 ? 'selected="selected"' : '';?> value="0.40">40%</option>
+                    <option <?php echo $user->commission_percentage == 0.50 ? 'selected="selected"' : '';?> value="0.50">50%</option>
+                    <option <?php echo $user->commission_percentage == 0.51 ? 'selected="selected"' : '';?> value="0.51">51%</option>
+                    <!-- <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option> -->
+                    <!-- <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option> -->
                 </select>
             </div>
         </div>

@@ -924,8 +924,14 @@
                                                         <td><small>Qty</small>
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
+                                                        <td class="d-none"><small>Original Price</small>
+                                                            <input id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
+                                                        </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item_price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                        </td>
+                                                        <td class="d-none"><small>Commission</small>
+                                                            <input step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
@@ -1095,14 +1101,15 @@
                                                             </div>
                                                         </div>
                                                     <?php } ?>
-                                                    <div class="row mt-3">
+                                                    <div class="row mt-3 d-none">
                                                             <div class="col-sm-6">
                                                                 <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label id="invoice_overall_total">$0</label>
-                                                                <input type="text" name="commission_type" value="" hidden>
-                                                                <input step="any" type="number" name="commission_amount" value="" hidden>
+                                                                <input type="text" name="commission_type" value="" hidde>
+                                                                <input step="any" type="number" name="commission_percentage" value="" hidde>
+                                                                <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" hidde>
                                                             </div>
                                                         </div>
                                                     <!-- <div class="col-sm-6"> -->
@@ -1662,7 +1669,7 @@
                                     ?>
                                     <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
                                         <td><?php foreach($itemsLocation as $itemLoc){
@@ -1673,7 +1680,7 @@
                                             } 
                                         }
                                         ?></td>
-                                        <td><?php echo $item->price; ?></td>
+                                        <td><?php echo $item->retail; ?></td>
                                         <td><?php echo $item->type; ?></td>
                                         <td class='d-none'><?php echo $item->location_name; ?></td>
                                     </tr>
@@ -2008,9 +2015,8 @@ add_footer_js(array(
 
 
 <script>
-$("#employee_id").on('change', function(event) {
-    let employee_id = $(this).val();
-
+var employee_id = $("#employee_id").val();
+function getUserInfo(employee_id){
     $.ajax({
         url: '<?php echo base_url('users/getUserInfo'); ?>',
         type: 'POST',
@@ -2018,16 +2024,41 @@ $("#employee_id").on('change', function(event) {
         success: function (data) {
             let json = $.parseJSON(data);
             let commission_type = "";
+            let commission_percentage = 0.0;
 
             (json.commission_id == 0) ? commission_type = "Percentage (Gross, Net)" : "" ;
             (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
+            (json.commission_percentage) ? commission_percentage = json.commission_percentage : commission_percentage = 0;
 
             $("input[name='commission_type']").val(commission_type);
+            $("input[name='commission_percentage']").val(commission_percentage);
             $(".COMMISSION_TYPE").text(commission_type);
         }
     });
+}
+
+$("#employee_id").on('change', function(event) {
+    let employee_id = $(this).val();
+    getUserInfo(employee_id);
 });
 
+getUserInfo(employee_id);
+
+
+function getTotalCommission(){
+    let totalCommission = 0.0;
+    $('.job_items_tbl tr').each(function() {
+      let commissionValue = $(this).find('td:eq(4) input').val();
+        totalCommission += parseFloat(commissionValue);
+    })
+    $("input[name='commission_amount']").val(totalCommission.toFixed(2));
+}
+
+const job_items_tbl = $('.job_items_tbl')[0];
+const observer = new MutationObserver(() => getTotalCommission());
+const config = { childList: true, subtree: true, characterData: true };
+observer.observe(job_items_tbl, config);
+getTotalCommission()
 
 $('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
   this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);

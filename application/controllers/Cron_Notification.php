@@ -46,70 +46,15 @@ class Cron_Notification extends MYF_Controller {
                     }
                 }*/
                 
-                if( $is_with_valid_sms_account ){                    
-                    $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message, $sms->user_id);
+                if( $is_with_valid_sms_account ){
+                    $isObjectExists = $this->checkSmsObject($sms->module_name, $sms->obj_id);
+                    if( $isObjectExists['is_exists' == 1] ){
+                        $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message, $sms->user_id);
 
-                    /*if( $smsApi == 'twilio' ){
-                        $isSent  = smsTwilio($twilioAccount, $sms->mobile_number, $sms_message);
-                        //$isSent['is_success'] = 1; 
-                        if( $isSent['is_sent'] ){  
-                            $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
-                            $data = [
-                                'is_sent' => 1,
-                                'date_sent' => date('Y-m-d H:i:s')
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
-
-                            $total_sent++;
-                        }else{
-                            $err_msg = $isSent['msg'];
-                            $data = [
-                                'is_sent' => 0,
-                                'is_with_error' => 1,
-                                'err_msg' => $err_msg
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                        }
-                    }elseif( $smsApi == 'ring_central' ){
-                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
-                        //$isSent['is_sent'] = true;
-                        if( $isSent['is_success'] == 1 ){
-                            $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
-                            $data = [
-                                'is_sent' => 1,
-                                'date_sent' => date('Y-m-d H:i:s')
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
-
-                            $total_sent++;
-                        }else{
-                            $err_msg = $isSent['msg'];
-                            $data = [
-                                'is_sent' => 0,
-                                'is_with_error' => 1,
-                                'err_msg' => $err_msg
-                            ];
-                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                        }    
-                    }*/
-
-                    //Check if has duplicate
-                    $filters[] = ['field' => 'mobile_number', 'value' => $sms->mobile_number];
-                    $filters[] = ['field' => 'company_auto_sms_id', 'value' => $sms->company_auto_sms_id];
-                    $filters[] = ['field' => 'is_sent', 'value' => 1];
-                    //$filters[] = ['field' => 'is_with_error', 'value' => 0];
-                    $isDuplicate = $this->CronAutoSmsNotification_model->getByObjectId($sms->obj_id, $filters);
-                    if( $isDuplicate ){
-                        $data = [
-                            'is_sent' => 0,
-                            'is_with_error' => 1,
-                            'err_msg' => 'Duplicate Number'
-                        ];
-                        $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                    }else{
-                        if( $smsApi == 'ring_central' ){
-                            $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);                            
-                            if( $isSent['is_success'] == 1 ){
+                        /*if( $smsApi == 'twilio' ){
+                            $isSent  = smsTwilio($twilioAccount, $sms->mobile_number, $sms_message);
+                            //$isSent['is_success'] = 1; 
+                            if( $isSent['is_sent'] ){  
                                 $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
                                 $data = [
                                     'is_sent' => 1,
@@ -121,49 +66,116 @@ class Cron_Notification extends MYF_Controller {
                             }else{
                                 $err_msg = $isSent['msg'];
                                 $data = [
-                                    'is_sent' => 0,
-                                    'is_with_error' => 1,
-                                    'err_msg' => $err_msg
-                                ];
-                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
-                            } 
-                        }elseif( $smsApi == 'vonage' ){
-                            $isSent = smsVonage($sms->mobile_number, $sms_message);
-                            if( $isSent['is_success'] == 1 ){
-                                $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
-                                $data = [
-                                    'api_name' => $smsApi,
-                                    'is_sent' => 1,
-                                    'date_sent' => date('Y-m-d H:i:s')
-                                ];
-                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
-
-                                //Log vonage sms
-                                $vonage_data = [
-                                    'company_id' => $client->id,
-                                    'messageId' => $isSent['data']['message_id'], 
-                                    'channel' => 'sms',
-                                    'sms_from' => VONAGE_NUMBER, 
-                                    'sms_to' => $isSent['data']['to'],
-                                    'sms_message' => $sms_message,
-                                    'status' => $isSent['data']['status']
-                                ];
-
-                                $this->VonageSms_model->create($vonage_data);
-
-                                $total_sent++;
-                            }else{
-                                $err_msg = $isSent['msg'];
-                                $data = [
-                                    'api_name' => $smsApi,
                                     'is_sent' => 0,
                                     'is_with_error' => 1,
                                     'err_msg' => $err_msg
                                 ];
                                 $this->CronAutoSmsNotification_model->update($sms->id, $data);
                             }
+                        }elseif( $smsApi == 'ring_central' ){
+                            $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);
+                            //$isSent['is_sent'] = true;
+                            if( $isSent['is_success'] == 1 ){
+                                $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                                $data = [
+                                    'is_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+
+                                $total_sent++;
+                            }else{
+                                $err_msg = $isSent['msg'];
+                                $data = [
+                                    'is_sent' => 0,
+                                    'is_with_error' => 1,
+                                    'err_msg' => $err_msg
+                                ];
+                                $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                            }    
+                        }*/
+
+                        //Check if has duplicate
+                        $filters[] = ['field' => 'mobile_number', 'value' => $sms->mobile_number];
+                        $filters[] = ['field' => 'company_auto_sms_id', 'value' => $sms->company_auto_sms_id];
+                        $filters[] = ['field' => 'is_sent', 'value' => 1];
+                        //$filters[] = ['field' => 'is_with_error', 'value' => 0];
+                        $isDuplicate = $this->CronAutoSmsNotification_model->getByObjectId($sms->obj_id, $filters);
+                        if( $isDuplicate ){
+                            $data = [
+                                'is_sent' => 0,
+                                'is_with_error' => 1,
+                                'err_msg' => 'Duplicate Number'
+                            ];
+                            $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                        }else{
+                            if( $smsApi == 'ring_central' ){
+                                $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);                            
+                                if( $isSent['is_success'] == 1 ){
+                                    $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                                    $data = [
+                                        'is_sent' => 1,
+                                        'date_sent' => date('Y-m-d H:i:s')
+                                    ];
+                                    $this->CronAutoSmsNotification_model->update($sms->id, $data);
+
+                                    $total_sent++;
+                                }else{
+                                    $err_msg = $isSent['msg'];
+                                    $data = [
+                                        'is_sent' => 0,
+                                        'is_with_error' => 1,
+                                        'err_msg' => $err_msg
+                                    ];
+                                    $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                                } 
+                            }elseif( $smsApi == 'vonage' ){
+                                $isSent = smsVonage($sms->mobile_number, $sms_message);
+                                if( $isSent['is_success'] == 1 ){
+                                    $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
+                                    $data = [
+                                        'api_name' => $smsApi,
+                                        'is_sent' => 1,
+                                        'date_sent' => date('Y-m-d H:i:s')
+                                    ];
+                                    $this->CronAutoSmsNotification_model->update($sms->id, $data);
+
+                                    //Log vonage sms
+                                    $vonage_data = [
+                                        'company_id' => $client->id,
+                                        'messageId' => $isSent['data']['message_id'], 
+                                        'channel' => 'sms',
+                                        'sms_from' => VONAGE_NUMBER, 
+                                        'sms_to' => $isSent['data']['to'],
+                                        'sms_message' => $sms_message,
+                                        'status' => $isSent['data']['status']
+                                    ];
+
+                                    $this->VonageSms_model->create($vonage_data);
+
+                                    $total_sent++;
+                                }else{
+                                    $err_msg = $isSent['msg'];
+                                    $data = [
+                                        'api_name' => $smsApi,
+                                        'is_sent' => 0,
+                                        'is_with_error' => 1,
+                                        'err_msg' => $err_msg
+                                    ];
+                                    $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                                }
+                            }
                         }
-                    }          
+                    }else{
+                        $err_msg = $isSent['msg'];
+                        $data = [
+                            'api_name' => '',
+                            'is_sent' => 0,
+                            'is_with_error' => 1,
+                            'err_msg' => 'Object does not exists'
+                        ];
+                        $this->CronAutoSmsNotification_model->update($sms->id, $data);
+                    }             
                 } 
             }                               
         }
@@ -391,6 +403,68 @@ class Cron_Notification extends MYF_Controller {
         }
 
         return $sms_message;
+    }
+
+    public function checkSmsObject($object_type, $object_id)
+    {
+        $this->load->model('Estimate_model');
+        $this->load->model('Workorder_model');
+        $this->load->model('Event_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Business_model');        
+        $this->load->model('Taskhub_model');        
+
+        $is_exists = 0;
+        $msg = 'Cannot find object';        
+
+        if( $object_type == $this->CompanyAutoSmsSettings_model->moduleJob() ){
+            $job = $this->Jobs_model->get_specific_job($object_id);
+            if( $job ){
+                $is_exists = 1;
+                $msg = '';          
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleEstimate() ){
+            $estimate = $this->Estimate_model->getById($object_id);
+            if( $estimate ){
+                $is_exists = 1;
+                $msg = '';                             
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleWorkOrder() ){
+            $workorder = $this->Workorder_model->adminGetById($object_id);
+            if( $workorder ){
+                $is_exists = 1;
+                $msg = '';               
+                
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleEvent() ){
+            $event = $this->Event_model->get_specific_event($object_id);
+            if( $event ){
+                $is_exists = 1;
+                $msg = '';                
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleTaskHub() ){
+            $task = $this->Taskhub_model->getById($object_id);
+            if( $task ){
+                $is_exists = 1;
+                $msg = '';                
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleLead() ){
+            $lead = $this->Customer_advance_model->get_data_by_id('leads_id',$object_id,"ac_leads");
+            if( $lead ){
+                $is_exists = 1;
+                $msg = '';                
+            }
+        }elseif( $object_type == $this->CompanyAutoSmsSettings_model->moduleCustomer() ){
+            $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$object_id,"acs_profile");
+            if( $customer ){
+                $is_exists = 1;
+                $msg = '';                
+            }
+        }       
+
+        $result = ['is_exists' => $is_exists, 'msg' => $msg];
+
+        return $result; 
     }
 
     public function testSmartTags()

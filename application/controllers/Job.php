@@ -2246,6 +2246,7 @@ class Job extends MY_Controller
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
                 'work_order_id' => $job_workorder_id,
+                'commission' => $input['commission_amount'],
                 'job_account_number' => $input['JOB_ACCOUNT_NUMBER'],
                 'BILLING_METHOD' => $input['BILLING_METHOD'],
                 'CC_CREDITCARDNUMBER' => $input['CC_CREDITCARDNUMBER'],
@@ -2287,8 +2288,10 @@ class Job extends MY_Controller
             $commission_history_payload = [
                 'datetime' => date("M d, Y")."<br>".date("h:i a"), 
                 'user_id' => $input['employee_id'], 
+                'customer_id' => $input['customer_id'], 
                 'location' => "Job<br><small class='text-muted'>($job_number)</small>", 
                 'type' => $input['commission_type'], 
+                'percentage' => $input['commission_percentage'], 
                 'commission' => $input['commission_amount']
             ];
 
@@ -2361,6 +2364,7 @@ class Job extends MY_Controller
                         $job_items_data = array();
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
+                        $job_items_data['commission'] = $input['item_commission'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
                         $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['tax']      = 0;
@@ -2409,6 +2413,7 @@ class Job extends MY_Controller
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
+                        $job_items_data['commission'] = $input['item_commission'][$xx];
                         $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['tax']      = 0;
                         $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];

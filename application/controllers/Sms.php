@@ -98,7 +98,7 @@ class Sms extends Widgets {
                       $msg = 'You do not have a valid ring central account. Cannot send SMS.';  
                     }                    
                     
-                }elseif( $client->default_sms_api == 'twilio' ){
+                }/*elseif( $client->default_sms_api == 'twilio' ){
                     $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($client->id);
                     if( $twilioAccount ){
                         $sms_api = $this->CompanySms_model->apiTwilio();
@@ -109,7 +109,7 @@ class Sms extends Widgets {
                             $msg = $is_sent['msg'];
                         }
                     }                                       
-                }
+                }*/
 
                 if( $is_success ){
                     $created = date("Y-m-d H:i:s");
