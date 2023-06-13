@@ -715,7 +715,7 @@ class Items_model extends MY_Model
     public function getAllItemWithLocation()
     {
         $company_id = logged('company_id');
-        $this->db->select('items.id, items.title, items.price, items.type, items_has_storage_loc.name AS location_name, items_has_storage_loc.loc_id AS location_id');
+        $this->db->select('items.id, items.title, items.price, items.retail, items.type, items_has_storage_loc.name AS location_name, items_has_storage_loc.loc_id AS location_id');
         $this->db->from('items');
         $this->db->where('items.company_id', $company_id);
         $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');

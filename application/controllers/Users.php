@@ -1801,6 +1801,7 @@ class Users extends MY_Controller
 					'postal_code' => $post['postal_code'],
 					'payscale_id' => $post['empPayscale'],
 					'commission_id' => $post['empCommission'],
+					'commission_percentage' => $post['empCommissionPercentage'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number']
 				);

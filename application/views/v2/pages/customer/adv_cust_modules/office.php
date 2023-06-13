@@ -31,8 +31,8 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($office_info->rep_comm) {
-                                        echo $office_info->rep_comm; 
+                                    if ($commission->totalCommission) {
+                                        echo number_format((float)$commission->totalCommission,2,'.',','); 
                                     } else {
                                         echo "&mdash;";
                                     }

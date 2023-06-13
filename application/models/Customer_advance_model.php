@@ -70,6 +70,14 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+    public function getTotalCommission($customer_id) {
+        $this->db->select('SUM(commission) as totalCommission');
+        $this->db->where('customer_id', $customer_id);
+        $this->db->from("jobs");
+        $query = $this->db->get();
+        return $query->result()[0];
+    }
+
     public function get_select_options($table=null, $key=null){
         if($table != null){
             $this->db->from($table);
@@ -207,7 +215,7 @@ class Customer_advance_model extends MY_Model {
                 $this->db->group_end();   
             }  
             $query = $this->db->get();
-        return $query->row()->count;
+            return $query->row()->count;
 
             // Outputs, 2
         }
@@ -248,8 +256,9 @@ class Customer_advance_model extends MY_Model {
                 $this->db->or_like('acs_profile.email', $param['search'], 'both'); 
                 $this->db->or_like('acs_profile.business_name', $param['search'], 'both'); 
             $this->db->group_end();   
-        }        
-        
+        }                
+        //$this->db->group_by('acs_profile.prof_id'); 
+        $this->db->order_by('acs_profile.first_name', 'ASC');
         $query = $this->db->get();
         return $query->result();
 
@@ -275,8 +284,8 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_subscriptions as acs_s', 'acs_s.customer_id = acs_profile.prof_id','left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','right');
+        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','right');
         $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
 
         if($cid == 58){

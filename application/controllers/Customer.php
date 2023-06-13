@@ -104,6 +104,14 @@ class Customer extends MY_Controller
         $search = ['search' => $search];    
         $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
         $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+
+        $all_customer_ids = [];
+        foreach($allCustomers as $c){
+            if( !in_array($c->prof_id, $all_customer_ids) ){
+                $all_customer_ids[] = $c->prof_id;
+            }
+        }
+        
         $get_company_settings = array(
             'where' => array(
                 'company_id' => logged('company_id')
@@ -117,33 +125,101 @@ class Customer extends MY_Controller
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
         $data = [];
-        
-        foreach($customers as $customer){
-            switch (strtoupper($customer->status)){
-                case "INSTALLED":
-                    $badge = "success";
-                    break;
-                case "CANCELLED":
-                    $badge = "error";
-                    break;
-                case "COLLECTIONS":
-                    $badge = "secondary";
-                    break;
-                case "CHARGED BACK":
-                    $badge = "primary";
-                    break;
-                default:
-                    $badge = "";
-                    break;
-            }
-            
-            $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
-            $companyId = logged('company_id');
-            $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
-            $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name . ' ' . $customer->last_name;
-            $data_arr = [];
-            if(!empty($enabled_table_headers)){
-                if (in_array('name', $enabled_table_headers)){
+        $customer_ids = [];        
+        foreach($customers as $customer){      
+            if( !in_array($customer->prof_id, $customer_ids) ){
+                $customer_ids[] = $customer->prof_id;   
+                switch (strtoupper($customer->status)){
+                    case "INSTALLED":
+                        $badge = "success";
+                        break;
+                    case "CANCELLED":
+                        $badge = "error";
+                        break;
+                    case "COLLECTIONS":
+                        $badge = "secondary";
+                        break;
+                    case "CHARGED BACK":
+                        $badge = "primary";
+                        break;
+                    default:
+                        $badge = "";
+                        break;
+                }
+                
+                $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
+                $companyId = logged('company_id');
+                $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
+                $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name . ' ' . $customer->last_name;
+                $data_arr = [];
+                if(!empty($enabled_table_headers)){
+                    if (in_array('name', $enabled_table_headers)){
+                        if ($customer->customer_type === 'Business'){
+                            $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                            $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                            $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                            array_push($data_arr, $data_name);
+                        }else{
+                            $n = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
+                            $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                            array_push($data_arr, $data_name);
+                        }
+                        $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                        <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
+                        if( $customer->adt_sales_project_id > 0 ){
+                            $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                        }
+                        array_push($data_arr, $name);
+                    }
+                    if (in_array('email', $enabled_table_headers)){
+                        array_push($data_arr, $customer->email);
+                    }
+                    if (in_array('industry', $enabled_table_headers)) {
+                        if( $customer->industry_type_id > 0 ){
+                            array_push($data_arr, $customer->industry_type);
+                        }else{
+                            array_push($data_arr, 'Not Specified');           
+                        }
+                    }
+                    if (in_array('city', $enabled_table_headers)) {
+                        array_push($data_arr, $customer->city);
+                    }
+                    if (in_array('state', $enabled_table_headers)){
+                        array_push($data_arr, $customer->state);
+                    }
+                    
+                    if (in_array('source', $enabled_table_headers)){
+                        // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
+                        $lead = "Door";
+                        array_push($data_arr, $lead);
+                    }
+                    if (in_array('added', $enabled_table_headers)){
+                        array_push($data_arr, $customer->entered_by);
+                    }
+                    if (in_array('sales_rep', $enabled_table_headers)){
+                        $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
+                        array_push($data_arr, $sales_rep);
+                    }
+                    if (in_array('tech', $enabled_table_headers)) {
+                        $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
+                        array_push($data_arr, $techician);
+                    }
+                    if (in_array('plan_type', $enabled_table_headers)){
+                        array_push($data_arr, $customer->system_type);
+                    }
+                    if (in_array('subscription_amount', $enabled_table_headers)){
+                        $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                        array_push($data_arr, "$".$subs_amt);
+                    }
+                    if (in_array('phone', $enabled_table_headers)){
+                        array_push($data_arr, $customer->phone_m);
+                    }
+                    if (in_array('status', $enabled_table_headers)){
+                        $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
+                        array_push($data_arr, $stat);
+                    }
+                }else{
+                    //name
                     if ($customer->customer_type === 'Business'){
                         $parts = explode(' ', strtoupper(trim($customer->business_name)));
                         $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
@@ -154,163 +230,100 @@ class Customer extends MY_Controller
                         $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
                         array_push($data_arr, $data_name);
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/'.$customer->prof_id.'')."\"'>".$labelName."</label>
                     <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
                     if( $customer->adt_sales_project_id > 0 ){
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
                     array_push($data_arr, $name);
-                }
-                if (in_array('email', $enabled_table_headers)){
+                    //email
                     array_push($data_arr, $customer->email);
-                }
-                if (in_array('industry', $enabled_table_headers)) {
+                    //industry
                     if( $customer->industry_type_id > 0 ){
                         array_push($data_arr, $customer->industry_type);
                     }else{
                         array_push($data_arr, 'Not Specified');           
                     }
-                }
-                if (in_array('city', $enabled_table_headers)) {
+                    //city
                     array_push($data_arr, $customer->city);
-                }
-                if (in_array('state', $enabled_table_headers)){
+                    //state
                     array_push($data_arr, $customer->state);
-                }
-                
-                if (in_array('source', $enabled_table_headers)){
-                    // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
-                    $lead = "Door";
+                    //source
+                    $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
                     array_push($data_arr, $lead);
-                }
-                if (in_array('added', $enabled_table_headers)){
+                    //added
                     array_push($data_arr, $customer->entered_by);
-                }
-                if (in_array('sales_rep', $enabled_table_headers)){
+                    //sales rep
                     $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
                     array_push($data_arr, $sales_rep);
-                }
-                if (in_array('tech', $enabled_table_headers)) {
+                    //tech
                     $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
                     array_push($data_arr, $techician);
-                }
-                if (in_array('plan_type', $enabled_table_headers)){
+                    //plan type
                     array_push($data_arr, $customer->system_type);
-                }
-                if (in_array('subscription_amount', $enabled_table_headers)){
+                    //sub amount
                     $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                     array_push($data_arr, "$".$subs_amt);
-                }
-                if (in_array('phone', $enabled_table_headers)){
+                    //phone
                     array_push($data_arr, $customer->phone_m);
-                }
-                if (in_array('status', $enabled_table_headers)){
+                    //status
                     $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
                     array_push($data_arr, $stat);
+
                 }
-            }else{
-                //name
-                if ($customer->customer_type === 'Business'){
-                    $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                    $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                    $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
-                    array_push($data_arr, $data_name);
-                }else{
-                    $n = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
-                    $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
-                    array_push($data_arr, $data_name);
-                }
-                $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/'.$customer->prof_id.'')."\"'>".$labelName."</label>
-                <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
-                if( $customer->adt_sales_project_id > 0 ){
-                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
-                }
-                array_push($data_arr, $name);
-                //email
-                array_push($data_arr, $customer->email);
-                //industry
-                if( $customer->industry_type_id > 0 ){
-                    array_push($data_arr, $customer->industry_type);
-                }else{
-                    array_push($data_arr, 'Not Specified');           
-                }
-                //city
-                array_push($data_arr, $customer->city);
-                //state
-                array_push($data_arr, $customer->state);
-                //source
-                $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
-                array_push($data_arr, $lead);
-                //added
-                array_push($data_arr, $customer->entered_by);
-                //sales rep
-                $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
-                array_push($data_arr, $sales_rep);
-                //tech
-                $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
-                array_push($data_arr, $techician);
-                //plan type
-                array_push($data_arr, $customer->system_type);
-                //sub amount
-                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                array_push($data_arr, "$".$subs_amt);
-                //phone
-                array_push($data_arr, $customer->phone_m);
-                //status
-                $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
-                array_push($data_arr, $stat);
 
-            }
+                $dropdown = "<div class='dropdown table-management'>
+                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                    </a>
+                    <ul class='dropdown-menu dropdown-menu-end'>
+                        <li>
+                            <a class='dropdown-item' href='".("customer/preview_/".$customer->prof_id)."'>Preview</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='mailto:".$customer->email."'>Email</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('invoice/add/')."'>Invoice</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='".base_url('job/new_job1/')."'>Schedule</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item' href='#'>Message</a>
+                        </li>
+                    </ul>
+                </div>";
+                array_push($data_arr, $dropdown);
 
-            $dropdown = "<div class='dropdown table-management'>
-                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class='dropdown-menu dropdown-menu-end'>
-                    <li>
-                        <a class='dropdown-item' href='".("customer/preview_/".$customer->prof_id)."'>Preview</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='mailto:".$customer->email."'>Email</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('invoice/add/')."'>Invoice</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('job/new_job1/')."'>Schedule</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item' href='#'>Message</a>
-                    </li>
-                </ul>
-            </div>";
-            array_push($data_arr, $dropdown);
+                // $is_adt_project = 'no';
+                // if( $customer->adt_sales_project_id > 0 ){
+                //     $is_adt_project = 'yes';
+                // }
+                // array_push($data_arr, $is_adt_project);
+                
 
-            // $is_adt_project = 'no';
-            // if( $customer->adt_sales_project_id > 0 ){
-            //     $is_adt_project = 'yes';
-            // }
-            // array_push($data_arr, $is_adt_project);
-            
+                $data[] = $data_arr;
+                
 
-            $data[] = $data_arr;
-            
-
-            $start++;
+                $start++;
+            }            
         }
         $output = array(
             "draw" => $draw,
-            "recordsTotal" => count($allCustomers),
-            "recordsFiltered" => count($allCustomers),
+            //"recordsTotal" => count($allCustomers),
+            //"recordsFiltered" => count($allCustomers),
+            "recordsTotal" => count($all_customer_ids),
+            "recordsFiltered" => count($all_customer_ids),            
             "data" => $data
         );
         echo json_encode($output);
@@ -488,6 +501,7 @@ class Customer extends MY_Controller
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
+            $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
@@ -1094,6 +1108,7 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
         if($id!=null){
+            $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
             $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
 
@@ -1758,6 +1773,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');        
         $this->page_data['test']= getLoggedUserID();
         if(isset($userid) || !empty($userid)){
+            $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
@@ -3935,7 +3951,7 @@ class Customer extends MY_Controller
             'notification_method' => post('notify_by'),
             'street_address' => post('street_address'),
             'suite_unit' => post('suite_unit'),
-            'city	' => post('city'),
+            'city   ' => post('city'),
             'postal_code' => post('zip'),
             'state' => post('state'),
             'birthday' => post('birthday'),
@@ -4014,7 +4030,7 @@ class Customer extends MY_Controller
 
             'suite_unit' => post('suite_unit'),
 
-            'city	' => post('city'),
+            'city   ' => post('city'),
 
             'postal_code' => post('zip'),
 

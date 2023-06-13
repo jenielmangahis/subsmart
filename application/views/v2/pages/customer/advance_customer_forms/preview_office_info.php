@@ -241,7 +241,7 @@
                     </label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">$<?= !empty($office_info->rep_comm) ?number_format((float)$office_info->rep_comm,2,'.',',') : '0.00';?></label>
+                    <label class="content-subtitle">$<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.',',') : 0.0 ?></label>
                 </div>
             </div>
             <div class="row p-0 field-custom-name-container">
