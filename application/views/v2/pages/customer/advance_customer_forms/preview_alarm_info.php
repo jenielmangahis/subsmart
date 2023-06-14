@@ -568,7 +568,7 @@
             </div>
             <div class="col-12 mt-3">
                 <div class="input-group">
-                    <input type="text" class="form-control nsm-field" readonly id="sharableLink" value="<?= base_url('customer/preview/') . $this->uri->segment(3); ?>">
+                    <input type="text" class="form-control nsm-field" readonly id="sharableLink" value="<?= base_url('share_link/public_preview_/') . $this->uri->segment(3); ?>">
                     <button class="nsm-button mb-0" type="button" id="copyLink">
                         <i class='bx bx-copy mt-2'></i>
                     </button>

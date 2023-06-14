@@ -68,6 +68,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_automatic_transactions_model');
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_delayed_charge_model');
+        $this->load->model('accounting_recurring_transactions_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -11177,6 +11178,297 @@ class Reports extends MY_Controller {
                 }
 
                 $this->page_data['report_title'] = 'Transaction Report';
+                if(!empty(get('show-report-title'))) {
+                    $this->page_data['show_report_title'] = false;
+                }
+
+                if(!empty(get('report-title'))) {
+                    $this->page_data['report_title'] = get('report-title');
+                }
+
+                if(!empty(get('show-report-period'))) {
+                    $this->page_data['show_report_period'] = false;
+                }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+                if(!empty(get('show-date-prepared'))) {
+                    $this->page_data['show_date_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("l, F j, Y", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('show-time-prepared'))) {
+                    $this->page_data['show_time_prepared'] = false;
+                    $this->page_data['prepared_timestamp'] = str_replace("h:i A eP", "", $this->page_data['prepared_timestamp']);
+                    $this->page_data['prepared_timestamp'] = trim($this->page_data['prepared_timestamp']);
+                }
+
+                if(!empty(get('header-alignment'))) {
+                    $this->page_data['header_alignment'] = get('header-alignment') === 'left' ? 'start' : 'end';
+                }
+
+                if(!empty(get('footer-alignment'))) {
+                    $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
+                }
+            break;
+            case 'recurring_template_list' :
+                $this->page_data['page']->title = "Recurring Template List Report";
+
+                if(!empty(get('column'))) {
+                    $this->page_data['sort_by'] = get('column');
+                }
+
+                if(!empty(get('order'))) {
+                    $this->page_data['sort_in'] = get('order');
+                }
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+                    $this->page_data['columns'] = $columns;
+
+                    $index = array_search('Amount', $columns);
+
+                    $this->page_data['total_index'] = $index === false ? count($columns) : $index;
+                }
+
+                $sort = [
+                    'column' => !empty(get('column')) ? str_replace('-', '_', get('column')) : 'template_name',
+                    'order' => empty(get('order')) ? 'asc' : 'desc'
+                ];
+
+                $templates = [];
+                $temps = $this->accounting_recurring_transactions_model->getCompanyRecurringTransactions(['company_id' => logged('company_id')], 'template_name', 'asc');
+
+                usort($templates, function($a, $b) use ($sort) {
+                    switch($sort['column']) {
+                        default :
+                            if($sort['order'] === 'asc') {
+                                return strcmp($a[$sort['column']], $a[$sort['column']]);
+                            } else {
+                                return strcmp($b[$sort['column']], $b[$sort['column']]);
+                            }
+                        break;
+                        case 'cc-expires' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['cc_expires']) > strtotime($b['cc_expires']);
+                            } else {
+                                return strtotime($a['cc_expires']) < strtotime($b['cc_expires']);
+                            }
+                        break;
+                        case 'create-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['create_date']) > strtotime($b['create_date']);
+                            } else {
+                                return strtotime($a['create_date']) < strtotime($b['create_date']);
+                            }
+                        break;
+                        case 'end-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['end_date']) > strtotime($b['end_date']);
+                            } else {
+                                return strtotime($a['end_date']) < strtotime($b['end_date']);
+                            }
+                        break;
+                        case 'last-modified' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['last_modified']) > strtotime($b['last_modified']);
+                            } else {
+                                return strtotime($a['last_modified']) < strtotime($b['last_modified']);
+                            }
+                        break;
+                        case 'next-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['next_date']) > strtotime($b['next_date']);
+                            } else {
+                                return strtotime($a['next_date']) < strtotime($b['next_date']);
+                            }
+                        break;
+                        case 'previous-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['previous_date']) > strtotime($b['previous_date']);
+                            } else {
+                                return strtotime($a['previous_date']) < strtotime($b['previous_date']);
+                            }
+                        break;
+                    }
+                });
+
+                $grouped = [];
+                if(get('group-by') !== 'none')
+                {
+                    switch(get('group-by')) {
+                        case 'account' :
+                            usort($templates, function($a, $b) {
+                                return strcmp($a['account'], $b['account']); 
+                            });
+                        break;
+                        case 'name' :
+                            usort($templates, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'transaction-type' :
+                            usort($templates, function($a, $b) {
+                                return strcmp($a['transaction_type'], $b['transaction_type']);
+                            });
+                        break;
+                        case 'payment-method' :
+                            usort($templates, function($a, $b) {
+                                return strcmp($a['payment_method_id'], $b['payment_method_id']);
+                            });
+                        break;
+                        default :
+                            usort($templates, function($a, $b) {
+                                return strcmp($a['template_type'], $b['template_type']);
+                            });
+                        break;
+                    }
+
+                    foreach($templates as $template)
+                    {
+                        switch(get('group-by')) {
+                            case 'account' :
+                                $key = $template['account_id'];
+                                $name = $template['account'];
+                            break;
+                            case 'name' :
+                                $key = $template['name_key'].'-'.$template['name_id'];
+                                $name = $template['name'];
+                            break;
+                            case 'transaction-type' :
+                                $key = strtolower(str_replace(' ', '-', $template['transaction_type']));
+                                $name = $template['transaction_type'];
+                            break;
+                            case 'payment-method' :
+                                $key = $template['payment_method_id'];
+                                $name = $template['payment_method'];
+                            break;
+                            default :
+                                $key = strtolower(str_replace(' ', '-', $template['template_type']));
+                                $name = $template['template_type'];
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['templates'][] = $template;
+                            $amount = $grouped[$key]['amount_total'];
+
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($template['amount']), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'amount_total' => $template['amount'],
+                                'templates' => [
+                                    $template
+                                ]
+                            ];
+                        }
+                    }
+
+                    foreach($grouped as $key => $group)
+                    {
+                        $amount = $group['amount_total'];
+                        if(!empty(get('divide-by-100'))) {
+                            $amount = number_format(floatval($amount) / 100, 2);
+                        }
+    
+                        if(!empty(get('without-cents'))) {
+                            $amount = number_format(floatval($amount), 0);
+                        }
+    
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = '('.$amount.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = $amount.'-';
+                                    }
+                                break;
+                            }
+                        }
+    
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+    
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $grouped[$key]['amount_total'] = $amount;
+                    }
+                } else {
+                    $grouped = $templates;
+                }
+
+                $this->page_data['templates'] = $grouped;
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
+                if(!empty(get('show-company-name'))) {
+                    $this->page_data['show_company_name'] = false;
+                }
+
+                if(!empty(get('company-name'))) {
+                    $this->page_data['company_name'] = get('company-name');
+                }
+
+                $this->page_data['report_title'] = 'Recurring Template List';
                 if(!empty(get('show-report-title'))) {
                     $this->page_data['show_report_title'] = false;
                 }

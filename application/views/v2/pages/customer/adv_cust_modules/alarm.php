@@ -174,8 +174,8 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($alarm_info->acct_info) {
-                                        echo $alarm_info->acct_info; 
+                                    if ($alarm_info->alarm_cs_account) {
+                                        echo $alarm_info->alarm_cs_account; 
                                     } else {
                                         echo "&mdash;";
                                     }

@@ -347,11 +347,11 @@ $('#run-report-button').on('click', function() {
     url += $('#custom-group-by').val() !== 'transaction-type' ? `group-by=${$('#custom-group-by').val()}&` : '';
 
     var columns = [];
-    $('input[name="select_columns"]:checked').each(function() {
-        columns.push($(this).next().text().trim().replace('#', 'No.'));
-    });
+    if($('input[name="select_columns"]:checked').length < $('input[name="select_columns"]').length) {
+        $('input[name="select_columns"]:checked').each(function() {
+            columns.push($(this).next().text().trim().replace('#', 'No.'));
+        });
 
-    if(columns.length < $('#reports-table thead tr td').length) {
         url += `columns=${columns}&`;
     }
 
@@ -384,7 +384,7 @@ $('#run-report-button').on('click', function() {
     url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
     url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
     url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
-    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Recent Automatic Transactions' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Transaction Report' ? `report-title=${$('#report-title').val()}&` : '';
     url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
     url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
     url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
