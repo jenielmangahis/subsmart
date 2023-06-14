@@ -10,27 +10,27 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
@@ -215,27 +215,27 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="34" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="35" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
@@ -328,7 +328,7 @@
                         </tr>
                         <?php foreach($transaction['transactions'] as $tran) : ?>
                         <tr>
-                            <?php if(isset($columns) && $total_index === 0) : ?>
+                            <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td></td>
                             <?php endif; ?>
                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
@@ -620,6 +620,14 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-last-modified-by" <?=isset($columns) && in_array('Last Modified By', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-last-modified-by">
+                                                                Last Modified By
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-name" <?=isset($columns) && in_array('Name', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-name">
                                                                 Name
@@ -647,14 +655,6 @@
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-split" <?=isset($columns) && in_array('Split', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-split">
                                                                 Split
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-start-time" <?=isset($columns) && in_array('Start Time', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-start-time">
-                                                                Start Time
                                                             </label>
                                                         </div>
                                                     </div>

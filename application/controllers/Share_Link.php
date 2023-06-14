@@ -27,10 +27,11 @@ class Share_Link extends CI_Controller
         $this->load->model('Users_model', 'users_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
-        $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        
         
         $user_id = getLoggedUserID();
-
+        $this->load->helper('functions');
         // add css and js file path so that they can be attached on this page dynamically
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
@@ -1593,6 +1594,107 @@ class Share_Link extends CI_Controller
         $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
         $this->load->view('invoice/genview_public', $this->page_data);
     }
+
+    public function public_preview_($id = null){
+        $this->load->model('IndustryType_model');
+
+        // $this->page_data['page']->title = 'Customer Preview';
+        // $this->page_data['page']->parent = 'Customers';
+
+        $this->load->model('jobs_model');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        $userid = $id;
+        $user_id = logged('id');
+        $companyId = logged('company_id');
+        if(isset($userid) || !empty($userid)){
+            $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
+            $this->page_data['profile_info'] = $customer;
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            if($companyId == 58){
+                $this->page_data['solar_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_info_solar");
+            }
+            
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+
+            $get_login_user = array(
+                'where' => array(
+                    'id' => $user_id
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+            if (count($this->page_data['papers'])) {
+                $this->page_data['papers'] = $this->page_data['papers'][0];
+            }
+
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+                'order' => array(
+                    'order_by' => 'id',
+                    'ordering' => 'asc'
+                ),
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
+        }
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['companyId'] = logged('company_id');
+       
+       // print_r($this->page_data['profile_info']);
+        $this->load->view('v2/pages/customer/public_preview', $this->page_data);
+    }
+ 
+	public function isAllowedModuleAccess($module_id = 0){
+		$this->load->helper(array('user_helper'));
+
+		$role_id  = logged('role');
+		$is_allowed = true;
+		if( $role_id != 1 && $role_id != 2 ){
+			//$is_allowed = validateUserAccessModule($module_id); //Activate to validate
+			$is_allowed = true;
+
+			/*if( !$is_allowed ){
+				$this->session->set_flashdata('alert_class', 'danger');
+        		$this->session->set_flashdata('message', 'No access to module');
+
+        		redirect('dashboard');
+			}*/
+		}
+
+		return $is_allowed;
+	}
 
     public function generateInvoiceHTML($id)
     {

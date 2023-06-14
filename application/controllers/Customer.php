@@ -22,7 +22,6 @@ class Customer extends MY_Controller
         $this->load->model('Tickets_model', 'tickets_model');
         $this->load->model('Workorder_model', 'workorder_model');
 
-        $this->checkLogin();
 
         //load library
         $this->load->library('session');
@@ -1964,7 +1963,7 @@ class Customer extends MY_Controller
         $this->load->library('qrcode/ciqrcode');
         $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
 
-        $params['data'] = 'https://nsmartrac.com/customer/preview/'.$profile_id;
+        $params['data'] = 'https://nsmartrac.com/share_link/public_preview_/'.$profile_id;
         $params['level'] = 'H';
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
