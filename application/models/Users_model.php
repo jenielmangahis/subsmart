@@ -951,6 +951,13 @@ class Users_model extends MY_Model
         return $query->result(); 
     }
 
+    public function getTotalCommission($employee_id) {
+        $this->db->select('SUM(commission) as totalCommission');
+        $this->db->where('employee_id', $employee_id);
+        $this->db->from("jobs");
+        $query = $this->db->get();
+        return $query->result()[0];
+    }
 }
 
 

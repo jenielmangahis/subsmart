@@ -375,12 +375,16 @@
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
                                             <td colspan="<?=isset($columns) ? $total_index : '8'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$template['name']?></b></td>
                                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['amount_total']?></b></td>
-                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) || $columns[0] === 'Open Balance' ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['debit_total']?></b></td>
-                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['credit_total']?></b></td>
-                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) || $columns[0] === 'Online Banking' ? 'style="display: none"' : ''?>></td>
-                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['tax_amount_total']?></b></td>
-                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['taxable_amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Num Entered', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('End Date', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Expired', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('CC Expires', $columns) ? 'style="display: none"' : ''?>></td>
                                         </tr>
                                         <?php foreach($template['templates'] as $temp) : ?>
                                         <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">

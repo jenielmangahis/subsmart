@@ -771,6 +771,7 @@ class Job extends MY_Controller
         ]);
 
         $this->page_data['cid'] = $comp_id;
+        $this->page_data['getAllLocation'] = $this->items_model->getAllLocation();
         $this->load->view('v2/pages/job/job_workorder', $this->page_data);
     }
 
@@ -2563,12 +2564,6 @@ class Job extends MY_Controller
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
-    }
-
-    public function tryFix(){
-        echo "<pre>";
-        print_r ($this->items_model->recordItemTransaction(1, 1, 4, "deduct"));
-        echo "</pre>";
     }
 
     public function delete()

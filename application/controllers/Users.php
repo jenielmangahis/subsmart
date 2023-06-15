@@ -1170,6 +1170,8 @@ class Users extends MY_Controller
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
+
+		$this->page_data['commission'] = $this->Users_model->getTotalCommission($user_id);
         $this->page_data['roles'] = $roles;
 	    $this->page_data['user'] = $get_user;
 	    $this->page_data['role'] = $get_role;	    

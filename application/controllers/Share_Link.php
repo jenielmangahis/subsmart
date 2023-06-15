@@ -1778,6 +1778,135 @@ class Share_Link extends CI_Controller
             $this->load->view('invoice/pdf/template', $this->page_data, "portrait");
         }
     }
+    
+    public function sendEstimateToCustomer($wo_id)
+    {
+        $this->load->helper(array('url', 'hashids_helper'));
+
+        $workData = $this->estimate_model->getEstimate($wo_id);
+        $eid      = hashids_encrypt($workData->id, '', 15);
+        // var_dump($workData);
+
+        // $items = $this->estimate_model->getItemlistByID($wo_id);
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+
+        $cliets = $this->estimate_model->get_cliets_data($c_id);
+        $customerData = $this->estimate_model->get_customerData_data($p_id);
+
+        $items_dataOP1 = $this->estimate_model->getItemlistByIDOption1($wo_id);
+        $items_dataOP2 = $this->estimate_model->getItemlistByIDOption2($wo_id);
+
+        $items_dataBD1 = $this->estimate_model->getItemlistByIDBundle1($wo_id);
+        $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($wo_id);
+        $items = $this->estimate_model->getEstimatesItems($wo_id);
+
+        
+        $urlApprove = base_url('share_Link/approveEstimate/' . $eid);
+        $urlDecline = base_url('share_Link/declineEstimate/' . $eid);
+
+		$business = $this->business_model->getByCompanyId(logged('company_id'));
+        $imageUrl = getCompanyBusinessProfileImage();
+
+        $data = array(
+            // 'workorder'             => $workorder,
+            'imageUrl'                      => $urlLogo,
+            'estimateID'                    => $workData->id,
+            'urlApprove'                    => $urlApprove,
+            'urlDecline'                    => $urlDecline,
+            // 'company'                       => $cliets->business_name,
+            // 'business_address'              => $cliets->business_address,
+            // 'phone_number'                  => $cliets->phone_number,
+            // 'email_address'                 => $cliets->email_address,
+
+            'company'                       => $business->business_name,
+            'business_address'              => "$business->address, $business->city $business->postal_code",
+            'phone_number'                  => $business->business_phone,
+            'email_address'                 => $business->business_email,
+
+            'acs_name'                      => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'acsemail'                      => $customerData->email,
+            'acsaddress'                    => $customerData->mail_add,
+            'phone_m'                       => $customerData->phone_m,
+
+            'items_dataOP1'                 => $items_dataOP1,
+            'items_dataOP2'                 => $items_dataOP2,
+            'items_dataBD1'                 => $items_dataBD1,
+            'items_dataBD2'                 => $items_dataBD2,
+
+            'estimate_number'               => $workData->estimate_number,
+            'job_location'                  => $workData->job_location,
+            'job_name'                      => $workData->job_name,
+            'estimate_date'                 => $workData->estimate_date,
+            'expiry_date'                   => $workData->expiry_date,
+            'purchase_order_number'         => $workData->purchase_order_number,
+            'status'                        => $workData->status,
+            'estimate_type'                 => $workData->estimate_type,
+            'type'                          => $workData->type,
+            'deposit_request'               => $workData->deposit_request,
+            'deposit_amount'                => $workData->deposit_amount,
+            'customer_message'              => $workData->customer_message,
+            'terms_conditions'              => $workData->terms_conditions,
+            'instructions'                  => $workData->instructions,
+            'email'                         => $workData->email,
+            'phone'                         => $workData->phone_number,
+            'mobile'                        => $workData->mobile_number,
+            'terms_and_conditions'          => $workData->terms_and_conditions,
+            'terms_of_use'                  => $workData->terms_of_use,
+            'job_description'               => $workData->job_description,
+            'instructions'                  => $workData->instructions,
+            'bundle1_message'               => $workData->bundle1_message,
+            'bundle2_message'               => $workData->bundle2_message,
+
+            'items'                         => $items,
+
+            'bundle_discount'               => $workData->bundle_discount,
+            // 'deposit_amount'                => $workData->deposit_amount,
+            'bundle1_total'                 => $workData->bundle1_total,
+            'bundle2_total'                 => $workData->bundle2_total,
+
+            'option_message'                => $workData->option_message,
+            'option2_message'               => $workData->option2_message,
+            'option1_total'                 => $workData->option1_total,
+            'option2_total'                 => $workData->option2_total,
+
+            'sub_total'                     => $workData->sub_total,
+            'sub_total2'                    => $workData->sub_total2,
+            'tax1_total'                    => $workData->tax1_total,
+            'tax2_total'                    => $workData->tax2_total,
+
+            'grand_total'                   => $workData->grand_total,
+            'adjustment_name'               => $workData->adjustment_name,
+            'adjustment_value'              => $workData->adjustment_value,
+            'markup_type'                   => $workData->markup_type,
+            'markup_amount'                 => $workData->markup_amount,
+            'eid'                           => $eid
+            // 'source' => $source
+        );
+
+
+        // $recipient  = "emploucelle@gmail.com";
+        $recipient  = $customerData->email;
+        // $message = "This is a test email";
+
+        $mail = email__getInstance(['subject' => 'Estimate Details']);
+        $mail->addAddress($recipient, $recipient);
+        $mail->isHTML(true);
+        $mail->Body = $this->load->view('estimate/send_email_acs', $data, true);
+
+        $json_data['is_success'] = 1;
+        $json_data['error']      = '';
+
+        if(!$mail->Send()) {
+            /*echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;*/
+            $json_data['is_success'] = 0;
+            $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+        }
+
+        return $json_data;
+    }
 }
 
 

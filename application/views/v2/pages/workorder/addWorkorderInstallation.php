@@ -1433,7 +1433,7 @@ tr {
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
                                                 
                                                 <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
@@ -2481,11 +2481,11 @@ $(document).on('click', '.saveCustomer', function() {
                     },
                     dataType: 'json',
                     success: function(response) {
-                        // alert('success');
-                        location.reload();
+                        alert('success');
+                        // location.reload();
                     },
                     error: function(response) {
-                        location.reload();
+                        // location.reload();
 
                     }
                 });

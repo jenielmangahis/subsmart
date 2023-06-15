@@ -1110,14 +1110,16 @@
                                                             <label>Record all Items used on Jobs</label>
                                                         </div>
                                                         <div class="col-sm-12">
-                                                            <table id="device_audit" class="nsm-table table-bordered w-100">
+                                                            <table id="device_audit" class="nsm-table table-sm table-bordered w-100 device_job_items_tbl">
                                                                 <thead class="bg-light">
                                                                     <tr>
                                                                         <!-- <td style="width: 0% !important;"></td> -->
                                                                         <td><strong>Name</strong></td>
                                                                         <td><strong>Type</strong></td>
                                                                         <td><strong>Points</strong></td>
+                                                                        <td><strong>Price</strong></td>
                                                                         <td><strong>Qty</strong></td>
+                                                                        <td><strong>SubTotal</strong></td>
                                                                         <td><strong>Location</strong></td>
                                                                     </tr>
                                                                 </thead>
@@ -1126,12 +1128,6 @@
                                                                         if (isset($jobs_data_items)) { 
                                                                             $subtotal = 0.00;
                                                                             foreach ($jobs_data_items as $item) {
-                                                                            
-                                                                            // Service don't have inventory
-                                                                            if (strtolower($item->type) === 'service') {
-                                                                                continue;
-                                                                            }
-
                                                                             $total = $item->price * $item->qty;
                                                                     ?>
                                                                     <tr>
@@ -1143,20 +1139,31 @@
                                                                                 </div>
                                                                             </center>
                                                                         </td> -->
-                                                                        <td><?= $item->title; ?></td>
-                                                                        <td><?= $item->type; ?></td>
-                                                                        <td><?= $item->points; ?></td>
-                                                                        <td><?= $item->qty; ?></td>
-                                                                        <td style="width: 200px">
-                                                                            <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
-                                                                            <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
-                                                                            <select id="location" name="location[]" class="form-control location" >
-                                                                                <option value="">Select Type</option>
-                                                                                    <?php foreach (getLocation($item->id, $item->qty) as $locationItem): ?>
-                                                                                        <option value="<?= $locationItem->id ?>"><?= $locationItem->name  ?></option>
-                                                                                    <?php endforeach; ?>
-                                                                            </select>
-                                                                        </td>
+                                                                        <td><?php echo $item->title; ?></td>
+                                                                        <td><?php echo $item->type; ?></td>
+                                                                        <td><?php echo $item->id; ?></td>
+                                                                        <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
+                                                                        <td><?php echo $item->qty; ?></td>
+                                                                        <td><?php echo number_format((float)$total,2,'.',','); ?></td>
+                                                                            <td>
+                                                                                <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
+                                                                                <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
+                                                                                <select id="location" name="location[]" class="form-select form-select-sm location" >
+                                                                                    <?php
+                                                                                        if ($item->location_name == "") {
+                                                                                            echo "<option value hidden disable>Select Location</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "<option selected disabled hidden value='".getLocation($jobs_data->id, $item->location_id)->LOCATION_ID."'>".getLocation($jobs_data->id, $item->location_id)->LOCATION_NAME."</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </td>
                                                                     </tr>
                                                                     <?php } } ?>
                                                                 </tbody>
