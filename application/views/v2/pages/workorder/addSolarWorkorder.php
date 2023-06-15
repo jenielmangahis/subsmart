@@ -14,7 +14,7 @@
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
-                <?php echo form_open_multipart('workorder/savenewWorkorderSolar', ['class' => 'form-validate', 'id' => 'form_new_solar_workorder', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart('workorder/savenewWorkorderSolar', ['class' => 'form-validate', 'id' => 'form_new_solar_workorder_', 'autocomplete' => 'off']); ?>
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
@@ -331,6 +331,18 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
+                                            <div class="col-12">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                                
+                                                <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                                    <!-- <option selected value hidden>- Select Customer -</option> -->
+                                                    <option value="" selected> Select Customer</option>
+                                                    <?php foreach( $customers as $customer ){ ?>
+                                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name.' '.$customer->last_name; ?></option>
+                                                    <?php } ?>                                        
+                                                </select>
+                                            </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">First name</label>
                                                 <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field">
@@ -1066,5 +1078,69 @@
             }
         });
     }
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        $('#customer_id').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                cache: true,
+                data: function (params) {
+                    return { q: params.term, page: params.page };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return { results: data };
+                }
+            },
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: (repo) => {
+                return "first_name" in repo ? `${repo.first_name} ${repo.last_name}` : repo.text
+            }
+        });
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            return $(
+                '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            );
+        }
+
+        $("#customer_id").on( 'change', function () {
+            if(this.value !== ""){
+                autoFillCustomer(this.value);
+            }
+        });
+
+        function autoFillCustomer(customerId){
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/get_customer_selected",
+                data: { id : customerId },
+                success: function(data) {
+                    const {data: customer} = JSON.parse(data);
+                    $("[name=firstname]").val(customer.first_name);
+                    $("[name=lastname]").val(customer.last_name);
+                    $("[name=address]").val(customer.mail_add);
+                    $("[name=city]").val(customer.city);
+                    $("[name=state]").val(customer.state);
+                    $("[name=postcode]").val(customer.zip_code);
+                    $("[name=country]").val(customer.country);
+                    $("[name=phone]").val(customer.phone_h);
+                    $("[name=mobile]").val(customer.phone_m);
+                    $("[name=email]").val(customer.email);
+                    $("[name=state]").val(customer.state);
+                    $("[name=businessname]").val(customer.business_name);
+                }
+            });
+        }
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

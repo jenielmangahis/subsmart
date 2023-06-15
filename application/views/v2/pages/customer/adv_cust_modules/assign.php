@@ -25,7 +25,7 @@
                         ?>
                         <div class="row w-100">
                             <div class="col-12 col-md-6">
-                                <span class="content-title">Tommy Fico</span>
+                                <span class="content-title">Lauren Williams</span>
                                 <span class="content-subtitle d-block">FICO HEROES</span>
                             </div>
                             <div class="col-12 col-md-6 text-end">

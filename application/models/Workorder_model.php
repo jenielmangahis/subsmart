@@ -2050,6 +2050,21 @@ class Workorder_model extends MY_Model
         return $query2->result();
     }
 
+    public function getItemsDetails()
+    {
+        $cid = getLoggedCompanyID();
+        $where = array(
+            'company_id' => $cid,
+            'title'      => 'Solar panels Powur Full Service'
+          );
+
+        $this->db->select('*');
+		$this->db->from('items');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
     public function getworkorderItems($id)
     {
         // $this->db->select('*');
@@ -2087,6 +2102,13 @@ class Workorder_model extends MY_Model
     public function add_workorder_agreement_items($data)
     {
         $vendor = $this->db->insert('work_orders_agreement_products', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function add_workorder_solar_items($data)
+    {
+        $vendor = $this->db->insert('work_orders_items', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
