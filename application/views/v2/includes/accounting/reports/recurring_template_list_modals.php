@@ -55,8 +55,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $index => $transaction) : ?>
+                        <?php if(count($templates) > 0) : ?>
+                        <?php foreach($templates as $index => $template) : ?>
                         <?php if($group_by === 'none') : ?>
                         <tr>
                             <td <?=isset($columns) && !in_array('Template Type', $columns) ? 'style="display: none"' : ''?>><?=$template['template_type']?></td>
@@ -83,14 +83,18 @@
                         <tr class="group-header">
                             <td colspan="<?=isset($columns) ? $total_index : '8'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$template['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['amount_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Open Balance', $columns) || $columns[0] === 'Open Balance' ? 'style="display: none"' : ''?>></td>
-                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['debit_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['credit_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Online Banking', $columns) || $columns[0] === 'Online Banking' ? 'style="display: none"' : ''?>></td>
-                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['tax_amount_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Num Entered', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('End Date', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Expired', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('CC Expires', $columns) ? 'style="display: none"' : ''?>></td>
                         </tr>
-                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                        <?php foreach($template['templates'] as $temp) : ?>
                         <tr>
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td></td>
@@ -216,8 +220,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $index => $transaction) : ?>
+                        <?php if(count($templates) > 0) : ?>
+                        <?php foreach($templates as $index => $template) : ?>
                         <?php if($group_by === 'none') : ?>
                         <tr>
                             <td <?=isset($columns) && !in_array('Template Type', $columns) ? 'style="display: none"' : ''?>><?=$template['template_type']?></td>
@@ -244,14 +248,18 @@
                         <tr class="group-header">
                             <td colspan="<?=isset($columns) ? $total_index : '8'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$template['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['amount_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Open Balance', $columns) || $columns[0] === 'Open Balance' ? 'style="display: none"' : ''?>></td>
-                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['debit_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$template['credit_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Online Banking', $columns) || $columns[0] === 'Online Banking' ? 'style="display: none"' : ''?>></td>
-                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['tax_amount_total']?></b></td>
-                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Num Entered', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('End Date', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Expired', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('CC Expires', $columns) ? 'style="display: none"' : ''?>></td>
                         </tr>
-                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                        <?php foreach($template['templates'] as $temp) : ?>
                         <tr>
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td></td>
@@ -350,10 +358,13 @@
                                                 <label for="template-interval"><b>Template Interval</b></label>
                                                 <select name="template_interval" id="template-interval" class="nsm-field form-control">
                                                     <option value="all" <?=empty($filter_template_interval) || $filter_template_interval === 'all' ? 'selected' : ''?>>All</option>
-                                                    <option value="scheduled" <?=$filter_template_interval === 'scheduled' ? 'selected' : ''?>>Scheduled</option>
-                                                    <option value="reminder" <?=$filter_template_interval === 'reminder' ? 'selected' : ''?>>Reminder</option>
-                                                    <option value="unscheduled" <?=$filter_template_interval === 'unscheduled' ? 'selected' : ''?>>Unscheduled</option>
-                                                    <option value="manual" <?=$filter_template_interval === 'manual' ? 'selected' : ''?>>Manual</option>
+                                                    <option value="daily" <?=$filter_template_interval === 'daily' ? 'selected' : ''?>>Daily</option>
+                                                    <option value="weekly" <?=$filter_template_interval === 'weekly' ? 'selected' : ''?>>Weekly</option>
+                                                    <option value="monthly" <?=$filter_template_interval === 'monthly' ? 'selected' : ''?>>Monthly</option>
+                                                    <option value="yearly" <?=$filter_template_interval === 'yearly' ? 'selected' : ''?>>Yearly</option>
+                                                    <option value="any-activity" <?=$filter_template_interval === 'any-activity' ? 'selected' : ''?>>Any Activity</option>
+                                                    <option value="bi-monthly" <?=$filter_template_interval === 'bi-monthly' ? 'selected' : ''?>>Bi Monthly</option>
+                                                    <option value="payroll-rule" <?=$filter_template_interval === 'payroll-rule' ? 'selected' : ''?>>Payroll Rule</option>
                                                 </select>
                                             </div>
                                         </div>

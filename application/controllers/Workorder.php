@@ -7597,12 +7597,16 @@ class Workorder extends MY_Controller
             'company_id'                => $company_id,
         );
 
-        $w_acs = $this->workorder_model->save_alarm($solarItemsACS);
+        // $w_acs = $this->workorder_model->save_alarm($solarItemsACS);
+        $w_acs = $this->input->post('customer_id');
 
+
+        $getItemsDetails = $this->workorder_model->getItemsDetails();
+        $item_tax = $getItemsDetails->price * 0.075;
 
         $new_data = array(
             'work_order_number'                     => $this->input->post('workorder_number'),
-            'customer_id'                           => $w_acs,
+            'customer_id'                           => $this->input->post('customer_id'),
             'phone_number'                          => $this->input->post('phone'),
             'mobile_number'                         => $this->input->post('mobile'),
             'email'                                 => $this->input->post('email'),
@@ -7629,6 +7633,8 @@ class Workorder extends MY_Controller
              'primary_account_holder_name'          => $this->input->post('primary_account_holder_name'),
              'secondary_account_holder_signature'   => $file3_save,
              'secondary_account_holder_name'        => $this->input->post('secondery_account_holder_name'),
+             'grand_total'                          => $getItemsDetails->price + $item_tax,
+             'taxes'                                => $item_tax,
 
 
             // 'roof_type'                 => $this->input->post('tor'),
@@ -7666,6 +7672,17 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        $data = array(
+            'work_order_id'         => $addQuery,
+            'items_id'              => $getItemsDetails->id,
+            'qty'                   => 1,
+            'cost'                  => $getItemsDetails->price,
+            'tax'                   => $item_tax,
+            'discount'              => 0,
+            'total'                 => $getItemsDetails->price + $item_tax,
+        );
+        $result_set = $this->workorder_model->add_workorder_solar_items($data);
 
         // dd($addQuery);
 

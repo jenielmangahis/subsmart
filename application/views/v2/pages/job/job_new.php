@@ -924,14 +924,14 @@
                                                         <td><small>Qty</small>
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
-                                                        <td class="d-none"><small>Original Price</small>
-                                                            <input id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
+                                                        <td class="d-non"><small>Original Price</small>
+                                                            <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
                                                             <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
-                                                        <td class="d-none"><small>Commission</small>
-                                                            <input step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
+                                                        <td class="d-non"><small>Commission</small>
+                                                            <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
@@ -1101,15 +1101,19 @@
                                                             </div>
                                                         </div>
                                                     <?php } ?>
-                                                    <div class="row mt-3 d-none">
-                                                            <div class="col-sm-6">
+                                                    <div class="row mt-3 d-non">
+                                                            <div class="col-sm-6 d-none">
                                                                 <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
                                                             </div>
+                                                            <div class="col-sm-6 d-none">
+                                                                <label  id="invoice_overall_total">$0</label>
+                                                            </div>
                                                             <div class="col-sm-6">
-                                                                <label id="invoice_overall_total">$0</label>
-                                                                <input type="text" name="commission_type" value="" hidde>
-                                                                <input step="any" type="number" name="commission_percentage" value="" hidde>
-                                                                <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" hidde>
+                                                                Commission Type: <input type="text" name="commission_type" value="" readonly hidde>
+                                                                <br>
+                                                                Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly hidde>
+                                                                <br>
+                                                                Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly hidde>
                                                             </div>
                                                         </div>
                                                     <!-- <div class="col-sm-6"> -->
@@ -2030,7 +2034,7 @@ function getUserInfo(employee_id){
             (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
             (json.commission_percentage) ? commission_percentage = json.commission_percentage : commission_percentage = 0;
 
-            $("input[name='commission_type']").val(commission_type);
+            $("input[name='commission_type']").val(json.commission_id);
             $("input[name='commission_percentage']").val(commission_percentage);
             $(".COMMISSION_TYPE").text(commission_type);
         }

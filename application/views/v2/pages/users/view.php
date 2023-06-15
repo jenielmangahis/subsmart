@@ -124,7 +124,7 @@
     </div>
 
 <div class="modal fade" id="commission_history_modal" role="dialog">
-    <div class="modal-dialog" style="max-width: 650px;">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Commission History</span>
@@ -138,8 +138,9 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Datetime</th>
-                                    <th>Location</th>
+                                    <th>Module</th>
                                     <th>Type</th>
+                                    <th>Percentage</th>
                                     <th>Commission</th>
                                 </tr>
                             </thead>
@@ -148,8 +149,9 @@
                                 <tr>
                                     <td><?php echo $commission_infos->datetime; ?></td>
                                     <td><?php echo $commission_infos->location; ?></td>
-                                    <td><?php echo $commission_infos->type; ?></td>
-                                    <td><?php echo ($commission_infos->commission) ? "$".$commission_infos->commission : "$0" ?></td>   
+                                    <td><?php echo ($commission_infos->type == 0) ? "Percentage (Gross, Net)" : "Net + Percentage" ; ?></td>
+                                    <td><?php echo ($commission_infos->percentage) ? ($commission_infos->percentage * 100)."%" : "0%"; ?></td>
+                                    <td><?php echo ($commission_infos->commission) ? "+$".$commission_infos->commission : "$0" ?></td>   
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
