@@ -16,7 +16,7 @@
 }
 </style>
 <div class="nsm-card primary">
-    <?php if($company_id == 58): ?>
+    <?php if($company_id == 58 || $company_id == 1): ?>
         <div class="nsm-card-header">
             <div class="nsm-card-title">
                 <span><i class="bx bx-fw bx-user"></i>Solar Information</span>
@@ -32,7 +32,7 @@
                     <field-custom-name default="Project ID" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="project_id" id="project_id"/>
+                    <input type="text" value="<?= $acs_info_solar ? $acs_info_solar->project_id : ''; ?>" class="form-control" name="project_id" id="project_id"/>
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -44,7 +44,12 @@
                     <select name="lender_type" id="lender_type" class="input_select solar_infos">
                         <option  value=""></option>
                         <?php foreach ($lenderTypes  as $lender): ?>
-                            <option  value="<?= $lender->name ?>"><?= $lender->name ?></option>
+                            <?php if( $acs_info_solar ){ ?>
+                                <option <?= $acs_info_solar->lender_type == $lender->name ? 'selected="selected"' : ''; ?> value="<?= $lender->name ?>"><?= $lender->name ?></option>
+                            <?php }else{ ?>
+                                <option value="<?= $lender->name ?>"><?= $lender->name ?></option>
+                            <?php } ?>
+                            
                         <?php endforeach; ?>
                     </select><br>
                     <a href="<?= base_url('customer/settings_solar_lender_type') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
@@ -59,7 +64,11 @@
                     <select name="proposed_system_size" id="proposed_system_size" class="input_select solar_infos">
                         <option  value=""></option>
                         <?php foreach ($proposed_system_sizes  as $size): ?>
-                            <option  value="<?= $size->name ?>"><?= $size->name ?></option>
+                            <?php if( $acs_info_solar ){ ?>
+                                <option <?= $acs_info_solar->proposed_system_size == $size->name ? 'selected="selected"' : ''; ?> value="<?= $size->name ?>"><?= $size->name ?></option>
+                            <?php }else{ ?>
+                                <option  value="<?= $size->name ?>"><?= $size->name ?></option>
+                            <?php } ?>                            
                         <?php endforeach; ?>
                     </select><br>
                     <a href="<?= base_url('customer/settings_solar_system_size') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
@@ -74,7 +83,11 @@
                     <select name="proposed_modules" id="proposed_modules" class="input_select solar_infos">
                         <option  value=""></option>
                         <?php foreach ($proposed_modules  as $module): ?>
-                            <option  value="<?= $module->name ?>"><?= $module->name ?></option>
+                            <?php if( $acs_info_solar ){ ?>
+                                <option <?= $acs_info_solar->proposed_modules == $module->name ? 'selected="selected"' : ''; ?>  value="<?= $module->name ?>"><?= $module->name ?></option>
+                            <?php }else{ ?>
+                                <option  value="<?= $module->name ?>"><?= $module->name ?></option>
+                            <?php } ?>                            
                         <?php endforeach; ?>
                     </select><br>
                     <a href="<?= base_url('customer/settings_solar_modules') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
@@ -89,7 +102,11 @@
                     <select name="proposed_inverter" id="proposed_inverter" class="input_select solar_infos">
                         <option  value=""></option>
                         <?php foreach ($proposed_inverters  as $inverter): ?>
-                            <option  value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
+                            <?php if( $acs_info_solar ){ ?>
+                                <option <?= $acs_info_solar->proposed_inverter == $inverter->name ? 'selected="selected"' : ''; ?> value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
+                            <?php }else{ ?>
+                                <option  value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
+                            <?php } ?>                            
                         <?php endforeach; ?>
                     </select><br>
                     <a href="<?= base_url('customer/settings_solar_inverter') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
@@ -104,7 +121,11 @@
                         <option  value=""></option>
                         <option  value="1">Less than 30%</option>
                         <?php for($x=31;$x<=120;$x++): ?>
-                            <option  value="<?= $x ?>"><?= $x ?>%</option>
+                            <?php if( $acs_info_solar ){ ?>
+                                <option <?= $acs_info_solar->proposed_offset == $x ? 'selected="selected"' : ''; ?> value="<?= $x ?>"><?= $x ?>%</option>
+                            <?php }else{ ?>
+                                <option  value="<?= $x ?>"><?= $x ?>%</option>
+                            <?php } ?>                            
                         <?php endfor; ?>
                     </select>
                 </div>
@@ -118,7 +139,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="proposed_solar" value="">
+                        <input type="number" class="form-control input_select" name="proposed_solar" value="<?= $acs_info_solar ? $acs_info_solar->proposed_solar : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -131,7 +152,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="proposed_utility" value="">
+                        <input type="number" class="form-control input_select" name="proposed_utility" value="<?= $acs_info_solar ? $acs_info_solar->proposed_utility : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -144,7 +165,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="proposed_payment" value="">
+                        <input type="number" class="form-control input_select" name="proposed_payment" value="<?= $acs_info_solar ? $acs_info_solar->proposed_payment : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -157,7 +178,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="annual_income" value="">
+                        <input type="number" class="form-control input_select" name="annual_income" value="<?= $acs_info_solar ? $acs_info_solar->annual_income : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -170,7 +191,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="tree_estimate" value="">
+                        <input type="number" class="form-control input_select" name="tree_estimate" value="<?= $acs_info_solar ? $acs_info_solar->tree_estimate : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -183,7 +204,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="roof_estimate" value="">
+                        <input type="number" class="form-control input_select" name="roof_estimate" value="<?= $acs_info_solar ? $acs_info_solar->roof_estimate : ''; ?>">
                     </div>
                 </div>
             </div>
@@ -193,7 +214,7 @@
                     <field-custom-name default="Utility Account #" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="utility_account" id="utility_account"/>
+                    <input type="text" class="form-control" name="utility_account" id="utility_account" value="<?= $acs_info_solar ? $acs_info_solar->utility_account : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -201,7 +222,7 @@
                     <field-custom-name default="Utility Login #" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="utility_login" id="utility_login"/>
+                    <input type="text" class="form-control" name="utility_login" id="utility_login" value="<?= $acs_info_solar ? $acs_info_solar->utility_login : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -209,7 +230,7 @@
                     <field-custom-name default="Utility Password" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="utility_pass" id="utility_pass"/>
+                    <input type="text" class="form-control" name="utility_pass" id="utility_pass" value="<?= $acs_info_solar ? $acs_info_solar->utility_pass : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -217,7 +238,7 @@
                     <field-custom-name default="Meter Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="meter_number" id="meter_number"/>
+                    <input type="text" class="form-control" name="meter_number" id="meter_number" value="<?= $acs_info_solar ? $acs_info_solar->meter_number : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -225,7 +246,7 @@
                     <field-custom-name default="Insurance Name" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="insurance_name" id="insurance_name"/>
+                    <input type="text" class="form-control" name="insurance_name" id="insurance_name" value="<?= $acs_info_solar ? $acs_info_solar->insurance_name : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -233,7 +254,7 @@
                     <field-custom-name default="Insurance Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="insurance_number" id="insurance_number"/>
+                    <input type="text" class="form-control" name="insurance_number" id="insurance_number" value="<?= $acs_info_solar ? $acs_info_solar->insurance_number : ''; ?>" />
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -241,9 +262,26 @@
                     <field-custom-name default="Policy Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="policy_number" id="policy_number"/>
+                    <input type="text" class="form-control" name="policy_number" id="policy_number" value="<?= $acs_info_solar ? $acs_info_solar->policy_number : ''; ?>" />
                 </div>
             </div>
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
+                    <field-custom-name default="Solar System Size" form="solar_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="solar_system_size" id="solar_system_size" value="<?= $acs_info_solar ? $acs_info_solar->solar_system_size : ''; ?>" />
+                </div>
+            </div>
+            <div class="row form_line field-custom-name-container">
+                <div class="col-md-6">
+                    <field-custom-name default="kW DC" form="solar_info"></field-custom-name>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="kw_dc" id="kw_dc" value="<?= $acs_info_solar ? $acs_info_solar->kw_dc : ''; ?>" />
+                </div>
+            </div>
+
         </div>
     <?php else: ?>
         <div class="nsm-card-header">

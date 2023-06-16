@@ -1814,6 +1814,19 @@ class Customer extends MY_Controller
             if (count($this->page_data['papers'])) {
                 $this->page_data['papers'] = $this->page_data['papers'][0];
             }
+
+            if(logged('company_id') == 58 || logged('company_id') == 1){
+                $solar_info_query = array(
+                    'where' => array(
+                        'fk_prof_id' => $userid
+                    ),
+                    'table' => 'acs_info_solar',
+                    'select' => '*',
+                );
+
+                $acs_info_solar = $this->general->get_data_with_param($solar_info_query, FALSE);                
+                $this->page_data['acs_info_solar'] = $acs_info_solar;
+            }
         }
         $get_customer_groups = array(
             'where' => array(
@@ -1859,12 +1872,12 @@ class Customer extends MY_Controller
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
 
-        if(logged('company_id') == 58){
-            $solar_info_query = array(
+        if(logged('company_id') == 58 || logged('company_id') == 1){
+            $solar_info_settings_query = array(
                 'table' => 'acs_solar_info_settings',
                 'select' => '*',
             );
-            $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_query);
+            $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_settings_query);
         }
         
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
@@ -2080,7 +2093,7 @@ class Customer extends MY_Controller
                 $save_papers = $this->save_papers_information($input,$profile_id);
                 $save_contacts = $this->save_contacts($input,$profile_id);
 
-                if($companyId == 58){
+                if($companyId == 58 || $companyId == 1){
                     $this->save_solar_info($input,$profile_id);
                 }
                 
@@ -2173,6 +2186,8 @@ class Customer extends MY_Controller
         $solarInfo['insurance_name'] = $input['insurance_name'];
         $solarInfo['insurance_number'] = $input['insurance_number'];
         $solarInfo['policy_number'] = $input['policy_number'];
+        $solarInfo['kw_dc'] = $input['kw_dc'];
+        $solarInfo['solar_system_size'] = $input['solar_system_size'];
 
         $check = array(
             'where' => array('fk_prof_id' => $id),
