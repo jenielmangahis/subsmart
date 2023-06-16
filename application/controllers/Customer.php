@@ -6633,4 +6633,13 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+
+    public function ajax_load_customer_sms_messages(){
+        $this->load->model('CompanySms_model');
+
+        $post = $this->input->post();
+        $customerSentSms = $this->CompanySms_model->getAllByProfId($post['cid']);
+        $this->page_data['customerSentSms'] = $customerSentSms;
+        $this->load->view('v2/pages/customer/ajax_load_customer_sms_messages', $this->page_data);
+    }
 }

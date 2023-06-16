@@ -9778,7 +9778,7 @@ const submitModalForm = (event, el) => {
         case '#depositModal' :
             data.delete('received_from[]');
             data.delete('payment_method[]');
-            var totalAmount = $(`#depositModal span.transaction-total-amount`).html().replace('$', '');
+            // var totalAmount = $(`#depositModal span.transaction-total-amount`).html().replace('$', '');
     
             $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
                 if(data.has('received_from[]') === false) {

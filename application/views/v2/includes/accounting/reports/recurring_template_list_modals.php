@@ -692,7 +692,7 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" <?=isset($filter_distribution_account) ? 'checked' : '' ?> name="allow_filter_distribution_account" value="1" id="allow-filter-distribution-account">
                                                     <label class="form-check-label" for="allow-filter-distribution-account">
-                                                        Account
+                                                        Distribution Account
                                                     </label>
                                                 </div>
                                             </div>
@@ -864,7 +864,7 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input" <?=isset($end_date) ? 'checked' : '' ?> type="checkbox" name="allow_filter_end_date" value="1" id="allow-filter-end-date">
                                                     <label class="form-check-label" for="allow-filter-end-date">
-                                                        Due Date
+                                                        End Date
                                                     </label>
                                                 </div>
                                             </div>

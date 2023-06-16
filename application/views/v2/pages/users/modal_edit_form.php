@@ -150,7 +150,7 @@
             </div>
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Commission</label>
-                <span><?php echo ($commission->totalCommission) ? "$$commission->totalCommission" : "$0"; ?></span>
+                <span><?php echo ($commission->totalCommission) ? "$".number_format($commission->totalCommission, 2) : "$0"; ?></span>
             </div>
         </div>
     </div>

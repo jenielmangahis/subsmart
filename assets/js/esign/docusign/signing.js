@@ -84,7 +84,7 @@ function Signing(hash) {
 
     const { alarm_cs_account, monthly_monitoring, otps, passcode } = window.__esigndata.auto_populate_data.acs_alarm;    
 
-    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
+    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
     
@@ -180,6 +180,10 @@ function Signing(hash) {
 
     if( field_name == "Access Password" ){
       return access_password;
+    }
+
+    if( field_name == "Equipment" ){
+      return equipment;
     }
 
     if( field_name == "Esign Envelope ID" ){      
@@ -999,7 +1003,7 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId); 
       }
 
-      if( field.original_field_name === "Checking Account Number" || field.original_field_name === "Account Number" || field.original_field_name === "CS Account Number" || field.original_field_name === "ABA" || field.original_field_name === "Card Number" || field.original_field_name === "Card Holder Name" || field.original_field_name === "Card Expiration" || field.original_field_name === "Card Security Code" ){
+      if( field.original_field_name === "Checking Account Number" || field.original_field_name === "Account Number" || field.original_field_name === "CS Account Number" || field.original_field_name === "ABA" || field.original_field_name === "Card Number" || field.original_field_name === "Card Holder Name" || field.original_field_name === "Card Expiration" || field.original_field_name === "Card Security Code" || field.original_field_name === "Equipment" ){
         $input.attr("data-field-type", "autoPopulateAccountDetails");
         $input.attr("data-field-id", fieldId); 
       }

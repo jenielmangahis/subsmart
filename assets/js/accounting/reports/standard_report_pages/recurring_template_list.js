@@ -257,12 +257,11 @@ $('#run-report-button').on('click', function() {
         $('#filter-report-period-date-to').val($('#report-period-date-to').val());
     }
 
-    var filterDate = $('#report-period-date').val();
     var sortBy = $('#sort-by').val();
     var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
-    url += $('#custom-group-by').val() !== 'transaction-type' ? `group-by=${$('#custom-group-by').val()}&` : '';
+    url += $('#custom-group-by').val() !== 'template-type' ? `group-by=${$('#custom-group-by').val()}&` : '';
     url += sortBy !== 'default' ? `column=${sortBy}&` : '';
     url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
 
