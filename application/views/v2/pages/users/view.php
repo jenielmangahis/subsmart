@@ -151,7 +151,7 @@
                                     <td><?php echo $commission_infos->location; ?></td>
                                     <td><?php echo ($commission_infos->type == 0) ? "Percentage (Gross, Net)" : "Net + Percentage" ; ?></td>
                                     <td><?php echo ($commission_infos->percentage) ? ($commission_infos->percentage * 100)."%" : "0%"; ?></td>
-                                    <td><?php echo ($commission_infos->commission) ? "+$".$commission_infos->commission : "$0" ?></td>   
+                                    <td><?php echo ($commission_infos->commission) ? "+$".number_format($commission_infos->commission, 2) : "$0" ?></td>   
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

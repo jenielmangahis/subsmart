@@ -135,7 +135,7 @@
                 <label class="content-subtitle fw-bold">Date Of Birth</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->date_of_birth) ? $profile_info->date_of_birth : '---'; ?></label>
+                <label class="content-subtitle"><?php echo ($profile_info->date_of_birth) ? date_format(date_create($profile_info->date_of_birth), "M d, Y") : "&mdash;"; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Email</label>
