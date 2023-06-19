@@ -445,7 +445,7 @@ function Signing(hash) {
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
-      $element.on("click", () => {
+      $element.on("click touchstart", () => {        
         signaturePad.clear();
         $(".signing__signatureInput").val("");
 
@@ -1436,7 +1436,7 @@ function Signing(hash) {
     });
 
     $signatureModal.on("show.bs.modal", function () {
-      if (!isMobile()) return;
+      /*if (!isMobile()) return;
 
       if (document.documentElement.requestFullscreen) {
         this.requestFullscreen();
@@ -1454,11 +1454,11 @@ function Signing(hash) {
           .catch((error) => {
             console.error(error);
           });
-      }
+      }*/
     });
 
     $signatureModal.on("hide.bs.modal", function () {
-      if (!isMobile()) return;
+      /*if (!isMobile()) return;
 
       if (document.fullscreenElement) {
         document.exitFullscreen().catch((err) => console.error(err));
@@ -1468,7 +1468,7 @@ function Signing(hash) {
       $dialog.classList.remove("max-width-unset");
       if (screen.orientation) {
         screen.orientation.unlock();
-      }
+      }*/
     });
 
     $finishSigning.on("click", async function () {
@@ -1797,7 +1797,7 @@ function Signing(hash) {
     
     if (data.generated_pdf) {
       // download link
-      $("[data-action=download]").on("click", function () {
+      $("[data-action=download]").on("click touchstart", function () {
         const queryString = new URLSearchParams({
           document_type: "esign",
           generated_esign_id: data.generated_pdf.docfile_id,

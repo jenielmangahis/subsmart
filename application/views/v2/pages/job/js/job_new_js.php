@@ -262,6 +262,15 @@ $("#attachment-file").change(function() {
             get_customers(idd);
         });
 
+        function currencyFormatter(amount) {
+          if (isNaN(amount)) {
+            return "$0.00";
+          } else {
+            var numberFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            return numberFormatter.format(amount);
+          }
+        }
+
         $(".select_item").click(function () {
             var idd = this.id;
             var title = $(this).data('itemname');
@@ -288,9 +297,9 @@ $("#attachment-file").change(function() {
             markup = "<tr id='ss'>" +
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
                 "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
-                "<td class='d-non'><small>Original Price</small><input data-id='"+idd+"' id='cost"+idd+"' value='"+price+"'  type='number' name='item_cost[]' class='form-control item-cost' step='any' placeholder='Original Price'></td>" +
+                "<td class='d-none'><small>Original Price</small><input data-id='"+idd+"' id='cost"+idd+"' value='"+price+"'  type='number' name='item_cost[]' class='form-control item-cost' step='any' placeholder='Original Price'></td>" +
                 "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+retail+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
-                "<td class='d-non'><small>Commission</small><input data-id='"+idd+"' id='commission"+idd+"' value='"+commission+"'  type='number' name='item_commission[]' class='form-control item-commission' step='any' placeholder='Commission'></td>" +
+                "<td class='d-none'><small>Commission</small><input data-id='"+idd+"' id='commission"+idd+"' value='"+commission+"'  type='number' name='item_commission[]' class='form-control item-commission' step='any' placeholder='Commission'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
                 "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
@@ -320,10 +329,10 @@ $("#attachment-file").change(function() {
             markup3 ="<tr id='ss'>" +
                 "<td>" + title + "</td>" +
                 "<td>" + item_type + "</td>" +
-                "<td>0</td>" +
-                "<td id='device_price"+idd+"'>" + retail + "</td>" +
+                "<td>"+currencyFormatter(price)+"</td>" +
+                "<td id='device_price"+idd+"'>" + currencyFormatter(retail) + "</td>" +
                 "<td id='device_qty"+idd+"'>"+ 1 + "</td>" +
-                "<td id='device_sub_total"+idd+"'>" + total + "</td>" +
+                "<td id='device_sub_total"+idd+"'>" + currencyFormatter(commission) + "</td>" +
                 "<td>" +
                 "<input hidden name='item_id1[]' value='"+ idd +"'>" +
                 "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
@@ -477,7 +486,7 @@ $("#attachment-file").change(function() {
                 }
             });
 
-            $('#invoice_overall_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
+            $('#invoice_overall_total').html(currencyFormatter(total));
             $('#pay_amount').val(withCommas);
             $('#total_amount').val(total);
             $('#total2').val(total);
@@ -501,6 +510,7 @@ $("#attachment-file").change(function() {
             var commission_percentage = parseFloat($("input[name='commission_percentage']").val());
             var commission = (commission_type == 0) ? (((retail - cost) * commission_percentage) * qty).toFixed(2) : ((retail * commission_percentage) * qty).toFixed(2);
             $('#commission'+id).val(commission);
+            $('#device_sub_total'+id).text(currencyFormatter(commission));
         }
 
 
@@ -513,7 +523,7 @@ $("#attachment-file").change(function() {
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
-            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            // $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
             // getLoc(id, qty);
@@ -530,7 +540,7 @@ $("#attachment-file").change(function() {
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
-            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            // $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
             // getLoc(id, qty);
@@ -546,7 +556,7 @@ $("#attachment-file").change(function() {
             var new_sub_total = Number(qty) * Number(cost);
             $('#sub_total'+id).data('subtotal',new_sub_total);
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
-            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            // $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#device_price'+id).text(cost);
             calculate_subtotal();

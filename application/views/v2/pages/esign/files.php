@@ -424,6 +424,31 @@ echo put_header_assets();
                                         </div>
                                     </div>
                                 <?php } ?>
+                                <?php if( logged('company_id') == 58 || logged('company_id') == 1 ){ ?>
+                                    <div>
+                                        <p class="fw-bold"><small>Solar Info</small></p>
+                                    </div>
+                                    <div class="sidebar_item">
+                                        <div class="menu-fields">
+                                            <ul class="menu_list">
+                                                <li class="menu_listItem">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-kw_dc"></i></span>
+                                                        <i class="esign-fa fa fa-lightbulb"></i>
+                                                        <span class="u-ellipsis ng-binding">kW DC</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-system_size"></i></span>
+                                                        <i class="esign-fa fa fa-lightbulb"></i>
+                                                        <span class="u-ellipsis ng-binding">System Size</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                                 <div>
                                     <p class="fw-bold"><small>Customer / Subscriber</small></p>
                                 </div>
