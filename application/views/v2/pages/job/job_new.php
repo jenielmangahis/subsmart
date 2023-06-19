@@ -924,13 +924,13 @@
                                                         <td><small>Qty</small>
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
-                                                        <td class="d-non"><small>Original Price</small>
+                                                        <td class="d-none"><small>Original Price</small>
                                                             <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
                                                             <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
-                                                        <td class="d-non"><small>Commission</small>
+                                                        <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
@@ -1101,7 +1101,7 @@
                                                             </div>
                                                         </div>
                                                     <?php } ?>
-                                                    <div class="row mt-3 d-non">
+                                                    <div class="row mt-3 d-none">
                                                             <div class="col-sm-6 d-none">
                                                                 <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
                                                             </div>
@@ -1458,10 +1458,10 @@
                                                                         <!-- <td style="width: 0% !important;"></td> -->
                                                                         <td><strong>Name</strong></td>
                                                                         <td><strong>Type</strong></td>
-                                                                        <td><strong>Points</strong></td>
+                                                                        <td><strong>Cost</strong></td>
                                                                         <td><strong>Price</strong></td>
                                                                         <td><strong>Qty</strong></td>
-                                                                        <td><strong>SubTotal</strong></td>
+                                                                        <td><strong>Margin</strong></td>
                                                                         <td><strong>Location</strong></td>
                                                                     </tr>
                                                                 </thead>
@@ -1483,10 +1483,10 @@
                                                                         </td> -->
                                                                         <td><?php echo $item->title; ?></td>
                                                                         <td><?php echo $item->type; ?></td>
-                                                                        <td><?php echo $item->id; ?></td>
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
+                                                                        <td><?php echo number_format((float)$item->retail,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
-                                                                        <td><?php echo number_format((float)$total,2,'.',','); ?></td>
+                                                                        <td><?php echo number_format((float)$item->commission,2,'.',','); ?></td>
                                                                         <?php if($jobs_data->status == "Scheduled") {?>
                                                                             <td>
                                                                                 <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
@@ -1516,6 +1516,16 @@
                                                             </table>
                                                         </div>
                                                     </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-sm-3">
+                                                            <strong>Rep:</strong>&nbsp;&nbsp;<span id="totalRep">&mdash;</span>
+                                                        </div>
+
+                                                        <div class="col-sm-3">
+                                                            <strong>Job Profit:</strong>&nbsp;&nbsp;<span id="totalJobProfit">$0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
                                                 </div>
                                                 <!-- <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                                 <div class="col-sm-12">
@@ -2048,21 +2058,37 @@ $("#employee_id").on('change', function(event) {
 
 getUserInfo(employee_id);
 
+function currencyFormatter(amount) {
+  if (isNaN(amount)) {
+    return "$0.00";
+  } else {
+    var numberFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    return numberFormatter.format(amount);
+  }
+}
+
+$("#employee_id").on('change', function(event) {
+    let salesRep = $("#employee_id option:selected").text();
+    $("#totalRep").text((salesRep !== "Select All") ? salesRep : "—");
+});
 
 function getTotalCommission(){
     let totalCommission = 0.0;
+    let salesRep = $("#employee_id option:selected").text();
     $('.job_items_tbl tr').each(function() {
       let commissionValue = $(this).find('td:eq(4) input').val();
         totalCommission += parseFloat(commissionValue);
     })
     $("input[name='commission_amount']").val(totalCommission.toFixed(2));
+    $("#totalRep").text((salesRep !== "Select All") ? salesRep : "—");
+    $("#totalJobProfit").text(currencyFormatter(totalCommission));
 }
 
 const job_items_tbl = $('.job_items_tbl')[0];
 const observer = new MutationObserver(() => getTotalCommission());
 const config = { childList: true, subtree: true, characterData: true };
 observer.observe(job_items_tbl, config);
-getTotalCommission()
+getTotalCommission();
 
 $('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
   this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);
