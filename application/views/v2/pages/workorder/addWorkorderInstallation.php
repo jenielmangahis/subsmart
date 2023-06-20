@@ -1973,7 +1973,7 @@ tr {
                     <div class="modal-body pt-0 pl-3 pb-3"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary saveCustomer">Save changes</button>
+                        <button type="button" class="btn btn-primary saveCustomerEst">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -2435,7 +2435,7 @@ $(".nsm-subtitle").html(function() {
 </script>
 
 <script>
-$(document).on('click', '.saveCustomer', function() {
+$(document).on('click', '.saveCustomerEst', function() {
 
     var first_name      = $('[name="first_name"]').val();
     var middle_name     = $('[name="middle_name"]').val();
@@ -2481,8 +2481,8 @@ $(document).on('click', '.saveCustomer', function() {
                     },
                     dataType: 'json',
                     success: function(response) {
-                        alert('success');
-                        // location.reload();
+                        // alert('success');
+                        location.reload();
                     },
                     error: function(response) {
                         // location.reload();

@@ -249,6 +249,7 @@ class DocuSign extends MYF_Controller
         $acs_alarm_accessKeys = [
             'alarm_cs_account',
             'monthly_monitoring',
+            'panel_type',
             'otps',
             'passcode'
         ];
@@ -257,6 +258,20 @@ class DocuSign extends MYF_Controller
             return in_array($v, $acs_alarm_accessKeys);
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
+
+        #acs solar
+        $this->db->where('fk_prof_id', $customer_id);
+        $acs_info_solar = $this->db->get('acs_info_solar')->row();
+
+        $acs_solar_info_accessKeys = [
+            'kw_dc',
+            'solar_system_size'
+        ];
+        
+        $filteredAcs_solar = array_filter( (array)$acs_info_solar , function($v) use ($acs_solar_info_accessKeys) {
+            return in_array($v, $acs_solar_info_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['acs_info_solar'] = $filteredAcs_solar;
 
         #emergency primary contact
         $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone');
@@ -3181,7 +3196,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment'];
+                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;

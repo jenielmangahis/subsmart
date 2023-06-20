@@ -7600,6 +7600,35 @@ class Workorder extends MY_Controller
         // $w_acs = $this->workorder_model->save_alarm($solarItemsACS);
         $w_acs = $this->input->post('customer_id');
 
+        $solarItemsACS2 = array(
+            'customer_id'               => $this->input->post('customer_id'),
+            'last_name'                 => $this->input->post('lastname'),
+            'first_name'                => $this->input->post('firstname'),
+            'phone_h'                   => $this->input->post('phone'), //new
+            'phone_m'                   => $this->input->post('mobile'), //new
+            'email'                     => $this->input->post('email'),
+            'mail_add'                  => $this->input->post('address'), //new
+            'city'                      => $this->input->post('city'), //new
+            'country'                   => $this->input->post('country'), //new
+            'zip_code'                  => $this->input->post('postcode'), //new
+            // 'ssn'                       => $this->input->post('ssn'), //new
+        );
+
+        $w_acs = $this->workorder_model->update_alarm($solarItemsACS2);
+        $customer_id = $this->input->post('customer_id');
+
+        $solarItemsOffice = array(
+            'fk_prof_id'                => $customer_id,
+            'lead_source'               => $this->input->post('lead_source'),
+            'save_by'                   => $user_id,
+            'fk_sales_rep_office'       => $user_id,
+            // 'equipment_cost'            => $equip,
+            // 'monthly_monitoring'        => $this->input->post('otps'),
+            'sales_date'                => date("m/d/Y"),
+        );
+
+        $solarItemsOffices = $this->workorder_model->update_office($solarItemsOffice);
+
 
         $getItemsDetails = $this->workorder_model->getItemsDetails();
         $item_tax = $getItemsDetails->price * 0.075;
@@ -7759,6 +7788,22 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_dataa = array(
+                'fk_prof_id'            => $customer_id,
+                'card_fname'            => $this->input->post('firstname'),
+                'card_lname'            => $this->input->post('lastname'),
+                'card_address'          => $this->input->post('address'),
+                'city'                  => $this->input->post('city'),
+                'state'                 => $this->input->post('state'),
+                'zip'                   => $this->input->post('postcode'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+                'bill_method'           => 'CASH',
+            );
+
+            $pay1 = $this->workorder_model->save_payment_billing($payment_dataa);
         }
         elseif($this->input->post('payment_method') == 'Check'){
             $payment_data = array(
@@ -7775,6 +7820,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datab = array(
+                'fk_prof_id'            => $customer_id,
+                'card_fname'            => $this->input->post('firstname'),
+                'card_lname'            => $this->input->post('lastname'),
+                'card_address'          => $this->input->post('address'),
+                'city'                  => $this->input->post('city'),
+                'state'                 => $this->input->post('state'),
+                'zip'                   => $this->input->post('postcode'),
+                'bill_method'           => 'CHECK',
+                'check_num'             => $this->input->post('check_number'),
+                'routing_num'           => $this->input->post('routing_number'),
+                'acct_num'              => $this->input->post('account_number'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay2 = $this->workorder_model->save_payment_billing($payment_datab);
         }
         //added apr 26, 2021
         elseif($this->input->post('payment_method') == 'Invoicing'){
@@ -7795,6 +7859,22 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datac = array(
+                'fk_prof_id'            => $customer_id,
+                'card_fname'            => $this->input->post('firstname'),
+                'card_lname'            => $this->input->post('lastname'),
+                'card_address'          => $this->input->post('address'),
+                'city'                  => $this->input->post('city'),
+                'state'                 => $this->input->post('state'),
+                'zip'                   => $this->input->post('postcode'),
+                'bill_method'           => 'Invoicing',
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay3 = $this->workorder_model->save_payment_billing($payment_datac);
         }
         //end added
         elseif($this->input->post('payment_method') == 'Credit Card'){
@@ -7813,6 +7893,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datad = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'CC',
+                'credit_card_num'           => $this->input->post('credit_number'),
+                'credit_card_exp'           => $this->input->post('credit_expiry'),
+                'credit_card_exp_mm_yyyy'   => $this->input->post('credit_cvc'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay4 = $this->workorder_model->save_payment_billing($payment_datad);
         }
         elseif($this->input->post('payment_method') == 'Debit Card'){
             $payment_data = array(
@@ -7830,6 +7929,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datae = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'DC',
+                'credit_card_num'           => $this->input->post('debit_credit_number'),
+                'credit_card_exp'           => $this->input->post('debit_credit_expiry'),
+                'credit_card_exp_mm_yyyy'   => $this->input->post('debit_credit_cvc'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay5 = $this->workorder_model->save_payment_billing($payment_datae);
         }
         elseif($this->input->post('payment_method') == 'ACH'){
             $payment_data = array(
@@ -7846,6 +7964,24 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_dataf = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'ACH',
+                'routing_num'               => $this->input->post('ach_routing_number'),
+                'acct_num'                  => $this->input->post('ach_account_number'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay6 = $this->workorder_model->save_payment_billing($payment_dataf);
         }
         elseif($this->input->post('payment_method') == 'Venmo'){
             $payment_data = array(
@@ -7863,6 +7999,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datag = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'VENMO',
+                'account_credential'        => $this->input->post('account_credentials'),
+                'account_note'              => $this->input->post('account_note'),
+                'confirmation'              => $this->input->post('confirmation'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay7 = $this->workorder_model->save_payment_billing($payment_datag);
         }
         elseif($this->input->post('payment_method') == 'Paypal'){
             $payment_data = array(
@@ -7880,6 +8035,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datah = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'PP',
+                'account_credential'        => $this->input->post('paypal_account_credentials'),
+                'account_note'              => $this->input->post('paypal_account_note'),
+                'confirmation'              => $this->input->post('paypal_confirmation'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay8 = $this->workorder_model->save_payment_billing($payment_datah);
         }
         elseif($this->input->post('payment_method') == 'Square'){
             $payment_data = array(
@@ -7897,6 +8071,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datai = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'SQ',
+                'account_credential'        => $this->input->post('square_account_credentials'),
+                'account_note'              => $this->input->post('square_account_note'),
+                'confirmation'              => $this->input->post('square_confirmation'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay9 = $this->workorder_model->save_payment_billing($payment_datai);
         }
         elseif($this->input->post('payment_method') == 'Warranty Work'){
             $payment_data = array(
@@ -7913,6 +8106,24 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_dataj = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'WW',
+                'account_credential'        => $this->input->post('warranty_account_credentials'),
+                'account_note'              => $this->input->post('warranty_account_note'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay10 = $this->workorder_model->save_payment_billing($payment_dataj);
         }
         elseif($this->input->post('payment_method') == 'Home Owner Financing'){
             $payment_data = array(
@@ -7929,6 +8140,24 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datak = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'HOF',
+                'account_credential'        => $this->input->post('home_account_credentials'),
+                'account_note'              => $this->input->post('home_account_note'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay11 = $this->workorder_model->save_payment_billing($payment_datak);
         }
         elseif($this->input->post('payment_method') == 'e-Transfer'){
             $payment_data = array(
@@ -7945,6 +8174,24 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datal = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'eT',
+                'account_credential'        => $this->input->post('e_account_credentials'),
+                'account_note'              => $this->input->post('e_account_note'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay12 = $this->workorder_model->save_payment_billing($payment_datal);
         }
         elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
             $payment_data = array(
@@ -7962,6 +8209,25 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datam = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'OCCP',
+                'credit_card_num'           => $this->input->post('other_credit_number'),
+                'credit_card_exp'           => $this->input->post('other_credit_expiry'),
+                'credit_card_exp_mm_yyyy'   => $this->input->post('other_credit_cvc'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay13 = $this->workorder_model->save_payment_billing($payment_datam);
         }
         elseif($this->input->post('payment_method') == 'Other Payment Type'){
             $payment_data = array(
@@ -7978,6 +8244,24 @@ class Workorder extends MY_Controller
             );
 
             $pay = $this->workorder_model->save_payment($payment_data);
+            $delete_payment_billing = $this->workorder_model->delete_payment_billing($customer_id);
+
+            $payment_datan = array(
+                'fk_prof_id'                => $customer_id,
+                'card_fname'                => $this->input->post('firstname'),
+                'card_lname'                => $this->input->post('lastname'),
+                'card_address'              => $this->input->post('address'),
+                'city'                      => $this->input->post('city'),
+                'state'                     => $this->input->post('state'),
+                'zip'                       => $this->input->post('postcode'),
+                'bill_method'               => 'OPT',
+                'account_credential'        => $this->input->post('other_payment_account_credentials'),
+                'account_note'              => $this->input->post('other_payment_account_note'),
+                'initial_dep'           => $this->input->post('payment_amount'),
+                'bill_freq'             => 'Every 1 Month',
+            );
+
+            $pay14 = $this->workorder_model->save_payment_billing($payment_datan);
         }
 
         

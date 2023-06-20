@@ -80,9 +80,11 @@ function Signing(hash) {
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
+    const { kw_dc, solar_system_size } = window.__esigndata.auto_populate_data.acs_info_solar;
+
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account, monthly_monitoring, otps, passcode } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
@@ -232,6 +234,14 @@ function Signing(hash) {
 
     if( field_name == "Monthly Monitoring Rate" ){
       return monthly_monitoring;
+    }
+
+    if( field_name == "kW DC" ){
+      return kw_dc;
+    }
+
+    if( field_name == "System Size" ){
+      return solar_system_size;
     }
     
     if (field_name === "Text" && fieldValue === null ) {
@@ -455,7 +465,7 @@ function Signing(hash) {
       return $element;
     }
 
-    if (["Checkbox", "Radio"].includes(field_name)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3"].includes(field_name)) {
       let {
         subCheckbox = [],
         isChecked,
@@ -480,13 +490,23 @@ function Signing(hash) {
         return hasRequested ? value.subCheckbox : subCheckbox;
       };
 
+      if( field_name === panel_type ){
+        isChecked = 'checked';
+      }
+
       if (value.hasOwnProperty("isChecked")) {
         isChecked = value.isChecked;
       }
 
-      const inputType = field_name.toLowerCase();
+      console.log('Panel Type' + panel_type);
+      console.log('Is Checked' + isChecked);
+
+      //const inputType = field_name.toLowerCase();
+      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+          ? "checkbox"
+          : field_name.toLowerCase();
       const baseClassName =
-        field_name === "Checkbox"
+        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
           ? "docusignField__checkbox"
           : "docusignField__radio";
 
@@ -1010,6 +1030,11 @@ function Signing(hash) {
 
       if( field.original_field_name === "Equipment Cost" || field.original_field_name === "Monthly Monitoring Rate" || field.original_field_name === "One Time Activation (OTP)" || field.original_field_name === "Total Due" ){
         $input.attr("data-field-type", "autoPopulateBilling");
+        $input.attr("data-field-id", fieldId); 
+      }
+
+      if( field.original_field_name === "System Size" || field.original_field_name === "kW DC" ){
+        $input.attr("data-field-type", "autoPopulateSolar");
         $input.attr("data-field-id", fieldId); 
       }
 
@@ -1652,6 +1677,19 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      const $autoPopulateSolar = $("[data-field-type=autoPopulateSolar]");
+      const autoPopulateSolarPromises = [...$autoPopulateSolar].map((autoPopulateSolar) => {
+        const $element = $($autoPopulateSolar);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
       const $formulas = $("[data-field-type=formula]");
       const formulaPromises = [...$formulas].map((formula) => {
         const $element = $(formula);
@@ -1672,6 +1710,7 @@ function Signing(hash) {
       await Promise.all(autoPopulateEmergencyContactPromises);
       await Promise.all(autoPopulateAccountDetailsPromises);
       await Promise.all(autoPopulateBillingPromises);
+      await Promise.all(autoPopulateSolarPromises);
 
       const response = await fetch(`${prefixURL}/DocuSign/apiComplete`, {
         method: "POST",

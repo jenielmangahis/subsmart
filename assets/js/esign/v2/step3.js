@@ -489,9 +489,9 @@ function Step3() {
     const $element = createElementFromHTML(html);
     const $subData = $element.find(".subData");
 
-    if (["Checkbox", "Radio", "2 GIG Go Panel 2"].includes(fieldName)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3"].includes(fieldName)) {
       const baseClassName =
-        fieldName === "Checkbox"
+        fieldName === "Checkbox" || fieldName === "2 GIG Go Panel 2" || fieldName === "2 GIG Go Panel 3"
           ? "esignBuilder__fieldCheckbox"
           : "esignBuilder__fieldRadio";
 
