@@ -376,6 +376,10 @@ $(document).ready(function () {
         sucess("New Customer has been Added Successfully!");
         // $('#sel-cul').load(window.location.href +  ' #sel-cul');
       },
+      error: function(response) {
+          location.reload();
+
+      }
     });
   });
 

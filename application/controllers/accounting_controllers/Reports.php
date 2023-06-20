@@ -12658,10 +12658,11 @@ class Reports extends MY_Controller {
                                         $category = $this->expenses_model->get_vendor_transaction_category_by_id($transac->child_id);
 
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
-                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $category->customer_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     } else {
                                         $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
+                                        $transacItem = $this->items_model->getItemById($checkItem->item_id)[0]->title;
                                         $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
                                         $qty = $checkItem->quantity;
                                     }
@@ -12686,16 +12687,19 @@ class Reports extends MY_Controller {
                                     case 'vendor':
                                         $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
                                         $name = $payee->display_name;
+                                        $vendorId = $expense->payee_id;
                                         $vendor = $payee->display_name;
                                     break;
                                     case 'customer':
                                         $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $expense->payee_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     break;
                                     case 'employee':
                                         $payee = $this->users_model->getUser($expense->payee_id);
                                         $name = $payee->FName . ' ' . $payee->LName;
+                                        $employeeId = $expense->payee_id;
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
                                 }
@@ -12707,11 +12711,13 @@ class Reports extends MY_Controller {
                                         $category = $this->expenses_model->get_vendor_transaction_category_by_id($transac->child_id);
 
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
-                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $category->customer_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     } else {
-                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
-                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
+                                        $expenseItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
+                                        $transacItem = $this->items_model->getItemById($expenseItem->item_id)[0]->title;
+                                        $rate = number_format(floatval(str_replace(',', '', $expenseItem->amount)), 2);
+                                        $qty = $expenseItem->quantity;
                                     }
                                 } else {
                                     $split = $this->account_col($expense->id, 'Expense');
@@ -12725,6 +12731,8 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($bill->updated_at));
 
                                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                                $nameKey = 'vendor';
+                                $nameId = $bill->vendor_id;
                                 $name = $payee->display_name;
                                 $vendor = $payee->display_name;
 
@@ -12736,11 +12744,13 @@ class Reports extends MY_Controller {
                                         $category = $this->expenses_model->get_vendor_transaction_category_by_id($transac->child_id);
 
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
-                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $category->customer_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     } else {
-                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
-                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
+                                        $billItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
+                                        $transacItem = $this->items_model->getItemById($billItem->item_id)[0]->title;
+                                        $rate = number_format(floatval(str_replace(',', '', $billItem->amount)), 2);
+                                        $qty = $billItem->quantity;
                                     }
                                 } else {
                                     $split = $this->account_col($bill->id, 'Bill');
@@ -12762,6 +12772,8 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($vCredit->updated_at));
 
                                 $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                                $nameKey = 'vendor';
+                                $nameId = $vCredit->vendor_id;
                                 $name = $payee->display_name;
                                 $vendor = $payee->display_name;
 
@@ -12773,11 +12785,13 @@ class Reports extends MY_Controller {
                                         $category = $this->expenses_model->get_vendor_transaction_category_by_id($transac->child_id);
 
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
-                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $category->customer_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     } else {
-                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
-                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
+                                        $vCreditItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
+                                        $transacItem = $this->items_model->getItemById($vCreditItem->item_id)[0]->title;
+                                        $rate = number_format(floatval(str_replace(',', '', $vCreditItem->amount)), 2);
+                                        $qty = $vCreditItem->quantity;
                                     }
                                 } else {
                                     $split = $this->account_col($vCredit->id, 'Vendor Credit');
@@ -12798,20 +12812,25 @@ class Reports extends MY_Controller {
                                 $createDate = date("m/d/Y h:i:s A", strtotime($ccCredit->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at));
 
+                                $nameKey = $ccCredit->payee_type;
+                                $nameId = $ccCredit->payee_id;
                                 switch($ccCredit->payee_type) {
                                     case 'vendor':
                                         $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
                                         $name = $payee->display_name;
+                                        $vendorId = $ccCredit->payee_id;
                                         $vendor = $payee->display_name;
                                     break;
                                     case 'customer':
                                         $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
                                         $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $ccCredit->payee_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     break;
                                     case 'employee':
                                         $payee = $this->users_model->getUser($ccCredit->payee_id);
                                         $name = $payee->FName . ' ' . $payee->LName;
+                                        $employeeId = $ccCredit->payee_id;
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
                                 }
@@ -12823,11 +12842,13 @@ class Reports extends MY_Controller {
                                         $category = $this->expenses_model->get_vendor_transaction_category_by_id($transac->child_id);
 
                                         $payee = $this->accounting_customers_model->get_by_id($category->customer_id);
-                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $category->customer_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     } else {
-                                        $checkItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
-                                        $rate = number_format(floatval(str_replace(',', '', $checkItem->amount)), 2);
+                                        $ccCreditItem = $this->expenses_model->get_vendor_transaction_item_by_id($transac->child_id);
+                                        $transacItem = $this->items_model->getItemById($ccCreditItem->item_id)[0]->title;
+                                        $rate = number_format(floatval(str_replace(',', '', $ccCreditItem->amount)), 2);
+                                        $qty = $ccCreditItem->quantity;
                                     }
                                 } else {
                                     $split = $this->account_col($ccCredit->id, 'Credit Card Credit');
@@ -12841,7 +12862,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($billPayment->updated_at));
 
                                 $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+                                $nameKey = 'vendor';
+                                $nameId = $billPayment->payee_id;
                                 $name = $payee->display_name;
+                                $vendorId = $billPayment->payee_id;
                                 $vendor = $payee->display_name;
 
                                 $accountType = $this->account_model->getById($account->account_id);
@@ -12867,7 +12891,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($invoice->date_updated));
 
                                 $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                                $nameKey = 'customer';
+                                $nameId = $invoice->customer_id;
                                 $name = $payee->first_name . ' ' . $payee->last_name;
+                                $customerId = $invoice->customer_id;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
 
                                 $accountType = $this->account_model->getById($account->account_id);
@@ -12879,8 +12906,8 @@ class Reports extends MY_Controller {
 
                                     $invoiceItem = $this->invoice_model->get_invoice_item_by_id($transac->child_id, $invoice->id);
                                     $transacItem = $this->items_model->getItemById($invoiceItem->items_id)[0]->title;
-
                                     $rate = number_format(floatval(str_replace(',', '', $invoiceItem->cost)), 2);
+                                    $qty = $invoiceItem->qty;
                                 } else {
                                     if(count($invoiceItems) > 1) {
                                         $split = '-Split-';
@@ -12914,7 +12941,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at));
 
                                 $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                                $nameKey = 'customer';
+                                $nameId = $creditMemo->customer_id;
                                 $name = $payee->first_name . ' ' . $payee->last_name;
+                                $customerId = $creditMemo->customer_id;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
 
                                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemo->id);
@@ -12925,8 +12955,8 @@ class Reports extends MY_Controller {
 
                                     $creditMemoItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transac->child_id);
                                     $transacItem = $this->items_model->getItemById($creditMemoItem->item_id)[0]->title;
-
                                     $rate = number_format(floatval(str_replace(',', '', $creditMemoItem->price)), 2);
+                                    $qty = $creditMemoItem->quantity;
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
@@ -12960,7 +12990,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at));
 
                                 $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                                $nameKey = 'customer';
+                                $nameId = $salesReceipt->customer_id;
                                 $name = $payee->first_name . ' ' . $payee->last_name;
+                                $customerId = $salesReceipt->customer_id;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
 
                                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceipt->id);
@@ -12970,8 +13003,8 @@ class Reports extends MY_Controller {
 
                                     $salesReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transac->child_id);
                                     $transacItem = $this->items_model->getItemById($salesReceiptItem->item_id)[0]->title;
-
                                     $rate = number_format(floatval(str_replace(',', '', $salesReceiptItem->price)), 2);
+                                    $qty = $salesReceiptItem->quantity;
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
@@ -12997,7 +13030,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at));
 
                                 $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+                                $nameKey = 'customer';
+                                $nameId = $refundReceipt->customer_id;
                                 $name = $payee->first_name . ' ' . $payee->last_name;
+                                $customerId = $refundReceipt->customer_id;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
 
                                 $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceipt->id);
@@ -13007,8 +13043,8 @@ class Reports extends MY_Controller {
 
                                     $refundReceiptItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($transac->child_id);
                                     $transacItem = $this->items_model->getItemById($refundReceiptItem->item_id)[0]->title;
-
                                     $rate = number_format(floatval(str_replace(',', '', $refundReceiptItem->price)), 2);
+                                    $qty = $refundReceiptItem->quantity;
                                 } else {
                                     if(count($items) > 1) {
                                         $split = '-Split-';
@@ -13034,7 +13070,10 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($payment->updated_at));
 
                                 $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
+                                $nameKey = 'customer';
+                                $nameId = $payment->customer_id;
                                 $name = $payee->first_name . ' ' . $payee->last_name;
+                                $customerId = $payment->customer_id;
                                 $customer = $payee->first_name . ' ' . $payee->last_name;
 
                                 $accountType = $this->account_model->getById($account->account_id);
@@ -13058,18 +13097,26 @@ class Reports extends MY_Controller {
 
                                 if($transac->is_category === '1') {
                                     $fund = $this->accounting_bank_deposit_model->get_fund($transac->child_id);
-                    
+
+                                    $nameKey = $fund->received_from_key;
+                                    $nameId = $fund->received_from_id;
                                     switch($fund->received_from_key) {
                                         case 'vendor':
                                             $payee = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                                            $name = $payee->display_name;
+                                            $vendorId = $fund->received_from_id;
                                             $vendor = $payee->display_name;
                                         break;
                                         case 'customer':
                                             $payee = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                                            $name = $payee->first_name . ' ' . $payee->last_name;
+                                            $customerId = $fund->received_from_id;
                                             $customer = $payee->first_name . ' ' . $payee->last_name;
                                         break;
                                         case 'employee':
                                             $payee = $this->users_model->getUser($fund->received_from_id);
+                                            $name = $payee->FName . ' ' . $payee->LName;
+                                            $employeeId = $fund->received_from_id;
                                             $employee = $payee->FName . ' ' . $payee->LName;
                                         break;
                                     }
@@ -13080,6 +13127,29 @@ class Reports extends MY_Controller {
                                         $split = '-Split-';
                                     } else {
                                         $split = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+
+                                        $nameKey = $funds[0]->received_from_key;
+                                        $nameId = $funds[0]->received_from_id;
+                                        switch($funds[0]->received_from_key) {
+                                            case 'vendor':
+                                                $payee = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                                                $name = $payee->display_name;
+                                                $vendorId = $funds[0]->received_from_id;
+                                                $vendor = $payee->display_name;
+                                            break;
+                                            case 'customer':
+                                                $payee = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
+                                                $name = $payee->first_name . ' ' . $payee->last_name;
+                                                $customerId = $funds[0]->received_from_id;
+                                                $customer = $payee->first_name . ' ' . $payee->last_name;
+                                            break;
+                                            case 'employee':
+                                                $payee = $this->users_model->getUser($funds[0]->received_from_id);
+                                                $name = $payee->FName . ' ' . $payee->LName;
+                                                $employeeId = $funds[0]->received_from_id;
+                                                $employee = $payee->FName . ' ' . $payee->LName;
+                                            break;
+                                        }
                                     }
                                 }
                             break;
@@ -13110,17 +13180,25 @@ class Reports extends MY_Controller {
                                     }
                                 }
 
+                                $nameKey = $journalEntryItem->name_key;
+                                $nameId = $journalEntryItem->name_id;
                                 switch($journalEntryItem->name_key) {
                                     case 'vendor':
                                         $payee = $this->vendors_model->get_vendor_by_id($journalEntryItem->name_id);
+                                        $name = $payee->display_name;
+                                        $vendorId = $journalEntryItem->name_id;
                                         $vendor = $payee->display_name;
                                     break;
                                     case 'customer':
                                         $payee = $this->accounting_customers_model->get_by_id($journalEntryItem->name_id);
+                                        $name = $payee->first_name . ' ' . $payee->last_name;
+                                        $customerId = $journalEntryItem->name_id;
                                         $customer = $payee->first_name . ' ' . $payee->last_name;
                                     break;
                                     case 'employee':
                                         $payee = $this->users_model->getUser($journalEntryItem->name_id);
+                                        $name = $payee->FName . ' ' . $payee->LName;
+                                        $employeeId = $journalEntryItem->name_id;
                                         $employee = $payee->FName . ' ' . $payee->LName;
                                     break;
                                 }
@@ -13137,7 +13215,13 @@ class Reports extends MY_Controller {
                                 if($account->id !== $adjustment->inventory_adjustment_account_id) {
                                     $split = $this->chart_of_accounts_model->getName($adjustment->inventory_adjustment_account_id);
                                 } else {
+                                    $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
                                     
+                                    if(count($adjustedProds) > 1) {
+                                        $transacItem = $this->items_model->getItemById($adjustedProds[0]->product_id)[0]->title;
+                                    } else {
+                                        $split = '-Split-';
+                                    }
                                 }
                             break;
                             case 'Inventory Starting Value' :
@@ -13150,6 +13234,7 @@ class Reports extends MY_Controller {
                                 $rate = number_format(floatval(str_replace(',', '', $adjustment->initial_cost)), 2);
 
                                 $split = $this->chart_of_accounts_model->getName($adjustment->inv_asset_account);
+                                $transacItem = $this->items_model->getItemById($adjustment->item_id)[0]->title;
                             break;
                             case 'CC Payment' :
                                 $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transac->transaction_id);
@@ -13158,6 +13243,9 @@ class Reports extends MY_Controller {
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at));
 
                                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                                $nameKey = 'vendor';
+                                $nameId = $ccPayment->payee_id;
+                                $vendorId = $ccPayment->payee_id;
                                 $name = !is_null($payee) ? $payee->display_name : "";
                                 $vendor = !is_null($payee) ? $payee->display_name : "";
 
@@ -13246,9 +13334,9 @@ class Reports extends MY_Controller {
 
                         $balance = 0.00;
 
-                        $accTransacs[] = [
+                        $transactions[] = [
                             'date' => $date,
-                            'transaction_type' => $transaction->transaction_type,
+                            'transaction_type' => $transac->transaction_type,
                             'num' => $num,
                             'adj' => '',
                             'create_date' => $createDate,
@@ -13286,7 +13374,303 @@ class Reports extends MY_Controller {
                     }
                 }
 
-                $this->page_data['transactions'] = [];
+                $grouped = [];
+                if(get('group-by') !== 'none')
+                {
+                    switch(get('group-by')) {
+                        default :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['account'], $b['account']); 
+                            });
+                        break;
+                        case 'transaction-type' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['transaction_type'], $b['transaction_type']);
+                            });
+                        break;
+                        case 'customer' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['customer_id'], $b['customer_id']);
+                            });
+                        break;
+                        case 'vendor' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['vendor_id'], $b['vendor_id']);
+                            });
+                        break;
+                        case 'employee' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['employee_id'], $b['employee_id']);
+                            });
+                        break;
+                        case 'product-service' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['product_service'], $b['product_service']);
+                            });
+                        break;
+                        case 'sku' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['sku'], $b['sku']);
+                            });
+                        break;
+                        case 'payment-method' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['payment_method'], $b['payment_method']);
+                            });
+                        break;
+                        case 'day' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'week' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'month' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'quarter' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'year' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                    }
+
+                    foreach($transactions as $transaction)
+                    {
+                        switch(get('group-by')) {
+                            default :
+                                $key = $transaction['account_id'];
+                                $name = $transaction['account'];
+                            break;
+                            case 'transaction-type' :
+                                $key = strtolower(str_replace(' ', '-', $transaction['transaction_type']));
+                                $name = $transaction['transaction_type'];
+                            break;
+                            case 'customer' :
+                                $key = $transaction['customer_id'];
+                                $name = $transaction['customer'];
+                            break;
+                            case 'vendor' :
+                                $key = $transaction['vendor_id'];
+                                $name = $transaction['vendor'];
+                            break;
+                            case 'employee' :
+                                $key = $transaction['employee_id'];
+                                $name = $transaction['employee'];
+                            break;
+                            case 'product-service' :
+                                $key = $transaction['item_id'];
+                                $name = $transaction['product_service'];
+                            break;
+                            case 'sku' :
+                                $key = $transaction['sku'];
+                                $name = $transaction['sku'];
+                            break;
+                            case 'payment-method' :
+                                $key = $transaction['payment_method_id'];
+                                $name = $transaction['payment_method'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $transaction['date']);
+                                $name = date("F j, Y", strtotime($transaction['date']));
+                            break;
+                            case 'week' :
+                                $ddate = $transaction['date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($transaction['date']));
+                                $name = date("F Y", strtotime($transaction['date']));
+                            break;
+                            case 'quarter' :
+                                $month = date("n", strtotime($transaction['date']));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($transaction['date']));
+                                        $name = "January - March ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($transaction['date']));
+                                        $name = "April - June ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($transaction['date']));
+                                        $name = "July - September ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($transaction['date']));
+                                        $name = "October - December ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                }
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($transaction['date']));
+                                $name = date("Y", strtotime($transaction['date']));
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['transactions'][] = $transaction;
+                            $amount = $grouped[$key]['amount_total'];
+                            $debit = $group[$key]['debit_total'];
+                            $credit = $group[$key]['credit_total'];
+                            $taxAmount = $group[$key]['tax_amount_total'];
+                            $taxableAmount = $group[$key]['taxable_amount_total'];
+
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($transaction['amount']), 2);
+                            $grouped[$key]['debit_total'] = number_format(floatval($debit) + floatval($transaction['debit']), 2);
+                            $grouped[$key]['credit_total'] = number_format(floatval($credit) + floatval($transaction['credit']), 2);
+                            $grouped[$key]['tax_amount_total'] = number_format(floatval($taxAmount) + floatval($transaction['tax_amount']), 2);
+                            $grouped[$key]['taxable_amount_total'] = number_format(floatval($taxableAmount) + floatval($transaction['taxable_amount']), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'amount_total' => $transaction['amount'],
+                                'debit_total' => $transaction['debit'],
+                                'credit_total' => $transaction['credit'],
+                                'tax_amount_total' => $transaction['tax_amount'],
+                                'taxable_amount_total' => $transaction['taxable_amount'],
+                                'transactions' => [
+                                    $transaction
+                                ]
+                            ];
+                        }
+                    }
+
+                    foreach($grouped as $key => $group)
+                    {
+                        $amount = $group['amount_total'];
+                        if(!empty(get('divide-by-100'))) {
+                            $amount = number_format(floatval($amount) / 100, 2);
+                        }
+    
+                        if(!empty(get('without-cents'))) {
+                            $amount = number_format(floatval($amount), 0);
+                        }
+    
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = '('.$amount.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = $amount.'-';
+                                    }
+                                break;
+                            }
+                        }
+    
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+    
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $grouped[$key]['amount_total'] = $amount;
+                    }
+                } else {
+                    $grouped = $transactions;
+                }
+
+                if(!empty(get('group-by'))) {
+                    $this->page_data['group_by'] = get('group-by');
+                }
+
+                $this->page_data['transactions'] = $grouped;
 
                 if(!empty(get('group-by'))) {
                     $this->page_data['group_by'] = get('group-by');
