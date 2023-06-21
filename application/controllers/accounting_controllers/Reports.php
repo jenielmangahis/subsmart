@@ -6249,16 +6249,16 @@ class Reports extends MY_Controller {
                     $this->page_data['filter_transaction_type'] = get('transaction-type');
                 }
 
-                if(!empty($post['account'])) {
+                if(!empty(get('account'))) {
                     $this->page_data['filter_account'] = new stdClass();
-                    $this->page_data['filter_account']->id = $post['account'];
+                    $this->page_data['filter_account']->id = get('account');
 
-                    if(intval($post['account']) > 0) {
-                        $account = $this->chart_of_accounts_model->getById($post['account']);
+                    if(intval(get('account')) > 0) {
+                        $account = $this->chart_of_accounts_model->getById(get('account'));
                         $this->page_data['filter_account']->name = $account->name;
 
                         $filters = [
-                            'account_id' => $post['account']
+                            'account_id' => get('account')
                         ];
 
                         $accounts = array_filter($accounts, function($v, $k) use ($filters) {
@@ -6287,9 +6287,9 @@ class Reports extends MY_Controller {
                             'other-income-accounts' => 'All Other Income Accounts',
                             'other-expense-accounts' => 'All Other Expense Accounts'
                         ];
-                        $this->page_data['filter_account']->name = $names[$post['account']];
+                        $this->page_data['filter_account']->name = $names[get('account')];
 
-                        $type = $post['account'];
+                        $type = get('account');
 
                         $accounts = array_filter($accounts, function($v, $k) use ($type) {
                             switch($type) {
@@ -7602,7 +7602,7 @@ class Reports extends MY_Controller {
                         'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
                     ];
 
-                    $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
                         return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
                     }, ARRAY_FILTER_USE_BOTH);
                 }
@@ -12627,6 +12627,7 @@ class Reports extends MY_Controller {
                                 $num = $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no);
                                 $createDate = date("m/d/Y h:i:s A", strtotime($check->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($check->updated_at));
+                                $memo = $check->memo;
 
                                 $nameKey = $check->payee_type;
                                 $nameId = $check->payee_id;
@@ -12680,6 +12681,9 @@ class Reports extends MY_Controller {
                                 $num = $expense->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($expense->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($expense->updated_at));
+                                $memo = $expense->memo;
+                                $paymentMethodId = $expense->payment_method_id;
+                                $paymentMethod = $this->accounting_payment_methods_model->getById($expense->payment_method_id)->name;
 
                                 $nameKey = $expense->payee_type;
                                 $nameId = $expense->payee_id;
@@ -12726,9 +12730,11 @@ class Reports extends MY_Controller {
                             case 'Bill' :
                                 $bill = $this->vendors_model->get_bill_by_id($transac->transaction_id, logged('company_id'));
                                 $date = date("m/d/Y", strtotime($bill->bill_date));
+                                $dueDate = date("m/d/Y", strtotime($bill->due_date));
                                 $num = $bill->bill_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($bill->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($bill->updated_at));
+                                $memo = $bill->memo;
 
                                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                                 $nameKey = 'vendor';
@@ -12770,6 +12776,7 @@ class Reports extends MY_Controller {
                                 $num = $vCredit->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($vCredit->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($vCredit->updated_at));
+                                $memo = $vCredit->memo;
 
                                 $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                                 $nameKey = 'vendor';
@@ -12811,6 +12818,7 @@ class Reports extends MY_Controller {
                                 $num = $ccCredit->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($ccCredit->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at));
+                                $memo = $ccCredit->memo;
 
                                 $nameKey = $ccCredit->payee_type;
                                 $nameId = $ccCredit->payee_id;
@@ -12860,6 +12868,7 @@ class Reports extends MY_Controller {
                                 $num = $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no);
                                 $createDate = date("m/d/Y h:i:s A", strtotime($billPayment->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($billPayment->updated_at));
+                                $memo = $billPayment->memo;
 
                                 $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
                                 $nameKey = 'vendor';
@@ -12886,9 +12895,11 @@ class Reports extends MY_Controller {
                             case 'Invoice' :
                                 $invoice = $this->invoice_model->getinvoice($transac->transaction_id);
                                 $date = date("m/d/Y", strtotime($invoice->date_issued));
+                                $dueDate = date("m/d/Y", strtotime($invoice->due_date));
                                 $num = $invoice->invoice_number;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($invoice->date_created));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($invoice->date_updated));
+                                $memo = $invoice->message_to_customer;
 
                                 $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                 $nameKey = 'customer';
@@ -12939,6 +12950,7 @@ class Reports extends MY_Controller {
                                 $num = $creditMemo->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($creditMemo->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at));
+                                $memo = $creditMemo->message_on_statement;
 
                                 $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
                                 $nameKey = 'customer';
@@ -12988,6 +13000,9 @@ class Reports extends MY_Controller {
                                 $num = $salesReceipt->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at));
+                                $memo = $salesReceipt->message_on_statement;
+                                $paymentMethodId = $salesReceipt->payment_method;
+                                $paymentMethod = $this->accounting_payment_methods_model->getById($salesReceipt->payment_method)->name;
 
                                 $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                                 $nameKey = 'customer';
@@ -13028,6 +13043,9 @@ class Reports extends MY_Controller {
                                 $num = $refundReceipt->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at));
+                                $memo = $refundReceipt->message_on_statement;
+                                $paymentMethodId = $refundReceipt->payment_method;
+                                $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method)->name;
 
                                 $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
                                 $nameKey = 'customer';
@@ -13053,12 +13071,12 @@ class Reports extends MY_Controller {
                                         $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
                 
                                         if($itemAccDetails->income_account_id === null) {
-                                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
                                         } else {
-                                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
                                         }
                 
-                                        $split = $account->name;
+                                        $split = $itemAcc->name;
                                     }
                                 }
                             break;
@@ -13068,6 +13086,9 @@ class Reports extends MY_Controller {
                                 $num = $payment->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($payment->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($payment->updated_at));
+                                $memo = $payment->memo;
+                                $paymentMethodId = $payment->payment_method;
+                                $paymentMethod = $this->accounting_payment_methods_model->getById($payment->payment_method)->name;
 
                                 $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
                                 $nameKey = 'customer';
@@ -13092,6 +13113,7 @@ class Reports extends MY_Controller {
                                 $date = date("m/d/Y", strtotime($deposit->date));
                                 $createDate = date("m/d/Y h:i:s A", strtotime($deposit->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($deposit->updated_at));
+                                $memo = $deposit->memo;
 
                                 $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
 
@@ -13158,6 +13180,7 @@ class Reports extends MY_Controller {
                                 $date = date("m/d/Y", strtotime($transfer->transfer_date));
                                 $createDate = date("m/d/Y h:i:s A", strtotime($transfer->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($transfer->updated_at));
+                                $memo = $transfer->transfer_memo;
 
                                 if($account->id === $transfer->transfer_from_account_id) {
                                     $split = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
@@ -13171,6 +13194,7 @@ class Reports extends MY_Controller {
                                 $num = $journalEntry->journal_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($journalEntry->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at));
+                                $memo = $journalEntry->memo;
 
                                 $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
@@ -13211,6 +13235,7 @@ class Reports extends MY_Controller {
                                 $num = $adjustment->adjustment_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
+                                $memo = $adjustment->memo;
 
                                 if($account->id !== $adjustment->inventory_adjustment_account_id) {
                                     $split = $this->chart_of_accounts_model->getName($adjustment->inventory_adjustment_account_id);
@@ -13218,7 +13243,14 @@ class Reports extends MY_Controller {
                                     $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
                                     
                                     if(count($adjustedProds) > 1) {
-                                        $transacItem = $this->items_model->getItemById($adjustedProds[0]->product_id)[0]->title;
+                                        $item = $this->items_model->getItemById($adjustedProds[0]->product_id)[0];
+                                        $transacItem = $item->title;
+
+                                        $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustedProds[0]->product_id);
+                
+                                        $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                                        $split = $itemAcc->name;
                                     } else {
                                         $split = '-Split-';
                                     }
@@ -13230,17 +13262,25 @@ class Reports extends MY_Controller {
                                 $num = $adjustment->ref_no;
                                 $createDate = date("m/d/Y h:i:s A", strtotime($adjustment->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($adjustment->updated_at));
+                                $memo = $adjustment->memo;
 
                                 $rate = number_format(floatval(str_replace(',', '', $adjustment->initial_cost)), 2);
 
-                                $split = $this->chart_of_accounts_model->getName($adjustment->inv_asset_account);
-                                $transacItem = $this->items_model->getItemById($adjustment->item_id)[0]->title;
+                                $item = $this->items_model->getItemById($adjustment->item_id)[0];
+
+                                if($transaction->type === 'increase') {
+                                    $split = $this->chart_of_accounts_model->getName($adjustment->inv_asset_account);
+                                } else {
+                                    $split = $this->chart_of_accounts_model->getName($adjustment->inv_adj_account);
+                                }
+                                $transacItem = $item->title;
                             break;
                             case 'CC Payment' :
                                 $ccPayment = $this->accounting_pay_down_credit_card_model->get_by_id($transac->transaction_id);
                                 $date = date("m/d/Y", strtotime($ccPayment->date));
                                 $createDate = date("m/d/Y h:i:s A", strtotime($ccPayment->created_at));
                                 $lastModified = date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at));
+                                $memo = $ccPayment->memo;
 
                                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
                                 $nameKey = 'vendor';
@@ -13372,6 +13412,488 @@ class Reports extends MY_Controller {
                             'taxable_amount' => $taxableAmount
                         ];
                     }
+                }
+
+                if($this->page_data['filter_date'] !== 'all-dates') {
+                    $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
+                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('transaction-type'))) {
+                    $transacType = get('transaction-type');
+                    $transactions = array_filter($transactions, function($v, $k) use ($transacType) {
+                        switch($transacType) {
+                            case 'credit-card-expense' :
+                                return $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'check' :
+                                return $v['transaction_type'] === 'Check';
+                            break;
+                            case 'invoice' :
+                                return $v['transaction_type'] === 'Invoice';
+                            break;
+                            case 'payment' :
+                                return $v['transaction_type'] === 'Payment';
+                            break;
+                            case 'journal-entry' :
+                                return $v['transaction_type'] === 'Journal Entry';
+                            break;
+                            case 'bill' :
+                                return $v['transaction_type'] === 'Bill';
+                            break;
+                            case 'credit-card-credit' :
+                                return $v['transaction_type'] === 'Credit Card Credit';
+                            break;
+                            case 'vendor-credit' :
+                                return $v['transaction_type'] === 'Vendor Credit';
+                            break;
+                            case 'bill-payment-check' :
+                                return $v['transaction_type'] === 'Bill Payment (Check)';
+                            break;
+                            case 'bill-payment-credit-card' :
+                                return $v['transaction_type'] === 'Bill Payment (Credit Card)';
+                            break;
+                            case 'transfer' :
+                                return $v['transaction_type'] === 'Transfer';
+                            break;
+                            case 'deposit' :
+                                return $v['transaction_type'] === 'Deposit';
+                            break;
+                            case 'cash-expense' :
+                                return $v['transaction_type'] === 'Expense';
+                            break;
+                            case 'sales-receipt' :
+                                return $v['transaction_type'] === 'Sales Receipt';
+                            break;
+                            case 'credit-memo' :
+                                return $v['transaction_type'] === 'Credit Memo';
+                            break;
+                            case 'refund' :
+                                return $v['transaction_type'] === 'Refund';
+                            break;
+                            case 'inventory-qty-adjust' :
+                                return $v['transaction_type'] === 'Inventory Qty Adjust';
+                            break;
+                            case 'expense' :
+                                return $v['transaction_type'] === 'Expense' || $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'inventory-starting-value' :
+                                return $v['transaction_type'] === 'Inventory Starting Value';
+                            break;
+                            case 'credit-card-payment' :
+                                return $v['transaction_type'] === 'Credit Card Payment';
+                            break;
+                        }
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_transaction_type'] = get('transaction-type');
+                }
+
+                if(!empty(get('account'))) {
+                    $this->page_data['filter_account'] = new stdClass();
+                    $this->page_data['filter_account']->id = get('account');
+
+                    if(intval(get('account')) > 0) {
+                        $account = $this->chart_of_accounts_model->getById(get('account'));
+                        $this->page_data['filter_account']->name = $account->name;
+
+                        $filters = [
+                            'account_id' => get('account')
+                        ];
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return $v['account_id'] === $filters['account_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $names = [
+                            'balance-sheet-accounts' => 'All Balance Sheet Accounts',
+                            'asset-accounts' => 'All Asset Accounts',
+                            'current-asset-accounts' => 'All Current Asset Accounts',
+                            'bank-accounts' => 'All Bank Accounts',
+                            'accounts-receivable-accounts' => 'All Accounts receivable (A/R) Accounts',
+                            'other-current-assets-accounts' => 'All Other Current Assets Accounts',
+                            'fixed-assets-accounts' => 'All Fixed Assets Accounts',
+                            'other-assets-accounts' => 'All Other Assets Accounts',
+                            'liability-accounts' => 'All Liability Accounts',
+                            'accounts-payable-accounts' => 'All Accounts payable (A/P) Accounts',
+                            'credit-card-accounts' => 'All Credit Card Accounts',
+                            'other-current-liabilities-accounts' => 'All Other Current Liabilities Accounts',
+                            'long-term-liabilities-accounts' => 'All Long Term Liabilities Accounts',
+                            'equity-accounts' => 'All Equity Accounts',
+                            'income-expense-accounts' => 'All Income/Expense Accounts',
+                            'income-accounts' => 'All Income Accounts',
+                            'cost-of-goods-sold-accounts' => 'All Cost of Goods Sold Accounts',
+                            'expenses-accounts' => 'All Expenses Accounts',
+                            'other-income-accounts' => 'All Other Income Accounts',
+                            'other-expense-accounts' => 'All Other Expense Accounts'
+                        ];
+                        $this->page_data['filter_account']->name = $names[get('account')];
+
+                        $type = get('account');
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($type) {
+                            switch($type) {
+                                case 'balance-sheet-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false || strpos($v['type'], 'Liabilities') !== false || $v['type'] === 'Equity' || $v['type'] === 'Credit Card';
+                                break;
+                                case 'asset-account' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false;
+                                break;
+                                case 'current-asset-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'bank-accounts' :
+                                    return $v['type'] === 'Bank';
+                                break;
+                                case 'accounts-receivable-accounts' :
+                                    return $v['type'] === 'Accounts receivable (A/R)';
+                                break;
+                                case 'other-current-assets-accounts' :
+                                    return $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'fixed-assets-accounts' :
+                                    return $v['type'] === 'Fixed Assets';
+                                break;
+                                case 'other-assets-accounts' :
+                                    return $v['type'] === 'Other Assets';
+                                break;
+                                case 'liability-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || strpos($v['type'], 'Liabilities') !== false;
+                                break;
+                                case 'accounts-payable-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'credit-card-accounts' :
+                                    return $v['type'] === 'Credit Card';
+                                break;
+                                case 'other-current-liabilities-accounts' :
+                                    return $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'long-term-liabilities-accounts' :
+                                    return $v['type'] === 'Long Term Liabilities';
+                                break;
+                                case 'equity-accounts' :
+                                    return $v['type'] === 'Equity';
+                                break;
+                                case 'income-expense-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold' || strpos($v['type'], 'Income') !== false || strpos($v['type'], 'Expense') !== false;
+                                break;
+                                case 'income-accounts' :
+                                    return $v['type'] === 'Income';
+                                break;
+                                case 'cost-of-goods-sold-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold';
+                                break;
+                                case 'expenses-accounts' :
+                                    return $v['type'] === 'Expenses';
+                                break;
+                                case 'other-income-accounts' :
+                                    return $v['type'] === 'Other Income';
+                                break;
+                                case 'other-expense-accounts' :
+                                    return $v['type'] === 'Other Expense';
+                                break;
+                            };
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                }
+
+                if(!empty(get('name'))) {
+                    $filterName = explode('-', get('name'));
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filterName) {
+                        return $v['name_type'] === $filterName[0] && $v['name_id'] === $filterName[1];
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_name'] = new stdClass();
+                    $this->page_data['filter_name']->id = get('name');
+
+                    switch($filterName[0]) {
+                        case 'customer' :
+                            $customer = $this->accounting_customers_model->get_by_id($filterName[1]);
+                            $this->page_data['filter_name']->name = $customer->first_name . ' ' . $customer->last_name;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($filterName[1]);
+                            $this->page_data['filter_name']->name = $vendor->display_name;
+                        break;
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($filterName[1]);
+                            $this->page_data['filter_name']->name = $employee->FName . ' ' . $employee->LName;
+                        break;
+                    }
+                }
+
+                if(!empty(get('customer'))) {
+                    $this->page_data['filter_customer'] = new stdClass();
+                    $this->page_data['filter_customer']->id = get('customer');
+                    if(!in_array(get('customer'), ['all', 'not-specified', 'specified'])) {
+                        $customer = $this->accounting_customers_model->get_by_id(get('customer'));
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+                        $this->page_data['filter_customer']->name = $customerName;
+
+                        $filters = [
+                            'customer_id' => get('customer')
+                        ];
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['filter_customer']->name = ucwords(str_replace('-', ' ', get('customer')));
+
+                        if(get('customer') === 'not-specified') {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('vendor'))) {
+                    $this->page_data['filter_vendor'] = new stdClass();
+                    $this->page_data['filter_vendor']->id = get('vendor');
+                    if(!in_array(get('vendor'), ['all', 'not-specified', 'specified'])) {
+                        $vendor = $this->vendors_model->get_vendor_by_id(get('vendor'));
+                        $vendorName = $vendor->display_name;
+                        $this->page_data['filter_vendor']->name = $vendorName;
+
+                        $filters = [
+                            'vendor_id' => get('vendor')
+                        ];
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return $v['vendor_id'] === $filters['vendor_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['filter_vendor']->name = ucwords(str_replace('-', ' ', get('vendor')));
+
+                        if(get('vendor') === 'not-specified') {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return empty($v['vendor_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return !empty($v['vendor_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('employee'))) {
+                    $this->page_data['employee'] = new stdClass();
+                    $this->page_data['employee']->id = get('employee');
+                    if(!in_array(get('employee'), ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', get('employee'));
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                                $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName . ' - Employee';
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                                $this->page_data['employee']->name = $vendor->display_name . ' - Vendor';
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['employee']->name = ucwords(str_replace('-', ' ', get('employee')));
+
+                        if(get('employee') === 'not-specified') {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('payment-method'))) {
+                    $methodId = get('payment-method');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($methodId) {
+                        return $v['payment_method_id'] === $methodId;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('terms'))) {
+                    $termId = get('terms');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($termId) {
+                        return $v['terms_id'] === $termId;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('product-service'))) {
+                    $this->page_data['product_service'] = new stdClass();
+                    $this->page_data['product_service']->id = get('product-service');
+                    if(!in_array(get('product-service'), ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID(get('product-service'));
+                        $this->page_data['product_service']->name = $item->title;
+
+                        $filters = [
+                            'item_id' => get('product-service')
+                        ];
+
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $this->page_data['product_service']->name = ucwords(str_replace('-', ' ', get('product-service')));
+
+                        if(get('product-service') === 'not-specified') {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $transactions = array_filter($transactions, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty(get('due-date'))) {
+                    $this->page_data['due_date'] = get('due-date');
+                    $this->page_data['due_date_from'] = str_replace('-', '/', get('due-date-from'));
+                    $this->page_data['due_date_to'] = str_replace('-', '/', get('due-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('due-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('due-date-to')))
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return strtotime($v['due_date']) >= strtotime($filters['start-date']) && strtotime($v['due_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('create-date'))) {
+                    $this->page_data['create_date'] = get('create-date');
+                    $this->page_data['create_date_from'] = str_replace('-', '/', get('create-date-from'));
+                    $this->page_data['create_date_to'] = str_replace('-', '/', get('create-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('create-date-to')))
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('last-modified-date'))) {
+                    $this->page_data['last_modified_date'] = get('last-modified-date');
+                    $this->page_data['last_modified_date_from'] = str_replace('-', '/', get('last-modified-date-from'));
+                    $this->page_data['last_modified_date_to'] = str_replace('-', '/', get('last-modified-date-to'));
+
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-from'))),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', get('last-modified-date-to')))
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty(get('check-printed'))) {
+                    $checkPrinted = get('check-printed');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($checkPrinted) {
+                        if($checkPrinted === 'printed') {
+                            return $v['to_print'] === null;
+                        } else {
+                            return $v['to_print'] !== null;
+                        }
+                    }, ARRAY_FILTER_USE_BOTH);
+                    $this->page_data['filter_check_printed'] = get('check-printed');
+                }
+
+                if(!empty(get('memo'))) {
+                    $memo = get('memo');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($memo) {
+                        return $v['memo_description'] === $memo;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_memo'] = get('memo');
+                }
+
+                if(!empty(get('num'))) {
+                    $num = get('num');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($num) {
+                        return $v['num'] === $num;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_num'] = get('num');
+                }
+
+                if(!empty(get('amount'))) {
+                    $amount = get('amount');
+
+                    if(!empty(get('divide-by-100'))) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($amount) {
+                        return strpos($v['amount'], $amount) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_amount'] = get('amount');
+                }
+
+                if(!empty(get('ship-via'))) {
+                    $shipVia = get('ship-via');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($shipVia) {
+                        return $v['ship_via'] === $shipVia;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_ship_via'] = get('ship-via');
+                }
+
+                if(!empty(get('po-number'))) {
+                    $poNumber = get('po-number');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($poNumber) {
+                        return $v['po_number'] === $poNumber;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_po_number'] = get('po-number');
+                }
+
+                if(!empty(get('sales-rep'))) {
+                    $salesRep = get('sales-rep');
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($salesRep) {
+                        return $v['sales_rep'] === $salesRep;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_sales_rep'] = get('sales-rep');
                 }
 
                 $grouped = [];
@@ -25804,6 +26326,9 @@ class Reports extends MY_Controller {
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Recent_Transactions.pdf', 'D');
                 }
+            break;
+            case 'Transaction Detail by Account' :
+
             break;
         }
     }

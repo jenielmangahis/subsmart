@@ -2295,6 +2295,8 @@ class Estimate extends MY_Controller
             'status'                    => $this->input->post('status')
         );
 
+        // dd($new_data);
+
         $addQuery = $this->estimate_model->addNewCustomer($new_data);
 
         $success = 'success';

@@ -355,17 +355,21 @@
                                                 <label class="content-subtitle fw-bold d-block mb-2">Address</label>
                                                 <input type="text" name="address" class="nsm-field form-control">
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city" class="nsm-field form-control">
+                                                <input type="text" name="city_form" class="nsm-field form-control">
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">County</label>
                                                 <input type="text" name="country" class="nsm-field form-control">
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-subtitle fw-bold d-block mb-2">State</label>
+                                                <input type="text" name="state_form" class="nsm-field form-control">
+                                            </div>
+                                            <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Postcode</label>
-                                                <input type="text" name="postcode" class="nsm-field form-control">
+                                                <input type="text" name="postcode_form" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
@@ -751,6 +755,29 @@
                     </div>
                 </div>
                 <?php echo form_close(); ?>
+
+                
+
+                <!-- Modal New Customer -->
+                <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="bx bx-fw bx-x m-0"></i>
+
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary saveCustomerEst">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -803,6 +830,11 @@
             format: 'mm/dd/yyyy',
             autoclose: true
         });
+        
+        // $(".dob_customer_form").datepicker({
+        //     format: 'mm/dd/yyyy',
+        //     autoclose: true
+        // });
 
         $('.number-field').keyup(function() {
             var val = this.value.replace(/\D/g, '');
@@ -1141,9 +1173,9 @@
                     $("[name=firstname]").val(customer.first_name);
                     $("[name=lastname]").val(customer.last_name);
                     $("[name=address]").val(customer.mail_add);
-                    $("[name=city]").val(customer.city);
-                    $("[name=state]").val(customer.state);
-                    $("[name=postcode]").val(customer.zip_code);
+                    $("[name=city_form]").val(customer.city);
+                    $("[name=state_form]").val(customer.state);
+                    $("[name=postcode_form]").val(customer.zip_code);
                     $("[name=country]").val(customer.country);
                     $("[name=phone]").val(customer.phone_h);
                     $("[name=mobile]").val(customer.phone_m);
@@ -1154,5 +1186,161 @@
             });
         }
     });
+</script>
+
+
+<script>
+$(document).on('click', '.saveCustomerEst', function() {
+
+    var first_name      = $('[name="first_name"]').val();
+    var middle_name     = $('[name="middle_name"]').val();
+    var last_name       = $('[name="last_name"]').val();
+    var contact_email   = $('[name="contact_email"]').val();
+    var contact_mobile  = $('[name="contact_mobile"]').val();
+    var contact_phone   = $('[name="contact_phone"]').val();
+    var customer_type   = $('[name="customer_type"]').val();
+    var street_address  = $('[name="street_address"]').val();
+    var suite_unit      = $('[name="suite_unit"]').val();
+    var city            = $('[name="city"]').val();
+    var postcode        = $('[name="postcode"]').val();
+    var state           = $('[name="state"]').val();
+
+    //new added
+    var suffix_name             = $('[name="suffix_name"]').val();
+    var date_of_birth           = $('[name="date_of_birth"]').val();
+    var social_security_number  = $('[name="social_security_number"]').val();
+    var status                  = $('[name="status"]').val();
+
+    if(first_name === '')
+    {
+        // alert('First Name is required.');
+        $('[name="first_name"]').attr('required', 'required');
+        $('[name="first_name"]').css('border-color', 'red');
+    }
+    else if(last_name === '')
+    {
+        // alert('Last Name is required.');
+        $('[name="last_name"]').attr('required', 'required');
+        $('[name="last_name"]').css('border-color', 'red');
+        $('[name="first_name"]').css('border-color', '#ced4da');
+    }
+    else if(contact_email === '')
+    {
+        // alert('Email is required.');
+        $('[name="contact_email"]').attr('required', 'required');
+        $('[name="contact_email"]').css('border-color', 'red');
+        $('[name="last_name"]').css('border-color', '#ced4da');
+    }
+    else if(contact_mobile === '')
+    {
+        // alert('Mobile is required.');
+        $('[name="contact_mobile"]').attr('required', 'required');
+        $('[name="contact_mobile"]').css('border-color', 'red');
+        $('[name="contact_email"]').css('border-color', '#ced4da');
+    }
+    else{
+    // alert(first_name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+                    data: {
+                        first_name: first_name,
+                        middle_name: middle_name,
+                        last_name: last_name,
+                        contact_email: contact_email,
+                        contact_mobile: contact_mobile,
+                        contact_phone: contact_phone,
+                        customer_type: customer_type,
+                        street_address: street_address,
+                        suite_unit: suite_unit,
+                        city: city,
+                        postcode: postcode,
+                        state: state,
+                        suffix_name: suffix_name,
+                        date_of_birth: date_of_birth,
+                        social_security_number: social_security_number,
+                        status: status
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // alert('success');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        location.reload();
+
+                    }
+                });
+    }
+
+});
+</script>
+<script>
+$(document).ready(function() {
+var options = {
+  urlGetAll: base_url + "invoice/customer/json_list",
+  urlGetAllJob: base_url + "invoice/job/json_list",
+  urlAdd: base_url + "invoice/source/save/json",
+  urlServiceAddressForm: base_url + "invoice/service_address_form",
+  urlSaveServiceAddress: base_url + "invoice/save_service_address",
+  urlGetServiceAddress: base_url + "invoice/json_get_address_services",
+  urlRemoveServiceAddress: base_url + "invoice/remove_address_services",
+  urlAdditionalContactForm: base_url + "invoice/new_customer_form",
+  urlRecordPaymentForm: base_url + "invoice/record_payment_form",
+  urlPayNowForm: base_url + "invoice/pay_now_form",
+  urlSaveAdditionalContact: base_url + "invoice/save_new_customer",
+  urlGetAdditionalContacts: base_url + "invoice/json_get_new_customers",
+  urlRemoveInvoice: base_url + "invoice/delete",
+  urlCloneInvoice: base_url + "invoice/clone",
+  urlMarkAsSentInvoice: base_url + "invoice/mark_as_sent",
+  urlSavePaymentRecord: base_url + "invoice/save_payment_record",
+  urlPayNow: base_url + "invoice/stripePost",
+};
+
+
+  // open additional contact form
+  $("#modalNewCustomer").on("shown.bs.modal", function (e) {
+    var element = $(this);
+    $(element).find(".modal-body").html("loading...");
+
+    var service_address_index = $(e.relatedTarget).attr("data-id");
+    var inquiry_id = $(e.relatedTarget).attr("data-inquiry-id");
+
+    if (service_address_index && inquiry_id) {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        data: {
+          index: service_address_index,
+          inquiry_id: inquiry_id,
+          action: "edit",
+        },
+        success: function (response) {
+          // console.log(response);
+
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    } else {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        success: function (response) {
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    }
+  });
+});
+</script>
+<script>
+$(document).ready(function() {
+
+    $(".dob_customer_form").datepicker({
+            format: 'mm/dd/yyyy',
+            autoclose: true
+        });
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
