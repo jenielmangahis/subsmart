@@ -1471,15 +1471,15 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city" class="nsm-field form-control">
+                                                <input type="text" name="city_form" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                                                <input type="text" name="state" class="nsm-field form-control">
+                                                <input type="text" name="state_form" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Postcode</label>
-                                                <input type="text" name="postcode" class="nsm-field form-control">
+                                                <input type="text" name="postcode_form" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">County</label>
@@ -2419,14 +2419,14 @@ $(".nsm-subtitle").html(function() {
                     $("[name=firstname]").val(customer.first_name);
                     $("[name=lastname]").val(customer.last_name);
                     $("[name=address]").val(customer.mail_add);
-                    $("[name=city]").val(customer.city);
-                    $("[name=state]").val(customer.state);
-                    $("[name=postcode]").val(customer.zip_code);
-                    $("[name=country]").val(customer.country);
+                    $("[name=city_form]").val(customer.city);
+                    $("[name=state_form]").val(customer.state);
+                    $("[name=postcode_form]").val(customer.zip_code);
+                    $("[name=county]").val(customer.country);
                     $("[name=phone]").val(customer.phone_h);
                     $("[name=mobile]").val(customer.phone_m);
                     $("[name=email]").val(customer.email);
-                    $("[name=state]").val(customer.state);
+                    $("[name=state_form]").val(customer.state);
                     $("[name=businessname]").val(customer.business_name);
                 }
             });
@@ -2449,12 +2449,42 @@ $(document).on('click', '.saveCustomerEst', function() {
     var city            = $('[name="city"]').val();
     var postcode        = $('[name="postcode"]').val();
     var state           = $('[name="state"]').val();
+    
 
     //new added
     var suffix_name             = $('[name="suffix_name"]').val();
     var date_of_birth           = $('[name="date_of_birth"]').val();
     var social_security_number  = $('[name="social_security_number"]').val();
     var status                  = $('[name="status"]').val();
+
+    if(first_name === '')
+    {
+        // alert('First Name is required.');
+        $('[name="first_name"]').attr('required', 'required');
+        $('[name="first_name"]').css('border-color', 'red');
+    }
+    else if(last_name === '')
+    {
+        // alert('Last Name is required.');
+        $('[name="last_name"]').attr('required', 'required');
+        $('[name="last_name"]').css('border-color', 'red');
+        $('[name="first_name"]').css('border-color', '#ced4da');
+    }
+    else if(contact_email === '')
+    {
+        // alert('Email is required.');
+        $('[name="contact_email"]').attr('required', 'required');
+        $('[name="contact_email"]').css('border-color', 'red');
+        $('[name="last_name"]').css('border-color', '#ced4da');
+    }
+    else if(contact_mobile === '')
+    {
+        // alert('Mobile is required.');
+        $('[name="contact_mobile"]').attr('required', 'required');
+        $('[name="contact_mobile"]').css('border-color', 'red');
+        $('[name="contact_email"]').css('border-color', '#ced4da');
+    }
+    else{
 
     // alert(first_name);
 
@@ -2485,10 +2515,11 @@ $(document).on('click', '.saveCustomerEst', function() {
                         location.reload();
                     },
                     error: function(response) {
-                        // location.reload();
+                        location.reload();
 
                     }
                 });
+    }
 
 });
 </script>
@@ -2512,5 +2543,72 @@ $(document).on('click', '.saveCustomerEst', function() {
     });
 // });
 </script>   
+<script>
+$(document).ready(function() {
+var options = {
+  urlGetAll: base_url + "invoice/customer/json_list",
+  urlGetAllJob: base_url + "invoice/job/json_list",
+  urlAdd: base_url + "invoice/source/save/json",
+  urlServiceAddressForm: base_url + "invoice/service_address_form",
+  urlSaveServiceAddress: base_url + "invoice/save_service_address",
+  urlGetServiceAddress: base_url + "invoice/json_get_address_services",
+  urlRemoveServiceAddress: base_url + "invoice/remove_address_services",
+  urlAdditionalContactForm: base_url + "invoice/new_customer_form",
+  urlRecordPaymentForm: base_url + "invoice/record_payment_form",
+  urlPayNowForm: base_url + "invoice/pay_now_form",
+  urlSaveAdditionalContact: base_url + "invoice/save_new_customer",
+  urlGetAdditionalContacts: base_url + "invoice/json_get_new_customers",
+  urlRemoveInvoice: base_url + "invoice/delete",
+  urlCloneInvoice: base_url + "invoice/clone",
+  urlMarkAsSentInvoice: base_url + "invoice/mark_as_sent",
+  urlSavePaymentRecord: base_url + "invoice/save_payment_record",
+  urlPayNow: base_url + "invoice/stripePost",
+};
+
+
+  // open additional contact form
+  $("#modalNewCustomer").on("shown.bs.modal", function (e) {
+    var element = $(this);
+    $(element).find(".modal-body").html("loading...");
+
+    var service_address_index = $(e.relatedTarget).attr("data-id");
+    var inquiry_id = $(e.relatedTarget).attr("data-inquiry-id");
+
+    if (service_address_index && inquiry_id) {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        data: {
+          index: service_address_index,
+          inquiry_id: inquiry_id,
+          action: "edit",
+        },
+        success: function (response) {
+          // console.log(response);
+
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    } else {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        success: function (response) {
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    }
+  });
+});
+</script>
+<script>
+$(document).ready(function() {
+
+    $(".dob_customer_form").datepicker({
+            format: 'mm/dd/yyyy',
+            autoclose: true
+        });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
-<script src="<?php echo $url->assets ?>js/add.js"></script>
+<!-- <script src="<?php echo $url->assets ?>js/add.js"></script> -->

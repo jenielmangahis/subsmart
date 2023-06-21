@@ -2558,7 +2558,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(894);
+        $pdf = $this->debugGeneratePDFMaker(953);
         echo 'Finish';
     }
 
@@ -2711,7 +2711,8 @@ SQL;
                         $pdf->Write(0, $value->email);
                     }
 
-                    if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
+                    if (in_array($field->field_name, ['Checkbox', 'Radio', '2 GIG Go Panel 2', '2 GIG Go Panel 3'])) {
+                        $field_value = $value->value;
                         $value = json_decode($value->value);
 
                         $top = (int) $coordinates->pageTop;
@@ -2746,7 +2747,7 @@ SQL;
                             }
                         }
 
-                        if ($value->isChecked) {
+                        if ($value->isChecked || $field_value == 'on') {                            
                             $pdf->setY($topAdjusted);
                             $pdf->setX($leftAdjusted);
 
@@ -3071,7 +3072,8 @@ SQL;
                         $pdf->Write(0, $value->email);
                     }
 
-                    if (in_array($field->field_name, ['Checkbox', 'Radio'])) {
+                    if (in_array($field->field_name, ['Checkbox', 'Radio', '2 GIG Go Panel 2', '2 GIG Go Panel 3'])) {
+                        $field_value = $value->value;
                         $value = json_decode($value->value);
 
                         $top = (int) $coordinates->pageTop;
@@ -3106,7 +3108,7 @@ SQL;
                             }
                         }
 
-                        if ($value->isChecked) {
+                        if ($value->isChecked || $field_value == 'on') {
                             $pdf->setY($topAdjusted);
                             $pdf->setX($leftAdjusted);
 

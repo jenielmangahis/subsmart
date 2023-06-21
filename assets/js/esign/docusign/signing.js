@@ -505,6 +505,9 @@ function Signing(hash) {
       const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
           ? "checkbox"
           : field_name.toLowerCase();
+      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+          ? "autoPopulatePanelType"
+          : 'esign-checkbox';
       const baseClassName =
         field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
           ? "docusignField__checkbox"
@@ -521,6 +524,7 @@ function Signing(hash) {
         $element.addClass(`${baseClassName}--isRequired`);
       }
 
+      console.log(JSON.stringify(field, null, 4));
       const inputName = `${name}-${field.unique_key}`;
       $element.append(`
             <div class="form-check">
@@ -533,6 +537,8 @@ function Signing(hash) {
                 ${valueSpec ? `value="${valueSpec}"` : ""}
                 data-is-parent="true"
                 data-parent-id="${field.unique_key}"
+                data-field-type="${chkDataFieldType}"
+                data-field-id="${field.id}"
               >
               <span class="form-check-indicator">x</span>
               <label
@@ -1679,7 +1685,7 @@ function Signing(hash) {
 
       const $autoPopulateSolar = $("[data-field-type=autoPopulateSolar]");
       const autoPopulateSolarPromises = [...$autoPopulateSolar].map((autoPopulateSolar) => {
-        const $element = $($autoPopulateSolar);
+        const $element = $(autoPopulateSolar);
         const fieldId = $element.attr("data-field-id");
 
         let value = $element.text().trim();
@@ -1703,6 +1709,19 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      const $autoPopulatePanelType = $("[data-field-type=autoPopulatePanelType]");
+      const autoPopulatePanelTypePromises = [...$autoPopulatePanelType].map((autoPopulatePanelType) => {
+        const $element = $(autoPopulatePanelType);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
       await Promise.all(dateSignedPromises);
       await Promise.all(formulaPromises);
 
@@ -1711,6 +1730,7 @@ function Signing(hash) {
       await Promise.all(autoPopulateAccountDetailsPromises);
       await Promise.all(autoPopulateBillingPromises);
       await Promise.all(autoPopulateSolarPromises);
+      await Promise.all(autoPopulatePanelTypePromises);
 
       const response = await fetch(`${prefixURL}/DocuSign/apiComplete`, {
         method: "POST",

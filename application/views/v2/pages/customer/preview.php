@@ -28,12 +28,14 @@
                             <button type="button" class="nsm-button" onclick="location.href='<?= base_url('customer/billing/' . $this->uri->segment(3)); ?>'">
                                 <i class='bx bx-fw bx-receipt'></i> Bill Customer
                             </button>
-                            <button type="button" class="nsm-button primary">
+                            <button type="button" class="nsm-button primary" id="printDivPreview">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <div id="DivIdToPrint">
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-12">
                         <div class="nsm-card">
@@ -172,20 +174,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="row g-3">
-                    <div class="col-12 col-md-4">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
-                    </div>
-                    <div class="col-12">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
-                    </div>
+                <table class="table">
+                    <tr>
+                        <td>
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
+                        </td>
+                        <td>
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
+                        </td>
+                        <td>
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
+                        </td>
+                    </tr>
+                </table>
+                <!-- end of div to print  -->
                 </div>
+                <!-- end of div to print  -->
             </div>
         </div>
     </div>
@@ -193,12 +202,45 @@
 
 <script src="<?=base_url('assets/js/customer/components/FieldCustomName.js');?>"></script>
 
+<script src="<?= base_url("assets/js/printThis.js") ?>"></script> 
+
 <script type="text/javascript">
     $(document).ready(function() {
         $("#copyLink").on("click", function(){
             var copyText = document.getElementById("sharableLink");
             copyText.select();
             document.execCommand("copy");
+        });
+
+        $("#printDivPreview").on("click", function(){
+            // var divToPrint=document.getElementById('DivIdToPrint');
+            // var newWin=window.open('','Print-Window');
+            // newWin.document.open();
+            // newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+            // newWin.document.close();
+            // setTimeout(function(){newWin.close();},10);
+
+
+            // var css= '<link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap.min.css") ?>" />';
+            // var prtContent = document.getElementById("DivIdToPrint");
+            // var WinPrint = window.open('','Print-Window');
+            // WinPrint.document.write(prtContent.innerHTML);
+            // // WinPrint.document.write( "<link rel='stylesheet' href='style.css' type='text/css' media='print'/>" );
+            // WinPrint.document.write('<style>@page{size:landscape;}</style><html><head><title></title>');
+            // WinPrint.document.write(css + jQuery('#DivIdToPrint').html());
+            // WinPrint.document.head.innerHTML = css;
+            // WinPrint.document.close();
+            // WinPrint.focus();
+            $("#DivIdToPrint").printThis({
+      debug: false,              // show the iframe for debugging
+      importCSS: true,           //import page CSS
+      importStyle: true,//thrown in for extra measure
+      printContainer: true,      // grab outer container as well as the contents of the selector
+      loadCSS: "<?= base_url("assets/css/v2/bootstrap.min.css") ?>", // path to additional css file
+      loadCSS: "<?= base_url("assets/css/v2/main.css") ?>",
+      pageTitle: "",             // add title to print page
+      removeInline: false        // remove all inline styles from print elements
+  });
         });
 
     });

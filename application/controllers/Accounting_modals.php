@@ -11195,6 +11195,9 @@ class Accounting_modals extends MY_Controller
                 $return = $this->get_employee_choices($return, $search, 'report');
                 $return = $this->get_vendor_choices($return, $search, 'report');
             break;
+            case 'filter-report-vendor' :
+                $return = $this->get_vendor_choices($return, $search, 'report');
+            break;
             case 'filter-report-item' :
                 $return = $this->get_items_choices($return, $search, 'report');
             break;
