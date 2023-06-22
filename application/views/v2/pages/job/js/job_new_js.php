@@ -291,6 +291,7 @@ $("#attachment-file").change(function() {
             // var commission = ((retail - price) * commission_percentage).toFixed(2);
             var commission = (commission_type == 0) ? (((retail - price) * commission_percentage) * 1).toFixed(2) : ((retail * commission_percentage) * 1).toFixed(2);
 
+            var margin = ((retail - price) * 1);
 
 
             $("#ITEMLIST_PRODUCT_"+idd).hide();
@@ -300,6 +301,7 @@ $("#attachment-file").change(function() {
                 "<td class='d-none'><small>Original Price</small><input data-id='"+idd+"' id='cost"+idd+"' value='"+price+"'  type='number' name='item_cost[]' class='form-control item-cost' step='any' placeholder='Original Price'></td>" +
                 "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+retail+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td class='d-none'><small>Commission</small><input data-id='"+idd+"' id='commission"+idd+"' value='"+commission+"'  type='number' name='item_commission[]' class='form-control item-commission' step='any' placeholder='Commission'></td>" +
+                "<td class='d-none'><small>Margin</small><input data-id='"+idd+"' id='margin"+idd+"' value='"+margin+"'  type='number' name='item_margin[]' class='form-control item-margin' step='any' placeholder='Margin'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
                 // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
                 "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
@@ -332,7 +334,7 @@ $("#attachment-file").change(function() {
                 "<td>"+currencyFormatter(price)+"</td>" +
                 "<td id='device_price"+idd+"'>" + currencyFormatter(retail) + "</td>" +
                 "<td id='device_qty"+idd+"'>"+ 1 + "</td>" +
-                "<td id='device_sub_total"+idd+"'>" + currencyFormatter(commission) + "</td>" +
+                "<td id='device_sub_total"+idd+"'>" + currencyFormatter(margin) + "</td>" +
                 "<td>" +
                 "<input hidden name='item_id1[]' value='"+ idd +"'>" +
                 "<input hidden name='location_qty[]' id='location_qty"+idd+"' value='"+ qty +"'>" +
@@ -510,7 +512,8 @@ $("#attachment-file").change(function() {
             var commission_percentage = parseFloat($("input[name='commission_percentage']").val());
             var commission = (commission_type == 0) ? (((retail - cost) * commission_percentage) * qty).toFixed(2) : ((retail * commission_percentage) * qty).toFixed(2);
             $('#commission'+id).val(commission);
-            $('#device_sub_total'+id).text(currencyFormatter(commission));
+            $('#device_sub_total'+id).text(currencyFormatter((retail - cost) * qty));
+            $('#margin'+id).val((retail - cost) * qty);
         }
 
 
@@ -558,7 +561,7 @@ $("#attachment-file").change(function() {
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             // $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
-            $('#device_price'+id).text(cost);
+            $('#device_price'+id).text(currencyFormatter(cost));
             calculate_subtotal();
             calculateCommissionPerItem(id, qty);
         });

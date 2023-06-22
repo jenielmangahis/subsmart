@@ -933,6 +933,9 @@
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
                                                         </td>
+                                                        <td class="d-none"><small>Margin</small>
+                                                            <input readonly step="any" id='margin<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->margin; ?>'  type="number" name="item_margin[]" class="form-control item-margin" placeholder="Margin">
+                                                        </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
                                                         <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
@@ -1517,12 +1520,23 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mt-4">
-                                                        <div class="col-sm-3">
-                                                            <strong>Rep:</strong>&nbsp;&nbsp;<span id="totalRep">&mdash;</span>
+                                                        <div class="col-sm-4 mb-3">
+                                                            <strong>Rep:</strong>&nbsp;&nbsp;<span id="selectedRep">&mdash;</span>
                                                         </div>
-
-                                                        <div class="col-sm-3">
-                                                            <strong>Job Profit:</strong>&nbsp;&nbsp;<span id="totalJobProfit">$0</span>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Rep Commission:</strong>&nbsp;&nbsp;<span id="totalRepCommissionProfit">$0</span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Fix Cost:</strong>&nbsp;&nbsp;<span id="totalFixCost"><input type="number" step="any" name=""></span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Equipment Margin:</strong>&nbsp;&nbsp;<span id="totalEquipmentMargin">$0</span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Amount Collected:</strong>&nbsp;&nbsp;<span id="totalAmountCollected">$0</span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
@@ -2069,19 +2083,23 @@ function currencyFormatter(amount) {
 
 $("#employee_id").on('change', function(event) {
     let salesRep = $("#employee_id option:selected").text();
-    $("#totalRep").text((salesRep !== "Select All") ? salesRep : "—");
+    $("#selectedRep").text((salesRep !== "Select All") ? salesRep : "—");
 });
 
 function getTotalCommission(){
     let totalCommission = 0.0;
+    let totalMargin = 0.0;
     let salesRep = $("#employee_id option:selected").text();
     $('.job_items_tbl tr').each(function() {
       let commissionValue = $(this).find('td:eq(4) input').val();
+      let marginValue = $(this).find('td:eq(5) input').val();
         totalCommission += parseFloat(commissionValue);
+        totalMargin += parseFloat(marginValue);
     })
     $("input[name='commission_amount']").val(totalCommission.toFixed(2));
-    $("#totalRep").text((salesRep !== "Select All") ? salesRep : "—");
-    $("#totalJobProfit").text(currencyFormatter(totalCommission));
+    $("#selectedRep").text((salesRep !== "Select All") ? salesRep : "—");
+    $("#totalRepCommissionProfit").text(currencyFormatter(totalCommission));
+    $("#totalEquipmentMargin").text(currencyFormatter(totalMargin));
 }
 
 const job_items_tbl = $('.job_items_tbl')[0];
