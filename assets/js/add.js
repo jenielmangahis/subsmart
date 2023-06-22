@@ -370,12 +370,16 @@ $(document).ready(function () {
         // $('#sel-customerdiv').load(window.location.href +  ' #sel-customerdiv');
         // location.reload();
         setTimeout(function() {
-          location.reload();
+          // location.reload();
       }, 1000);
 
         sucess("New Customer has been Added Successfully!");
         // $('#sel-cul').load(window.location.href +  ' #sel-cul');
       },
+      error: function(response) {
+          // location.reload();
+
+      }
     });
   });
 

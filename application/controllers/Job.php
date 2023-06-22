@@ -2366,6 +2366,7 @@ class Job extends MY_Controller
                         $job_items_data['job_id'] = $jobs_id; //from jobs table
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['commission'] = $input['item_commission'][$xx];
+                        // $job_items_data['margin'] = $input['item_margin'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
                         $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['tax']      = 0;
@@ -2415,6 +2416,7 @@ class Job extends MY_Controller
                         $job_items_data['items_id'] = $input['item_id'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
                         $job_items_data['commission'] = $input['item_commission'][$xx];
+                        // $job_items_data['margin'] = $input['item_margin'][$xx];
                         $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['tax']      = 0;
                         $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];

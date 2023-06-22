@@ -58,7 +58,7 @@
     </div>
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Date of Birth*</label>
-        <input type="text" name="date_of_birth" class="nsm-field form-control" />
+        <input type="text" name="date_of_birth" class="nsm-field form-control dob_customer_form" />
     </div>
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Mobile</label>
@@ -143,3 +143,13 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+
+    $(".dob_customer_form").datepicker({
+            format: 'mm-dd-yyyy',
+            autoclose: true
+        });
+});
+</script>

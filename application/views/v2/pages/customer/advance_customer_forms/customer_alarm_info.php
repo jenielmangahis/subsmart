@@ -16,7 +16,7 @@
 }
 </style>
 <div class="nsm-card primary">
-    <?php if($company_id == 58 || $company_id == 1): ?>
+    <?php if($company_id == 58): ?>
         <div class="nsm-card-header">
             <div class="nsm-card-title">
                 <span><i class="bx bx-fw bx-user"></i>Solar Information</span>

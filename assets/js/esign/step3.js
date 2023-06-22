@@ -479,7 +479,7 @@ function Step3() {
 
     if (["Checkbox", "Radio", "2 GIG Go Panel 2"].includes(fieldName)) {
       const baseClassName =
-        fieldName === "Checkbox"
+        fieldName === "Checkbox" || fieldName === "2 GIG Go Panel 2" 
           ? "esignBuilder__fieldCheckbox"
           : "esignBuilder__fieldRadio";
 

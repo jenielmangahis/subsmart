@@ -80,9 +80,11 @@ function Signing(hash) {
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
+    const { kw_dc, solar_system_size } = window.__esigndata.auto_populate_data.acs_info_solar;
+
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account, monthly_monitoring, otps, passcode } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
@@ -232,6 +234,14 @@ function Signing(hash) {
 
     if( field_name == "Monthly Monitoring Rate" ){
       return monthly_monitoring;
+    }
+
+    if( field_name == "kW DC" ){
+      return kw_dc;
+    }
+
+    if( field_name == "System Size" ){
+      return solar_system_size;
     }
     
     if (field_name === "Text" && fieldValue === null ) {
@@ -445,7 +455,7 @@ function Signing(hash) {
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
-      $element.on("click", () => {
+      $element.on("click touchstart", () => {        
         signaturePad.clear();
         $(".signing__signatureInput").val("");
 
@@ -455,7 +465,7 @@ function Signing(hash) {
       return $element;
     }
 
-    if (["Checkbox", "Radio"].includes(field_name)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3"].includes(field_name)) {
       let {
         subCheckbox = [],
         isChecked,
@@ -480,13 +490,26 @@ function Signing(hash) {
         return hasRequested ? value.subCheckbox : subCheckbox;
       };
 
+      if( field_name === panel_type ){
+        isChecked = 'checked';
+      }
+
       if (value.hasOwnProperty("isChecked")) {
         isChecked = value.isChecked;
       }
 
-      const inputType = field_name.toLowerCase();
+      console.log('Panel Type' + panel_type);
+      console.log('Is Checked' + isChecked);
+
+      //const inputType = field_name.toLowerCase();
+      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+          ? "checkbox"
+          : field_name.toLowerCase();
+      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+          ? "autoPopulatePanelType"
+          : 'esign-checkbox';
       const baseClassName =
-        field_name === "Checkbox"
+        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
           ? "docusignField__checkbox"
           : "docusignField__radio";
 
@@ -501,6 +524,7 @@ function Signing(hash) {
         $element.addClass(`${baseClassName}--isRequired`);
       }
 
+      console.log(JSON.stringify(field, null, 4));
       const inputName = `${name}-${field.unique_key}`;
       $element.append(`
             <div class="form-check">
@@ -513,6 +537,8 @@ function Signing(hash) {
                 ${valueSpec ? `value="${valueSpec}"` : ""}
                 data-is-parent="true"
                 data-parent-id="${field.unique_key}"
+                data-field-type="${chkDataFieldType}"
+                data-field-id="${field.id}"
               >
               <span class="form-check-indicator">x</span>
               <label
@@ -1013,6 +1039,11 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId); 
       }
 
+      if( field.original_field_name === "System Size" || field.original_field_name === "kW DC" ){
+        $input.attr("data-field-type", "autoPopulateSolar");
+        $input.attr("data-field-id", fieldId); 
+      }
+
       if (field.original_field_name === "Text" ) {
         let specs_field_name = specs;
         if( specs_field_name.name === "equipment_cost" || specs_field_name.name === "one_time_activation" || specs_field_name.name === "first_month_monitoring" || specs_field_name.name === 'total_due' ) {
@@ -1436,7 +1467,7 @@ function Signing(hash) {
     });
 
     $signatureModal.on("show.bs.modal", function () {
-      if (!isMobile()) return;
+      /*if (!isMobile()) return;
 
       if (document.documentElement.requestFullscreen) {
         this.requestFullscreen();
@@ -1454,11 +1485,11 @@ function Signing(hash) {
           .catch((error) => {
             console.error(error);
           });
-      }
+      }*/
     });
 
     $signatureModal.on("hide.bs.modal", function () {
-      if (!isMobile()) return;
+      /*if (!isMobile()) return;
 
       if (document.fullscreenElement) {
         document.exitFullscreen().catch((err) => console.error(err));
@@ -1468,7 +1499,7 @@ function Signing(hash) {
       $dialog.classList.remove("max-width-unset");
       if (screen.orientation) {
         screen.orientation.unlock();
-      }
+      }*/
     });
 
     $finishSigning.on("click", async function () {
@@ -1652,6 +1683,19 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      const $autoPopulateSolar = $("[data-field-type=autoPopulateSolar]");
+      const autoPopulateSolarPromises = [...$autoPopulateSolar].map((autoPopulateSolar) => {
+        const $element = $(autoPopulateSolar);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+
       const $formulas = $("[data-field-type=formula]");
       const formulaPromises = [...$formulas].map((formula) => {
         const $element = $(formula);
@@ -1665,6 +1709,25 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      const $autoPopulatePanelType = $("[data-field-type=autoPopulatePanelType]");
+      const autoPopulatePanelTypePromises = [...$autoPopulatePanelType].map((autoPopulatePanelType) => {
+        const $element = $(autoPopulatePanelType);
+        const fieldId = $element.attr("data-field-id");
+        const _panelTypeisChecked = $element.is(":checked");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ 
+          id: fieldId,
+          value: JSON.stringify({
+              isChecked: _panelTypeisChecked,
+          })
+        });
+      });
+
       await Promise.all(dateSignedPromises);
       await Promise.all(formulaPromises);
 
@@ -1672,6 +1735,8 @@ function Signing(hash) {
       await Promise.all(autoPopulateEmergencyContactPromises);
       await Promise.all(autoPopulateAccountDetailsPromises);
       await Promise.all(autoPopulateBillingPromises);
+      await Promise.all(autoPopulateSolarPromises);
+      await Promise.all(autoPopulatePanelTypePromises);
 
       const response = await fetch(`${prefixURL}/DocuSign/apiComplete`, {
         method: "POST",
@@ -1797,7 +1862,7 @@ function Signing(hash) {
     
     if (data.generated_pdf) {
       // download link
-      $("[data-action=download]").on("click", function () {
+      $("[data-action=download]").on("click touchstart", function () {
         const queryString = new URLSearchParams({
           document_type: "esign",
           generated_esign_id: data.generated_pdf.docfile_id,

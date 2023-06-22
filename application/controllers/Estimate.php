@@ -2289,11 +2289,13 @@ class Estimate extends MY_Controller
             'cross_street'              => $this->input->post('street_address'),
             'phone_h'                   => $this->input->post('contact_phone'),
             'phone_m'                   => $this->input->post('contact_mobile'),
-            'suffix_name'               => $this->input->post('suffix_name'),
+            'suffix'                    => $this->input->post('suffix_name'),
             'date_of_birth'             => $this->input->post('date_of_birth'),
-            'social_security_number'    => $this->input->post('social_security_number'),
+            'ssn'                       => $this->input->post('social_security_number'),
             'status'                    => $this->input->post('status')
         );
+
+        // dd($new_data);
 
         $addQuery = $this->estimate_model->addNewCustomer($new_data);
 
