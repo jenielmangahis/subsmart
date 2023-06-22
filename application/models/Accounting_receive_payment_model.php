@@ -239,6 +239,22 @@ class Accounting_receive_payment_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->result();
     }
+    public function accounting_bills($company_id)
+    {
+        // $sql = "SELECT * FROM accounting_bill WHERE company_id = " . $company_id;
+        // $query = $this->db->query($sql);
+        // return $query->result();
+        $cid = getLoggedCompanyID();
+        $where = array(
+            'company_id' => $cid
+          );
+
+        $this->db->select('*');
+		$this->db->from('accounting_bill');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
     public function add_payment_invoices($paymentInvoices)
     {
         $this->db->insert_batch('accounting_receive_payment_invoices', $paymentInvoices);

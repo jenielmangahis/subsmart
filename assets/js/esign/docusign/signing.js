@@ -1713,13 +1713,19 @@ function Signing(hash) {
       const autoPopulatePanelTypePromises = [...$autoPopulatePanelType].map((autoPopulatePanelType) => {
         const $element = $(autoPopulatePanelType);
         const fieldId = $element.attr("data-field-id");
+        const _panelTypeisChecked = $element.is(":checked");
 
         let value = $element.text().trim();
         if ($element.is("input")) {
           value = $element.val().trim();
         }
 
-        return storeFieldValue({ id: fieldId, value });
+        return storeFieldValue({ 
+          id: fieldId,
+          value: JSON.stringify({
+              isChecked: _panelTypeisChecked,
+          })
+        });
       });
 
       await Promise.all(dateSignedPromises);
