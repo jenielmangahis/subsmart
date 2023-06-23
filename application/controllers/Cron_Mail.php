@@ -9,6 +9,57 @@ class Cron_Mail extends MYF_Controller {
 		parent::__construct();
 	}
 
+    public function send_acs_mail(){
+        $this->load->model('AcsSentEmail_model');
+        $this->load->model('MailSettings_model');
+
+        $total_sent    = 0;
+        $mail_setting  = $this->MailSettings_model->getSetting();        
+        $acsSentEmails = $this->AcsSentEmail_model->getAllNotSent(10);
+        if( $mail_setting && $mail_setting->is_enabled == 1 ){
+            $total_sent = $mail_setting->total_sent;
+            foreach($acsSentEmails as $sentMail ){
+                if( $total_sent < $mail_setting->daily_max_email_sent ){
+                    $subject  = $sentMail->subject;
+                    $body     = $sentMail->message;
+                    $from     = 'nSmarTrac';
+                    $to       = $sentMail->to_email;
+
+                    $mail = email__getInstance(['subject' => $subject]);
+                    $mail->FromName = $from;
+                    $mail->addAddress($to, $to);
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body    = $body;
+                    if (!$mail->Send()) {
+                        $data_acs_email = [
+                            'is_with_error' => 1,
+                            'err_message' => 'Cannot send email'
+                        ];                                                
+                    }else{
+                        $total_sent++;
+                        $data_acs_email = [
+                            'is_sent' => 1,
+                            'date_sent' => date("Y-m-d H:i:s")
+                        ];
+
+                        $mail_setting_data   = ['total_sent' => $total_sent];                        
+                        $this->MailSettings_model->updateSentCount($mail_setting_data);
+                    }
+
+                    $this->AcsSentEmail_model->update($sentMail->id, $data_acs_email);
+
+                }else{
+                    break;
+                }
+
+                $total_sent++;
+            }
+        } 
+
+        echo 'Total Sent : ' . $total_sent;       
+    }
+
     public function send_mail(){
         $this->load->model('MailSettings_model');
         $this->load->model('MailSendTo_model');
@@ -21,7 +72,31 @@ class Cron_Mail extends MYF_Controller {
             if( $total_sent < $mail_setting->daily_max_email_sent ){
                 foreach( $mails as $m ){
                     if( $total_sent < $mail_setting->daily_max_email_sent ){
-                        $server   = MAIL_SERVER;
+                        $subject  = $m->email_subject;
+                        $body     = $m->email_body;
+                        $from     = 'nSmarTrac';
+
+                        $mail = email__getInstance(['subject' => $subject]);
+                        $mail->FromName = $from;
+                        $mail->addAddress($m->email_to, $m->email_to);
+                        $mail->isHTML(true);
+                        $mail->Subject = $subject;
+                        $mail->Body    = $body;
+                        if (!$mail->Send()) {
+                            $update_send_to_data = [
+                                'is_with_error' => 1,
+                                'err_note' => 'Cannot send email'
+                            ];                        
+                            $this->MailSendTo_model->updateSendTo($m->id, $update_send_to_data);
+                        }else{
+                            $total_sent++;
+                            $update_send_to_data = ['is_sent' => 1];
+                            $mail_setting_data   = ['total_sent' => $total_sent];
+                            $this->MailSendTo_model->updateSendTo($m->id, $update_send_to_data);
+                            $this->MailSettings_model->updateSentCount($mail_setting_data);
+                        }
+
+                        /*$server   = MAIL_SERVER;
                         $port     = MAIL_PORT;
                         $username = MAIL_USERNAME;
                         $password = MAIL_PASSWORD;
@@ -75,7 +150,7 @@ class Cron_Mail extends MYF_Controller {
                                 'err_note' => $error
                             ];                        
                             $this->MailSendTo_model->updateSendTo($m->id, $update_send_to_data);
-                        }
+                        }*/
 
                         
                     }else{

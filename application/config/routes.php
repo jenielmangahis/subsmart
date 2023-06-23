@@ -90,6 +90,7 @@ $route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address
 $route['customer/_update_address_mobile'] = 'Customer/ajax_update_address_mobile';
 
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
+$route['customer/_send_email'] = 'Customer/ajax_send_email';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';

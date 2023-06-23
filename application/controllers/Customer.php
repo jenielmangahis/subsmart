@@ -6657,4 +6657,53 @@ class Customer extends MY_Controller
         $this->page_data['customerSentSms'] = $customerSentSms;
         $this->load->view('v2/pages/customer/ajax_load_customer_sms_messages', $this->page_data);
     }
+
+    public function ajax_send_email(){
+        $this->load->model('AcsSentEmail_model');
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $msg = 'Cannot find customer data';
+
+        $post = $this->input->post();
+        if( $post['customer_email_suject'] == '' ){
+            $msg = 'Please enter email subject';
+            $is_success = 0;
+        }
+
+        if( $post['customer_email'] == '' ){
+            $msg = 'Please enter customer email';
+            $is_success = 0;
+        }
+
+        if( $post['customer_email_message'] == '' ){
+            $msg = 'Please enter email message';
+            $is_success = 0;
+        }
+        
+        $customer = $this->AcsProfile_model->getByProfId($post['cid']);
+        if( $customer && $is_success == 1 ){
+            $cid = logged('company_id');
+            $uid = logged('id');
+            $data_acs_emails = [
+                'company_id' => $cid,
+                'user_id' => $uid,
+                'customer_id' => $customer->prof_id,
+                'to_email' => $post['customer_email'],
+                'subject' => $post['customer_email_suject'],
+                'message' => $post['customer_email_message'],
+                'is_sent' => 0,
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->AcsSentEmail_model->create($data_acs_emails);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
 }

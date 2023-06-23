@@ -253,7 +253,12 @@ div#controls div#call-controls div#volume-indicators > div {
                         </button>
                 </div>
                 <div class="col-12 col-md-4">
-                    <a href="mailto:<?=  $profile_info->email ?>">
+                    <!-- <a href="mailto:<?=  $profile_info->email ?>">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-mail-send'></i> Send Email
+                        </button>
+                    </a> -->
+                    <a href="javascript:void(0);" class="customer-send-mail">
                         <button role="button" class="nsm-button w-100 ms-0 mt-3">
                             <i class='bx bx-fw bx-mail-send'></i> Send Email
                         </button>
@@ -328,6 +333,47 @@ div#controls div#call-controls div#volume-indicators > div {
                     </div>
                 </div>
             <?php } ?>
+        </div>
+    </div>
+</div>
+
+<!--Send Email Modal-->
+<div class="modal fade nsm-modal fade" id="ownerModalSendMail" tabindex="-1" aria-labelledby="ownerModalSendMailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="new_feed_modal_label">Send Email</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form action="" id="frm-customer-send-email">
+            <input type="hidden" name="cid" id="send-email-cid" value="<?= $profile_info->prof_id; ?>">
+            <div class="modal-body">
+                <div class="row">                                                                
+                    <div class="col-md-12 mt-3">
+                        <label for="">Customer Name</label>
+                        <input type="text" name="customer_name" id="customer-name" disabled="" class="form-control" value="<?= $profile_info->first_name . ' ' . $profile_info->last_name; ?>">
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label for="">Customer Email</label>
+                        <input type="text" name="customer_email" id="customer-name" class="form-control" required="" value="<?= $profile_info->email; ?>">
+                    </div>                    
+                    <div class="col-md-12 mt-3">
+                        <label for="">Subject</label>
+                        <input type="text" name="customer_email_suject" id="customer-email-subject" class="form-control" required="" value="">
+                    </div>                    
+                    <div class="col-md-12 mt-3">
+                        <label for="" style="display:block;margin-bottom: 11px;">Message</label>
+                        <div class="sms-message-container">
+                            <textarea class="form-control" name="customer_email_message" id="customer-email-message" style="height:150px;"></textarea>                                    
+                        </div>                                            
+                    </div> 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary btn-send-email-message">Send</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -512,9 +558,58 @@ $(document).on('click', ".btn-use-template", function(){
     });
 });
 
+$(document).on('click', '.customer-send-mail', function(){    
+    $('#ownerModalSendMail').modal('show');
+});
+
 $(document).on('click', '.btn-sms-template', function(){
     $('#ownerModalSendMessage').modal('hide');
     $('#ownerModalSmsTemplate').modal('show');
+});
+
+$(document).on('submit', '#frm-customer-send-email', function(e){
+    e.preventDefault();
+    var url = base_url + 'customer/_send_email';
+    $(".btn-send-email-message").html('<span class="bx bx-loader bx-spin"></span>');
+
+    var formData = new FormData($("#frm-customer-send-email")[0]);   
+
+    setTimeout(function () {
+      $.ajax({
+         type: "POST",
+         url: url,
+         dataType: 'json',
+         contentType: false,
+         cache: false,
+         processData:false,
+         data: formData,
+         success: function(o)
+         {          
+            if( o.is_success == 1 ){   
+                $("#ownerModalSendMail").modal("hide");         
+                Swal.fire({                    
+                    text: "Your email was successfully sent to customer.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    //if (result.value) {
+                    $('#customer-email-subject').val('');
+                    $('#customer-email-message').val('');
+                    //}
+                });
+            }else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: o.msg
+              });
+            } 
+
+            $(".btn-send-email-message").html('Send');
+         }
+      });
+    }, 800);
 });
 
 $(document).on('click', '.btn-set-customer-mobile', function(){
