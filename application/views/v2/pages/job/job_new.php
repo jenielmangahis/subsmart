@@ -1112,11 +1112,11 @@
                                                                 <label  id="invoice_overall_total">$0</label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                Commission Type: <input type="text" name="commission_type" value="" readonly hidde>
+                                                                Commission Type: <input type="text" name="commission_type" value="" readonly>
                                                                 <br>
-                                                                Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly hidde>
+                                                                Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly>
                                                                 <br>
-                                                                Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly hidde>
+                                                                Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly>
                                                             </div>
                                                         </div>
                                                     <!-- <div class="col-sm-6"> -->
@@ -1489,7 +1489,7 @@
                                                                         <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
                                                                         <td><?php echo number_format((float)$item->retail,2,'.',','); ?></td>
                                                                         <td><?php echo $item->qty; ?></td>
-                                                                        <td><?php echo number_format((float)$item->commission,2,'.',','); ?></td>
+                                                                        <td><?php echo number_format((float)$item->margin,2,'.',','); ?></td>
                                                                         <?php if($jobs_data->status == "Scheduled") {?>
                                                                             <td>
                                                                                 <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
@@ -1527,16 +1527,19 @@
                                                             <strong>Rep Commission:</strong>&nbsp;&nbsp;<span id="totalRepCommissionProfit">$0</span>
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
-                                                            <strong>Fix Cost:</strong>&nbsp;&nbsp;<span id="totalFixCost"><input type="number" step="any" name=""></span>
+                                                            <strong>Fix Cost:</strong>&nbsp;&nbsp;<span id="totalFixCost"><input type="number" step="any" name="input_totalFixCost" value="<?php echo ($jobs_data) ? $jobs_data->fix_cost : "0.0"; ?>"></span>
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Equipment Margin:</strong>&nbsp;&nbsp;<span id="totalEquipmentMargin">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalEquipmentMargin" value="<?php echo ($jobs_data) ? $jobs_data->margin : "0.0"; ?>">
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Amount Collected:</strong>&nbsp;&nbsp;<span id="totalAmountCollected">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalAmountCollected" value="<?php echo ($jobs_data) ? $jobs_data->amount_collected : "0.0"; ?>">
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalJobGrossProfit" value="<?php echo ($jobs_data) ? $jobs_data->gross_profit : "0.0"; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
@@ -2090,6 +2093,7 @@ function getTotalCommission(){
     let totalCommission = 0.0;
     let totalMargin = 0.0;
     let salesRep = $("#employee_id option:selected").text();
+    let totalAmountCollected = $("#total2").val();
     $('.job_items_tbl tr').each(function() {
       let commissionValue = $(this).find('td:eq(4) input').val();
       let marginValue = $(this).find('td:eq(5) input').val();
@@ -2100,13 +2104,17 @@ function getTotalCommission(){
     $("#selectedRep").text((salesRep !== "Select All") ? salesRep : "—");
     $("#totalRepCommissionProfit").text(currencyFormatter(totalCommission));
     $("#totalEquipmentMargin").text(currencyFormatter(totalMargin));
+    $("#totalAmountCollected").text(currencyFormatter(totalAmountCollected));
+
+    $("input[name='input_totalEquipmentMargin']").val(totalMargin.toFixed(2));
+    $("input[name='input_totalAmountCollected']").val(totalAmountCollected);
+    // $("input[name='input_totalJobGrossProfit']").val(totalAmountCollected.toFixed(2));
 }
 
 const job_items_tbl = $('.job_items_tbl')[0];
 const observer = new MutationObserver(() => getTotalCommission());
 const config = { childList: true, subtree: true, characterData: true };
 observer.observe(job_items_tbl, config);
-getTotalCommission();
 
 $('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
   this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);
@@ -2130,9 +2138,13 @@ $('input[name="CHECK_ACCOUNTNUMBER"], input[name="ACH_ACCOUNTNUMBER"]').on('inpu
   this.value = this.value.replace(/\D/g, '').substr(0, 12);
 });
 
-    
 $(document).ready(function() {
     $('select[name="BILLING_METHOD"]').val("<?php echo $jobs_data->BILLING_METHOD ?>").change();
+    getTotalCommission();
+
+    ($("#adjustment_ic").val() == 0) ? $("#adjustment_ic").val(0).change() : $("#adjustment_ic").change();
+    ($("#adjustment_otps").val() == 0) ? $("#adjustment_otps").val(0).change() : $("#adjustment_otps").change();
+    ($("#adjustment_mm").val() == 0) ? $("#adjustment_mm").val(0).change() : $("#adjustment_mm").change();
 });
 
 $('select[name="BILLING_METHOD"]').change(function(event) {
