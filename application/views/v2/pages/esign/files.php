@@ -401,7 +401,7 @@ echo put_header_assets();
                                         </ul>
                                     </div>
                                 </div>
-                                <?php if( logged('company_id') == 24 || logged('company_id') == 1 ){ ?>
+                                <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 ){ ?>
                                     <div>
                                         <p class="fw-bold"><small>Panel Type</small></p>
                                     </div>
@@ -418,6 +418,36 @@ echo put_header_assets();
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
                                                         <span class="u-ellipsis ng-binding">2 GIG Go Panel 3</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                        <span class="u-ellipsis ng-binding">Lynx3000</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                        <span class="u-ellipsis ng-binding">LynxTouch</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                        <span class="u-ellipsis ng-binding">Vista/SEM</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                        <span class="u-ellipsis ng-binding">DSC</span>
+                                                    </div>
+                                                </li>
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                    <div class="fields menu_item">
+                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                        <span class="u-ellipsis ng-binding">Other</span>
                                                     </div>
                                                 </li>
                                             </ul>

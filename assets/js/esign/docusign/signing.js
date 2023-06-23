@@ -465,7 +465,7 @@ function Signing(hash) {
       return $element;
     }
 
-    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3"].includes(field_name)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other"].includes(field_name)) {
       let {
         subCheckbox = [],
         isChecked,
@@ -502,14 +502,14 @@ function Signing(hash) {
       console.log('Is Checked' + isChecked);
 
       //const inputType = field_name.toLowerCase();
-      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
           ? "checkbox"
           : field_name.toLowerCase();
-      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
           ? "autoPopulatePanelType"
           : 'esign-checkbox';
       const baseClassName =
-        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3"
+        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
           ? "docusignField__checkbox"
           : "docusignField__radio";
 

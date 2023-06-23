@@ -489,9 +489,9 @@ function Step3() {
     const $element = createElementFromHTML(html);
     const $subData = $element.find(".subData");
 
-    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3"].includes(fieldName)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other"].includes(fieldName)) {
       const baseClassName =
-        fieldName === "Checkbox" || fieldName === "2 GIG Go Panel 2" || fieldName === "2 GIG Go Panel 3"
+        fieldName === "Checkbox" || fieldName === "2 GIG Go Panel 2" || fieldName === "2 GIG Go Panel 3" || fieldName === "Lynx3000" || fieldName === "LynxTouch" || fieldName === "Vista/SEM" || fieldName === "DSC" || fieldName === "Other"
           ? "esignBuilder__fieldCheckbox"
           : "esignBuilder__fieldRadio";
 
