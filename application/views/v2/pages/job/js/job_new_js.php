@@ -530,8 +530,8 @@ $("#attachment-file").change(function() {
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
             // getLoc(id, qty);
+            calculateCommissionPerItem(id, qty);
             calculate_subtotal();
-            calculateCommissionPerItem(id, qty)
         });
 
         $("body").delegate(".qty", "change", function(){
@@ -540,15 +540,15 @@ $("#attachment-file").change(function() {
             var qty=this.value;
             var retail = $("#price"+id).val();
             var cost = $('#cost'+id).val();
-            var new_sub_total = Number(qty) * Number(cost);
+            var new_sub_total = Number(qty) * Number(retail);
             $('#sub_total'+id).data('subtotal',new_sub_total);
             $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             // $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
             $('#device_qty'+id).text(qty);
             $('#location_qty'+id).val(qty);
             // getLoc(id, qty);
-            calculate_subtotal();
             calculateCommissionPerItem(id, qty);
+            calculate_subtotal();
         });
 
         $("body").delegate(".item-price", "change", function(){
