@@ -135,7 +135,7 @@ tr {
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
                                             <option value="0">- none -</option>
                                             <?php foreach ($lead_source as $lead) { ?>
-                                                <option value="<?php echo $lead->ls_name; ?>"><?php echo $lead->ls_name; ?></option>
+                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

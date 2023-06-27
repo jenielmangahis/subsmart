@@ -350,7 +350,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="table">
                                     <thead>
                                         <tr>
                                             <td>Vendor</td>
@@ -366,7 +366,7 @@
                                         // dd($billsNi);
                                         foreach($billsNi as $billn): ?>
                                             <tr>
-                                                <td><?= $billn->vendor_id ?></td>
+                                                <td><?= $billn->name ?></td>
                                                 <td><?= $billn->bill_date; ?></td>
                                                 <td><?= $billn->due_date; ?></td>
                                                 <td><?= $billn->permit_no; ?></td>

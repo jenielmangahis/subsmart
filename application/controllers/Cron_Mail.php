@@ -12,17 +12,24 @@ class Cron_Mail extends MYF_Controller {
     public function send_acs_mail(){
         $this->load->model('AcsSentEmail_model');
         $this->load->model('MailSettings_model');
+        $this->load->model('Business_model');
 
         $total_sent    = 0;
         $mail_setting  = $this->MailSettings_model->getSetting();        
         $acsSentEmails = $this->AcsSentEmail_model->getAllNotSent(10);
         if( $mail_setting && $mail_setting->is_enabled == 1 ){
-            $total_sent = $mail_setting->total_sent;
+            $settings_total_sent = $mail_setting->total_sent;
             foreach($acsSentEmails as $sentMail ){
                 if( $total_sent < $mail_setting->daily_max_email_sent ){
+                    $company = $this->Business_model->getByCompanyId($sentMail->company_id);
+                    if( $company ){
+                        $from = $company->business_name;
+                    }else{
+                        $from = 'nSmarTrac';    
+                    }
+                    
                     $subject  = $sentMail->subject;
-                    $body     = $sentMail->message;
-                    $from     = 'nSmarTrac';
+                    $body     = $sentMail->message;                    
                     $to       = $sentMail->to_email;
 
                     $mail = email__getInstance(['subject' => $subject]);
@@ -37,13 +44,13 @@ class Cron_Mail extends MYF_Controller {
                             'err_message' => 'Cannot send email'
                         ];                                                
                     }else{
-                        $total_sent++;
+                        $settings_total_sent++;
                         $data_acs_email = [
                             'is_sent' => 1,
                             'date_sent' => date("Y-m-d H:i:s")
                         ];
 
-                        $mail_setting_data   = ['total_sent' => $total_sent];                        
+                        $mail_setting_data   = ['total_sent' => $settings_total_sent];                        
                         $this->MailSettings_model->updateSentCount($mail_setting_data);
                     }
 

@@ -296,13 +296,16 @@
 							</div>
 					</center>
                     <br>
-                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:8px;">
+                    <table style="border: 0px solid white;border-collapse: collapse;width:350px;font-size:9px;">
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:;margin-bottom:-1px;background-color:white;"></td>
                         </tr> -->
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $firstname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>First name:</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($firstname)){ echo '<br>'; }else{echo $lastname;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
                         </tr>
                         <?php if($account_type == 'Commercial'){ ?>
                         <tr>
@@ -320,10 +323,16 @@
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($lastname_spouse)){ echo '<br>'; }else{echo $lastname_spouse;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Last name (Spouse):</b></td>
                         </tr>
                         <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
+                        </tr>
+                        <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($address)){ echo '<br>'; }else{echo $address;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Address:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
@@ -333,11 +342,17 @@
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($state)){ echo '<br>'; }else{echo $state;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>State:</b></td>
                         </tr>
                         <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
+                        </tr>
+                        <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($postcode)){ echo '<br>'; }else{echo $postcode;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Zip Code:</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($county)){ echo '<br>'; }else{echo $county;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>County:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
@@ -346,16 +361,25 @@
                             <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($phone_number)){ echo '<br>'; }else{echo $phone_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
                         </tr>
                         <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
+                        </tr>
+                        <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($mobile_number)){ echo '<br>'; }else{echo $mobile_number;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Mobile:</b></td>
                         </tr>
                         <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
+                        </tr>
+                        <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;" colspan="2"><?php if(empty($email)){ echo '<br>'; }else{echo $email;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Email:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
@@ -365,11 +389,17 @@
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($first_ecn_no)){ echo '<br>'; }else{echo $first_ecn_no;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
                         </tr>
                         <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
+                        </tr>
+                        <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($second_ecn)){ echo '<br>'; }else{echo $second_ecn;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>2nd Emergency Contact Name:</b></td>
                             <td style="border: 0px solid white;border-collapse: collapse;"><?php if(empty($second_ecn_no)){ echo '<br>'; }else{echo $second_ecn_no;} ?><hr style="margin-top:0px;margin-bottom:-1px;"><b>Phone:</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;"><br></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;"><hr style="margin-top:0px;margin-bottom:-1px;background-color:white;"></td>
@@ -380,30 +410,30 @@
                         </tr>
                     </table>
                     <br><br>
-                    <table>
+                    <table style="width:350px;">
                         <tr>
                             <td style="margin:;padding:6px;"><b>Equipment Cost</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $subtotal; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $subtotal; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Sales Tax</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $taxes; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $taxes; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Installation Cost</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $installation_cost; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $installation_cost; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>One time (Program and Setup)</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $otp_setup; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $otp_setup; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Monthly Monitoring</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $monthly_monitoring; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $monthly_monitoring; ?></td>
                         </tr>
                         <tr>
                             <td style="margin:;padding:6px;"><b>Total Due</b></td>
-                            <td style="margin:;padding:6px;">$<?php echo $total; ?></td>
+                            <td style="margin:;padding:6px;text-align:right;">$<?php echo $total; ?></td>
                         </tr>
                     </table>
                 </div> 

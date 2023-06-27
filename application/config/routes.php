@@ -1334,6 +1334,7 @@ $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 
 //Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
+$route['cron_mail/send_acs_mail'] = 'Cron_Mail/send_acs_mail';
 
 //Cron Api
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';

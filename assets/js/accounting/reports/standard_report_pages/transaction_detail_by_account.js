@@ -425,8 +425,12 @@ $('#run-report-button').on('click', function() {
     url += $('#allow-filter-distribution-account').prop('checked') && $('#filter-distribution-account').val() !== 'all' ? `account=${$('#filter-distribution-account').val()}&` : '';
     url += $('#allow-filter-account').prop('checked') && $('#filter-account').val() !== 'all' ? `account=${$('#filter-account').val()}&` : '';
     url += $('#allow-filter-name').prop('checked') && $('#filter-name').val() !== 'all' ? `name=${$('#filter-name').val()}&` : '';
+    url += $('#allow-filter-customer').prop('checked') && $('#filter-customer').val() !== 'all' ? `customer=${$('#filter-customer').val()}&` : '';
+    url += $('#allow-filter-vendor').prop('checked') && $('#filter-vendor').val() !== 'all' ? `vendor=${$('#filter-vendor').val()}&` : '';
+    url += $('#allow-filter-employee').prop('checked') && $('#filter-employee').val() !== 'all' ? `employee=${$('#filter-employee').val()}&` : '';
     url += $('#allow-filter-payment-method').prop('checked') && $('#filter-payment-method').val() !== 'all' ? `payment-method=${$('#filter-payment-method').val()}&` : '';
     url += $('#allow-filter-terms').prop('checked') && $('#filter-terms').val() !== 'all' ? `terms=${$('#filter-terms').val()}&` : '';
+    url += $('#allow-filter-product-service').prop('checked') && $('#filter-product-service').val() !== 'all' ? `product-service=${$('#filter-product-service').val()}&` : '';
     url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date=${$('#filter-due-date').val()}&` : '';
     url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-from=${$('#filter-due-date-from').val().replaceAll('/', '-')}&` : '';
     url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-to=${$('#filter-due-date-to').val().replaceAll('/', '-')}&` : '';

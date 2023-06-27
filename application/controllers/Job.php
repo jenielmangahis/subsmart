@@ -2243,6 +2243,7 @@ class Job extends MY_Controller
                 'created_by' => logged('id'),
                 //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
+                'tax_percentage' => $input['tax_percentage'],
                 'tax_rate' => $input['tax'],
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
@@ -2252,7 +2253,6 @@ class Job extends MY_Controller
                 'margin' => $input['input_totalEquipmentMargin'],
                 'amount_collected' => $input['input_totalAmountCollected'],
                 'gross_profit' => $input['input_totalJobGrossProfit'],
-
                 'job_account_number' => $input['JOB_ACCOUNT_NUMBER'],
                 'BILLING_METHOD' => $input['BILLING_METHOD'],
                 'CC_CREDITCARDNUMBER' => $input['CC_CREDITCARDNUMBER'],
@@ -2352,6 +2352,9 @@ class Job extends MY_Controller
                     // insert data to job payments table
                     $job_payment_query = array(
                         'amount' => $input['total_amount'],
+                        'program_setup' => $input['otps'],
+                        'monthly_monitoring' => $input['monthly_monitoring'],
+                        'installation_cost' => $input['installation_cost'],
                         'job_id' => $jobs_id,
                     );
                     $this->general->add_($job_payment_query, 'job_payments');

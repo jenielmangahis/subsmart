@@ -501,18 +501,36 @@
                                     <thead>
                                         <tr>
                                             <td data-name="Date">DATE</td>
-                                            <td data-name="Num">NUM</td>
+                                            <td data-name="Estimate #">ESTIMATE #</td>
+                                            <td data-name="Num">NAME</td>
                                             <td data-name="Estimate Status">ESTIMATE STATUS</td>
                                             <td data-name="Accepted Date">ACCEPTED DATE</td>
-                                            <td data-name="Accepted By">ACCEPTED BY</td>
+                                            <!-- <td data-name="Accepted By">ACCEPTED BY</td> -->
                                             <td data-name="Expiration Date">EXPIRATION DATE</td>
                                             <td data-name="Invoice #">INVOICE #</td>
                                             <td data-name="Amount">AMOUNT</td>
                                         </tr>
                                     </thead>
                                     <tbody id="customerTbl">
-                                        <tr>
-                                        </tr>
+                                        <?php foreach($estimates as $estimate){ 
+                                            foreach($customers as $customer)
+                                            {
+                                            if($estimate->customer_id == $customer->prof_id )
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $estimate->estimate_date; ?></td>
+                                                <td><?php echo $estimate->estimate_number; ?></td>
+                                                <td><?php echo $customer->first_name.' '.$customer->last_name; ?> </td>
+                                                <td><?php echo $estimate->status; ?></td>
+                                                <td><?php echo $estimate->accepted_date; ?></td>
+                                                <td><?php echo $estimate->expiry_date; ?></td>
+                                                <td><?php echo ''; ?></td>
+                                                <td><?php echo $estimate->grand_total; ?></td>
+                                            </tr>
+                                        <?php 
+                                            } 
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
 

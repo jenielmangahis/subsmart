@@ -107,6 +107,14 @@
                     <?php } ?>
                 </select>
             </div>
+            <div class="col-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Base Salary</label>
+                <input class="form-control" name="empBaseSalary" type="number" step="any" min="0" value="<?php echo ($user->base_salary) ? $user->base_salary : "0"; ?>">
+            </div>
+            <div class="col-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Compensation Base</label>
+                <input class="form-control" name="empCompensationBase" type="number" step="any" min="0" value="<?php echo ($user->compensation_base) ? $user->compensation_base : "0"; ?>">
+            </div>
             <div class="col-9">
                 <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
                 <select class="nsm-field form-select" name="empCommission" required>
@@ -148,7 +156,12 @@
                     <!-- <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option> -->
                 </select>
             </div>
-            <div class="col-12">
+            <hr class="mb-0">
+            <div class="col-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Total Salary</label>
+                <span><?php echo ($commission->totalSalary) ? "$".number_format($commission->totalSalary, 2) : "$0"; ?></span>
+            </div>
+            <div class="col-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Commission</label>
                 <span><?php echo ($commission->totalCommission) ? "$".number_format($commission->totalCommission, 2) : "$0"; ?></span>
             </div>

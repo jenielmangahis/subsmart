@@ -541,7 +541,7 @@
                                     <tbody>
                                         <?php if(count($transactions) > 0) : ?>
                                         <?php foreach($transactions as $index => $transaction) : ?>
-                                        <?php if($group_by === 'none') : ?>
+                                        <?php if(is_null($group_by)) : ?>
                                         <tr>
                                             <td <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
                                             <td <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>

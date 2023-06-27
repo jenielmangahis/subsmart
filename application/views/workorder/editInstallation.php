@@ -116,7 +116,7 @@ tr {
                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
                                             <?php foreach($lead_source as $leads){ ?>
-                                                <option value="<?php echo $leads->ls_name; ?>" <?php if($workorder->lead_source_id == $leads->ls_name){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
+                                                <option value="<?php echo $leads->ls_id; ?>" <?php if($workorder->lead_source_id == $leads->ls_id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
                                                 <?php } ?>
                                         </select>
                                     </div>
