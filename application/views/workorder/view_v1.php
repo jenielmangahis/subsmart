@@ -1394,7 +1394,7 @@ table input.form-control {
 													<label for="lead_source"><b>Lead Source</b></label> <br>
 													
 														<?php foreach($lead_source as $leads){ ?>
-														<?php //echo $leads->ls_id; ?> <?php if($workorder->lead_source_id == $leads->ls_name){ echo $leads->ls_name; }else{ echo ''; } ?>
+														<?php //echo $leads->ls_id; ?> <?php if($workorder->lead_source_id == $leads->ls_id){ echo $leads->ls_name; }else{ echo ''; } ?>
 														<?php //echo $leads->ls_name; ?>
 														<?php } if(empty($workorder->lead_source_id)){ echo 'N/A<br>'; }
 														?>

@@ -1,6 +1,5 @@
 <?php 
-    $details = explode(',', trim($module_sort->ams_values));
-
+    $details = explode(',', trim($module_sort->ams_values));    
     foreach ($widgets as $w):
         if(in_array(strtolower($w->ac_id), $details)):
             $isUsed = true;

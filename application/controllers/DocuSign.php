@@ -860,9 +860,9 @@ class DocuSign extends MYF_Controller
             $jobId = $this->db->get('user_docfile_job_recipients')->row();
             $jobId = is_null($jobId) ? null : $jobId->job_id;
 
-            if (!is_null($jobId)) {
+            if ( $envelope['job_id'] > 0 ) {
                 $this->db->select('id,employee_id,company_id,customer_id');
-                $this->db->where('id', $jobId);
+                $this->db->where('id', $envelope['job_id']);
                 $job = $this->db->get('jobs')->row();
 
                 if ($job) {
@@ -2558,7 +2558,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(953);
+        $pdf = $this->debugGeneratePDFMaker(971);
         echo 'Finish';
     }
 
@@ -2802,7 +2802,7 @@ SQL;
                         $top = (int) str_replace("px", "", $coordinates->pageTop);
                         $left = (int) str_replace("px", "", $coordinates->left);
                         if( $left > 800 ){
-                            $left = 773;
+                            $left = 779;
                         }
 
                         $topAdjusted = (31.8 / 100) * $top;

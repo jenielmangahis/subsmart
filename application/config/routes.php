@@ -90,6 +90,7 @@ $route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address
 $route['customer/_update_address_mobile'] = 'Customer/ajax_update_address_mobile';
 
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
+$route['customer/_send_email'] = 'Customer/ajax_send_email';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1333,6 +1334,7 @@ $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 
 //Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
+$route['cron_mail/send_acs_mail'] = 'Cron_Mail/send_acs_mail';
 
 //Cron Api
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';

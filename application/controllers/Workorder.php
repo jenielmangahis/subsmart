@@ -2364,6 +2364,7 @@ class Workorder extends MY_Controller
         $first = $this->workorder_model->getuserfirst($workorder->company_representative_name);
         $second = $this->workorder_model->getusersecond($workorder->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workorder->secondary_account_holder_name);
+        $job_tag = $this->workorder_model->getjob_tag($workorder->job_tags);
 
         $data = array(
             'workorder'                         => $workorderNo,
@@ -2447,6 +2448,7 @@ class Workorder extends MY_Controller
             'sale_rep_phone'                    => $agreements->sale_rep_phone,
             'team_leader'                       => $agreements->team_leader,
             'billing_date'                      => $agreements->billing_date,
+            'job_tags'                          => $job_tag->name,
         );
 
         // dd($agreements);
@@ -2503,6 +2505,7 @@ class Workorder extends MY_Controller
 
         $solars = $this->workorder_model->get_solar($wo_id);
         $solar_files = $this->workorder_model->get_solar_files($wo_id);
+        $job_tag = $this->workorder_model->getjob_tag($workorder_model->job_tags);
 
         $data = array(
             'workorder'                         => $workorderNo,
@@ -2553,6 +2556,7 @@ class Workorder extends MY_Controller
             'email'                             => $customerData->email,
 
             'solar_files'                       => $solar_files,
+            'job_tags'                           => $job_tag->name,
         );
 
         // dd($agreements);
@@ -8404,9 +8408,11 @@ class Workorder extends MY_Controller
 
             // echo $w_acs;
 
+            $get_lead = $this->workorder_model->get_lead($this->input->post('lead_source'));
+
             $solarItemsOffice = array(
                 'fk_prof_id'                => $w_acs,
-                'lead_source'               => $this->input->post('lead_source'),
+                'lead_source'               => $get_lead->ls_name,
                 'save_by'                   => $user_id,
                 'equipment'                 => $this->input->post('equipmentCost'),
             );
@@ -10220,21 +10226,47 @@ class Workorder extends MY_Controller
 
         // echo $w_acs;
 
+        // $solarItemsOffice = array(
+        //     'customer_id'               => $customer_id,
+        //     'lead_source'               => $this->input->post('lead_source'),
+        //     'save_by'                   => $user_id,
+        //     'equipment_cost'            => $this->input->post('equipmentCost'),
+        //     'monthly_monitoring'        => $this->input->post('otps'),
+        // );
+
+        // $solarItemsOffices = $this->workorder_model->update_office($solarItemsOffice);
         $solarItemsOffice = array(
-            'customer_id'               => $customer_id,
+            'fk_prof_id'                => $customer_id,
             'lead_source'               => $this->input->post('lead_source'),
             'save_by'                   => $user_id,
-            'equipment_cost'            => $this->input->post('equipmentCost'),
+            'fk_sales_rep_office'       => $user_id,
+            'equipment_cost'            => $equip,
             'monthly_monitoring'        => $this->input->post('otps'),
+            'sales_date'                => date("m/d/Y"),
         );
 
         $solarItemsOffices = $this->workorder_model->update_office($solarItemsOffice);
 
+        // $alarmInfoData = array(
+        //     'customer_id'                => $customer_id,
+        //     'equipment_cost'            => $this->input->post('equipmentCost'),
+        //     'monthly_monitoring'        => $this->input->post('otps'),
+        //     'panel_type'                => $this->input->post('panel_type'),
+        // );
+
+        // $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);
         $alarmInfoData = array(
-            'customer_id'                => $customer_id,
+            'fk_prof_id'                => $customer_id,
             'equipment_cost'            => $this->input->post('equipmentCost'),
-            'monthly_monitoring'        => $this->input->post('otps'),
+            'monthly_monitoring'        => $this->input->post('monthlyMonitoring'),
             'panel_type'                => $this->input->post('panel_type'),
+            'otps'                      => $this->input->post('otps'),
+            'system_type'               => $this->input->post('communication_type'),
+            'monitor_comp'              => 'Stanley',
+            'acct_type'                 => 'In-House',
+            'equipment'                 => 'Installed',
+            'passcode'                  => $this->input->post('password'),
+            'comm_type'                 => $this->input->post('communication_type'),
         );
 
         $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);

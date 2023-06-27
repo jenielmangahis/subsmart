@@ -910,6 +910,8 @@ class Share_Link extends CI_Controller
         $third = $this->workorder_model->getuserthird($workorder->secondary_account_holder_name);
 
         $firstNumeric = $this->workorder_model->firstNumeric($workorder->company_representative_name);
+        $job_tag = $this->workorder_model->getjob_tag($workorder->job_tags);
+        $lead_source = $this->workorder_model->get_lead($workorder->lead_source_id);
 
         // dd($wo_id);
 
@@ -939,11 +941,11 @@ class Share_Link extends CI_Controller
             'password'                          => $workorder->password,
             'security_number'                   => $workorder->security_number,
 
-            'lead_source'                       => $workorder->ls_name,
+            'lead_source'                       => $lead_source->ls_name,
             'account_type'                      => $workorder->account_type,
             'panel_communication'               => $workorder->panel_communication,
             'panel_type'                        => $workorder->panel_type,
-            'job_tags'                          => $workorder->job_tags,
+            // 'job_tags'                          => $workorder->job_tags,
             // 'source' => $source
 
             'payment_method'                    => $payment->payment_method,
@@ -999,6 +1001,7 @@ class Share_Link extends CI_Controller
             'sale_rep_phone'                    => $agreements->sale_rep_phone,
             'team_leader'                       => $agreements->team_leader,
             'billing_date'                      => $agreements->billing_date,
+            'job_tags'                          => $job_tag->name,
         );
 
         // dd($agreements);

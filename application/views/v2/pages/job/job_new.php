@@ -1011,24 +1011,28 @@
                                                                     <span class="bx bx-plus"></span>Manage Tax Rates
                                                                 </a>
                                                             </div>
-                                                            <select id="tax_rate" name="tax_rate" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
+                                                            <select id="tax_rate" name="tax_percentage" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
                                                                 <option value="0.0">None</option>
                                                                 <?php 
                                                                     $SELECTED_TAX = (isset($jobs_data->tax_rate)) ? $jobs_data->tax_rate : '0.00';
                                                                     foreach ($tax_rates as $rate) {
-                                                                        if ($SELECTED_TAX !== "0.00") {
-                                                                            if ($subtotal * ($rate->rate / 100) == $jobs_data->tax_rate) {
-                                                                                echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
-                                                                            } else {
-                                                                                echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
-                                                                            }
+                                                                        if ($jobs_data->tax_percentage == $rate->rate) {
+                                                                            echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
                                                                         } else {
-                                                                            if ($rate->is_default == "1") {
-                                                                                echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
-                                                                            } else {
-                                                                                echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
-                                                                            } 
-                                                                        } 
+                                                                            echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                        }
+                                                                        // if ($SELECTED_TAX !== "0.00") {
+                                                                        //     if ($subtotal * ($rate->rate / 100) == $jobs_data->tax_rate) {
+                                                                        //         echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                        //     } else {
+                                                                        //         echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                        //     }
+                                                                        // } else {
+                                                                        //     if ($rate->is_default == "1") {
+                                                                        //         echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                        //     } else {
+                                                                        //     } 
+                                                                        // } 
                                                                     } 
                                                                 ?>
                                                             </select>
@@ -1074,7 +1078,8 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label id="invoice_overall_total"></label>
-                                                                <input step="any" type="hidden" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                                <!-- <input step="any" type="hidden" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                                <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -1100,7 +1105,8 @@
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label id="invoice_overall_total"></label>
-                                                                <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                                <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                                <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
                                                         </div>
                                                     <?php } ?>
@@ -1112,7 +1118,7 @@
                                                                 <label  id="invoice_overall_total">$0</label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                Commission Type: <input type="text" name="commission_type" value="" readonly>
+                                                                Commission Type: <input type="number" name="commission_type" value="" readonly>
                                                                 <br>
                                                                 Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly>
                                                                 <br>
@@ -1540,6 +1546,16 @@
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
                                                             <input class="d-none" type="number" step="any" name="input_totalJobGrossProfit" value="<?php echo ($jobs_data) ? $jobs_data->gross_profit : "0.0"; ?>">
+                                                        </div>
+                                                        <div class="col-lg-12 d-none">
+                                                            Customer Funded Amount/Purchase Price: <input id="CUSTOMER_FUNDED_AMOUNT" type="number" type="any" value="0"><br>
+                                                            Customer Pass Through Cost: <input id="CUSTOMER_PASS_THROUGH" type="number" type="any" value="0"><br>
+                                                            Sales Rep BS: <input id="SRBS_1" type="number" type="any" value="0"><br>
+                                                            Tech Rep 1 BS: <input id="TRBS_1" type="number" type="any" value="0"><br>
+                                                            Tech Rep 2 BS: <input id="TRBS_2" type="number" type="any" value="0"><br>
+                                                            Tech Rep 3 BS: <input id="TRBS_3" type="number" type="any" value="0"><br>
+                                                            Tech Rep 4 BS: <input id="TRBS_4" type="number" type="any" value="0"><br>
+                                                            Tech Rep 5 BS: <input id="TRBS_5" type="number" type="any" value="0"><br>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
@@ -2047,7 +2063,7 @@ add_footer_js(array(
 
 <script>
 var employee_id = $("#employee_id").val();
-function getUserInfo(employee_id){
+function getUserInfo(employee_id, type){
     $.ajax({
         url: '<?php echo base_url('users/getUserInfo'); ?>',
         type: 'POST',
@@ -2056,24 +2072,79 @@ function getUserInfo(employee_id){
             let json = $.parseJSON(data);
             let commission_type = "";
             let commission_percentage = 0.0;
+            if (json) {
+            // ========================
+            if (type == "sales_rep") {
+                (json.base_salary) ? $("#SRBS_1").val(json.base_salary).change() : $("#SRBS_1").val(0).change();
+                (json.commission_id == 0) ? commission_type = "Percentage (Gross, Net)" : "" ;
+                (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
+                (json.commission_percentage) ? commission_percentage = json.commission_percentage : commission_percentage = 0;
 
-            (json.commission_id == 0) ? commission_type = "Percentage (Gross, Net)" : "" ;
-            (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
-            (json.commission_percentage) ? commission_percentage = json.commission_percentage : commission_percentage = 0;
-
-            $("input[name='commission_type']").val(json.commission_id);
-            $("input[name='commission_percentage']").val(commission_percentage);
-            $(".COMMISSION_TYPE").text(commission_type);
+                $("input[name='commission_type']").val(json.commission_id).change();
+                $("input[name='commission_percentage']").val(commission_percentage).change();
+                $(".COMMISSION_TYPE").text(commission_type).change();
+            }
+            // ========================
+            if (type == "tech_rep_1") {
+                (json.base_salary) ? $("#TRBS_1").val(json.base_salary).change() : $("#TRBS_1").val(0).change()
+            }
+            // ========================
+            if (type == "tech_rep_2") {
+                (json.base_salary) ? $("#TRBS_2").val(json.base_salary).change() : $("#TRBS_2").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_3") {
+               (json.base_salary) ? $("#TRBS_3").val(json.base_salary).change() : $("#TRBS_3").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_4") {
+                (json.base_salary) ? $("#TRBS_4").val(json.base_salary).change() : $("#TRBS_4").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_5") {
+                (json.base_salary) ? $("#TRBS_5").val(json.base_salary).change() : $("#TRBS_5").val(0).change();
+            }
+            // ========================
+        }
         }
     });
 }
 
-$("#employee_id").on('change', function(event) {
-    let employee_id = $(this).val();
-    getUserInfo(employee_id);
-});
+$("#employee_id").on('change', function(event) { getUserInfo($(this).val(), "sales_rep"); });
+$("#EMPLOYEE_SELECT_2").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_1"); });
+$("#EMPLOYEE_SELECT_3").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_2"); });
+$("#EMPLOYEE_SELECT_4").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_3"); });
+$("#EMPLOYEE_SELECT_5").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_4"); });
+$("#EMPLOYEE_SELECT_6").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_5"); });
 
-getUserInfo(employee_id);
+
+$('#adjustment_mm, #CUSTOMER_FUNDED_AMOUNT, #CUSTOMER_PASS_THROUGH, #SRBS_1, #TRBS_1, #TRBS_2, #TRBS_3, #TRBS_4, #TRBS_5, input[name="commission_type"], input[name="commission_percentage"], input[name="commission_amount"], input[name="input_totalFixCost"], input[name="input_totalEquipmentMargin"], input[name="input_totalAmountCollected"], input[name="input_totalJobGrossProfit"], select[name="tax_percentage"]').on('change', function(event) {
+    let totalAmountCollected = $('input[name="total_amount"]').val();
+    let funded_amount = parseFloat($("#CUSTOMER_FUNDED_AMOUNT").val());
+    let net_margin = parseFloat($('input[name="input_totalEquipmentMargin"]').val());
+    let rep_pay = parseFloat($("#SRBS_1").val());
+    let tech_pay = parseFloat($("#TRBS_1").val()) + parseFloat($("#TRBS_2").val()) + parseFloat($("#TRBS_3").val()) + parseFloat($("#TRBS_4").val()) + parseFloat($("#TRBS_5").val());
+    let fix_cost = parseFloat($('input[name="input_totalFixCost"]').val());
+    let pass_through = parseFloat($("#CUSTOMER_PASS_THROUGH").val());
+    let monitoring_cost = parseFloat($('input[name="monthly_monitoring"]').val());
+    let JOB_GROSS_PROFIT = (funded_amount + net_margin) - (rep_pay + tech_pay + fix_cost + pass_through + monitoring_cost);
+
+    console.clear();
+    // console.log("==========");
+    // console.log("funded_amount: "+funded_amount);
+    // console.log("net_margin: "+net_margin);
+    // console.log("rep_pay: "+rep_pay);
+    // console.log("tech_pay: "+tech_pay);
+    // console.log("fix_cost: "+fix_cost);
+    // console.log("pass_through: "+pass_through);
+    // console.log("monitoring_cost: "+monitoring_cost);
+    // console.log("JOB GROSS PROFIT: "+JOB_GROSS_PROFIT);
+    // console.log("==========");
+    $("#totalJobGrossProfit").text(currencyFormatter(JOB_GROSS_PROFIT));
+    $("input[name='input_totalJobGrossProfit']").val(JOB_GROSS_PROFIT);
+    $("#totalAmountCollected").text(currencyFormatter(totalAmountCollected));
+    $("input[name='input_totalAmountCollected']").val(totalAmountCollected);
+});
 
 function currencyFormatter(amount) {
   if (isNaN(amount)) {
@@ -2093,7 +2164,8 @@ function getTotalCommission(){
     let totalCommission = 0.0;
     let totalMargin = 0.0;
     let salesRep = $("#employee_id option:selected").text();
-    let totalAmountCollected = $("#total2").val();
+    let totalAmountCollected = $('input[name="total_amount"]').val(); 
+    let totalTaxAmount = $("#tax_total_form_input").val();
     $('.job_items_tbl tr').each(function() {
       let commissionValue = $(this).find('td:eq(4) input').val();
       let marginValue = $(this).find('td:eq(5) input').val();
@@ -2105,10 +2177,10 @@ function getTotalCommission(){
     $("#totalRepCommissionProfit").text(currencyFormatter(totalCommission));
     $("#totalEquipmentMargin").text(currencyFormatter(totalMargin));
     $("#totalAmountCollected").text(currencyFormatter(totalAmountCollected));
+    // $("#totalJobGrossProfit").text(currencyFormatter(totalAmountCollected));
 
-    $("input[name='input_totalEquipmentMargin']").val(totalMargin.toFixed(2));
-    $("input[name='input_totalAmountCollected']").val(totalAmountCollected);
-    // $("input[name='input_totalJobGrossProfit']").val(totalAmountCollected.toFixed(2));
+    $("input[name='input_totalEquipmentMargin']").val(totalMargin.toFixed(2)).change();
+    $("input[name='input_totalAmountCollected']").val(totalAmountCollected).change();
 }
 
 const job_items_tbl = $('.job_items_tbl')[0];
@@ -2139,6 +2211,12 @@ $('input[name="CHECK_ACCOUNTNUMBER"], input[name="ACH_ACCOUNTNUMBER"]').on('inpu
 });
 
 $(document).ready(function() {
+    if(employee_id) { getUserInfo(employee_id, "sales_rep"); }
+    if($("#EMPLOYEE_SELECT_2").val()) { getUserInfo($("#EMPLOYEE_SELECT_2").val(), "tech_rep_1"); }
+    if($("#EMPLOYEE_SELECT_3").val()) { getUserInfo($("#EMPLOYEE_SELECT_3").val(), "tech_rep_2"); }
+    if($("#EMPLOYEE_SELECT_4").val()) { getUserInfo($("#EMPLOYEE_SELECT_4").val(), "tech_rep_3"); }
+    if($("#EMPLOYEE_SELECT_5").val()) { getUserInfo($("#EMPLOYEE_SELECT_5").val(), "tech_rep_4"); }
+    if($("#EMPLOYEE_SELECT_6").val()) { getUserInfo($("#EMPLOYEE_SELECT_6").val(), "tech_rep_5"); }
     $('select[name="BILLING_METHOD"]').val("<?php echo $jobs_data->BILLING_METHOD ?>").change();
     getTotalCommission();
 
@@ -2223,9 +2301,10 @@ $(function() {
         (TOTAL == 2) ? $(".REMOVE_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
     });
     $(".REMOVE_ASSIGN_EMPLOYEE").click(function(event) {
+        $("#TRBS_"+TOTAL).val(0);
         if (TOTAL > 1 && TOTAL <= 5) {
-            $('.ASSIGNED_TO_' + TOTAL).hide();
             $(".ASSIGNED_TO_" + TOTAL + "> select").val('').change();
+            $('.ASSIGNED_TO_' + TOTAL).hide();
             TOTAL--;
         }
         (TOTAL <= 4) ? $(".ADD_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';

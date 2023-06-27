@@ -944,6 +944,15 @@ class Workorder_model extends MY_Model
 		return $query->row();
     }
 
+    public function get_lead($id)
+    {
+        $this->db->select('*');
+		$this->db->from('ac_leadsource');
+		$this->db->where('ls_id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function getpayment($id)
     {
         $this->db->select('*');
@@ -955,14 +964,14 @@ class Workorder_model extends MY_Model
 
     public function get_workorder_data($id)
     {
-        // $this->db->select('*');
+        $this->db->select('*');
 		// $this->db->from('work_orders');
 		// $this->db->where('id', $id);
-        $this->db->select('*','ls_name','jbname');
+        // $this->db->select('*','ls_name','jbname');
 		$this->db->from('work_orders');
-        $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
+        // $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
         // $this->db->join('job_tags', 'work_orders.job_tags  = job_tags.id');
-		$this->db->where('work_orders.id', $id);
+		$this->db->where('id', $id);
 		$query = $this->db->get();
 		return $query->row();
     }
@@ -1899,7 +1908,7 @@ class Workorder_model extends MY_Model
     public function  getlead_source($company_id)
     {
         $this->db->distinct();
-        $this->db->select('ls_name');
+        $this->db->select('*');
 		$this->db->from('ac_leadsource');
 		// $this->db->where('fk_company_id', $company_id);
         $query = $this->db->get();
@@ -1919,6 +1928,15 @@ class Workorder_model extends MY_Model
     {
         $this->db->select('*');
 		$this->db->from('clients');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getjob_tag($id)
+    {
+        $this->db->select('*');
+		$this->db->from('job_tags');
 		$this->db->where('id', $id);
         $query = $this->db->get();
         return $query->row();
