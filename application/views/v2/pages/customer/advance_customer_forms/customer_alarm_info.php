@@ -14,6 +14,10 @@
     border-radius: 0.25rem;
     margin-top: 9px;
 }
+.customer-notes-list{
+    max-height: 200px;
+    overflow: auto;
+}
 </style>
 <div class="nsm-card primary">
     <?php if($company_id == 58): ?>
@@ -390,7 +394,7 @@
                     <field-custom-name default="Installer Code" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
+                    <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code ?  $alarm_info->install_code : ''; } ?>"/>
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -676,12 +680,8 @@
         </div>
     </div>
     <div class="nsm-card-content"><hr>
-        <div class="row form-line">
-            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5">
-            <?php foreach ($customer_notes as $notes) : ?>
-                <?= $notes->note; ?>
-            <?php endforeach; ?>
-            </textarea>
+        <div class="row form-line">   
+            <textarea type="text" class="form-controls" name="notes" id="notes" rows="5"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
         </div>
     </div>
 </div>
@@ -694,22 +694,24 @@
             </div>
             <div class="nsm-card-content">
                     <div class="row">
+                        <div class="customer-notes-list">
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tbody>
                             <?php foreach ($customer_notes as $note) : ?>
                                 <tr>
-                                    <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699">
-                                        <?= $note->datetime; ?>
+                                    <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699; padding:5px;background-color: #d9d9d9;border: 1px; border-style: solid; border-color: #999999;">
+                                        <i class='bx bxs-calendar-event'></i> <?= $note->datetime; ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px">
+                                    <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px;padding:5px">
                                         <?= $note->note; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
                     </div>
             </div>
         </div>
@@ -827,7 +829,7 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
+                <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship3">
                     <option><?= isset($contact3) ? $contact3->relation : "" ?></option>
                 </select>
             </div>

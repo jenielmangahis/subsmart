@@ -280,7 +280,7 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" >
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control">
                     <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                 </select>
                 <!-- <select name="system_type" id="system_type" class="input_select">

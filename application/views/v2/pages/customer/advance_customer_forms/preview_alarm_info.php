@@ -365,6 +365,29 @@
                 </div>
 
                 <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Program and Setup</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->otps) ? $alarm_info->otps : '---'; ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Equipment Cost</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->equipment_cost) ? $alarm_info->equipment_cost : '---'; ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Monhtly Monitoring Rate</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->monthly_monitoring) ? $alarm_info->monthly_monitoring : '---'; ?></label>
+                </div>
+
+
+
+                <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Account Cost</label>
                 </div>
                 <div class="col-12 col-md-6">
