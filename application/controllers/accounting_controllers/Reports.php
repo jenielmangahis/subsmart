@@ -15190,6 +15190,54 @@ class Reports extends MY_Controller {
 
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
 
+                    $amount = number_format(floatval(str_replace(',', '', $payment->amount_to_apply)), 2, '.', ',');
+
+                    if(!empty(get('divide-by-100'))) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($payment->payment_date)),
                         'transaction_type' => 'Payment',
@@ -16330,369 +16378,284 @@ class Reports extends MY_Controller {
                         'amount' => '',
                         'open_balance' => '',
                         'debit' => '',
-                        'credit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
+                        'credit' => '',
                         'online_banking' => '',
                         'tax_amount' => '',
                         'taxable_amount' => ''
                     ];
                 }
 
-                // $qtyAdjustments = $this->accounting_inventory_qty_adjustments_model->get_company_quantity_adjustments($filters);
-                // foreach($qtyAdjustments as $adjustment)
-                // {
-                //     $account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+                $qtyAdjustments = $this->accounting_inventory_qty_adjustments_model->get_company_quantity_adjustments($filters);
+                foreach($qtyAdjustments as $adjustment)
+                {
+                    $employee = $this->users_model->getUser($adjustment->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
 
-                //     $adjustmentItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
 
-                //     $subRows = [];
-                //     foreach($adjustmentItems as $adjustmentItem)
-                //     {
-                //         $item = $this->items_model->getItemById($adjustmentItem->product_id)[0];
-                //         $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+                    $adjustmentItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
 
-                //         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    if(count($adjustmentItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($adjustmentItems[0]->product_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustmentItems[0]->product_id);
 
-                //         $where = [
-                //             'account_id' => $invAssetAcc->id,
-                //             'transaction_type' => 'Inventory Qty Adjust',
-                //             'transaction_id' => $adjustment->id,
-                //             'is_item_category' => 1,
-                //             'child_id' => $adjustmentItem->id
-                //         ];
+                        $split = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id)->name;
+                    }
 
-                //         $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
+                        'transaction_type' => 'Inventory Qty Adjust',
+                        'to_print' => '',
+                        'num' => $adjustment->adjustment_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $adjustment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => '',
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
 
-                //         $rate = floatval(str_replace(',', '', $item->cost));
-                //         $rate = number_format(floatval($rate), 2);
-                //         $qty = number_format(floatval($adjustmentItem->change_in_quantity), 2);
+                $adjustments = $this->starting_value_model->get_by_company_id(logged('company_id'));
+                foreach($adjustments as $adjustment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
 
-                //         if(!empty($post['divide-by-100'])) {
-                //             $rate = number_format(floatval($rate) / 100, 2);
-                //             $qty = number_format(floatval($qty) / 100, 2);
-                //         }
+                    $item = $this->items_model->getItemById($adjustment->item_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                //         if(!empty($post['without-cents'])) {
-                //             $rate = number_format(floatval($rate), 0);
-                //             $qty = number_format(floatval($qty), 0);
-                //         }
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($adjustment->inv_asset_account);
 
-                //         if(!empty($post['negative-numbers'])) {
-                //             switch($post['negative-numbers']) {
-                //                 case '(100)' :
-                //                     if(substr($rate, 0, 1) === '-') {
-                //                         $rate = str_replace('-', '', $rate);
-                //                         $rate = '('.$rate.')';
-                //                     }
+                    $amount = number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',');
 
-                //                     if(substr($qty, 0, 1) === '-') {
-                //                         $qty = str_replace('-', '', $qty);
-                //                         $qty = '('.$qty.')';
-                //                     }
-                //                 break;
-                //                 case '100-' :
-                //                     if(substr($rate, 0, 1) === '-') {
-                //                         $rate = str_replace('-', '', $rate);
-                //                         $rate = $rate.'-';
-                //                     }
+                    if(!empty(get('divide-by-100'))) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
 
-                //                     if(substr($qty, 0, 1) === '-') {
-                //                         $qty = str_replace('-', '', $qty);
-                //                         $qty = $qty.'-';
-                //                     }
-                //                 break;
-                //             }
-                //         }
+                    if(!empty(get('without-cents'))) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
 
-                //         if(!empty($post['show-in-red'])) {
-                //             if(empty($post['negative-numbers'])) {
-                //                 if(substr($rate, 0, 1) === '-') {
-                //                     $rate = '<span class="text-danger">'.$rate.'</span>';
-                //                 }
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
 
-                //                 if(substr($qty, 0, 1) === '-') {
-                //                     $qty = '<span class="text-danger">'.$qty.'</span>';
-                //                 }
-                //             } else {
-                //                 switch($post['negative-numbers']) {
-                //                     case '(100)' :
-                //                         if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
-                //                             $rate = '<span class="text-danger">'.$rate.'</span>';
-                //                         }
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
 
-                //                         if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
-                //                             $qty = '<span class="text-danger">'.$qty.'</span>';
-                //                         }
-                //                     break;
-                //                     case '100-' :
-                //                         if(substr($rate, -1) === '-') {
-                //                             $rate = '<span class="text-danger">'.$rate.'</span>';
-                //                         }
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
+                        'transaction_type' => 'Inventory Starting Value',
+                        'to_print' => '',
+                        'num' => $adjustment->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $adjustment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $invAssetAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
 
-                //                         if(substr($qty, -1) === '-') {
-                //                             $qty = '<span class="text-danger">'.$qty.'</span>';
-                //                         }
-                //                     break;
-                //                 }
-                //             }
-                //         }
+                $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+                foreach($ccPayments as $ccPayment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+                    $ccAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
 
-                //         if(!empty($accTransacData)) {
-                //             $subRows[] = [
-                //                 'product_service' => $item->title,
-                //                 'qty' => $qty,
-                //                 'rate' => $rate,
-                //                 'account' => $invAssetAcc->name,
-                //                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
-                //             ];
-                //         }
-                //     }
+                    $employee = $this->users_model->getUser($ccPayment->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
 
-                //     $transactions[] = [
-                //         'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
-                //         'transaction_type' => 'Inventory Qty Adjust',
-                //         'to_print' => '',
-                //         'num' => $adjustment->adjustment_no,
-                //         'created_by' => '',
-                //         'last_modified_by' => '',
-                //         'due_date' => '',
-                //         'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
-                //         'open_balance' => '',
-                //         'payment_date' => '',
-                //         'method' => 'Inventory Qty Adjust',
-                //         'adj' => '',
-                //         'created' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
-                //         'name_type' => '',
-                //         'name_id' => '',
-                //         'name' => '',
-                //         'customer' => '',
-                //         'vendor' => '',
-                //         'employee' => '',
-                //         'product_service' => '',
-                //         'memo_description' => $adjustment->memo,
-                //         'qty' => '',
-                //         'rate' => '',
-                //         'account_id' => $account->id,
-                //         'account' => $account->name,
-                //         'ar_paid' => '',
-                //         'ap_paid' => '',
-                //         'clr' => '',
-                //         'check_printed' => '',
-                //         'debit' => '',
-                //         'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
-                //         'online_banking' => '',
-                //         'sub_rows' => $subRows
-                //     ];
-                // }
+                    $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                    $name = $vendor->display_name;
 
-                // $adjustments = $this->starting_value_model->get_by_company_id(logged('company_id'));
-                // foreach($adjustments as $adjustment)
-                // {
-                //     $account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
+                    $amount = number_format(floatval(str_replace(',', '', $ccPayment->total_amount)), 2, '.', ',');
 
-                //     $item = $this->items_model->getItemById($adjustment->item_id)[0];
-                //     $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+                    if(!empty(get('divide-by-100'))) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
 
-                //     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    if(!empty(get('without-cents'))) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
 
-                //     $where = [
-                //         'account_id' => $invAssetAcc->id,
-                //         'transaction_type' => 'Inventory Starting Value',
-                //         'transaction_id' => $adjustment->id,
-                //         'is_item_category' => 1,
-                //         'child_id' => $adjustmentItem->id
-                //     ];
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
 
-                //     $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
 
-                //     $rate = floatval(str_replace(',', '', $adjustment->initial_cost));
-                //     $rate = number_format(floatval($rate), 2);
-                //     $qty = number_format(floatval($adjustmentItem->initial_qty), 2);
-
-                //     if(!empty($post['divide-by-100'])) {
-                //         $rate = number_format(floatval($rate) / 100, 2);
-                //         $qty = number_format(floatval($qty) / 100, 2);
-                //     }
-
-                //     if(!empty($post['without-cents'])) {
-                //         $rate = number_format(floatval($rate), 0);
-                //         $qty = number_format(floatval($qty), 0);
-                //     }
-
-                //     if(!empty($post['negative-numbers'])) {
-                //         switch($post['negative-numbers']) {
-                //             case '(100)' :
-                //                 if(substr($rate, 0, 1) === '-') {
-                //                     $rate = str_replace('-', '', $rate);
-                //                     $rate = '('.$rate.')';
-                //                 }
-
-                //                 if(substr($qty, 0, 1) === '-') {
-                //                     $qty = str_replace('-', '', $qty);
-                //                     $qty = '('.$qty.')';
-                //                 }
-                //             break;
-                //             case '100-' :
-                //                 if(substr($rate, 0, 1) === '-') {
-                //                     $rate = str_replace('-', '', $rate);
-                //                     $rate = $rate.'-';
-                //                 }
-
-                //                 if(substr($qty, 0, 1) === '-') {
-                //                     $qty = str_replace('-', '', $qty);
-                //                     $qty = $qty.'-';
-                //                 }
-                //             break;
-                //         }
-                //     }
-
-                //     if(!empty($post['show-in-red'])) {
-                //         if(empty($post['negative-numbers'])) {
-                //             if(substr($rate, 0, 1) === '-') {
-                //                 $rate = '<span class="text-danger">'.$rate.'</span>';
-                //             }
-
-                //             if(substr($qty, 0, 1) === '-') {
-                //                 $qty = '<span class="text-danger">'.$qty.'</span>';
-                //             }
-                //         } else {
-                //             switch($post['negative-numbers']) {
-                //                 case '(100)' :
-                //                     if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
-                //                         $rate = '<span class="text-danger">'.$rate.'</span>';
-                //                     }
-
-                //                     if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
-                //                         $qty = '<span class="text-danger">'.$qty.'</span>';
-                //                     }
-                //                 break;
-                //                 case '100-' :
-                //                     if(substr($rate, -1) === '-') {
-                //                         $rate = '<span class="text-danger">'.$rate.'</span>';
-                //                     }
-
-                //                     if(substr($qty, -1) === '-') {
-                //                         $qty = '<span class="text-danger">'.$qty.'</span>';
-                //                     }
-                //                 break;
-                //             }
-                //         }
-                //     }
-
-                //     if(!empty($accTransacData)) {
-                //         $subRows = [
-                //             [
-                //                 'product_service' => $item->title,
-                //                 'qty' => $qty,
-                //                 'rate' => $rate,
-                //                 'account' => $invAssetAcc->name,
-                //                 'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
-                //             ]
-                //         ];
-                //     }
-
-                //     $transactions[] = [
-                //         'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
-                //         'transaction_type' => 'Inventory Starting Value',
-                //         'to_print' => '',
-                //         'num' => $adjustment->ref_no,
-                //         'created_by' => '',
-                //         'last_modified_by' => '',
-                //         'due_date' => '',
-                //         'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
-                //         'open_balance' => '',
-                //         'payment_date' => '',
-                //         'method' => 'Inventory Starting Value',
-                //         'adj' => '',
-                //         'created' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
-                //         'name_type' => '',
-                //         'name_id' => '',
-                //         'name' => '',
-                //         'customer' => '',
-                //         'vendor' => '',
-                //         'employee' => '',
-                //         'product_service' => '',
-                //         'memo_description' => $adjustment->memo,
-                //         'qty' => '',
-                //         'rate' => '',
-                //         'account_id' => $account->id,
-                //         'account' => $account->name,
-                //         'ar_paid' => '',
-                //         'ap_paid' => '',
-                //         'clr' => '',
-                //         'check_printed' => '',
-                //         'debit' => '',
-                //         'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
-                //         'online_banking' => '',
-                //         'sub_rows' => $subRows
-                //     ];
-                // }
-
-                // $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
-                // foreach($ccPayments as $ccPayment)
-                // {
-                //     $account = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
-                //     $ccAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
-
-                //     $employee = $this->users_model->getUser($ccPayment->created_by);
-                //     $createdBy = $employee->FName . ' ' . $employee->LName;
-
-                //     $where = [
-                //         'account_id' => $ccAcc->id,
-                //         'transaction_type' => 'CC Payment',
-                //         'transaction_id' => $ccPayment->id
-                //     ];
-
-                //     $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
-
-                //     if(!empty($accTransacData)) {
-                //         $subRows = [
-                //             [
-                //                 'account' => $ccAcc->name,
-                //                 'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
-                //                 'vendor' => $name
-                //             ]
-                //         ];
-                //     }
-
-                //     $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
-                //     $name = $vendor->display_name;
-
-                //     $transactions[] = [
-                //         'date' => date("m/d/Y", strtotime($ccPayment->date)),
-                //         'transaction_type' => 'Credit Card Payment',
-                //         'to_print' => '',
-                //         'num' => '',
-                //         'created_by' => $createdBy,
-                //         'last_modified_by' => '',
-                //         'due_date' => '',
-                //         'last_modified' => date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at)),
-                //         'open_balance' => '',
-                //         'payment_date' => '',
-                //         'method' => 'Credit Card Payment',
-                //         'adj' => '',
-                //         'created' => date("m/d/Y h:i:s A", strtotime($ccPayment->created_at)),
-                //         'name_type' => !empty($ccPayment->payee_id) ? 'vendor' : '',
-                //         'name_id' => $ccPayment->payee_id,
-                //         'name' => $name,
-                //         'customer' => '',
-                //         'vendor' => $name,
-                //         'employee' => '',
-                //         'product_service' => '',
-                //         'memo_description' => $ccPayment->memo,
-                //         'qty' => '',
-                //         'rate' => '',
-                //         'account_id' => $account->id,
-                //         'account' => $account->name,
-                //         'ar_paid' => '',
-                //         'ap_paid' => '',
-                //         'clr' => '',
-                //         'check_printed' => '',
-                //         'debit' => '',
-                //         'credit' => number_format(floatval(str_replace(',', '', $ccPayment->amount)), 2, '.', ','),
-                //         'online_banking' => '',
-                //         'sub_rows' => $subRows
-                //     ];
-                // }
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                        'transaction_type' => 'Credit Card Payment',
+                        'to_print' => '',
+                        'num' => '',
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($ccPayment->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at)),
+                        'name_type' => !empty($ccPayment->payee_id) ? 'vendor' : '',
+                        'name_id' => $ccPayment->payee_id,
+                        'name' => $name,
+                        'memo_description' => $ccPayment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $ccAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $ccPayment->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
 
                 usort($transactions, function($a, $b) use ($sort) {
                     switch($sort['column']) {
@@ -17110,7 +17073,303 @@ class Reports extends MY_Controller {
                     $this->page_data['filter_sales_rep'] = get('sales-rep');
                 }
 
-                $grouped = $transactions;
+                $grouped = [];
+                if(!empty(get('group-by')))
+                {
+                    switch(get('group-by')) {
+                        case 'account' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['account'], $b['account']); 
+                            });
+                        break;
+                        case 'name' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'transaction-type' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['transaction_type'], $b['transaction_type']);
+                            });
+                        break;
+                        case 'customer' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'vendor' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'employee' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'payment-method' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['payment_method'], $b['payment_method']);
+                            });
+                        break;
+                        case 'day' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'week' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'month' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'quarter' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'year' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                    }
+
+                    foreach($transactions as $transaction)
+                    {
+                        switch(get('group-by')) {
+                            case 'account' :
+                                $key = $transaction['account_id'];
+                                $name = $transaction['account'];
+                            break;
+                            case 'name' :
+                                $key = $transaction['name_key'].'-'.$transaction['name_id'];
+                                $name = $transaction['name'];
+                            break;
+                            case 'transaction-type' :
+                                $key = strtolower(str_replace(' ', '-', $transaction['transaction_type']));
+                                $name = $transaction['transaction_type'];
+                            break;
+                            case 'customer' :
+                                if($transaction['name_key'] === 'customer') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'vendor' :
+                                if($transaction['name_key'] === 'vendor') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'employee' :
+                                if($transaction['name_key'] === 'employee') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'payment-method' :
+                                $key = $transaction['payment_method_id'];
+                                $name = $transaction['payment_method'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $transaction['date']);
+                                $name = date("F j, Y", strtotime($transaction['date']));
+                            break;
+                            case 'week' :
+                                $ddate = $transaction['date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($transaction['date']));
+                                $name = date("F Y", strtotime($transaction['date']));
+                            break;
+                            case 'quarter' :
+                                $month = date("n", strtotime($transaction['date']));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($transaction['date']));
+                                        $name = "January - March ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($transaction['date']));
+                                        $name = "April - June ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($transaction['date']));
+                                        $name = "July - September ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($transaction['date']));
+                                        $name = "October - December ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                }
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($transaction['date']));
+                                $name = date("Y", strtotime($transaction['date']));
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['transactions'][] = $transaction;
+                            $amount = $grouped[$key]['amount_total'];
+                            $debit = $group[$key]['debit_total'];
+                            $credit = $group[$key]['credit_total'];
+                            $taxAmount = $group[$key]['tax_amount_total'];
+                            $taxableAmount = $group[$key]['taxable_amount_total'];
+
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($transaction['amount']), 2);
+                            $grouped[$key]['debit_total'] = number_format(floatval($debit) + floatval($transaction['debit']), 2);
+                            $grouped[$key]['credit_total'] = number_format(floatval($credit) + floatval($transaction['credit']), 2);
+                            $grouped[$key]['tax_amount_total'] = number_format(floatval($taxAmount) + floatval($transaction['tax_amount']), 2);
+                            $grouped[$key]['taxable_amount_total'] = number_format(floatval($taxableAmount) + floatval($transaction['taxable_amount']), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'amount_total' => $transaction['amount'],
+                                'debit_total' => $transaction['debit'],
+                                'credit_total' => $transaction['credit'],
+                                'tax_amount_total' => $transaction['tax_amount'],
+                                'taxable_amount_total' => $transaction['taxable_amount'],
+                                'transactions' => [
+                                    $transaction
+                                ]
+                            ];
+                        }
+                    }
+
+                    foreach($grouped as $key => $group)
+                    {
+                        $amount = $group['amount_total'];
+                        if(!empty(get('divide-by-100'))) {
+                            $amount = number_format(floatval($amount) / 100, 2);
+                        }
+    
+                        if(!empty(get('without-cents'))) {
+                            $amount = number_format(floatval($amount), 0);
+                        }
+    
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = '('.$amount.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = $amount.'-';
+                                    }
+                                break;
+                            }
+                        }
+    
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+    
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $grouped[$key]['amount_total'] = $amount;
+                    }
+                } else {
+                    $grouped = $transactions;
+                }
 
                 if(!empty(get('group-by'))) {
                     $this->page_data['group_by'] = get('group-by');
@@ -32593,6 +32852,3315 @@ class Reports extends MY_Controller {
                         <tbody>';
 
                         if($post['group-by'] === 'none') {
+                            foreach($transactions as $transaction)
+                            {
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $field)
+                                {
+                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                }
+                                $html .= '</tr>';
+                            }
+                        } else {
+                            foreach($transactions as $group)
+                            {
+                                $totalFields = [
+                                    'Amount',
+                                    'Debit',
+                                    'Credit',
+                                    'Tax Amount',
+                                    'Taxable Amount'
+                                ];
+                                
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td><b>'.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
+
+                                foreach($group['transactions'] as $transaction)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
+                            }
+                        }
+                    
+                    $html .= '</tbody>';
+                    $html .= '<tfoot>';
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                    $html .= '<tr>
+                            <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="'.count($post['fields']).'">
+                                <h4><b>Notes</b></h4>
+                                '.$reportNote->notes.'
+                            </td>
+                        </tr>';
+                    }
+
+                    $html .= '<tr style="text-align: '.$footerAlignment.'">
+                                <td colspan="'.count($post['fields']).'">
+                                    <p style="margin: 0">'.$date.'</p>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Transaction Detail by Account";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account.pdf', 'D');
+                }
+            break;
+            case 'Transaction List by Date' :
+                $start_date = date("m/01/Y");
+                $end_date = date("m/d/Y");
+                $report_period = date("F 1-j, Y");
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+
+                    switch($post['date']) {
+                        default : 
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $startYear = date("Y", strtotime($startDate));
+                            $endYear = date("Y", strtotime($endDate));
+
+                            if($startMonth === $endMonth && $startYear === $endYear) {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
+                            } else if($startYear !== $endYear) {
+                                $report_period = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            } else {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            }
+                        break;
+                        case 'all-dates' :
+                            $report_period = 'All Dates';
+                        break;
+                        case 'today' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'yesterday' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'this-month' :
+                            $report_period = date("F Y");
+                        break;
+                        case 'last-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'next-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'this-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'next-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'this-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'next-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'this-year-to-last-month' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'since-30-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-60-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-90-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-365-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                    }
+                }
+
+                $sort = [
+                    'column' => $post['column'] !== 'default' ? str_replace('-', '_', $post['column']) : 'date',
+                    'order' => $post['order']
+                ];
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $transactions = [];
+
+                $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+                foreach($invoices as $invoice)
+                {
+                    $employee = $this->users_model->getUser($invoice->user_id);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    if(count($invoiceItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($invoiceItems[0]->items_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItems[0]->items_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $itemAcc->name;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                        'transaction_type' => 'Invoice',
+                        'to_print' => '',
+                        'num' => $invoice->invoice_number,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($invoice->date_created)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($invoice->date_updated)),
+                        'name_type' => 'customer',
+                        'name_id' => $invoice->customer_id,
+                        'name' => $name,
+                        'memo_description' => $invoice->message_on_statement,
+                        'account_id' => $arAcc->id,
+                        'account' => $arAcc->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => $invoice->purchase_order,
+                        'po_status' => '',
+                        'ship_via' => $invoice->ship_via,
+                        'payment_method' => '',
+                        'terms_id' => $invoice->terms,
+                        'terms' => $this->accounting_terms_model->get_by_id($invoice->terms, logged('company_id'))->name,
+                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => floatval(str_replace(',', '', $invoice->balance)) > 0.00 ? 'Unpaid' : 'Paid',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
+                        'debit' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $invoice->taxes)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $creditMemos = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
+                foreach($creditMemos as $creditMemo)
+                {
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    $creditMemoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemo->id);
+
+                    $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($creditMemoItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($creditMemoItems[0]->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($creditMemoItems[0]->item_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $itemAcc->name;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                        'transaction_type' => 'Credit Memo',
+                        'to_print' => '',
+                        'num' => $creditMemo->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($creditMemo->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($creditMemo->updated_at)),
+                        'name_type' => 'customer',
+                        'name_id' => $creditMemo->customer_id,
+                        'name' => $name,
+                        'memo_description' => $creditMemo->message_on_statement,
+                        'account_id' => $arAcc->id,
+                        'account' => $arAcc->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => floatval(str_replace(',', '', $creditMemo->balance)) > 0.00 ? 'Unpaid' : 'Paid',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $creditmemo->tax_total)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $salesReceipts = $this->accounting_sales_receipt_model->get_all_by_company_id(logged('company_id'));
+                foreach($salesReceipts as $salesReceipt)
+                {
+                    $account = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
+
+                    $salesReceiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceipt->id);
+
+                    $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($salesReceiptItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($salesReceiptItems[0]->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($salesReceiptItems[0]->item_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $itemAcc->name;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                        'transaction_type' => 'Sales Receipt',
+                        'to_print' => '',
+                        'num' => $salesReceipt->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($salesReceipt->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($salesReceipt->updated_at)),
+                        'name_type' => 'customer',
+                        'name_id' => $salesReceipt->customer_id,
+                        'name' => $name,
+                        'memo_description' => $salesReceipt->message_on_statement,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $split,
+                        'ref_no' => $salesReceipt->reference_no,
+                        'sales_rep' => $salesReceipt->sales_rep,
+                        'po_number' => $salesReceipt->po_number,
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => $salesReceipt->payment_method,
+                        'payment_method' => $this->accounting_payment_methods_model->getById($salesReceipt->payment_method)->name,
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $salesReceipt->tax_total)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $refundReceipts = $this->accounting_refund_receipt_model->get_company_refund_receipts(['company_id' => logged('company_id')]);
+                foreach($refundReceipts as $refundReceipt)
+                {
+                    $account = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+
+                    $refundReceiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceipt->id);
+
+                    $customer = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($refundReceiptItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($refundReceiptItems[0]->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($refundReceiptItems[0]->item_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $itemAcc->name;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                        'transaction_type' => 'Refund Receipt',
+                        'to_print' => $refundReceipt->print_later,
+                        'num' => $refundReceipt->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($refundReceipt->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($refundReceipt->updated_at)),
+                        'name_type' => 'customer',
+                        'name_id' => $refundReceipt->customer_id,
+                        'name' => $name,
+                        'memo_description' => $refundReceipt->message_on_statement,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $split,
+                        'ref_no' => $refundReceipt->check_no,
+                        'sales_rep' => $refundReceipt->sales_rep,
+                        'po_number' => $refundReceipt->po_number,
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => $refundReceipt->payment_method,
+                        'payment_method' => $this->accounting_payment_methods_model->getById($refundReceipt->payment_method)->name,
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $refundReceipt->tax_total)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $delayedCredits = $this->accounting_delayed_credit_model->get_company_delayed_credits(['company_id' => logged('company_id')]);
+                foreach($delayedCredits as $delayedCredit)
+                {
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $delayedCredit->id);
+    
+                    if(count($items) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $account->name;
+                    }
+
+                    $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $amount = '-'.number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                        'transaction_type' => 'Credit',
+                        'to_print' => '',
+                        'num' => $delayedCredit->ref_no,
+                        'adj' => '',
+                        'posting' => 'No',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($delayedCredit->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($delayedCredit->updated_at)),
+                        'name_type' => 'customer',
+                        'name_id' => $delayedCredit->customer_id,
+                        'name' => $name,
+                        'memo_description' => $delayedCredit->message_on_statement,
+                        'account_id' => $arAcc->id,
+                        'account' => $arAcc->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $delayedCredit->tax_total)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $delayedCharges = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
+                foreach($delayedCharges as $delayedCharge)
+                {
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                    
+                    $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $delayedCharge->id);
+    
+                    if(count($items) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+
+                        if($itemAccDetails->income_account_id === null) {
+                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
+                        } else {
+                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        }
+
+                        $split = $account->name;
+                    }
+
+                    $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $amount = number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                        'transaction_type' => 'Charge',
+                        'to_print' => '',
+                        'num' => $delayedCharge->ref_no,
+                        'adj' => '',
+                        'posting' => 'No',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($delayedCharge->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($delayedCharge->updated_at)),
+                        'last_modified_by' => '',
+                        'name_type' => 'customer',
+                        'name_id' => $delayedCharge->customer_id,
+                        'name' => $name,
+                        'memo_description' => $delayedCharge->message_on_statement,
+                        'account_id' => $arAcc->id,
+                        'account' => $arAcc->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => number_format(floatval(str_replace(',', '', $delayedCharge->tax_total)), 2),
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $payments = $this->accounting_receive_payment_model->get_payments_by_company_id($filters['company_id']);
+                foreach($payments as $payment)
+                {
+                    $depositToAcc = $this->chart_of_accounts_model->getById($payment->deposit_to);
+
+                    $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+
+                    $amount = number_format(floatval(str_replace(',', '', $payment->amount_to_apply)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                        'transaction_type' => 'Payment',
+                        'to_print' => '',
+                        'num' => $payment->ref_no,
+                        'adj' => '',
+                        'posting' => 'No',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($payment->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($payment->updated_at)),
+                        'last_modified_by' => '',
+                        'name_type' => 'customer',
+                        'name_id' => $payment->customer_id,
+                        'name' => $name,
+                        'memo_description' => $payment->memo,
+                        'account_id' => $depositToAcc->id,
+                        'account' => $depositToAcc->name,
+                        'split' => $arAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => 'Paid',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $filters = [
+                    'company_id' => logged('company_id'),
+                    'start-date' => date("Y-m-d", strtotime($start_date)),
+                    'end-date' => date("Y-m-d", strtotime($end_date))
+                ];
+                if($post['date'] === 'all-dates') {
+                    unset($filters['start-date']);
+                    unset($filters['end-date']);
+                }
+                $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+                foreach($expenses as $expense)
+                {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                    $type = $paymentAccType->account_name === 'Credit Card' ? 'Credit Card Expense' : 'Expense';
+
+                    switch($expense->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($expense->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                        'transaction_type' => $type,
+                        'to_print' => '',
+                        'num' => $expense->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($expense->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($expense->updated_at)),
+                        'name_type' => $expense->payee_type,
+                        'name_id' => $expense->payee_id,
+                        'name' => $name,
+                        'memo_description' => $expense->memo,
+                        'account_id' => $paymentAcc->id,
+                        'account' => $paymentAcc->name,
+                        'split' => $this->account_col($expense->id, 'Expense'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => $expense->payment_method_id,
+                        'payment_method' => $this->accounting_payment_methods_model->getById($expense->payment_method_id)->name,
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $checks = $this->expenses_model->get_company_check_transactions($filters);
+                foreach($checks as $check)
+                {
+                    $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+                    switch($check->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($check->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($check->payment_date)),
+                        'transaction_type' => 'Check',
+                        'to_print' => $check->to_print,
+                        'num' => $check->check_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($check->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($check->updated_at)),
+                        'name_type' => $check->payee_type,
+                        'name_id' => $check->payee_id,
+                        'name' => $name,
+                        'memo_description' => $check->memo,
+                        'account_id' => $bankAcc->id,
+                        'account' => $bankAcc->name,
+                        'split' => $this->account_col($check->id, 'Check'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => $check->to_print === '1' ? 'To be printed' : 'Printed',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $bills = $this->expenses_model->get_company_bill_transactions($filters);
+                foreach($bills as $bill)
+                {
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                    $name = $payee->display_name;
+
+                    $amount = number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
+                    $openBalance = number_format(floatval(str_replace(',', '', $bill->remaining_balance)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                        $openBalance = number_format(floatval($openBalance) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                        $openBalance = number_format(floatval($openBalance), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+
+                                if(substr($openBalance, 0, 1) === '-') {
+                                    $openBalance = str_replace('-', '', $openBalance);
+                                    $openBalance = '('.$openBalance.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+
+                                if(substr($openBalance, 0, 1) === '-') {
+                                    $openBalance = str_replace('-', '', $openBalance);
+                                    $openBalance = $openBalance.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+
+                            if(substr($openBalance, 0, 1) === '-') {
+                                $openBalance = '<span class="text-danger">'.$openBalance.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+
+                                    if(substr($openBalance, 0, 1) === '(' && substr($openBalance, -1) === ')') {
+                                        $openBalance = '<span class="text-danger">'.$openBalance.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+
+                                    if(substr($openBalance, -1) === '-') {
+                                        $openBalance = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                        'transaction_type' => 'Bill',
+                        'to_print' => '',
+                        'num' => $bill->bill_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($bill->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($bill->updated_at)),
+                        'name_type' => 'vendor',
+                        'name_id' => $bill->vendor_id,
+                        'name' => $name,
+                        'memo_description' => $bill->memo,
+                        'account_id' => $apAcc->id,
+                        'account' => $apAcc->name,
+                        'split' => $this->account_col($bill->id, 'Bill'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => floatval(str_replace(',', '', $bill->remaining_balance)) > 0 ? 'Unpaid' : 'Paid',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => $openBalance,
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+                foreach($purchOrders as $purchOrder)
+                {
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $vendor = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
+                    $name = $vendor->display_name;
+
+                    $amount = number_format(floatval(str_replace(',', '', $purchOrder->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
+                        'transaction_type' => 'Purchase Order',
+                        'to_print' => '',
+                        'num' => $purchOrder->purchase_order_no,
+                        'adj' => '',
+                        'posting' => 'No',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($purchOrder->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($purchOrder->updated_at)),
+                        'name_type' => 'vendor',
+                        'name_id' => $purchOrder->vendor_id,
+                        'name' => $name,
+                        'memo_description' => $purchOrder->memo,
+                        'account_id' => $apAcc->id,
+                        'account' => $apAcc->name,
+                        'split' => $this->account_col($purchOrder->id, 'Purchase Order'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $purchOrder->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
+                foreach($vendorCredits as $vCredit)
+                {
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+
+                    $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                    $name = $payee->display_name;
+
+                    $amount = '-'.number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ',');
+                    $openBalance = '-'.number_format(floatval(str_replace(',', '', $vCredit->remaining_balance)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                        $openBalance = number_format(floatval($openBalance) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                        $openBalance = number_format(floatval($openBalance), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+
+                                if(substr($openBalance, 0, 1) === '-') {
+                                    $openBalance = str_replace('-', '', $openBalance);
+                                    $openBalance = '('.$openBalance.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+
+                                if(substr($openBalance, 0, 1) === '-') {
+                                    $openBalance = str_replace('-', '', $openBalance);
+                                    $openBalance = $openBalance.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+
+                            if(substr($openBalance, 0, 1) === '-') {
+                                $openBalance = '<span class="text-danger">'.$openBalance.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+
+                                    if(substr($openBalance, 0, 1) === '(' && substr($openBalance, -1) === ')') {
+                                        $openBalance = '<span class="text-danger">'.$openBalance.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+
+                                    if(substr($openBalance, -1) === '-') {
+                                        $openBalance = '<span class="text-danger">'.$openBalance.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                        'transaction_type' => 'Vendor Credit',
+                        'to_print' => '',
+                        'num' => $vCredit->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($vCredit->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($vCredit->updated_at)),
+                        'name_type' => 'vendor',
+                        'name_id' => $vCredit->vendor_id,
+                        'name' => $name,
+                        'memo_description' => $vCredit->memo,
+                        'account_id' => $apAcc->id,
+                        'account' => $apAcc->name,
+                        'split' => $this->account_col($vCredit->id, 'Vendor Credit'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => floatval(str_replace(',', '', $vCredit->remaining_balance)) > 0 ? 'Unpaid' : 'Paid',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => $openBalance,
+                        'debit' => number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $ccCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
+                foreach($ccCredits as $ccCredit)
+                {
+                    $account = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+                    switch($ccCredit->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($ccCredit->payee_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = '-'.number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                        'transaction_type' => 'Credit Card Credit',
+                        'to_print' => '',
+                        'num' => $ccCredit->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($ccCredit->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($ccCredit->updated_at)),
+                        'name_type' => $ccCredit->payee_type,
+                        'name_id' => $ccCredit->payee_id,
+                        'name' => $name,
+                        'memo_description' => $ccCredit->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $this->account_col($ccCredit->id, 'Credit Card Credit'),
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
+                foreach($billPayments as $billPayment)
+                {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                    $type = $paymentAccType->account_name === 'Credit Card' ? 'Bill Payment (Credit Card)' : 'Bill Payment (Check)';
+
+                    $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+                    $name = $payee->display_name;
+
+                    $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+
+                    $amount = '-'.number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                        'transaction_type' => $type,
+                        'to_print' => $billPayment->to_print_check_no,
+                        'num' => $billPayment->check_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($billPayment->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($billPayment->updated_at)),
+                        'name_type' => 'vendor',
+                        'name_id' => $billPayment->payee_id,
+                        'name' => $name,
+                        'memo_description' => $billPayment->memo,
+                        'account_id' => $paymentAcc->id,
+                        'account' => $paymentAcc->name,
+                        'split' => $apAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => 'Paid',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $deposits = $this->accounting_bank_deposit_model->get_company_deposits($filters);
+                foreach($deposits as $deposit)
+                {
+                    $employee = $this->users_model->getUser($deposit->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+
+                    $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+                    if(count($funds) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $split = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                    }
+
+                    if(count($funds) < 2 && count($funds) > 0) {
+                        switch($funds[0]->received_from_key) {
+                            case 'vendor':
+                                $receivedFrom = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                                $name = $receivedFrom->display_name;
+                            break;
+                            case 'customer':
+                                $receivedFrom = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
+                                $name = $receivedFrom->first_name . ' ' . $receivedFrom->last_name;
+                            break;
+                            case 'employee':
+                                $receivedFrom = $this->users_model->getUser($funds[0]->received_from_id);
+                                $name = $receivedFrom->FName . ' ' . $receivedFrom->LName;
+                            break;
+                        }
+                    } else {
+                        $name = '';
+                    }
+
+                    $amount = number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($deposit->date)),
+                        'transaction_type' => 'Deposit',
+                        'to_print' => '',
+                        'num' => '',
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($deposit->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($deposit->updated_at)),
+                        'name_type' => count($funds) < 2 && count($funds) > 0 ? $funds[0]->received_from_key : '',
+                        'name_id' => count($funds) < 2 && count($funds) > 0 ? $funds[0]->received_from_id : '',
+                        'name' => $name,
+                        'memo_description' => $deposit->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $split->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ','),
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $transfers = $this->expenses_model->get_company_transfers($filters);
+                foreach($transfers as $transfer)
+                {
+                    $employee = $this->users_model->getUser($transfer->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $account = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+
+                    $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+                    $amount = '-'.number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
+                        'transaction_type' => 'Transfer',
+                        'to_print' => '',
+                        'num' => '',
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($transfer->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($transfer->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $transfer->transfer_memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $transferToAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $journalEntries = $this->accounting_journal_entries_model->get_company_journal_entries($filters);
+                foreach($journalEntries as $journalEntry)
+                {
+                    $employee = $this->users_model->getUser($journalEntry->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+                    switch($entries[0]->name_key) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($entries[0]->name_id);
+                            $name = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($entries[0]->name_id);
+                            $name = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($entries[0]->name_id);
+                            $name = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                        'transaction_type' => 'Journal Entry',
+                        'to_print' => '',
+                        'num' => $journalEntry->journal_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($journalEntry->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($journalEntry->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $journalEntry->memo,
+                        'account_id' => '',
+                        'account' => '',
+                        'split' => '-Split-',
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => '',
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $qtyAdjustments = $this->accounting_inventory_qty_adjustments_model->get_company_quantity_adjustments($filters);
+                foreach($qtyAdjustments as $adjustment)
+                {
+                    $employee = $this->users_model->getUser($adjustment->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+
+                    $adjustmentItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+                    if(count($adjustmentItems) > 1) {
+                        $split = '-Split-';
+                    } else {
+                        $item = $this->items_model->getItemById($adjustmentItems[0]->product_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustmentItems[0]->product_id);
+
+                        $split = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id)->name;
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->adjustment_date)),
+                        'transaction_type' => 'Inventory Qty Adjust',
+                        'to_print' => '',
+                        'num' => $adjustment->adjustment_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $adjustment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $split,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => '',
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => '',
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $adjustments = $this->starting_value_model->get_by_company_id(logged('company_id'));
+                foreach($adjustments as $adjustment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
+
+                    $item = $this->items_model->getItemById($adjustment->item_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($adjustment->inv_asset_account);
+
+                    $amount = number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
+                        'transaction_type' => 'Inventory Starting Value',
+                        'to_print' => '',
+                        'num' => $adjustment->ref_no,
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($adjustment->created_at)),
+                        'created_by' => '',
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($adjustment->updated_at)),
+                        'name_type' => '',
+                        'name_id' => '',
+                        'name' => '',
+                        'memo_description' => $adjustment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $invAssetAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+                foreach($ccPayments as $ccPayment)
+                {
+                    $account = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+                    $ccAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
+
+                    $employee = $this->users_model->getUser($ccPayment->created_by);
+                    $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                    $name = $vendor->display_name;
+
+                    $amount = number_format(floatval(str_replace(',', '', $ccPayment->total_amount)), 2, '.', ',');
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $transactions[] = [
+                        'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                        'transaction_type' => 'Credit Card Payment',
+                        'to_print' => '',
+                        'num' => '',
+                        'adj' => '',
+                        'posting' => 'Yes',
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($ccPayment->created_at)),
+                        'created_by' => $createdBy,
+                        'last_modified_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($ccPayment->updated_at)),
+                        'name_type' => !empty($ccPayment->payee_id) ? 'vendor' : '',
+                        'name_id' => $ccPayment->payee_id,
+                        'name' => $name,
+                        'memo_description' => $ccPayment->memo,
+                        'account_id' => $account->id,
+                        'account' => $account->name,
+                        'split' => $ccAcc->name,
+                        'ref_no' => '',
+                        'sales_rep' => '',
+                        'po_number' => '',
+                        'po_status' => '',
+                        'ship_via' => '',
+                        'payment_method_id' => '',
+                        'payment_method' => '',
+                        'terms_id' => '',
+                        'terms' => '',
+                        'due_date' => '',
+                        'customer_vendor_message' => '',
+                        'invoice_date' => '',
+                        'ar_paid' => '',
+                        'ap_paid' => '',
+                        'clr' => '',
+                        'check_printed' => '',
+                        'paid_by_mas' => '',
+                        'amount' => $amount,
+                        'open_balance' => '',
+                        'debit' => '',
+                        'credit' => number_format(floatval(str_replace(',', '', $ccPayment->total_amount)), 2, '.', ','),
+                        'online_banking' => '',
+                        'tax_amount' => '',
+                        'taxable_amount' => ''
+                    ];
+                }
+
+                usort($transactions, function($a, $b) use ($sort) {
+                    switch($sort['column']) {
+                        case 'date' :
+                            if($sort['order'] === 'asc') {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['create_date']) > strtotime($b['create_date']);
+                                }
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            } else {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['create_date']) < strtotime($b['create_date']);
+                                }
+                                return strtotime($a['date']) < strtotime($b['date']);
+                            }
+                        break;
+                        case 'create-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['create_date']) > strtotime($b['create_date']);
+                            } else {
+                                return strtotime($a['create_date']) < strtotime($b['create_date']);
+                            }
+                        break;
+                        case 'last-modified' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['last_modified']) > strtotime($b['last_modified']);
+                            } else {
+                                return strtotime($a['last_modified']) < strtotime($b['last_modified']);
+                            }
+                        break;
+                        case 'due-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['due_date']) > strtotime($b['due_date']);
+                            } else {
+                                return strtotime($a['due_date']) < strtotime($b['due_date']);
+                            }
+                        break;
+                        case 'invoice-date' :
+                            if($sort['order'] === 'asc') {
+                                return strtotime($a['invoice_date']) > strtotime($b['invoice_date']);
+                            } else {
+                                return strtotime($a['invoice_date']) < strtotime($b['invoice_date']);
+                            }
+                        break;
+                        default :
+                            if($sort['order'] === 'asc') {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['create_date']) > strtotime($b['create_date']);
+                                }
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            } else {
+                                if($a['date'] === $b['date']) {
+                                    return strtotime($a['create_date']) < strtotime($b['create_date']);
+                                }
+                                return strtotime($a['date']) < strtotime($b['date']);
+                            }
+                        break;
+                    }
+                });
+
+                if($filter_date !== 'all-dates') {
+                    $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
+                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['transaction-type'])) {
+                    $transacType = $post['transaction-type'];
+                    $transactions = array_filter($transactions, function($v, $k) use ($transacType) {
+                        switch($transacType) {
+                            case 'credit-card-expense' :
+                                return $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'check' :
+                                return $v['transaction_type'] === 'Check';
+                            break;
+                            case 'invoice' :
+                                return $v['transaction_type'] === 'Invoice';
+                            break;
+                            case 'payment' :
+                                return $v['transaction_type'] === 'Payment';
+                            break;
+                            case 'journal-entry' :
+                                return $v['transaction_type'] === 'Journal Entry';
+                            break;
+                            case 'bill' :
+                                return $v['transaction_type'] === 'Bill';
+                            break;
+                            case 'credit-card-credit' :
+                                return $v['transaction_type'] === 'Credit Card Credit';
+                            break;
+                            case 'vendor-credit' :
+                                return $v['transaction_type'] === 'Vendor Credit';
+                            break;
+                            case 'bill-payment-check' :
+                                return $v['transaction_type'] === 'Bill Payment (Check)';
+                            break;
+                            case 'bill-payment-credit-card' :
+                                return $v['transaction_type'] === 'Bill Payment (Credit Card)';
+                            break;
+                            case 'transfer' :
+                                return $v['transaction_type'] === 'Transfer';
+                            break;
+                            case 'deposit' :
+                                return $v['transaction_type'] === 'Deposit';
+                            break;
+                            case 'cash-expense' :
+                                return $v['transaction_type'] === 'Expense';
+                            break;
+                            case 'sales-receipt' :
+                                return $v['transaction_type'] === 'Sales Receipt';
+                            break;
+                            case 'credit-memo' :
+                                return $v['transaction_type'] === 'Credit Memo';
+                            break;
+                            case 'refund' :
+                                return $v['transaction_type'] === 'Refund';
+                            break;
+                            case 'inventory-qty-adjust' :
+                                return $v['transaction_type'] === 'Inventory Qty Adjust';
+                            break;
+                            case 'expense' :
+                                return $v['transaction_type'] === 'Expense' || $v['transaction_type'] === 'Credit Card Expense';
+                            break;
+                            case 'inventory-starting-value' :
+                                return $v['transaction_type'] === 'Inventory Starting Value';
+                            break;
+                            case 'credit-card-payment' :
+                                return $v['transaction_type'] === 'Credit Card Payment';
+                            break;
+                        }
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['account'])) {
+                    if(intval($post['account']) > 0) {
+                        $account = $this->chart_of_accounts_model->getById($post['account']);
+
+                        $filters = [
+                            'account_id' => $post['account']
+                        ];
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($filters) {
+                            return $v['account_id'] === $filters['account_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        $names = [
+                            'balance-sheet-accounts' => 'All Balance Sheet Accounts',
+                            'asset-accounts' => 'All Asset Accounts',
+                            'current-asset-accounts' => 'All Current Asset Accounts',
+                            'bank-accounts' => 'All Bank Accounts',
+                            'accounts-receivable-accounts' => 'All Accounts receivable (A/R) Accounts',
+                            'other-current-assets-accounts' => 'All Other Current Assets Accounts',
+                            'fixed-assets-accounts' => 'All Fixed Assets Accounts',
+                            'other-assets-accounts' => 'All Other Assets Accounts',
+                            'liability-accounts' => 'All Liability Accounts',
+                            'accounts-payable-accounts' => 'All Accounts payable (A/P) Accounts',
+                            'credit-card-accounts' => 'All Credit Card Accounts',
+                            'other-current-liabilities-accounts' => 'All Other Current Liabilities Accounts',
+                            'long-term-liabilities-accounts' => 'All Long Term Liabilities Accounts',
+                            'equity-accounts' => 'All Equity Accounts',
+                            'income-expense-accounts' => 'All Income/Expense Accounts',
+                            'income-accounts' => 'All Income Accounts',
+                            'cost-of-goods-sold-accounts' => 'All Cost of Goods Sold Accounts',
+                            'expenses-accounts' => 'All Expenses Accounts',
+                            'other-income-accounts' => 'All Other Income Accounts',
+                            'other-expense-accounts' => 'All Other Expense Accounts'
+                        ];
+
+                        $type = $post['account'];
+
+                        $accounts = array_filter($accounts, function($v, $k) use ($type) {
+                            switch($type) {
+                                case 'balance-sheet-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false || strpos($v['type'], 'Liabilities') !== false || $v['type'] === 'Equity' || $v['type'] === 'Credit Card';
+                                break;
+                                case 'asset-account' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || strpos($v['type'], 'Assets') !== false;
+                                break;
+                                case 'current-asset-accounts' :
+                                    return $v['type'] === 'Bank' || $v['type'] === 'Accounts receivable (A/R)' || $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'bank-accounts' :
+                                    return $v['type'] === 'Bank';
+                                break;
+                                case 'accounts-receivable-accounts' :
+                                    return $v['type'] === 'Accounts receivable (A/R)';
+                                break;
+                                case 'other-current-assets-accounts' :
+                                    return $v['type'] === 'Other Current Assets';
+                                break;
+                                case 'fixed-assets-accounts' :
+                                    return $v['type'] === 'Fixed Assets';
+                                break;
+                                case 'other-assets-accounts' :
+                                    return $v['type'] === 'Other Assets';
+                                break;
+                                case 'liability-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || strpos($v['type'], 'Liabilities') !== false;
+                                break;
+                                case 'accounts-payable-accounts' :
+                                    return $v['type'] === 'Accounts payable (A/P)' || $v['type'] === 'Credit Card' || $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'credit-card-accounts' :
+                                    return $v['type'] === 'Credit Card';
+                                break;
+                                case 'other-current-liabilities-accounts' :
+                                    return $v['type'] === 'Other Current Liabilities';
+                                break;
+                                case 'long-term-liabilities-accounts' :
+                                    return $v['type'] === 'Long Term Liabilities';
+                                break;
+                                case 'equity-accounts' :
+                                    return $v['type'] === 'Equity';
+                                break;
+                                case 'income-expense-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold' || strpos($v['type'], 'Income') !== false || strpos($v['type'], 'Expense') !== false;
+                                break;
+                                case 'income-accounts' :
+                                    return $v['type'] === 'Income';
+                                break;
+                                case 'cost-of-goods-sold-accounts' :
+                                    return $v['type'] === 'Cost of Goods Sold';
+                                break;
+                                case 'expenses-accounts' :
+                                    return $v['type'] === 'Expenses';
+                                break;
+                                case 'other-income-accounts' :
+                                    return $v['type'] === 'Other Income';
+                                break;
+                                case 'other-expense-accounts' :
+                                    return $v['type'] === 'Other Expense';
+                                break;
+                            };
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                }
+
+                if(!empty($post['name'])) {
+                    $filterName = explode('-', $post['name']);
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filterName) {
+                        return $v['name_type'] === $filterName[0] && $v['name_id'] === $filterName[1];
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['payment-method'])) {
+                    $methodId = $post['payment-method'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($methodId) {
+                        return $v['payment_method_id'] === $methodId;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['terms'])) {
+                    $termsId = $post['terms'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($termsId) {
+                        return $v['terms_id'] === $termsId;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['due-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['due-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['due-date-to']))
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return strtotime($v['due_date']) >= strtotime($filters['start-date']) && strtotime($v['due_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['create-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['last-modified-date'])) {
+                    if($post['last-modified-date'] !== 'all-dates') {
+                        $filters = [
+                            'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
+                            'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
+                        ];
+    
+                        $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                            return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                        }, ARRAY_FILTER_USE_BOTH);
+                    }
+                }
+
+                if(!empty($post['check-printed'])) {
+                    $checkPrinted = $post['check-printed'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($checkPrinted) {
+                        if($checkPrinted === 'printed') {
+                            return $v['to_print'] === null;
+                        } else {
+                            return $v['to_print'] !== null;
+                        }
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['memo'])) {
+                    $filters = [
+                        'memo' => $post['memo']
+                    ];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+                        return stripos($v['memo_description'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['num'])) {
+                    $num = $post['num'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($num) {
+                        return $v['num'] === $num;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['amount'])) {
+                    $amount = $post['amount'];
+
+                    if(!empty($post['divide-by-100'])) {
+                        $amount = number_format(floatval($amount) / 100, 2);
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($amount) {
+                        return strpos($v['amount'], $amount) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['ship-via'])) {
+                    $shipVia = $post['ship-via'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($shipVia) {
+                        return $v['ship_via'] === $shipVia;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['po-number'])) {
+                    $poNumber = $post['po-number'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($poNumber) {
+                        return $v['po_number'] === $poNumber;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['sales-rep'])) {
+                    $salesRep = $post['sales-rep'];
+
+                    $transactions = array_filter($transactions, function($v, $k) use ($salesRep) {
+                        return $v['sales_rep'] === $salesRep;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $grouped = [];
+                if(!empty($post['group-by']))
+                {
+                    switch($post['group-by']) {
+                        case 'account' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['account'], $b['account']); 
+                            });
+                        break;
+                        case 'name' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'transaction-type' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['transaction_type'], $b['transaction_type']);
+                            });
+                        break;
+                        case 'customer' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'vendor' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'employee' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['name'], $b['name']);
+                            });
+                        break;
+                        case 'payment-method' :
+                            usort($transactions, function($a, $b) {
+                                return strcmp($a['payment_method'], $b['payment_method']);
+                            });
+                        break;
+                        case 'day' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'week' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'month' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'quarter' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                        case 'year' :
+                            usort($transactions, function($a, $b) {
+                                return strtotime($a['date']) > strtotime($b['date']);
+                            });
+                        break;
+                    }
+
+                    foreach($transactions as $transaction)
+                    {
+                        switch($post['group-by']) {
+                            case 'account' :
+                                $key = $transaction['account_id'];
+                                $name = $transaction['account'];
+                            break;
+                            case 'name' :
+                                $key = $transaction['name_key'].'-'.$transaction['name_id'];
+                                $name = $transaction['name'];
+                            break;
+                            case 'transaction-type' :
+                                $key = strtolower(str_replace(' ', '-', $transaction['transaction_type']));
+                                $name = $transaction['transaction_type'];
+                            break;
+                            case 'customer' :
+                                if($transaction['name_key'] === 'customer') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'vendor' :
+                                if($transaction['name_key'] === 'vendor') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'employee' :
+                                if($transaction['name_key'] === 'employee') {
+                                    $key = $transaction['name_id'];
+                                    $name = $transaction['name'];
+                                } else {
+                                    $key = 'not-specified';
+                                    $name = 'Not Specified';
+                                }
+                            break;
+                            case 'payment-method' :
+                                $key = $transaction['payment_method_id'];
+                                $name = $transaction['payment_method'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $transaction['date']);
+                                $name = date("F j, Y", strtotime($transaction['date']));
+                            break;
+                            case 'week' :
+                                $ddate = $transaction['date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($transaction['date']));
+                                $name = date("F Y", strtotime($transaction['date']));
+                            break;
+                            case 'quarter' :
+                                $month = date("n", strtotime($transaction['date']));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($transaction['date']));
+                                        $name = "January - March ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($transaction['date']));
+                                        $name = "April - June ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($transaction['date']));
+                                        $name = "July - September ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($transaction['date']));
+                                        $name = "October - December ".date("Y", strtotime($transaction['date']));
+                                    break;
+                                }
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($transaction['date']));
+                                $name = date("Y", strtotime($transaction['date']));
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['transactions'][] = $transaction;
+                            $amount = $grouped[$key]['amount_total'];
+                            $debit = $group[$key]['debit_total'];
+                            $credit = $group[$key]['credit_total'];
+                            $taxAmount = $group[$key]['tax_amount_total'];
+                            $taxableAmount = $group[$key]['taxable_amount_total'];
+
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($transaction['amount']), 2);
+                            $grouped[$key]['debit_total'] = number_format(floatval($debit) + floatval($transaction['debit']), 2);
+                            $grouped[$key]['credit_total'] = number_format(floatval($credit) + floatval($transaction['credit']), 2);
+                            $grouped[$key]['tax_amount_total'] = number_format(floatval($taxAmount) + floatval($transaction['tax_amount']), 2);
+                            $grouped[$key]['taxable_amount_total'] = number_format(floatval($taxableAmount) + floatval($transaction['taxable_amount']), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'amount_total' => $transaction['amount'],
+                                'debit_total' => $transaction['debit'],
+                                'credit_total' => $transaction['credit'],
+                                'tax_amount_total' => $transaction['tax_amount'],
+                                'taxable_amount_total' => $transaction['taxable_amount'],
+                                'transactions' => [
+                                    $transaction
+                                ]
+                            ];
+                        }
+                    }
+
+                    foreach($grouped as $key => $group)
+                    {
+                        $amount = $group['amount_total'];
+                        if(!empty(get('divide-by-100'))) {
+                            $amount = number_format(floatval($amount) / 100, 2);
+                        }
+    
+                        if(!empty(get('without-cents'))) {
+                            $amount = number_format(floatval($amount), 0);
+                        }
+    
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = '('.$amount.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, 0, 1) === '-') {
+                                        $amount = str_replace('-', '', $amount);
+                                        $amount = $amount.'-';
+                                    }
+                                break;
+                            }
+                        }
+    
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+    
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = '<span class="text-danger">'.$amount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($amount, -1) === '-') {
+                                            $amount = '<span class="text-danger">'.$amount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $grouped[$key]['amount_total'] = $amount;
+                    }
+                } else {
+                    $grouped = $transactions;
+                }
+
+                if($filter_date !== 'all-dates') {
+                    $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
+                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $transactions = $grouped;
+
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    if(empty($post['show-company-name'])) {
+                        $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-title'])) {
+                        $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-period'])) {
+                        $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    
+                    if(empty($post['group-by'])) {
+                        foreach($transactions as $transaction) {
+                            $data = [];
+    
+                            $style = [];
+                            foreach($post['fields'] as $field) {
+                                if($field === 'Rate' || $field === 'Amount' || $field === 'Balance' || $field === 'Qty') {
+                                    if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                    // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                        $style[] = ['color' => '#FF0000'];
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
+                                $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+    
+                            $row++;
+                        }
+                    } else {
+                        foreach($transactions as $group)
+                        {
+                            $groupHead = [];
+                            $groupTotal = [];
+
+                            $totalFields = [
+                                'Amount',
+                                'Debit',
+                                'Credit',
+                                'Tax Amount',
+                                'Taxable Amount'
+                            ];
+
+                            $groupHeaderStyle = [];
+                            $groupTotalStyle = [];
+                            foreach($post['fields'] as $field)
+                            {
+                                if(stripos($group[strtolower(str_replace(' ', '_', $field)).'_total'], '<span class="text-danger">') !== false) {
+                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('<span class="text-danger">', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('</span>', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+
+                                    $groupHeaderStyle[] = ['color' => '#FF0000', 'font-style' => 'bold'];
+                                    $groupTotalStyle[] = ['color' => '#FF0000', 'font-style' => 'bold', 'border' => 'top'];
+                                } else {
+                                    $groupHeaderStyle[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                    $groupTotalStyle[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'top'];
+                                }
+
+                                $groupHead[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                                $groupTotal[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                            }
+                            $groupHead[0] = $group['name'];
+                            $groupTotal[0] = 'Total for '.$group['name'];
+
+                            $writer->writeSheetRow('Sheet1', $groupHead, $groupHeaderStyle);
+                            $row++;
+
+                            foreach($group['transactions'] as $transaction)
+                            {
+                                $data = [];
+                                $style = [];
+                                foreach($post['fields'] as $field) {
+                                    if($field === 'Rates' || $field === 'Amount') {
+                                        if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                            $style[] = ['color' => '#FF0000'];
+                                        } else {
+                                            $style[] = ['color' => '#000000'];
+                                        }
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
+                                    $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                                }
+        
+                                $writer->writeSheetRow('Sheet1', $data, $style);
+        
+                                $row++;
+                            }
+
+                            $writer->writeSheetRow('Sheet1', $groupTotal, $groupTotalStyle);
+                            $row++;
+                        }
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', ['Notes'], ['font-style' => 'bold', 'border' => 'bottom']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', [$reportNote->notes]);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->writeSheetRow('Sheet1', []);
+                        $row += 1;
+                    }
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => $footerAlignment, 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Transaction_Detail_by_Account.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top:-40px;">
+                            <tr>
+                                <td style="text-align: '.$headerAlignment.'">';
+                                    $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                    $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                    $html .= empty($post['show-report-period']) ? '<h4 style="margin: 0">'.$report_period.'</h4>' : '';
+                                $html .= '</td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width="100%;>
+                        <thead>
+                            <tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                            }
+                        $html .= '</tr>
+                        </thead>
+                        <tbody>';
+
+                        if(empty($post['group-by'])) {
                             foreach($transactions as $transaction)
                             {
                                 $html .= '<tr>';
