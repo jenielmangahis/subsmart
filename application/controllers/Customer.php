@@ -1773,6 +1773,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');        
         $this->page_data['test']= getLoggedUserID();
         if(isset($userid) || !empty($userid)){
+            $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");

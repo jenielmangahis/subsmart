@@ -455,8 +455,9 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>">
+                    </div>                    
+                    <!-- <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>"> -->
+                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($office_info->rep_comm) ? number_format((float)$office_info->rep_comm,2,'.','') : 0.0 ?>">
                 </div>
             </div>
         </div>
