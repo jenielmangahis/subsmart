@@ -98,7 +98,7 @@
                     <input type="file" name="userfile" class="nsm-upload" accept="image/*">
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-8">
                 <label class="content-subtitle fw-bold d-block mb-2">Payscale</label>
                 <select class="nsm-field form-select" name="empPayscale" required>
                     <option value="" disabled>Select payscale</option>
@@ -107,13 +107,17 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <label class="content-subtitle fw-bold d-block mb-2">Base Salary</label>
                 <input class="form-control" name="empBaseSalary" type="number" step="any" min="0" value="<?php echo ($user->base_salary) ? $user->base_salary : "0"; ?>">
             </div>
-            <div class="col-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Compensation Base</label>
+            <div class="col-12 compensation_baseamount" style="display: none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Compensation&nbsp;<small class="text-muted fw-normal">(Base Amount)</small></label>
                 <input class="form-control" name="empCompensationBase" type="number" step="any" min="0" value="<?php echo ($user->compensation_base) ? $user->compensation_base : "0"; ?>">
+            </div>
+            <div class="col-12 compensation_hourlyrate" style="display: none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Compensation&nbsp;<small class="text-muted fw-normal">(Hourly Rate)</small></label>
+                <input class="form-control" name="empCompensationHourlyRate" type="number" step="any" min="0" value="<?php echo ($user->compensation_rate) ? $user->compensation_rate : "0"; ?>">
             </div>
             <div class="col-9">
                 <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
@@ -239,3 +243,22 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function compensationHideShow() {
+        let selectedOption = $('select[name="empPayscale"]').find('option:selected').text();
+        if (selectedOption.includes("Compensation (Base Amount)")) {
+            $('.compensation_baseamount').fadeIn('fast');
+            $('.compensation_hourlyrate').hide();
+        } else if(selectedOption.includes("Compensation (Hourly Rate)")) {
+            $('.compensation_baseamount').hide();
+            $('.compensation_hourlyrate').fadeIn('fast');
+        } else {
+            $('.compensation_baseamount').hide();
+            $('.compensation_hourlyrate').hide();
+        }
+    } compensationHideShow();
+
+    $('select[name="empPayscale"]').change(function() {
+        compensationHideShow();
+    });
+</script>

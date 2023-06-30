@@ -312,7 +312,7 @@
                                                             <input type="checkbox" name="col_chk" id="col-memo-description" class="form-check-input" <?=isset($columns) && in_array('Memo/Description', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label for="col-memo-description" class="form-check-label">Memo/Description</label>
                                                         </div>
-                                                </div>
+                                                    </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
                                                             <input type="checkbox" name="col_chk" id="col-account" class="form-check-input" <?=isset($columns) && in_array('Account', $columns) || !isset($columns) ? 'checked' : ''?>>
