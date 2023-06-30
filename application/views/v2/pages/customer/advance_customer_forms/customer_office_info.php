@@ -280,7 +280,7 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" >
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control">
                     <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                 </select>
                 <!-- <select name="system_type" id="system_type" class="input_select">
@@ -455,8 +455,9 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>">
+                    </div>                    
+                    <!-- <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>"> -->
+                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($office_info->rep_comm) ? number_format((float)$office_info->rep_comm,2,'.','') : 0.0 ?>">
                 </div>
             </div>
         </div>

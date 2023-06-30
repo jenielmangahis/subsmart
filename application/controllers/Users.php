@@ -1804,6 +1804,7 @@ class Users extends MY_Controller
 					'payscale_id' => $post['empPayscale'],
 					'base_salary' => $post['empBaseSalary'],
 					'compensation_base' => $post['empCompensationBase'],
+					'compensation_rate' => $post['empCompensationHourlyRate'],
 					'commission_id' => $post['empCommission'],
 					'commission_percentage' => $post['empCommissionPercentage'],
 					'user_type' => $post['user_type'],

@@ -81,6 +81,12 @@
                 <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->mail_add) ? $profile_info->mail_add : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Country</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->country) ? $profile_info->country : '---'; ?></label>
+            </div>
+            <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">City</label>
             </div>
             <div class="col-12 col-md-6">
@@ -108,7 +114,7 @@
                 <label class="content-subtitle fw-bold">County</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->country) ? $profile_info->country : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->county) ? $profile_info->county : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Subdivision</label>
@@ -147,13 +153,13 @@
                 <label class="content-subtitle fw-bold">Phone (H)</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? substr($profile_info->phone_h, 0, 13) : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? formatPhoneNumber($profile_info->phone_h) : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Phone (M)</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_h) ? substr($profile_info->phone_h, 20, 33) : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_m) ? formatPhoneNumber($profile_info->phone_m) : '---'; ?></label>
             </div>
         </div>
 
@@ -167,25 +173,26 @@
         <div class="row g-1 mb-5">
             <?php if (!empty($contacts)) : ?>
                 <?php foreach ($contacts as $key => $contact): ?>
-                    <?php if (!empty(trim($contact->name))): ?>
+                    <?php if (!empty(trim($contact->first_name))): ?>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold">Contact Name <?= $key + 1; ?></label>
+                            <label class="content-subtitle fw-bold"><?= $key + 1; ?>. Contact Name</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle"><?= $contact->name; ?></label>
+                            <label class="content-subtitle"><?= $contact->first_name . ' ' . $contact->last_name; ?></label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold">Contact Phone <?= $key + 1; ?></label>
+                            <label class="content-subtitle fw-bold" style="margin-left:15px;">Contact Phone</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle"><?= empty($contact->phone) ? '---' : $contact->phone; ?></label>
+                            <label class="content-subtitle"><?= empty($contact->phone) ? '---' : formatPhoneNumber($contact->phone); ?></label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold">Relationship <?= $key + 1; ?></label>
+                            <label class="content-subtitle fw-bold" style="margin-left:15px;">Relationship</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle"><?= empty($contact->relation) ? '---' : $contact->relation; ?></label>
                         </div>
+                        <hr />
                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php else : ?>

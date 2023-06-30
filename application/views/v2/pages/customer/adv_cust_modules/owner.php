@@ -674,6 +674,10 @@ $(document).on('submit', '#frm-send-sms-message', function(e){
 <script type="text/javascript">
     $(document).ready(function() {
         var count = 0;
+
+        $('#ownerModalSendMessage').modal({backdrop: 'static', keyboard: false});
+        $('#ownerModalSendMail').modal({backdrop: 'static', keyboard: false});
+
         $(".digit").on('click', function() {
 
           var num = ($(this).clone().children().remove().end().text());

@@ -419,6 +419,7 @@ class Customer extends MY_Controller
                     'ordering' => 'asc'
                 ),
             );
+            $emergency_contacts = $this->general->get_data_with_param($customer_contacts);            
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
@@ -1772,6 +1773,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');        
         $this->page_data['test']= getLoggedUserID();
         if(isset($userid) || !empty($userid)){
+            $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
@@ -1786,6 +1788,10 @@ class Customer extends MY_Controller
                 ),
                 'table' => 'acs_notes',
                 'select' => '*',
+                'order' => array(
+                    'order_by' => 'id',
+                    'ordering' => 'desc'
+                ),
             );
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
             //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
@@ -2038,6 +2044,7 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
+            $input_profile['notes'] = trim($input['notes']);
             $input_profile['custom_fields'] = json_encode($custom_fields_array);
             $input_profile['is_sync'] = 0;
             if( $input['bill_method'] == 'CC' ){
@@ -2068,8 +2075,10 @@ class Customer extends MY_Controller
             }   
 
             if( $proceed == 1 ){
+                $prev_notes_value = '';
                 if(isset($input['customer_id'])){
-                    $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);
+                    $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);                    
+                    $prev_notes_value = $customer[0]->notes;                    
                     if( $customer->adt_sales_project_id > 0 ){
                         $input_profile['is_sync'] = 0;
                     }
@@ -2101,9 +2110,9 @@ class Customer extends MY_Controller
                 if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
                     echo 'Error Occured on Saving Billing Information';
                     $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
-                }else {
+                }else {                    
                     if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
-                        $this->save_notes($input,$profile_id);
+                        $this->save_notes($prev_notes_value,$input,$profile_id);
                     }
                     //$this->generate_qr_image($profile_id);
                     if(isset($input['customer_id'])){
@@ -2492,14 +2501,14 @@ class Customer extends MY_Controller
         }
     }
 
-    public function save_notes($input,$id){
-        $input_notes = array();
-            // notes data
+    public function save_notes($prev_notes_value, $input,$id){
+        $input_notes = array();         
+        if( trim($prev_notes_value) != trim($input['notes']) ){
             $input_notes['fk_prof_id'] = $id;
             $input_notes['note'] = $input['notes'];
             $input_notes['datetime'] = date("m-d-Y h:i A");
             $this->general->add_($input_notes, 'acs_notes');
-
+        }           
     }
 
     public function add_data_sheet(){

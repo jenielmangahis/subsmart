@@ -44,16 +44,33 @@
             <div class="col-12 col-md-6">
                 <label class="content-subtitle">
                     <?php
-                    $sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
+                        $office_sales_rep_name = '---';
+                        if( $office_info->fk_sales_rep_office > 0 ){
+                            $salesRep = get_user_by_id($office_info->fk_sales_rep_office);
+                            if( $salesRep ){
+                                $office_sales_rep_name = $salesRep->FName . ' ' . $salesRep->LName;
+                            }
+                        }                    
                     ?>
-                    <?= $sales_rep->FName . ' ' . $sales_rep->LName; ?>
+                    <?= $office_sales_rep_name; ?>
                 </label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Technician</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->technician) ?  $office_info->technician : '---' ?></label>
+                <label class="content-subtitle">
+                    <?php
+                        $office_tech_name = '---';
+                        if( $office_info->technician > 0 ){
+                            $officeTech = get_user_by_id($office_info->technician);
+                            if( $officeTech ){
+                                $office_tech_name = $officeTech->FName . ' ' . $officeTech->LName;
+                            }
+                        }                    
+                    ?>
+                    <?= $office_tech_name; ?>                        
+                </label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Install Date</label>
@@ -241,7 +258,8 @@
                     </label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">$<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.',',') : 0.0 ?></label>
+                    <!-- <label class="content-subtitle">$<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.',',') : 0.0 ?></label> -->
+                    <label class="content-subtitle">$<?php echo ($office_info->rep_comm) ? number_format((float)$office_info->rep_comm,2,'.',',') : 0.0 ?></label>
                 </div>
             </div>
             <div class="row p-0 field-custom-name-container">
@@ -311,7 +329,7 @@
                     </label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($office_info->tech_deduction) ? number_format((float)$office_info->price_per_point,2,'.',','): '---';?></label>
+                    <label class="content-subtitle">$<?= !empty($office_info->tech_deduction) ? number_format((float)$office_info->tech_deduction,2,'.',','): '0.00';?></label>
                 </div>
             </div>
             <div class="col-12"><hr></div>
