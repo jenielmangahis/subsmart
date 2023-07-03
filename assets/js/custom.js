@@ -45,7 +45,7 @@ function getplanItems(pid) {
 }
 
 // $(document).ready(function () {
-//   $(".form-validate").validate();
+//   $(".form-validate").validate();array('#test');
 //   //Initialize Select2 Elements
 //   $(".select2").select2();
 // });

@@ -3384,7 +3384,7 @@ class Reports extends MY_Controller {
                     usort($payments, function($a, $b) {
                         return strtotime($a->payment_date) < strtotime($b->payment_date);
                     });
-//
+
                     $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
                     $subRows = [];
                     foreach($invoiceItems as $invoiceItem)
@@ -6084,7 +6084,7 @@ class Reports extends MY_Controller {
                             ]
                         ];
                     }
-
+//
                     $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
                     $name = $vendor->display_name;
 
@@ -17618,179 +17618,208 @@ class Reports extends MY_Controller {
 
                     $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
 
-                    // $subRows = [];
-                    // foreach($invoiceItems as $invoiceItem)
-                    // {
-                    //     $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-                    //     $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+                    $subRows = [];
+                    foreach($invoiceItems as $invoiceItem)
+                    {
+                        $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                    //     $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
-                    //     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    //     $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
 
-                    //     $incomeRate = floatval(str_replace(',', '', $invoiceItem->cost));
-                    //     $incomeRate = number_format(floatval($incomeRate), 2);
-                    //     $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
-                    //     $rate = number_format(floatval($rate), 2);
+                        $incomeRate = floatval(str_replace(',', '', $invoiceItem->cost));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($invoiceItem->qty);
+                        $rate = number_format(floatval($rate), 2);
 
-                    //     $qty = '-'.number_format(floatval($invoiceItem->qty), 2);
-                    //     $expenseQty = number_format(floatval($invoiceItem->qty), 2);
+                        $qty = '-'.number_format(floatval($invoiceItem->qty), 2);
+                        $expenseQty = number_format(floatval($invoiceItem->qty), 2);
 
-                    //     if(!empty(get('divide-by-100'))) {
-                    //         $incomeRate = number_format(floatval($incomeRate) / 100, 2);
-                    //         $rate = number_format(floatval($rate) / 100, 2);
-                    //         $qty = number_format(floatval($qty) / 100, 2);
-                    //         $expenseQty = number_format(floatval($expenseQty) / 100, 2);
-                    //     }
-
-                    //     if(!empty(get('without-cents'))) {
-                    //         $incomeRate = number_format(floatval($incomeRate), 0);
-                    //         $rate = number_format(floatval($rate), 0);
-                    //         $qty = number_format(floatval($qty), 0);
-                    //         $expenseQty = number_format(floatval($expenseQty), 0);
-                    //     }
-
-                    //     if(!empty(get('negative-numbers'))) {
-                    //         switch(get('negative-numbers')) {
-                    //             case '(100)' :
-                    //                 if(substr($incomeRate, 0, 1) === '-') {
-                    //                     $incomeRate = str_replace('-', '', $incomeRate);
-                    //                     $incomeRate = '('.$incomeRate.')';
-                    //                 }
-
-                    //                 if(substr($rate, 0, 1) === '-') {
-                    //                     $rate = str_replace('-', '', $rate);
-                    //                     $rate = '('.$rate.')';
-                    //                 }
-
-                    //                 if(substr($qty, 0, 1) === '-') {
-                    //                     $qty = str_replace('-', '', $qty);
-                    //                     $qty = '('.$qty.')';
-                    //                 }
-
-                    //                 if(substr($expenseQty, 0, 1) === '-') {
-                    //                     $expenseQty = str_replace('-', '', $expenseQty);
-                    //                     $expenseQty = '('.$expenseQty.')';
-                    //                 }
-                    //             break;
-                    //             case '100-' :
-                    //                 if(substr($incomeRate, 0, 1) === '-') {
-                    //                     $incomeRate = str_replace('-', '', $incomeRate);
-                    //                     $incomeRate = $incomeRate.'-';
-                    //                 }
-
-                    //                 if(substr($rate, 0, 1) === '-') {
-                    //                     $rate = str_replace('-', '', $rate);
-                    //                     $rate = $rate.'-';
-                    //                 }
-
-                    //                 if(substr($qty, 0, 1) === '-') {
-                    //                     $qty = str_replace('-', '', $qty);
-                    //                     $qty = $qty.'-';
-                    //                 }
-
-                    //                 if(substr($expenseQty, 0, 1) === '-') {
-                    //                     $expenseQty = str_replace('-', '', $expenseQty);
-                    //                     $expenseQty = $expenseQty.'-';
-                    //                 }
-                    //             break;
-                    //         }
-                    //     }
-
-                    //     if(!empty(get('show-in-red'))) {
-                    //         if(empty(get('negative-numbers'))) {
-                    //             if(substr($incomeRate, 0, 1) === '-') {
-                    //                 $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
-                    //             }
-
-                    //             if(substr($rate, 0, 1) === '-') {
-                    //                 $rate = '<span class="text-danger">'.$rate.'</span>';
-                    //             }
-
-                    //             if(substr($qty, 0, 1) === '-') {
-                    //                 $qty = '<span class="text-danger">'.$qty.'</span>';
-                    //             }
-
-                    //             if(substr($expenseQty, 0, 1) === '-') {
-                    //                 $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
-                    //             }
-                    //         } else {
-                    //             switch(get('negative-numbers')) {
-                    //                 case '(100)' :
-                    //                     if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
-                    //                         $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
-                    //                     }
-
-                    //                     if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
-                    //                         $rate = '<span class="text-danger">'.$rate.'</span>';
-                    //                     }
-
-                    //                     if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
-                    //                         $qty = '<span class="text-danger">'.$qty.'</span>';
-                    //                     }
-
-                    //                     if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
-                    //                         $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
-                    //                     }
-                    //                 break;
-                    //                 case '100-' :
-                    //                     if(substr($incomeRate, -1) === '-') {
-                    //                         $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
-                    //                     }
-
-                    //                     if(substr($rate, -1) === '-') {
-                    //                         $rate = '<span class="text-danger">'.$rate.'</span>';
-                    //                     }
-
-                    //                     if(substr($qty, -1) === '-') {
-                    //                         $qty = '<span class="text-danger">'.$qty.'</span>';
-                    //                     }
-
-                    //                     if(substr($expenseQty, -1) === '-') {
-                    //                         $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
-                    //                     }
-                    //                 break;
-                    //             }
-                    //         }
-                    //     }
-
-                    //     $where = [
-                    //         'account_id' => $incomeAcc->id,
-                    //         'transaction_type' => 'Invoice',
-                    //         'transaction_id' => $invoice->id,
-                    //         'is_item_category' => 1,
-                    //         'child_id' => $invoiceItem->id
-                    //     ];
-
-                    //     $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
-
-                    //     if(!empty($accTransacData)) {
-                    //         $subRows[] = [
-                    //             'product_service' => $item->title,
-                    //             'qty' => $qty,
-                    //             'rate' => $incomeRate,
-                    //             'account' => $incomeAcc->name,
-                    //             'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
-                    //         ];
-                    //     }
-                    // }
-
-                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
-
-                    if(count($invoiceItems) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($invoiceItems[0]->items_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItems[0]->items_id);
-
-                        if($itemAccDetails->income_account_id === null) {
-                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
-                        $split = $itemAcc->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'customer' => $name,
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $incomeRate,
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'customer' => $name,
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'is_item_category' => 1,
+                            'child_id' => $invoiceItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'customer' => $name,
+                                'product_service' => $item->title,
+                                'qty' => $expenseQty,
+                                'rate' => $rate,
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'ar_paid' => floatval(str_replace(',', '', $invoice->balance)) > 0.00 ? 'Unpaid' : 'Paid'
+                            ];
+                        }
                     }
+
+                    $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
 
                     $amount = number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ',');
 
@@ -17885,19 +17914,204 @@ class Reports extends MY_Controller {
                     $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
-                    if(count($creditMemoItems) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($creditMemoItems[0]->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($creditMemoItems[0]->item_id);
+                    $subRows = [];
+                    foreach($creditMemoItems as $creditMemoItem)
+                    {
+                        $item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                        if($itemAccDetails->income_account_id === null) {
-                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $incomeRate = floatval(str_replace(',', '', $creditMemoItem->price));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($creditMemoItem->quantity);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($creditMemo->quantity), 2);
+                        $expenseQty = '-'.number_format(floatval($creditMemo->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
-                        $split = $itemAcc->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $incomeRate,
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemo->id,
+                            'is_item_category' => 1,
+                            'child_id' => $creditMemoItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $expenseQty,
+                                'rate' => $rate,
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
                     }
 
                     $amount = number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ',');
@@ -17979,7 +18193,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -17993,19 +18207,204 @@ class Reports extends MY_Controller {
                     $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
-                    if(count($salesReceiptItems) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($salesReceiptItems[0]->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($salesReceiptItems[0]->item_id);
+                    $subRows = [];
+                    foreach($salesReceiptItems as $salesReceiptItem)
+                    {
+                        $item = $this->items_model->getItemById($salesReceiptItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                        if($itemAccDetails->income_account_id === null) {
-                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $incomeRate = floatval(str_replace(',', '', $salesReceiptItem->price));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($salesReceiptItem->quantity);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = '-'.number_format(floatval($salesReceiptItem->quantity), 2);
+                        $expenseQty = number_format(floatval($salesReceiptItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
-                        $split = $itemAcc->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $incomeRate,
+                                'account' => $incomeAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $salesReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $expenseQty,
+                                'rate' => $rate,
+                                'account' => $expenseAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
                     }
 
                     $amount = number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ',');
@@ -18088,7 +18487,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $salesReceipt->total_amount)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18102,19 +18501,204 @@ class Reports extends MY_Controller {
                     $customer = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
-                    if(count($refundReceiptItems) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($refundReceiptItems[0]->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($refundReceiptItems[0]->item_id);
+                    $subRows = [];
+                    foreach($refundReceiptItems as $refundReceiptItem)
+                    {
+                        $item = $this->items_model->getItemById($refundReceiptItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                        if($itemAccDetails->income_account_id === null) {
-                            $itemAcc = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $itemAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $expenseAcc = $this->chart_of_accounts_model->getById($itemAccDetails->expense_account_id);
+
+                        $incomeRate = floatval(str_replace(',', '', $refundReceiptItem->price));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($refundReceiptItem->quantity);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($refundReceiptItem->quantity), 2);
+                        $expenseQty = '-'.number_format(floatval($refundReceiptItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                            $expenseQty = number_format(floatval($expenseQty) / 100, 2);
                         }
 
-                        $split = $itemAcc->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                            $expenseQty = number_format(floatval($expenseQty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = '('.$expenseQty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+
+                                    if(substr($expenseQty, 0, 1) === '-') {
+                                        $expenseQty = str_replace('-', '', $expenseQty);
+                                        $expenseQty = $expenseQty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+
+                                if(substr($expenseQty, 0, 1) === '-') {
+                                    $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, 0, 1) === '(' && substr($expenseQty, -1) === ')') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+
+                                        if(substr($expenseQty, -1) === '-') {
+                                            $expenseQty = '<span class="text-danger">'.$expenseQty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $where = [
+                            'account_id' => $incomeAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $incomeRate,
+                                'account' => $incomeAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceipt->id,
+                            'is_item_category' => 1,
+                            'child_id' => $refundReceiptItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $expenseQty,
+                                'rate' => $rate,
+                                'account' => $expenseAcc->name,
+                                'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'customer' => $name
+                            ];
+                        }
                     }
 
                     $amount = number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ',');
@@ -18197,7 +18781,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $refundReceipt->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18208,19 +18792,123 @@ class Reports extends MY_Controller {
 
                     $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $delayedCredit->id);
     
-                    if(count($items) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+                    $subRows = [];
+                    foreach($items as $delayedCreditItem)
+                    {
+                        $item = $this->items_model->getItemById($delayedCreditItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                        if($itemAccDetails->income_account_id === null) {
-                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+
+                        $incomeRate = floatval(str_replace(',', '', $delayedCreditItem->price));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($delayedCreditItem->quantity);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($delayedCreditItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
-                        $split = $account->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $incomeRate,
+                            'account' => $incomeAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $delayedCreditItem->total)), 2, '.', ','),
+                            'customer' => $name
+                        ];
                     }
 
                     $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
@@ -18306,7 +18994,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18316,20 +19004,124 @@ class Reports extends MY_Controller {
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
                     
                     $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $delayedCharge->id);
-    
-                    if(count($items) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($items[0]->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
 
-                        if($itemAccDetails->income_account_id === null) {
-                            $account = $this->chart_of_accounts_model->get_sales_of_product_income(logged('company_id'));
-                        } else {
-                            $account = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                    $subRows = [];
+                    foreach($items as $delayedChargeItem)
+                    {
+                        $item = $this->items_model->getItemById($delayedChargeItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+
+                        $incomeRate = floatval(str_replace(',', '', $delayedChargeItem->price));
+                        $incomeRate = number_format(floatval($incomeRate), 2);
+                        $rate = floatval(str_replace(',', '', $item->cost)) * floatval($delayedChargeItem->quantity);
+                        $rate = number_format(floatval($rate), 2);
+
+                        $qty = number_format(floatval($delayedChargeItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $incomeRate = number_format(floatval($incomeRate) / 100, 2);
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
                         }
 
-                        $split = $account->name;
+                        if(!empty(get('without-cents'))) {
+                            $incomeRate = number_format(floatval($incomeRate), 0);
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = '('.$incomeRate.')';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($incomeRate, 0, 1) === '-') {
+                                        $incomeRate = str_replace('-', '', $incomeRate);
+                                        $incomeRate = $incomeRate.'-';
+                                    }
+
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($incomeRate, 0, 1) === '-') {
+                                    $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                }
+
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($incomeRate, 0, 1) === '(' && substr($incomeRate, -1) === ')') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($incomeRate, -1) === '-') {
+                                            $incomeRate = '<span class="text-danger">'.$incomeRate.'</span>';
+                                        }
+
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $incomeRate,
+                            'account' => $incomeAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $delayedChargeItem->total)), 2, '.', ','),
+                            'customer' => $name
+                        ];
                     }
 
                     $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
@@ -18415,7 +19207,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18428,6 +19220,22 @@ class Reports extends MY_Controller {
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
                     $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                    $where = [
+                        'account_id' => $arAcc->id,
+                        'transaction_type' => 'Payment',
+                        'transaction_id' => $payment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $subRows = [
+                        [
+                            'account' => $arAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $name,
+                            'payment_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                        ]
+                    ];
 
                     $amount = number_format(floatval(str_replace(',', '', $payment->amount_to_apply)), 2, '.', ',');
 
@@ -18509,7 +19317,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18589,6 +19397,142 @@ class Reports extends MY_Controller {
                         }
                     }
 
+                    $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+                    $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = $expense->payee_type === 'customer' ? $name : '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expense->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'customer' => $customer,
+                            'vendor' => $expense->payee_type === 'vendor' ? $name : '',
+                            'employee' => $expense->payee_type === 'employee' ? $name : '',
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                        ];
+                    }
+
+                    foreach($items as $expenseItem)
+                    {
+                        $item = $this->items_model->getItemById($expenseItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expense->id,
+                            'is_item_category' => 1,
+                            'child_id' => $expenseItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $expenseItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($expenseItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'customer' => $expense->payee_type === 'customer' ? $name : '',
+                            'vendor' => $expense->payee_type === 'vendor' ? $name : '',
+                            'employee' => $expense->payee_type === 'employee' ? $name : '',
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $rate,
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($expense->payment_date)),
                         'transaction_type' => $type,
@@ -18621,7 +19565,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $expense->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18642,6 +19586,143 @@ class Reports extends MY_Controller {
                             $payee = $this->users_model->getUser($check->payee_id);
                             $name = $payee->FName . ' ' . $payee->LName;
                         break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
+                    $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = $expense->payee_type === 'customer' ? $name : '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $check->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'customer' => $customer,
+                            'vendor' => $expense->payee_type === 'vendor' ? $name : '',
+                            'employee' => $expense->payee_type === 'employee' ? $name : '',
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer
+                        ];
+                    }
+
+                    foreach($items as $checkItem)
+                    {
+                        $item = $this->items_model->getItemById($checkItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $check->id,
+                            'is_item_category' => 1,
+                            'child_id' => $checkItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $checkItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($checkItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'customer' => $check->payee_type === 'customer' ? $name : '',
+                            'vendor' => $check->payee_type === 'vendor' ? $name : '',
+                            'employee' => $check->payee_type === 'employee' ? $name : '',
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $rate,
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
                     }
 
                     $amount = number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
@@ -18724,7 +19805,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18734,6 +19815,139 @@ class Reports extends MY_Controller {
                     $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
                     $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                     $name = $payee->display_name;
+
+                    $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
+                    $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $bill->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer,
+                            'vendor' => $name
+                        ];
+                    }
+
+                    foreach($items as $billItem)
+                    {
+                        $item = $this->items_model->getItemById($billItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $bill->id,
+                            'is_item_category' => 1,
+                            'child_id' => $billItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $billItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($billItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'vendor' => $name,
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $rate,
+                            'account' => $invAssetAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
 
                     $amount = number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ',');
                     $openBalance = number_format(floatval(str_replace(',', '', $bill->remaining_balance)), 2, '.', ',');
@@ -18840,7 +20054,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $bill->total_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -18942,6 +20156,139 @@ class Reports extends MY_Controller {
 
                     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                     $name = $payee->display_name;
+
+                    $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
+                    $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vCredit->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer,
+                            'vendor' => $name,
+                        ];
+                    }
+
+                    foreach($items as $vCreditItem)
+                    {
+                        $item = $this->items_model->getItemById($vCreditItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vCredit->id,
+                            'is_item_category' => 1,
+                            'child_id' => $vCreditItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $vCreditItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($vCreditItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'vendor' => $name,
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $rate,
+                            'account' => $invAssetAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
+                    }
 
                     $amount = '-'.number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ',');
                     $openBalance = '-'.number_format(floatval(str_replace(',', '', $vCredit->remaining_balance)), 2, '.', ',');
@@ -19048,7 +20395,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $vCredit->total_amount)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19070,6 +20417,142 @@ class Reports extends MY_Controller {
                             $payee = $this->users_model->getUser($ccCredit->payee_id);
                             $name = $payee->FName . ' ' . $payee->LName;
                         break;
+                    }
+
+                    $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
+                    $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
+
+                    $subRows = [];
+                    foreach($categories as $category)
+                    {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                        $customer = $ccCredit->payee_type === 'customer' ? $name : '';
+                        if(!empty($category->customer_id)) {
+                            $customer = $this->accounting_customers_model->get_by_id($category->customer_id);
+                            $customer = $customer->first_name . ' ' . $customer->last_name;
+                        }
+
+                        $where = [
+                            'account_id' => $expenseAcc->id,
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $ccCredit->id,
+                            'is_category' => 1,
+                            'child_id' => $category->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $subRows[] = [
+                            'account' => $expenseAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer,
+                            'vendor' => $ccCredit->payee_type === 'vendor' ? $name : '',
+                            'employee' => $ccCredit->payee_type === 'employee' ? $name : ''
+                        ];
+                    }
+
+                    foreach($items as $ccCreditItem)
+                    {
+                        $item = $this->items_model->getItemById($ccCreditItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $ccCredit->id,
+                            'is_item_category' => 1,
+                            'child_id' => $ccCreditItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $ccCreditItem->rate));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($ccCreditItem->quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'customer' => $ccCredit->payee_type === 'customer' ? $name : '',
+                            'vendor' => $ccCredit->payee_type === 'vendor' ? $name : '',
+                            'employee' => $ccCredit->payee_type === 'employee' ? $name : '',
+                            'product_service' => $item->title,
+                            'qty' => $qty,
+                            'rate' => $rate,
+                            'account' => $invAssetAcc->name,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                        ];
                     }
 
                     $amount = '-'.number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ',');
@@ -19152,7 +20635,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $ccCredit->total_amount)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19168,6 +20651,23 @@ class Reports extends MY_Controller {
                     $name = $payee->display_name;
 
                     $apAcc = $this->chart_of_accounts_model->get_accounts_payable_account(logged('company_id'));
+                    $where = [
+                        'account_id' => $apAcc->id,
+                        'transaction_type' => 'Bill Payment',
+                        'transaction_id' => $billPayment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $subRows = [
+                        [
+                            'account' => $apAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'vendor' => $name,
+                            'payment_date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                            'ap_paid' => 'Paid'
+                        ]
+                    ];
 
                     $amount = '-'.number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ',');
 
@@ -19249,7 +20749,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $billPayment->amount_to_apply)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19262,6 +20762,97 @@ class Reports extends MY_Controller {
                     $account = $this->chart_of_accounts_model->getById($deposit->account_id);
 
                     $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+                    $subRows = [];
+                    foreach($funds as $fund)
+                    {
+                        $fundAcc = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                        $where = [
+                            'account_id' => $fundAcc->id,
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $deposit->id,
+                            'is_category' => 1,
+                            'child_id' => $fund->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $vendor = '';
+                        $customer = '';
+                        $employee = '';
+                        switch($fund->received_from_key) {
+                            case 'vendor':
+                                $receivedFrom = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                                $vendor = $receivedFrom->display_name;
+                            break;
+                            case 'customer':
+                                $receivedFrom = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                                $customer = $receivedFrom->first_name . ' ' . $receivedFrom->last_name;
+                            break;
+                            case 'employee':
+                                $receivedFrom = $this->users_model->getUser($fund->received_from_id);
+                                $employee = $receivedFrom->FName . ' ' . $receivedFrom->LName;
+                            break;
+                        }
+
+                        $fundAmount = number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',');
+
+                        if(!empty(get('divide-by-100'))) {
+                            $fundAmount = number_format(floatval($fundAmount) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $fundAmount = number_format(floatval($fundAmount), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($fundAmount, 0, 1) === '-') {
+                                        $fundAmount = str_replace('-', '', $fundAmount);
+                                        $fundAmount = '('.$fundAmount.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($fundAmount, 0, 1) === '-') {
+                                        $fundAmount = str_replace('-', '', $fundAmount);
+                                        $fundAmount = $fundAmount.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($fundAmount, 0, 1) === '-') {
+                                    $fundAmount = '<span class="text-danger">'.$fundAmount.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($fundAmount, 0, 1) === '(' && substr($fundAmount, -1) === ')') {
+                                            $fundAmount = '<span class="text-danger">'.$fundAmount.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($fundAmount, -1) === '-') {
+                                            $fundAmount = '<span class="text-danger">'.$fundAmount.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $subRows[] = [
+                            'account' => $fundAcc->name,
+                            'amount' => $fundAmount,
+                            'credit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'customer' => $customer,
+                            'vendor' => $vendor,
+                            'employee' => $employee
+                        ];
+                    }
 
                     if(count($funds) > 1) {
                         $split = '-Split-';
@@ -19368,7 +20959,7 @@ class Reports extends MY_Controller {
                         'debit' => number_format(floatval(str_replace(',', '', $deposit->total_amount)), 2, '.', ','),
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19382,7 +20973,25 @@ class Reports extends MY_Controller {
 
                     $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
 
-                    $amount = '-'.number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ',');
+                    $where = [
+                        'account_id' => $transferToAcc->id,
+                        'transaction_type' => 'Transfer',
+                        'transaction_id' => $transfer->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $amount = number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ',');
+
+                    $subRows = [
+                        [
+                            'account' => $transferToAcc->name,
+                            'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                            'amount' => $amount
+                        ]
+                    ];
+
+                    $amount = '-'.$amount;
 
                     if(!empty(get('divide-by-100'))) {
                         $amount = number_format(floatval($amount) / 100, 2);
@@ -19462,7 +21071,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => number_format(floatval(str_replace(',', '', $transfer->transfer_amount)), 2, '.', ','),
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19489,6 +21098,38 @@ class Reports extends MY_Controller {
                         break;
                     }
 
+                    $subRows = [];
+                    foreach($entries as $index => $entry)
+                    {
+                        if($index > 0) {
+                            $entryAcc = $this->chart_of_accounts_model->getById($entry->account_id);
+
+                            switch($entry->name_key) {
+                                case 'vendor':
+                                    $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
+                                    $name = $vendor->display_name;
+                                break;
+                                case 'customer':
+                                    $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
+                                    $name = $customer->first_name . ' ' . $customer->last_name;
+                                break;
+                                case 'employee':
+                                    $employee = $this->users_model->getUser($entry->name_id);
+                                    $name = $employee->FName . ' ' . $employee->LName;
+                                break;
+                            }
+
+                            $subRows[] = [
+                                'account' => $entryAcc->name,
+                                'customer' => $entry->name_key === 'customer' ? $name : '',
+                                'vendor' => $entry->name_key === 'vendor' ? $name : '',
+                                'employee' => $entry->name_key === 'employee' ? $name : '',
+                                'debit' => !empty($entry->debit) ? number_format(floatval(str_replace(',', '', $entry->debit)), 2, '.', ',') : '',
+                                'credit' => !empty($entry->credit) ? number_format(floatval(str_replace(',', '', $entry->credit)), 2, '.', ',') : ''
+                            ];
+                        }
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                         'transaction_type' => 'Journal Entry',
@@ -19502,15 +21143,15 @@ class Reports extends MY_Controller {
                         'name_type' => '',
                         'name_id' => '',
                         'name' => '',
-                        'customer' => '',
-                        'vendor' => '',
-                        'employee' => '',
+                        'customer' => $entries[0]->name_key === 'customer' ? $name : '',
+                        'vendor' => $entries[0]->name_key === 'vendor' ? $name : '',
+                        'employee' => $entries[0]->name_key === 'employee' ? $name : '',
                         'product_service' => '',
-                        'memo_description' => $journalEntry->memo,
+                        'memo_description' => $entries[0]->description,
                         'qty' => '',
                         'rate' => '',
-                        'account_id' => '',
-                        'account' => '',
+                        'account_id' => $account->id,
+                        'account' => $account->name,
                         'payment_method_id' => '',
                         'payment_method' => '',
                         'clr' => '',
@@ -19518,10 +21159,10 @@ class Reports extends MY_Controller {
                         'open_balance' => '',
                         'taxable' => '',
                         'billable' => '',
-                        'debit' => '',
-                        'credit' => '',
+                        'debit' => !empty($entries[0]->debit) ? number_format(floatval(str_replace(',', '', $entries[0]->debit)), 2, '.', ',') : '',
+                        'credit' => !empty($entries[0]->credit) ? number_format(floatval(str_replace(',', '', $entries[0]->credit)), 2, '.', ',') : '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19535,13 +21176,107 @@ class Reports extends MY_Controller {
 
                     $adjustmentItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
 
-                    if(count($adjustmentItems) > 1) {
-                        $split = '-Split-';
-                    } else {
-                        $item = $this->items_model->getItemById($adjustmentItems[0]->product_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustmentItems[0]->product_id);
+                    $subRows = [];
+                    foreach($adjustmentItems as $adjustmentItem)
+                    {
+                        $item = $this->items_model->getItemById($adjustmentItem->product_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-                        $split = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id)->name;
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                        $where = [
+                            'account_id' => $invAssetAcc->id,
+                            'transaction_type' => 'Inventory Qty Adjust',
+                            'transaction_id' => $adjustment->id,
+                            'is_item_category' => 1,
+                            'child_id' => $adjustmentItem->id
+                        ];
+
+                        $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                        $rate = floatval(str_replace(',', '', $item->cost));
+                        $rate = number_format(floatval($rate), 2);
+                        $qty = number_format(floatval($adjustmentItem->change_in_quantity), 2);
+
+                        if(!empty(get('divide-by-100'))) {
+                            $rate = number_format(floatval($rate) / 100, 2);
+                            $qty = number_format(floatval($qty) / 100, 2);
+                        }
+
+                        if(!empty(get('without-cents'))) {
+                            $rate = number_format(floatval($rate), 0);
+                            $qty = number_format(floatval($qty), 0);
+                        }
+
+                        if(!empty(get('negative-numbers'))) {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = '('.$rate.')';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = '('.$qty.')';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, 0, 1) === '-') {
+                                        $rate = str_replace('-', '', $rate);
+                                        $rate = $rate.'-';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '-') {
+                                        $qty = str_replace('-', '', $qty);
+                                        $qty = $qty.'-';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = '<span class="text-danger">'.$rate.'</span>';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = '<span class="text-danger">'.$qty.'</span>';
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(substr($rate, -1) === '-') {
+                                            $rate = '<span class="text-danger">'.$rate.'</span>';
+                                        }
+
+                                        if(substr($qty, -1) === '-') {
+                                            $qty = '<span class="text-danger">'.$qty.'</span>';
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(!empty($accTransacData)) {
+                            $subRows[] = [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ',')
+                            ];
+                        }
                     }
 
                     $transactions[] = [
@@ -19576,7 +21311,7 @@ class Reports extends MY_Controller {
                         'debit' => '',
                         'credit' => '',
                         'online_banking' => '',
-                        // 'sub_rows' => $subRows
+                        'sub_rows' => $subRows
                     ];
                 }
 
@@ -19589,6 +21324,90 @@ class Reports extends MY_Controller {
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
 
                     $invAssetAcc = $this->chart_of_accounts_model->getById($adjustment->inv_asset_account);
+
+                    $where = [
+                        'account_id' => $invAssetAcc->id,
+                        'transaction_type' => 'Inventory Starting Value',
+                        'transaction_id' => $adjustment->id,
+                        'is_item_category' => 1,
+                        'child_id' => $adjustmentItem->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
+
+                    $rate = floatval(str_replace(',', '', $adjustment->initial_cost));
+                    $rate = number_format(floatval($rate), 2);
+                    $qty = number_format(floatval($adjustmentItem->initial_qty), 2);
+
+                    if(!empty(get('divide-by-100'))) {
+                        $rate = number_format(floatval($rate) / 100, 2);
+                        $qty = number_format(floatval($qty) / 100, 2);
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        $rate = number_format(floatval($rate), 0);
+                        $qty = number_format(floatval($qty), 0);
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = str_replace('-', '', $rate);
+                                    $rate = '('.$rate.')';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = str_replace('-', '', $qty);
+                                    $qty = '('.$qty.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rate, 0, 1) === '-') {
+                                    $rate = str_replace('-', '', $rate);
+                                    $rate = $rate.'-';
+                                }
+
+                                if(substr($qty, 0, 1) === '-') {
+                                    $qty = str_replace('-', '', $qty);
+                                    $qty = $qty.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(substr($rate, 0, 1) === '-') {
+                                $rate = '<span class="text-danger">'.$rate.'</span>';
+                            }
+
+                            if(substr($qty, 0, 1) === '-') {
+                                $qty = '<span class="text-danger">'.$qty.'</span>';
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(substr($rate, 0, 1) === '(' && substr($rate, -1) === ')') {
+                                        $rate = '<span class="text-danger">'.$rate.'</span>';
+                                    }
+
+                                    if(substr($qty, 0, 1) === '(' && substr($qty, -1) === ')') {
+                                        $qty = '<span class="text-danger">'.$qty.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rate, -1) === '-') {
+                                        $rate = '<span class="text-danger">'.$rate.'</span>';
+                                    }
+
+                                    if(substr($qty, -1) === '-') {
+                                        $qty = '<span class="text-danger">'.$qty.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
 
                     $amount = number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',');
 
@@ -19638,6 +21457,19 @@ class Reports extends MY_Controller {
                         }
                     }
 
+                    if(!empty($accTransacData)) {
+                        $subRows = [
+                            [
+                                'product_service' => $item->title,
+                                'qty' => $qty,
+                                'rate' => $rate,
+                                'account' => $invAssetAcc->name,
+                                'amount' => $amount,
+                                'debit' => number_format(floatval(str_replace(',', '', $adjustment->total_amount)), 2, '.', ',')
+                            ]
+                        ];
+                    }
+
                     $transactions[] = [
                         'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                         'transaction_type' => 'Inventory Starting Value',
@@ -19682,6 +21514,14 @@ class Reports extends MY_Controller {
 
                     $employee = $this->users_model->getUser($ccPayment->created_by);
                     $createdBy = $employee->FName . ' ' . $employee->LName;
+
+                    $where = [
+                        'account_id' => $ccAcc->id,
+                        'transaction_type' => 'CC Payment',
+                        'transaction_id' => $ccPayment->id
+                    ];
+
+                    $accTransacData = $this->accounting_account_transactions_model->get_with_custom_where($where);
 
                     $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
                     $name = $vendor->display_name;
@@ -19732,6 +21572,17 @@ class Reports extends MY_Controller {
                                 break;
                             }
                         }
+                    }
+
+                    if(!empty($accTransacData)) {
+                        $subRows = [
+                            [
+                                'account' => $ccAcc->name,
+                                'amount' => $amount,
+                                'debit' => number_format(floatval(str_replace(',', '', $accTransacData->amount)), 2, '.', ','),
+                                'vendor' => $name
+                            ]
+                        ];
                     }
 
                     $transactions[] = [
@@ -38780,12 +40631,6 @@ class Reports extends MY_Controller {
                     $grouped = $transactions;
                 }
 
-                if($filter_date !== 'all-dates') {
-                    $transactions = array_filter($transactions, function($v, $k) use ($dateFilter) {
-                        return strtotime($v['date']) >= strtotime($dateFilter['start_date']) && strtotime($v['date']) <= strtotime($dateFilter['end_date']);
-                    }, ARRAY_FILTER_USE_BOTH);
-                }
-
                 $transactions = $grouped;
 
                 $companyName = $this->page_data['clients']->business_name;
@@ -38854,6 +40699,453 @@ class Reports extends MY_Controller {
 
                     
                     if(empty($post['group-by'])) {
+                        foreach($transactions as $transaction) {
+                            $data = [];
+    
+                            $style = [];
+                            foreach($post['fields'] as $field) {
+                                if($field === 'Rate' || $field === 'Amount' || $field === 'Balance' || $field === 'Qty') {
+                                    if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                    // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                        $style[] = ['color' => '#FF0000'];
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
+                                $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+    
+                            $row++;
+                        }
+                    } else {
+                        foreach($transactions as $group)
+                        {
+                            $groupHead = [];
+                            $groupTotal = [];
+
+                            $totalFields = [
+                                'Amount',
+                                'Debit',
+                                'Credit',
+                                'Tax Amount',
+                                'Taxable Amount'
+                            ];
+
+                            $groupHeaderStyle = [];
+                            $groupTotalStyle = [];
+                            foreach($post['fields'] as $field)
+                            {
+                                if(stripos($group[strtolower(str_replace(' ', '_', $field)).'_total'], '<span class="text-danger">') !== false) {
+                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('<span class="text-danger">', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('</span>', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+
+                                    $groupHeaderStyle[] = ['color' => '#FF0000', 'font-style' => 'bold'];
+                                    $groupTotalStyle[] = ['color' => '#FF0000', 'font-style' => 'bold', 'border' => 'top'];
+                                } else {
+                                    $groupHeaderStyle[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                    $groupTotalStyle[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'top'];
+                                }
+
+                                $groupHead[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                                $groupTotal[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                            }
+                            $groupHead[0] = $group['name'];
+                            $groupTotal[0] = 'Total for '.$group['name'];
+
+                            $writer->writeSheetRow('Sheet1', $groupHead, $groupHeaderStyle);
+                            $row++;
+
+                            foreach($group['transactions'] as $transaction)
+                            {
+                                $data = [];
+                                $style = [];
+                                foreach($post['fields'] as $field) {
+                                    if($field === 'Rates' || $field === 'Amount') {
+                                        if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                                        // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                                            $style[] = ['color' => '#FF0000'];
+                                        } else {
+                                            $style[] = ['color' => '#000000'];
+                                        }
+                                    } else {
+                                        $style[] = ['color' => '#000000'];
+                                    }
+                                    $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                                }
+        
+                                $writer->writeSheetRow('Sheet1', $data, $style);
+        
+                                $row++;
+                            }
+
+                            $writer->writeSheetRow('Sheet1', $groupTotal, $groupTotalStyle);
+                            $row++;
+                        }
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', ['Notes'], ['font-style' => 'bold', 'border' => 'bottom']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row += 1;
+                        $writer->writeSheetRow('Sheet1', [$reportNote->notes]);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->writeSheetRow('Sheet1', []);
+                        $row += 1;
+                    }
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => $footerAlignment, 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Transaction_Detail_by_Account.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top:-40px;">
+                            <tr>
+                                <td style="text-align: '.$headerAlignment.'">';
+                                    $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                    $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                    $html .= empty($post['show-report-period']) ? '<h4 style="margin: 0">'.$report_period.'</h4>' : '';
+                                $html .= '</td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width="100%;>
+                        <thead>
+                            <tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                            }
+                        $html .= '</tr>
+                        </thead>
+                        <tbody>';
+
+                        if(empty($post['group-by'])) {
+                            foreach($transactions as $transaction)
+                            {
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $field)
+                                {
+                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                }
+                                $html .= '</tr>';
+                            }
+                        } else {
+                            foreach($transactions as $group)
+                            {
+                                $totalFields = [
+                                    'Amount',
+                                    'Debit',
+                                    'Credit',
+                                    'Tax Amount',
+                                    'Taxable Amount'
+                                ];
+                                
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td><b>'.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
+
+                                foreach($group['transactions'] as $transaction)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $index => $field)
+                                {
+                                    if($index === 0) {
+                                        $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
+                                    } else {
+                                        $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                                    }
+                                }
+                                $html .= '</tr>';
+                            }
+                        }
+                    
+                    $html .= '</tbody>';
+                    $html .= '<tfoot>';
+                    if(!empty($reportNote) && !empty($reportNote->notes)) {
+                    $html .= '<tr>
+                            <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="'.count($post['fields']).'">
+                                <h4><b>Notes</b></h4>
+                                '.$reportNote->notes.'
+                            </td>
+                        </tr>';
+                    }
+
+                    $html .= '<tr style="text-align: '.$footerAlignment.'">
+                                <td colspan="'.count($post['fields']).'">
+                                    <p style="margin: 0">'.$date.'</p>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Transaction Detail by Account";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Transaction_Detail_by_Account.pdf', 'D');
+                }
+            break;
+            case 'Transaction List with Splits' :
+                $start_date = date("m/01/Y");
+                $end_date = date("m/d/Y");
+                $report_period = date("F 1-j, Y");
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+
+                    switch($post['date']) {
+                        default : 
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $startYear = date("Y", strtotime($startDate));
+                            $endYear = date("Y", strtotime($endDate));
+
+                            if($startMonth === $endMonth && $startYear === $endYear) {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
+                            } else if($startYear !== $endYear) {
+                                $report_period = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            } else {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            }
+                        break;
+                        case 'all-dates' :
+                            $report_period = 'All Dates';
+                        break;
+                        case 'today' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'yesterday' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'this-month' :
+                            $report_period = date("F Y");
+                        break;
+                        case 'last-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'next-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'this-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'next-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'this-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'next-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'this-year-to-last-month' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'since-30-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-60-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-90-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-365-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                    }
+                }
+
+                $sort = [
+                    'column' => $post['column'] !== 'default' ? str_replace('-', '_', $post['column']) : 'date',
+                    'order' => $post['order']
+                ];
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $transactions = [];
+
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    if(empty($post['show-company-name'])) {
+                        $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-title'])) {
+                        $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+                    if(empty($post['show-report-period'])) {
+                        $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    
+                    if($post['group-by'] === 'none') {
                         foreach($transactions as $transaction) {
                             $data = [];
     

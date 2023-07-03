@@ -1454,6 +1454,8 @@
                     //$('#upcoming-schedule-view-more-details').hide();                   
                 } else if( appointment_type == 'event' ) {
                     var url = base_url + "event/_quick_view_event";               
+                } else if( appointment_type == 'workorder' ) {
+                    var url = base_url + "workorder/_quick_view_details"; 
                 }
 
                 $('#modal-quick-access-calendar-schedule').modal('hide');
@@ -2678,9 +2680,12 @@
         }else if( schedule_type == 'event' ){
             var url = base_url + 'event/_quick_delete_event';
             var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore event data once deleted</b>'
+        }else if( schedule_type == 'workorder' ){
+            var url = base_url + 'workorder/_quick_delete_workorder';
+            var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore event data once deleted</b>'
         }else{
             var url = base_url + 'calendar/_quick_delete_appointment';
-            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore appointment data once deleted</b>';
+            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore workorder data once deleted</b>';
         }
 
         Swal.fire({
@@ -2734,6 +2739,8 @@
 
         if( schedule_type == 'job' ){
             location.href = base_url + 'job/new_job1/' + schedule_id;
+        }else if( schedule_type == 'workorder' ){
+            location.href = base_url + 'workorder/_edit/' + schedule_id;
         }else if( schedule_type == 'service_ticket' ){
             location.href = base_url + 'tickets/editDetails/' + schedule_id;
         }else if( schedule_type == 'tc-off' ){
@@ -2768,6 +2775,8 @@
         var appointment_id   = $(this).data('id');
         if( appointment_type == 'job' ){
             location.href = base_url + 'job/job_preview/' + appointment_id;
+        }else if( appointment_type == 'workorder' ){
+            location.href = base_url + 'workorder/view/' + appointment_id;
         }else if( appointment_type == 'ticket' || appointment_type == 'service_ticket' ){
             location.href = base_url + 'tickets/viewDetails/' + appointment_id;
         }else if( appointment_type == 'tc-off' ){
