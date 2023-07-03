@@ -566,14 +566,13 @@ span.sc-item {
                       <div id="" style="">
                           <!-- <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:100px;"> -->
                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-                            <img src="<?php 
-                            if($client_profile){
-                                $url = urlUpload('users/business_profile/' . $client_profile->id . '/' . $client_profile->business_image . '?' . time());
-                            }else{
-                                $url = urlUpload('users/business_profile/default.png');
-                            }
-                            echo $url;
-                            //echo base_url().''.$client_profile->business_logo; ?>"  style="max-width: 230px; max-height: 200px;" />
+                            <!-- <img src="<?php 
+                            // if($client_profile){
+                            //     $url = urlUpload('users/business_profile/' . $client_profile->id . '/' . $client_profile->business_image . '?' . time());
+                            // }else{
+                            //     $url = urlUpload('users/business_profile/default.png');
+                            // }
+                            // echo $url; ?>"  style="max-width: 230px; max-height: 200px;" /> -->
                           <!-- </div> -->
                           
                             <div class="col-xl-5 right" style="float: right">
@@ -815,7 +814,7 @@ span.sc-item {
                             <?php } ?>
                       </div>
 
-                        <div class="row">
+                        <!-- <div class="row">
                                                                 <div class=" col-md-12">
                                                                     <div class="work_nore">
                                                                         <h6>Signature</h6>
@@ -824,7 +823,6 @@ span.sc-item {
                                                                     </div>
                                                                 </div>
                                                                 <div class=" col-md-4">
-                                                                    <!-- <h6>Signature</h6> -->
                                                                     <a data-toggle="modal" data-target=".customerSignature" class="btn btn-success"> Add Signature</a>
                                                                     <div id="companyrep"></div>
 
@@ -832,7 +830,7 @@ span.sc-item {
                                            name="company_representative_approval_signature1a">
 
                                                                 </div>
-                            </div>
+                            </div> -->
                             
 
                   </div>

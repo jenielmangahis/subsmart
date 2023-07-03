@@ -1381,11 +1381,13 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
-    public function getlastInsertID(){
+    public function getlastInsertID()
+    {
+        $cid = getLoggedCompanyID();
 
         $this->db->select('*');
         $this->db->from('work_orders');
-        // $this->db->where('company_id', $company_id);
+        $this->db->where('company_id', $cid);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
 

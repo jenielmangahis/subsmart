@@ -7,7 +7,7 @@ include_once 'application/services/JobType.php';
 include_once 'application/services/Priority.php';
 include_once 'application/services/InvoiceCustomer.php';
 
-class Share_Link extends CI_Controller
+class Share_Link extends MY_P_Controller
 {
 
     public function __construct()
@@ -25,12 +25,13 @@ class Share_Link extends CI_Controller
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('Users_model', 'users_model');
+        $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         
         
-        $user_id = getLoggedUserID();
+        // $user_id = getLoggedUserID();
         $this->load->helper('functions');
         // add css and js file path so that they can be attached on this page dynamically
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
@@ -1561,11 +1562,13 @@ class Share_Link extends CI_Controller
     
     public function genview_invoice($id)
     {
-        $invoice = get_invoice_by_id($id);
+        // $invoice = get_invoice_by_id($id);
+        $invoice = $this->invoice_model->getinvoice($id);
+        
         // $user = get_user_by_id(logged('id'));
         // $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
         
-        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+        $this->page_data['clients'] = $this->invoice_model->getclientsData($invoice->company_id);
 
         // if (!empty($setting)) {
         //     foreach ($setting as $key => $value) {
@@ -1909,6 +1912,34 @@ class Share_Link extends CI_Controller
         }
 
         return $json_data;
+    }
+
+    public function estimateview($id)
+    {        
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Clients_model');
+
+        $estimate = $this->estimate_model->getById($id);
+        $company_id = $estimate->company_id;
+
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            // $client   = $this->Clients_model->get_company($company_id);
+            $client   = $this->Clients_model->getCompanyCompanyId($company_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['client'] = $client;
+            $this->page_data['estimate'] = $estimate;
+
+            // $this->page_data['items_data'] = $this->estimate_model->getItems($id);
+            $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
+            $this->page_data['items_dataOP1'] = $this->estimate_model->getItemlistByIDOption1($id);
+            $this->page_data['items_dataOP2'] = $this->estimate_model->getItemlistByIDOption2($id);
+
+            $this->page_data['items_dataBD1'] = $this->estimate_model->getItemlistByIDBundle1($id);
+            $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);
+
+            $this->load->view('estimate/publicview', $this->page_data);
     }
 }
 

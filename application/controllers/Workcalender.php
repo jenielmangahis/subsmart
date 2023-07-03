@@ -616,9 +616,11 @@ class Workcalender extends MY_Controller
         $this->load->model('EventTags_model');
         $this->load->model('Tickets_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('JobTags_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('TechnicianDayOffSchedule_model');
+        $this->load->model('Workorder_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -824,8 +826,13 @@ class Workcalender extends MY_Controller
         }
 
         //Jobs
+        $scheduled_workorder_ids = array();
         $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);        
         foreach ($jobs as $j) {
+            if( $j->work_order_id > 0 ){
+                $scheduled_workorder_ids[] = $j;
+            }
+
             if ($j->job_description != '') {
                 $starttime = $j->start_date . " " . $j->start_time;
                 $start_date_time = date('Y-m-d H:i:s', strtotime($j->start_date . " " . $j->start_time));
@@ -881,6 +888,68 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['eventOrderNum'] = $j->job_number;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = $j->job_description;
+                $resources_user_events[$inc]['customHtml'] = $custom_html;
+                $resources_user_events[$inc]['start'] = $start_date_time;
+                $resources_user_events[$inc]['end'] = $start_date_end;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+                $inc++;
+            }
+        }
+
+        //Scheduled Workorders        
+        foreach($scheduled_workorder_ids as $wid){
+            $workorder = $this->Workorder_model->getworkorder($wid->work_order_id);
+            if( $workorder ){                
+                $starttime = $wid->start_date . " " . $wid->start_time;
+                $start_date_time = date('Y-m-d H:i:s', strtotime($wid->start_date . " " . $wid->start_time));
+                $start_date_end  = date('Y-m-d H:i:s', strtotime($wid->end_date . " " . $wid->end_time));
+                $backgroundColor = "#38a4f8";
+                
+                if($workorder->event_color != ''){
+                    $backgroundColor = $workorder->event_color;
+                }
+
+                $colorSetting = $this->ColorSettings_model->getById($wid->event_color);
+                if($colorSetting){
+                    $backgroundColor = $colorSetting->color_code;
+                }
+
+                $custom_html = '<div class="calendar-title-header">';
+                $tags = '---';
+                if( $workorder->job_tags > 0 ){
+                    $jobTag = $this->JobTags_model->getById($workorder->job_tags);
+                    if( $jobTag ){
+                        $tags = $jobTag->name;
+                    }                    
+                }
+
+                $assigned_employees = array();
+                $assigned_employees[] = $workorder->employee_id;
+
+                $resourceIds = array();
+                $resourceIds[] = 'user' . $workorder->employee_id;                    
+                
+                if( $settings && $settings->display_customer_name ){                    
+                    if( $workorder->first_name != '' ||  $workorder->last_name != ''){
+                        $customer_name = $workorder->first_name . ' ' . $workorder->last_name;
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="workorder" data-id="'.$workorder->id.'" href="javascript:void(0);"><span>'.$workorder->work_order_number.' - '.$tags.' : '.$customer_name.'</span></a>';
+                    }else{
+                        $custom_html .= '<a class="quick-calendar-tile" data-type="workorder" data-id="'.$workorder->id.'" href="javascript:void(0);"><span>'.$workorder->work_order_number.' - '.$tags.'</span></a>';                        
+                    }
+                }else{
+                    $custom_html .= '<a class="quick-calendar-tile" data-type="workorder" data-id="'.$workorder->id.'" href="javascript:void(0);"><span>'.$workorder->work_order_number.' - '.$tags.'</span></a>';          
+                }
+                
+
+                $custom_html .= "</div>";                
+                
+                $resources_user_events[$inc]['eventId'] = $workorder->id;
+                $resources_user_events[$inc]['eventType'] = 'workorder';
+                $resources_user_events[$inc]['eventOrderNum'] = $workorder->work_order_number;
+                $resources_user_events[$inc]['resourceIds'] = $resourceIds;
+                $resources_user_events[$inc]['title'] = 'Workorder: ' . $workorder->work_order_number;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;

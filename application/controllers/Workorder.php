@@ -11779,6 +11779,58 @@ class Workorder extends MY_Controller
         // return $query;
         echo json_encode($query);
     }
+
+    public function ajax_quick_view_details()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('JobTags_model');
+        $this->load->model('workorder_model');
+
+        $post    = $this->input->post();
+        $comp_id = logged('company_id');        
+        $wid     = $post['appointment_id'];
+
+
+        $workorder = $this->workorder_model->getById($wid);
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $tags = '---';
+        if( $workorder->job_tags > 0 ){
+            $jobTag = $this->JobTags_model->getById($workorder->job_tags);
+            if( $jobTag ){
+                $tags = $jobTag->name;
+            }                    
+        }
+
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+        $this->page_data['agree_items']  = $this->workorder_model->get_agree_items($wid);
+        $this->page_data['customer']     = $this->AcsProfile_model->getByProfId($workorder->customer_id);
+        $this->page_data['workorder']    = $workorder;
+        $this->page_data['tags'] = $tags;
+        $this->load->view('v2/pages/workorder/ajax_quick_view_details', $this->page_data);
+    }
+
+    public function redirect_edit($wid)
+    {
+        $this->load->model('workorder_model');
+
+        $workorder = $this->workorder_model->getById($wid);
+        if( $workorder->work_order_type_id == '2' ){
+            redirect('workorder/editAlarm/' . $workorder->id);
+        }elseif( $workorder->work_order_type_id == '3' ) {
+            redirect('workorder/editWorkorderSolar/' . $workorder->id);
+        }elseif( $workorder->work_order_type_id == '4' ){
+            redirect('workorder/editInstallation/' . $workorder->id);
+        }else{
+            redirect('workorder/edit/' . $workorder->id);
+        }
+    }
 }
 
 
