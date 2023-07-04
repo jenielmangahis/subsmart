@@ -38,7 +38,7 @@
                                 $timestamp = time();
                                 ?>
                                 <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
-                                <input type="hidden" id="current_date" name="current_date" value="<?php echo @date('m-d-Y'); ?>">
+                                <input type="hidden" id="current_date" name="current_date" value="<?php echo date('Y-m-d'); ?>">
                                 <input type="hidden" name="wo_id" value="<?php foreach ($ids as $id) {
                                                                                 $add = $id->id + 1;
                                                                                 echo $add;

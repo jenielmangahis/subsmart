@@ -7637,6 +7637,8 @@ class Workorder extends MY_Controller
         $getItemsDetails = $this->workorder_model->getItemsDetails();
         $item_tax = $getItemsDetails->price * 0.075;
 
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('current_date'))); //current_date date_issued
+
         $new_data = array(
             'work_order_number'                     => $this->input->post('workorder_number'),
             'customer_id'                           => $this->input->post('customer_id'),
@@ -8487,7 +8489,7 @@ class Workorder extends MY_Controller
                 'payment_amount'                        => $this->input->post('payment_amount'),
                 'header'                                => $this->input->post('header'),
                 'date_issued'                           => $dateIssued,
-                // 'installation_date'                     => $this->input->post('installation_date'),
+                // 'installation_date'                     => $this->input->post('installation_date'), date_issued
 
                 'lead_source_id'                        => $this->input->post('lead_source'),
                 'panel_type'                            => $this->input->post('panel_type'),

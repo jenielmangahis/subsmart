@@ -641,9 +641,7 @@ $('input[name="col_chk"]').on('change', function() {
     var totalColumns = [
         'Amount',
         'Debit',
-        'Credit',
-        'Tax Amount',
-        'Taxable Amount'
+        'Credit'
     ];
 
     if($($('#reports-table thead tr td:visible')[0]).data().name === '') {
