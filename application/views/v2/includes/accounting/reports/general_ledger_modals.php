@@ -149,7 +149,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="32" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?>
+                                <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
                     </tfoot>
@@ -314,7 +314,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="32" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?>
+                                <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
                     </tfoot>
@@ -863,6 +863,14 @@
                                                     <input class="form-check-input" <?=!isset($show_time_prepared) ? 'checked' : ''?> type="checkbox" name="show_time_prepared" value="1" id="show-time-prepared">
                                                     <label class="form-check-label" for="show-time-prepared">
                                                         Time prepared
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=!isset($show_report_basis) ? 'checked' : ''?> type="checkbox" name="show_report_basis" value="1" id="show-report-basis">
+                                                    <label class="form-check-label" for="show-report-basis">
+                                                        Report basis (cash vs. accrual)
                                                     </label>
                                                 </div>
                                             </div>

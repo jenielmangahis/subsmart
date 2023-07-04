@@ -901,7 +901,8 @@ class Workcalender extends MY_Controller
         //Scheduled Workorders        
         foreach($scheduled_workorder_ids as $wid){
             $workorder = $this->Workorder_model->getworkorder($wid->work_order_id);
-            if( $workorder ){                
+
+            if( $workorder && $workorder->view_flag == 1 ){                
                 $starttime = $wid->start_date . " " . $wid->start_time;
                 $start_date_time = date('Y-m-d H:i:s', strtotime($wid->start_date . " " . $wid->start_time));
                 $start_date_end  = date('Y-m-d H:i:s', strtotime($wid->end_date . " " . $wid->end_time));
@@ -932,8 +933,8 @@ class Workcalender extends MY_Controller
                 $resourceIds[] = 'user' . $workorder->employee_id;                    
                 
                 if( $settings && $settings->display_customer_name ){                    
-                    if( $workorder->first_name != '' ||  $workorder->last_name != ''){
-                        $customer_name = $workorder->first_name . ' ' . $workorder->last_name;
+                    if( $workorder->acs_first_name != '' ||  $workorder->acs_last_name != ''){
+                        $customer_name = $workorder->acs_first_name . ' ' . $workorder->acs_last_name;
                         $custom_html .= '<a class="quick-calendar-tile" data-type="workorder" data-id="'.$workorder->id.'" href="javascript:void(0);"><span>'.$workorder->work_order_number.' - '.$tags.' : '.$customer_name.'</span></a>';
                     }else{
                         $custom_html .= '<a class="quick-calendar-tile" data-type="workorder" data-id="'.$workorder->id.'" href="javascript:void(0);"><span>'.$workorder->work_order_number.' - '.$tags.'</span></a>';                        

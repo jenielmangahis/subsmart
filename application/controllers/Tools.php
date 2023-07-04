@@ -222,7 +222,10 @@ class Tools extends MY_Controller {
             $company_id = logged('company_id');
             $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');
             if( $companyQuickBooksPayroll ){
-                $data_quickbooks = [                        
+                $data_quickbooks = [
+                    'qb_total_employee' => 0,
+                    'qb_total_employee_synced' => 0, 
+                    'qb_total_employee_faild_synced' => 0,                       
                     'status' => 1,
                     'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    
                     'qb_payroll_realm_id' => $this->input->get('realmId'),
@@ -232,6 +235,9 @@ class Tools extends MY_Controller {
             }else{
                 $data_quickbooks = [
                     'company_id' => $company_id,
+                    'qb_total_employee' => 0,
+                    'qb_total_employee_synced' => 0, 
+                    'qb_total_employee_faild_synced' => 0,
                     'api_name' => 'quickbooks_payroll',
                     'status' => 1,
                     'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    
@@ -1342,51 +1348,142 @@ class Tools extends MY_Controller {
         $this->load->library('QuickbooksApi');
         $this->load->model('CompanyApiConnector_model');
         $this->load->model('QbImportEmployeeLogs_model');
+        $this->load->model('QbImportTimesheetLogs_model');
         $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = '';
 
         $company_id = logged('company_id');
         $post = $this->input->post();
         $date_from = date("Y-m-d", strtotime($post['date_from']));
         $date_to   = date("Y-m-d", strtotime($post['date_to']));  
         $attendance_logs = $this->attendance_logs($date_from, $date_to);  
+        $total_employee   = 0;
+        $total_attendance = 0;
         if( $attendance_logs ){
+            $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');
             foreach($attendance_logs as $logs){
                 $importEmployeeLog = $this->QbImportEmployeeLogs_model->getByUserId($logs['user_id']);
+
+                //Create employee
                 if( !$importEmployeeLog ){
-                    $user = $this->Users_model->getUserByID($logs['user_id']);
-                    if( $user ){                        
-                        $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll'); 
-                        $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+                    $qb_employee_import = [
+                        'company_id' => $company_id,
+                        'user_id' => $logs['user_id'],
+                        'qb_user_id' => 0,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => ''
+                    ];                  
 
-                        //Update company refresh token
-                        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
-                        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+                    $this->QbImportEmployeeLogs_model->create($qb_employee_import);                    
+                }else{
+                    $qb_employee_import = [
+                        'qb_user_id' => 0,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => ''
+                    ];                  
 
-                        $user_data = [
-                            "GivenName" => $user->FName,
-                            "SSN" => "444-55-6666",
-                            "PrimaryAddr" => [
-                                "CountrySubDivisionCode" => $user->state,
-                                "City" => $user->city,
-                                "PostalCode" => $user->postal_code,
-                            ],
-                            "PrimaryPhone" => ["FreeFormNumber" =>  formatPhoneNumber($user->mobile)],
-                            "FamilyName" => $user->LName
-                        ];
-                        $employee = $this->quickbooksapi->create_employee($user_data, $token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);
-                    }                    
+                    $this->QbImportEmployeeLogs_model->update($importEmployeeLog->id, $qb_employee_import);
                 }
+                $total_employee++;
+
+                //Create timesheet
+                $qb_timesheet_import = [
+                    'company_id' => $company_id,
+                    'user_id' => $logs['user_id'],
+                    'qb_user_id' => 0,
+                    'qb_employee_name' => '',
+                    'qb_timesheet_id' => 0,
+                    'start_date' => date("Y-m-d", strtotime($logs['checkin'])),
+                    'start_time' => date('H:i:s', strtotime($logs['checkin'])),
+                    'end_date' => date("Y-m-d", strtotime($logs['checkout'])),
+                    'end_time' => date('H:i:s', strtotime($logs['checkout'])),
+                    'billable_status' => 'NotBillable',
+                    'taxable' => 0,
+                    'hourly_rate' => 0,
+                    'description' => 'Timesheet Attendance',
+                    'is_sync' => 0,
+                    'is_with_error' => 0,
+                    'error_message' => '',
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+                $this->QbImportTimesheetLogs_model->create($qb_timesheet_import);  
+                $total_attendance++;
             }
+
+            //Update qb api summary
+            $data_qb_summary = [
+                'qb_total_employee' => $total_employee,
+                'qb_total_employee_synced' => 0,
+                'qb_total_employee_failed_synced' => 0,
+                'qb_total_attendance' => $total_attendance,
+                'qb_total_attendance_synced' => 0,
+                'qb_total_attendance_failed_synced' => 0
+            ];
+
+            $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_qb_summary);
         }
 
-        
+        if( $total_employee > 0 ){
+            $is_success = 1;
+        }else{
+            $msg = 'Nothing to import';
+        }
+  
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
 
-        $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);                         
-        //Update company refresh token
-        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
-        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+        echo json_encode($json_data);
+    }  
 
-        
-        exit;
-    }
+    public function quickbooks_payroll_employee_logs()
+    {
+        $this->load->model('QbImportEmployeeLogs_model');
+
+        $company_id = logged('company_id');    
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'qb_import_employee_logs.is_with_error', 'value' => 1];
+            }
+            $employeeLogs = $this->QbImportEmployeeLogs_model->getAllByCompanyId($company_id, $search);            
+        }else{
+            $employeeLogs = $this->QbImportEmployeeLogs_model->getAllByCompanyId($company_id);
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['employeeLogs'] = $employeeLogs;
+        $this->load->view('v2/pages/tools/quickbooks_payroll_employee_logs', $this->page_data);
+    }  
+
+    public function quickbooks_payroll_timesheet_logs()
+    {
+        $this->load->model('QbImportTimesheetLogs_model');
+
+        $company_id = logged('company_id');    
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'qb_import_timesheet_logs.is_with_error', 'value' => 1];
+            }
+            $timesheetLogs = $this->QbImportTimesheetLogs_model->getAllByCompanyId($company_id, $search);            
+        }else{
+            $timesheetLogs = $this->QbImportTimesheetLogs_model->getAllByCompanyId($company_id);
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['timesheetLogs'] = $timesheetLogs;
+        $this->load->view('v2/pages/tools/quickbooks_payroll_timesheet_logs', $this->page_data);
+    }  
 }

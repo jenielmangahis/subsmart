@@ -137,6 +137,8 @@ class Cron_Api extends MYF_Controller {
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('JobTags_model');
+        $this->load->model('Workorder_model');
         $this->load->model('GoogleAccounts_model');
         $this->load->model('Users_model');
         $this->load->model('CalendarSettings_model');
@@ -468,6 +470,69 @@ class Cron_Api extends MYF_Controller {
                         $description .= "Job Description : ". $job_description ."\n";
                         $description .= "Notes : ". $job_notes ."\n";
                         $description .= $view_link . "\n";
+
+                        $is_valid = true;
+                    }else{
+                        $err_msg = 'Cannot find object data';
+                    }
+                    break;
+                case 'workorder':
+                    $calendar_type = $this->GoogleCalendar_model->calendarTypeJob();                    
+                    $workorder     = $this->Workorder_model->getworkorder($gs->object_id);
+                    $job           = $this->Jobs_model->get_specific_job_by_work_order_id($gs->object_id);
+                    if( $workorder && $job ){
+                        $tags = '---';
+                        if( $workorder->job_tags > 0 ){
+                            $jobTag = $this->JobTags_model->getById($workorder->job_tags);
+                            if( $jobTag ){
+                                $tags = $jobTag->name;
+                            }                    
+                        }
+
+                        $customer_name  = $workorder->acs_first_name . ' ' . $workorder->acs_last_name;
+                        $calendar_title = $workorder->work_order_number.' - '.$tags.' : '.$customer_name;
+
+                        $start_time     = date("Y-m-d\TH:i:s", strtotime($job->start_date . ' ' . $job->start_time));
+                        $end_time     = date("Y-m-d\TH:i:s", strtotime($job->end_date . ' ' . $job->end_time));
+                        $event_time = [
+                            'start_time' => $start_time,
+                            'end_time' => $end_time
+                        ];
+
+                        $attendees = array();
+                        $techNames = array();
+
+                        if( $workorder->employee_id != '' ){
+                            $user = $this->Users_model->getUserByID($workorder->employee_id);
+                            if( $user ){
+                                $techNames[] = $user->FName;
+                                $attendees[] = ['email' => $user->email];
+                            }
+                        }
+                        if( !empty($techNames) ){
+                            $calendar_title = $calendar_title . ' - ' . implode("/", $techNames);
+                        }
+
+                        $location = $workorder->acs_mail_add . ',  ' . $workorder->acs_city . ', ' . $workorder->acs_zipcode;
+                        
+
+                        //$view_link = base_url('/job_invoice_view/' . $job_eid);
+                        
+                        if( $workorder->comments != '' ){
+                            $workorder_comments = $workorder->comments;
+                        }else{
+                            $workorder_comments = 'None';
+                        }
+
+                        $phone_m = formatPhoneNumber($workorder->acs_phone_m);
+                        if( $workorder->acs_phone_m == '' ){
+                            $phone_m = formatPhoneNumber($workorder->acs_phone_h);
+                        }                        
+                        
+                        $description = "Phone Number : ".$phone_m."\n";                                        
+                        $description .= "Workorder Comments : ". $workorder_comments ."\n";
+                        
+                        //$description .= $view_link . "\n";
 
                         $is_valid = true;
                     }else{

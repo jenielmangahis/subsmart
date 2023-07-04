@@ -476,6 +476,7 @@ $('#run-report-button').on('click', function() {
     url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'General Ledger' ? `report-title=${$('#report-title').val()}&` : '';
     url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
     url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
+    url += $('#show-report-basis').prop('checked') ? `` : 'show-report-basis=no&';
     url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
     url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
 

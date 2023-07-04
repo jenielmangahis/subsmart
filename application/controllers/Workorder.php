@@ -7637,6 +7637,8 @@ class Workorder extends MY_Controller
         $getItemsDetails = $this->workorder_model->getItemsDetails();
         $item_tax = $getItemsDetails->price * 0.075;
 
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('current_date'))); //current_date date_issued
+
         $new_data = array(
             'work_order_number'                     => $this->input->post('workorder_number'),
             'customer_id'                           => $this->input->post('customer_id'),
@@ -8487,7 +8489,7 @@ class Workorder extends MY_Controller
                 'payment_amount'                        => $this->input->post('payment_amount'),
                 'header'                                => $this->input->post('header'),
                 'date_issued'                           => $dateIssued,
-                // 'installation_date'                     => $this->input->post('installation_date'),
+                // 'installation_date'                     => $this->input->post('installation_date'), date_issued
 
                 'lead_source_id'                        => $this->input->post('lead_source'),
                 'panel_type'                            => $this->input->post('panel_type'),
@@ -11830,6 +11832,34 @@ class Workorder extends MY_Controller
         }else{
             redirect('workorder/edit/' . $workorder->id);
         }
+    }
+
+    public function ajax_quick_delete_workorder()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $workOrder = $this->workorder_model->getDataByWO($post['schedule_id']);
+        if( $workOrder ){
+            $data = array(
+                'id' => $post['schedule_id'],
+                'view_flag' => '0',
+            );
+
+            $this->workorder_model->deleteWorkorder($data);
+            customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
+
+            $is_success = 1;
+            $msg = '';
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
     }
 }
 

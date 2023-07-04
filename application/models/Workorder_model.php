@@ -1381,13 +1381,11 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
-    public function getlastInsertID()
-    {
-        $cid = getLoggedCompanyID();
+    public function getlastInsertID(){
 
         $this->db->select('*');
         $this->db->from('work_orders');
-        $this->db->where('company_id', $cid);
+        // $this->db->where('company_id', $company_id);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
 
@@ -1818,13 +1816,13 @@ class Workorder_model extends MY_Model
 
     public function getworkorder($id)
     {
-        $company_id = logged('company_id');        
+        /*$company_id = logged('company_id');        
         $where = array(
-            // 'work_orders.company_id' => $company_id,
+            'work_orders.company_id' => $company_id,
             'work_orders.id'   => $id
-          );
+        );*/
 
-        $this->db->select('work_orders.*, work_orders.email AS w_email, work_orders.status AS w_status, acs_profile.first_name AS acs_first_name, acs_profile.last_name AS acs_last_name, acs_profile.middle_name AS acs_middle_name, CONCAT(users.LName," ",users.FName)AS agent_name');
+        $this->db->select('work_orders.*, work_orders.email AS w_email, work_orders.status AS w_status, acs_profile.first_name AS acs_first_name, acs_profile.last_name AS acs_last_name, acs_profile.middle_name AS acs_middle_name, acs_profile.mail_add AS acs_mail_add, acs_profile.city AS acs_city, acs_profile.state AS acs_state, acs_profile.zip_code AS acs_zipcode, acs_profile.phone_m AS acs_phone_m, acs_profile.phone_h AS acs_phone_h, CONCAT(users.LName," ",users.FName)AS agent_name');
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
         $this->db->join('users', 'work_orders.employee_id  = users.id', 'left');

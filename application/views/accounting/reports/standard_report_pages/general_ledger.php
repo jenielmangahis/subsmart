@@ -595,7 +595,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-footer <?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
-                                <p class="m-0"><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?> <?=date($prepared_timestamp)?></p>
+                                <p class="m-0"><?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
