@@ -901,6 +901,7 @@ class Workcalender extends MY_Controller
         //Scheduled Workorders        
         foreach($scheduled_workorder_ids as $wid){
             $workorder = $this->Workorder_model->getworkorder($wid->work_order_id);
+
             if( $workorder && $workorder->view_flag == 1 ){                
                 $starttime = $wid->start_date . " " . $wid->start_time;
                 $start_date_time = date('Y-m-d H:i:s', strtotime($wid->start_date . " " . $wid->start_time));
