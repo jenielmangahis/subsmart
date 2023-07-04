@@ -182,29 +182,76 @@ class Tools extends MY_Controller {
         $this->page_data['companyGoogleContactsApi'] = $companyGoogleContactsApi;
         $this->load->view('v2/pages/tools/google_contacts', $this->page_data);
     }
+    
 
     public function quickbooks() {
-        $this->page_data['page']->title = 'Quickbooks Payroll';
-        $this->page_data['page']->parent = 'Tools';
-
         $this->load->library('QuickbooksApi');
-        $this->page_data['sidebar'] = $this->api_sidebars();
-        $user_id = getLoggedUserID();
+        $this->load->model('CompanyApiConnector_model');
 
-        if (isset($_GET['code']) && isset($_GET['state']) && isset($_GET['realmId'])) {
-            if ($_SESSION['sessionAccessToken'] == null || $_SESSION['sessionAccessToken'] == "") {
-                $this->quickbooksapi->create_session($_SERVER['QUERY_STRING']);
-            } else {
-                $this->quickbooksapi->create_session($_SERVER['QUERY_STRING']);
-                $company_info = $this->quickbooksapi->get_qb_company_info();
-                $this->page_data['qb_info'] = $company_info;
-                $this->page_data['qb_customers'] = $this->quickbooksapi->get_customers();
-            }
-        } else {
-            $this->page_data['authurl'] = $this->quickbooksapi->initialize_auth();
+        $company_id = logged('company_id');
+        $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');        
+        if( $companyQuickBooksPayroll ){                  
+            $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);             
+            $companyInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);            
+            //Update company refresh token
+            $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+            $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+
+            $date_from = date("Y-m-d");
+            $date_to   = date("Y-m-d");          
+            $attendance_logs = $this->attendance_logs($date_from, $date_to);   
+            $this->page_data['companyInfo'] = $companyInfo;
+            $this->page_data['attendance_logs'] = $attendance_logs;
+        }else{
+            $qbAuth = $this->quickbooksapi->initialize_auth();
+            $this->page_data['qbAuth_url'] = $qbAuth;
         }
 
+        $this->page_data['companyQuickBooksPayroll'] = $companyQuickBooksPayroll;
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['page']->parent = 'Tools';     
         $this->load->view('v2/pages/tools/quickbooks', $this->page_data);
+    }
+
+    public function quickbooks_connect(){
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+
+        if( $this->input->get('code') != '' && $this->input->get('realmId') != '' ){
+            $tokens     = $this->quickbooksapi->get_access_token($_SERVER['QUERY_STRING']);
+            $company_id = logged('company_id');
+            $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');
+            if( $companyQuickBooksPayroll ){
+                $data_quickbooks = [
+                    'qb_total_employee' => 0,
+                    'qb_total_employee_synced' => 0, 
+                    'qb_total_employee_faild_synced' => 0,                       
+                    'status' => 1,
+                    'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    
+                    'qb_payroll_realm_id' => $this->input->get('realmId'),
+                    'created' => date("Y-m-d H:i:s")
+                ];
+                $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+            }else{
+                $data_quickbooks = [
+                    'company_id' => $company_id,
+                    'qb_total_employee' => 0,
+                    'qb_total_employee_synced' => 0, 
+                    'qb_total_employee_faild_synced' => 0,
+                    'api_name' => 'quickbooks_payroll',
+                    'status' => 1,
+                    'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    
+                    'qb_payroll_realm_id' => $this->input->get('realmId'),
+                    'created' => date("Y-m-d H:i:s")
+                ];    
+
+                $this->CompanyApiConnector_model->create($data_quickbooks);
+            }
+
+            redirect('tools/quickbooks');
+        }else{
+            redirect('tools/quickbooks?err=1');
+        }
     }
 
     public function nicejob() {
@@ -1008,6 +1055,8 @@ class Tools extends MY_Controller {
                         'google_email' => $profile['user']->email,
                         'google_access_token' => $profile['access_token'],
                         'google_refresh_token' => $profile['refreshToken'],
+                        'google_contacts_total_imported' => 0,
+                        'google_contacts_total_failed' => 0,
                         'google_last_sync' => NULL,
                         'created' => date("Y-m-d H:i:s")
                     ];
@@ -1020,6 +1069,8 @@ class Tools extends MY_Controller {
                         'google_email' => $profile['user']->email,
                         'google_access_token' => $profile['access_token'],
                         'google_refresh_token' => $profile['refreshToken'],
+                        'google_contacts_total_imported' => 0,
+                        'google_contacts_total_failed' => 0,
                         'created' => date("Y-m-d H:i:s")
                     ];    
 
@@ -1053,7 +1104,7 @@ class Tools extends MY_Controller {
         if( $companyGoogleContactsApi && $companyGoogleContactsApi->google_access_token != '' ){            
             $customers = $this->AcsProfile_model->getCustomerBasicInfoByCompanyId($company_id);
             foreach($customers as $customer){         
-                //Check if customer id is already in logs
+                //Check if customer id is already in logs                
                 $isCustomerExists = $this->GoogleContactLogs_model->getByCompanyIdAndObjectId($company_id, $customer->prof_id);
                 if( !$isCustomerExists ){
                     $data_logs = [
@@ -1071,12 +1122,22 @@ class Tools extends MY_Controller {
 
                     $this->GoogleContactLogs_model->create($data_logs);
 
-                    $total_imported++;
-                }                       
+                }else{
+                    $data_logs = [                        
+                        'is_with_error' => 0,
+                        'is_sync' => 0,
+                        'error_message' => ''
+                    ];
+
+                    $this->GoogleContactLogs_model->update($isCustomerExists->id, $data_logs);
+                }   
+
+                $total_imported++;                 
             }
 
             $data_google_contacts = [                        
-                'google_contacts_total_imported' => $total_imported,                        
+                'google_contacts_total_imported' => $total_imported,
+                'google_contacts_total_failed' => 0,                        
                 'google_last_sync' => date("Y-m-d H:i:s"),                
             ];
 
@@ -1130,6 +1191,299 @@ class Tools extends MY_Controller {
         $this->page_data['filter'] = $filter;
         $this->page_data['page']->title = 'Google Contacts';
         $this->page_data['page']->parent = 'Tools';        
-        $this->load->view('v2/pages/tools/google_contacts_logs', $this->page_data);
+        $this->load->view('v2/pages/tools/google_contacts_logs', $this->page_data);       
     }
+
+    public function attendance_logs($date_from, $date_to)
+    {
+        $date_from = $date_from;
+        $date_to = $date_to;
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_from . " 00:00:00");
+        date_default_timezone_set("UTC");
+        $date_from = date("Y-m-d", $the_date);
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_to . " 24:59:00");
+        date_default_timezone_set("UTC");
+        $date_to = date("Y-m-d H:i:s", $the_date);
+        $company_id = logged('company_id');
+        $attendances = $this->timesheet_model->get_all_attendance($date_from, $date_to, $company_id);
+        
+        $data_attendance_logs = array();
+        $logs_index = 0;
+        foreach ($attendances as $attendance) {
+            $shift_date = $attendance->date_created;
+            date_default_timezone_set("UTC");
+            $the_date = strtotime($shift_date);
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $shift_date = date("m/d/Y", $the_date);
+
+            date_default_timezone_set("UTC");
+            $shift_schedules = $this->timesheet_model->get_schedule_in_shift_date(date("Y-m-d", strtotime($attendance->date_created)), $attendance->user_id);
+            $shift_start = '';
+            $shift_end = '';
+            $expected_hours = '';
+            $expected_break = '';
+            $expected_work_hours = '';
+            foreach ($shift_schedules as $sched) {
+                $olddate_start = $sched->shift_start;
+                $olddate_end = $sched->shift_end;
+                date_default_timezone_set("UTC");
+                $the_date1 = strtotime($olddate_start);
+                $the_date2 = strtotime($olddate_end);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate_start = date("m/d/Y h:i A", $the_date1);
+                $newdate_end = date("m/d/Y h:i A", $the_date2);
+                $shift_start = $newdate_start;
+                $shift_end = $newdate_end;
+                $expected_hours = $sched->duration;
+                $expected_break = 0;
+                if ($expected_hours > 4) {
+                    $expected_break = 30;
+                }
+                if ($expected_hours > 6) {
+                    $expected_break += 15;
+                }
+                if ($expected_hours >= 8) {
+                    $expected_break = 60;
+                }
+                $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
+            }
+
+            $auxes = $this->timesheet_model->get_logs_of_attendance($attendance->id);
+            $checkin = '';
+            $checkout = '';
+            $breakin = '';
+            $breakout = '';
+
+            foreach ($auxes as $aux) {
+                $olddate = $aux->date_created;
+                date_default_timezone_set("UTC");
+                $the_date = strtotime($olddate);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate = date("m/d/Y h:i A", $the_date);
+                if ($aux->action == "Check in") {
+                    $checkin = $newdate;
+                } elseif ($aux->action == "Check out") {
+                    $checkout = $newdate;
+                } elseif ($aux->action == "Break in") {
+                    $breakin = $newdate;
+                } elseif ($aux->action == "Break out") {
+                    $breakout = $newdate;
+                }
+            }
+            
+            $minutes_late = "";
+            if ($shift_start != '') {
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin) * 60;
+            }
+            
+            $overtime = 0;
+            if ($expected_hours != '') {
+                if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
+                    $overtime = round(($attendance->shift_duration + $attendance->overtime) - $expected_work_hours, 2);
+                } elseif ($attendance->shift_duration == 0) {
+                    $overtime = 0;
+                } else {
+                    $overtime = $expected_work_hours;
+                }
+            } else {
+                $overtime = $attendance->overtime;
+            }
+            
+            if ($attendance->overtime_status == 1) {
+                $ot_status = "Pending";
+            } elseif ($attendance->overtime_status == 0) {
+                $ot_status = "Denied";
+            } else {
+                $ot_status = "Approved";
+            }
+            
+            $payable_hours = $attendance->shift_duration;
+            if ($expected_hours != '') {
+                if ($payable_hours > $expected_work_hours) {
+                    $payable_hours = $expected_work_hours;
+                }
+            }
+            if ($ot_status === "Approved") {
+                $payable_hours = $payable_hours + $attendance->overtime;
+            }
+
+            $data_attendance_logs[$logs_index]['user_id']   = $attendance->user_id;
+            $data_attendance_logs[$logs_index]['name']      = $attendance->FName . ' ' .   $attendance->LName;
+            $data_attendance_logs[$logs_index]['checkin']   = $checkin;
+            $data_attendance_logs[$logs_index]['checkout']  = $checkout;
+            $data_attendance_logs[$logs_index]['total_hrs'] = $attendance->shift_duration + $attendance->overtime;
+
+            $logs_index++;
+        }
+
+        return $data_attendance_logs;
+        
+    }
+
+    public function datetime_zone_converter($olddate, $from_timezone, $to_timezone)
+    {
+        date_default_timezone_set($from_timezone);
+        $the_date = strtotime($olddate);
+        date_default_timezone_set($to_timezone);
+        $newdate = date("Y-m-d H:i:s", $the_date);
+        return $newdate;
+    }
+
+    public function ajax_load_attendance_list()
+    {
+        $post = $this->input->post();
+        $date_from = date("Y-m-d", strtotime($post['date_from']));
+        $date_to   = date("Y-m-d", strtotime($post['date_to']));          
+        $attendance_logs = $this->attendance_logs($date_from, $date_to);  
+
+        $this->page_data['attendance_logs'] = $attendance_logs;
+        $this->load->view('v2/pages/tools/ajax_load_attendance_list', $this->page_data);       
+    }
+
+    public function ajax_export_qb_timesheet()
+    {
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('QbImportEmployeeLogs_model');
+        $this->load->model('QbImportTimesheetLogs_model');
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+        $date_from = date("Y-m-d", strtotime($post['date_from']));
+        $date_to   = date("Y-m-d", strtotime($post['date_to']));  
+        $attendance_logs = $this->attendance_logs($date_from, $date_to);  
+        $total_employee   = 0;
+        $total_attendance = 0;
+        if( $attendance_logs ){
+            $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');
+            foreach($attendance_logs as $logs){
+                $importEmployeeLog = $this->QbImportEmployeeLogs_model->getByUserId($logs['user_id']);
+
+                //Create employee
+                if( !$importEmployeeLog ){
+                    $qb_employee_import = [
+                        'company_id' => $company_id,
+                        'user_id' => $logs['user_id'],
+                        'qb_user_id' => 0,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => ''
+                    ];                  
+
+                    $this->QbImportEmployeeLogs_model->create($qb_employee_import);                    
+                }else{
+                    $qb_employee_import = [
+                        'qb_user_id' => 0,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => ''
+                    ];                  
+
+                    $this->QbImportEmployeeLogs_model->update($importEmployeeLog->id, $qb_employee_import);
+                }
+                $total_employee++;
+
+                //Create timesheet
+                $qb_timesheet_import = [
+                    'company_id' => $company_id,
+                    'user_id' => $logs['user_id'],
+                    'qb_user_id' => 0,
+                    'qb_employee_name' => '',
+                    'qb_timesheet_id' => 0,
+                    'start_date' => date("Y-m-d", strtotime($logs['checkin'])),
+                    'start_time' => date('H:i:s', strtotime($logs['checkin'])),
+                    'end_date' => date("Y-m-d", strtotime($logs['checkout'])),
+                    'end_time' => date('H:i:s', strtotime($logs['checkout'])),
+                    'billable_status' => 'NotBillable',
+                    'taxable' => 0,
+                    'hourly_rate' => 0,
+                    'description' => 'Timesheet Attendance',
+                    'is_sync' => 0,
+                    'is_with_error' => 0,
+                    'error_message' => '',
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+                $this->QbImportTimesheetLogs_model->create($qb_timesheet_import);  
+                $total_attendance++;
+            }
+
+            //Update qb api summary
+            $data_qb_summary = [
+                'qb_total_employee' => $total_employee,
+                'qb_total_employee_synced' => 0,
+                'qb_total_employee_failed_synced' => 0,
+                'qb_total_attendance' => $total_attendance,
+                'qb_total_attendance_synced' => 0,
+                'qb_total_attendance_failed_synced' => 0
+            ];
+
+            $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_qb_summary);
+        }
+
+        if( $total_employee > 0 ){
+            $is_success = 1;
+        }else{
+            $msg = 'Nothing to import';
+        }
+  
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }  
+
+    public function quickbooks_payroll_employee_logs()
+    {
+        $this->load->model('QbImportEmployeeLogs_model');
+
+        $company_id = logged('company_id');    
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'qb_import_employee_logs.is_with_error', 'value' => 1];
+            }
+            $employeeLogs = $this->QbImportEmployeeLogs_model->getAllByCompanyId($company_id, $search);            
+        }else{
+            $employeeLogs = $this->QbImportEmployeeLogs_model->getAllByCompanyId($company_id);
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['employeeLogs'] = $employeeLogs;
+        $this->load->view('v2/pages/tools/quickbooks_payroll_employee_logs', $this->page_data);
+    }  
+
+    public function quickbooks_payroll_timesheet_logs()
+    {
+        $this->load->model('QbImportTimesheetLogs_model');
+
+        $company_id = logged('company_id');    
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'qb_import_timesheet_logs.is_with_error', 'value' => 1];
+            }
+            $timesheetLogs = $this->QbImportTimesheetLogs_model->getAllByCompanyId($company_id, $search);            
+        }else{
+            $timesheetLogs = $this->QbImportTimesheetLogs_model->getAllByCompanyId($company_id);
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['timesheetLogs'] = $timesheetLogs;
+        $this->load->view('v2/pages/tools/quickbooks_payroll_timesheet_logs', $this->page_data);
+    }  
 }

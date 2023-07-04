@@ -51,6 +51,15 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
                 }                
             } 
 
+            if( $module_name == 'workorder' ){
+                $job = $CI->Jobs_model->get_specific_job_by_work_order_id($object_id);
+                if( $job ){
+                    //if( $settings->auto_add_tcoff == 1 ){
+                        $is_valid_sync_calendar = true;
+                    //}                
+                }                
+            } 
+
             if( $is_valid_sync_calendar ){                
                 $isExists = $CI->GoogleCalendarSync_model->getByObjectIdAndModuleName($object_id, $module_name);
                 if( !$isExists ){

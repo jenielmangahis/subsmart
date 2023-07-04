@@ -11779,6 +11779,86 @@ class Workorder extends MY_Controller
         // return $query;
         echo json_encode($query);
     }
+
+    public function ajax_quick_view_details()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('JobTags_model');
+        $this->load->model('workorder_model');
+
+        $post    = $this->input->post();
+        $comp_id = logged('company_id');        
+        $wid     = $post['appointment_id'];
+
+
+        $workorder = $this->workorder_model->getById($wid);
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $tags = '---';
+        if( $workorder->job_tags > 0 ){
+            $jobTag = $this->JobTags_model->getById($workorder->job_tags);
+            if( $jobTag ){
+                $tags = $jobTag->name;
+            }                    
+        }
+
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
+        $this->page_data['agree_items']  = $this->workorder_model->get_agree_items($wid);
+        $this->page_data['customer']     = $this->AcsProfile_model->getByProfId($workorder->customer_id);
+        $this->page_data['workorder']    = $workorder;
+        $this->page_data['tags'] = $tags;
+        $this->load->view('v2/pages/workorder/ajax_quick_view_details', $this->page_data);
+    }
+
+    public function redirect_edit($wid)
+    {
+        $this->load->model('workorder_model');
+
+        $workorder = $this->workorder_model->getById($wid);
+        if( $workorder->work_order_type_id == '2' ){
+            redirect('workorder/editAlarm/' . $workorder->id);
+        }elseif( $workorder->work_order_type_id == '3' ) {
+            redirect('workorder/editWorkorderSolar/' . $workorder->id);
+        }elseif( $workorder->work_order_type_id == '4' ){
+            redirect('workorder/editInstallation/' . $workorder->id);
+        }else{
+            redirect('workorder/edit/' . $workorder->id);
+        }
+    }
+
+    public function ajax_quick_delete_workorder()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $workOrder = $this->workorder_model->getDataByWO($post['schedule_id']);
+        if( $workOrder ){
+            $data = array(
+                'id' => $post['schedule_id'],
+                'view_flag' => '0',
+            );
+
+            $this->workorder_model->deleteWorkorder($data);
+            customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
+
+            $is_success = 1;
+            $msg = '';
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
 }
 
 

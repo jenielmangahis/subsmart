@@ -998,6 +998,9 @@ $route['workorder/_update_checklist'] = 'Workorder/ajax_update_checklist';
 $route['workorder/_delete_checklist'] = 'Workorder/ajax_delete_checklist';
 $route['workorder/_create_workorder_priority'] = 'Workorder/ajax_create_workorder_priority';
 $route['workorder/_update_workorder_priority'] = 'Workorder/ajax_update_workorder_priority';
+$route['workorder/_quick_view_details'] = 'Workorder/ajax_quick_view_details';
+$route['workorder/_edit/(:num)'] = 'Workorder/redirect_edit/$1';
+$route['workorder/_quick_delete_workorder'] = 'Workorder/ajax_quick_delete_workorder';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
