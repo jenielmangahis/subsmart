@@ -976,6 +976,10 @@ class Workorder extends MY_Controller
 
     public function editInstallation($id)
     {
+        add_footer_js([
+            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'assets/js/jquery.signaturepad.js'
+        ]);
         
         $company_id = logged('company_id');
         $user_id = logged('id');
@@ -9221,9 +9225,30 @@ class Workorder extends MY_Controller
 
             $contacts2 = $this->workorder_model->save_contact($contact2);
 
+            //Workorder settings
+            $workorderSettings = $this->workorder_model->getWorkOrderSettingsByCompanyId($company_id);
+            $workorder_setting_next_num = 0;
+            if ($workorderSettings) {
+                $prefix   = $workorderSettings->work_order_num_prefix;
+                $workorder_setting_next_num = $workorderSettings->work_order_num_next + 1;
+                $next_num = str_pad($workorder_setting_next_num, 5, '0', STR_PAD_LEFT);
+            } else {
+                $prefix = 'WO-';
+                $lastId = $this->workorder_model->getlastInsert($comp_id);
+                if ($lastId) {
+                    $next_num = $lastId->id + 1;
+                    $workorder_setting_next_num = $next_num;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                } else {
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                    $workorder_setting_next_num = 1;
+                }
+            }
+
+            $work_order_number = $prefix . $next_num;
 
             $new_data = array(
-                'work_order_number'                     => $this->input->post('workorder_number'),
+                'work_order_number'                     => $work_order_number,
                 'customer_id'                           => $customer_id,
                 'business_name'                         => $this->input->post('business_name'),
                 'phone_number'                          => $this->input->post('phone'),
@@ -9278,6 +9303,22 @@ class Workorder extends MY_Controller
             );
 
             $addQuery = $this->workorder_model->save_workorder($new_data);
+            if( $addQuery > 0 ){
+                if( $workorderSettings ){
+                    //Update workorder setting
+                    $workorder_settings_data = array(
+                        'work_order_num_next' => $workorder_setting_next_num
+                    );
+                    $this->general->update_with_key($workorder_settings_data, $workorderSettings->id, 'work_order_settings');    
+                }else{
+                    $workorder_settings_data = array(
+                        'job_num_prefix' => 'WO-',
+                        'job_num_next' => $workorder_setting_next_num,
+                        'company_id' => $company_id,
+                    );
+                    $this->general->add_($workorder_settings_data, 'work_order_settings');
+                }                
+            }
 
             $solarItems = array(
                 'firstname'                 => $this->input->post('firstname'),

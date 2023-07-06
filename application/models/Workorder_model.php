@@ -5,6 +5,7 @@ class Workorder_model extends MY_Model
 {
 
     public $table = 'work_orders';
+    public $table_workorder_settings = 'work_order_settings';
 
     public function getAllOrderByCompany($company_id, $options = array())
     {
@@ -1305,7 +1306,7 @@ class Workorder_model extends MY_Model
     public function getlastInsert($company_id){
 
         $where = array(
-            'view_flag'     => '0',
+            //'view_flag'     => '0',
             'company_id'   => $company_id
           );
 
@@ -2495,6 +2496,15 @@ class Workorder_model extends MY_Model
         $this->db->where('company_id', $company_id);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getWorkOrderSettingsByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_workorder_settings);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get()->row();
+        return $query;
     }
     
 }

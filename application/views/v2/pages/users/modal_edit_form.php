@@ -98,7 +98,7 @@
                     <input type="file" name="userfile" class="nsm-upload" accept="image/*">
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Payscale</label>
                 <select class="nsm-field form-select" name="empPayscale" required>
                     <option value="" disabled>Select payscale</option>
@@ -107,16 +107,28 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <label class="content-subtitle fw-bold d-block mb-2">Base Salary</label>
                 <input class="form-control" name="empBaseSalary" type="number" step="any" min="0" value="<?php echo ($user->base_salary) ? $user->base_salary : "0"; ?>">
             </div>
+            <div class="col-12 base_hourlyrate" style="display: none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Hourly Rate</label>
+                <input class="form-control" name="empBaseHourlyRate" type="number" step="any" min="0" value="<?php echo ($user->base_hourly) ? $user->base_hourly : "0"; ?>">
+            </div>  
+            <div class="col-12 base_weeklyrate" style="display: none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Weekly Rate</label>
+                <input class="form-control" name="empBaseWeeklyRate" type="number" step="any" min="0" value="<?php echo ($user->base_weekly) ? $user->base_weekly : "0"; ?>">
+            </div>
+            <div class="col-12 base_monthlyrate" style="display: none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Monthly Rate</label>
+                <input class="form-control" name="empBaseMonthlyRate" type="number" step="any" min="0" value="<?php echo ($user->base_monthly) ? $user->base_monthly : "0"; ?>">
+            </div>
             <div class="col-12 compensation_baseamount" style="display: none;">
-                <label class="content-subtitle fw-bold d-block mb-2">Compensation&nbsp;<small class="text-muted fw-normal">(Base Amount)</small></label>
+                <label class="content-subtitle fw-bold d-block mb-2">Base Amount</label>
                 <input class="form-control" name="empCompensationBase" type="number" step="any" min="0" value="<?php echo ($user->compensation_base) ? $user->compensation_base : "0"; ?>">
             </div>
             <div class="col-12 compensation_hourlyrate" style="display: none;">
-                <label class="content-subtitle fw-bold d-block mb-2">Compensation&nbsp;<small class="text-muted fw-normal">(Hourly Rate)</small></label>
+                <label class="content-subtitle fw-bold d-block mb-2">Hourly Rate</label>
                 <input class="form-control" name="empCompensationHourlyRate" type="number" step="any" min="0" value="<?php echo ($user->compensation_rate) ? $user->compensation_rate : "0"; ?>">
             </div>
             <div class="col-9">
@@ -246,13 +258,41 @@
 <script type="text/javascript">
     function compensationHideShow() {
         let selectedOption = $('select[name="empPayscale"]').find('option:selected').text();
-        if (selectedOption.includes("Compensation (Base Amount)")) {
+        
+        if (selectedOption.includes("Base (Hourly Rate)")) {
+            $('.base_hourlyrate').fadeIn('fast');
+            $('.base_weeklyrate').hide();
+            $('.base_monthlyrate').hide();
+            $('.compensation_baseamount').hide();
+            $('.compensation_hourlyrate').hide();
+        } else if (selectedOption.includes("Base (Weekly Rate)")) {
+            $('.base_hourlyrate').hide();
+            $('.base_weeklyrate').fadeIn('fast');
+            $('.base_monthlyrate').hide();
+            $('.compensation_baseamount').hide();
+            $('.compensation_hourlyrate').hide();
+        } else if (selectedOption.includes("Base (Monthly Rate)")) {
+            $('.base_hourlyrate').hide();
+            $('.base_weeklyrate').hide();
+            $('.base_monthlyrate').fadeIn('fast');
+            $('.compensation_baseamount').hide();
+            $('.compensation_hourlyrate').hide();
+        } else if (selectedOption.includes("Compensation (Base Amount)")) {
+            $('.base_hourlyrate').hide();
+            $('.base_weeklyrate').hide();
+            $('.base_monthlyrate').hide();
             $('.compensation_baseamount').fadeIn('fast');
             $('.compensation_hourlyrate').hide();
         } else if(selectedOption.includes("Compensation (Hourly Rate)")) {
+            $('.base_hourlyrate').hide();
+            $('.base_weeklyrate').hide();
+            $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').fadeIn('fast');
         } else {
+            $('.base_hourlyrate').hide();
+            $('.base_weeklyrate').hide();
+            $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
         }

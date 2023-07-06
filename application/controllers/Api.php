@@ -722,7 +722,6 @@ class Api extends MYF_Controller
                 );
 
                 $recipient  = $customerData->email;               
-
                 $mail = email__getInstance(['subject' => 'Estimate Details']);
                 $mail->addAddress($recipient, $recipient);
                 $mail->isHTML(true);
@@ -795,6 +794,32 @@ class Api extends MYF_Controller
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function sendEmail()
+    {
+        $is_sent  = 1;
+        $err_msg  = '';
+
+        $post = $this->input->post();
+        if( isset($post['email_subject']) && isset($post['email_recipient']) ){            
+            $mail = email__getInstance(['subject' => $post['email_subject']]);
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($post['email_recipient'], $post['email_recipient']);
+            $mail->isHTML(true);
+            $mail->Subject = $post['email_subject'];
+            $mail->Body    = $post['email_message'];
+            if (!$mail->Send()) {
+                $is_sent = 0;
+                $err_msg = 'Cannot send email';
+            }
+        }else{
+            $is_sent = 0;
+            $err_msg = 'Email subject and recipient are required';
+        }
+
+        $return = ['is_sent' => $is_sent, 'err_msg' => $err_msg];
         echo json_encode($return);
     }
 }

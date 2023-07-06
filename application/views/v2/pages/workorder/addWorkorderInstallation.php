@@ -2085,37 +2085,60 @@ $(".nsm-subtitle").html(function() {
             $('.dcam_check').val(this.value);
         });
 
-        $("#form_new_adi_workorder").on("submit", function(e) {
-            let _this = $(this);
+        $("#form_new_adi_workorder").on("submit", function(e) {            
             e.preventDefault();
+            var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
 
-            var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";
-            _this.find("button[type=submit]").html("Submitting");
-            _this.find("button[type=submit]").prop("disabled", true);
+            let _this        = $(this);
+            let form_valid   = 1;
+            let form_err_msg = '';
+            let total_amount = $('#payment_amount_grand').val();
+            let customer_id  = $('#customer_id').val();
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Workorder has been saved successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
+            if( parseFloat(total_amount) <= 0 ){
+                form_valid = 0;
+                form_err_msg = 'Cannot accept 0 total amount due';
+            }
 
-                    _this.trigger("reset");
+            /*if( parseFloat(customer_id) <= 0 ){
+                form_valid = 0;
+                form_err_msg = 'Please select customer';
+            }*/
 
-                    _this.find("button[type=submit]").html("Submit");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
+            if( form_valid == 1 ){
+                _this.find("button[type=submit]").html("Submitting");
+                _this.find("button[type=submit]").prop("disabled", true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: _this.serialize(),                
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Workorder has been saved successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+
+                        _this.trigger("reset");
+
+                        _this.find("button[type=submit]").html("Submit");
+                        _this.find("button[type=submit]").prop("disabled", false);
+                    },
+                });
+            }else{
+                Swal.fire({
+                icon: 'error',
+                    title: 'Error!',
+                    html: form_err_msg
+                });
+            }
         });
 
         $(".datepicker").datepicker({
