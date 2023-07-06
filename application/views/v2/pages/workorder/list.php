@@ -121,7 +121,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="workorder-list">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -285,7 +285,7 @@ function workordermodule__formatWorkOrderNumber($number) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        $("#workorder-list").nsmPagination({itemsPerPage:10});
 
         $("#select-all").on("change", function() {
             let isChecked = $(this).is(":checked");

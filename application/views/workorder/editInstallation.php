@@ -81,6 +81,7 @@ tr {
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <?php echo form_open_multipart('workorder/updateWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_new_adi_workorder', 'autocomplete' => 'off']); ?>
+                <input type="hidden" name="status" value="<?= $workorder->status; ?>">
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
@@ -890,12 +891,11 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
-                                                <select id="customer_id_" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
-                                                    <!-- <option selected hidden>Select Customer</option> -->
-                                                    <option hidden>Select Customer</option>
-                                                    <?php foreach ($customers as $customer) { ?>
-                                                        <option value="<?php echo $customer->prof_id; ?>" <?php if($customer->prof_id == $workorder->customer_id){ echo 'selected'; } ?>><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                    <?php } ?>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                    <option>Select Customer</option>
+                                                    <?php if( $workorder->customer_id > 0 && $workorder->acs_first_name != '' ){ ?>
+                                                        <option selected="" value="<?= $workorder->customer_id; ?>"><?= $workorder->acs_first_name . ' ' . $workorder->acs_last_name; ?></option>
+                                                    <?php } ?>                                                    
                                                 </select>
                                             </div>
 
@@ -1744,6 +1744,62 @@ $(".nsm-subtitle").html(function() {
         $('.check-ccam').on('change', function() {
             $('input[name="' + this.name + '"]').not(this).prop('checked', false);
             $('.dcam_check').val(this.value);
+        });
+
+        $("#form_new_adi_workorder").on("submit", function(e) {            
+            e.preventDefault();
+            var url = "<?php echo base_url('workorder/updateWorkorderAgreement'); ?>";            
+
+            let _this        = $(this);
+            let form_valid   = 1;
+            let form_err_msg = '';
+            let total_amount = $('#payment_amount_grand').val();
+            let customer_id  = $('#customer_id').val();
+
+            if( parseFloat(total_amount) <= 0 ){
+                form_valid = 0;
+                form_err_msg = 'Cannot accept 0 total amount due';
+            }
+
+            /*if( parseFloat(customer_id) <= 0 ){
+                form_valid = 0;
+                form_err_msg = 'Please select customer';
+            }*/
+
+            if( form_valid == 1 ){
+                _this.find("button[type=submit]").html("Submitting");
+                _this.find("button[type=submit]").prop("disabled", true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: _this.serialize(),                
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Workorder has been saved successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+
+                        _this.trigger("reset");
+
+                        _this.find("button[type=submit]").html("Submit");
+                        _this.find("button[type=submit]").prop("disabled", false);
+                    },
+                });
+            }else{
+                Swal.fire({
+                icon: 'error',
+                    title: 'Error!',
+                    html: form_err_msg
+                });
+            }
         });
 
         // $("#form_new_adi_workorder").on("submit", function(e) {

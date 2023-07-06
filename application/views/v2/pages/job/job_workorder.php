@@ -804,7 +804,7 @@
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' value='<?= $base_price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
+                                                            <input id='price<?= $item->id ?>' value='<?= number_format($base_price, 2); ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
                                                         </td>
                                                         <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
                                                         <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->

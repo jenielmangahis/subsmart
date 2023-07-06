@@ -298,8 +298,7 @@ class Users_model extends MY_Model
     {
         $parent_id = getLoggedUserID();
         $cid=logged('company_id');
-
-        $this->db->select('*');
+        $this->db->select('*, (SELECT payscale_name FROM payscale WHERE payscale.id = users.payscale_id) AS payscale_name');
         $this->db->from($this->table);
         $this->db->where('id', $user_id);
         // $this->db->where('role !=', 1);
