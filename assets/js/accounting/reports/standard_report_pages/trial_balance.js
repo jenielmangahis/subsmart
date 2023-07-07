@@ -90,8 +90,6 @@ $('#run-report').on('click', function(e) {
     var showRows = $('input[name="show_rows"]:checked').val();
     var showCols = $('input[name="show_columns"]:checked').val();
     var accountingMethod = $('input[name="accounting_method"]:checked').val();
-    var sortBy = $('#sort-by').val();
-    var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     url += filterDate !== 'this-month-to-date' ? `date=${filterDate}&` : '';
@@ -100,8 +98,6 @@ $('#run-report').on('click', function(e) {
     url += showRows !== 'active' ? `show-rows=${showRows}&` : '';
     url += showCols !== 'active' ? `show-columns=${showCols}&` : '';
     url += accountingMethod !== 'accrual' ? `accounting-method=${accountingMethod}&` : '';
-    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
-    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
 
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');
@@ -181,8 +177,6 @@ $('#run-report-button').on('click', function() {
     var showRows = $('input[name="custom_show_rows"]:checked').val();
     var showCols = $('input[name="custom_show_columns"]:checked').val();
     var accountingMethod = $('input[name="custom_accounting_method"]:checked').val();
-    var sortBy = $('#sort-by').val();
-    var sortIn = $('input[name="sort_order"]:checked').val();
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     url += filterDate !== 'this-month-to-date' ? `date=${filterDate}&` : '';
@@ -191,12 +185,10 @@ $('#run-report-button').on('click', function() {
     url += showRows !== 'active' ? `show-rows=${showRows}&` : '';
     url += showCols !== 'active' ? `show-columns=${showCols}&` : '';
     url += accountingMethod !== 'accrual' ? `accounting-method=${accountingMethod}&` : '';
-    url += sortBy !== 'default' ? `column=${sortBy}&` : '';
-    url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
 
     url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
     url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
-    url += $('#except-zero-amount').prop('checked') === false ? `except-zero-amount=0&` : '';
+    url += $('#except-zero-amount').prop('checked') === false ? `except-zero-amount=1&` : '';
     url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
     url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
 
@@ -204,7 +196,7 @@ $('#run-report-button').on('click', function() {
     url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
     url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
     url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
-    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Transaction List with Splits' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Trial Balance' ? `report-title=${$('#report-title').val()}&` : '';
     url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
     url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
     url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';

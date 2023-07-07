@@ -248,7 +248,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" <?=!isset($excel_zero_amount) ? 'checked' : ''?> type="checkbox" name="number_format" value="except-zero-amount" id="except-zero-amount">
+                                                    <input class="form-check-input" <?=!isset($except_zero_amount) ? 'checked' : ''?> type="checkbox" name="number_format" value="except-zero-amount" id="except-zero-amount">
                                                     <label class="form-check-label" for="except-zero-amount">
                                                         Except zero amount
                                                     </label>

@@ -275,7 +275,12 @@ $("#attachment-file").change(function() {
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));
-            var retail = parseInt($(this).attr('data-retail'));
+            if( isNaN(parseInt($(this).attr('data-retail'))) ){
+                var retail = 0;    
+            }else{
+                var retail = parseInt($(this).attr('data-retail'));
+            }
+            
             var qty = parseInt($(this).attr('data-quantity'));
             var location_name = $(this).data('location_name');
             var location_id = $(this).data('location_id');
@@ -427,7 +432,7 @@ $("#attachment-file").change(function() {
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
                 // var idd = this.id;
-                subtotal = Number(subtotal) + Number(idd);
+                subtotal = parseFloat(subtotal) + parseFloat(idd);
 
             });
             var total = parseFloat(subtotal).toFixed(2);
@@ -473,9 +478,9 @@ $("#attachment-file").change(function() {
             total = Number(total) + Number(installation_cost) + Number(otps) + Number(monthly_monitoring);*/
 
             var withCommas = Number(total).toLocaleString('en');
-            if(tax_total < 1){
-                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(total).toFixed(2)));
-            }
+            //if(tax_total < 1){                
+                $('#invoice_sub_total').html('$' + formatNumber(parseFloat(subtotal).toFixed(2)));
+            //}
             if(discount > 0){
                 $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
             }            
@@ -551,7 +556,7 @@ $("#attachment-file").change(function() {
             $('#location_qty'+id).val(qty);
             // getLoc(id, qty);
             calculateCommissionPerItem(id, qty);
-            calculate_subtotal();
+            calculate_subtotal();                        
         });
 
         $("body").delegate(".item-price", "change", function(){
