@@ -22352,12 +22352,146 @@ class Reports extends MY_Controller {
 
                 foreach($compAccs as $account)
                 {
+                    $debit = floatval(str_replace(',', '', $account->balance)) > 0 ? number_format(floatval(str_replace(',', '', $account->balance)), 2) : '';
+                    $credit = floatval(str_replace(',', '', $account->balance)) < 0 ? substr(number_format(floatval(str_replace(',', '', $account->balance)), 2), 1) : '';
+
+                    if(floatval(str_replace(',', '', $account->balance)) === 0.00) {
+                        $credit = '0.00';
+                    }
+
+                    if(!empty(get('except-zero-amount'))) {
+                        $debit = empty($debit) ? '0.00' : $debit;
+                        $credit = empty($credit) ? '0.00' : $credit;
+                    }
+
+                    if(!empty(get('divide-by-100'))) {
+                        if(!empty($debit)) {
+                            $debit = number_format(floatval($debit) / 100, 2);
+                        }
+
+                        if(!empty($credit)) {
+                            $credit = number_format(floatval($credit) / 100, 2);
+                        }
+                    }
+
+                    if(!empty(get('without-cents'))) {
+                        if(!empty($debit)) {
+                            $debit = number_format(floatval($debit), 0);
+                        }
+
+                        if(!empty($credit)) {
+                            $credit = number_format(floatval($credit), 0);
+                        }
+                    }
+
+                    if(!empty(get('negative-numbers'))) {
+                        switch(get('negative-numbers')) {
+                            case '(100)' :
+                                if(!empty($debit)) {
+                                    if(substr($debit, 0, 1) === '-') {
+                                        $debit = str_replace('-', '', $debit);
+                                        $debit = '('.$debit.')';
+                                    }
+                                }
+
+                                if(!empty($credit)) {
+                                    if(substr($credit, 0, 1) === '-') {
+                                        $credit = str_replace('-', '', $credit);
+                                        $credit = '('.$credit.')';
+                                    }
+                                }
+                            break;
+                            case '100-' :
+                                if(!empty($debit)) {
+                                    if(substr($debit, 0, 1) === '-') {
+                                        $debit = str_replace('-', '', $debit);
+                                        $debit = $debit.'-';
+                                    }
+                                }
+
+                                if(!empty($credit)) {
+                                    if(substr($credit, 0, 1) === '-') {
+                                        $credit = str_replace('-', '', $credit);
+                                        $credit = $credit.'-';
+                                    }
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty(get('show-in-red'))) {
+                        if(empty(get('negative-numbers'))) {
+                            if(!empty($debit)) {
+                                if(substr($debit, 0, 1) === '-') {
+                                    $debit = '<span class="text-danger">'.$debit.'</span>';
+                                }
+                            }
+
+                            if(!empty($credit)) {
+                                if(substr($credit, 0, 1) === '-') {
+                                    $credit = '<span class="text-danger">'.$credit.'</span>';
+                                }
+                            }
+                        } else {
+                            switch(get('negative-numbers')) {
+                                case '(100)' :
+                                    if(!empty($debit)) {
+                                        if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
+                                            $debit = '<span class="text-danger">'.$debit.'</span>';
+                                        }
+                                    }
+
+                                    if(!empty($credit)) {
+                                        if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
+                                            $credit = '<span class="text-danger">'.$credit.'</span>';
+                                        }
+                                    }
+                                break;
+                                case '100-' :
+                                    if(!empty($debit)) {
+                                        if(substr($debit, -1) === '-') {
+                                            $debit = '<span class="text-danger">'.$debit.'</span>';
+                                        }
+                                    }
+
+                                    if(!empty($credit)) {
+                                        if(substr($credit, -1) === '-') {
+                                            $credit = '<span class="text-danger">'.$credit.'</span>';
+                                        }
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
                     $accounts[] = [
-                        'name' => $account->name
+                        'name' => $account->name,
+                        'debit' => $debit,
+                        'credit' => $credit
                     ];
                 }
 
                 $this->page_data['accounts'] = $accounts;
+
+                if(!empty(get('divide-by-100'))) {
+                    $this->page_data['divide_by_100'] = get('divide-by-100');
+                }
+
+                if(!empty(get('without-cents'))) {
+                    $this->page_data['without_cents'] = get('without-cents');
+                }
+
+                if(!empty(get('except-zero-amount'))) {
+                    $this->page_data['except_zero_amount'] = get('except-zero-amount');
+                }
+
+                if(!empty(get('negative-numbers'))) {
+                    $this->page_data['negative_numbers'] = get('negative-numbers');
+                }
+
+                if(!empty(get('show-in-red'))) {
+                    $this->page_data['show_in_red'] = get('show-in-red');
+                }
 
                 if(!empty(get('show-company-name'))) {
                     $this->page_data['show_company_name'] = false;

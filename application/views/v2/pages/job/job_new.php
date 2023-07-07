@@ -1727,7 +1727,15 @@
                                             } 
                                         }
                                         ?></td>
-                                        <td><?php echo $item->retail; ?></td>
+                                        <td>
+                                            <?php 
+                                                if( $item->retail > 0 ){
+                                                    echo number_format($item->retail, 2);
+                                                }else{
+                                                    echo '0.00';
+                                                }                                                
+                                            ?>                                                
+                                        </td>
                                         <td><?php echo $item->type; ?></td>
                                         <td class='d-none'><?php echo $item->location_name; ?></td>
                                     </tr>
