@@ -29,20 +29,45 @@
                             </td>
                         </tr>
                         <?php endif; ?>
+                        <?php if($display_columns_by === 'months') : ?>
+                        <tr>
+                            <td data-name="Name" rowspan="2"></td>
+                            <?php foreach($columns as $column) : ?>
+                            <td colspan="2" style="text-align: center;"><?=$column?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <tr>
+                            <?php foreach($columns as $column) : ?>
+                            <td data-name="Debit">DEBIT</td>
+                            <td data-name="Credit">CREDIT</td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <?php else : ?>
                         <tr>
                             <td data-name="Name"></td>
                             <td data-name="Debit">DEBIT</td>
                             <td data-name="Credit">CREDIT</td>
                         </tr>
+                        <?php endif; ?>
                     </thead>
                     <tbody>
                         <?php if(count($accounts) > 0) : ?>
                         <?php foreach($accounts as $index => $account) : ?>
+                        <?php if($display_columns_by === 'months') : ?>
+                        <tr>
+                            <td><?=$account['name']?></td>
+                            <?php foreach($columns as $column) : ?>
+                            <td><?=$account[$column]['debit']?></td>
+                            <td><?=$account[$column]['credit']?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <?php else : ?>
                         <tr>
                             <td><?=$account['name']?></td>
                             <td><?=$account['debit']?></td>
                             <td><?=$account['credit']?></td>
                         </tr>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
@@ -102,20 +127,45 @@
                             </td>
                         </tr>
                         <?php endif; ?>
+                        <?php if($display_columns_by === 'months') : ?>
+                        <tr>
+                            <td data-name="Name" rowspan="2"></td>
+                            <?php foreach($columns as $column) : ?>
+                            <td colspan="2" style="text-align: center;"><?=$column?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <tr>
+                            <?php foreach($columns as $column) : ?>
+                            <td data-name="Debit">DEBIT</td>
+                            <td data-name="Credit">CREDIT</td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <?php else : ?>
                         <tr>
                             <td data-name="Name"></td>
                             <td data-name="Debit">DEBIT</td>
                             <td data-name="Credit">CREDIT</td>
                         </tr>
+                        <?php endif; ?>
                     </thead>
                     <tbody>
                         <?php if(count($accounts) > 0) : ?>
                         <?php foreach($accounts as $index => $account) : ?>
+                        <?php if($display_columns_by === 'months') : ?>
+                        <tr>
+                            <td><?=$account['name']?></td>
+                            <?php foreach($columns as $column) : ?>
+                            <td><?=$account[$column]['debit']?></td>
+                            <td><?=$account[$column]['credit']?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <?php else : ?>
                         <tr>
                             <td><?=$account['name']?></td>
                             <td><?=$account['debit']?></td>
                             <td><?=$account['credit']?></td>
                         </tr>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
@@ -296,7 +346,7 @@
                                             <div class="col-12 col-md-6">
                                                 <label for="show-non-zero-or-active-only">Show non-zero or active only</label>
                                                 <button type="button" class="nsm-button w-100" data-bs-toggle="dropdown">
-                                                    Active rows/active columns <i class='bx bx-fw bx-caret-down'></i>
+                                                    <?=$showed_rows?> Rows/<?=$showed_columns?> Columns <i class='bx bx-fw bx-caret-down'></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end p-3">
                                                     <p class="m-0">Show rows</p>

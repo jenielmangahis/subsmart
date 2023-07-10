@@ -998,6 +998,9 @@ $route['workorder/_update_checklist'] = 'Workorder/ajax_update_checklist';
 $route['workorder/_delete_checklist'] = 'Workorder/ajax_delete_checklist';
 $route['workorder/_create_workorder_priority'] = 'Workorder/ajax_create_workorder_priority';
 $route['workorder/_update_workorder_priority'] = 'Workorder/ajax_update_workorder_priority';
+$route['workorder/_quick_view_details'] = 'Workorder/ajax_quick_view_details';
+$route['workorder/_edit/(:num)'] = 'Workorder/redirect_edit/$1';
+$route['workorder/_quick_delete_workorder'] = 'Workorder/ajax_quick_delete_workorder';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
@@ -1506,6 +1509,8 @@ $route['api/delete_multi_account'] = 'Api/deleteCompanyMultiAccount';
 $route['api/vonage_inbound_sms'] = 'Api/vonageInboundSms';
 $route['api/estimate_send_customer_email'] = 'Api/emailCustomerEstimate';
 $route['api/converge_send_sale'] = 'Api/convergeSendSale';
+$route['api/send_email'] = 'Api/sendEmail';
+$route['api/send_customer_estimate_email'] = 'Api/emailCustomerEstimate';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

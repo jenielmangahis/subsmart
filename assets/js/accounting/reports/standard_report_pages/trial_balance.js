@@ -82,6 +82,16 @@ $('#filter-report-period').on('change', function() {
     }
 });
 
+$('input[name="show_rows"], input[name="show_columns"]').on('change', function() {
+    var rows = $('input[name="show_rows"]:checked');
+    var columns = $('input[name="show_columns"]:checked');
+    var rowsText = rows.next().text();
+    var columnsText = columns.next().text();
+
+    var buttonText = rowsText+' Rows/'+columnsText+' Columns';
+    $(this).closest('.dropdown-menu').prev().html(buttonText+' <i class="bx bx-fw bx-caret-down"></i>')
+});
+
 $('#run-report').on('click', function(e) {
     e.preventDefault();
 
@@ -163,6 +173,16 @@ $('#report-period-date').on('change', function() {
             });
         }
     }
+});
+
+$('input[name="custom_show_rows"], input[name="custom_show_columns"]').on('change', function() {
+    var rows = $('input[name="custom_show_rows"]:checked');
+    var columns = $('input[name="custom_show_columns"]:checked');
+    var rowsText = rows.next().text();
+    var columnsText = columns.next().text();
+
+    var buttonText = rowsText+' Rows/'+columnsText+' Columns';
+    $(this).closest('.dropdown-menu').prev().html(buttonText+' <i class="bx bx-fw bx-caret-down"></i>')
 });
 
 $('#run-report-button').on('click', function() {
