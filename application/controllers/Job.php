@@ -677,7 +677,7 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
         // get items
-        $get_items = array(
+        /*$get_items = array(
             'where' => array(
                 'items.company_id' => $comp_id,
                 //'is_active' => 1,
@@ -685,7 +685,9 @@ class Job extends MY_Controller
             'table' => 'items',
             'select' => 'items.id,title,price,type',
         );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);*/
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 
         $get_settings = array(
             'table' => 'job_tax_rates',

@@ -20640,7 +20640,7 @@ class Reports extends MY_Controller {
             case 'trial_balance' :
                 $this->page_data['start_date'] = date("m/01/Y");
                 $this->page_data['end_date'] = date("m/d/Y");
-                $this->page_data['report_period'] = date("F 1-j, Y");
+                $this->page_data['report_period'] = "As of ".date("F j, Y");
                 if(!empty(get('date'))) {
                     $this->page_data['filter_date'] = get('date');
                     if(get('date') !== 'all-dates') {
@@ -20655,123 +20655,42 @@ class Reports extends MY_Controller {
                         case 'all-dates' :
                             $this->page_data['report_period'] = 'All Dates';
                         break;
-                        case 'today' :
-                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
-                        break;
-                        case 'yesterday' :
-                            $this->page_data['report_period'] = date("F j, Y", strtotime($this->page_data['start_date']));
-                        break;
-                        case 'this-month' :
-                            $this->page_data['report_period'] = date("F Y");
-                        break;
-                        case 'last-month' :
-                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
-                        break;
-                        case 'next-month' :
-                            $this->page_data['report_period'] = date("F Y", strtotime($this->page_data['start_date']));
-                        break;
-                        case 'this-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
-                        break;
-                        case 'last-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
-                        break;
-                        case 'next-quarter' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
-                        break;
-                        case 'this-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
-                        break;
-                        case 'last-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
-                        break;
-                        case 'next-year' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
-                        break;
-                        case 'this-year-to-last-month' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $this->page_data['report_period'] = $startMonth.'-'.$endMonth.' '.date("Y");
-                        break;
-                        case 'since-30-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-
-                            $this->page_data['report_period'] = 'Since '.$startDate;
-                        break;
-                        case 'since-60-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-
-                            $this->page_data['report_period'] = 'Since '.$startDate;
-                        break;
-                        case 'since-90-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-
-                            $this->page_data['report_period'] = 'Since '.$startDate;
-                        break;
-                        case 'since-365-days-ago' :
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-
-                            $this->page_data['report_period'] = 'Since '.$startDate;
-                        break;
-                        default : 
-                            $startDate = date("F j, Y", strtotime($this->page_data['start_date']));
-                            $endDate = date("F j, Y", strtotime($this->page_data['end_date']));
-
-                            $startMonth = date("F", strtotime($startDate));
-                            $endMonth = date("F", strtotime($endDate));
-
-                            $startYear = date("Y", strtotime($startDate));
-                            $endYear = date("Y", strtotime($endDate));
-
-                            if($startMonth === $endMonth && $startYear === $endYear) {
-                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
-                            } else if($startYear !== $endYear) {
-                                $this->page_data['report_period'] = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
-                            } else {
-                                $this->page_data['report_period'] = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
-                            }
+                        default :
+                            $this->page_data['report_period'] = "As of ".date("F j, Y", strtotime(str_replace('-', '/', get('to'))));
                         break;
                     }
+                }
+
+                if(!empty(get('display-columns-by'))) {
+                    $this->page_data['display_columns_by'] = get('display-columns-by');
+
+                    if(get('date') !== 'all-dates') {
+                        $startMonth = intval(date("m", strtotime($this->page_data['start_date'])));
+                        $startDate = intval(date("d", strtotime($this->page_data['start_date'])));
+                        $startYear = intval(date("Y", strtotime($this->page_data['start_date'])));
+                        $endMonth = intval(date("m", strtotime($this->page_data['end_date'])));
+                        $endDate = intval(date("d", strtotime($this->page_data['end_date'])));
+                        $endYear = intval(date("Y", strtotime($this->page_data['end_date'])));
+                        $i = $startMonth;
+                        $months = [];
+
+                        for($i = $startMonth; $i <= $endMonth; $i++)
+                        {
+                            $month = date("M Y", mktime(0, 0, 0, $i, 1, intval(date("Y"))));
+
+                            if($i === $startMonth && $startDate > 1 && $startMonth < $endMonth) {
+                                $month = date("M $startDate-t, Y", strtotime(date("$startMonth/$startDate/$startYear")));
+                            }
+
+                            if($i === $endMonth && $endDate < intval(date('t', strtotime(date("$endMonth/$endDate/$endYear"))))) {
+                                $month = date("M 1-$endDate, Y", strtotime(date("$endMonth/$endDate/$endYear")));
+                            }
+
+                            $months[] = $month;
+                        }
+                    }
+
+                    $this->page_data['columns'] = $months;
                 }
 
                 $dateFilter = [
@@ -20784,123 +20703,143 @@ class Reports extends MY_Controller {
 
                 foreach($compAccs as $account)
                 {
-                    $debit = floatval(str_replace(',', '', $account->balance)) > 0 ? number_format(floatval(str_replace(',', '', $account->balance)), 2) : '';
-                    $credit = floatval(str_replace(',', '', $account->balance)) < 0 ? substr(number_format(floatval(str_replace(',', '', $account->balance)), 2), 1) : '';
+                    if(get('display-columns-by') === 'months') {
+                        $accountData = [
+                            'name' => $account->name
+                        ];
 
-                    if(floatval(str_replace(',', '', $account->balance)) === 0.00) {
-                        $credit = '0.00';
-                    }
+                        $transacs = $this->accounting_account_transactions_model->get_account_transactions($account->id);
 
-                    if(!empty(get('except-zero-amount'))) {
-                        $debit = empty($debit) ? '0.00' : $debit;
-                        $credit = empty($credit) ? '0.00' : $credit;
-                    }
+                        usort($transacs, function($a, $b) {
+                            return strtotime($a->transaction_date) < strtotime($b->transaction_date);
+                        });
 
-                    if(!empty(get('divide-by-100'))) {
-                        if(!empty($debit)) {
-                            $debit = number_format(floatval($debit) / 100, 2);
+                        foreach($months as $column)
+                        {
+                            $accountData[$column]['debit'] = '';
+                            $accountData[$column]['credit'] = '';
                         }
 
-                        if(!empty($credit)) {
-                            $credit = number_format(floatval($credit) / 100, 2);
+                        $accounts[] = $accountData;
+                    } else {
+                        $debit = floatval(str_replace(',', '', $account->balance)) > 0 ? number_format(floatval(str_replace(',', '', $account->balance)), 2) : '';
+                        $credit = floatval(str_replace(',', '', $account->balance)) < 0 ? substr(number_format(floatval(str_replace(',', '', $account->balance)), 2), 1) : '';
+    
+                        if(floatval(str_replace(',', '', $account->balance)) === 0.00) {
+                            $credit = '0.00';
                         }
-                    }
-
-                    if(!empty(get('without-cents'))) {
-                        if(!empty($debit)) {
-                            $debit = number_format(floatval($debit), 0);
+    
+                        if(!empty(get('except-zero-amount'))) {
+                            $debit = empty($debit) ? '0.00' : $debit;
+                            $credit = empty($credit) ? '0.00' : $credit;
                         }
-
-                        if(!empty($credit)) {
-                            $credit = number_format(floatval($credit), 0);
-                        }
-                    }
-
-                    if(!empty(get('negative-numbers'))) {
-                        switch(get('negative-numbers')) {
-                            case '(100)' :
-                                if(!empty($debit)) {
-                                    if(substr($debit, 0, 1) === '-') {
-                                        $debit = str_replace('-', '', $debit);
-                                        $debit = '('.$debit.')';
-                                    }
-                                }
-
-                                if(!empty($credit)) {
-                                    if(substr($credit, 0, 1) === '-') {
-                                        $credit = str_replace('-', '', $credit);
-                                        $credit = '('.$credit.')';
-                                    }
-                                }
-                            break;
-                            case '100-' :
-                                if(!empty($debit)) {
-                                    if(substr($debit, 0, 1) === '-') {
-                                        $debit = str_replace('-', '', $debit);
-                                        $debit = $debit.'-';
-                                    }
-                                }
-
-                                if(!empty($credit)) {
-                                    if(substr($credit, 0, 1) === '-') {
-                                        $credit = str_replace('-', '', $credit);
-                                        $credit = $credit.'-';
-                                    }
-                                }
-                            break;
-                        }
-                    }
-
-                    if(!empty(get('show-in-red'))) {
-                        if(empty(get('negative-numbers'))) {
+    
+                        if(!empty(get('divide-by-100'))) {
                             if(!empty($debit)) {
-                                if(substr($debit, 0, 1) === '-') {
-                                    $debit = '<span class="text-danger">'.$debit.'</span>';
-                                }
+                                $debit = number_format(floatval($debit) / 100, 2);
                             }
-
+    
                             if(!empty($credit)) {
-                                if(substr($credit, 0, 1) === '-') {
-                                    $credit = '<span class="text-danger">'.$credit.'</span>';
-                                }
+                                $credit = number_format(floatval($credit) / 100, 2);
                             }
-                        } else {
+                        }
+    
+                        if(!empty(get('without-cents'))) {
+                            if(!empty($debit)) {
+                                $debit = number_format(floatval($debit), 0);
+                            }
+    
+                            if(!empty($credit)) {
+                                $credit = number_format(floatval($credit), 0);
+                            }
+                        }
+    
+                        if(!empty(get('negative-numbers'))) {
                             switch(get('negative-numbers')) {
                                 case '(100)' :
                                     if(!empty($debit)) {
-                                        if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
-                                            $debit = '<span class="text-danger">'.$debit.'</span>';
+                                        if(substr($debit, 0, 1) === '-') {
+                                            $debit = str_replace('-', '', $debit);
+                                            $debit = '('.$debit.')';
                                         }
                                     }
-
+    
                                     if(!empty($credit)) {
-                                        if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
-                                            $credit = '<span class="text-danger">'.$credit.'</span>';
+                                        if(substr($credit, 0, 1) === '-') {
+                                            $credit = str_replace('-', '', $credit);
+                                            $credit = '('.$credit.')';
                                         }
                                     }
                                 break;
                                 case '100-' :
                                     if(!empty($debit)) {
-                                        if(substr($debit, -1) === '-') {
-                                            $debit = '<span class="text-danger">'.$debit.'</span>';
+                                        if(substr($debit, 0, 1) === '-') {
+                                            $debit = str_replace('-', '', $debit);
+                                            $debit = $debit.'-';
                                         }
                                     }
-
+    
                                     if(!empty($credit)) {
-                                        if(substr($credit, -1) === '-') {
-                                            $credit = '<span class="text-danger">'.$credit.'</span>';
+                                        if(substr($credit, 0, 1) === '-') {
+                                            $credit = str_replace('-', '', $credit);
+                                            $credit = $credit.'-';
                                         }
                                     }
                                 break;
                             }
                         }
+    
+                        if(!empty(get('show-in-red'))) {
+                            if(empty(get('negative-numbers'))) {
+                                if(!empty($debit)) {
+                                    if(substr($debit, 0, 1) === '-') {
+                                        $debit = '<span class="text-danger">'.$debit.'</span>';
+                                    }
+                                }
+    
+                                if(!empty($credit)) {
+                                    if(substr($credit, 0, 1) === '-') {
+                                        $credit = '<span class="text-danger">'.$credit.'</span>';
+                                    }
+                                }
+                            } else {
+                                switch(get('negative-numbers')) {
+                                    case '(100)' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
+                                                $debit = '<span class="text-danger">'.$debit.'</span>';
+                                            }
+                                        }
+    
+                                        if(!empty($credit)) {
+                                            if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
+                                                $credit = '<span class="text-danger">'.$credit.'</span>';
+                                            }
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, -1) === '-') {
+                                                $debit = '<span class="text-danger">'.$debit.'</span>';
+                                            }
+                                        }
+    
+                                        if(!empty($credit)) {
+                                            if(substr($credit, -1) === '-') {
+                                                $credit = '<span class="text-danger">'.$credit.'</span>';
+                                            }
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+    
+                        $accounts[] = [
+                            'name' => $account->name,
+                            'debit' => $debit,
+                            'credit' => $credit
+                        ];
                     }
-
-                    $accounts[] = [
-                        'name' => $account->name,
-                        'debit' => $debit,
-                        'credit' => $credit
-                    ];
                 }
 
                 $this->page_data['accounts'] = $accounts;
@@ -20923,6 +20862,18 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('show-in-red'))) {
                     $this->page_data['show_in_red'] = get('show-in-red');
+                }
+
+                $this->page_data['showed_rows'] = 'All';
+                if(!empty(get('show-rows'))) {
+                    $this->page_data['showed_rows'] = ucfirst(get('show-rows'));
+                    $this->page_data['show_rows'] = get('show-rows');
+                }
+
+                $this->page_data['showed_columns'] = 'All';
+                if(!empty(get('show-columns'))) {
+                    $this->page_data['showed_columns'] = ucfirst(get('show-columns'));
+                    $this->page_data['show_columns'] = get('show-columns');
                 }
 
                 if(!empty(get('show-company-name'))) {

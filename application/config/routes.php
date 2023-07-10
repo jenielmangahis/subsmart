@@ -1509,6 +1509,8 @@ $route['api/delete_multi_account'] = 'Api/deleteCompanyMultiAccount';
 $route['api/vonage_inbound_sms'] = 'Api/vonageInboundSms';
 $route['api/estimate_send_customer_email'] = 'Api/emailCustomerEstimate';
 $route['api/converge_send_sale'] = 'Api/convergeSendSale';
+$route['api/send_email'] = 'Api/sendEmail';
+$route['api/send_customer_estimate_email'] = 'Api/emailCustomerEstimate';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';
