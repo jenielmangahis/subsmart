@@ -1166,7 +1166,7 @@ class Tools extends MY_Controller {
             $msg = '';
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'total_imported' => $total_imported, 'total_failed' => $total_failed];
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 
@@ -1486,4 +1486,23 @@ class Tools extends MY_Controller {
         $this->page_data['timesheetLogs'] = $timesheetLogs;
         $this->load->view('v2/pages/tools/quickbooks_payroll_timesheet_logs', $this->page_data);
     }  
+
+    public function ajax_disconnect_quickbook_payroll_account(){
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find Quickbook Payroll Account.';
+
+        $company_id = logged('company_id');
+        $companyQuickBookPayrollApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'quickbooks_payroll');
+        if( $companyQuickBookPayrollApi ){
+            //$this->CompanyApiConnector_model->update($companyQuickBookPayrollApi->id, ['status' => 0]);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 }
