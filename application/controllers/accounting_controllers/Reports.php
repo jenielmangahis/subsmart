@@ -22282,10 +22282,160 @@ class Reports extends MY_Controller {
                             return strtotime($a->transaction_date) < strtotime($b->transaction_date);
                         });
 
-                        foreach($months as $column)
+                        foreach($transacs as $transac)
                         {
-                            $accountData[$column]['debit'] = '';
-                            $accountData[$column]['credit'] = '';
+                            $balance = floatval($account->balance);
+                            foreach($months as $column)
+                            {
+                                if(strpos($column, '-') === false) {
+                                    $monthStart = date("m/01/Y", strtotime($column));
+                                    $monthEnd = date("m/t/Y", strtotime($column));
+                                } else {
+                                    $strpos = strpos($column, '-');
+
+                                    $pos = $strpos;
+                                    $string = substr($column, $pos, 1);
+                                    do {
+                                        $pos++;
+                                        $string = substr($column, $pos, 1);
+                                    } while($string !== ',');
+
+                                    $str = substr($column, $strpos, $pos - $strpos);
+                                    $start = str_replace($str, '', $column);
+
+                                    $pos = $strpos;
+                                    $string = substr($column, $pos, 1);
+                                    do {
+                                        $pos--;
+                                        $string = substr($column, $pos, 1);
+                                    } while($string !== ' ');
+
+                                    $str = substr($column, $strpos, $strpos - $pos);
+                                    $end = str_replace($str, '', $column);
+
+                                    $monthStart = date("m/d/Y", strtotime($start));
+                                    $monthEnd = date("m/d/Y", strtotime($end));
+                                }
+
+                                if(strtotime($transac->transaction_date) > strtotime($monthEnd)) {
+                                    $balance = $transac->type === 'increase' ? $balance - floatval($transac->amount) : $balance + floatval($transac->amount);
+                                }
+
+                                $debit = floatval($balance) > 0 ? number_format(floatval($balance), 2) : '';
+                                $credit = floatval($balance) < 0 ? substr(number_format(floatval($balance), 2), 1) : '';
+
+                                if($balance === 0.00) {
+                                    $credit = '0.00';
+                                }
+            
+                                if(!empty(get('except-zero-amount'))) {
+                                    $debit = empty($debit) ? '0.00' : $debit;
+                                    $credit = empty($credit) ? '0.00' : $credit;
+                                }
+            
+                                if(!empty(get('divide-by-100'))) {
+                                    if(!empty($debit)) {
+                                        $debit = number_format(floatval($debit) / 100, 2);
+                                    }
+            
+                                    if(!empty($credit)) {
+                                        $credit = number_format(floatval($credit) / 100, 2);
+                                    }
+                                }
+            
+                                if(!empty(get('without-cents'))) {
+                                    if(!empty($debit)) {
+                                        $debit = number_format(floatval($debit), 0);
+                                    }
+            
+                                    if(!empty($credit)) {
+                                        $credit = number_format(floatval($credit), 0);
+                                    }
+                                }
+            
+                                if(!empty(get('negative-numbers'))) {
+                                    switch(get('negative-numbers')) {
+                                        case '(100)' :
+                                            if(!empty($debit)) {
+                                                if(substr($debit, 0, 1) === '-') {
+                                                    $debit = str_replace('-', '', $debit);
+                                                    $debit = '('.$debit.')';
+                                                }
+                                            }
+            
+                                            if(!empty($credit)) {
+                                                if(substr($credit, 0, 1) === '-') {
+                                                    $credit = str_replace('-', '', $credit);
+                                                    $credit = '('.$credit.')';
+                                                }
+                                            }
+                                        break;
+                                        case '100-' :
+                                            if(!empty($debit)) {
+                                                if(substr($debit, 0, 1) === '-') {
+                                                    $debit = str_replace('-', '', $debit);
+                                                    $debit = $debit.'-';
+                                                }
+                                            }
+            
+                                            if(!empty($credit)) {
+                                                if(substr($credit, 0, 1) === '-') {
+                                                    $credit = str_replace('-', '', $credit);
+                                                    $credit = $credit.'-';
+                                                }
+                                            }
+                                        break;
+                                    }
+                                }
+            
+                                if(!empty(get('show-in-red'))) {
+                                    if(empty(get('negative-numbers'))) {
+                                        if(!empty($debit)) {
+                                            if(substr($debit, 0, 1) === '-') {
+                                                $debit = '<span class="text-danger">'.$debit.'</span>';
+                                            }
+                                        }
+            
+                                        if(!empty($credit)) {
+                                            if(substr($credit, 0, 1) === '-') {
+                                                $credit = '<span class="text-danger">'.$credit.'</span>';
+                                            }
+                                        }
+                                    } else {
+                                        switch(get('negative-numbers')) {
+                                            case '(100)' :
+                                                if(!empty($debit)) {
+                                                    if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
+                                                        $debit = '<span class="text-danger">'.$debit.'</span>';
+                                                    }
+                                                }
+            
+                                                if(!empty($credit)) {
+                                                    if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
+                                                        $credit = '<span class="text-danger">'.$credit.'</span>';
+                                                    }
+                                                }
+                                            break;
+                                            case '100-' :
+                                                if(!empty($debit)) {
+                                                    if(substr($debit, -1) === '-') {
+                                                        $debit = '<span class="text-danger">'.$debit.'</span>';
+                                                    }
+                                                }
+            
+                                                if(!empty($credit)) {
+                                                    if(substr($credit, -1) === '-') {
+                                                        $credit = '<span class="text-danger">'.$credit.'</span>';
+                                                    }
+                                                }
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $accountData[$column]['debit'] = $debit;
+                                $accountData[$column]['credit'] = $credit;
+                            }
                         }
 
                         $accounts[] = $accountData;
