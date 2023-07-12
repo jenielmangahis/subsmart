@@ -455,9 +455,10 @@ $("#attachment-file").change(function() {
                 $('#invoice_tax_total').html('$' + tax_with_comma);
                 $('#tax_total_form_input').val(tax_with_comma);
             }else if((tax !== 0 || tax !== '') && def == true){
-                total = Number(total)+ Number(tax) - Number(discount);
+                //total = Number(total)+ Number(tax) - Number(discount);
                 total = parseFloat(total).toFixed(2);
-                tax_total =  parseFloat(tax).toFixed(2);
+                //tax_total =  parseFloat(tax).toFixed(2);
+                tax_total = (Number(tax) / 100) * Number(total);
 
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
 

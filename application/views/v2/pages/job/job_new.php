@@ -1019,7 +1019,12 @@
                                                                         if ($jobs_data->tax_percentage == $rate->rate) {
                                                                             echo "<option selected value='$rate->rate'>$rate->name ($rate->rate%)</option>";
                                                                         } else {
-                                                                            echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";
+                                                                            if( $default_tax_id > 0 && ($default_tax_id == $rate->id) ){
+                                                                                echo "<option value='$rate->rate' selected='selected'>$rate->name ($rate->rate%)</option>";
+                                                                            }else{
+                                                                                echo "<option value='$rate->rate'>$rate->name ($rate->rate%)</option>";    
+                                                                            }
+                                                                            
                                                                         }
                                                                         // if ($SELECTED_TAX !== "0.00") {
                                                                         //     if ($subtotal * ($rate->rate / 100) == $jobs_data->tax_rate) {
