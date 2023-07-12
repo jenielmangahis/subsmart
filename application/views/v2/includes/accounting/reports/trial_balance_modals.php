@@ -10,21 +10,21 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
@@ -71,7 +71,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="3">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -81,7 +81,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -108,21 +108,21 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="3" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
@@ -169,7 +169,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="3">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -179,7 +179,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
                             </td>
                         </tr>

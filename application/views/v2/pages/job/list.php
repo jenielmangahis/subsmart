@@ -231,7 +231,10 @@ foreach ($jobs as $job) {
                             <td>
                                 <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?= jobsmodule__formatJobNumber($job->job_number); ?></td>
+                            <td class="fw-bold nsm-text-primary">
+                                <!-- <?= jobsmodule__formatJobNumber($job->job_number); ?> -->                                    
+                                <?= $job->job_number; ?>
+                            </td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                             <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
                             <td><?php echo $job->FName . ' ' . $job->LName; ?></td>

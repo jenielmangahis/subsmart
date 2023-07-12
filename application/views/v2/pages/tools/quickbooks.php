@@ -43,7 +43,7 @@
                             <span class="api-label f-green">You are connected</span>
                         </div>
                         <div class="col-4">
-                            <a href="javascript:void(0);" class="nsm-button primary btn-disconnect-google-account">Disconnect</a>
+                            <a href="javascript:void(0);" class="nsm-button primary btn-disconnect-qb">Disconnect</a>
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -117,7 +117,7 @@
                             </table>
                         </div>
                     </div>
-
+                    <a href="<?= base_url('tools/quickbooks_payroll_employee_logs') ?>" class="nsm-button default">View Logs</a>
                 <?php }else{ ?>
                     <div class="row">
                         <div class="col-8">
@@ -149,11 +149,58 @@ $(function(){
         }, function(start, end, label) {
         var start_date = start.format('YYYY-MM-DD');
         var end_date   = end.format('YYYY-MM-DD');
-        $('#data-from').val(start_date);
+        $('#date-from').val(start_date);
         $('#date-to').val(end_date);
         load_attendance_list(start_date, end_date);
         console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });   
+    });  
+
+    $('.btn-disconnect-qb').on('click', function(){
+        Swal.fire({            
+            html: "Disconnect your Quickbook Payroll Account?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                var url = base_url + "tools/_disconnect_quickbook_account";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    beforeSend: function(data) {
+                        $('#loading_modal').modal('show');
+                        $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Disconnecting Quickbook Payroll Account....');
+                    },
+                    success: function(data) {                                                
+                        setTimeout(
+                            function() 
+                            {                                
+                                $('#loading_modal').modal('hide');
+                                Swal.fire({                        
+                                    text: "Quickbook Payroll Account was successfully disconnected.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });                    
+                            }, 
+                        1000);                                        
+                    },
+                    complete : function(){
+                        
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
+            }
+        });
+    }); 
 
     $('#btn-qb-export-timesheet').on('click', function(){
         var url = base_url + "tools/_export_qb_timesheet";
