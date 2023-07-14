@@ -1200,6 +1200,7 @@ $route['tools/google_contacts_logs'] = 'Tools/google_contacts_logs';
 $route['tools/quickbooks_connect'] = 'Tools/quickbooks_connect';
 $route['tools/_load_attendance_list'] = 'Tools/ajax_load_attendance_list';
 $route['tools/_export_qb_timesheet'] = 'Tools/ajax_export_qb_timesheet';
+$route['tools/_disconnect_quickbook_account'] = 'Tools/ajax_disconnect_quickbook_payroll_account';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1344,6 +1345,8 @@ $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPort
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
 $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
 $route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayroll';
+$route['cron_api/qb_employee_sync'] = 'Cron_Api/syncQbPayrollEmployees';
+$route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';

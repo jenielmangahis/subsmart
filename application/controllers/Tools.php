@@ -190,7 +190,7 @@ class Tools extends MY_Controller {
 
         $company_id = logged('company_id');
         $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');        
-        if( $companyQuickBooksPayroll ){                  
+        if( $companyQuickBooksPayroll && $companyQuickBooksPayroll->status == 1 ){                  
             $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);             
             $companyInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);            
             //Update company refresh token
@@ -1496,8 +1496,7 @@ class Tools extends MY_Controller {
         $company_id = logged('company_id');
         $companyQuickBookPayrollApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'quickbooks_payroll');
         if( $companyQuickBookPayrollApi ){
-            //$this->CompanyApiConnector_model->update($companyQuickBookPayrollApi->id, ['status' => 0]);
-
+            $this->CompanyApiConnector_model->update($companyQuickBookPayrollApi->id, ['status' => 0]);
             $is_success = 1;
             $msg = '';
         }
