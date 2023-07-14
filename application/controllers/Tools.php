@@ -225,7 +225,7 @@ class Tools extends MY_Controller {
                 $data_quickbooks = [
                     'qb_total_employee' => 0,
                     'qb_total_employee_synced' => 0, 
-                    'qb_total_employee_faild_synced' => 0,                       
+                    'qb_total_employee_failed_synced' => 0,                       
                     'status' => 1,
                     'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    
                     'qb_payroll_realm_id' => $this->input->get('realmId'),
@@ -237,7 +237,7 @@ class Tools extends MY_Controller {
                     'company_id' => $company_id,
                     'qb_total_employee' => 0,
                     'qb_total_employee_synced' => 0, 
-                    'qb_total_employee_faild_synced' => 0,
+                    'qb_total_employee_failed_synced' => 0,
                     'api_name' => 'quickbooks_payroll',
                     'status' => 1,
                     'qb_payroll_refresh_token' => $tokens->getRefreshToken(),                    

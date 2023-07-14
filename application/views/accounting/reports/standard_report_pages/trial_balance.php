@@ -296,7 +296,7 @@
                                         <?php endforeach; ?>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="3">
+                                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>

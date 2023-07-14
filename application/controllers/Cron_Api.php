@@ -777,5 +777,220 @@ class Cron_Api extends MYF_Controller {
 
         echo "Total Updated : " . $total_records;
     }
+
+    public function syncQbPayrollEmployees()
+    {
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('QbImportEmployeeLogs_model');
+        $this->load->model('Users_model');
+
+        $total_imported    = 0;
+        $importEmployeeLogs = $this->QbImportEmployeeLogs_model->getAllNotSync(5);
+        foreach($importEmployeeLogs as $logs){
+            $user = $this->Users_model->getUserByID($logs->user_id);
+            if( $user ){                        
+                $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($logs->company_id,'quickbooks_payroll'); 
+                if( $companyQuickBooksPayroll ){
+                    $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+
+                    //Update company refresh token
+                    $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+                    $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+
+                    $user_data = [
+                        "GivenName" => $user->FName,
+                        "SSN" => "",
+                        "PrimaryAddr" => [
+                            "CountrySubDivisionCode" => $user->state,
+                            "City" => $user->city,
+                            "PostalCode" => $user->postal_code,
+                        ],
+                        "PrimaryPhone" => ["FreeFormNumber" =>  formatPhoneNumber($user->mobile)],
+                        "FamilyName" => $user->LName
+                    ];
+                    $qb_employee = $this->quickbooksapi->create_employee($user_data, $token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);
+
+                    if( $qb_employee['is_imported'] ){                                                                
+                        $data_qb_employee_log = [
+                            'qb_user_id' => $qb_employee['qb_user_id'],
+                            'name' => $user->FName . ' ' . $user->LName,
+                            'is_sync' => 1,
+                            'is_with_error' => 0,
+                            'error_message' => '',
+                            'action_date' => date("Y-m-d H:i:s")
+                        ];                        
+
+                        $data_qb_sync_summary = [
+                            'qb_total_employee_synced' => $companyQuickBooksPayroll->qb_total_employee_synced + 1
+                        ];
+                        $total_imported++;
+                    }else{            
+                        if( $qb_employee['err_code'] == 6240 ){                            
+                            $a_err_details = explode(':', $qb_employee['err_msg']);
+                            if( isset($a_err_details[1]) ){
+                                $qb_id = trim(str_replace('Id=', "", $a_err_details[1]));
+                                $qb_id = (int)$qb_id;
+                                if( $qb_id > 0 ){
+                                    $data_qb_employee_log = [
+                                        'qb_user_id' => $qb_id,
+                                        'name' => $user->FName . ' ' . $user->LName,
+                                        'is_sync' => 1,
+                                        'is_with_error' => 0,
+                                        'error_message' => '',
+                                        'action_date' => date("Y-m-d H:i:s")
+                                    ];  
+
+                                    $data_qb_sync_summary = [
+                                        'qb_total_employee_synced' => $companyQuickBooksPayroll->qb_total_employee_synced + 1
+                                    ];
+                                    $total_imported++;  
+                                }else{
+                                    $data_qb_employee_log = [
+                                        'qb_user_id' => 0,
+                                        'is_sync' => 0,
+                                        'is_with_error' => 1,
+                                        'error_message' => $qb_employee['err_msg'],                            
+                                        'action_date' => date("Y-m-d H:i:s")
+                                    ];   
+
+                                    $data_qb_sync_summary = [
+                                        'qb_total_employee_failed_synced' => $companyQuickBooksPayroll->qb_total_employee_failed_synced + 1
+                                    ]; 
+                                }
+                            }
+                            
+                        }else{
+                            $data_qb_employee_log = [
+                                'qb_user_id' => 0,
+                                'is_sync' => 0,
+                                'is_with_error' => 1,
+                                'error_message' => $qb_employee['err_msg'],                            
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];   
+
+                            $data_qb_sync_summary = [
+                                'qb_total_employee_failed_synced' => $companyQuickBooksPayroll->qb_total_employee_failed_synced + 1
+                            ];    
+                        }                                       
+                        
+                    }
+
+                    $this->QbImportEmployeeLogs_model->update($logs->id,$data_qb_employee_log);
+                    $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_qb_sync_summary);   
+                }
+            } 
+        }
+
+        echo $total_imported;
+        
+    }
+
+    public function syncQbPayrollTimesheet()
+    {
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('QbImportEmployeeLogs_model');
+        $this->load->model('QbImportTimesheetLogs_model');
+        $this->load->model('Users_model');
+
+        $total_imported    = 0;
+        $importTimesheetLogs = $this->QbImportTimesheetLogs_model->getAllNotSync(10);
+        foreach($importTimesheetLogs as $logs){
+            $qbEmployee = $this->QbImportEmployeeLogs_model->getByUserId($logs->user_id);
+            if( $qbEmployee ){
+                $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($logs->company_id,'quickbooks_payroll');
+                if( $companyQuickBooksPayroll ){
+                    if( $qbEmployee->qb_user_id > 0 ){
+                        $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+                        //Update company refresh token
+                        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();                        
+                        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+
+                        $attendance_start_date = date('Y-m-d\TH:i:s', strtotime($logs->start_date . ' ' . $logs->start_time));
+                        $attendance_end_date   = date('Y-m-d\TH:i:s', strtotime($logs->end_date . ' ' . $logs->end_time));
+                        $timesheet_data = [
+                            "NameOf" => "Employee",
+                            "EmployeeRef" => [
+                                "value" => $qbEmployee->qb_user_id,
+                                "name" => $qbEmployee->name
+                            ],
+                            "StartTime" => $attendance_start_date,
+                            "EndTime" => $attendance_end_date,
+                            "BillableStatus" => $logs->billable_status,
+                            "Taxable" => $logs->taxable == 1 ? true : false,
+                            "HourlyRate" => $logs->hourly_rate,
+                            "Description"=> $logs->description
+                        ];
+
+                        $qb_timesheet = $this->quickbooksapi->create_timesheet($timesheet_data, $token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);        
+                        if( $qb_timesheet['is_imported'] ){
+                            $data_qb_timesheet_log = [
+                                'qb_timesheet_id' => $qb_timesheet['qb_timesheet_id'],
+                                'qb_user_id' => $qbEmployee->qb_user_id,
+                                'qb_employee_name' => $qbEmployee->name,
+                                'is_sync' => 1,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];   
+
+                            $data_qb_sync_summary = [
+                                'qb_total_attendance_synced' => $companyQuickBooksPayroll->qb_total_attendance_synced + 1
+                            ];
+
+                            $total_imported++;
+
+                        }else{
+                            $data_qb_timesheet_log = [
+                                'qb_timesheet_id' => 0,
+                                'is_sync' => 0,
+                                'is_with_error' => 1,
+                                'error_message' => $qb_timesheet['err_msg'],
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];   
+
+                            $data_qb_sync_summary = [
+                                'qb_total_attendance_failed_synced' => $companyQuickBooksPayroll->qb_total_attendance_failed_synced + 1
+                            ];
+                        }
+                    }else{
+                        $data_qb_timesheet_log = [
+                            'is_sync' => 0,
+                            'is_with_error' => 1,
+                            'error_message' => 'Cannot find employee in QuickBooks',
+                            'action_date' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->QbImportTimesheetLogs_model->update($logs->id,$qb_timesheet);
+                    }
+
+                    $this->QbImportTimesheetLogs_model->update($logs->id,$data_qb_timesheet_log);
+                    $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_qb_sync_summary);  
+
+                }else{
+                    $qb_timesheet = [
+                        'is_sync' => 0,
+                        'is_with_error' => 1,
+                        'error_message' => 'Cannot find QuickBooks account',
+                        'action_date' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->QbImportTimesheetLogs_model->update($logs->id,$qb_timesheet);
+                } 
+                               
+            }else{
+                $qb_timesheet = [
+                    'is_sync' => 0,
+                    'is_with_error' => 1,
+                    'error_message' => 'Cannot find employee in QuickBooks',
+                    'action_date' => date("Y-m-d H:i:s")
+                ];
+
+                $this->QbImportTimesheetLogs_model->update($logs->id,$qb_timesheet);
+            }
+        }
+        echo $total_imported;        
+    }
         
 }

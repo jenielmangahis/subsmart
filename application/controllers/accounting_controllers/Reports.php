@@ -22288,6 +22288,7 @@ class Reports extends MY_Controller {
                             return strtotime($a->transaction_date) < strtotime($b->transaction_date);
                         });
 
+                        $flag = get('show-rows') === 'non-zero' ? false : true;
                         foreach($months as $column)
                         {
                             $balance = floatval($account->balance);
@@ -22445,11 +22446,18 @@ class Reports extends MY_Controller {
                                 }
                             }
 
+                            if(get('show-rows') === 'non-zero') {
+                                if(!empty(floatval($debit)) || !empty(floatval($credit))) {
+                                    $flag = true;
+                                }
+                            }
                             $accountData[$column]['debit'] = $debit;
                             $accountData[$column]['credit'] = $credit;
                         }
 
-                        $accounts[] = $accountData;
+                        if($flag) {
+                            $accounts[] = $accountData;
+                        }
                     } else {
                         $debit = floatval(str_replace(',', '', $account->balance)) > 0 ? number_format(floatval(str_replace(',', '', $account->balance)), 2) : '';
                         $credit = floatval(str_replace(',', '', $account->balance)) < 0 ? substr(number_format(floatval(str_replace(',', '', $account->balance)), 2), 1) : '';
@@ -22562,12 +22570,22 @@ class Reports extends MY_Controller {
                                 }
                             }
                         }
+
+                        $flag = true;
+
+                        if(get('show-rows') === 'non-zero') {
+                            if(empty(floatval($debit)) && empty(floatval($credit))) {
+                                $flag = false;
+                            }
+                        }
     
-                        $accounts[] = [
-                            'name' => $account->name,
-                            'debit' => $debit,
-                            'credit' => $credit
-                        ];
+                        if($flag) {
+                            $accounts[] = [
+                                'name' => $account->name,
+                                'debit' => $debit,
+                                'credit' => $credit
+                            ];
+                        }
                     }
                 }
 
@@ -46493,8 +46511,8 @@ class Reports extends MY_Controller {
                 if(!empty($post['date'])) {
                     $filter_date = $post['date'];
                     if($post['date'] !== 'all-dates') {
-                        $start_date = str_replace('-', '/', get('from'));
-                        $end_date = str_replace('-', '/', get('to'));
+                        $start_date = str_replace('-', '/', $post['from']);
+                        $end_date = str_replace('-', '/', $post['to']);
                     } else {
                         $start_date = null;
                         $start_date = null;
@@ -46505,184 +46523,620 @@ class Reports extends MY_Controller {
                             $report_period = 'All Dates';
                         break;
                         default :
-                            $report_period = "As of ".date("F j, Y", strtotime(str_replace('-', '/', get('to'))));
+                            $report_period = "As of ".date("F j, Y", strtotime(str_replace('-', '/', $post['to'])));
                         break;
                     }
                 }
+
+                if(!empty($post['display-columns-by'])) {
+                    if($post['date'] !== 'all-dates') {
+                        $startMonth = intval(date("m", strtotime($start_date)));
+                        $startDate = intval(date("d", strtotime($start_date)));
+                        $startYear = intval(date("Y", strtotime($start_date)));
+                        $endMonth = intval(date("m", strtotime($end_date)));
+                        $endDate = intval(date("d", strtotime($end_date)));
+                        $endYear = intval(date("Y", strtotime($end_date)));
+                        $i = $startMonth;
+                        $months = [];
+
+                        for($i = $startMonth; $i <= $endMonth; $i++)
+                        {
+                            $month = date("M Y", mktime(0, 0, 0, $i, 1, intval(date("Y"))));
+
+                            if($i === $startMonth && $startDate > 1 && $startMonth < $endMonth) {
+                                $month = date("M $startDate-t, Y", strtotime(date("$startMonth/$startDate/$startYear")));
+                            }
+
+                            if($i === $endMonth && $endDate < intval(date('t', strtotime(date("$endMonth/$endDate/$endYear"))))) {
+                                $month = date("M 1-$endDate, Y", strtotime(date("$endMonth/$endDate/$endYear")));
+                            }
+
+                            $months[] = $month;
+                        }
+                    }
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $accounts = [];
+                $compAccs = $this->chart_of_accounts_model->get_by_company_id(logged('company_id'));
+
+                if($post['show-rows'] !== 'all') {
+                    $compAccs = array_filter($compAccs, function($v, $k) {
+                        return $v->active !== '0';
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                foreach($compAccs as $account)
+                {
+                    if($post['display-columns-by'] === 'months') {
+                        $accountData = [
+                            'name' => $account->name
+                        ];
+
+                        $transacs = $this->accounting_account_transactions_model->get_account_transactions($account->id);
+
+                        usort($transacs, function($a, $b) {
+                            return strtotime($a->transaction_date) < strtotime($b->transaction_date);
+                        });
+
+                        $flag = $post['show-rows'] === 'non-zero' ? false : true;
+                        foreach($months as $column)
+                        {
+                            $balance = floatval($account->balance);
+
+                            if(strpos($column, '-') === false) {
+                                $monthStart = date("m/01/Y", strtotime($column));
+                                $monthEnd = date("m/t/Y", strtotime($column));
+                            } else {
+                                $strpos = strpos($column, '-');
+
+                                $pos = $strpos;
+                                $string = substr($column, $pos, 1);
+                                do {
+                                    $pos++;
+                                    $string = substr($column, $pos, 1);
+                                } while($string !== ',');
+
+                                $str = substr($column, $strpos, $pos - $strpos);
+                                $start = str_replace($str, '', $column);
+
+                                $pos = $strpos;
+                                $string = substr($column, $pos, 1);
+                                do {
+                                    $pos--;
+                                    $string = substr($column, $pos, 1);
+                                } while($string !== ' ');
+
+                                $str = substr($column, $strpos, $strpos - $pos);
+                                $end = str_replace($str, '', $column);
+
+                                $monthStart = date("m/d/Y", strtotime($start));
+                                $monthEnd = date("m/d/Y", strtotime($end));
+                            }
+
+                            $overTransacs = array_filter($transacs, function($v, $k) use ($monthEnd) {
+                                return strtotime($v->transaction_date) > strtotime($monthEnd);
+                            }, ARRAY_FILTER_USE_BOTH);
+                         
+                            foreach($overTransacs as $transac)
+                            {
+                                if(strtotime($transac->transaction_date) > strtotime($monthEnd)) {
+                                    $balance = $transac->type === 'increase' ? $balance - floatval($transac->amount) : $balance + floatval($transac->amount);
+                                }
+                            }
+
+                            $debit = floatval($balance) > 0 ? number_format(floatval($balance), 2) : '';
+                            $credit = floatval($balance) < 0 ? substr(number_format(floatval($balance), 2), 1) : '';
+
+                            if($balance === 0.00) {
+                                $credit = '0.00';
+                            }
+        
+                            if(!empty($post['except-zero-amount'])) {
+                                $debit = empty($debit) ? '0.00' : $debit;
+                                $credit = empty($credit) ? '0.00' : $credit;
+                            }
+        
+                            if(!empty($post['divide-by-100'])) {
+                                if(!empty($debit)) {
+                                    $debit = number_format(floatval($debit) / 100, 2);
+                                }
+        
+                                if(!empty($credit)) {
+                                    $credit = number_format(floatval($credit) / 100, 2);
+                                }
+                            }
+        
+                            if(!empty($post['without-cents'])) {
+                                if(!empty($debit)) {
+                                    $debit = number_format(floatval($debit), 0);
+                                }
+        
+                                if(!empty($credit)) {
+                                    $credit = number_format(floatval($credit), 0);
+                                }
+                            }
+        
+                            if(!empty($post['negative-numbers'])) {
+                                switch($post['negative-numbers']) {
+                                    case '(100)' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, 0, 1) === '-') {
+                                                $debit = str_replace('-', '', $debit);
+                                                $debit = '('.$debit.')';
+                                            }
+                                        }
+        
+                                        if(!empty($credit)) {
+                                            if(substr($credit, 0, 1) === '-') {
+                                                $credit = str_replace('-', '', $credit);
+                                                $credit = '('.$credit.')';
+                                            }
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, 0, 1) === '-') {
+                                                $debit = str_replace('-', '', $debit);
+                                                $debit = $debit.'-';
+                                            }
+                                        }
+        
+                                        if(!empty($credit)) {
+                                            if(substr($credit, 0, 1) === '-') {
+                                                $credit = str_replace('-', '', $credit);
+                                                $credit = $credit.'-';
+                                            }
+                                        }
+                                    break;
+                                }
+                            }
+        
+                            if(!empty($post['show-in-red'])) {
+                                if(empty($post['negative-numbers'])) {
+                                    if(!empty($debit)) {
+                                        if(substr($debit, 0, 1) === '-') {
+                                            $debit = '<span class="text-danger">'.$debit.'</span>';
+                                        }
+                                    }
+        
+                                    if(!empty($credit)) {
+                                        if(substr($credit, 0, 1) === '-') {
+                                            $credit = '<span class="text-danger">'.$credit.'</span>';
+                                        }
+                                    }
+                                } else {
+                                    switch($post['negative-numbers']) {
+                                        case '(100)' :
+                                            if(!empty($debit)) {
+                                                if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
+                                                    $debit = '<span class="text-danger">'.$debit.'</span>';
+                                                }
+                                            }
+        
+                                            if(!empty($credit)) {
+                                                if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
+                                                    $credit = '<span class="text-danger">'.$credit.'</span>';
+                                                }
+                                            }
+                                        break;
+                                        case '100-' :
+                                            if(!empty($debit)) {
+                                                if(substr($debit, -1) === '-') {
+                                                    $debit = '<span class="text-danger">'.$debit.'</span>';
+                                                }
+                                            }
+        
+                                            if(!empty($credit)) {
+                                                if(substr($credit, -1) === '-') {
+                                                    $credit = '<span class="text-danger">'.$credit.'</span>';
+                                                }
+                                            }
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if($post['show-rows'] === 'non-zero') {
+                                if(!empty(floatval($debit)) || !empty(floatval($credit))) {
+                                    $flag = true;
+                                }
+                            }
+
+                            $accountData[$column]['debit'] = $debit;
+                            $accountData[$column]['credit'] = $credit;
+                        }
+
+                        if($flag) {
+                            $accounts[] = $accountData;
+                        }
+                    } else {
+                        $debit = floatval(str_replace(',', '', $account->balance)) > 0 ? number_format(floatval(str_replace(',', '', $account->balance)), 2) : '';
+                        $credit = floatval(str_replace(',', '', $account->balance)) < 0 ? substr(number_format(floatval(str_replace(',', '', $account->balance)), 2), 1) : '';
+    
+                        if(floatval(str_replace(',', '', $account->balance)) === 0.00) {
+                            $credit = '0.00';
+                        }
+    
+                        if(!empty($post['except-zero-amount'])) {
+                            $debit = empty($debit) ? '0.00' : $debit;
+                            $credit = empty($credit) ? '0.00' : $credit;
+                        }
+    
+                        if(!empty($post['divide-by-100'])) {
+                            if(!empty($debit)) {
+                                $debit = number_format(floatval($debit) / 100, 2);
+                            }
+    
+                            if(!empty($credit)) {
+                                $credit = number_format(floatval($credit) / 100, 2);
+                            }
+                        }
+    
+                        if(!empty($post['without-cents'])) {
+                            if(!empty($debit)) {
+                                $debit = number_format(floatval($debit), 0);
+                            }
+    
+                            if(!empty($credit)) {
+                                $credit = number_format(floatval($credit), 0);
+                            }
+                        }
+    
+                        if(!empty($post['negative-numbers'])) {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(!empty($debit)) {
+                                        if(substr($debit, 0, 1) === '-') {
+                                            $debit = str_replace('-', '', $debit);
+                                            $debit = '('.$debit.')';
+                                        }
+                                    }
+    
+                                    if(!empty($credit)) {
+                                        if(substr($credit, 0, 1) === '-') {
+                                            $credit = str_replace('-', '', $credit);
+                                            $credit = '('.$credit.')';
+                                        }
+                                    }
+                                break;
+                                case '100-' :
+                                    if(!empty($debit)) {
+                                        if(substr($debit, 0, 1) === '-') {
+                                            $debit = str_replace('-', '', $debit);
+                                            $debit = $debit.'-';
+                                        }
+                                    }
+    
+                                    if(!empty($credit)) {
+                                        if(substr($credit, 0, 1) === '-') {
+                                            $credit = str_replace('-', '', $credit);
+                                            $credit = $credit.'-';
+                                        }
+                                    }
+                                break;
+                            }
+                        }
+    
+                        if(!empty($post['show-in-red'])) {
+                            if(empty($post['negative-numbers'])) {
+                                if(!empty($debit)) {
+                                    if(substr($debit, 0, 1) === '-') {
+                                        $debit = '<span class="text-danger">'.$debit.'</span>';
+                                    }
+                                }
+    
+                                if(!empty($credit)) {
+                                    if(substr($credit, 0, 1) === '-') {
+                                        $credit = '<span class="text-danger">'.$credit.'</span>';
+                                    }
+                                }
+                            } else {
+                                switch($post['negative-numbers']) {
+                                    case '(100)' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, 0, 1) === '(' && substr($debit, -1) === ')') {
+                                                $debit = '<span class="text-danger">'.$debit.'</span>';
+                                            }
+                                        }
+    
+                                        if(!empty($credit)) {
+                                            if(substr($credit, 0, 1) === '(' && substr($credit, -1) === ')') {
+                                                $credit = '<span class="text-danger">'.$credit.'</span>';
+                                            }
+                                        }
+                                    break;
+                                    case '100-' :
+                                        if(!empty($debit)) {
+                                            if(substr($debit, -1) === '-') {
+                                                $debit = '<span class="text-danger">'.$debit.'</span>';
+                                            }
+                                        }
+    
+                                        if(!empty($credit)) {
+                                            if(substr($credit, -1) === '-') {
+                                                $credit = '<span class="text-danger">'.$credit.'</span>';
+                                            }
+                                        }
+                                    break;
+                                }
+                            }
+                        }
+
+                        $flag = true;
+
+                        if($post['show-rows'] === 'non-zero') {
+                            if(empty(floatval($debit)) && empty(floatval($credit))) {
+                                $flag = false;
+                            }
+                        }
+    
+                        if($flag) {
+                            $accounts[] = [
+                                'name' => $account->name,
+                                'debit' => $debit,
+                                'credit' => $credit
+                            ];
+                        }
+                    }
+                }
+
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
                     $row = 0;
 
-                    $header = [];
-                    foreach($post['fields'] as $field)
-                    {
+                    $header = [
+                        'string'
+                    ];
+                    if($post['display-columns-by'] === 'months') {
+                        $totalFields = 0;
+                        foreach($months as $column)
+                        {
+                            $header[] = 'string';
+                            $header[] = 'string';
+
+                            $totalFields += 2;
+                        }
+                    } else {
                         $header[] = 'string';
+                        $header[] = 'string';
+
+                        $totalFields = 2;
                     }
+
+                    // foreach($post['fields'] as $field)
+                    // {
+                    //     $header[] = 'string';
+                    // }
 
                     $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
     
                     if(empty($post['show-company-name'])) {
                         $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
-                        $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                        $writer->markMergedCell('Sheet1', 0, 0, 0, $totalFields);
                         $row++;
                     }
                     if(empty($post['show-report-title'])) {
                         $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
-                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, $totalFields);
                         $row++;
                     }
                     if(empty($post['show-report-period'])) {
                         $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => $headerAlignment, 'valign' => 'center', 'font-style' => 'bold']);
-                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, $totalFields);
                         $row++;
                     }
 
-                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
-                    $row += 2;
-
-                    if($post['group-by'] === 'none') {
-                        foreach($transactions as $transaction) {
-                            $data = [];
-    
-                            $style = [];
-                            foreach($post['fields'] as $field) {
-                                if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                                    if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                        $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                    // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                                        $style[] = ['color' => '#FF0000'];
-                                    } else {
-                                        $style[] = ['color' => '#000000'];
-                                    }
-                                } else {
-                                    $style[] = ['color' => '#000000'];
-                                }
-                                $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                            }
-    
-                            $writer->writeSheetRow('Sheet1', $data, $style);
-    
-                            $row++;
-
-                            foreach($transaction['sub_rows'] as $subRow)
-                            {
-                                $data = [];
-
-                                $style = [];
-                                foreach($post['fields'] as $field) {
-                                    if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                                        if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                                            $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                            $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                        // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                                            $style[] = ['color' => '#FF0000'];
-                                        } else {
-                                            $style[] = ['color' => '#000000'];
-                                        }
-                                    } else {
-                                        $style[] = ['color' => '#000000'];
-                                    }
-                                    $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                                }
-
-                                $writer->writeSheetRow('Sheet1', $data, $style);
-    
-                                $row++;
-                            }
-                        }
-                    } else {
-                        foreach($transactions as $group)
+                    if($post['display-columns-by'] === 'months') {
+                        $fields = [
+                            ''
+                        ];
+                        $secondFields = [
+                            ''
+                        ];
+                        foreach($months as $column)
                         {
-                            $groupHead = [];
-                            $groupTotal = [];
+                            $fields[] = $column;
+                            $fields[] = '';
 
-                            $totalFields = [
-                                'Amount',
-                                'Debit',
-                                'Credit'
-                            ];
-
-                            $groupHeaderStyle = [];
-                            $groupTotalStyle = [];
-                            foreach($post['fields'] as $field)
-                            {
-                                if(stripos($group[strtolower(str_replace(' ', '_', $field)).'_total'], '<span class="text-danger">') !== false) {
-                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('<span class="text-danger">', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
-                                    $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('</span>', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
-
-                                    $groupHeaderStyle[] = ['color' => '#FF0000', 'font-style' => 'bold'];
-                                    $groupTotalStyle[] = ['color' => '#FF0000', 'font-style' => 'bold', 'border' => 'top'];
-                                } else {
-                                    $groupHeaderStyle[] = ['color' => '#000000', 'font-style' => 'bold'];
-                                    $groupTotalStyle[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'top'];
-                                }
-
-                                $groupHead[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
-                                $groupTotal[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
-                            }
-                            $groupHead[0] = $group['name'];
-                            $groupTotal[0] = 'Total for '.$group['name'];
-
-                            $writer->writeSheetRow('Sheet1', $groupHead, $groupHeaderStyle);
-                            $row++;
-
-                            foreach($group['transactions'] as $transaction)
-                            {
-                                $data = [];
-                                $style = [];
-                                foreach($post['fields'] as $field) {
-                                    if($field === 'Rates' || $field === 'Amount') {
-                                        if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                            $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                        // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                                            $style[] = ['color' => '#FF0000'];
-                                        } else {
-                                            $style[] = ['color' => '#000000'];
-                                        }
-                                    } else {
-                                        $style[] = ['color' => '#000000'];
-                                    }
-                                    $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                                }
-        
-                                $writer->writeSheetRow('Sheet1', $data, $style);
-        
-                                $row++;
-
-                                foreach($transaction['sub_rows'] as $subRow)
-                                {
-                                    $data = [];
-
-                                    $style = [];
-                                    foreach($post['fields'] as $field) {
-                                        if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                                            if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                                                $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                                $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                                            // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                                                $style[] = ['color' => '#FF0000'];
-                                            } else {
-                                                $style[] = ['color' => '#000000'];
-                                            }
-                                        } else {
-                                            $style[] = ['color' => '#000000'];
-                                        }
-                                        $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                                    }
-
-                                    $writer->writeSheetRow('Sheet1', $data, $style);
-        
-                                    $row++;
-                                }
-                            }
-
-                            $writer->writeSheetRow('Sheet1', $groupTotal, $groupTotalStyle);
-                            $row++;
+                            $secondFields[] = 'Debit';
+                            $secondFields[] = 'Credit';
                         }
+
+                        $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'halign' => 'center', 'valign' => 'center']);
+                        $writer->writeSheetRow('Sheet1', $secondFields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                        $row += 3;
+                    } else {
+                        $fields = [
+                            '',
+                            'Debit',
+                            'Credit'
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                        $row += 2;
                     }
+                    
+
+                    // if($post['group-by'] === 'none') {
+                    //     foreach($transactions as $transaction) {
+                    //         $data = [];
+    
+                    //         $style = [];
+                    //         foreach($post['fields'] as $field) {
+                    //             if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
+                    //                 if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                    //                     $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                     $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                 // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                    //                     $style[] = ['color' => '#FF0000'];
+                    //                 } else {
+                    //                     $style[] = ['color' => '#000000'];
+                    //                 }
+                    //             } else {
+                    //                 $style[] = ['color' => '#000000'];
+                    //             }
+                    //             $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                    //         }
+    
+                    //         $writer->writeSheetRow('Sheet1', $data, $style);
+    
+                    //         $row++;
+
+                    //         foreach($transaction['sub_rows'] as $subRow)
+                    //         {
+                    //             $data = [];
+
+                    //             $style = [];
+                    //             foreach($post['fields'] as $field) {
+                    //                 if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
+                    //                     if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                    //                         $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                         $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                     // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                    //                         $style[] = ['color' => '#FF0000'];
+                    //                     } else {
+                    //                         $style[] = ['color' => '#000000'];
+                    //                     }
+                    //                 } else {
+                    //                     $style[] = ['color' => '#000000'];
+                    //                 }
+                    //                 $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                    //             }
+
+                    //             $writer->writeSheetRow('Sheet1', $data, $style);
+    
+                    //             $row++;
+                    //         }
+                    //     }
+                    // } else {
+                    //     foreach($transactions as $group)
+                    //     {
+                    //         $groupHead = [];
+                    //         $groupTotal = [];
+
+                    //         $totalFields = [
+                    //             'Amount',
+                    //             'Debit',
+                    //             'Credit'
+                    //         ];
+
+                    //         $groupHeaderStyle = [];
+                    //         $groupTotalStyle = [];
+                    //         foreach($post['fields'] as $field)
+                    //         {
+                    //             if(stripos($group[strtolower(str_replace(' ', '_', $field)).'_total'], '<span class="text-danger">') !== false) {
+                    //                 $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('<span class="text-danger">', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+                    //                 $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('</span>', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
+
+                    //                 $groupHeaderStyle[] = ['color' => '#FF0000', 'font-style' => 'bold'];
+                    //                 $groupTotalStyle[] = ['color' => '#FF0000', 'font-style' => 'bold', 'border' => 'top'];
+                    //             } else {
+                    //                 $groupHeaderStyle[] = ['color' => '#000000', 'font-style' => 'bold'];
+                    //                 $groupTotalStyle[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'top'];
+                    //             }
+
+                    //             $groupHead[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                    //             $groupTotal[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
+                    //         }
+                    //         $groupHead[0] = $group['name'];
+                    //         $groupTotal[0] = 'Total for '.$group['name'];
+
+                    //         $writer->writeSheetRow('Sheet1', $groupHead, $groupHeaderStyle);
+                    //         $row++;
+
+                    //         foreach($group['transactions'] as $transaction)
+                    //         {
+                    //             $data = [];
+                    //             $style = [];
+                    //             foreach($post['fields'] as $field) {
+                    //                 if($field === 'Rates' || $field === 'Amount') {
+                    //                     if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                    //                         $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                         $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                     // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                    //                         $style[] = ['color' => '#FF0000'];
+                    //                     } else {
+                    //                         $style[] = ['color' => '#000000'];
+                    //                     }
+                    //                 } else {
+                    //                     $style[] = ['color' => '#000000'];
+                    //                 }
+                    //                 $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                    //             }
+        
+                    //             $writer->writeSheetRow('Sheet1', $data, $style);
+        
+                    //             $row++;
+
+                    //             foreach($transaction['sub_rows'] as $subRow)
+                    //             {
+                    //                 $data = [];
+
+                    //                 $style = [];
+                    //                 foreach($post['fields'] as $field) {
+                    //                     if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
+                    //                         if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
+                    //                             $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                             $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
+                    //                         // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
+                    //                             $style[] = ['color' => '#FF0000'];
+                    //                         } else {
+                    //                             $style[] = ['color' => '#000000'];
+                    //                         }
+                    //                     } else {
+                    //                         $style[] = ['color' => '#000000'];
+                    //                     }
+                    //                     $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
+                    //                 }
+
+                    //                 $writer->writeSheetRow('Sheet1', $data, $style);
+        
+                    //                 $row++;
+                    //             }
+                    //         }
+
+                    //         $writer->writeSheetRow('Sheet1', $groupTotal, $groupTotalStyle);
+                    //         $row++;
+                    //     }
+                    // }
 
                     $writer->writeSheetRow('Sheet1', []);
                     $writer->writeSheetRow('Sheet1', []);
@@ -46690,10 +47144,10 @@ class Reports extends MY_Controller {
                     if(!empty($reportNote) && !empty($reportNote->notes)) {
                         $row += 1;
                         $writer->writeSheetRow('Sheet1', ['Notes'], ['font-style' => 'bold', 'border' => 'bottom']);
-                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, $totalFields);
                         $row += 1;
                         $writer->writeSheetRow('Sheet1', [$reportNote->notes]);
-                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, $totalFields);
                         $writer->writeSheetRow('Sheet1', []);
                         $row += 1;
                     }
@@ -46701,7 +47155,7 @@ class Reports extends MY_Controller {
                     $row += 1;
 
                     $writer->writeSheetRow('Sheet1', [$date], ['halign' => $footerAlignment, 'valign' => 'center']);
-                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, $totalFields);
 
                     $fileName = str_replace(' ', '_', $companyName).'_Trial_Balance';
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -46731,78 +47185,78 @@ class Reports extends MY_Controller {
                         </thead>
                         <tbody>';
 
-                        if($post['group-by'] === 'none') {
-                            foreach($transactions as $transaction)
-                            {
-                                $html .= '<tr>';
-                                foreach($post['fields'] as $field)
-                                {
-                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                                }
-                                $html .= '</tr>';
+                        // if($post['group-by'] === 'none') {
+                        //     foreach($transactions as $transaction)
+                        //     {
+                        //         $html .= '<tr>';
+                        //         foreach($post['fields'] as $field)
+                        //         {
+                        //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        //         }
+                        //         $html .= '</tr>';
 
-                                foreach($transaction['sub_rows'] as $subRow)
-                                {
-                                    $html .= '<tr>';
-                                    foreach($post['fields'] as $field)
-                                    {
-                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                                    }
-                                    $html .= '</tr>';
-                                }
-                            }
-                        } else {
-                            foreach($transactions as $group)
-                            {
-                                $totalFields = [
-                                    'Amount',
-                                    'Debit',
-                                    'Credit'
-                                ];
+                        //         foreach($transaction['sub_rows'] as $subRow)
+                        //         {
+                        //             $html .= '<tr>';
+                        //             foreach($post['fields'] as $field)
+                        //             {
+                        //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        //             }
+                        //             $html .= '</tr>';
+                        //         }
+                        //     }
+                        // } else {
+                        //     foreach($transactions as $group)
+                        //     {
+                        //         $totalFields = [
+                        //             'Amount',
+                        //             'Debit',
+                        //             'Credit'
+                        //         ];
                                 
-                                $html .= '<tr>';
-                                foreach($post['fields'] as $index => $field)
-                                {
-                                    if($index === 0) {
-                                        $html .= '<td><b>'.$group['name'].'</b></td>';
-                                    } else {
-                                        $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
-                                    }
-                                }
-                                $html .= '</tr>';
+                        //         $html .= '<tr>';
+                        //         foreach($post['fields'] as $index => $field)
+                        //         {
+                        //             if($index === 0) {
+                        //                 $html .= '<td><b>'.$group['name'].'</b></td>';
+                        //             } else {
+                        //                 $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                        //             }
+                        //         }
+                        //         $html .= '</tr>';
 
-                                foreach($group['transactions'] as $transaction)
-                                {
-                                    $html .= '<tr>';
-                                    foreach($post['fields'] as $field)
-                                    {
-                                        $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                                    }
-                                    $html .= '</tr>';
+                        //         foreach($group['transactions'] as $transaction)
+                        //         {
+                        //             $html .= '<tr>';
+                        //             foreach($post['fields'] as $field)
+                        //             {
+                        //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        //             }
+                        //             $html .= '</tr>';
 
-                                    foreach($transaction['sub_rows'] as $subRow)
-                                    {
-                                        $html .= '<tr>';
-                                        foreach($post['fields'] as $field)
-                                        {
-                                            $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                                        }
-                                        $html .= '</tr>';
-                                    }
-                                }
+                        //             foreach($transaction['sub_rows'] as $subRow)
+                        //             {
+                        //                 $html .= '<tr>';
+                        //                 foreach($post['fields'] as $field)
+                        //                 {
+                        //                     $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        //                 }
+                        //                 $html .= '</tr>';
+                        //             }
+                        //         }
 
-                                $html .= '<tr>';
-                                foreach($post['fields'] as $index => $field)
-                                {
-                                    if($index === 0) {
-                                        $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
-                                    } else {
-                                        $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
-                                    }
-                                }
-                                $html .= '</tr>';
-                            }
-                        }
+                        //         $html .= '<tr>';
+                        //         foreach($post['fields'] as $index => $field)
+                        //         {
+                        //             if($index === 0) {
+                        //                 $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
+                        //             } else {
+                        //                 $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
+                        //             }
+                        //         }
+                        //         $html .= '</tr>';
+                        //     }
+                        // }
                     
                     $html .= '</tbody>';
                     $html .= '<tfoot>';

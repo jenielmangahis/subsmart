@@ -219,6 +219,23 @@ class Job extends MY_Controller
         );
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
+        //default tax
+        $default_tax_id = 0;
+        $get_job_tax = array(
+            'where' => array(
+                'company_id' => $comp_id,
+                'is_default' => 1
+            ),            
+            'table' => 'tax_rates',
+            'select' => '*',
+        );
+
+        $defaultTaxRate = $this->general->get_data_with_param($get_job_tax);                
+        if( $defaultTaxRate ){
+            $default_tax_id = $defaultTaxRate[0]->id;
+        } 
+        $this->page_data['default_tax_id'] = $default_tax_id;
+
         // get color settings
         $get_color_settings = array(
             'where' => array(
