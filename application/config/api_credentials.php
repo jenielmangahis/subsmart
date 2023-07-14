@@ -16,7 +16,7 @@ $config['qb_client_secret']       = 'lbQD1t129fyCzeLgPTPlHqtteXA66Jc7xMDcS2xt';*
 //$config['qb_redirect_uri']       = 'https://nsmartrac.org/tools/quickbooks';
 $config['qb_client_id']       = 'AB8v4ZI2taAp4pMFdPazPReIe2nFvb5NwV5ebgeXkR1tl0DtAY';
 $config['qb_client_secret']       = '1q73wP26tjtVxwQIzmTuzBtHwR3In8DsHxd4QMOq';
-$config['qb_redirect_uri']       = 'https://localhost/ci/nsmart_v2/tools/quickbooks_connect';
+$config['qb_redirect_uri']       = 'https://nsmartrac.com/tools/quickbooks_connect';
 $config['qb_auth_scope']       = 'com.intuit.quickbooks.accounting openid profile email phone address';
 
 

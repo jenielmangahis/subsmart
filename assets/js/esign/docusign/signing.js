@@ -1135,7 +1135,11 @@ function Signing(hash) {
   }
 
   function renderField({ fields, recipient, context, $page }) {
-    const isOwner = recipient.id === data.recipient.id;
+    if ( recipient == null) {
+      const isOwner = false;      
+    }else{
+      const isOwner = recipient.id === data.recipient.id;      
+    }    
 
     const $fields = fields.map((field) => {
       field.original_field_name = field.field_name;

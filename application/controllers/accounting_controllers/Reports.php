@@ -44950,11 +44950,6 @@ class Reports extends MY_Controller {
                         $totalFields = 2;
                     }
 
-                    // foreach($post['fields'] as $field)
-                    // {
-                    //     $header[] = 'string';
-                    // }
-
                     $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
     
                     if(empty($post['show-company-name'])) {
@@ -44980,6 +44975,10 @@ class Reports extends MY_Controller {
                         $secondFields = [
                             ''
                         ];
+
+                        $merge = [];
+                        $start = -1;
+                        $end = 0;
                         foreach($months as $column)
                         {
                             $fields[] = $column;
@@ -44987,9 +44986,20 @@ class Reports extends MY_Controller {
 
                             $secondFields[] = 'Debit';
                             $secondFields[] = 'Credit';
+                            $start += 2;
+                            $end += 2;
+                            $merge[] = [
+                                'start' => $start,
+                                'end' => $end
+                            ];
                         }
 
                         $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'halign' => 'center', 'valign' => 'center']);
+                        foreach($merge as $col)
+                        {
+                            $writer->markMergedCell('Sheet1', $row, $col['start'], $row, $col['end']);
+                        }
+
                         $writer->writeSheetRow('Sheet1', $secondFields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
                         $row += 3;
                     } else {
@@ -45002,150 +45012,65 @@ class Reports extends MY_Controller {
                         $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
                         $row += 2;
                     }
-                    
 
-                    // if($post['group-by'] === 'none') {
-                    //     foreach($transactions as $transaction) {
-                    //         $data = [];
+                    foreach($accounts as $account)
+                    {
+                        $style = [];
+                        if($post['display-columns-by'] === 'months') {
+                            $style[] = ['color' => '#000000'];
+
+                            $data = [
+                                $account['name']
+                            ];
+                            foreach($months as $column)
+                            {
+                                if(stripos($account[$column]['debit'], '<span class="text-danger">') !== false) {
+                                    $account[$column]['debit'] = str_replace('<span class="text-danger">', '', $account[$column]['debit']);
+                                    $account[$column]['debit'] = str_replace('</span>', '', $account[$column]['debit']);
+                                    $style[] = ['color' => '#FF0000'];
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
     
-                    //         $style = [];
-                    //         foreach($post['fields'] as $field) {
-                    //             if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                    //                 if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                    //                     $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                     $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                 // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                    //                     $style[] = ['color' => '#FF0000'];
-                    //                 } else {
-                    //                     $style[] = ['color' => '#000000'];
-                    //                 }
-                    //             } else {
-                    //                 $style[] = ['color' => '#000000'];
-                    //             }
-                    //             $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                    //         }
-    
-                    //         $writer->writeSheetRow('Sheet1', $data, $style);
-    
-                    //         $row++;
+                                if(stripos($account[$column]['credit'], '<span class="text-danger">') !== false) {
+                                    $account[$column]['credit'] = str_replace('<span class="text-danger">', '', $account[$column]['credit']);
+                                    $account[$column]['credit'] = str_replace('</span>', '', $account[$column]['credit']);
+                                    $style[] = ['color' => '#FF0000'];
+                                } else {
+                                    $style[] = ['color' => '#000000'];
+                                }
 
-                    //         foreach($transaction['sub_rows'] as $subRow)
-                    //         {
-                    //             $data = [];
+                                $data[] = $account[$column]['debit'];
+                                $data[] = $account[$column]['credit'];
+                            }
+                        } else {
+                            $style[] = ['color' => '#000000'];
+                            if(stripos($account['debit'], '<span class="text-danger">') !== false) {
+                                $account['debit'] = str_replace('<span class="text-danger">', '', $account['debit']);
+                                $account['debit'] = str_replace('</span>', '', $account['debit']);
+                                $style[] = ['color' => '#FF0000'];
+                            } else {
+                                $style[] = ['color' => '#000000'];
+                            }
 
-                    //             $style = [];
-                    //             foreach($post['fields'] as $field) {
-                    //                 if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                    //                     if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                    //                         $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                         $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                     // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                    //                         $style[] = ['color' => '#FF0000'];
-                    //                     } else {
-                    //                         $style[] = ['color' => '#000000'];
-                    //                     }
-                    //                 } else {
-                    //                     $style[] = ['color' => '#000000'];
-                    //                 }
-                    //                 $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                    //             }
+                            if(stripos($account['credit'], '<span class="text-danger">') !== false) {
+                                $account['credit'] = str_replace('<span class="text-danger">', '', $account['credit']);
+                                $account['credit'] = str_replace('</span>', '', $account['credit']);
+                                $style[] = ['color' => '#FF0000'];
+                            } else {
+                                $style[] = ['color' => '#000000'];
+                            }
 
-                    //             $writer->writeSheetRow('Sheet1', $data, $style);
-    
-                    //             $row++;
-                    //         }
-                    //     }
-                    // } else {
-                    //     foreach($transactions as $group)
-                    //     {
-                    //         $groupHead = [];
-                    //         $groupTotal = [];
+                            $data = [
+                                $account['name'],
+                                $account['debit'],
+                                $account['credit']
+                            ];
+                        }
 
-                    //         $totalFields = [
-                    //             'Amount',
-                    //             'Debit',
-                    //             'Credit'
-                    //         ];
-
-                    //         $groupHeaderStyle = [];
-                    //         $groupTotalStyle = [];
-                    //         foreach($post['fields'] as $field)
-                    //         {
-                    //             if(stripos($group[strtolower(str_replace(' ', '_', $field)).'_total'], '<span class="text-danger">') !== false) {
-                    //                 $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('<span class="text-danger">', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
-                    //                 $group[strtolower(str_replace(' ', '_', $field)).'_total'] = str_replace('</span>', '', $group[strtolower(str_replace(' ', '_', $field)).'_total']);
-
-                    //                 $groupHeaderStyle[] = ['color' => '#FF0000', 'font-style' => 'bold'];
-                    //                 $groupTotalStyle[] = ['color' => '#FF0000', 'font-style' => 'bold', 'border' => 'top'];
-                    //             } else {
-                    //                 $groupHeaderStyle[] = ['color' => '#000000', 'font-style' => 'bold'];
-                    //                 $groupTotalStyle[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'top'];
-                    //             }
-
-                    //             $groupHead[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
-                    //             $groupTotal[] = in_array($field, $totalFields) ? $group[strtolower(str_replace(' ', '_', $field)).'_total'] : '';
-                    //         }
-                    //         $groupHead[0] = $group['name'];
-                    //         $groupTotal[0] = 'Total for '.$group['name'];
-
-                    //         $writer->writeSheetRow('Sheet1', $groupHead, $groupHeaderStyle);
-                    //         $row++;
-
-                    //         foreach($group['transactions'] as $transaction)
-                    //         {
-                    //             $data = [];
-                    //             $style = [];
-                    //             foreach($post['fields'] as $field) {
-                    //                 if($field === 'Rates' || $field === 'Amount') {
-                    //                     if(stripos($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                    //                         $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                         $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                     // if(substr($transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                    //                         $style[] = ['color' => '#FF0000'];
-                    //                     } else {
-                    //                         $style[] = ['color' => '#000000'];
-                    //                     }
-                    //                 } else {
-                    //                     $style[] = ['color' => '#000000'];
-                    //                 }
-                    //                 $data[] = $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                    //             }
-        
-                    //             $writer->writeSheetRow('Sheet1', $data, $style);
-        
-                    //             $row++;
-
-                    //             foreach($transaction['sub_rows'] as $subRow)
-                    //             {
-                    //                 $data = [];
-
-                    //                 $style = [];
-                    //                 foreach($post['fields'] as $field) {
-                    //                     if($field === 'Rate' || $field === 'Amount' || $field === 'Open Balance' || $field === 'Qty') {
-                    //                         if(stripos($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], '<span class="text-danger">') !== false) {
-                    //                             $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('<span class="text-danger">', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                             $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))] = str_replace('</span>', '', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]);
-                    //                         // if(substr($subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))], 0, 1) === '-') {
-                    //                             $style[] = ['color' => '#FF0000'];
-                    //                         } else {
-                    //                             $style[] = ['color' => '#000000'];
-                    //                         }
-                    //                     } else {
-                    //                         $style[] = ['color' => '#000000'];
-                    //                     }
-                    //                     $data[] = $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))];
-                    //                 }
-
-                    //                 $writer->writeSheetRow('Sheet1', $data, $style);
-        
-                    //                 $row++;
-                    //             }
-                    //         }
-
-                    //         $writer->writeSheetRow('Sheet1', $groupTotal, $groupTotalStyle);
-                    //         $row++;
-                    //     }
-                    // }
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
 
                     $writer->writeSheetRow('Sheet1', []);
                     $writer->writeSheetRow('Sheet1', []);
@@ -45185,13 +45110,30 @@ class Reports extends MY_Controller {
                         <br /><br /><br />
 
                         <table style="width="100%;>
-                        <thead>
-                            <tr>';
-                            foreach($post['fields'] as $field) {
-                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                        <thead>';
+                            if($post['display-columns-by'] === 'months') {
+                                $html .= '<tr>';
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black" rowspan="2"></th>';
+                                foreach($months as $column)
+                                {
+                                    $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black; text-align: center" colspan="2">'.$column.'</th>';
+                                }
+                                $html .= '</tr>';
+                                $html .= '<tr>';
+                                foreach($months as $column)
+                                {
+                                    $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
+                                    $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
+                                }
+                                $html .= '</tr>';
+                            } else {
+                                $html .= '<tr>';
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"></th>';
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
+                                $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
+                                $html .= '</tr>';
                             }
-                        $html .= '</tr>
-                        </thead>
+                        $html .= '</thead>
                         <tbody>';
 
                         // if($post['group-by'] === 'none') {
@@ -45271,10 +45213,10 @@ class Reports extends MY_Controller {
                     $html .= '<tfoot>';
                     if(!empty($reportNote) && !empty($reportNote->notes)) {
                     $html .= '<tr>
-                            <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                            <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'" style="border-bottom: 1px solid black"></td>
                         </tr>
                         <tr>
-                            <td colspan="'.count($post['fields']).'">
+                            <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'">
                                 <h4><b>Notes</b></h4>
                                 '.$reportNote->notes.'
                             </td>
@@ -45282,7 +45224,7 @@ class Reports extends MY_Controller {
                     }
 
                     $html .= '<tr style="text-align: '.$footerAlignment.'">
-                                <td colspan="'.count($post['fields']).'">
+                                <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'">
                                     <p style="margin: 0">'.$date.'</p>
                                 </td>
                             </tr>
