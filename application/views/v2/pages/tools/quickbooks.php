@@ -58,8 +58,8 @@
                             </a>
                             <div class="date-filter">
                                 <input type="text" name="attendace_date" id="attendance-filter" class="form-control" placeholder="" value="" required="">
-                                <input type="hidden" name="date_from" id="date-from" value="">
-                                <input type="hidden" name="date_to" id="date-to" value="">
+                                <input type="hidden" name="date_from" id="date-from" value="<?= date("Y-m-d"); ?>">
+                                <input type="hidden" name="date_to" id="date-to" value="<?= date("Y-m-d"); ?>">
                             </div>
                         </div>
                     </div>
