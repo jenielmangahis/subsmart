@@ -22669,6 +22669,59 @@ class Reports extends MY_Controller {
                     $this->page_data['footer_alignment'] = get('footer-alignment') === 'left' ? 'start' : 'end';
                 }
             break;
+            case 'contractor_payments' :
+                $date = date("m/d/Y");
+                $month = date("m", strtotime($date));
+                $year = date("Y");
+                $currQuarter = floor(intval($month) / 3 + 1);
+
+                switch($currQuarter)
+                {
+                    case 1 :
+                        $startDate = date("M d, Y", strtotime("01/01/$year"));
+                        $endDate = date("M t, Y", strtotime("03/01/$year"));
+
+                        $this->page_data['start_date'] = date("m/d/Y", strtotime("01/01/$year"));
+                        $this->page_data['end_date'] = date("m/t/Y", strtotime("03/01/$year"));
+                    break;
+                    case 2 :
+                        $startDate = date("M d, Y", strtotime("04/01/$year"));
+                        $endDate = date("M t, Y", strtotime("06/01/$year"));
+
+                        $this->page_data['start_date'] = date("m/d/Y", strtotime("04/01/$year"));
+                        $this->page_data['end_date'] = date("m/t/Y", strtotime("06/01/$year"));
+                    break;
+                    case 3 :
+                        $startDate = date("M d, Y", strtotime("07/01/$year"));
+                        $endDate = date("M t, Y", strtotime("09/01/$year"));
+
+                        $this->page_data['start_date'] = date("m/d/Y", strtotime("07/01/$year"));
+                        $this->page_data['end_date'] = date("m/t/Y", strtotime("09/01/$year"));
+                    break;
+                    case 4 :
+                        $startDate = date("M d, Y", strtotime("10/01/$year"));
+                        $endDate = date("M t, Y", strtotime("12/01/$year"));
+
+                        $this->page_data['start_date'] = date("m/d/Y", strtotime("10/01/$year"));
+                        $this->page_data['end_date'] = date("m/t/Y", strtotime("12/01/$year"));
+                    break;
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+
+                    $startDate = date("M d, Y", strtotime($this->page_data['start_date']));
+                    $endDate = date("M d, Y", strtotime($this->page_data['end_date']));
+                }
+
+                $this->page_data['report_period'] = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
+
+                $this->page_data['transactions'] = [];
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -46916,6 +46969,11 @@ class Reports extends MY_Controller {
                 }
                 $date = date($preparedTimestamp);
 
+                if(empty($post['show-report-basis'])) {
+                    $accountingMethod = empty($post['accounting-method']) ? 'Accrual basis' : 'Cash basis';
+                    $date = "$accountingMethod $date";
+                }
+
                 $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
 
                 if($post['type'] === 'excel') {
@@ -47126,88 +47184,30 @@ class Reports extends MY_Controller {
                             }
                         $html .= '</thead>
                         <tbody>';
+                        foreach($accounts as $account) {
+                            $html .= '<tr>';
+                            $html .= '<td>'.$account['name'].'</td>';
+                            if($post['display-columns-by'] === 'months') {
+                                foreach($months as $column) {
+                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['debit']).'</td>';
+                                    $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['credit']).'</td>';
+                                }
+                            } else {
+                                $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['debit']).'</td>';
+                                $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['credit']).'</td>';
+                            }
+                            $html .= '</tr>';
+                        }
 
-                        // if($post['group-by'] === 'none') {
-                        //     foreach($transactions as $transaction)
-                        //     {
-                        //         $html .= '<tr>';
-                        //         foreach($post['fields'] as $field)
-                        //         {
-                        //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                        //         }
-                        //         $html .= '</tr>';
-
-                        //         foreach($transaction['sub_rows'] as $subRow)
-                        //         {
-                        //             $html .= '<tr>';
-                        //             foreach($post['fields'] as $field)
-                        //             {
-                        //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                        //             }
-                        //             $html .= '</tr>';
-                        //         }
-                        //     }
-                        // } else {
-                        //     foreach($transactions as $group)
-                        //     {
-                        //         $totalFields = [
-                        //             'Amount',
-                        //             'Debit',
-                        //             'Credit'
-                        //         ];
-                                
-                        //         $html .= '<tr>';
-                        //         foreach($post['fields'] as $index => $field)
-                        //         {
-                        //             if($index === 0) {
-                        //                 $html .= '<td><b>'.$group['name'].'</b></td>';
-                        //             } else {
-                        //                 $html .= '<td><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
-                        //             }
-                        //         }
-                        //         $html .= '</tr>';
-
-                        //         foreach($group['transactions'] as $transaction)
-                        //         {
-                        //             $html .= '<tr>';
-                        //             foreach($post['fields'] as $field)
-                        //             {
-                        //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $transaction[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                        //             }
-                        //             $html .= '</tr>';
-
-                        //             foreach($transaction['sub_rows'] as $subRow)
-                        //             {
-                        //                 $html .= '<tr>';
-                        //                 foreach($post['fields'] as $field)
-                        //                 {
-                        //                     $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $subRow[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
-                        //                 }
-                        //                 $html .= '</tr>';
-                        //             }
-                        //         }
-
-                        //         $html .= '<tr>';
-                        //         foreach($post['fields'] as $index => $field)
-                        //         {
-                        //             if($index === 0) {
-                        //                 $html .= '<td style="border-top: 1px solid black"><b>Total for '.$group['name'].'</b></td>';
-                        //             } else {
-                        //                 $html .= '<td style="border-top: 1px solid black"><b>'.str_replace('class="text-danger"', 'style="color: red"', $group[strtolower(str_replace(' ', '_', str_replace('/', '_', $field))).'_total']).'</b></td>';
-                        //             }
-                        //         }
-                        //         $html .= '</tr>';
-                        //     }
-                        // }
-                    
                     $html .= '</tbody>';
                     $html .= '<tfoot>';
+                    $totalCols = $post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : 3;
                     if(!empty($reportNote) && !empty($reportNote->notes)) {
                     $html .= '<tr>
-                            <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'" style="border-bottom: 1px solid black"></td>
+                            <td colspan="'.$totalCols.'" style="border-bottom: 1px solid black"></td>
                         </tr>
                         <tr>
-                            <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'">
+                            <td colspan="'.$totalCols.'">
                                 <h4><b>Notes</b></h4>
                                 '.$reportNote->notes.'
                             </td>
@@ -47215,7 +47215,7 @@ class Reports extends MY_Controller {
                     }
 
                     $html .= '<tr style="text-align: '.$footerAlignment.'">
-                                <td colspan="'.$post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : '3'.'">
+                                <td colspan="'.$totalCols.'">
                                     <p style="margin: 0">'.$date.'</p>
                                 </td>
                             </tr>

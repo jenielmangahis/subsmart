@@ -498,8 +498,8 @@ function Signing(hash) {
         isChecked = value.isChecked;
       }
 
-      console.log('Panel Type' + panel_type);
-      console.log('Is Checked' + isChecked);
+      //console.log('Panel Type' + panel_type);
+      //console.log('Is Checked' + isChecked);
 
       //const inputType = field_name.toLowerCase();
       const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
@@ -1134,13 +1134,8 @@ function Signing(hash) {
     return null;
   }
 
-  function renderField({ fields, recipient, context, $page }) {
-    if ( recipient == null) {
-      const isOwner = false;      
-    }else{
-      const isOwner = recipient.id === data.recipient.id;      
-    }    
-
+  function renderField({ fields, recipient, context, $page }) {    
+    const isOwner = recipient == null ? false : recipient.id === data.recipient.id;    
     const $fields = fields.map((field) => {
       field.original_field_name = field.field_name;
 
@@ -1775,7 +1770,7 @@ function Signing(hash) {
           );
 
           const jsonData = await response.json();
-          console.log(jsonData);
+          //console.log(jsonData);
         }
       }
 
