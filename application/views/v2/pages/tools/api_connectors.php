@@ -21,7 +21,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -41,14 +41,14 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/google_contacts'); ?>'">Manage</button>
+                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/google_contacts'); ?>'">Manage</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -68,14 +68,14 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/quickbooks'); ?>'">Manage</button>
+                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks'); ?>'">Manage</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -116,7 +116,13 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <?php 
+                            $is_enabled = 0;
+                            if( array_key_exists('zapier', $enabledApiConnectors) ){
+                                $is_enabled = 1;
+                            }   
+                        ?>
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -133,13 +139,7 @@
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-6">
-                                                <div class="form-check form-switch nsm-switch m-auto">
-                                                    <?php 
-                                                        $is_enabled = 0;
-                                                        if( array_key_exists('zapier', $enabledApiConnectors) ){
-                                                            $is_enabled = 1;
-                                                        }   
-                                                    ?>
+                                                <div class="form-check form-switch nsm-switch m-auto">                                                    
                                                     <input class="form-check-input chk_api_enabled" data-apiname="zapier" type="checkbox" id="switch_zapier" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_zapier">Enabled</label>
                                                 </div>
@@ -157,7 +157,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -198,7 +198,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -239,7 +239,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -280,7 +280,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card primary p-5" role="button">
+                        <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
