@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-12 text-end py-3">
                         <?php date_default_timezone_set(logged("role")); ?>
-                        <label class="content-title"><span class="text-muted">Today:</span> <?php echo date('M d, Y') . " " ?></label>
+                        <label class="content-title"><span class="text-muted">Today: </span> <?php echo date('M d, Y') . " " ?></label>
                     </div>
                 </div>
                 <div class="row g-3">

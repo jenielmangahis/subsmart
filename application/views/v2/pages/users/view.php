@@ -1,21 +1,26 @@
 <?php include viewPath('v2/includes/header'); ?>
 <style type="text/css">
-    #COMMISSION_HISTORY_SEARCH {
+    #COMMISSION_HISTORY_SEARCH, #PAY_HISTORY_SEARCH {
         width: 200px;
     }
 
+     #PAY_SELECTION {
+        width: 100px;
+     }
+
     #COMMISSION_HISTORY_TABLE_length, 
     #COMMISSION_HISTORY_TABLE_filter, 
-    #COMMISSION_HISTORY_TABLE_info {
+    #PAY_HISTORY_TABLE_length, 
+    #PAY_HISTORY_TABLE_filter {
         display: none;
     }
-    #COMMISSION_HISTORY_TABLE.dataTable thead th, #COMMISSION_HISTORY_TABLE.dataTable thead td {
+    .customTable.dataTable thead th, .customTable.dataTable thead td {
         padding: 5px;
     }
-    #COMMISSION_HISTORY_TABLE.dataTable.no-footer {
+    .customTable.dataTable.no-footer {
         border: 1px solid lightgray;
     }
-    #COMMISSION_HISTORY_TABLE.dataTable, #COMMISSION_HISTORY_TABLE.dataTable th, #COMMISSION_HISTORY_TABLE.dataTable td {
+    .customTable.dataTable, .customTable.dataTable th, .customTable.dataTable td {
         box-sizing: border-box;
     }
 </style>
@@ -48,7 +53,9 @@
                                   <a class="nsm-button primary" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
                                   <a class="nsm-button primary" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);" style="width: 100%;">Edit Profile</a>
                                   <br />
-                                  <button class="nsm-button mt-3 COMMISSION_HISTORY" data-bs-toggle="modal" data-bs-target="#commission_history_modal">Commission History</button>
+                                  <?php if ($current_user_id == $User->id): ?>
+                                  <button class="nsm-button mt-3 COMMISSION_HISTORY" data-bs-toggle="modal" data-bs-target="#paycommission_history_modal">Pay / Commission History</button>
+                                  <?php endif; ?>
                                 </div>
                               </div>
                             </div>
@@ -123,75 +130,129 @@
         </div>
     </div>
 
-<div class="modal fade" id="commission_history_modal" role="dialog">
+<div class="modal fade" id="paycommission_history_modal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Commission History</span>
+                <span class="modal-title content-title" style="font-size: 17px;">History Information</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="table-responsive">
-                        <input id="COMMISSION_HISTORY_SEARCH" class="form-control mb-2" type="text" name="" placeholder="Search History...">
-                        <table id="COMMISSION_HISTORY_TABLE" class="table table-hover table-sm">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Datetime</th>
-                                    <th>Module</th>
-                                    <th>Type</th>
-                                    <th>Percentage</th>
-                                    <th>Commission</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($commission_info as $commission_infos): ?>
-                                <tr>
-                                    <td><?php echo $commission_infos->datetime; ?></td>
-                                    <td><?php echo $commission_infos->location; ?></td>
-                                    <td><?php echo ($commission_infos->type == 0) ? "Percentage (Gross, Net)" : "Net + Percentage" ; ?></td>
-                                    <td><?php echo ($commission_infos->percentage) ? ($commission_infos->percentage * 100)."%" : "0%"; ?></td>
-                                    <td><?php echo ($commission_infos->commission) ? "+$".number_format($commission_infos->commission, 2) : "$0" ?></td>   
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pills-pay" type="button" role="tab" aria-controls="pills-pay" aria-selected="true">Pay</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-commission-tab" data-bs-toggle="pill" data-bs-target="#pills-commission" type="button" role="tab" aria-controls="pills-commission" aria-selected="false">Commission</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane show active" id="pills-pay" role="tabpanel" aria-labelledby="pills-pay-tab">
+                                
+                                <div>
+                                    <input id="PAY_HISTORY_SEARCH" class="form-control mb-2 float-start" type="text" name="" placeholder="Search History...">
+                                    <select id="PAY_SELECTION" class="form-select float-end">
+                                        <option value="Hourly">Hourly</option>
+                                        <option disabled value="Weekly">Weekly</option>
+                                        <option disabled value="Monthly">Monthly</option>
+                                    </select>
+                                </div>
+                                <table id="PAY_HISTORY_TABLE" class="table table-hover table-sm customTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Shift Date</th>
+                                            <th>Payable Hours</th>
+                                            <th>Hourly Rate</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($hourly_pay_info as $hourly_pay_infos): ?>
+                                        <tr>
+                                            <td><?php echo $hourly_pay_infos->SHIFT_DATE; ?></td>
+                                            <td><?php echo $hourly_pay_infos->PAYABLE_HOURS; ?></td>
+                                            <td><?php echo "$".$hourly_pay_infos->HOURLY_RATE; ?></td>
+                                            <td><?php echo "$".$hourly_pay_infos->TOTAL; ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                              <!--   
+                                <script type="text/javascript">
+                                        $('#PAY_SELECTION').change(function(event) {
+                                            let tableSelection = $(this).val();
+                                            if (tableSelection == "Hourly") {
+                                                alert(tableSelection);
+                                            } else if (tableSelection == "Weekly") {
+                                                alert(tableSelection);
+                                            } else {
+                                                alert(tableSelection);
+                                            }
+                                        });
+                                    </script> -->
+                            </div>
+                            <div class="tab-pane" id="pills-commission" role="tabpanel" aria-labelledby="pills-commission-tab">
+                                <input id="COMMISSION_HISTORY_SEARCH" class="form-control mb-2" type="text" name="" placeholder="Search History...">
+                                <table id="COMMISSION_HISTORY_TABLE" class="table table-hover table-sm customTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Datetime</th>
+                                            <th>Module</th>
+                                            <th>Type</th>
+                                            <th>Percentage</th>
+                                            <th>Commission</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($commission_info as $commission_infos): ?>
+                                        <tr>
+                                            <td><?php echo $commission_infos->datetime; ?></td>
+                                            <td><?php echo $commission_infos->location; ?></td>
+                                            <td><?php echo ($commission_infos->type == 0) ? "Percentage (Gross, Net)" : "Net + Percentage" ; ?></td>
+                                            <td><?php echo ($commission_infos->percentage) ? ($commission_infos->percentage * 100)."%" : "0%"; ?></td>
+                                            <td><?php echo ($commission_infos->commission) ? "+$".number_format($commission_infos->commission, 2) : "$0" ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-    <div class="modal fade nsm-modal fade" id="modalEditEmployee" aria-labelledby="modalEditEmployeelabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Edit Employee</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <form action="" id="editEmployeeForm" enctype="multipart/form-data">
+<div class="modal fade nsm-modal fade" id="modalEditEmployee" aria-labelledby="modalEditEmployeelabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Employee</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form action="" id="editEmployeeForm" enctype="multipart/form-data">
                 <div class="modal-body modal-edit-employee" style="max-height: 500px; overflow: auto;"></div>
-                <div class="modal-footer" style="display:block;">                    
+                <div class="modal-footer" style="display:block;">
                     <div style="float:right;">
                         <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary" id="updateEmployee">Update</button>
                     </div>
                 </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <div class="modal fade nsm-modal fade" id="modalChangePassword" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Change Password</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <form method="POST" id="change_password_form">
+<div class="modal fade nsm-modal fade" id="modalChangePassword" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Change Password</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form method="POST" id="change_password_form">
                 <div class="modal-body">
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
@@ -215,16 +276,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="display:block;">                    
+                <div class="modal-footer" style="display:block;">
                     <div style="float:right;">
                         <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary" id="updateEmployee">Save</button>
                     </div>
                 </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
 </div>
 <script type="text/javascript">
@@ -234,6 +295,13 @@ $(document).ready(function(){
     });
     $("#COMMISSION_HISTORY_SEARCH").keyup(function() {
         COMMISSION_HISTORY_TABLE.search($(this).val()).draw()
+    });
+
+    var PAY_HISTORY_TABLE = $('#PAY_HISTORY_TABLE').DataTable({
+        "ordering": false,
+    });
+    $("#PAY_HISTORY_SEARCH").keyup(function() {
+        PAY_HISTORY_TABLE.search($(this).val()).draw()
     });
 
     $('#modalEditEmployee').modal({backdrop: 'static', keyboard: false});

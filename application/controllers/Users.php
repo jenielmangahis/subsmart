@@ -1300,6 +1300,8 @@ class Users extends MY_Controller
 		], ['order' => ['id', 'desc']]);
 
 		$this->page_data['commission_info'] = $this->users_model->getCommissionHistory($id);
+		$this->page_data['hourly_pay_info'] = $this->users_model->getHourlyPayHistory($id);
+		$this->page_data['current_user_id'] = logged('id');
 		$this->load->view('v2/pages/users/view', $this->page_data);
 	}
 

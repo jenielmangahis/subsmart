@@ -7,7 +7,6 @@
     </div>
 </div>
 
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/employees_tabs'); ?>
@@ -61,9 +60,18 @@
                                     <td class="nsm-text-primary"><?= $p->payscale_name; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
+                                            <?php 
+                                                if ($p->payscale_name !== "Base (Hourly Rate)" && 
+                                                    $p->payscale_name !== "Base (Monthly Rate)" && 
+                                                    $p->payscale_name !== "Base (Weekly Rate)" && 
+                                                    $p->payscale_name !== "Base (Weekly Rate)" &&
+                                                    $p->payscale_name !== "Compensation (Base Amount)" && 
+                                                    $p->payscale_name !== "Compensation (Hourly Rate)") : 
+                                            ?>
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
+                                            <?php endif; ?>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>">Edit</a>

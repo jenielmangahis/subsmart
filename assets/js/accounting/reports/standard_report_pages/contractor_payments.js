@@ -97,6 +97,62 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
+$("#btn_print_report").on("click", function() {
+    $("#report_table_print").printThis();
+});
+
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {
