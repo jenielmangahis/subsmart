@@ -22718,7 +22718,65 @@ class Reports extends MY_Controller {
 
                 $this->page_data['report_period'] = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
 
-                $this->page_data['transactions'] = [];
+                $transactions = [];
+
+                $contractors = $this->vendors_model->get_company_contractors([0, 1]);
+
+                $filters = [
+                    'start-date' => date("Y-m-d", strtotime($this->page_data['start_date'])),
+                    'end-date' => date("Y-m-d", strtotime($this->page_data['end_date']))
+                ];
+                foreach($contractors as $contractor)
+                {
+                    $expenses = $this->vendors_model->get_vendor_expense_transactions($contractor->id, $filters);
+                    $checks = $this->vendors_model->get_vendor_check_transactions($contractor->id, $filters);
+
+                    foreach($expenses as $expense)
+                    {
+                        $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+
+                        foreach($categories as $category)
+                        {
+                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+
+                            $transactions[] = [
+                                'date' => date('m/d/Y', strtotime($expense->payment_date)),
+                                'contractor' => $contractor->display_name,
+                                'type' => 'Expense',
+                                'pay_method' => 'Other',
+                                'pay_status' => '-',
+                                'category' => $accountType,
+                                'amount' => number_format(floatval($category->amount), 2)
+                            ];
+                        }
+                    }
+
+                    foreach($checks as $check)
+                    {
+                        $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
+
+                        foreach($categories as $category)
+                        {
+                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+
+                            $transactions[] = [
+                                'date' => date('m/d/Y', strtotime($check->payment_date)),
+                                'contractor' => $contractor->display_name,
+                                'type' => 'Check',
+                                'pay_method' => 'Check',
+                                'pay_status' => '-',
+                                'category' => $accountType,
+                                'amount' => number_format(floatval($category->amount), 2)
+                            ];
+                        }
+                    }
+                }
+
+                usort($transactions, function($a, $b) {
+                    return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                });
+
+                $this->page_data['transactions'] = $transactions;
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
@@ -47241,6 +47299,284 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Trial_Balance.pdf', 'D');
+                }
+            break;
+            case 'Contractor Payments' :
+                $date = date("m/d/Y");
+                $month = date("m", strtotime($date));
+                $year = date("Y");
+                $currQuarter = floor(intval($month) / 3 + 1);
+
+                switch($currQuarter)
+                {
+                    case 1 :
+                        $startDate = date("M d, Y", strtotime("01/01/$year"));
+                        $endDate = date("M t, Y", strtotime("03/01/$year"));
+
+                        $start_date = date("m/d/Y", strtotime("01/01/$year"));
+                        $end_date = date("m/t/Y", strtotime("03/01/$year"));
+                    break;
+                    case 2 :
+                        $startDate = date("M d, Y", strtotime("04/01/$year"));
+                        $endDate = date("M t, Y", strtotime("06/01/$year"));
+
+                        $start_date = date("m/d/Y", strtotime("04/01/$year"));
+                        $end_date = date("m/t/Y", strtotime("06/01/$year"));
+                    break;
+                    case 3 :
+                        $startDate = date("M d, Y", strtotime("07/01/$year"));
+                        $endDate = date("M t, Y", strtotime("09/01/$year"));
+
+                        $start_date = date("m/d/Y", strtotime("07/01/$year"));
+                        $end_date = date("m/t/Y", strtotime("09/01/$year"));
+                    break;
+                    case 4 :
+                        $startDate = date("M d, Y", strtotime("10/01/$year"));
+                        $endDate = date("M t, Y", strtotime("12/01/$year"));
+
+                        $start_date = date("m/d/Y", strtotime("10/01/$year"));
+                        $end_date = date("m/t/Y", strtotime("12/01/$year"));
+                    break;
+                }
+
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+
+                    $startDate = date("M d, Y", strtotime($start_date));
+                    $endDate = date("M d, Y", strtotime($end_date));
+                }
+
+                $report_period = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
+
+                $transactions = [];
+
+                $contractors = $this->vendors_model->get_company_contractors([0, 1]);
+
+                $filters = [
+                    'start-date' => date("Y-m-d", strtotime($start_date)),
+                    'end-date' => date("Y-m-d", strtotime($end_date))
+                ];
+
+                foreach($contractors as $contractor)
+                {
+                    $expenses = $this->vendors_model->get_vendor_expense_transactions($contractor->id, $filters);
+                    $checks = $this->vendors_model->get_vendor_check_transactions($contractor->id, $filters);
+
+                    foreach($expenses as $expense)
+                    {
+                        $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+
+                        foreach($categories as $category)
+                        {
+                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+
+                            $transactions[] = [
+                                'date' => date('m/d/Y', strtotime($expense->payment_date)),
+                                'contractor' => $contractor->display_name,
+                                'type' => 'Expense',
+                                'pay_method' => 'Other',
+                                'pay_status' => '-',
+                                'category' => $account,
+                                'amount' => number_format(floatval($category->amount), 2)
+                            ];
+                        }
+                    }
+
+                    foreach($checks as $check)
+                    {
+                        $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
+
+                        foreach($categories as $category)
+                        {
+                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+
+                            $transactions[] = [
+                                'date' => date('m/d/Y', strtotime($check->payment_date)),
+                                'contractor' => $contractor->display_name,
+                                'type' => 'Check',
+                                'pay_method' => 'Check',
+                                'pay_status' => '-',
+                                'category' => $account,
+                                'amount' => number_format(floatval($category->amount), 2)
+                            ];
+                        }
+                    }
+                }
+
+                usort($transactions, function($a, $b) {
+                    return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                });
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $fields = [
+                        'Date',
+                        'Contractor',
+                        'Type',
+                        'Pay Method',
+                        'Pay Status',
+                        'Category',
+                        'Amount'
+                    ];
+
+                    $header = [];
+                    
+                    foreach($fields as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($fields));
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    foreach($transactions as $transaction)
+                    {
+                        $data = [];
+                        $style = [];
+
+                        foreach($fields as $field)
+                        {
+                            $data[] = $transaction[strtolower(str_replace(' ', '_', $field))];
+                            $style[] = ['color' => '#000000'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Contractor_Payments';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Contractor_Payments.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    // $html = '
+                    //     <table style="padding-top:-40px;">
+                    //         <tr>
+                    //             <td style="text-align: '.$headerAlignment.'">';
+                    //                 $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                    //                 $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                    //                 $html .= empty($post['show-report-period']) ? '<h4 style="margin: 0">'.$report_period.'</h4>' : '';
+                    //             $html .= '</td>
+                    //         </tr>
+                    //     </table>
+                    //     <br /><br /><br />
+
+                    //     <table style="width="100%;>
+                    //     <thead>';
+                    //         if($post['display-columns-by'] === 'months') {
+                    //             $html .= '<tr>';
+                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black" rowspan="2"></th>';
+                    //             foreach($months as $column)
+                    //             {
+                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black; text-align: center" colspan="2">'.$column.'</th>';
+                    //             }
+                    //             $html .= '</tr>';
+                    //             $html .= '<tr>';
+                    //             foreach($months as $column)
+                    //             {
+                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
+                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
+                    //             }
+                    //             $html .= '</tr>';
+                    //         } else {
+                    //             $html .= '<tr>';
+                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"></th>';
+                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
+                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
+                    //             $html .= '</tr>';
+                    //         }
+                    //     $html .= '</thead>
+                    //     <tbody>';
+                    //     foreach($accounts as $account) {
+                    //         $html .= '<tr>';
+                    //         $html .= '<td>'.$account['name'].'</td>';
+                    //         if($post['display-columns-by'] === 'months') {
+                    //             foreach($months as $column) {
+                    //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['debit']).'</td>';
+                    //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['credit']).'</td>';
+                    //             }
+                    //         } else {
+                    //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['debit']).'</td>';
+                    //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['credit']).'</td>';
+                    //         }
+                    //         $html .= '</tr>';
+                    //     }
+
+                    // $html .= '</tbody>';
+                    // $html .= '<tfoot>';
+                    // $totalCols = $post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : 3;
+                    // if(!empty($reportNote) && !empty($reportNote->notes)) {
+                    // $html .= '<tr>
+                    //         <td colspan="'.$totalCols.'" style="border-bottom: 1px solid black"></td>
+                    //     </tr>
+                    //     <tr>
+                    //         <td colspan="'.$totalCols.'">
+                    //             <h4><b>Notes</b></h4>
+                    //             '.$reportNote->notes.'
+                    //         </td>
+                    //     </tr>';
+                    // }
+
+                    // $html .= '<tr style="text-align: '.$footerAlignment.'">
+                    //             <td colspan="'.$totalCols.'">
+                    //                 <p style="margin: 0">'.$date.'</p>
+                    //             </td>
+                    //         </tr>
+                    //     </tfoot>
+                    // </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Contractor_Payments';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Contractor Payments";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Contractor_Payments.pdf', 'D');
                 }
             break;
         }

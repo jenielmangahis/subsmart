@@ -909,7 +909,8 @@ class Cron_Api extends MYF_Controller {
 
                         $attendance_start_date = date('Y-m-d\TH:i:s', strtotime($logs->start_date . ' ' . $logs->start_time));
                         $attendance_end_date   = date('Y-m-d\TH:i:s', strtotime($logs->end_date . ' ' . $logs->end_time));
-                        $timesheet_data = [
+                        
+                        /*$timesheet_data = [
                             "NameOf" => "Employee",
                             "EmployeeRef" => [
                                 "value" => $qbEmployee->qb_user_id,
@@ -917,6 +918,21 @@ class Cron_Api extends MYF_Controller {
                             ],
                             "StartTime" => $attendance_start_date,
                             "EndTime" => $attendance_end_date,
+                            "BillableStatus" => $logs->billable_status,
+                            "Taxable" => $logs->taxable == 1 ? true : false,
+                            "HourlyRate" => $logs->hourly_rate,
+                            "Description"=> $logs->description
+                        ];*/
+
+                        $timesheet_data = [
+                            "NameOf" => "Employee",
+                            "EmployeeRef" => [
+                                "value" => $qbEmployee->qb_user_id,
+                                "name" => $qbEmployee->name
+                            ],
+                            'TxnDate' => date("Y-m-d", strtotime($logs->start_date)),
+                            "StartTime" => $logs->start_time,
+                            "EndTime" => $logs->end_time,
                             "BillableStatus" => $logs->billable_status,
                             "Taxable" => $logs->taxable == 1 ? true : false,
                             "HourlyRate" => $logs->hourly_rate,

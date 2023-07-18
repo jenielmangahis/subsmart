@@ -950,6 +950,14 @@ class Users_model extends MY_Model
         return $query->result(); 
     }
 
+    public function getHourlyPayHistory($user_id) {
+        $this->db->select('*');
+        $this->db->from('timesheet_hourly_pay');
+        $this->db->where_in('USER_ID', $user_id);
+        $query = $this->db->get();
+        return $query->result(); 
+    }
+
     public function getTotalCommission($employee_id) {
         $this->db->select('SUM(commission) as totalCommission');
         $this->db->where('employee_id', $employee_id);

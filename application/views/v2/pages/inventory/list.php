@@ -352,6 +352,10 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>  
             <div class="modal-body">
+                <div id="ITH_LOADER">
+                    <h5>Fetching data, please wait...</h5>
+                </div>
+                <div id="ITH_CONTENT" style="display: none;">
                     <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="true">User</button>
@@ -470,7 +474,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>  
+                </div>
             </div>
         </div>
     </div>
@@ -480,6 +485,9 @@
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#ITH_LOADER').hide();
+        $('#ITH_CONTENT').fadeIn('fast');
+
         var HISTORY_TABLE = $("#HISTORY_TABLE").DataTable({
             order: [[0, 'desc']],
             // "ordering": false,
