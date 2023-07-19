@@ -21150,9 +21150,38 @@ class Reports extends MY_Controller {
 
                 $this->page_data['report_period'] = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
 
+                if(!empty(get('columns'))) {
+                    $columns = explode(',', get('columns'));
+
+                    $this->page_data['columns'] = $columns;
+                }
+
+                switch(get('status')) {
+                    case 'inactive' :
+                        $status = [
+                            0
+                        ];
+                    break;
+                    case 'active' :
+                        $status = [
+                            1
+                        ];
+                    break;
+                    default :
+                        $status = [
+                            0,
+                            1
+                        ];
+                    break;
+                }
+
+                if(!empty(get('status'))) {
+                    $this->page_data['filter_status'] = get('status');
+                }
+
                 $transactions = [];
 
-                $contractors = $this->vendors_model->get_company_contractors([0, 1]);
+                $contractors = $this->vendors_model->get_company_contractors($status);
 
                 $filters = [
                     'start-date' => date("Y-m-d", strtotime($this->page_data['start_date'])),
@@ -21165,40 +21194,48 @@ class Reports extends MY_Controller {
 
                     foreach($expenses as $expense)
                     {
+                        $account = $this->chart_of_accounts_model->getName($expense->payment_account_id);
                         $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
 
                         foreach($categories as $category)
                         {
-                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+                            $categoryAcc = $this->chart_of_accounts_model->getName($category->expense_account_id);
 
                             $transactions[] = [
                                 'date' => date('m/d/Y', strtotime($expense->payment_date)),
                                 'contractor' => $contractor->display_name,
                                 'type' => 'Expense',
                                 'pay_method' => 'Other',
+                                'check_number' => '-',
+                                'account_name' => $account,
                                 'pay_status' => '-',
-                                'category' => $accountType,
-                                'amount' => number_format(floatval($category->amount), 2)
+                                'category' => $categoryAcc,
+                                'amount' => number_format(floatval($category->amount), 2),
+                                'memo' => $expense->memo
                             ];
                         }
                     }
 
                     foreach($checks as $check)
                     {
+                        $account = $this->chart_of_accounts_model->getName($check->bank_account_id);
                         $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
 
                         foreach($categories as $category)
                         {
-                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+                            $categoryAcc = $this->chart_of_accounts_model->getName($category->expense_account_id);
 
                             $transactions[] = [
                                 'date' => date('m/d/Y', strtotime($check->payment_date)),
                                 'contractor' => $contractor->display_name,
                                 'type' => 'Check',
                                 'pay_method' => 'Check',
+                                'check_number' => !empty($check->check_no) ? $check->check_no : '-',
+                                'account_name' => $account,
                                 'pay_status' => '-',
-                                'category' => $accountType,
-                                'amount' => number_format(floatval($category->amount), 2)
+                                'category' => $categoryAcc,
+                                'amount' => number_format(floatval($category->amount), 2),
+                                'memo' => $check->memo
                             ];
                         }
                     }
@@ -45359,9 +45396,28 @@ class Reports extends MY_Controller {
 
                 $report_period = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
 
+                switch($post['status']) {
+                    case 'inactive' :
+                        $status = [
+                            0
+                        ];
+                    break;
+                    case 'active' :
+                        $status = [
+                            1
+                        ];
+                    break;
+                    default :
+                        $status = [
+                            0,
+                            1
+                        ];
+                    break;
+                }
+
                 $transactions = [];
 
-                $contractors = $this->vendors_model->get_company_contractors([0, 1]);
+                $contractors = $this->vendors_model->get_company_contractors($status);
 
                 $filters = [
                     'start-date' => date("Y-m-d", strtotime($start_date)),
@@ -45375,40 +45431,48 @@ class Reports extends MY_Controller {
 
                     foreach($expenses as $expense)
                     {
+                        $account = $this->chart_of_accounts_model->getName($expense->payment_account_id);
                         $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
 
                         foreach($categories as $category)
                         {
-                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+                            $categoryAcc = $this->chart_of_accounts_model->getName($category->expense_account_id);
 
                             $transactions[] = [
-                                'date' => date('m/d/Y', strtotime($expense->payment_date)),
+                                'pay_date' => date('m/d/Y', strtotime($expense->payment_date)),
                                 'contractor' => $contractor->display_name,
                                 'type' => 'Expense',
                                 'pay_method' => 'Other',
+                                'check_number' => '-',
+                                'account_name' => $account,
                                 'pay_status' => '-',
-                                'category' => $account,
-                                'amount' => number_format(floatval($category->amount), 2)
+                                'category' => $categoryAcc,
+                                'amount' => number_format(floatval($category->amount), 2),
+                                'memo' => $expense->memo
                             ];
                         }
                     }
 
                     foreach($checks as $check)
                     {
+                        $account = $this->chart_of_accounts_model->getName($check->bank_account_id);
                         $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
 
                         foreach($categories as $category)
                         {
-                            $account = $this->chart_of_accounts_model->getName($category->expense_account_id);
+                            $categoryAcc = $this->chart_of_accounts_model->getName($category->expense_account_id);
 
                             $transactions[] = [
-                                'date' => date('m/d/Y', strtotime($check->payment_date)),
+                                'pay_date' => date('m/d/Y', strtotime($check->payment_date)),
                                 'contractor' => $contractor->display_name,
                                 'type' => 'Check',
                                 'pay_method' => 'Check',
+                                'check_number' => !empty($check->check_no) ? $check->check_no : '-',
+                                'account_name' => $account,
                                 'pay_status' => '-',
-                                'category' => $account,
-                                'amount' => number_format(floatval($category->amount), 2)
+                                'category' => $categoryAcc,
+                                'amount' => number_format(floatval($category->amount), 2),
+                                'memo' => $check->memo
                             ];
                         }
                     }
@@ -45428,19 +45492,9 @@ class Reports extends MY_Controller {
                     $writer = new XLSXWriter();
                     $row = 0;
 
-                    $fields = [
-                        'Date',
-                        'Contractor',
-                        'Type',
-                        'Pay Method',
-                        'Pay Status',
-                        'Category',
-                        'Amount'
-                    ];
-
                     $header = [];
                     
-                    foreach($fields as $field)
+                    foreach($post['fields'] as $field)
                     {
                         $header[] = 'string';
                     }
@@ -45448,18 +45502,18 @@ class Reports extends MY_Controller {
                     $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
     
                     $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
-                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($fields));
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']));
                     $row++;
 
                     $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
-                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']));
                     $row++;
 
                     $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
-                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']));
                     $row++;
 
-                    $writer->writeSheetRow('Sheet1', $fields, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
                     $row += 2;
 
                     foreach($transactions as $transaction)
@@ -45467,7 +45521,7 @@ class Reports extends MY_Controller {
                         $data = [];
                         $style = [];
 
-                        foreach($fields as $field)
+                        foreach($post['fields'] as $field)
                         {
                             $data[] = $transaction[strtolower(str_replace(' ', '_', $field))];
                             $style[] = ['color' => '#000000'];
@@ -45483,7 +45537,7 @@ class Reports extends MY_Controller {
                     $row += 1;
 
                     $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
-                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($fields));
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']));
 
                     $fileName = str_replace(' ', '_', $companyName).'_Contractor_Payments';
                     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -45491,81 +45545,46 @@ class Reports extends MY_Controller {
                     header('Cache-Control: max-age=0');
                     $writer->writeToStdOut();
                 } else {
-                    // $html = '
-                    //     <table style="padding-top:-40px;">
-                    //         <tr>
-                    //             <td style="text-align: '.$headerAlignment.'">';
-                    //                 $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
-                    //                 $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
-                    //                 $html .= empty($post['show-report-period']) ? '<h4 style="margin: 0">'.$report_period.'</h4>' : '';
-                    //             $html .= '</td>
-                    //         </tr>
-                    //     </table>
-                    //     <br /><br /><br />
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
 
-                    //     <table style="width="100%;>
-                    //     <thead>';
-                    //         if($post['display-columns-by'] === 'months') {
-                    //             $html .= '<tr>';
-                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black" rowspan="2"></th>';
-                    //             foreach($months as $column)
-                    //             {
-                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black; text-align: center" colspan="2">'.$column.'</th>';
-                    //             }
-                    //             $html .= '</tr>';
-                    //             $html .= '<tr>';
-                    //             foreach($months as $column)
-                    //             {
-                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
-                    //                 $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
-                    //             }
-                    //             $html .= '</tr>';
-                    //         } else {
-                    //             $html .= '<tr>';
-                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"></th>';
-                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>DEBIT</b></th>';
-                    //             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>CREDIT</b></th>';
-                    //             $html .= '</tr>';
-                    //         }
-                    //     $html .= '</thead>
-                    //     <tbody>';
-                    //     foreach($accounts as $account) {
-                    //         $html .= '<tr>';
-                    //         $html .= '<td>'.$account['name'].'</td>';
-                    //         if($post['display-columns-by'] === 'months') {
-                    //             foreach($months as $column) {
-                    //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['debit']).'</td>';
-                    //                 $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account[$column]['credit']).'</td>';
-                    //             }
-                    //         } else {
-                    //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['debit']).'</td>';
-                    //             $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $account['credit']).'</td>';
-                    //         }
-                    //         $html .= '</tr>';
-                    //     }
-
-                    // $html .= '</tbody>';
-                    // $html .= '<tfoot>';
-                    // $totalCols = $post['display-columns-by'] === 'months' ? (count($months) * 2) + 1 : 3;
-                    // if(!empty($reportNote) && !empty($reportNote->notes)) {
-                    // $html .= '<tr>
-                    //         <td colspan="'.$totalCols.'" style="border-bottom: 1px solid black"></td>
-                    //     </tr>
-                    //     <tr>
-                    //         <td colspan="'.$totalCols.'">
-                    //             <h4><b>Notes</b></h4>
-                    //             '.$reportNote->notes.'
-                    //         </td>
-                    //     </tr>';
-                    // }
-
-                    // $html .= '<tr style="text-align: '.$footerAlignment.'">
-                    //             <td colspan="'.$totalCols.'">
-                    //                 <p style="margin: 0">'.$date.'</p>
-                    //             </td>
-                    //         </tr>
-                    //     </tfoot>
-                    // </table>';
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) 
+                                {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($transactions as $transaction)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.$transaction[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="10">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
 
                     $fileName = str_replace(' ', '_', $companyName).'_Contractor_Payments';
 
