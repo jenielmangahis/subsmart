@@ -54,7 +54,7 @@
                     <div class="row mt-5">                                     
                         <div class="col-12">
                             <a class="nsm-button primary" id="btn-qb-export-timesheet" href="javascript:void(0);">
-                                <i class='bx bxl-google'></i> Export Timesheet
+                                <i class='bx bx-export'></i> Export Timesheet
                             </a>
                             <div class="date-filter">
                                 <input type="text" name="attendace_date" id="attendance-filter" class="form-control" placeholder="" value="" required="">

@@ -173,25 +173,11 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check form-switch nsm-switch m-auto">
-                                                    <?php 
-                                                        $is_enabled = 0;
-                                                        if( array_key_exists('mailchimp', $enabledApiConnectors) ){
-                                                            $is_enabled = 1;
-                                                        }   
-                                                    ?>
-                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_mailchimp" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="switch_mailchimp">Enabled</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="nsm-subtitle text-success">$10.00/Month</label>
+                                            <div class="col-12">
+                                                <label class="nsm-subtitle text-success">Free</label>
                                             </div>
                                         </div>
-                                        <?php if( $is_enabled == 1 ){ ?>
-                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/mailchimp'); ?>'">Manage</button>
-                                        <?php } ?>
+                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/mailchimp'); ?>'">Manage</button>
                                     </div>
                                 </div>
                             </div>
