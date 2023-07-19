@@ -107,11 +107,14 @@
                                         <tr>
                                             <td data-name="Pay Date">PAY DATE</td>
                                             <td data-name="Contractor">CONTRACTOR</td>
-                                            <td data-name="Type">TYPE</td>
-                                            <td data-name="Pay Method">PAY METHOD</td>
-                                            <td data-name="Pay Status">PAY STATUS</td>
-                                            <td data-name="Category">CATEGORY</td>
-                                            <td data-name="Amount">AMOUNT</td>
+                                            <td data-name="Type" <?=isset($columns) && !in_array('Type', $columns) ? 'style="display: none"' : ''?>>TYPE</td>
+                                            <td data-name="Pay Method" <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>>PAY METHOD</td>
+                                            <td data-name="Check Number" <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>>CHECK NUMBER</td>
+                                            <td data-name="Account Name" <?=isset($columns) && !in_array('Account Name', $columns) ? 'style="display: none"' : ''?>>ACCOUNT NAME</td>
+                                            <td data-name="Pay Status" <?=isset($columns) && !in_array('Pay Status', $columns) ? 'style="display: none"' : ''?>>PAY STATUS</td>
+                                            <td data-name="Category" <?=isset($columns) && !in_array('Category', $columns) ? 'style="display: none"' : ''?>>CATEGORY</td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
+                                            <td data-name="Memo" <?=isset($columns) && !in_array('Memo', $columns) ? 'style="display: none"' : ''?>>MEMO</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -120,16 +123,19 @@
                                         <tr>
                                             <td><?=$transaction['date']?></td>
                                             <td><?=$transaction['contractor']?></td>
-                                            <td><?=$transaction['type']?></td>
-                                            <td><?=$transaction['pay_method']?></td>
-                                            <td><?=$transaction['pay_status']?></td>
-                                            <td><?=$transaction['category']?></td>
-                                            <td><?=$transaction['amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['type']?></td>
+                                            <td <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>><?=$transaction['pay_method']?></td>
+                                            <td <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>><?=$transaction['check_number']?></td>
+                                            <td <?=isset($columns) && !in_array('Account Name', $columns) ? 'style="display: none"' : ''?>><?=$transaction['account_name']?></td>
+                                            <td <?=isset($columns) && !in_array('Pay Status', $columns) ? 'style="display: none"' : ''?>><?=$transaction['pay_status']?></td>
+                                            <td <?=isset($columns) && !in_array('Category', $columns) ? 'style="display: none"' : ''?>><?=$transaction['category']?></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['amount']?></td>
+                                            <td <?=isset($columns) && !in_array('Memo', $columns) ? 'style="display: none"' : ''?>><?=$transaction['memo']?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="10">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>

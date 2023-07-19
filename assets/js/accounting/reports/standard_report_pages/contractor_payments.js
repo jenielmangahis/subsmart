@@ -97,6 +97,56 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
+$('#select-all-columns').on('click', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', true);
+});
+
+$('#run-report-button').on('click', function() {
+    $('#filter-report-period-date').val($('#report-period-date').val()).trigger('change');
+    if($('#report-period-date').val() !== 'this-month-to-date') {
+        $('#filter-report-period-date-from').val($('#report-period-date-from').val());
+        $('#filter-report-period-date-to').val($('#report-period-date-to').val());
+    }
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        var notIncluded = [
+            'status',
+            'columns'
+        ];
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(notIncluded.includes(selectedVal[0]) === false) {
+                url += value+'&';
+            }
+        });
+    }
+
+    url += $('#filter-contractor').val() !== 'all' ? `status=${$('#filter-contractor').val()}&` : '';
+    var columns = [];
+    $('input[name="select_columns"]:checked').each(function() {
+        columns.push($(this).next().text().trim());
+    });
+
+    if(columns.length < $('#reports-table thead tr td').length - 2) {
+        url += `columns=${columns}&`;
+    }
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
 $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
 });
@@ -109,6 +159,11 @@ $('#export-to-excel').on('click', function(e) {
     }
 
     $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
 
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');
@@ -135,6 +190,11 @@ $('#export-to-pdf').on('click', function(e) {
     }
 
     $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
 
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');
