@@ -22817,6 +22817,83 @@ class Reports extends MY_Controller {
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
+            case 'employee_details' :
+                $this->page_data['report_period'] = 'For all employees from all locations';
+
+                $filters = [];
+                switch(get('status')) {
+                    case 'active' :
+                        $filters['status'] = [
+                            "1"
+                        ];
+                    break;
+                    case 'inactive' :
+                        $filters['status'] = [
+                            "0",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                    default :
+                        $filters['status'] = [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                }
+
+                if(!empty(get('status'))) {
+                    $this->page_data['status'] = get('status');
+                }
+
+                $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
+
+                $details = [];
+                foreach($employees as $employee)
+                {
+                    $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
+                    if($empPayDetails) {
+                        $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
+
+                        if($empPayDetails->pay_type === 'hourly') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+                        } else if($empPayDetails->pay_type === 'salary') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                        } else {
+                            $payRate = 'Commission only';
+                        }
+                    } else {
+                        $payMethod = 'Missing';
+                        $payRate = 'Missing';
+                    }
+
+                    $address = '';
+                    $address .= !in_array($employee->address, ['', null]) ? $employee->address.'<br>' : '';
+                    $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+                    $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+                    $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+
+                    $details[] = [
+                        'name' => "$employee->LName, $employee->FName",
+                        'address' => $address,
+                        'birth_date' => date("m/d/Y", strtotime($employee->birthdate)),
+                        'hire_date' => date("m/d/Y", strtotime($employee->date_hired)),
+                        'pay_type' => $payRate,
+                        'pay_method' => $payMethod,
+                        'notes' => $empPayDetails->notes
+                    ];
+                }
+
+                $this->page_data['employees'] = $details;
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);

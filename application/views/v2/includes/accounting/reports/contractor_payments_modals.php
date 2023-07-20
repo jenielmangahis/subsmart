@@ -115,9 +115,10 @@
                             <td data-name="Category" <?=isset($columns) && !in_array('Category', $columns) ? 'style="display: none"' : ''?>>CATEGORY</td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
                             <td data-name="Memo" <?=isset($columns) && !in_array('Memo', $columns) ? 'style="display: none"' : ''?>>MEMO</td>
+                        </tr>
                     </thead>
                     <tbody>
-                    <?php if(count($transactions) > 0) : ?>
+                        <?php if(count($transactions) > 0) : ?>
                         <?php foreach($transactions as $index => $transaction) : ?>
                         <tr>
                             <td><?=$transaction['date']?></td>
