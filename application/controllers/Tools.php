@@ -254,6 +254,46 @@ class Tools extends MY_Controller {
         }
     }
 
+    public function mailchimp() {
+        $this->load->library('MailChimpApi');
+        $this->load->model('MailChimpExportCustomerLogs_model');
+        $this->load->model('CompanyApiConnector_model');
+
+        $company_id    = logged('company_id');
+        $mailchimpList = array();
+        $companyMailChimp = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'mailchimp'); 
+        $logs_summary     = array();
+        if( $companyMailChimp && $companyMailChimp->status == 1 && $companyMailChimp->mailchimp_access_token != '' && $companyMailChimp->mailchimp_server_prefix != '' ){
+            $mailChimp = new MailChimpApi;
+            $mailchimpList = $mailChimp->getAllLists($companyMailChimp->mailchimp_access_token, $companyMailChimp->mailchimp_server_prefix);            
+            foreach($mailchimpList->lists as $list){                     
+                $query_filter      = array();
+                $query_filter[]    = ['field' => 'is_sync', 'value' => 1];
+                $exportSuccessLogs = $this->MailChimpExportCustomerLogs_model->getAllByListIdAndCompanyId($list->id, $company_id, $query_filter);                
+
+                $query_filter      = array();
+                $query_filter[]    = ['field' => 'is_with_error', 'value' => 1];
+                $exportFailedLogs  = $this->MailChimpExportCustomerLogs_model->getAllByListIdAndCompanyId($list->id, $company_id, $query_filter);                
+
+                $logs_summary[$list->id] = ['total_success' => count($exportSuccessLogs), 'total_failed' => count($exportFailedLogs)];
+            }
+        }       
+
+        $is_with_error = 0;
+        if( !empty($this->input->get('error')) && $this->input->get('error') == 1 ){
+            $is_with_error = 1;            
+        }
+
+        $this->page_data['companyMailChimp'] = $companyMailChimp;
+        $this->page_data['mailchimpList'] = $mailchimpList;
+        $this->page_data['logs_summary']  = $logs_summary;
+        $this->page_data['is_with_error'] = $is_with_error;
+        $this->page_data['page']->title = 'MailChimp';
+        $this->page_data['page']->parent = 'Tools';
+        $this->page_data['sidebar'] = $this->api_sidebars();
+        $this->load->view('v2/pages/tools/mailchimp', $this->page_data);
+    }
+
     public function nicejob() {
         $this->page_data['page']->title = 'Nice Job';
         $this->page_data['page']->parent = 'Tools';
@@ -274,15 +314,7 @@ class Tools extends MY_Controller {
 
         $this->page_data['sidebar'] = $this->api_sidebars();
         $this->load->view('v2/pages/tools/zapier', $this->page_data);
-    }
-
-    public function mailchimp() {
-        $this->page_data['page']->title = 'MailChimp';
-        $this->page_data['page']->parent = 'Tools';
-
-        $this->page_data['sidebar'] = $this->api_sidebars();
-        $this->load->view('v2/pages/tools/mailchimp', $this->page_data);
-    }
+    }    
 
     public function active_campaign() {
         $this->page_data['page']->title = 'Active Campaign';
@@ -1487,7 +1519,8 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/quickbooks_payroll_timesheet_logs', $this->page_data);
     }  
 
-    public function ajax_disconnect_quickbook_payroll_account(){
+    public function ajax_disconnect_quickbook_payroll_account()
+    {
         $this->load->model('CompanyApiConnector_model');
 
         $is_success = 0;
@@ -1503,5 +1536,211 @@ class Tools extends MY_Controller {
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function mailchimpConnect()
+    {
+        $this->config->load('api_credentials');
+        header('Location: https://login.mailchimp.com/oauth2/authorize?'.http_build_query([
+            'response_type' => 'code',
+            'client_id' => $this->config->item('mailchimp_client_id'),
+            'redirect_uri' => $this->config->item('mailchimp_redirect_uri'),
+        ]));
+    }
+
+    public function mailchimpApiSave()
+    {
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->library('MailChimpApi');
+
+        if( !empty($this->input->get('code')) ){
+            $mailchimpApi = new MailChimpApi;
+            $access_token = $mailchimpApi->createAccessToken($this->input->get('code'));
+            if( $access_token != '' ){
+                $accountDetails = $mailchimpApi->getAccountDetails($access_token);                
+                if( isset($accountDetails->login) ){
+
+                    $account_info = [
+                        'user_id' => $accountDetails->user_id,
+                        'accountname' => $accountDetails->accountname,
+                        'email' => $accountDetails->login->email,
+                        'login_id' => $accountDetails->login->login_id
+
+                    ];
+
+                    $company_id = logged('company_id');
+                    $companyMailChimp = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'mailchimp');
+                    if( $companyMailChimp ){
+                        $data_mailchimp = [                            
+                            'mailchimp_access_token' => $access_token,
+                            'mailchimp_server_prefix' => $accountDetails->dc, 
+                            'mailchimp_account_info' => serialize($account_info),
+                            'api_name' => 'mailchimp',
+                            'status' => 1,
+                            'created' => date("Y-m-d H:i:s")
+                        ];    
+                        $this->CompanyApiConnector_model->update($companyMailChimp->id, $data_mailchimp);
+                    }else{
+                        $data_mailchimp = [
+                            'company_id' => $company_id,
+                            'mailchimp_access_token' => $access_token,
+                            'mailchimp_server_prefix' => $accountDetails->dc, 
+                            'mailchimp_account_info' => serialize($account_info),
+                            'api_name' => 'mailchimp',
+                            'status' => 1,
+                            'created' => date("Y-m-d H:i:s")
+                        ];     
+                        $this->CompanyApiConnector_model->create($data_mailchimp);
+                    }
+                    
+                    redirect('tools/mailchimp');     
+                }else{
+                    redirect('tools/mailchimp?error=1');     
+                }
+            }else{
+                redirect('tools/mailchimp?error=1'); 
+            }
+        }else{
+           redirect('tools/maigetListByIdlchimp?error=1'); 
+        }
+    }
+
+    public function ajax_create_mailchimp_customer_export()
+    {
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('MailChimpExportCustomerLogs_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->library('MailChimpApi');
+
+
+        $is_success = false;
+        $is_valid   = true;
+        $msg = 'Invalid ring central account';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        if( empty($post['mailchimp_list']) ){
+            $is_valid = false;
+            $msg = 'Please select Mailchimp list.';
+        }
+
+        if( empty($post['mailchimp_customer']) ){
+            $is_valid = false;
+            $msg = 'Please customer to export to Mailchimp.';
+        }
+
+        $companyMailChimp = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'mailchimp'); 
+        if( empty($companyMailChimp) ){
+            $is_valid = false;
+            $msg = 'Cannot find company Mailchimp account.';
+        }
+
+        if( $is_valid ){
+
+            $mailchimpApi = new MailChimpApi;
+            $mailChimpList = $mailchimpApi->getListById($post['mailchimp_list'], $companyMailChimp->mailchimp_access_token, $companyMailChimp->mailchimp_server_prefix);
+            if( $mailChimpList ){
+                $total_exported = 0;
+                foreach( $post['mailchimp_customer'] as $cid ){    
+                    $customer = $this->AcsProfile_model->getByProfId($cid);
+                    if( $customer && $customer->email != '' ){
+                        $mailChimpLog = $this->MailChimpExportCustomerLogs_model->getByCustomerEmailAndListId($customer->email, $post['mailchimp_list']);
+                        if( $mailChimpLog ){
+                            if( $mailChimpLog->is_sync == 0 ){                            
+                                $data_mailchimp_export = [                            
+                                    'mailchimp_list_id' => $post['mailchimp_list'],
+                                    'mailchimp_list_name' => $mailChimpList->name,
+                                    'mailchimp_status' => 'subscribed',
+                                    'customer_id' => $customer->prof_id,
+                                    'customer_email' => $customer->email,
+                                    'is_sync' => 0,
+                                    'is_with_error' => 0,
+                                    'error_message' => '',
+                                    'date_created' => date("Y-m-d H:i:s")
+                                ];
+
+                                $this->MailChimpExportCustomerLogs_model->update($mailChimpLog->id, $data_mailchimp_export);
+
+                                $total_exported++;
+                            }
+                        }else{
+                            $data_mailchimp_export = [
+                                'company_id' => $company_id,
+                                'mailchimp_list_id' => $post['mailchimp_list'],
+                                'mailchimp_list_name' => $mailChimpList->name,
+                                'mailchimp_status' => 'subscribed',
+                                'customer_id' => $customer->prof_id,
+                                'customer_email' => $customer->email,
+                                'is_sync' => 0,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
+
+                            $this->MailChimpExportCustomerLogs_model->create($data_mailchimp_export);
+
+                            $total_exported++;
+                        } 
+                    }            
+                }
+
+                if( $total_exported > 0 ){
+                    $is_success = true;
+                    $msg = '';
+                }else{
+                    $msg = 'Nothing to export';
+                }
+            }else{
+                $is_success = false;
+                $msg = 'Invalid Mailchimp list id.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_disconnect_mailchimp_account()
+    {
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find MailChimp Account.';
+
+        $company_id = logged('company_id');
+        $companyMailChimpApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'mailchimp');
+        if( $companyMailChimpApi ){
+            $this->CompanyApiConnector_model->update($companyMailChimpApi->id, ['status' => 0]);
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function mailchimp_logs()
+    {
+        $this->load->model('MailChimpExportCustomerLogs_model');
+
+        $company_id = logged('company_id');
+        $filter     = 'all';
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'is_with_error', 'value' => 1];
+            }else{
+                $search['search'][] = ['field' => 'is_with_error', 'value' => 0];
+            }                     
+            $mailchimpLogs = $this->MailChimpExportCustomerLogs_model->getAllByCompanyId($company_id, $search);
+        }else{
+            $mailchimpLogs = $this->MailChimpExportCustomerLogs_model->getAllByCompanyId($company_id);
+        }        
+
+        $this->page_data['page']->title   = 'MailChimp';
+        $this->page_data['page']->parent  = 'Tools';
+        $this->page_data['mailchimpLogs'] = $mailchimpLogs;
+        $this->load->view('v2/pages/tools/mailchimp_export_logs', $this->page_data);
     }
 }
