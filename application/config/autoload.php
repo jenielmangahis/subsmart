@@ -58,8 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array( 'session', 'database', 'parser', 'form_validation', 'uploadlib', 'email', 'googlemaps');
-
+$autoload['libraries'] = array( 'session', 'database', 'parser', 'form_validation', 'uploadlib', 'email', 'googlemaps', 'tcpdf_lib');
 /*
 | -------------------------------------------------------------------
 |  Auto-load Drivers
