@@ -72,11 +72,11 @@
                                         <tr>
                                             <td>
                                                 <h5><?=$employee['name']?></h5>
-                                                <p><?=!empty($employee['address']) ? $employee['address'] : '-'?></p>
-                                                <p>DOB: <?=$employee['birth_date']?></p>
+                                                <?php if(!isset($columns) || isset($columns) && in_array('Home Address', $columns)) : ?><p><?=!empty($employee['address']) ? $employee['address'] : '-'?></p><?php endif; ?>
+                                                <?php if(!isset($columns) || isset($columns) && in_array('Birth Date', $columns)) : ?><p>DOB: <?=$employee['birth_date']?></p><?php endif; ?>
                                             </td>
                                             <td <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['hire_date']?></td>
-                                            <td>
+                                            <td <?=isset($columns) && !in_array('Pay Info', $columns) ? 'style="display: none"' : ''?>>
                                                 <div class="row">
                                                     <div class="col-md-6 col-12">
                                                         <h5>Pay type</h5>
@@ -86,7 +86,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><?=$employee['notes']?></td>
+                                            <td <?=isset($columns) && !in_array('Notes', $columns) ? 'style="display: none"' : ''?>><?=$employee['notes']?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                         <?php else : ?>
