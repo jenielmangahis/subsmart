@@ -657,8 +657,8 @@ class Reports extends MY_Controller {
                     $activities = array_slice($activities, 0, 25);
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
                 }
 
@@ -894,8 +894,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
                 }
 
@@ -1676,8 +1676,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
                 }
 
@@ -3158,8 +3158,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Debit', $columns);
@@ -6438,8 +6438,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
                 }
 
@@ -6510,8 +6510,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -8086,8 +8086,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -11243,8 +11243,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -12424,8 +12424,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -14318,8 +14318,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -17454,8 +17454,8 @@ class Reports extends MY_Controller {
                     $this->page_data['show_in_red'] = get('show-in-red');
                 }
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if(!empty($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
                     $this->page_data['columns'] = $columns;
 
                     $index = array_search('Amount', $columns);
@@ -21150,8 +21150,8 @@ class Reports extends MY_Controller {
 
                 $this->page_data['report_period'] = 'Payments from '.date("M d, Y", strtotime($startDate)).' to '.date("M d, Y", strtotime($endDate)).' for all contractors';
 
-                if(!empty(get('columns'))) {
-                    $columns = explode(',', get('columns'));
+                if($this->input->get('columns')) {
+                    $columns = explode(',', $this->input->get('columns'));
 
                     $this->page_data['columns'] = $columns;
                 }
@@ -21246,6 +21246,89 @@ class Reports extends MY_Controller {
                 });
 
                 $this->page_data['transactions'] = $transactions;
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'employee_details' :
+                $this->page_data['report_period'] = 'For all employees';
+
+                if(!is_null($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
+
+                    $this->page_data['columns'] = $columns;
+                }
+
+                $filters = [];
+                switch(get('status')) {
+                    case 'active' :
+                        $filters['status'] = [
+                            "1"
+                        ];
+                    break;
+                    case 'inactive' :
+                        $filters['status'] = [
+                            "0",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                    default :
+                        $filters['status'] = [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                }
+
+                if(!empty(get('status'))) {
+                    $this->page_data['filter_status'] = get('status');
+                }
+
+                $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
+
+                $details = [];
+                foreach($employees as $employee)
+                {
+                    $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
+                    if($empPayDetails) {
+                        $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
+
+                        if($empPayDetails->pay_type === 'hourly') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+                        } else if($empPayDetails->pay_type === 'salary') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                        } else {
+                            $payRate = 'Commission only';
+                        }
+                    } else {
+                        $payMethod = 'Missing';
+                        $payRate = 'Missing';
+                    }
+
+                    $address = '';
+                    $address .= !in_array($employee->address, ['', null]) ? $employee->address.'<br>' : '';
+                    $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+                    $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+                    $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+
+                    $details[] = [
+                        'name' => "$employee->LName, $employee->FName",
+                        'address' => $address,
+                        'birth_date' => date("m/d/Y", strtotime($employee->birthdate)),
+                        'hire_date' => date("m/d/Y", strtotime($employee->date_hired)),
+                        'pay_type' => $payRate,
+                        'pay_method' => $payMethod,
+                        'notes' => $empPayDetails->notes
+                    ];
+                }
+
+                $this->page_data['employees'] = $details;
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;

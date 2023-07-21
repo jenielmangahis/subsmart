@@ -97,10 +97,22 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
-$('#select-all-columns').on('click', function(e) {
+$(document).on('click', '#select-all-columns', function(e) {
     e.preventDefault();
 
     $('input[name="select_columns"]').prop('checked', true);
+
+    $(this).html('Unselect all');
+    $(this).attr('id', 'unselect-all-columns');
+});
+
+$(document).on('click', '#unselect-all-columns', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', false);
+
+    $(this).html('Select all');
+    $(this).attr('id', 'select-all-columns');
 });
 
 $('#run-report-button').on('click', function() {
