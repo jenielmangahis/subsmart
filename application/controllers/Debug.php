@@ -2150,9 +2150,31 @@ class Debug extends MY_Controller {
         exit;
     }
 
-    public function quickbooks()
+    public function qb_import_timesheet()
     {
-        
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+
+        $timesheet_data = [
+            "NameOf" => "Employee",
+            "EmployeeRef" => [
+                "value" => "1165",
+                "name" => "Tommy Nguyen"
+            ],
+            "StartTime" => "2023-05-15T08:00:00-08:00",
+            "EndTime" => "2023-05-15T17:00:00-08:00",
+            "BillableStatus" => "NotBillable",
+            "Taxable" => false,
+            "HourlyRate" => 15,
+            "Description"=> "Timesheet"
+        ];
+
+        $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName(1,'quickbooks_payroll');
+        $token  = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+        //Update company refresh token
+        $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+        $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+        $result = $this->quickbooksapi->create_timesheet($timesheet_data, $token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);        
     }
 
     public function ajax_export_qb_timesheet()
@@ -2204,6 +2226,56 @@ class Debug extends MY_Controller {
 
         
         exit;
+    }
+
+    public function mailChimpList()
+    {
+        $this->load->library('MailChimpApi');
+
+        $api_key   = 'fce81532f5350b3ac4152d3880e80652-us21';
+        $server_prefix = 'us21';
+
+        $mailChimp = new MailChimpApi;
+        $response  = $mailChimp->getList($api_key, $server_prefix);
+
+        echo "<pre>";
+        print_r($response);
+        exit;
+
+    }
+
+    public function mailChimpAddToList()
+    {
+        $this->load->library('MailChimpApi');
+
+        $api_key   = 'fce81532f5350b3ac4152d3880e80652-us21';
+        $server_prefix = 'us21';
+
+        $list_id = 'b9ca0b851f';
+        $member_info = [
+            "email_address" => "bryan.yobi@gmail.com",
+            "status" => "pending",
+        ];
+        $mailChimp = new MailChimpApi;
+        $response  = $mailChimp->addMemberToList($list_id, $member_info, $api_key, $server_prefix);
+
+        echo "<pre>";
+        print_r($response);
+        exit;
+    }
+
+    public function mailChimpOath2()
+    {
+        $this->load->library('MailChimpApi');
+
+        $client_id = '567134062530';
+        $client_secret = 'ded9c4026750c337c60af890acfb6f21f667f691a2c9a43df8';
+        $oauth_callback = "http://127.0.0.1:8080";
+        header('Location: https://login.mailchimp.com/oauth2/authorize?'.http_build_query([
+            'response_type' => 'code',
+            'client_id' => $client_id,
+            'redirect_uri' => $oauth_callback,
+        ]));
     }
 }
 /* End of file Debug.php */

@@ -9,53 +9,47 @@
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td data-name="Personal Info">PERSONAL INFO</td>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="Birth Date" <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>>BIRTH DATE</td>
+                            <td data-name="Email" <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>>EMAIL</td>
+                            <td data-name="Phone" <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>PHONE</td>
+                            <td data-name="Home Address" <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>>HOME ADDRESS</td>
                             <td data-name="Hire Date" <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>>HIRE DATE</td>
-                            <td data-name="Pay Info" <?=isset($columns) && !in_array('Pay Info', $columns) ? 'style="display: none"' : ''?>>PAY INFO</td>
-                            <td data-name="Notes" <?=isset($columns) && !in_array('Notes', $columns) ? 'style="display: none"' : ''?>>NOTES</td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if(count($employees) > 0) : ?>
                         <?php foreach($employees as $index => $employee) : ?>
                         <tr>
-                            <td>
-                                <h5><?=$employee['name']?></h5>
-                                <p><?=!empty($employee['address']) ? $employee['address'] : '-'?></p>
-                                <p>DOB: <?=$employee['birth_date']?></p>
+                            <td><?=$employee['name']?></td>
+                            <td <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['birth_date']?></td>
+                            <td <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>><?=$employee['email']?></td>
+                            <td <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>
+                                <?php if(isset($columns) && in_array('Phone', $columns) && !empty($employee['phone']) || !isset($columns) && !empty($employee['phone'])) : ?> <p>Phone: <?=$employee['phone']?></p> <?php endif; ?>
+                                <?php if(isset($columns) && in_array('Mobile', $columns) && !empty($employee['mobile']) || !isset($columns) && !empty($employee['mobile'])) : ?> <p>Mobile: <?=$employee['mobile']?></p> <?php endif; ?>
                             </td>
+                            <td <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>><?=$employee['home_address']?></td>
                             <td <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['hire_date']?></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <h5>Pay type</h5>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <p><?=$employee['pay_type']?></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><?=$employee['notes']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="6">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -65,7 +59,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -91,53 +85,47 @@
                 <table class="w-100" id="report_table_print">
                     <thead>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td data-name="Personal Info">PERSONAL INFO</td>
+                            <td data-name="Name">NAME</td>
+                            <td data-name="Birth Date" <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>>BIRTH DATE</td>
+                            <td data-name="Email" <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>>EMAIL</td>
+                            <td data-name="Phone" <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>PHONE</td>
+                            <td data-name="Home Address" <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>>HOME ADDRESS</td>
                             <td data-name="Hire Date" <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>>HIRE DATE</td>
-                            <td data-name="Pay Info" <?=isset($columns) && !in_array('Pay Info', $columns) ? 'style="display: none"' : ''?>>PAY INFO</td>
-                            <td data-name="Notes" <?=isset($columns) && !in_array('Notes', $columns) ? 'style="display: none"' : ''?>>NOTES</td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if(count($employees) > 0) : ?>
                         <?php foreach($employees as $index => $employee) : ?>
                         <tr>
-                            <td>
-                                <h5><?=$employee['name']?></h5>
-                                <p><?=!empty($employee['address']) ? $employee['address'] : '-'?></p>
-                                <p>DOB: <?=$employee['birth_date']?></p>
+                            <td><?=$employee['name']?></td>
+                            <td <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['birth_date']?></td>
+                            <td <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>><?=$employee['email']?></td>
+                            <td <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>
+                                <?php if(isset($columns) && in_array('Phone', $columns) && !empty($employee['phone']) || !isset($columns) && !empty($employee['phone'])) : ?> <p>Phone: <?=$employee['phone']?></p> <?php endif; ?>
+                                <?php if(isset($columns) && in_array('Mobile', $columns) && !empty($employee['mobile']) || !isset($columns) && !empty($employee['mobile'])) : ?> <p>Mobile: <?=$employee['mobile']?></p> <?php endif; ?>
                             </td>
+                            <td <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>><?=$employee['home_address']?></td>
                             <td <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['hire_date']?></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <h5>Pay type</h5>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <p><?=$employee['pay_type']?></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><?=$employee['notes']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="6">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -147,7 +135,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -220,6 +208,30 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-email" <?=isset($columns) && in_array('Email', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-email">
+                                                                Email
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-phone" <?=isset($columns) && in_array('Phone', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-phone">
+                                                                Phone
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-mobile" <?=isset($columns) && in_array('Mobile', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-mobile">
+                                                                Mobile
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-home-address" <?=isset($columns) && in_array('Home Address', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-home-address">
                                                                 Home Address
@@ -231,22 +243,6 @@
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-hire-date" <?=isset($columns) && in_array('Hire Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-hire-date">
                                                                 Hire Date
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-pay-info" <?=isset($columns) && in_array('Pay Info', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-pay-info">
-                                                                Pay Info
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-notes" <?=isset($columns) && in_array('Notes', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-notes">
-                                                                Notes
                                                             </label>
                                                         </div>
                                                     </div>
