@@ -6,9 +6,9 @@ class TCPDFReport extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library("tcpdf_lib");
+        $this->load->helper("pdf_helper");
         $this->load->model('general_model');
-
+        tcpdf();
     }
 
     public function index() {   
@@ -37,7 +37,9 @@ class TCPDFReport extends CI_Controller
             if ($CURRENT_USERID && $CURRENT_USERTYPE_ID == 7) {
 
                 // create new PDF document
-                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, "UTF-8", false);
+                // $orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false
+
+                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, "", true, "UTF-8", false);
 
                 // set document information
                 $pdf->setCreator(PDF_CREATOR);
@@ -51,9 +53,8 @@ class TCPDFReport extends CI_Controller
                     PDF_HEADER_LOGO,
                     PDF_HEADER_LOGO_WIDTH,
                     $BUSINESS_NAME,
-                    $REPORT_NAME."\n".base_url(),
-                    // [0, 64, 255],
-                    [0, 64, 100]
+                    $REPORT_NAME."\n".date('M d, Y'),
+                    [0, 0, 0]
                 );
                 // $pdf->setFooterData([0, 64, 0], [0, 64, 128]);
 
@@ -105,8 +106,29 @@ class TCPDFReport extends CI_Controller
                 }
 
                 // Set some content to print
+                // $header = "
+                //     <table border='0' cellspacing='0' cellpadding='0' width='100%'>
+                //         <tr>
+                //             <td width='0%'></td>
+                //             <td align='center' colspan='2'><h2>$BUSINESS_NAME</h2></td>
+                //             <td width='0%'></td>
+                //         </tr>
+                //         <tr>
+                //             <td width='0%'></td>
+                //             <td align='center' colspan='2'><span>$REPORT_NAME</span></td>
+                //             <td width='0%'></td>
+                //         </tr>
+                //         <tr>
+                //             <td width='0%'></td>
+                //             <td align='center' colspan='2'><span>[DATE_FIELD]</span></td>
+                //             <td width='0%'></td>
+                //         </tr>
+                //     </table>
+                // ";
+
+                $html = "";
                 $html .= "
-                <table>
+                <table border='1' class='sales_tax_table'>
                     <thead>
                         <tr>
                             <th>Tax Name</th>
@@ -118,7 +140,7 @@ class TCPDFReport extends CI_Controller
                     </thead>
                     <tbody>";
                 // foreach ($REQUEST_DATA as $DATA) {
-                   $html .= "
+                $html .= "
                    <tr>
                         <td>Florida State</td>
                         <td>$220,170.57</td>
@@ -137,19 +159,27 @@ class TCPDFReport extends CI_Controller
                     table {
                         width: 100%;
                     }
-                    table, th, td {
+                    table, th{
                         border: solid 1px #BBB; 
                         border-collapse: collapse; 
                         padding: 3px 5px;
                         text-align: left; 
                     }
                     td {
-                        font-size: 11px !important;
+                        border: solid 1px #BBB; 
+                        font-size: 12px;
+                    }
+                    h2, span {
+                        text-align: center;
                     }
                 </style>";
                 // Print text using writeHTMLCell()
                 $pdf->writeHTMLCell(0, 0, "", "", $html, 0, 1, 0, true, "", true);
                 // ---------------------------------------------------------
+                // Center the content horizontally
+                
+                // $pdf->SetX(($pdf->getPageWidth() - $pdf->GetStringWidth('Your Report Title')) / 2);
+
                 // Close and output PDF document
                 // This method has several options, check the source code documentation for more information.
                 $pdf->Output("$BUSINESS_NAME $REPORT_NAME.pdf", "I");

@@ -206,7 +206,7 @@
                                             <div class="col-12">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <a href="#" class="text-decoration-none" id="select-all-columns">Select all</a>
+                                                        <a href="#" class="text-decoration-none" id="<?=!isset($columns) ? 'unselect-all-columns' : 'select-all-columns'?>"><?=!isset($columns) ? 'Unselect' : 'Select'?> all</a>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">

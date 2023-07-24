@@ -1,146 +1,112 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style type="text/css">
-    .hide-toggle::after {
-        display: none !important;
-    }
+<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath("v2/includes/accounting/reports/$modalsView"); ?>
 
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
-
-    .action-bar ul li a:after {
-        width: 0 !important;
-    }
-    .action-bar ul li a > i {
-        font-size: 20px !important;
-    }
-    .action-bar ul li {
-        margin-right: 5px !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item {
-        font-size: 1rem;
-        padding-right: 0 !important;
-    }
-    .action-bar ul li .dropdown-menu .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
-       background-color: revert;
-    }
-    .report-container .action-bar li a {
-        font-size: 14px !important;
-    }
-    .report-container .action-bar li a i {
-        font-size: unset !important;
-    }
-    .report-container #report-table {
-        font-size: 12px !important;
-    }
-    .report-container .report-footer {
-        font-size: 10px;
-    }
-</style>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Employee directory</h3>
-                                </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-sm-6">
-                                    <h6><a href="/accounting/reports" class="text-info"><i class="fa fa-chevron-left"></i> Back to report list</a></h6>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="dropdown float-right">
-                                        <button class="btn btn-transparent dropdown-toggle hide-toggle rounded" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Share <i class="fa fa-caret-down"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Export to Excel</a>
-                                            <a class="dropdown-item" href="#">Print or save PDF</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div> -->
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
+                                <i class='bx bx-fw bx-customize'></i> Customize
+                            </button>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3">
-                                    <div class="col-md-9">
+                <div class="row g-3 justify-content-center">
+                    <div class="col-12 col-md-6">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 grid-mb">
                                         
                                     </div>
-                                    <div class="col d-flex justify-content-end align-items-end">
-                                        <div class="form-group">
-                                            <a href="#" class="btn"><i class="fa fa-sliders"></i> Customize</a>
+                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
+                                                <i class='bx bx-fw bx-printer'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-export"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col">
-                                        <table class="table" style="width: 100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Birth date</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                    <th>Home address</th>
-                                                    <th>Work location</th>
-                                                    <th>Hire date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Test Employee</td>
-                                                    <td>06/15/2022</td>
-                                                    <td>test@email.com</td>
-                                                    <td></td>
-                                                    <td>Home address</td>
-                                                    <td>Work location</td>
-                                                    <td>06/15/2022</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                <div class="row text-center">
+                                    <div class="col-12 grid-mb">
+                                        <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
+                                    </div>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0 fw-bold"><?=$report_title?></p>
+                                    </div>
+                                    <div class="col-12 grid-mb">
+                                        <p class="m-0"><?=$report_period?></p>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="nsm-card-content h-auto grid-mb">
+                                <table class="nsm-table grid-mb" id="reports-table">
+                                    <thead>
+                                        <tr>
+                                            <td data-name="Name">NAME</td>
+                                            <td data-name="Birth Date" <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>>BIRTH DATE</td>
+                                            <td data-name="Email" <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>>EMAIL</td>
+                                            <td data-name="Phone" <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>PHONE</td>
+                                            <td data-name="Home Address" <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>>HOME ADDRESS</td>
+                                            <td data-name="Hire Date" <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>>HIRE DATE</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(count($employees) > 0) : ?>
+                                        <?php foreach($employees as $index => $employee) : ?>
+                                        <tr>
+                                            <td><?=$employee['name']?></td>
+                                            <td <?=isset($columns) && !in_array('Birth Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['birth_date']?></td>
+                                            <td <?=isset($columns) && !in_array('Email', $columns) ? 'style="display: none"' : ''?>><?=$employee['email']?></td>
+                                            <td <?=isset($columns) && !in_array('Phone', $columns) && !in_array('Mobile', $columns) ? 'style="display: none"' : ''?>>
+                                                <?php if(isset($columns) && in_array('Phone', $columns) && !empty($employee['phone']) || !isset($columns) && !empty($employee['phone'])) : ?> <p>Phone: <?=$employee['phone']?></p> <?php endif; ?>
+                                                <?php if(isset($columns) && in_array('Mobile', $columns) && !empty($employee['mobile']) || !isset($columns) && !empty($employee['mobile'])) : ?> <p>Mobile: <?=$employee['mobile']?></p> <?php endif; ?>
+                                            </td>
+                                            <td <?=isset($columns) && !in_array('Home Address', $columns) ? 'style="display: none"' : ''?>><?=$employee['home_address']?></td>
+                                            <td <?=isset($columns) && !in_array('Hire Date', $columns) ? 'style="display: none"' : ''?>><?=$employee['hire_date']?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php else : ?>
+                                        <tr>
+                                            <td colspan="6">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="nsm-card-footer text-center">
+                                <p class="m-0"><?=date($prepared_timestamp)?></p>
                             </div>
                         </div>
                     </div>
-                    <!-- end card -->
                 </div>
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container-fluid -->
     </div>
 </div>
 
-
-<!-- page wrapper end -->
-<?php include viewPath('includes/footer_accounting'); ?>
+<script>
+    const companyName = "<?=$clients->business_name?>"
+</script>
+<?php include viewPath('v2/includes/footer'); ?>
