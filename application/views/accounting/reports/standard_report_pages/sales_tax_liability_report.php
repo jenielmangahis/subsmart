@@ -1,6 +1,10 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
 <style>
+    .saveCustomize {
+        display: none;
+    }
+
     table {
         width: 100% !important;
     }
@@ -22,50 +26,187 @@
         border-bottom: 0px solid #111;
         margin-bottom: 10px;
     }
+
+    .customizeContainer {
+        display: none;
+    }
+
+    .customizeComponent {
+        background: #00000008;
+    }
+
+    .dateToContainer {
+        position: relative;
+        width: 35px;
+    }
+
+    .dateTo {
+        position: absolute;
+        bottom: 0px;
+    }
+
+    .verticalRuleContainer {
+        position: relative;
+        width: 0px;
+    }
+
+    .vr {
+        position: absolute;
+        bottom: 0px;
+        height: 55px;
+    }
+
+    .customizeRunReportContainer {
+        position: relative;
+    }
+
+    .customizeRunReport {
+        position: absolute;
+        bottom: 11px;
+        border-radius: 100px;
+    }
+
+    .accountingMethodContainer {
+        position: relative;
+        width: 180px;
+    }
+
+    .accountingRadio {
+        position: absolute;
+        bottom: 5px;
+    }
 </style>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
-            <div class="row">
-                <div class="col-lg-12">
-                    <span class="float-end">
-                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                            <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                            <p class="m-0">Rows/columns</p>
-                            <div class="row grid-mb">
-                                <div class="col-12">
-                                    <label for="filter-group-by">Group by</label>
-                                    <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
-                                        <option value="none" selected>None</option>
-                                        <option value="Tax Name">Tax Name</option>
-                                        <option value="Gross Total">Gross Total</option>
-                                        <option value="Non-Taxable">Non-Taxable</option>
-                                        <option value="Taxable Amount">Taxable Amount</option>
-                                        <option value="Tax Amount">Tax Amount</option>
-                                    </select>
+            <div class="float-end">
+                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                    <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                    <p class="m-0">Rows/columns</p>
+                    <div class="row grid-mb">
+                        <div class="col-12">
+                            <label for="filter-group-by">Group by</label>
+                            <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
+                                <option value="none" selected>None</option>
+                                <option value="Tax Name">Tax Name</option>
+                                <option value="Gross Total">Gross Total</option>
+                                <option value="Non-Taxable">Non-Taxable</option>
+                                <option value="Taxable Amount">Taxable Amount</option>
+                                <option value="Tax Amount">Tax Amount</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button type="submit" class="nsm-button primary">Run Report</button>
+                        </div>
+                    </div>
+                </ul>
+                <button type="button" class="nsm-button openCustomize"><i class='bx bx-fw bx-customize'></i> Customize</button>
+                <button type="button" class="nsm-button primary saveCustomize"><i class='bx bx-fw bx-save'></i> Save customization</button>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10 customizeContainer">
+            <div class="float-end">
+            </div>
+            <div class="card">
+                <div class="card-body customizeComponent">
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Report Period</label>
+                                <select class="form-select">
+                                    <option value="all-dates">All Dates</option>
+                                    <option value="custom">Custom</option>
+                                    <option value="today">Today</option>
+                                    <option value="this-week">This Week</option>
+                                    <option value="this-week-to-date">This Week-to-date</option>
+                                    <option value="this-month">This Month</option>
+                                    <option value="this-month-to-date" selected="">This Month-to-date</option>
+                                    <option value="this-quarter">This Quarter</option>
+                                    <option value="this-quarter-to-date">This Quarter-to-date</option>
+                                    <option value="this-year">This Year</option>
+                                    <option value="this-year-to-date">This Year-to-date</option>
+                                    <option value="this-year-to-last-month">This Year-to-last-month</option>
+                                    <option value="yesterday">Yesterday</option>
+                                    <option value="recent">Recent</option>
+                                    <option value="last-week">Last Week</option>
+                                    <option value="last-week-to-date">Last Week-to-date</option>
+                                    <option value="last-month">Last Month</option>
+                                    <option value="last-month-to-date">Last Month-to-date</option>
+                                    <option value="last-quarter">Last Quarter</option>
+                                    <option value="last-quarter-to-date">Last Quarter-to-date</option>
+                                    <option value="last-year">Last Year</option>
+                                    <option value="last-year-to-date">Last Year-to-date</option>
+                                    <option value="since-30-days-ago">Since 30 Days Ago</option>
+                                    <option value="since-60-days-ago">Since 60 Days Ago</option>
+                                    <option value="since-90-days-ago">Since 90 Days Ago</option>
+                                    <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                    <option value="next-week">Next Week</option>
+                                    <option value="next-4-weeks">Next 4 Weeks</option>
+                                    <option value="next-month">Next Month</option>
+                                    <option value="next-quarter">Next Quarter</option>
+                                    <option value="next-year">Next Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">&nbsp;</label>
+                            <input class="form-control" type="date">
+                        </div>
+                        <div class="col-md-1 dateToContainer">
+                            <label class="form-label dateTo">To</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">&nbsp;</label>
+                            <input class="form-control" type="date">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Tax Agency</label>
+                                <select class="form-select">
+                                    <option value="All">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2 accountingMethodContainer">
+                            <label class="form-label fw-bold">Accounting method</label>
+                            <div class="accountingRadio">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="CashRadio" value="Cash">
+                                  <label class="form-check-label" for="CashRadio">Cash</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="AccrualRadio" value="Accrual">
+                                  <label class="form-check-label" for="AccrualRadio">Accrual</label>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12 d-flex justify-content-center">
-                                    <button type="submit" class="nsm-button primary">
-                                        Run Report
-                                    </button>
-                                </div>
-                            </div>
-                        </ul>
-                        <!-- <a type="button" class="nsm-button demo" data-bs-toggle="modal" data-bs-target="#customizeModal">
-                        <i class='bx bx-fw bx-customize'></i> Customize
-                        </a>
-                        <button type="button" class="nsm-button primary">
-                        <i class='bx bx-fw bx-save'></i> Save customization
-                        </button> -->
-                    </span>
+                        </div>
+                        <div class="col-md-1 verticalRuleContainer">
+                            <div class="vr"></div>
+                        </div>
+                        <div class="col-md-2 customizeRunReportContainer">
+                            <button class="btn btn-success customizeRunReport">Run Report</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="nsm-card primary">
@@ -174,38 +315,6 @@
     </div>
 </div>
 <!-- START: MODALS -->
-<!-- START: ADD NOTES MODAL -->
-<div class="modal" id="ADD_NOTES_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Add Notes</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-            </div>
-            <div class="modal-body">
-                <!-- <form id="ADD_NOTES_FORM" method="POST">
-                    <div class="row">
-                        <div class="col-sm-12 mt-1 mb-3">
-                            <div class="form-group">
-                                    <textarea id="NOTES" class="form-control"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="float-end">
-                                <button type="button" id="NOTE_CLOSE_MODAL" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="nsm-button primary">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </form> -->
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END: ADD NOTES MODAL -->
 
 <!-- START: PRINT/SAVE MODAL -->
 <div class="modal" id="PRINT_SAVE_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -329,6 +438,19 @@
 <!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->
 
 <script type="text/javascript">
+    $(".openCustomize").click(function(event) {
+        $(".openCustomize").hide();
+        $(".saveCustomize").show();
+        $(".customizeContainer").show();
+    });
+
+    $(".saveCustomize").click(function(event) {
+        $(".openCustomize").show();
+        $(".saveCustomize").hide();
+        $(".customizeContainer").hide();
+    });
+
+
     $(document).ready(function() {
         $("#PAGE_ORIENTATION").select2({
             dropdownParent: $("#PRINT_SAVE_MODAL")
@@ -431,21 +553,20 @@
     $('#SEND_EMAIL_FORM').submit(function(event) {
         event.preventDefault();
         $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
-        var EMAIL_TO = $("#EMAIL_TO").val();
-        var EMAIL_CC = $("#EMAIL_CC").val();
-        var EMAIL_SUBJECT = $("#EMAIL_SUBJECT").val();
-        var EMAIL_BODY = $("#EMAIL_BODY").val();
+        var emailTo = $("#EMAIL_TO").val();
+        var emailCC = $("#EMAIL_CC").val();
+        var emailSubject = $("#EMAIL_SUBJECT").val();
+        var emailBody = $("#EMAIL_BODY").val();
         var EMAIL_REPORT_FILENAME = $("#EMAIL_REPORT_FILENAME").val();
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('PHPMailer/emailReport'); ?>",
+            url: "<?php echo base_url('AccountingMailer/emailReport/sales_tax_liability'); ?>",
             data: {
-                REPORT: "sales_tax_liability",
-                EMAIL_TO: EMAIL_TO,
-                EMAIL_CC: EMAIL_CC,
-                EMAIL_SUBJECT: EMAIL_SUBJECT,
-                EMAIL_BODY: EMAIL_BODY,
-                EMAIL_REPORT_FILENAME: EMAIL_REPORT_FILENAME,
+                emailTo: emailTo,
+                emailCC: emailCC,
+                emailSubject: emailSubject,
+                emailBody: emailBody,
+                // EMAIL_REPORT_FILENAME: EMAIL_REPORT_FILENAME,
             },
             success: function(data) {
                 $(".sendEmail").removeAttr('disabled').empty().append('Send');
@@ -453,7 +574,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Email was sent successfully!',
+                        text: 'Report was emailed successfully!',
                     }).then((result) => {
                         $("#EMAIL_CLOSE_MODAL").click();
                     });
@@ -462,7 +583,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Failed to send email!',
+                        text: 'Failed to send report!',
                     });
                 }
             }

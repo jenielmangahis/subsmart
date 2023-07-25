@@ -1,4 +1,16 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<style>
+    a {
+        text-decoration:none;
+    }
+     li a{
+        font-size:16px;
+     }
+     .nsm-card-header{
+        font-size:16px;
+        background-color:#EEDBFB;
+     }
+</style>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

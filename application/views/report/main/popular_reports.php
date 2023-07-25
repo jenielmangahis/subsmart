@@ -1,10 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/accounting_header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/report'); ?>
-    <?php include viewPath('includes/notifications'); ?>
 	<style>
 		.report-group-items li {
 			margin-bottom: 15px;
@@ -794,7 +792,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
 
 <script>
     $(document).ready(function(){
