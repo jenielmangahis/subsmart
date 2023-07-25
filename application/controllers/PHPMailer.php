@@ -1,67 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class PHPMailer extends CI_Controller{
+class PHPMailer extends MY_Controller{
    
     function  __construct(){
         parent::__construct();
+        $this->checkLogin();
     }
     
-    function index () {
-        // MICROSOFT OUTLOOK EMAIL HOST SERVER
-        $MAIL_HOST_SERVER = "smtp-mail.outlook.com";
+    public function emailReport() {
+        $REPORT = $this->input->post('REPORT');
+        if ($REPORT == "sales_tax_liability") {
+            // EMAIL REPORT DETAILS
+            $EMAIL_TO = $this->input->post('EMAIL_TO');
+            $EMAIL_CC = $this->input->post('EMAIL_CC');
+            $EMAIL_SUBJECT = $this->input->post('EMAIL_SUBJECT');
+            $EMAIL_BODY = $this->input->post('EMAIL_BODY');
 
-        // MICROSOFT OUTLOOK EMAIL LOGIN CREDENTIALS
-        $EMAIL_USERNAME = "<EMAIL>";
-        $EMAIL_PASSWORD = "<PASSWORD>"
+            $EMAILER = email__getInstance(['subject' => $EMAIL_SUBJECT]);
+            $EMAILER->addAddress($EMAIL_TO, $EMAIL_TO);
+            $EMAILER->isHTML(true);
+            $EMAILER->Subject = $EMAIL_SUBJECT;
+            $EMAILER->Body = $EMAIL_BODY;
+            $EMAILER->addCC("$EMAIL_CC");
+            $EMAILER->addBCC("$EMAIL_CC");
+            $EMAILER->Send();
 
-        $EMAIL_TO = $_POST['EMAIL_TO'];
-        $EMAIL_CC = $_POST['EMAIL_CC'];
-        $EMAIL_SUBJECT = $_POST['EMAIL_SUBJECT'];
-        $EMAIL_BODY = $_POST['EMAIL_BODY'];
+            if ($EMAILER) {
+                echo "true";
+            } else {
+                echo "false";
+            }
 
-        /* Load PHPMailer library */
-        $this->load->library('phpmailer_lib');
-       
-        /* PHPMailer object */
-        $mail = $this->phpmailer_lib->load();
-       
-        /* SMTP configuration */
-        $mail->isSMTP();
-        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-        $mail->SMTPKeepAlive = true;
-        $mail->Host     = $MAIL_HOST_SERVER;
-        $mail->SMTPAuth = true;
-        $mail->Username = $EMAIL_USERNAME;
-        $mail->Password = $EMAIL_PASSWORD;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port     = 587;
-       
-        $mail->setFrom($EMAIL_USERNAME, 'nSmartrac');
-        $mail->addReplyTo($EMAIL_USERNAME, 'nSmartrac');
-       
-        /* Add a recipient */
-        $mail->addAddress("$EMAIL_TO");
-       
-        /* Add cc or bcc */
-        $mail->addCC("$EMAIL_CC");
-        $mail->addBCC("$EMAIL_CC");
-       
-        /* Email subject */
-        $mail->Subject = "$EMAIL_SUBJECT";
-       
-        /* Set email format to HTML */
-        $mail->isHTML(true);
-       
-        /* Email body content */
-        $mailContent = "$EMAIL_BODY";
-        $mail->Body = $mailContent;
-       
-        /* Send email */
-        if(!$mail->send()){
-            echo "false";
-        }else{
-            echo "true";
-        }
+        } else { die("unable to send email report."); }
     }
 }

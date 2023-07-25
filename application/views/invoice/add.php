@@ -12,6 +12,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
+<?php include viewPath('v2/pages/job/css/job_new'); ?>
     <style>
   .custom-signaturepad {
     padding-left: 0;
@@ -351,14 +352,9 @@ input:checked + .slider:before {
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
                                     </select> -->
-                                    <select name="customer_id" id="customer-id" class="form-control" required>
+                                    <select name="customer_id" id="customer-id" class="form-control searchable-dropdown" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <?php 
-                                        if( !empty($workorder[0]) ){
-                                            $default_cust_id = $workorder[0]->customer_id;
-                                        }
-                                    ?>
                                     <option <?= $default_cust_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -374,7 +370,7 @@ input:checked + .slider:before {
                                 <br>
                                     <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
                                     
-                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_location : ''; ?>" name="jobs_location" id="invoice_jobs_location" />
+                                    <input type="text" class="form-control" value="" name="jobs_location" id="invoice_jobs_location" />
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <!-- <p>&nbsp;</p>
@@ -385,7 +381,7 @@ input:checked + .slider:before {
                                 <div class="col-md-5 form-group">
                                 <br>
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_name : ''; ?>" name="job_name" id="job_name" />
+                                    <input type="text" class="form-control" value="" name="job_name" id="job_name" />
                                 </div>
                                 <div class="col-md-5 form-group">
                                 <br>
@@ -579,76 +575,50 @@ input:checked + .slider:before {
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr> -->
                                         <?php if( empty($w_items) ){ ?>
-                                            <!-- <tr>
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                           onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-
-                                                    </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                           data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                           data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                           <div class="show_mobile_view"><span class="price">0</span>
-                                                           </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                           data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                           data-counter="0" id="tax1_0" min="0" value="0">
-                                                           </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                           data-counter="0" id="item_total_0" min="0" value="0">
-                                                           $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="bx bx-fw bx-trash"></i></a></td>
-                                            </tr> -->
-                                            <tr style="display:;">
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="0">
-                                                    <input type="hidden" name="packageID[]" value="0">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-                                                    </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                        <div class="show_mobile_view">
-                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0" >
+                                            <?php if(isset($jobs_data)): ?>
+                                                <?php
+                                                    $subtotal = 0.00;
+                                                    foreach ($jobs_data_items as $item):
+                                                    $item_price = $item->cost / $item->qty;
+                                                    $total = $item->cost;
+                                                    $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
+                                                ?>
+                                                   <tr id=ss>
+                                                        <td width="35%"><small>Item name</small>
+                                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" readonly>
+                                                            <input type="hidden" value='<?= $item->id ?>' name="item_id[]">
                                                         </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                            </tr>
+                                                        <td><small>Qty</small>
+                                                            <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
+                                                        </td>
+                                                        <td class="d-none"><small>Original Price</small>
+                                                            <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
+                                                        </td>
+                                                        <td><small>Unit Price</small>
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                        </td>
+                                                        <td class="d-none"><small>Commission</small>
+                                                            <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
+                                                        </td>
+                                                        <td class="d-none"><small>Margin</small>
+                                                            <input readonly step="any" id='margin<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->margin; ?>'  type="number" name="item_margin[]" class="form-control item-margin" placeholder="Margin">
+                                                        </td>
+                                                        <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
+                                                        <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
+                                                        <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
+                                                        <td>
+                                                            <small>Amount</small><br>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2" onclick="$('#ITEMLIST_PRODUCT_<?php echo "$item->id"; ?>').show();"><i class="bx bx-trash" aria-hidden="true"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                    $subtotal = $subtotal + $total;
+                                                    endforeach;
+                                                ?>
+                                            <?php endif; ?>
                                         <?php }else{ ?>
                                             <?php $item_row = 0; foreach($w_items as $data){ ?>
 
@@ -700,6 +670,10 @@ input:checked + .slider:before {
                                         <?php } ?>
                                         </tbody>
                                     </table>
+                                    
+                                    <style type="text/css">
+                                                <?php echo $hideSelectedItems; ?>
+                                            </style>
                                     <div class="row lamesa">
                                         <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
@@ -881,7 +855,7 @@ input:checked + .slider:before {
                                 <br><br>
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
                                 </div>
                             </div>
                             </div>
@@ -914,8 +888,8 @@ input:checked + .slider:before {
                             <br>
                             <div class="row" style="background-color:white;padding-top:10px;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save</button>
-                                    <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
+                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="save">Save</button>
+                                    <!-- <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button> -->
                                     <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
                                 </div>
                             </div>
@@ -1182,47 +1156,43 @@ input:checked + .slider:before {
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Rebatable</td>
-                                            <td> On Hand</td>
-                                            <td> Price</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="">
-                                        <?php foreach($items as $item){ // print_r($item); ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
-                                                <td></td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                <!-- <span class="fa fa-plus"></span> -->
-                                                <i class="bx bx-fw bx-plus"></i>
-                                            </button></td>
-                                            </tr>
-                                            
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
+                                        <table id="items_table" class="table table-hover" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <td style="width: 0% !important;"></td>
+                                                    <td><strong>Name</strong></td>
+                                                    <td><strong>On Hand</strong></td>
+                                                    <td><strong>Price</strong></td>
+                                                    <td><strong>Type</strong></td>
+                                                    <td class='d-none'><strong>Location</strong></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    if (!empty($items)) {
+                                                        foreach ($items as $item) {
+                                                        $item_qty = get_total_item_qty($item->id);
+                                                ?>
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td style="width: 0% !important;">
+                                                        <button type="button" data-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    </td>
+                                                    <td><?php echo $item->title; ?></td>
+                                                    <td><?php foreach($itemsLocation as $itemLoc){
+                                                        if($itemLoc->item_id == $item->id){
+                                                            echo "<div class='data-block'>";
+                                                            echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                            echo "</div>";
+                                                        } 
+                                                    }
+                                                    ?></td>
+                                                    <td><?php echo $item->retail; ?></td>
+                                                    <td><?php echo $item->type; ?></td>
+                                                    <td class='d-none'><?php echo $item->location_name; ?></td>
+                                                </tr>
+                                                <?php } } ?>
+                                            </tbody>
+                                        </table>
                                 </div>
                             </div>
                         </div>
@@ -1234,6 +1204,8 @@ input:checked + .slider:before {
                     </div>
                 </div>
             </div>
+
+            
 <?php include viewPath('accounting/add_new_term'); ?>
 <?php //include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('includes/footer'); ?>
@@ -1325,6 +1297,65 @@ $(".toggle").each(function () {
     // });
     });
 });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+var options = {
+  urlGetAll: base_url + "invoice/customer/json_list",
+  urlGetAllJob: base_url + "invoice/job/json_list",
+  urlAdd: base_url + "invoice/source/save/json",
+  urlServiceAddressForm: base_url + "invoice/service_address_form",
+  urlSaveServiceAddress: base_url + "invoice/save_service_address",
+  urlGetServiceAddress: base_url + "invoice/json_get_address_services",
+  urlRemoveServiceAddress: base_url + "invoice/remove_address_services",
+  urlAdditionalContactForm: base_url + "invoice/new_customer_form",
+  urlRecordPaymentForm: base_url + "invoice/record_payment_form",
+  urlPayNowForm: base_url + "invoice/pay_now_form",
+  urlSaveAdditionalContact: base_url + "invoice/save_new_customer",
+  urlGetAdditionalContacts: base_url + "invoice/json_get_new_customers",
+  urlRemoveInvoice: base_url + "invoice/delete",
+  urlCloneInvoice: base_url + "invoice/clone",
+  urlMarkAsSentInvoice: base_url + "invoice/mark_as_sent",
+  urlSavePaymentRecord: base_url + "invoice/save_payment_record",
+  urlPayNow: base_url + "invoice/stripePost",
+};
+
+
+  // open additional contact form
+  $("#modalNewCustomer").on("shown.bs.modal", function (e) {
+    var element = $(this);
+    $(element).find(".modal-body").html("loading...");
+
+    var service_address_index = $(e.relatedTarget).attr("data-id");
+    var inquiry_id = $(e.relatedTarget).attr("data-inquiry-id");
+
+    if (service_address_index && inquiry_id) {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        data: {
+          index: service_address_index,
+          inquiry_id: inquiry_id,
+          action: "edit",
+        },
+        success: function (response) {
+          // console.log(response);
+
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    } else {
+      $.ajax({
+        url: options.urlAdditionalContactForm,
+        type: "GET",
+        success: function (response) {
+          $(element).find(".modal-body").html(response);
+        },
+      });
+    }
+  });
 });
 </script>
 

@@ -21332,6 +21332,92 @@ class Reports extends MY_Controller {
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
+            case 'employee_directory' :
+                $this->page_data['report_period'] = 'For all employees';
+
+                if(!is_null($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
+
+                    $this->page_data['columns'] = $columns;
+                }
+
+                $filters = [];
+                switch(get('status')) {
+                    case 'active' :
+                        $filters['status'] = [
+                            "1"
+                        ];
+                    break;
+                    case 'inactive' :
+                        $filters['status'] = [
+                            "0",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                    default :
+                        $filters['status'] = [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                }
+
+                if(!empty(get('status'))) {
+                    $this->page_data['filter_status'] = get('status');
+                }
+
+                $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
+
+                $details = [];
+                foreach($employees as $employee)
+                {
+                    $address = '';
+                    $address .= !in_array($employee->address, ['', null]) ? $employee->address.'<br>' : '';
+                    $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+                    $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+                    $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+
+                    $details[] = [
+                        'name' => "$employee->LName, $employee->FName",
+                        'birth_date' => date("m/d/Y", strtotime($employee->birthdate)),
+                        'email' => $employee->email,
+                        'phone' => $employee->phone,
+                        'mobile' => $employee->mobile,
+                        'home_address' => $address,
+                        'hire_date' => date("m/d/Y", strtotime($employee->date_hired))
+                    ];
+                }
+
+                $this->page_data['employees'] = $details;
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'paycheck_history' :
+                $this->page_data['start_date'] = date("m/d/Y");
+                $this->page_data['end_date'] = date("m/t/Y");
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+
+                    $startDate = date("M d, Y", strtotime($this->page_data['start_date']));
+                    $endDate = date("M d, Y", strtotime($this->page_data['end_date']));
+                }
+
+                $this->page_data['report_period'] = 'Paychecks from '.date("M d, Y").' to '.date("M d, Y").' for all employees from all locations';
+
+                $this->page_data['employees'] = [];
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -45688,6 +45774,431 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Contractor_Payments.pdf', 'D');
+                }
+            break;
+            case 'Employee Details' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $report_period = 'For all employees';
+
+                $filters = [];
+                switch($post['status']) {
+                    case 'active' :
+                        $filters['status'] = [
+                            "1"
+                        ];
+                    break;
+                    case 'inactive' :
+                        $filters['status'] = [
+                            "0",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                    default :
+                        $filters['status'] = [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                }
+
+                $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
+
+                $details = [];
+                foreach($employees as $employee)
+                {
+                    $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
+                    if($empPayDetails) {
+                        $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
+
+                        if($empPayDetails->pay_type === 'hourly') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+                        } else if($empPayDetails->pay_type === 'salary') {
+                            $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                        } else {
+                            $payRate = 'Commission only';
+                        }
+                    } else {
+                        $payMethod = 'Missing';
+                        $payRate = 'Missing';
+                    }
+
+                    $address = '';
+                    $address .= !in_array($employee->address, ['', null]) ? $employee->address."\n" : '';
+                    $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+                    $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+                    $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+
+                    $details[] = [
+                        'name' => "$employee->LName, $employee->FName",
+                        'address' => $address,
+                        'birth_date' => date("m/d/Y", strtotime($employee->birthdate)),
+                        'hire_date' => date("m/d/Y", strtotime($employee->date_hired)),
+                        'pay_type' => $payRate,
+                        'pay_method' => $payMethod,
+                        'notes' => $empPayDetails->notes
+                    ];
+                }
+
+                $employees = $details;
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    foreach($employees as $employee)
+                    {
+                        $data = [];
+                        $style = [];
+
+                        foreach($post['fields'] as $field)
+                        {
+                            if($field !== 'Personal Info' && $field !== 'Pay Info') {
+                                $data[] = $employee[strtolower(str_replace(' ', '_', $field))];
+                            } else {
+                                if($field === 'Personal Info') {
+                                    $text = $employee['name'];
+
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Home Address', $post['columns'])) {
+                                        $text .= "\n";
+                                        $text .= !empty($employee['address']) ? $employee['address'] : '-';
+                                    }
+
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Birth Date', $post['columns'])) {
+                                        $text .= "\n";
+                                        $text .= 'DOB: '.$employee['birth_date'];
+                                    }
+                                } else {
+                                    $text = 'Pay type: '.$employee['pay_type'];
+                                }
+
+                                $data[] = $text;
+                            }
+
+                            $style[] = ['color' => '#000000'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Employee_Details';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Employee_Details.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) 
+                                {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($employees as $employee)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        if($field !== 'Personal Info' && $field !== 'Pay Info') {
+                                            $html .= '<td>'.$employee[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                        } else {
+                                            $html .= '<td>';
+                                            if($field === 'Personal Info') {
+                                                $html .= '<h3>'.$employee['name'].'</h3>';
+                                                $address = !empty($employee['address']) ? $employee['address'] : "-";
+                                                $html .= !isset($post['columns']) || isset($post['columns']) && in_array('Home Address', $post['columns']) ? '<p>'.$address.'</p>' : '';
+                                                $html .= !isset($post['columns']) || isset($post['columns']) && in_array('Birth Date', $post['columns']) ? '<p>DOB: '.$employee['birth_date'].'</p>' : '';
+                                            } else {
+                                                $html .= 'Pay type: '.$employee['pay_type'];
+                                            }
+                                            $html .= '</td>';
+                                        }
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="10">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Employee_Details';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Employee Details";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Employee_Details.pdf', 'D');
+                }
+            break;
+            case 'Employee Directory' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $report_period = 'For all employees';
+
+                $filters = [];
+                switch($post['status']) {
+                    case 'active' :
+                        $filters['status'] = [
+                            "1"
+                        ];
+                    break;
+                    case 'inactive' :
+                        $filters['status'] = [
+                            "0",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                    default :
+                        $filters['status'] = [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ];
+                    break;
+                }
+
+                $employees = $this->users_model->getCompanyUsersWithFilter($filters['status']);
+
+                $details = [];
+                foreach($employees as $employee)
+                {
+                    $address = '';
+                    $address .= !in_array($employee->address, ['', null]) ? $employee->address."\n" : '';
+                    $address .= !in_array($employee->city, ['', null]) ? $employee->city.', ' : '';
+                    $address .= !in_array($employee->state, ['', null]) ? $employee->state.' ' : '';
+                    $address .= !in_array($employee->postal_code, ['', null]) ? $employee->postal_code : '';
+
+                    $details[] = [
+                        'name' => "$employee->LName, $employee->FName",
+                        'birth_date' => date("m/d/Y", strtotime($employee->birthdate)),
+                        'email' => $employee->email,
+                        'phone' => $employee->phone,
+                        'mobile' => $employee->mobile,
+                        'home_address' => $address,
+                        'hire_date' => date("m/d/Y", strtotime($employee->date_hired))
+                    ];
+                }
+
+                $employees = $details;
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    foreach($employees as $employee)
+                    {
+                        $data = [];
+                        $style = [];
+
+                        foreach($post['fields'] as $field)
+                        {
+                            if($field !== 'Phone') {
+                                $data[] = $employee[strtolower(str_replace(' ', '_', $field))];
+                            } else {
+                                $text = !empty($employee['phone']) ? "Phone: ".$employee['phone']."\n" : '';
+                                $text .= !empty($employee['mobile']) ? 'Mobile: '.$employee['mobile'] : '';
+
+                                $data[] = $text;
+                            }
+
+                            $style[] = ['color' => '#000000'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Employee_Directory';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Employee_Directory.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) 
+                                {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($employees as $employee)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        if($field !== 'Phone') {
+                                            $html .= '<td>'.$employee[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                        } else {
+                                            $html .= '<td>';
+                                            $html .= !empty($employee['phone']) ? '<p style="margin: 0">Phone: '.$employee['phone'].'</p>' : '';
+                                            $html .= !empty($employee['mobile']) ? '<p>Mobile: '.$employee['mobile'].'</p>' : '';
+                                            $html .= '</td>';
+                                        }
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="10">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Employee_Directory';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Employee Directory";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Employee_Directory.pdf', 'D');
                 }
             break;
         }

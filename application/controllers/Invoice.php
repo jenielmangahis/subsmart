@@ -328,6 +328,9 @@ class Invoice extends MY_Controller
 
     public function add()
     {
+        
+        $this->load->helper('functions');
+
         $query       = $this->input->get();        
         $workorder   = array();
         $w_customer  = array();
@@ -384,7 +387,10 @@ class Invoice extends MY_Controller
         $this->page_data['workorder']  = $workorder;
         $this->page_data['w_customer'] = $w_customer;
         $this->page_data['w_items']    = $w_items;
-        $this->page_data['items']      = $this->items_model->getItemlist();
+        // $this->page_data['items']      = $this->items_model->getItemlist();
+        
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 
         $this->load->view('invoice/add', $this->page_data);
     }
@@ -1177,6 +1183,8 @@ class Invoice extends MY_Controller
 
     public function invoice_edit($id)
     {
+        
+        $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
         // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
@@ -1190,10 +1198,13 @@ class Invoice extends MY_Controller
         $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
 
         $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
-        $this->page_data['items'] = $this->items_model->getItemlist();
+        // $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
         $this->page_data['terms'] =  $terms;
         // print_r($this->page_data['invoice']);
+        
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 
         $this->load->view('invoice/invoice_edit', $this->page_data);
     }
@@ -1224,6 +1235,7 @@ class Invoice extends MY_Controller
     public function updateInvoice()
     {
         $id = $this->input->post('invoiceDataID');
+        // dd($this->input->post('customer_id'));
 
         $update_data = array(
             'id'                        => $this->input->post('invoiceDataID'),//
@@ -1327,7 +1339,8 @@ class Invoice extends MY_Controller
             header('content-type: application/json');
             exit(json_encode(['id' => $addQuery]));
         } else {
-            redirect('accounting/invoices');
+            // redirect('accounting/invoices');
+            redirect('invoice');
         }
     }
 

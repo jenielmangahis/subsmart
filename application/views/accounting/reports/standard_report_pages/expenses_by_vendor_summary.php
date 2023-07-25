@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         font-size: 10px;
     }
 </style>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('v2/includes/accounting_header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->

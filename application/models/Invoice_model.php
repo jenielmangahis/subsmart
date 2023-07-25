@@ -59,7 +59,7 @@ class Invoice_model extends MY_Model
         extract($data);
         $this->db->where('id', $id);
         $this->db->update('invoices', array(
-            // 'customer_id'               => $customer_id,
+            'customer_id'               => $customer_id,
             'job_location'              => $job_location, //
             'job_name'                  => $job_name,//
             'invoice_type'              => $invoice_type,//
