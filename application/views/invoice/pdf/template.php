@@ -173,24 +173,7 @@
                             </table>
                         </td>
                         <td style="width: 70%" valign="top">
-                            <p style="margin: 0"><b>JOB LOCATION:</b></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><b><?php echo $users->first_name .' '. $users->middle_name .' '. $users->last_name; ?></b></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?php echo $users->cross_street?></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.', '.$users->zip_code?></p>
-                            <!-- <br> -->
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
-                                        <td>
-                                            <?php echo $users->phone_m ?><br>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            
                         </td>
                     </tr>
                 </tbody>
@@ -203,10 +186,11 @@
 
             <br><br>
             <?php endif; ?>
-
+            <br><br>
             <p style="margin:0"><b>JOB:</b></p>
-            <!-- <br> -->
-            <p style="margin: 0"><?php echo $invoice->job_name ?></p>
+            <!-- <br> job_location -->
+            <p style="margin: 0">Job Name: <?php echo $invoice->job_name ?></p>
+            <p style="margin: 0">Job Location: <?php echo $invoice->job_location ?></p>
             <br>
             <br>
             <!-- <br> -->
@@ -260,7 +244,7 @@
                             <td colspan="3"></td>
                             <td colspan="2" style="text-align: right"><b>Subtotal (without tax)</b></td>
                             <td></td>
-                            <td style="text-align: right">$<?php echo number_format($invoice->sub_total, 2);?></td>
+                            <td style="text-align: right">$<?php if(empty($invoice->sub_total) || $invoice->sub_total == 0){ echo '0.00'; }else{ echo number_format($invoice->sub_total, 2); }?></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
