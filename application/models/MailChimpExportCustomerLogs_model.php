@@ -138,6 +138,16 @@ class MailChimpExportCustomerLogs_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function mailchimpStatusOptions()
+    {
+        $options = [
+            'subscribed' => 'Subscribed',
+            'pending' => 'Pending'
+        ];        
+
+        return $options;
+    }
 }
 
 /* End of file MailChimpExportCustomerLogs_model.php */

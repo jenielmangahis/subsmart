@@ -1548,3 +1548,4 @@ $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+

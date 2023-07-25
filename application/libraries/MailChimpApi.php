@@ -84,7 +84,7 @@ class MailChimpApi
                 'server' => $server_prefix,
             ]);
 
-            $response = $client->lists->addListMember($list_id, $member_info);
+            $response = $client->lists->addListMember($list_id, $member_info, ["skip_merge_validation" => false]);
         } catch (Exception $e) {                        
             $response = ['error' => $e->getMessage()]; 
         }
