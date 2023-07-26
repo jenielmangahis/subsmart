@@ -15,4 +15,11 @@ class Accounting_paychecks_model extends MY_Model {
         $this->db->insert_batch($this->table, $data);
         return $this->db->insert_id();
 	}
+
+	public function get_company_paychecks($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

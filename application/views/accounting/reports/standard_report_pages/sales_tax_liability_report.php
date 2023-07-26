@@ -78,7 +78,7 @@
 </style>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-1">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
             <div class="float-end">
@@ -112,7 +112,7 @@
         </div>
         <div class="col-lg-1"></div>
     </div>
-    <div class="row mb-3">
+    <div class="row addMargin3">
         <div class="col-lg-1"></div>
         <div class="col-lg-10 customizeContainer">
             <div class="float-end">
@@ -442,12 +442,15 @@
         $(".openCustomize").hide();
         $(".saveCustomize").show();
         $(".customizeContainer").show();
+        $(".addMargin3").addClass('mb-3');
+
     });
 
     $(".saveCustomize").click(function(event) {
         $(".openCustomize").show();
         $(".saveCustomize").hide();
         $(".customizeContainer").hide();
+        $(".addMargin3").removeClass('mb-3');
     });
 
 

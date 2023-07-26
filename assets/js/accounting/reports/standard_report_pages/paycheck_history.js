@@ -97,6 +97,10 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
+$("#btn_print_report").on("click", function() {
+    $("#report_table_print").printThis();
+});
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {
