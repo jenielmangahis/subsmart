@@ -141,6 +141,14 @@
                                             </select>
                                         </div>
                                         <div class="col-12">
+                                            <label class="content-subtitle fw-bold d-block mb-2">Mailchimp Status</label>
+                                            <select class="form-control" name="mailchimp_status" id="mailchimp-status" required="">                                                
+                                                <?php foreach($mailchimpStatusOptions as $key => $value){ ?>
+                                                    <option value="<?= $key; ?>"><?= $value; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
                                             <label class="content-subtitle fw-bold d-block mb-2 create-tech-attendees">Customer</label>
                                             <select name="mailchimp_customer[]" id="mailchimp-customer" class="form-control" required="" multiple="">
                                                 <option value="">Select Customer</option>
@@ -269,6 +277,11 @@
         $('#mailchimp-list').select2({
             dropdownParent: $("#mailchimp-export-modal"),
             placeholder: 'Select Mailchimp List'
+        });
+
+        $('#mailchimp-status').select2({
+            dropdownParent: $("#mailchimp-export-modal"),
+            placeholder: 'Select Mailchimp Status'
         });
 
         $('#mailchimp-customer').select2({

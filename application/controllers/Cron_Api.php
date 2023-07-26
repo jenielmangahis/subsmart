@@ -778,6 +778,66 @@ class Cron_Api extends MYF_Controller {
         echo "Total Updated : " . $total_records;
     }
 
+    public function exportCustomerMailChimpList()
+    {
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('MailChimpExportCustomerLogs_model');
+        $this->load->library('MailChimpApi');
+
+        $total_exported = 0;
+        $exportMailChimpData = $this->MailChimpExportCustomerLogs_model->getAllNotSync(10);
+        foreach( $exportMailChimpData as $mc ){            
+            if( $mc->customer_email != '' ){
+                $companyApiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($mc->company_id, 'mailchimp');
+                if( $companyApiConnector ){
+                    $list_id = $mc->mailchimp_list_id;
+                    $customer_address = unserialize($mc->customer_address);
+                    $customer_info = [
+                        "email_address" => $mc->customer_email,
+                        "status" => $mc->mailchimp_status,
+                        "merge_fields" => [
+                            "FNAME" => $mc->customer_firstname,
+                            "LNAME" => $mc->customer_lastname,
+                            "PHONE" => $mc->customer_phone,
+                            "ADDRESS" => [
+                                 "addr1" => $customer_address['address'],
+                                  "city" => $customer_address['city'],
+                                  "state" => $customer_address['state'],
+                                  "zip" => $customer['zip']
+                            ]
+                        ]                        
+                    ];
+                    
+                    $mailChimp = new MailChimpApi;
+                    $response  = $mailChimp->addMemberToList($list_id, $customer_info, $companyApiConnector->mailchimp_access_token, $companyApiConnector->mailchimp_server_prefix);
+                    if( $response->id ){
+                        $data_mailchimp_logs = [
+                            'mailchimp_id' => $response->id,
+                            'mailchimp_hash_id' => $response->unique_email_id,
+                            'is_sync' => 1,
+                            'is_with_error' => 0,
+                            'error_message' => '',
+                            'action_date' => date("Y-m-d H:i:s")
+                        ];
+                        $total_exported++;
+                    }else{                          
+                        $data_mailchimp_logs = [
+                            'mailchimp_hash_id' => 0,
+                            'mailchimp_email_id' => 0,
+                            'is_sync' => 0,
+                            'is_with_error' => 1,
+                            'error_message' => $response['error'],
+                            'action_date' => date("Y-m-d H:i:s")
+                        ];
+                    }
+                    $this->MailChimpExportCustomerLogs_model->update($mc->id, $data_mailchimp_logs);
+                }                
+            }               
+        }
+
+        echo 'Total Exported : ' . $total_exported;
+    }
+
     public function syncQbPayrollEmployees()
     {
         $this->load->library('QuickbooksApi');

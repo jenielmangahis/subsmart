@@ -64,6 +64,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('EstimateSettings_model');
         $this->load->model('Clients_model');
         $this->load->model('accounting_custom_reports_model');
+        $this->load->model('accounting_paychecks_model');
         $this->load->library('form_validation');
     }
 
@@ -2741,6 +2742,7 @@ class Accounting_modals extends MY_Controller
                         'company_id' => $company_id,
                         'employee_id' => $value,
                         'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                        'total_pay' => floatval(str_replace(',', '', $empTotalPay)),
                         'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
                         'status' => 1
                     ];

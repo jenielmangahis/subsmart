@@ -69,6 +69,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('accounting_paychecks_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -1926,7 +1927,7 @@ class Reports extends MY_Controller {
 
                 if(!empty(get('deleted'))) {
                     if(get('deleted') === 'deleted') {
-                        $accounts = array_fitler($accounts, function($v, $k) {
+                        $accounts = array_filter($accounts, function($v, $k) {
                             return empty($v['status']);
                         }, ARRAY_FILTER_USE_BOTH);
                     }
@@ -22968,21 +22969,49 @@ class Reports extends MY_Controller {
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
             case 'paycheck_history' :
-                $this->page_data['start_date'] = date("m/d/Y");
-                $this->page_data['end_date'] = date("m/t/Y");
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
 
                 if(!empty(get('date'))) {
                     $this->page_data['filter_date'] = get('date');
                     $this->page_data['start_date'] = str_replace('-', '/', get('from'));
                     $this->page_data['end_date'] = str_replace('-', '/', get('to'));
-
-                    $startDate = date("M d, Y", strtotime($this->page_data['start_date']));
-                    $endDate = date("M d, Y", strtotime($this->page_data['end_date']));
                 }
 
-                $this->page_data['report_period'] = 'Paychecks from '.date("M d, Y").' to '.date("M d, Y").' for all employees from all locations';
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
 
-                $this->page_data['employees'] = [];
+                $data = [];
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+
+                    $data[] = [
+                        'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
+                        'name' => "$emp->LName, $emp->FName",
+                        'total_pay' => number_format(floatval($paycheck->total_pay), 2),
+                        'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                        'pay_method' => $paycheck->pay_method,
+                        'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : '-',
+                        'status' => '-'
+                    ];
+                }
+
+                $this->page_data['report_period'] = 'Paychecks from '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees from all locations';
+
+                $this->page_data['employees'] = $data;
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
@@ -25019,7 +25048,7 @@ class Reports extends MY_Controller {
 
                 if(!empty($post['deleted'])) {
                     if($post['deleted'] === 'deleted') {
-                        $accounts = array_fitler($accounts, function($v, $k) {
+                        $accounts = array_filter($accounts, function($v, $k) {
                             return empty($v['status']);
                         }, ARRAY_FILTER_USE_BOTH);
                     }

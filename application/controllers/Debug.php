@@ -2277,6 +2277,29 @@ class Debug extends MY_Controller {
             'redirect_uri' => $oauth_callback,
         ]));
     }
+
+    public function emailReport() {
+        // EMAIL REPORT DETAILS
+        $EMAIL_TO = 'bryann.revina03@gmail.com';
+        $EMAIL_CC = 'bryann.revina03@gmail.com';
+        $EMAIL_SUBJECT = 'Test Email';
+        $EMAIL_BODY = 'This is a sample email';
+
+        $EMAILER = email__getInstance(['subject' => $EMAIL_SUBJECT]);
+        $EMAILER->addAddress($EMAIL_TO, $EMAIL_TO);
+        $EMAILER->isHTML(true);
+        $EMAILER->Subject = $EMAIL_SUBJECT;
+        $EMAILER->Body = $EMAIL_BODY;
+        $EMAILER->addCC("$EMAIL_CC");
+        $EMAILER->addBCC("$EMAIL_CC");
+        $EMAILER->Send();
+
+        if ($EMAILER) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+    }
 }
 /* End of file Debug.php */
 

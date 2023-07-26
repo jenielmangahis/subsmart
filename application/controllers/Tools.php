@@ -284,7 +284,10 @@ class Tools extends MY_Controller {
             $is_with_error = 1;            
         }
 
+        $mailchimpStatusOptions = $this->MailChimpExportCustomerLogs_model->mailchimpStatusOptions();
+
         $this->page_data['companyMailChimp'] = $companyMailChimp;
+        $this->page_data['mailchimpStatusOptions'] = $mailchimpStatusOptions;
         $this->page_data['mailchimpList'] = $mailchimpList;
         $this->page_data['logs_summary']  = $logs_summary;
         $this->page_data['is_with_error'] = $is_with_error;
@@ -1645,15 +1648,25 @@ class Tools extends MY_Controller {
                 foreach( $post['mailchimp_customer'] as $cid ){    
                     $customer = $this->AcsProfile_model->getByProfId($cid);
                     if( $customer && $customer->email != '' ){
+                        $customer_address = [
+                            'address' => $customer->mail_add,
+                            'city' => $customer->city,
+                            'state' => $customer->state,
+                            'zip' => $customer->zip_code
+                        ];
                         $mailChimpLog = $this->MailChimpExportCustomerLogs_model->getByCustomerEmailAndListId($customer->email, $post['mailchimp_list']);
                         if( $mailChimpLog ){
-                            if( $mailChimpLog->is_sync == 0 ){                            
+                            if( $mailChimpLog->is_sync == 0 ){                                     
                                 $data_mailchimp_export = [                            
                                     'mailchimp_list_id' => $post['mailchimp_list'],
                                     'mailchimp_list_name' => $mailChimpList->name,
                                     'mailchimp_status' => 'subscribed',
                                     'customer_id' => $customer->prof_id,
                                     'customer_email' => $customer->email,
+                                    'customer_firstname' => $customer->first_name,
+                                    'customer_lastname' => $customer->last_name,
+                                    'customer_address' => serialize($customer_address),
+                                    'customer_phone' => formatPhoneNumber($customer->phone_m),
                                     'is_sync' => 0,
                                     'is_with_error' => 0,
                                     'error_message' => '',
@@ -1672,6 +1685,10 @@ class Tools extends MY_Controller {
                                 'mailchimp_status' => 'subscribed',
                                 'customer_id' => $customer->prof_id,
                                 'customer_email' => $customer->email,
+                                'customer_firstname' => $customer->first_name,
+                                'customer_lastname' => $customer->last_name,
+                                'customer_address' => serialize($customer_address),
+                                'customer_phone' => formatPhoneNumber($customer->phone_m),
                                 'is_sync' => 0,
                                 'is_with_error' => 0,
                                 'error_message' => '',
@@ -1738,6 +1755,7 @@ class Tools extends MY_Controller {
             $mailchimpLogs = $this->MailChimpExportCustomerLogs_model->getAllByCompanyId($company_id);
         }        
 
+        $this->page_data['filter'] = $filter;
         $this->page_data['page']->title   = 'MailChimp';
         $this->page_data['page']->parent  = 'Tools';
         $this->page_data['mailchimpLogs'] = $mailchimpLogs;
