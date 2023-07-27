@@ -48,7 +48,7 @@
                 <?php if( $is_with_error == 1 ){ ?>
                     <div class="row">
                         <div class="col-4">
-                            <div class="alert alert-danger">Cannot connect to MailChimp.</div>
+                            <div class="alert alert-danger">Cannot connect to <b>MailChimp</b>.</div>
                         </div>
                     </div>
                 <?php } ?>

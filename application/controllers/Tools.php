@@ -191,22 +191,33 @@ class Tools extends MY_Controller {
         $company_id = logged('company_id');
         $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');        
         if( $companyQuickBooksPayroll && $companyQuickBooksPayroll->status == 1 ){                  
-            $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);             
-            $companyInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);            
-            //Update company refresh token
-            $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
-            $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);
+            $token = $this->quickbooksapi->refresh_token($companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id); 
+            if( $token ){
+                $companyInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $companyQuickBooksPayroll->qb_payroll_refresh_token, $companyQuickBooksPayroll->qb_payroll_realm_id);            
+                //Update company refresh token
+                $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
+                $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_quickbooks);    
 
-            $date_from = date("Y-m-d");
-            $date_to   = date("Y-m-d");          
-            $attendance_logs = $this->attendance_logs($date_from, $date_to);   
-            $this->page_data['companyInfo'] = $companyInfo;
-            $this->page_data['attendance_logs'] = $attendance_logs;
+                $date_from = date("Y-m-d");
+                $date_to   = date("Y-m-d");          
+                $attendance_logs = $this->attendance_logs($date_from, $date_to);   
+                $this->page_data['companyInfo'] = $companyInfo;
+                $this->page_data['attendance_logs'] = $attendance_logs;
+            }else{
+                $qbAuth = $this->quickbooksapi->initialize_auth();
+                $this->page_data['qbAuth_url'] = $qbAuth;
+            }
         }else{
             $qbAuth = $this->quickbooksapi->initialize_auth();
             $this->page_data['qbAuth_url'] = $qbAuth;
         }
 
+        $is_with_error = 0;
+        if( !empty($this->input->get('err')) && $this->input->get('err') == 1 ){
+            $is_with_error = 1;            
+        }
+
+        $this->page_data['is_with_error'] = $is_with_error;
         $this->page_data['companyQuickBooksPayroll'] = $companyQuickBooksPayroll;
         $this->page_data['page']->title = 'Quickbooks Payroll';
         $this->page_data['page']->parent = 'Tools';     
@@ -1524,6 +1535,7 @@ class Tools extends MY_Controller {
 
     public function ajax_disconnect_quickbook_payroll_account()
     {
+        $this->load->library('QuickbooksApi');
         $this->load->model('CompanyApiConnector_model');
 
         $is_success = 0;
@@ -1531,8 +1543,9 @@ class Tools extends MY_Controller {
 
         $company_id = logged('company_id');
         $companyQuickBookPayrollApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'quickbooks_payroll');
-        if( $companyQuickBookPayrollApi ){
-            $this->CompanyApiConnector_model->update($companyQuickBookPayrollApi->id, ['status' => 0]);
+        if( $companyQuickBookPayrollApi ){ 
+            $this->quickbooksapi->revoke_token($companyQuickBookPayrollApi->qb_payroll_refresh_token, $companyQuickBookPayrollApi->qb_payroll_realm_id);           
+            $this->CompanyApiConnector_model->update($companyQuickBookPayrollApi->id, ['qb_payroll_refresh_token' => '', 'status' => 0]);
             $is_success = 1;
             $msg = '';
         }
