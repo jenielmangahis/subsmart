@@ -22969,6 +22969,42 @@ class Reports extends MY_Controller {
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
             case 'paycheck_history' :
+                if(!is_null($this->input->get('columns'))) {
+                    $columns = explode(',', $this->input->get('columns'));
+
+                    $this->page_data['columns'] = $columns;
+                }
+
+                $status = [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ];
+
+                if(!empty(get('status'))) {
+                    $this->page_data['filter_status'] = get('status');
+
+                    switch(get('status')) {
+                        case 'active' :
+                            $status = [
+                                "1"
+                            ];
+                        break;
+                        case 'inactive' :
+                            $status = [
+                                "0",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                    }
+                }
+
                 $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
 
                 $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
@@ -22998,15 +23034,23 @@ class Reports extends MY_Controller {
                 {
                     $emp = $this->users_model->getUser($paycheck->employee_id);
 
-                    $data[] = [
-                        'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
-                        'name' => "$emp->LName, $emp->FName",
-                        'total_pay' => number_format(floatval($paycheck->total_pay), 2),
-                        'net_pay' => number_format(floatval($paycheck->net_pay), 2),
-                        'pay_method' => $paycheck->pay_method,
-                        'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : '-',
-                        'status' => '-'
-                    ];
+                    $flag = true;
+
+                    if(!in_array($emp->status, $status)) {
+                        $flag = false;
+                    }
+
+                    if($flag) {
+                        $data[] = [
+                            'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
+                            'name' => "$emp->LName, $emp->FName",
+                            'total_pay' => number_format(floatval($paycheck->total_pay), 2),
+                            'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                            'pay_method' => $paycheck->pay_method,
+                            'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : '-',
+                            'status' => '-'
+                        ];
+                    }
                 }
 
                 $this->page_data['report_period'] = 'Paychecks from '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees from all locations';
@@ -48219,6 +48263,209 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Employee_Directory.pdf', 'D');
+                }
+            break;
+            case 'Paycheck History' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $status = [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ];
+
+                if(!empty($post['status'])) {
+                    switch($post['status']) {
+                        case 'active' :
+                            $status = [
+                                "1"
+                            ];
+                        break;
+                        case 'inactive' :
+                            $status = [
+                                "0",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                    }
+                }
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+
+                if(!empty($post['date'])) {
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $data = [];
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+
+                    $flag = true;
+
+                    if(!in_array($emp->status, $status)) {
+                        $flag = false;
+                    }
+
+                    if($flag) {
+                        $data[] = [
+                            'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
+                            'name' => "$emp->LName, $emp->FName",
+                            'total_pay' => number_format(floatval($paycheck->total_pay), 2),
+                            'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                            'pay_method' => $paycheck->pay_method,
+                            'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : '-',
+                            'status' => '-'
+                        ];
+                    }
+                }
+
+                $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees from all locations';
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    foreach($data as $employee)
+                    {
+                        $data = [];
+                        $style = [];
+
+                        foreach($post['fields'] as $field)
+                        {
+                            $data[] = $employee[strtolower(str_replace(' ', '_', $field))];
+                            $style[] = ['color' => '#000000'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Paycheck_History';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Paycheck_History.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) 
+                                {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($data as $employee)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.$employee[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="10">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Paycheck_History';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Paycheck History";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Paycheck_History.pdf', 'D');
                 }
             break;
         }

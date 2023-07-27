@@ -23,6 +23,16 @@ $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
 });
 
+$('input[name="select_columns"]').on('change', function(e) {
+    if($('input[name="select_columns"]:checked').length === $('input[name="select_columns"]').length) {
+        $('#select-all-columns').html('Unselect all');
+        $('#select-all-columns').attr('id', 'unselect-all-columns');
+    } else {
+        $('#unselect-all-columns').html('Select All');
+        $('#unselect-all-columns').attr('id', 'select-all-columns');
+    }
+});
+
 $(document).on('click', '#select-all-columns', function(e) {
     e.preventDefault();
 
@@ -42,12 +52,6 @@ $(document).on('click', '#unselect-all-columns', function(e) {
 });
 
 $('#run-report-button').on('click', function() {
-    $('#filter-report-period-date').val($('#report-period-date').val()).trigger('change');
-    if($('#report-period-date').val() !== 'this-month-to-date') {
-        $('#filter-report-period-date-from').val($('#report-period-date-from').val());
-        $('#filter-report-period-date-to').val($('#report-period-date-to').val());
-    }
-
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');

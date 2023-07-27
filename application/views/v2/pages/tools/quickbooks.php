@@ -36,6 +36,14 @@
                         <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_quickbooks_payroll.png">
                     </div>
                 </div>
+
+                <?php if( $is_with_error == 1 ){ ?>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="alert alert-danger">Cannot connect to <b>Quickbooks</b>.</div>
+                        </div>
+                    </div>
+                <?php } ?>
                 <?php if($companyQuickBooksPayroll && $companyQuickBooksPayroll->status == 1 && $companyInfo){ ?>
                     <div class="row mt-4">
                         <div class="col-2">

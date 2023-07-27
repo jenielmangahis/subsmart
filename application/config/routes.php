@@ -1201,6 +1201,10 @@ $route['tools/quickbooks_connect'] = 'Tools/quickbooks_connect';
 $route['tools/_load_attendance_list'] = 'Tools/ajax_load_attendance_list';
 $route['tools/_export_qb_timesheet'] = 'Tools/ajax_export_qb_timesheet';
 $route['tools/_disconnect_quickbook_account'] = 'Tools/ajax_disconnect_quickbook_payroll_account';
+$route['tools/mailchimp_connect'] = 'Tools/mailchimpConnect';
+$route['tools/mailchimp_api_save'] = 'Tools/mailchimpApiSave';
+$route['tools/_create_mailchimp_customer_export'] = 'Tools/ajax_create_mailchimp_customer_export';
+$route['tools/_disconnect_mailchimp_account'] = 'Tools/ajax_disconnect_mailchimp_account';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1347,6 +1351,7 @@ $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
 $route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayroll';
 $route['cron_api/qb_employee_sync'] = 'Cron_Api/syncQbPayrollEmployees';
 $route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
+$route['cron_api/export_customer_mailchimp_list'] = 'Cron_Api/exportCustomerMailChimpList';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
@@ -1543,3 +1548,4 @@ $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+

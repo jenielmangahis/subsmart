@@ -5,30 +5,42 @@ class AccountingMailer extends MY_Controller{
    
     function  __construct(){
         parent::__construct();
+    }    
+
+    private function sendEmail($emailTo, $emailCC, $emailSubject, $emailBody) {
+        
+        $emailer = email__getInstance(['subject' => $emailSubject]);
+        $emailer->addAddress($emailTo, $emailTo);
+        $emailer->isHTML(true);
+        $emailer->Body = $emailBody;
+        $emailer->addCC("$emailCC");
+        $emailer->addBCC("$emailCC");
+        $emailer->Send();
+        if ($emailer) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+        
     }
-    
+
     public function emailReport($reportType) {
-        if ($reportType == "sales_tax_liability") {
+
+        $accountingValidReports = [
+            "sales_tax_liability",
+            "taxable_sales_detail",
+            "taxable_sales_summary",
+        ];
+
+        if (in_array($reportType, $accountingValidReports)) {
             $emailTo = $this->input->post("emailTo");
             $emailCC = $this->input->post("emailCC");
             $emailSubject = $this->input->post("emailSubject");
             $emailBody = $this->input->post("emailBody");
+            $this->sendEmail($emailTo, $emailCC, $emailSubject, $emailBody);
+        } else {
+            die("unable to send email report.");
+        }
 
-            $emailer = email__getInstance(['subject' => $emailSubject]);
-            $emailer->addAddress($EMAIL_TO, $EMAIL_TO);
-            $emailer->isHTML(true);
-            $emailer->Subject = $emailSubject;
-            $emailer->Body = $emailBody;
-            $emailer->addCC("$emailCC");
-            $emailer->addBCC("$emailCC");
-            $emailer->Send();
-
-            if ($emailer) {
-                echo "true";
-            } else {
-                echo "false";
-            }
-
-        } else { die("unable to send email report."); }
     }
 }

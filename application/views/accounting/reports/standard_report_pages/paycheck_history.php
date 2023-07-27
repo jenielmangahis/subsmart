@@ -23,7 +23,7 @@
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="last-pay-date" <?=empty($filter_date) || $filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
                                             <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
-                                            <option value="this-quarter" <?=empty($filter_date) || $filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
                                             <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
                                             <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last Month</option>
                                             <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
