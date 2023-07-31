@@ -141,7 +141,7 @@ class Tools extends MY_Controller {
         echo 'HTTP code: '. $httpcode;
     }
 
-    public function zillow()
+    public function zillow_old()
     {
         $this->page_data['sidebar'] = $this->api_sidebars();
         $this->load->view('tools/zillow', $this->page_data);
@@ -1409,8 +1409,11 @@ class Tools extends MY_Controller {
         $total_attendance = 0;
         if( $attendance_logs ){
             $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');
+            $total_employee           = $companyQuickBooksPayroll->qb_total_employee;
+            $total_attendance         = $companyQuickBooksPayroll->qb_total_attendance;
             foreach($attendance_logs as $logs){
                 $importEmployeeLog = $this->QbImportEmployeeLogs_model->getByUserId($logs['user_id']);
+
 
                 //Create employee
                 if( !$importEmployeeLog ){
@@ -1424,6 +1427,9 @@ class Tools extends MY_Controller {
                     ];                  
 
                     $this->QbImportEmployeeLogs_model->create($qb_employee_import);                    
+
+                    $total_employee++;
+
                 }else{
                     $qb_employee_import = [
                         'qb_user_id' => 0,
@@ -1433,8 +1439,7 @@ class Tools extends MY_Controller {
                     ];                  
 
                     $this->QbImportEmployeeLogs_model->update($importEmployeeLog->id, $qb_employee_import);
-                }
-                $total_employee++;
+                }                
 
                 //Create timesheet
                 $qb_timesheet_import = [
@@ -1473,10 +1478,10 @@ class Tools extends MY_Controller {
             $this->CompanyApiConnector_model->update($companyQuickBooksPayroll->id, $data_qb_summary);
         }
 
-        if( $total_employee > 0 ){
+        if( $total_attendance > 0 ){
             $is_success = 1;
         }else{
-            $msg = 'Nothing to import';
+            $msg = 'Nothing to export';
         }
   
         $json_data = [
@@ -1773,5 +1778,12 @@ class Tools extends MY_Controller {
         $this->page_data['page']->parent  = 'Tools';
         $this->page_data['mailchimpLogs'] = $mailchimpLogs;
         $this->load->view('v2/pages/tools/mailchimp_export_logs', $this->page_data);
+    }
+
+    public function zillow()
+    {
+        $this->page_data['page']->title   = 'Zillow';
+        $this->page_data['page']->parent  = 'Tools';     
+        $this->load->view('v2/pages/tools/zillow', $this->page_data);
     }
 }

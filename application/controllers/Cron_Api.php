@@ -791,7 +791,7 @@ class Cron_Api extends MYF_Controller {
                 $companyApiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($mc->company_id, 'mailchimp');
                 if( $companyApiConnector ){
                     $list_id = $mc->mailchimp_list_id;
-                    $customer_address = unserialize($mc->customer_address);
+                    $customer_address = unserialize($mc->customer_address);                                        
                     $customer_info = [
                         "email_address" => $mc->customer_email,
                         "status" => $mc->mailchimp_status,
@@ -803,10 +803,10 @@ class Cron_Api extends MYF_Controller {
                                  "addr1" => $customer_address['address'],
                                   "city" => $customer_address['city'],
                                   "state" => $customer_address['state'],
-                                  "zip" => $customer['zip']
+                                  "zip" => $customer_address['zip']
                             ]
                         ]                        
-                    ];
+                    ];   
                     
                     $mailChimp = new MailChimpApi;
                     $response  = $mailChimp->addMemberToList($list_id, $customer_info, $companyApiConnector->mailchimp_access_token, $companyApiConnector->mailchimp_server_prefix);
@@ -885,8 +885,8 @@ class Cron_Api extends MYF_Controller {
                             'qb_total_employee_synced' => $companyQuickBooksPayroll->qb_total_employee_synced + 1
                         ];
                         $total_imported++;
-                    }else{            
-                        if( $qb_employee['err_code'] == 6240 ){                            
+                    }else{                              
+                        if( $qb_employee['err_code'] == 6240 || $qb_employee['err_code'] == 400){                            
                             $a_err_details = explode(':', $qb_employee['err_msg']);
                             if( isset($a_err_details[1]) ){
                                 $qb_id = trim(str_replace('Id=', "", $a_err_details[1]));
@@ -1037,8 +1037,6 @@ class Cron_Api extends MYF_Controller {
                             'error_message' => 'Cannot find employee in QuickBooks',
                             'action_date' => date("Y-m-d H:i:s")
                         ];
-
-                        $this->QbImportTimesheetLogs_model->update($logs->id,$qb_timesheet);
                     }
 
                     $this->QbImportTimesheetLogs_model->update($logs->id,$data_qb_timesheet_log);

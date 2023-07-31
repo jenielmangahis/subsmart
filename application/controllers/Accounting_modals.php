@@ -2740,6 +2740,7 @@ class Accounting_modals extends MY_Controller
 
                     $paychecks[] = [
                         'company_id' => $company_id,
+                        'payroll_id' => $payrollId,
                         'employee_id' => $value,
                         'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                         'total_pay' => floatval(str_replace(',', '', $empTotalPay)),

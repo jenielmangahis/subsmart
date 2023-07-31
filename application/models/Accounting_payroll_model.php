@@ -29,4 +29,18 @@ class Accounting_payroll_model extends MY_Model {
 		$this->db->insert_batch('accounting_payroll_employees', $data);
 		return $this->db->insert_id();
 	}
+
+	public function get_by_id($id)
+	{
+		$this->db->where('id', $id);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	public function get_payroll_item($payrollItemId)
+	{
+		$this->db->where('id', $payrollItemId);
+		$query = $this->db->get('accounting_payroll_employees');
+		return $query->row();
+	}
 }

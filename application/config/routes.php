@@ -719,6 +719,7 @@ $route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controller
 $route['accounting/reports/add-custom-report-group']['post'] = 'accounting_controllers/reports/add_custom_report_group';
 $route['accounting/reports/save-custom-report']['post'] = 'accounting_controllers/reports/save_custom_report';
 $route['accounting/reports/check-custom-report-name']['post'] = 'accounting_controllers/reports/check_name';
+$route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_controllers/reports/generate_paychecks_pdf';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1348,7 +1349,7 @@ $route['cron_mail/send_acs_mail'] = 'Cron_Mail/send_acs_mail';
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
 $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
-$route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayroll';
+$route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
 $route['cron_api/qb_employee_sync'] = 'Cron_Api/syncQbPayrollEmployees';
 $route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
 $route['cron_api/export_customer_mailchimp_list'] = 'Cron_Api/exportCustomerMailChimpList';
