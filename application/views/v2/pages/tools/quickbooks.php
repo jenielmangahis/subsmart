@@ -113,13 +113,13 @@
                                         <td>Employees</td>
                                         <td><?= $companyQuickBooksPayroll->qb_total_employee; ?></td>
                                         <td><?= $companyQuickBooksPayroll->qb_total_employee_synced; ?></td>
-                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_faild_synced; ?></td>   
+                                        <td><?= $companyQuickBooksPayroll->qb_total_employee_failed_synced; ?></td>   
                                     </tr>
                                     <tr>
                                         <td>Timesheet Entries Exported</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>                                        
+                                        <td><?= $companyQuickBooksPayroll->qb_total_attendance; ?></td>
+                                        <td><?= $companyQuickBooksPayroll->qb_total_attendance_synced; ?></td>
+                                        <td><?= $companyQuickBooksPayroll->qb_total_attendance_failed_synced; ?></td>                                        
                                     </tr>
                                 </tbody>
                             </table>

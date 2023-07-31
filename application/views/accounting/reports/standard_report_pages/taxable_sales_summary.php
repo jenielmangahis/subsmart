@@ -490,20 +490,20 @@
     var PDF_ORIENTATION = "PAGE_ORIENTATION=PORTRAIT";
 
     // INITIATE SETTINGS
-    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
+    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
 
     $('#PAGE_ORIENTATION').change(function(event) {
         PDF_ORIENTATION = "PAGE_ORIENTATION=" + $(this).val();
-        $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
+        $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
     });
 
     $('#PAGE_HEADER_REPEAT').change(function() {
         if ($(this).is(':checked')) {
             PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=true";
-            $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
+            $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
         } else {
             PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
-            $('#PDF_PREVIEW').attr('src', '<?php echo base_url("TCPDFReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
+            $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
         }
     });
     // END: PDF SETTINGS SCRIPT

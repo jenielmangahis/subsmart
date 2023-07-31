@@ -229,6 +229,49 @@ $('#export-to-pdf').on('click', function(e) {
     $('#export-form').remove();
 });
 
+$('#reports-table thead .select-all').on('change', function() {
+    $('#reports-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+$('#reports-table tbody tr:visible .select-one').on('change', function() {
+    var checked = $('#reports-table tbody tr:visible input.select-one:checked');
+    var totalrows = $('#reports-table tbody tr:visible input.select-one').length;
+
+    $('#reports-table thead .select-all').prop('checked', checked.length === totalrows);
+
+    if(checked.length < 1) {
+        $('#print-paychecks').remove();
+    } else {
+        $(`<button type="button" class="nsm-button" id="print-paychecks">
+            <i class="bx bx-fw bx-printer"></i> Print
+        </button>`).insertAfter($('button[data-bs-target="#settings-modal"]'));
+    }
+});
+
+$(document).on('click', '#print-paychecks', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    $('#reports-table tbody tr:visible .select-one:checked').each(function() {
+        data.append('paychecks[]', $(this).val());
+    });
+
+    $.ajax({
+        url: '/accounting/reports/generate-paychecks-pdf',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(src) {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write(`<iframe width="100%" height="100%" src="data:application/pdf;base64,${src}"></iframe>`);
+            $(pdfWindow.document).find('body').css('padding', '0');
+            $(pdfWindow.document).find('body').css('margin', '0');
+            $(pdfWindow.document).find('iframe').css('border', '0');
+        }
+    });
+});
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {

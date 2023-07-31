@@ -34,16 +34,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($employees) > 0) : ?>
-                        <?php foreach($employees as $index => $employee) : ?>
+                        <?php if(count($paychecks) > 0) : ?>
+                        <?php foreach($paychecks as $index => $paycheck) : ?>
                         <tr>
-                            <td><?=$employee['pay_date']?></td>
-                            <td><?=$employee['name']?></td>
-                            <td <?=isset($columns) && !in_array('Total Pay', $columns) ? 'style="display: none"' : ''?>><?=$employee['total_pay']?></td>
-                            <td><?=$employee['net_pay']?></td>
-                            <td <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>><?=$employee['pay_method']?></td>
-                            <td <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>><?=$employee['check_number']?></td>
-                            <td <?=isset($columns) && !in_array('Status', $columns) ? 'style="display: none"' : ''?>><?=$employee['status']?></td>
+                            <td><?=$paycheck['pay_date']?></td>
+                            <td><?=$paycheck['name']?></td>
+                            <td <?=isset($columns) && !in_array('Total Pay', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['total_pay']?></td>
+                            <td><?=$paycheck['net_pay']?></td>
+                            <td <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['pay_method']?></td>
+                            <td <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['check_number']?></td>
+                            <td <?=isset($columns) && !in_array('Status', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['status']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
@@ -109,16 +109,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($employees) > 0) : ?>
-                        <?php foreach($employees as $index => $employee) : ?>
+                        <?php if(count($paychecks) > 0) : ?>
+                        <?php foreach($paychecks as $index => $paycheck) : ?>
                         <tr>
-                            <td><?=$employee['pay_date']?></td>
-                            <td><?=$employee['name']?></td>
-                            <td <?=isset($columns) && !in_array('Total Pay', $columns) ? 'style="display: none"' : ''?>><?=$employee['total_pay']?></td>
-                            <td><?=$employee['net_pay']?></td>
-                            <td <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>><?=$employee['pay_method']?></td>
-                            <td <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>><?=$employee['check_number']?></td>
-                            <td <?=isset($columns) && !in_array('Status', $columns) ? 'style="display: none"' : ''?>><?=$employee['status']?></td>
+                            <td><?=$paycheck['pay_date']?></td>
+                            <td><?=$paycheck['name']?></td>
+                            <td <?=isset($columns) && !in_array('Total Pay', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['total_pay']?></td>
+                            <td><?=$paycheck['net_pay']?></td>
+                            <td <?=isset($columns) && !in_array('Pay Method', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['pay_method']?></td>
+                            <td <?=isset($columns) && !in_array('Check Number', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['check_number']?></td>
+                            <td <?=isset($columns) && !in_array('Status', $columns) ? 'style="display: none"' : ''?>><?=$paycheck['status']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>

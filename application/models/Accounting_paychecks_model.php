@@ -22,4 +22,11 @@ class Accounting_paychecks_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function get_by_id($id)
+	{
+		$this->db->where('id', $id);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

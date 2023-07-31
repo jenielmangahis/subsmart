@@ -23,6 +23,7 @@ class Reports extends MY_Controller {
         $this->load->model('timesheet_model');
         $this->load->model('accounting_management_reports');
 
+        $this->load->model('accounting_model');
         $this->load->model('accounting_report_type_notes_model');
         $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_invoices_model');
@@ -70,6 +71,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('accounting_paychecks_model');
+        $this->load->model('accounting_payroll_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -21474,6 +21476,7 @@ class Reports extends MY_Controller {
 
                     if($flag) {
                         $data[] = [
+                            'id' => $paycheck->id,
                             'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
                             'name' => "$emp->LName, $emp->FName",
                             'total_pay' => number_format(floatval($paycheck->total_pay), 2),
@@ -21487,7 +21490,34 @@ class Reports extends MY_Controller {
 
                 $this->page_data['report_period'] = 'Paychecks from '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees from all locations';
 
-                $this->page_data['employees'] = $data;
+                $this->page_data['paychecks'] = $data;
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'payroll_billing_summary' :
+                $this->page_data['report_period'] = date("M d, Y");
+                $this->page_data['start_date'] = date("m/d/Y");
+                $this->page_data['end_date'] = date("m/d/Y");
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+
+                    $startDate = date("M d, Y", strtotime($this->page_data['start_date']));
+                    $endDate = date("M d, Y", strtotime($this->page_data['end_date']));
+
+                    $this->page_data['report_period'] = $startDate.' - '.$endDate;
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $bills = [];
+
+                $this->page_data['bills'] = $bills;
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
@@ -21670,62 +21700,150 @@ class Reports extends MY_Controller {
         die(json_encode($data_arr));
     }
 
-    public function getCustomerContactList()
-    {
-        // $input = $this->input->post();
-        
-        // if(empty($input)){
-        //     $data = array(
-        //         'table' => 'acs_profile',
-        //         'select' => 'acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code',
-        //         'join' => array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id'),
-        //         'where' => array(
-        //             'fk_user_id' => logged('id'),
-        //             'company_id' => logged('company_id')
-        //         ),
-        //     );
-        //     $acs_profile = $this->AcsProfile_model->getProfileWithParam($data);
-        //     $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
-        // }
+    public function getReportData($reportType) {
+        $this->load->helper("pdf_helper");
+        $businessName = $this->input->post('businessName');
+        $reportName = $this->input->post('reportName');
+        $filename = $this->input->post('filename');
 
-        // else{
-        //     $customerCol = json_decode($input['customerCol']);
-        //     $billingCol = json_decode($input['billingCol']);
-        //     if($customerCol != 'null' && $billingCol != 'null'){
-        //         $selected_col = array_merge($customerCol,$billingCol);
-        //     }else{
-        //         if($customerCol != 'null'){
-        //             $selected_col = $customerCol;
-        //         }elseif($billingCol != 'null'){
-        //             $selected_col = $billingCol;
-        //         }else{
-        //             $selected_col = array('acs_profile.first_name, acs_profile.last_name, acs_profile.phone_h, acs_profile.email, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code');
-        //         }
-        //     }
-        //     if(!empty($selected_col)){
-        //         $param['select'] = $selected_col;
-        //     }   
-        //     //get table param
-        //     $param['table'] = 'acs_profile';
-        //     //get join param
-        //     $param['join'] = array('acs_billing' => 'acs_profile.prof_id = acs_billing.fk_prof_id');
-        //     $param['where'] = array('acs_profile.fk_user_id' => logged('id'), 'acs_profile.company_id' => logged('company_id'));
-        //     $acs_profile = $this->AcsProfile_model->getProfileWithParam($param);
-        //     $data_arr = array("success" => true, "acs_profile" => $acs_profile);    
-        // }
-        // die(json_encode($data_arr));
-
-        $DATA = array(
-            'table' => 'acs_profile',
-            'select' => 'CONCAT(first_name  , " ", last_name) AS CUSTOMER, phone_h AS PHONE_NUMBER, email AS EMAIL, mail_add AS BILLING_ADDRESS, CONCAT(city, " ", state, " ", zip_code) AS SHIPPING_ADDRESS',
-            'where' => array(
-                'fk_user_id' => logged('id'),
-                'company_id' => logged('company_id')
-            )
+        // List of valid reports to request
+        $accountingValidReports = array(
+            "sales_tax_liability",
+            "taxable_sales_detail",
+            "taxable_sales_summary",
+            "customer_contact_list",
         );
-        $REQUEST_DATA = $this->general_model->get_data_with_param($DATA);
+        
+        // Conditional Statements on the array
+        if (in_array($reportType, $accountingValidReports)) {
+            
+            // Fetch Sales Tax Liability Report data
+            if ($reportType == "sales_tax_liability") {
 
-        echo '{ "data":'.json_encode($REQUEST_DATA).'}';
+            }
+            
+            // Fetch Taxable Sales Detail Report data
+            if ($reportType == "taxable_sales_detail") {
+                
+            }
+            
+            // Fetch Taxable Sales Summary Report data
+            if ($reportType == "taxable_sales_summary") {
+                
+            }
+            
+            // Fetch Customer Contact List Report data
+            if ($reportType == "customer_contact_list") {
+
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, null);
+                
+                // Generate PDF File
+                tcpdf();
+                $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf->setCreator(PDF_CREATOR);
+                $pdf->setAuthor($businessName);
+                $pdf->setTitle($reportName);
+                $pdf->setSubject("Report");
+                $pdf->setPrintHeader(false);
+                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+                $pdf->setFont('helvetica', '', 10, '', true);
+                $pdf->setFontSubsetting(false);
+                $pdf->AddPage("P");
+
+                $title = '
+                    <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
+                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
+                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
+                        <tr><td></td></tr>
+                    </table>
+                ';
+
+                $tableColumns = '
+                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
+                        <tr>
+                            <th class="COLUMN_NAME">CUSTOMER</th>
+                            <th class="COLUMN_NAME">PHONE NUMBER</th>
+                            <th class="COLUMN_NAME">EMAIL</th>
+                            <th class="COLUMN_NAME">BILLING ADDRESS</th>
+                            <th class="COLUMN_NAME">SHIPPING ADDRESS</th>
+                        </tr>
+                    </table>
+                ';
+
+                $tableContent = '
+                    <table cellpadding="0" cellspacing="4" border="0">
+                ';
+
+                $response = '';
+
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "&mdash;";
+                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "&mdash;";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "&mdash;";
+                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "&mdash;";
+                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "&mdash;";
+
+                    $response .= '<tr>';
+                    $response .= '<td>'.$customer.'</td>';
+                    $response .= '<td>'.$phoneNumber.'</td>';
+                    $response .= '<td>'.$email.'</td>';
+                    $response .= '<td>'.$billingAddress.'</td>';
+                    $response .= '<td>'.$shippingAddress.'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$customer.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$phoneNumber.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$email.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$billingAddress.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$shippingAddress.'</td>';
+                    $tableContent .= '</tr>';
+                }
+
+                $tableContent .= '
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table {
+                            width: 100% !important;
+                        }
+                        .tableHeader {
+                            border-bottom: 1px solid gray; 
+                            border-top: 1px solid gray;
+                        }
+                        .COLUMN_NAME {
+                            font-size: 12px;
+                        }
+                        .TD_NAME {
+                            font-size: 11px;
+                        }
+                        .BUSINESS_NAME {
+                            font-weight: bold;
+                            font-size: 20px;
+                            margin: 100px;
+                        }
+                        .REPORT_NAME {
+                            font-size: 13.5px;
+                        }
+                    </style>
+                ';
+
+                $renderHTML = $title . $tableColumns . $tableContent . $styles;
+                $pdf->writeHTML($renderHTML, true, false, true, false, '');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+
+                // Return the requested data into html
+                echo $response;
+            }
+
+        // If $reportType was not in the $accountingValidReports then return die() method
+        } else { die("unable to get report data."); }
     }
 
     public function saveNotes() {
@@ -46561,5 +46679,299 @@ class Reports extends MY_Controller {
             'data' => $checkName,
             'exists' => $checkName ? true : false
         ]);
+    }
+
+    public function generate_paychecks_pdf()
+    {
+        $this->load->helper('pdf_helper');
+        $this->load->helper('string');
+
+        $paychecks = $this->input->post('paychecks');
+
+        $socialSecurity = 6.2;
+        $medicare = 1.45;
+
+        $data = [];
+        foreach($paychecks as $paycheckId)
+        {
+            $paycheck = $this->accounting_paychecks_model->get_by_id($paycheckId);
+            $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+            $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+            $emp = $this->users_model->getUser($paycheck->employee_id);
+
+            $address = '';
+            $address .= !in_array($emp->address, ['', null]) ? $emp->address.'<br>' : '';
+            $address .= !in_array($emp->city, ['', null]) ? $emp->city.', ' : '';
+            $address .= !in_array($emp->state, ['', null]) ? $emp->state.' ' : '';
+            $address .= !in_array($emp->postal_code, ['', null]) ? $emp->postal_code : '';
+
+            $empTotalPay = floatval($paycheck->total_pay);
+
+            $empSocial = ($empTotalPay / 100) * $socialSecurity;
+            $empMedicare = ($empTotalPay / 100) * $medicare;
+
+            $data[] = [
+                'pay_date' => date('m/d/Y', strtotime($paycheck->pay_date)),
+                'name' => "$emp->FName $emp->LName",
+                'total_pay' => number_format(floatval($paycheck->total_pay), 2),
+                'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                'pay_method' => $paycheck->pay_method,
+                'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : '-',
+                'employee_address' => $address,
+                'payroll' => $payroll,
+                'payroll_item' => $payrollItem,
+                'federal_income_tax' => '0.00',
+                'social_security' => number_format($empSocial, 2),
+                'medicare' => number_format($empMedicare, 2)
+            ];
+        }
+
+        $companyName = $this->page_data['clients']->business_name;
+        $companyAddress = $this->page_data['clients']->business_address;
+        $randomString = random_string('alnum');
+        $fileName = $randomString . '.pdf';
+
+        tcpdf();
+        $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $obj_pdf->SetTitle($randomString);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('helvetica', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        $obj_pdf->AddPage();
+        ob_end_clean();
+
+        foreach($data as $index => $paycheck)
+        {
+            $html = '<table style="width: 100%; padding-top: -40px; font-size: 10px">
+                <tbody>
+                    <tr>
+                        <td>'.$companyName.'<br>'.$companyAddress.'</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+
+            <table style="width: 100%; font-size: 10px">
+                <tbody>
+                    <tr>
+                        <td style="text-align: right">PAY STUB DETAIL</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">PAY DATE: '.$paycheck['pay_date'].'</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">NET PAY: '.str_replace('$-', '-$', '$'.$paycheck['net_pay']).'</td>
+                    </tr>
+                    <tr>
+                        <td>'.$paycheck['name'].'</td>
+                    </tr>
+                    <tr>
+                        <td>'.$paycheck['employee_address'].'</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br /><br />
+            <hr style="width: 100%">
+            <p style="padding: 20px">&nbsp;</p>';
+
+            $html .= '<table style="width: 100%; font-size: 10px;">
+                <tbody>
+                    <tr>
+                        <td><b>EMPLOYER</b></td>
+                        <td></td>
+                        <td><b>PAY PERIOD</b></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>'.$companyName.'</td>
+                        <td></td>
+                        <td colspan="2">Period Beginning: '.$paycheck['pay_date'].'</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">'.$companyAddress.'</td>
+                        <td></td>
+                        <td>Period Ending: '.$paycheck['pay_date'].'</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Pay Date: '.$paycheck['pay_date'].'</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Total Hours: '.number_format(floatval($paycheck['payroll_item']->employee_hours), 2).'</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>EMPLOYEE</b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>'.$paycheck['name'].'</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>'.$paycheck['employee_address'].'</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><b>NET PAY:</b></td>
+                        <td style="text-align: right"><b>'.str_replace('$-', '-$', '$'.$paycheck['net_pay']).'</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>MEMO:</b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>'.$paycheck['payroll_item']->memo.'</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br /><br />
+            <hr style="width: 100%">
+            <p style="padding: 20px">&nbsp;</p>
+
+            <table style="width: 100%">
+                <tbody>
+                    <tr>
+                        <td>
+                            <table style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">PAY</th>
+                                        <th width="15%">Hours</th>
+                                        <th width="15%">Rate</th>
+                                        <th width="15%">Current</th>
+                                        <th width="15%">YTD</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 8px !important;">
+                                    <tr>
+                                        <td>Commission</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>'.$paycheck['total_pay'].'</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">DEDUCTIONS</th>
+                                        <th width="25%">Current</th>
+                                        <th width="25%">YTD</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 8px !important;">
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="padding: 20px">&nbsp;</p>
+
+            <table style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <table style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">TAXES</th>
+                                        <th>Current</th>
+                                        <th>YTD</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 8px !important;">
+                                    <tr>
+                                        <td>Federal Income Tax</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Social Security</td>
+                                        <td>'.$paycheck['social_security'].'</td>
+                                        <td>'.$paycheck['social_security'].'</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Medicare</td>
+                                        <td>'.$paycheck['medicare'].'</td>
+                                        <td>'.$paycheck['medicare'].'</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width: 100%; border: 1px solid black">
+                                <thead>
+                                    <tr>
+                                        <th style="border-bottom: 1px solid black" width="50%">SUMMARY</th>
+                                        <th style="border-bottom: 1px solid black" width="25%">Current</th>
+                                        <th style="border-bottom: 1px solid black" width="25%">YTD</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 8px !important;">
+                                    <tr>
+                                        <td>Total Pay</td>
+                                        <td>'.$paycheck['total_pay'].'</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taxes</td>
+                                        <td>'.number_format(floatval($paycheck['payroll_item']->employee_taxes), 2).'</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Deductions</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>';
+
+            $obj_pdf->writeHTML($html, true, false, true, false, '');
+
+            if($index < count($data) - 1) {
+                $obj_pdf->AddPage();
+            }
+        }
+
+        $base64String = base64_encode($obj_pdf->Output($fileName, 'S'));
+        echo $base64String;
     }
 }
