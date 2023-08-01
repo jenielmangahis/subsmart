@@ -21521,6 +21521,26 @@ class Reports extends MY_Controller {
 
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
+            case 'payroll_deductions_contributions' :
+                $this->page_data['start_date'] = date("m/d/Y");
+                $this->page_data['end_date'] = date("m/d/Y");
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date']));
+
+                $this->page_data['data'] = [];
+
+                if(!empty(get('type'))) {
+                    $this->page_data['filter_type'] = get('type');
+                }
+
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -21702,9 +21722,12 @@ class Reports extends MY_Controller {
 
     public function getReportData($reportType) {
         $this->load->helper("pdf_helper");
+        $this->load->library('PHPXLSXWriter');
         $businessName = $this->input->post('businessName');
         $reportName = $this->input->post('reportName');
         $filename = $this->input->post('filename');
+        $notes = $this->input->post('notes');
+        $reportConfig = $this->input->post('reportConfig');
 
         // List of valid reports to request
         $accountingValidReports = array(
@@ -21736,11 +21759,11 @@ class Reports extends MY_Controller {
             if ($reportType == "customer_contact_list") {
 
                 // Request Data in accounting model
-                $returnData = $this->accounting_model->fetchReportData($reportType, null);
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
                 
-                // Generate PDF File
+                // ====== Generate PDF File ============================================================
                 tcpdf();
-                $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
                 $pdf->setCreator(PDF_CREATOR);
                 $pdf->setAuthor($businessName);
                 $pdf->setTitle($reportName);
@@ -21752,7 +21775,7 @@ class Reports extends MY_Controller {
                 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                 $pdf->setFont('helvetica', '', 10, '', true);
                 $pdf->setFontSubsetting(false);
-                $pdf->AddPage("P");
+                $pdf->AddPage($reportConfig['pageOrientation']);
 
                 $title = '
                     <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
@@ -21808,6 +21831,16 @@ class Reports extends MY_Controller {
                     </table>
                 ';
 
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
+                        <tr><td></td></tr>
+                        <tr><td></td></tr>
+                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
+                    </table>
+                ';
+
                 $styles = '
                     <style>
                         table {
@@ -21831,12 +21864,94 @@ class Reports extends MY_Controller {
                         .REPORT_NAME {
                             font-size: 13.5px;
                         }
+                        .reportNotes {
+                            text-align: left;
+                            font-size: 11.5px;
+                        }
+                        .reportDate {
+                            text-align: center;
+                        }
                     </style>
                 ';
 
-                $renderHTML = $title . $tableColumns . $tableContent . $styles;
+                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
                 $pdf->writeHTML($renderHTML, true, false, true, false, '');
                 $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = 4;
+
+                $businessNameStyle = array(
+                    'font-size' => 13,
+                    'font-style' => 'bold',
+                    'halign' => 'center', 
+                    'valign' => 'center', 
+                );
+
+                $reportNameStyle = array(
+                    'font-size' => 11,
+                    'halign' => 'center', 
+                    'valign' => 'center',
+                ); 
+
+                $headerStyle = array(
+                    'font-style' => 'bold',
+                    'font-size' => 10,
+                    'border' => 'top,bottom',
+                    'border-style' => 'thin',
+                    'border-color' => '000000',
+                    'valign' => 'center', 
+                );
+
+                $contentStyle = array(
+                    'font-size' => 10,
+                    'halign' => 'left', 
+                );
+
+                $reportDateStyle = array(
+                    'font-size' => 10,
+                    'valign' => 'center', 
+                    'halign' => 'center', 
+                );
+
+                $headerData = array(
+                    'CUSTOMER', 
+                    'PHONE NUMBER', 
+                    'EMAIL', 
+                    'BILLING ADDRESS', 
+                    'SHIPPING ADDRESS'
+                );
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $row = 6;
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "—";
+                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "—";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "—";
+                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "—";
+                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "—";
+
+                    $row_data = array($customer, $phoneNumber, $email, $billingAddress, $shippingAddress);
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
 
                 // Return the requested data into html
                 echo $response;
@@ -21848,8 +21963,8 @@ class Reports extends MY_Controller {
 
     public function saveNotes() {
         $TABLE = "accounting_report_types";
-        $ID = $this->input->post('REPORT_ID');
-        $NOTES = $this->input->post('REPORT_NOTES');
+        $ID = $this->input->post('reportID');
+        $NOTES = $this->input->post('reportNotes');
 
         $DATA = array(
             'notes' => $NOTES,
@@ -21861,7 +21976,7 @@ class Reports extends MY_Controller {
 
     public function getNotes() {
        $TABLE = "accounting_report_types";
-       $ID = $this->input->post('REPORT_ID');
+       $ID = $this->input->post('reportID');
        
        $DATA = array(
             'table' => $TABLE,
@@ -46593,6 +46708,149 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Paycheck_History.pdf', 'D');
+                }
+            break;
+            case 'Payroll Deductions/Contributions' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $start_date = date("m/d/Y");
+                $end_date = date("m/d/Y");
+
+                if(!empty($post['date'])) {
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
+
+                $data = [];
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    foreach($data as $row)
+                    {
+                        $data = [];
+                        $style = [];
+
+                        foreach($post['fields'] as $field)
+                        {
+                            $data[] = $row[strtolower(str_replace(' ', '_', $field))];
+                            $style[] = ['color' => '#000000'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Deductions/Contributions';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Payroll_Deductions/Contributions.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) 
+                                {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($data as $row)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        $html .= '<td>'.$row[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="10">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Deductions/Contributions';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Payroll Deductions/Contributions";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Payroll_Deductions/Contributions.pdf', 'D');
                 }
             break;
         }

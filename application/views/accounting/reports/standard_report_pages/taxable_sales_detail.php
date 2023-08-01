@@ -529,9 +529,9 @@
     });
     // END: PDF SETTINGS SCRIPT
 
-    var REPORT_ID = "<?php echo $reportTypeId; ?>";
+    var reportID = "<?php echo $reportTypeId; ?>";
     $.post("<?php echo base_url('accounting_controllers/reports/getNotes'); ?>", {
-        REPORT_ID: REPORT_ID,
+        reportID: reportID,
     }).done(function(data) {
         $('#NOTES_CONTENT').html("Loading notes...");
         $('#NOTES_CONTENT').html(data);
@@ -542,16 +542,16 @@
     // START: ADD NOTES SCRIPT
     $('#ADD_NOTES_FORM').submit(function(event) {
         event.preventDefault();
-        var REPORT_NOTES = $("#NOTES").val();
+        var reportNotes = $("#NOTES").val();
         // =========
-        $('#NOTES_CONTENT').html(REPORT_NOTES);
+        $('#NOTES_CONTENT').html(reportNotes);
         $("#NOTES_CONTENT").show();
         $("#ADD_NOTES_FORM").hide();
-        (REPORT_NOTES !== "") ? $('.add_notes').text('Edit Notes'): $('.add_notes').text('Add Notes');
+        (reportNotes !== "") ? $('.add_notes').text('Edit Notes'): $('.add_notes').text('Add Notes');
         // =========
         $.post("<?php echo base_url('accounting_controllers/reports/saveNotes'); ?>", {
-            REPORT_ID: REPORT_ID,
-            REPORT_NOTES: REPORT_NOTES,
+            reportID: reportID,
+            reportNotes: reportNotes,
         }).done(function(data) {
             $("#NOTES_CLOSE_MODAL").click();
         });
