@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Accounting_model extends MY_Model {
 
-	public function fetchReportData($reportType, $config) {
+	public function fetchReportData($reportType, $reportConfig = array()) {
         $loggedInUser = logged('id');
 		$companyID = logged('company_id');
 
@@ -27,6 +27,7 @@ class Accounting_model extends MY_Model {
             $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, mail_add AS billingAddress, CONCAT(city, " ", state, " ", zip_code) AS shippingAddress');
             $this->db->from('acs_profile');
             $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $data = $this->db->get();
             return $data->result();
         }

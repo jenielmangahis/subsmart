@@ -75,6 +75,11 @@
         position: absolute;
         bottom: 5px;
     }
+
+    .pdfAttachmentCheckbox, .xlsxAttachmentCheckbox {
+        width: 18px;
+        height: 18px;
+    }
 </style>
 
 <div class="container-fluid">
@@ -214,35 +219,44 @@
                             <div class="col-lg-12">
                                 <span class="float-start">
                                     <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i></button>
-                                    <ul class="dropdown-menu p-3">
-                                        <p class="m-0">Sort by</p>
-                                        <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                            <option value="default" selected>Default</option>
-                                            <option value="Customer">Customer</option>
-                                            <option value="Phone Numbers">Phone Numbers</option>
-                                            <option value="Email">Email</option>
-                                            <option value="Billing">Billing</option>
-                                            <option value="Shipping Address">Shipping Address</option>
-                                        </select>
-                                        <p class="m-0">Sort in</p>
-                                        <div class="form-check">
-                                            <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" checked>
-                                            <label for="sort-asc" class="form-check-label">Ascending order</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
-                                            <label for="sort-desc" class="form-check-label">Descending order</label>
-                                        </div>
+                                    <ul class="dropdown-menu p-3" style="width: 200px">
+                                        <form id="sortReportForm" method="POST">
+                                            <div class="row">
+                                                <div class="col-lg-12 mb-1"><strong>Sort by</strong></div>
+                                                <div class="col-lg-12 mb-2">
+                                                    <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                        <option value="prof_id" selected>Default</option>
+                                                        <option value="customer">Customer</option>
+                                                        <option value="phoneNumber">Phone Numbers</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="billingAddress">Billing</option>
+                                                        <option value="shippingAddress">Shipping Address</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-12 mb-1"><strong>Sort in</strong></div>
+                                                <div class="col-lg-12 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="ASC">
+                                                        <label for="sort-asc" class="form-check-label">Ascending order</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="DESC" checked>
+                                                        <label for="sort-desc" class="form-check-label">Descending order</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 mb-1"><button class="nsm-button primary small" type="submit">Apply</button></div>
+                                            </div>
+                                        </form>
                                     </ul>
-                                    <button class="nsm-button add_notes">Add Notes</button>
+                                    <button class="nsm-button addNotes">Add Notes</button>
                                 </span>
                                 <span class="float-end">
                                     <button data-bs-toggle="modal" data-bs-target="#EMAIL_REPORT_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
                                     <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
                                     <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
-                                        <li><a class="dropdown-item" href="javascript:void(0);" id="EXPORT_TO_EXCEL">Export to Excel</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" id="EXPORT_TO_PDF" download>Export to PDF</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
                                     </ul>
                                     <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
                                     <!-- Example single danger button -->
@@ -287,7 +301,11 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="5"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</center></td>
+                                                <td colspan="5">
+                                                    <center>
+                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                    </center>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -295,19 +313,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <span id="NOTES_CONTENT" class="text-muted">Loading Notes...</span>
-                                    <form id="ADD_NOTES_FORM" method="POST" style="display: none;">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
                                         <div class="row">
                                             <div class="col-sm-12 mt-1 mb-3">
                                                 <div class="form-group">
                                                     <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
                                                 </div>
                                             </div>
-                                            <script type="text/javascript">
-                                                $("#NOTES").change(function(event) {
-                                                    console.log($(this).val());
-                                                });
-                                            </script>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -315,7 +328,7 @@
                                                     4000 characters max
                                                 </div>
                                                 <div class="float-end">
-                                                    <button type="button" id="NOTE_CLOSE_MODAL" class="nsm-button">Cancel</button>
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
                                                     <button type="submit" class="nsm-button primary">Save</button>
                                                 </div>
                                             </div>
@@ -349,21 +362,18 @@
                         <hr>
                         <div class="form-group mb-2">
                             <label>Orientation</label>
-                            <select id="PAGE_ORIENTATION" name="PAGE_ORIENTATION" class="form-select">
-                                <option value="PORTRAIT" selected>Portrait</option>
-                                <option value="LANDSCAPE">Landscape</option>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
                             </select>
-                            <script type="text/javascript">
-                                $('#PAGE_ORIENTATION').select2();
-                            </script>
                         </div>
                         <div class="form-check">
-                            <input id="PAGE_HEADER_REPEAT" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
                         </div>
                     </div>
                     <div class="col-sm-9">
-                        <iframe id="PDF_PREVIEW" class="border-0" width="100%" height="450px"></iframe>
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
                     </div>
                 </div>
                 <hr>
@@ -373,9 +383,9 @@
                             <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                         </div>
                         <div class="float-end">
-                                <button type="button" class="nsm-button success savePDF">Save as PDF</button>
-                                <!-- <button type="button" class="nsm-button success printPDF">Print</button> -->
-                            </div>
+                            <button type="button" class="nsm-button success savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button success printPDF">Print</button> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -392,38 +402,46 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <form id="SEND_EMAIL_FORM">
+                <form id="sendEmailForm">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>To</h6>
-                                <input id="EMAIL_TO" class="form-control" type="email" placeholder="Send to" required>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>CC</h6>
-                                <input id="EMAIL_CC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="EMAIL_SUBJECT" class="form-control" type="text" required>
+                                <input id="emailSubject" class="form-control" type="text" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1 mb-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <textarea id="EMAIL_BODY" class="form-control"></textarea required>
+                                <textarea id="emailBody" class="form-control"></textarea required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-3">
+                        <div class="col-sm-12 mt-1">
                             <div class="form-group">
-                                <h6>Report <small class="text-muted">(ReportFileName.pdf)</small></h6>
-                                <div class="input-group">
-                                    <input id="EMAIL_REPORT_FILENAME" class="form-control" type="text" value="Customer Contact List Report" required>
-                                    <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                <h6>Attachment</h6>
+                                <div class="row">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="(PDF) Customer Contact List Report" required>
+                                        <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="(XLSX) Customer Contact List Report" required>
+                                        <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -432,7 +450,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
-                                <button type="button" id="EMAIL_CLOSE_MODAL" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button success sendEmail"><span class="sendEmail_Loader"></span>Send</button>
@@ -444,6 +462,7 @@
         </div>
     </div>
 </div>
+
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
 
@@ -454,105 +473,109 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
 <!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->
 <script type="text/javascript">
-    $(".openCustomize").click(function(event) {
-        $(".openCustomize").hide();
-        $(".saveCustomize").show();
-        $(".customizeContainer").show();
-        $(".addMargin3").addClass('mb-3');
-
-    });
-
-    $(".saveCustomize").click(function(event) {
-        $(".openCustomize").show();
-        $(".saveCustomize").hide();
-        $(".customizeContainer").hide();
-        $(".addMargin3").removeClass('mb-3');
-    });
-
-
     $(document).ready(function() {
-        $("#PAGE_ORIENTATION").select2({
-            dropdownParent: $("#PRINT_SAVE_MODAL")
-        });
+        getReportNotes(reportID);
     });
 
-    var businessName = $("#BUSINESS_NAME").html();
-    var reportName = $("#REPORT_NAME").html();
+    var businessName = $("#BUSINESS_NAME").text();
+    var reportName = $("#REPORT_NAME").text();
     var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+    var notes = $("#notesContent").text();
+    var reportID = "<?php echo $reportTypeId; ?>";
+    var sort_by = $('select[name="sort_by"]').val();
+    var sort_order = $('input[name="sort_order"]:checked').val();
+    var pageOrientation = $('#pageOrientation').val();
+    var reportConfig = {
+        sort_by: sort_by,
+        sort_order: sort_order,
+        pageOrientation: pageOrientation,
+    };
 
-    $.ajax({
-        type: "POST",
-        url: "<?php echo base_url('accounting_controllers/Reports/getReportData/customer_contact_list'); ?>",
-        data: { 
-            businessName: businessName, 
-            reportName: reportName, 
-            filename: filename, 
-        },
-        success: function(data) {
-            $("#customercontactlist_table > tbody").empty().html(data);
-        }
+    function renderReportList(businessName, reportName, filename, notes, reportConfig) {
+        $("#customercontactlist_table > tbody").empty().html('<tr><td colspan="5"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('accounting_controllers/Reports/getReportData/customer_contact_list'); ?>",
+            data: { 
+                businessName: this.businessName, 
+                reportName: this.reportName, 
+                filename: this.filename, 
+                notes: this.notes, 
+                reportConfig: this.reportConfig, 
+            },
+            success: function(data) {
+                $("#customercontactlist_table > tbody").empty().html(data);
+                loadReportPreview();
+            }
+        });
+    }
+
+    function getReportNotes(reportID) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('accounting_controllers/reports/getNotes'); ?>",
+            data: { reportID: this.reportID, },
+            success: function(data) {
+                notes = data;
+                $('#notesContent').html("Loading notes...");
+                $('#notesContent').html(data);
+                $("#NOTES").val(data);
+                (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
+                renderReportList(businessName, reportName, filename, notes, reportConfig);
+            }
+        });
+    }
+
+    function loadReportPreview() {
+        $('#pdfPreview').attr(
+            'src', 
+            '<?php echo base_url("assets/pdf/accounting/"); ?>' + filename + '.pdf?' + Math.round(Math.random() * 1000000)
+        );
+    }
+
+    $('#sortReportForm').submit(function(event) {
+        event.preventDefault();
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('input[name="sort_order"]:checked').val();
+        reportConfig = {
+            sort_by: sort_by,
+            sort_order: sort_order,
+            pageOrientation: pageOrientation,
+        };
+        renderReportList(businessName, reportName, filename, notes, reportConfig);
     });
 
     // START: PDF SETTINGS SCRIPT
-    var PAGE = "PAGE=ACCOUNTING";
-    var BUSINESS_NAME = "BUSINESS_NAME=" + $("#BUSINESS_NAME").html();
-    var REPORT_NAME = "REPORT_NAME=" + $("#REPORT_NAME").html();
-    var PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
-    var PDF_ORIENTATION = "PAGE_ORIENTATION=PORTRAIT";
-
-    // INITIATE SETTINGS
-    $('#PDF_PREVIEW').attr('src', '<?php echo base_url("assets/pdf/accounting/"); ?>' + filename + '.pdf');
-
-    // $('#PAGE_ORIENTATION').change(function(event) {
-    //     PDF_ORIENTATION = "PAGE_ORIENTATION=" + $(this).val();
-    //     $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
-    // });
-
-    // $('#PAGE_HEADER_REPEAT').change(function() {
-    //     if ($(this).is(':checked')) {
-    //         PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=true";
-    //         $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
-    //     } else {
-    //         PDF_HEADER_REPEAT = "PAGE_HEADER_REPEAT=false";
-    //         $('#PDF_PREVIEW').attr('src', '<?php echo base_url("AccountingGenerateReport?"); ?>' + PAGE + "&" + BUSINESS_NAME + "&" + REPORT_NAME + "&" + PDF_ORIENTATION + "&" + PDF_HEADER_REPEAT);
-    //     }
-    // });
-    // END: PDF SETTINGS SCRIPT
-
-    var REPORT_ID = "<?php echo $reportTypeId; ?>";
-    $.ajax({
-        type: "POST",
-        url: "<?php echo base_url('accounting_controllers/reports/getNotes'); ?>",
-        data: { 
-            REPORT_ID: REPORT_ID,
-        },
-        success: function(data) {
-            $('#NOTES_CONTENT').html("Loading notes...");
-            $('#NOTES_CONTENT').html(data);
-            $("#NOTES").val(data);
-            (data !== "") ? $('.add_notes').text('Edit Notes'): $('.add_notes').text('Add Notes');
-        }
+    $('#pageOrientation').change(function(event) {
+        reportConfig = {
+            sort_by: sort_by,
+            sort_order: sort_order,
+            pageOrientation: $(this).val(),
+        };
+        renderReportList(businessName, reportName, filename, notes, reportConfig);
     });
 
     // START: ADD NOTES SCRIPT
-    $('#ADD_NOTES_FORM').submit(function(event) {
+    $('#addNotesForm').submit(function(event) {
         event.preventDefault();
-        var REPORT_NOTES = $("#NOTES").val();
         // =========
-        $('#NOTES_CONTENT').html(REPORT_NOTES);
-        $("#NOTES_CONTENT").show();
-        $("#ADD_NOTES_FORM").hide();
-        (REPORT_NOTES !== "") ? $('.add_notes').text('Edit Notes'): $('.add_notes').text('Add Notes');
+        var reportNotes = $("#NOTES").val();
+        // =========
+        $('#notesContent').html(reportNotes);
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
+        (reportNotes !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
         // =========
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('accounting_controllers/reports/saveNotes'); ?>",
             data: { 
-                REPORT_ID: REPORT_ID,
-                REPORT_NOTES: REPORT_NOTES,
+                reportID: reportID,
+                reportNotes: reportNotes,
             },
             success: function(data) {
-                $("#NOTES_CLOSE_MODAL").click();
+                notes = $("#notesContent").text();
+                renderReportList(businessName, reportName, filename, notes, reportConfig);
             }
         });
 
@@ -560,15 +583,22 @@
     // END: ADD NOTES SCRIPT
 
     // START: ADD EVENT SCRIPT
-    $('#SEND_EMAIL_FORM').submit(function(event) {
+    $('#sendEmailForm').submit(function(event) {
         event.preventDefault();
         $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
-        var emailTo = $("#EMAIL_TO").val();
-        var emailCC = $("#EMAIL_CC").val();
-        var emailSubject = $("#EMAIL_SUBJECT").val();
-        var emailBody = $("#EMAIL_BODY").val();
-        var customAttachmentName = $("#EMAIL_REPORT_FILENAME").val();
-        var reportFilePath = filename + ".pdf";
+        var emailTo = $("#emailTo").val();
+        var emailCC = $("#emailCC").val();
+        var emailSubject = $("#emailSubject").val();
+        var emailBody = $("#emailBody").val();
+        var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
+        var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
+        var attachmentConfig = {
+            reportFilePathPDF: filename + ".pdf",
+            reportFilePathXLSX: filename + ".xlsx",
+            customAttachmentNamePDF: customAttachmentNamePDF,
+            customAttachmentNameXLSX: customAttachmentNameXLSX,
+        }
+
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('AccountingMailer/emailReport/customer_contact_list'); ?>",
@@ -577,8 +607,7 @@
                 emailCC: emailCC,
                 emailSubject: emailSubject,
                 emailBody: emailBody,
-                customAttachmentName: customAttachmentName,
-                reportFilePath: reportFilePath,
+                attachmentConfig: attachmentConfig,
             },
             success: function(data) {
                 $(".sendEmail").removeAttr('disabled').empty().append('Send');
@@ -588,7 +617,7 @@
                         title: 'Success',
                         text: 'Report was emailed successfully!',
                     }).then((result) => {
-                        $("#EMAIL_CLOSE_MODAL").click();
+                        $("#emailCloseModal").click();
                     });
                 } else {
                     $(".sendEmail").removeAttr('disabled').empty().append('Send');
@@ -604,17 +633,17 @@
 
     // END: ADD EVENT SCRIPT
 
-    $('.add_notes').on('click', function(event) {
-        $("#NOTES_CONTENT").hide();
-        $("#ADD_NOTES_FORM").show();
+    $('.addNotes').on('click', function(event) {
+        $("#notesContent").hide();
+        $("#addNotesForm").show();
         $("#NOTES").focus();
     });
-    $('#NOTE_CLOSE_MODAL').on('click', function(event) {
-        $("#NOTES_CONTENT").show();
-        $("#ADD_NOTES_FORM").hide();
+    $('#cancelNotes').on('click', function(event) {
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
     });
 
-    $("#EXPORT_TO_PDF, .savePDF").click(function(event) {
+    $("#exportToPDF, .savePDF").click(function(event) {
         event.preventDefault();
         var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".pdf";
         var link = $("<a>", {
@@ -624,6 +653,33 @@
         $("body").append(link);
         link[0].click();
         link.remove();
+    });
+
+    $("#exportToXLSX").click(function(event) {
+        event.preventDefault();
+        var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".xlsx";
+        var link = $("<a>", {
+            href: filePath,
+            download: filename + ".xlsx",
+        });
+        $("body").append(link);
+        link[0].click();
+        link.remove();
+    });
+
+    $(".openCustomize").click(function(event) {
+        $(".openCustomize").hide();
+        $(".saveCustomize").show();
+        $(".customizeContainer").show();
+        $(".addMargin3").addClass('mb-3');
+
+    });
+
+    $(".saveCustomize").click(function(event) {
+        $(".openCustomize").show();
+        $(".saveCustomize").hide();
+        $(".customizeContainer").hide();
+        $(".addMargin3").removeClass('mb-3');
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
