@@ -79,7 +79,9 @@ class Reports extends MY_Controller {
         $this->page_data['receivedPayments'] = $this->Accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));      
         $this->page_data['customers'] = $this->customer_model->getAllByCompany(logged('company_id'));
         $this->page_data['invoices'] = $this->invoice_model->get_company_open_invoices(logged('company_id'));
-
+        
+        $this->page_data['page']->title = 'Activities Reports';
+        $this->page_data['page']->parent = 'Reports';
         $this->load->view('report/main/popular_reports', $this->page_data);
     }
     public function preview()

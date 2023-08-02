@@ -32,6 +32,16 @@ class Accounting_model extends MY_Model {
             return $data->result();
         }
 
+        // Get Vendor Contact List data in Database
+        if ($reportType == "vendor_contact_list") {
+            $this->db->select('id, company AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, CONCAT(f_name, " ", m_name, " ", l_name, " ", suffix) AS fullname, CONCAT(street, ", ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
+            $this->db->from('accounting_vendors');
+            $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 
 }
