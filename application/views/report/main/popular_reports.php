@@ -1,37 +1,27 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<!-- page wrapper start -->
-<div class="wrapper" role="wrapper">
-	<style>
-		.report-group-items li {
-			margin-bottom: 15px;
-		}
-		.report-group-items li a{
-			color: #259e57;
-			text-decoration: none;
-			outline: none;
-			font-size:16px
-		}
-		.report-group {
-			font-size: 20px;
-			font-weight: normal;
-			margin-bottom: 25px;
-			color: #2c3659;
-		}
-		.report-group span {
-			margin-right: 10px;
-		}
-		.report-group-items {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
-	</style>
-	
-    <div wrapper__section>
-        <div class="container-fluid">
-            
+<style>
+    a {
+        text-decoration:none;
+    }
+     li a{
+        font-size:16px;
+     }
+     .nsm-card-header{
+        font-size:16px;
+        background-color:#EEDBFB;
+     }
+</style>
+
+
+<input type="hidden" id="siteurl"
+            value="<?php echo url(); ?>">
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/reports_subtabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -130,7 +120,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php endif; ?>
                                         </ul>
                                     </div>
-                                    <span class="margin-left" data-report="date-interval"><span id='fromCustomDate'><?php echo '01-Jan-' . date("Y") ?></span> to <span id='toCustomDate'><?php echo '31-Dec-' . date("Y") ?></span>
+                                    <span class="margin-left" data-report="date-interval"><span id='fromCustomDate'><?php echo date("Y").'-01-01'; ?></span> to <span id='toCustomDate'><?php echo date("Y").'-12-31' ?></span>
                                     <input type="hidden" id="fromCustomDateInput" value="<?php echo date("Y") .'-01-01' ?>">
                                     <input type="hidden" id="toCustomDateInput" value="<?php echo date("Y") .'-12-31' ?>">
                                     <span class="middot">·</span> <a class="link-modal-open" id="daterange" data-filter="date-range" href="javascript:void(0)">Custom Dates</a>
@@ -785,13 +775,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- end card -->
                 </div>
             </div>
-            <?php echo form_close(); ?>
-            <!-- end row -->
+
+
+            </div>
         </div>
-        <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
 </div>
+
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
@@ -819,13 +809,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 table.draw();
             });
         });
-</script>
-
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script>
-// $(document).ready(function() {
-//     $('.salesItemsReport').DataTable( {
-//         "order": [[ 0, "desc" ]]
-//     } );
-// } );
 </script>

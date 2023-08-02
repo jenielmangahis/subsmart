@@ -10,7 +10,7 @@
         font-size:16px;
         background-color:#EEDBFB;
      }
-</style>
+</style> 
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

@@ -2507,13 +2507,18 @@ function get_invoice_by_id($invoice_id, $key = '')
 /**
  * return invoice details based on ID
  */
-function get_reports_by_date($start_date, $end_date, $month, $action)
+function get_reports_by_date($start_date2, $end_date2, $month, $action)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Estimate_model', 'estimate_model');
     $company_id = logged('company_id');
+    
     $final_res = 0;
+    
+    $start_date = date("Y-m-d", strtotime($start_date2));
+    $end_date = date("Y-m-d", strtotime($end_date2));
+    
 
     switch ($action) {
         case 'num_estimate':

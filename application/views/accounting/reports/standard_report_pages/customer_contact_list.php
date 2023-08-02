@@ -9,24 +9,6 @@
         width: 100% !important;
     }
 
-    .dataTables_filter,
-    .dataTables_length,
-    .dataTables_info,
-    .dt-buttons {
-        display: none;
-    }
-
-    table.dataTable thead th,
-    table.dataTable thead td {
-        padding: 10px 18px;
-        border-bottom: 1px solid lightgray;
-    }
-
-    table.dataTable.no-footer {
-        border-bottom: 0px solid #111;
-        margin-bottom: 10px;
-    }
-
     .customizeContainer {
         display: none;
     }
@@ -76,7 +58,8 @@
         bottom: 5px;
     }
 
-    .pdfAttachmentCheckbox, .xlsxAttachmentCheckbox {
+    .pdfAttachmentCheckbox,
+    .xlsxAttachmentCheckbox {
         width: 18px;
         height: 18px;
     }
@@ -268,14 +251,14 @@
                             <div class="row mt-4 mb-2">
                                 <div class="col-lg-12">
                                     <center>
-                                        <h3 id="BUSINESS_NAME"><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3>
+                                        <h3 id="businessName"><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3>
                                     </center>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-lg-12">
                                     <center>
-                                        <h5><strong id="REPORT_NAME">Customer Contact List Report</strong></h5>
+                                        <h5><strong id="reportName">Customer Contact List Report</strong></h5>
                                     </center>
                                 </div>
                             </div>
@@ -434,12 +417,12 @@
                                 <div class="row">
                                     <div class="input-group mb-2">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="pdfReportFilename" class="form-control" type="text" value="(PDF) Customer Contact List Report" required>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="Customer Contact List Report" required>
                                         <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
                                     </div>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="xlsxReportFileName" class="form-control" type="text" value="(XLSX) Customer Contact List Report" required>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="Customer Contact List Report" required>
                                         <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
                                     </div>
                                 </div>
@@ -462,23 +445,12 @@
         </div>
     </div>
 </div>
-
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
 
-<!-- START: LIBRARY AND FRAMEWORKS IMPORTS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.1/b-2.3.3/b-html5-2.3.3/b-print-2.3.3/datatables.min.js"></script>
-<!-- END: LIBRARY AND FRAMEWORKS IMPORTS -->
 <script type="text/javascript">
-    $(document).ready(function() {
-        getReportNotes(reportID);
-    });
-
-    var businessName = $("#BUSINESS_NAME").text();
-    var reportName = $("#REPORT_NAME").text();
+    var businessName = $("#businessName").text();
+    var reportName = $("#reportName").text();
     var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
     var notes = $("#notesContent").text();
     var reportID = "<?php echo $reportTypeId; ?>";
@@ -491,6 +463,7 @@
         pageOrientation: pageOrientation,
     };
 
+    // Render result function
     function renderReportList(businessName, reportName, filename, notes, reportConfig) {
         $("#customercontactlist_table > tbody").empty().html('<tr><td colspan="5"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         $.ajax({
@@ -510,6 +483,7 @@
         });
     }
 
+    // Fetch report notes function
     function getReportNotes(reportID) {
         $.ajax({
             type: "POST",
@@ -524,8 +498,9 @@
                 renderReportList(businessName, reportName, filename, notes, reportConfig);
             }
         });
-    }
+    } getReportNotes(reportID);
 
+    // Preview .pdf report in embedded frame function
     function loadReportPreview() {
         $('#pdfPreview').attr(
             'src', 
@@ -533,6 +508,7 @@
         );
     }
 
+    // Sort feature config
     $('#sortReportForm').submit(function(event) {
         event.preventDefault();
         sort_by = $('select[name="sort_by"]').val();
@@ -545,7 +521,7 @@
         renderReportList(businessName, reportName, filename, notes, reportConfig);
     });
 
-    // START: PDF SETTINGS SCRIPT
+    // Page orientation feature config
     $('#pageOrientation').change(function(event) {
         reportConfig = {
             sort_by: sort_by,
@@ -555,9 +531,11 @@
         renderReportList(businessName, reportName, filename, notes, reportConfig);
     });
 
-    // START: ADD NOTES SCRIPT
+    // Add notes script
     $('#addNotesForm').submit(function(event) {
         event.preventDefault();
+        // =========
+        $("#customercontactlist_table > tbody").empty().html('<tr><td colspan="5"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         // =========
         var reportNotes = $("#NOTES").val();
         // =========
@@ -580,9 +558,8 @@
         });
 
     });
-    // END: ADD NOTES SCRIPT
 
-    // START: ADD EVENT SCRIPT
+    // Send report in email script
     $('#sendEmailForm').submit(function(event) {
         event.preventDefault();
         $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
@@ -631,18 +608,7 @@
         });
     });
 
-    // END: ADD EVENT SCRIPT
-
-    $('.addNotes').on('click', function(event) {
-        $("#notesContent").hide();
-        $("#addNotesForm").show();
-        $("#NOTES").focus();
-    });
-    $('#cancelNotes').on('click', function(event) {
-        $("#notesContent").show();
-        $("#addNotesForm").hide();
-    });
-
+    // Export Report to PDF feature
     $("#exportToPDF, .savePDF").click(function(event) {
         event.preventDefault();
         var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".pdf";
@@ -655,6 +621,7 @@
         link.remove();
     });
 
+    // Export Report to XLSX feature
     $("#exportToXLSX").click(function(event) {
         event.preventDefault();
         var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".xlsx";
@@ -667,6 +634,16 @@
         link.remove();
     });
 
+    // Show/hide script
+    $('.addNotes').on('click', function(event) {
+        $("#notesContent").hide();
+        $("#addNotesForm").show();
+        $("#NOTES").focus();
+    });
+    $('#cancelNotes').on('click', function(event) {
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
+    });
     $(".openCustomize").click(function(event) {
         $(".openCustomize").hide();
         $(".saveCustomize").show();
@@ -674,7 +651,6 @@
         $(".addMargin3").addClass('mb-3');
 
     });
-
     $(".saveCustomize").click(function(event) {
         $(".openCustomize").show();
         $(".saveCustomize").hide();

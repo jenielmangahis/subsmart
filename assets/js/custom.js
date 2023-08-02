@@ -2311,7 +2311,7 @@ function calculation(counter) {
   if($("#grand_total").length && $("#grand_total").val().length)
   {
     // console.log('none');
-    // alert('none');
+    // alert('none'); grand_total
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2)).trigger('change');

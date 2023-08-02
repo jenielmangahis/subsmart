@@ -86,11 +86,11 @@
     <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
 
     <!-- Switchery -->
-    <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
+    <!-- <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script> -->
 
     <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> -->
 
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
@@ -257,25 +257,25 @@
             });
         }
 
-        function notificationClockInOut(){
-            $.ajax({
-                url: baseURL + "Timesheet/getCount_NotificationsAll",
-                type: "POST",
-                dataType: "json",
-                data: {
-                    notifycount: notification_badge_value
-                },
-                success: function(data) {
-                    if (notification_badge_value != data.badgeCount) {
-                        notification_badge_value = data.badgeCount;
-                        getNotificationsAll();
-                    }
-                    if (data.notifyCount < 1) {
-                        $('#notifications_container').html('<div class="text-center py-3"><span class="content-subtitle">No notifications for now.</span></div>');
-                    }
-                }
-            });
-        }
+        // function notificationClockInOut(){
+        //     $.ajax({
+        //         url: baseURL + "Timesheet/getCount_NotificationsAll",
+        //         type: "POST",
+        //         dataType: "json",
+        //         data: {
+        //             notifycount: notification_badge_value
+        //         },
+        //         success: function(data) {
+        //             if (notification_badge_value != data.badgeCount) {
+        //                 notification_badge_value = data.badgeCount;
+        //                 getNotificationsAll();
+        //             }
+        //             if (data.notifyCount < 1) {
+        //                 $('#notifications_container').html('<div class="text-center py-3"><span class="content-subtitle">No notifications for now.</span></div>');
+        //             }
+        //         }
+        //     });
+        // }
 
         function sendFeed(){
             $.ajax({
@@ -522,6 +522,77 @@
 
     <!-- Added footer assets -->
     <?php echo put_footer_assets();?>
+    
+<!-- taxes page -->
+<script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
+<!-- global script that can be use all over the site pages -->
+<script>
+    function notifyUser(title,text,icon,location=null){
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                if(location === "reload"){
+                    window.location.reload(true);
+                }else if(location !== null && location !== ""){
+                    window.location.href='<?= base_url(); ?>'+location;
+                }
+            }
+        });
+    }
+
+    var Accordion = function() {
+  
+  var
+    toggleItems,
+    items;
+  
+  var _init = function() {
+    toggleItems     = document.querySelectorAll('.accordion__itemTitleWrap');
+    toggleItems     = Array.prototype.slice.call(toggleItems);
+    items           = document.querySelectorAll('.accordion__item');
+    items           = Array.prototype.slice.call(items);
+    
+    _addEventHandlers();
+    TweenLite.set(items, {visibility:'visible'});
+    TweenMax.staggerFrom(items, 0.9,{opacity:0, x:-100, ease:Power2.easeOut}, 0.3)
+  }
+  
+  var _addEventHandlers = function() {
+    toggleItems.forEach(function(element, index) {
+      element.addEventListener('click', _toggleItem, false);
+    });
+  }
+  
+  var _toggleItem = function() {
+    var parent = this.parentNode;
+    var content = parent.children[1];
+    if(!parent.classList.contains('is-active')) {
+      parent.classList.add('is-active');
+      TweenLite.set(content, {height:'auto'})
+      TweenLite.from(content, 0.6, {height: 0, immediateRender:false, ease: Back.easeOut})
+      
+    } else {
+      parent.classList.remove('is-active');
+      TweenLite.to(content, 0.3, {height: 0, immediateRender:false, ease: Power1.easeOut})
+    }
+  }
+  
+  return {
+    init: _init
+  }
+  
+}();
+
+Accordion.init();
+</script>
   </body>
 
 </html>
