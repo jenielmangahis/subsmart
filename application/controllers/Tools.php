@@ -1786,4 +1786,197 @@ class Tools extends MY_Controller {
         $this->page_data['page']->parent  = 'Tools';     
         $this->load->view('v2/pages/tools/zillow', $this->page_data);
     }
+
+    public function ajax_verify_connect_active_campaign()
+    {
+        $this->load->library('ActiveCampaignApi');
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg  = 'Invalid credentials.';
+
+        $post = $this->input->post();
+
+        $company_id = logged('company_id');
+        
+        if( $post['api_key'] != '' && $post['api_url'] != '' ){
+            $activeCampaign = new ActiveCampaignApi;
+            $contacts       = $activeCampaign->getContacts($post['api_url'], $post['api_key']);            
+            if( $contacts['error_message'] == '' ){
+                $data_active_campaign = [                            
+                    'company_id' => $company_id,
+                    'active_campaign_token' => $post['api_key'],
+                    'active_campaign_account_url' => $post['api_url'], 
+                    'api_name' => 'active_campaign',
+                    'status' => 1,
+                    'created' => date("Y-m-d H:i:s")
+                ];    
+                $this->CompanyApiConnector_model->create($data_active_campaign);
+
+                $is_success = 1;
+                $msg = '';
+            }
+
+        }else{
+            $msg = 'Please enter your Active Campaign credentials.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+
+    }
+
+    public function ajax_create_active_campaign_export_list()
+    {
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('ActiveCampaignExportListAutomationLogs_model');
+        $this->load->model('ActiveCampaignExportCustomerLogs_model');
+
+        $is_success = 1;
+        $msg  = 'Cannot save data.';
+        $total_export = 0;
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( $post['active_campaign_list'] <= 0  ){
+            $is_success = 0;
+            $msg = 'Please select list.';
+        }
+
+        if( empty($post['company_customer']) ){
+            $is_success = 0;
+            $msg = 'Please select customer to export to list.';
+        }
+
+        if( $is_success == 1 ){
+            foreach( $post['company_customer'] as $cid ){
+                $customer = $this->AcsProfile_model->getByProfId($cid);
+                $exportCustomer = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($cid);
+                if( $customer && empty($exportCustomer) ){
+                    $data_export_customer = [
+                        'company_id' => $company_id,
+                        'customer_id' => $cid,
+                        'active_campaign_customer_id' => 0,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => '',
+                        'date_created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
+                }
+
+                $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getListByCustomerIdAndObjectId($cid, $post['active_campaign_list']);
+                if( !$exportList ){
+                    $data_export_list = [
+                        'company_id' => $company_id,
+                        'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeList(),
+                        'object_id' => $post['active_campaign_list'],
+                        'customer_id' => $cid,
+                        'is_sync' => 0,
+                        'is_with_error' => 0,
+                        'error_message' => '',
+                        'date_created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
+
+                    $total_export++;
+                }
+            }            
+        }
+
+        if( $total_export <= 0 ){
+            $is_success = 0;
+            $msg = 'Customer selected is already in the list.';
+        }        
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_active_campaign_export_automation()
+    {
+        $this->load->library('ActiveCampaignApi');
+        $this->load->model('CompanyApiConnector_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('ActiveCampaignExportListAutomationLogs_model');
+        $this->load->model('ActiveCampaignExportCustomerLogs_model');
+
+        $is_success = 1;
+        $msg  = 'Cannot save data.';
+        $total_export = 0;
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( $post['active_campaign_automation'] <= 0  ){
+            $is_success = 0;
+            $msg = 'Please select automation.';
+        }
+
+        if( empty($post['company_customer']) ){
+            $is_success = 0;
+            $msg = 'Please select customer to export to automation.';
+        }
+
+        if( $is_success == 1 ){
+
+            $companyActiveCampaign = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'active_campaign'); 
+
+            $activeCampaign = new ActiveCampaignApi;
+            $automation     = $activeCampaign->getAutomations($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $post['active_campaign_automation']);
+            if( $automation['automations'] ){
+                foreach( $post['company_customer'] as $cid ){
+                    $customer = $this->AcsProfile_model->getByProfId($cid);
+                    $exportCustomer = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($cid);
+                    if( $customer && empty($exportCustomer) ){
+                        $data_export_customer = [
+                            'company_id' => $company_id,
+                            'customer_id' => $cid,
+                            'active_campaign_customer_id' => 0,
+                            'is_sync' => 0,
+                            'is_with_error' => 0,
+                            'error_message' => '',
+                            'date_created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
+                    }
+
+                    $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getAutomationByCustomerIdAndObjectId($cid, $automation['automations']->automation->id);
+                    if( !$exportList ){
+                        $data_export_list = [
+                            'company_id' => $company_id,
+                            'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeAutomation(),
+                            'object_id' => $automation['automations']->automation->id,
+                            'object_name' => $automation['automations']->automation->name,
+                            'customer_id' => $cid,
+                            'is_sync' => 0,
+                            'is_with_error' => 0,
+                            'error_message' => '',
+                            'date_created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
+
+                        $total_export++;
+                    }
+                } 
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find automation';
+            }                       
+        }
+
+        if( $total_export <= 0 ){
+            $is_success = 0;
+            $msg = 'Customer selected is already in the automation.';
+        }        
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 }

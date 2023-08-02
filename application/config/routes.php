@@ -1206,6 +1206,9 @@ $route['tools/mailchimp_connect'] = 'Tools/mailchimpConnect';
 $route['tools/mailchimp_api_save'] = 'Tools/mailchimpApiSave';
 $route['tools/_create_mailchimp_customer_export'] = 'Tools/ajax_create_mailchimp_customer_export';
 $route['tools/_disconnect_mailchimp_account'] = 'Tools/ajax_disconnect_mailchimp_account';
+$route['tools/_verify_connect_active_campaign'] = 'Tools/ajax_verify_connect_active_campaign';
+$route['tools/_create_active_campaign_export_list'] = 'Tools/ajax_create_active_campaign_export_list';
+$route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_active_campaign_export_automation';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
