@@ -37,9 +37,9 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12">
+                                            <!-- <div class="col-12">
                                                 <label class="nsm-subtitle text-success">Free</label>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/google_contacts'); ?>'">Manage</button>
                                     </div>
@@ -64,9 +64,9 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12">
+                                            <!-- <div class="col-12">
                                                 <label class="nsm-subtitle text-success">Free</label>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks'); ?>'">Manage</button>
                                     </div>
@@ -172,17 +172,18 @@
                                         </label>
                                     </div>
                                     <div class="col-12 text-center">
-                                        <div class="row align-items-center mb-3">
+                                        <!-- <div class="row align-items-center mb-3">
                                             <div class="col-12">
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/mailchimp'); ?>'">Manage</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
@@ -200,30 +201,17 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check form-switch nsm-switch m-auto">
-                                                    <?php 
-                                                        $is_enabled = 0;
-                                                        if( array_key_exists('active_campaign', $enabledApiConnectors) ){
-                                                            $is_enabled = 1;
-                                                        }   
-                                                    ?>
-                                                    <input class="form-check-input chk_api_enabled" type="checkbox" id="switch_activecampaign" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="switch_activecampaign">Enabled</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="nsm-subtitle text-success">$10.00/Month</label>
-                                            </div>
+                                            <!-- <div class="col-12">
+                                                <label class="nsm-subtitle text-success">Free</label>
+                                            </div> -->
                                         </div>
-                                        <?php if( $is_enabled == 1 ){ ?>
-                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/active_campaign'); ?>'">Manage</button>
-                                        <?php } ?>
+                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/active_campaign'); ?>'">Manage</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                                        
                     <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">

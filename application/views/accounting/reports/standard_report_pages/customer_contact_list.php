@@ -63,6 +63,14 @@
         width: 18px;
         height: 18px;
     }
+
+    .borderRadius0 > * {
+        border-radius: 0px;
+    }
+
+    .pdfAttachment {
+        margin-bottom: -1px;
+    }
 </style>
 
 <div class="container-fluid">
@@ -201,12 +209,12 @@
                         <div class="nsm-card-header">
                             <div class="col-lg-12">
                                 <span class="float-start">
-                                    <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i></button>
+                                    <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Settings</span> <i class='bx bx-fw bx-chevron-down'></i></button>
                                     <ul class="dropdown-menu p-3" style="width: 200px">
                                         <form id="sortReportForm" method="POST">
                                             <div class="row">
-                                                <div class="col-lg-12 mb-1"><strong>Sort by</strong></div>
                                                 <div class="col-lg-12 mb-2">
+                                                    <label class="fw-bold mb-1">Sort By</label>
                                                     <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                         <option value="prof_id" selected>Default</option>
                                                         <option value="customer">Customer</option>
@@ -216,7 +224,6 @@
                                                         <option value="shippingAddress">Shipping Address</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-lg-12 mb-1"><strong>Sort in</strong></div>
                                                 <div class="col-lg-12 mb-2">
                                                     <div class="form-check">
                                                         <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="ASC">
@@ -226,6 +233,17 @@
                                                         <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="DESC" checked>
                                                         <label for="sort-desc" class="form-check-label">Descending order</label>
                                                     </div>
+                                                </div>
+                                                <div class="col-lg-12 mb-2"><hr class="m-0"></div>
+                                                <div class="col-lg-12 mb-2">
+                                                    <label class="fw-bold mb-1">Page Size</label>
+                                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                                        <option value="10" selected>10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="500">500</option>
+                                                    </select>
                                                 </div>
                                                 <div class="col-lg-12 mb-1"><button class="nsm-button primary small" type="submit">Apply</button></div>
                                             </div>
@@ -366,8 +384,8 @@
                             <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                         </div>
                         <div class="float-end">
-                            <button type="button" class="nsm-button success savePDF">Save as PDF</button>
-                            <!-- <button type="button" class="nsm-button success printPDF">Print</button> -->
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                         </div>
                     </div>
                 </div>
@@ -415,12 +433,12 @@
                             <div class="form-group">
                                 <h6>Attachment</h6>
                                 <div class="row">
-                                    <div class="input-group mb-2">
+                                    <div class="input-group borderRadius0 pdfAttachment">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
                                         <input id="pdfReportFilename" class="form-control" type="text" value="Customer Contact List Report" required>
                                         <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
                                     </div>
-                                    <div class="input-group">
+                                    <div class="input-group borderRadius0">
                                         <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
                                         <input id="xlsxReportFileName" class="form-control" type="text" value="Customer Contact List Report" required>
                                         <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
@@ -436,7 +454,7 @@
                                 <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                             </div>
                             <div class="float-end">
-                                <button type="submit" class="nsm-button success sendEmail"><span class="sendEmail_Loader"></span>Send</button>
+                                <button type="submit" class="nsm-button primary sendEmail"><span class="sendEmail_Loader"></span>Send</button>
                             </div>
                         </div>
                     </div>
@@ -456,10 +474,12 @@
     var reportID = "<?php echo $reportTypeId; ?>";
     var sort_by = $('select[name="sort_by"]').val();
     var sort_order = $('input[name="sort_order"]:checked').val();
+    var page_size = $('select[name="page_size"]').val();
     var pageOrientation = $('#pageOrientation').val();
     var reportConfig = {
         sort_by: sort_by,
         sort_order: sort_order,
+        page_size: page_size,
         pageOrientation: pageOrientation,
     };
 
@@ -513,9 +533,12 @@
         event.preventDefault();
         sort_by = $('select[name="sort_by"]').val();
         sort_order = $('input[name="sort_order"]:checked').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('#pageOrientation').val();
         reportConfig = {
             sort_by: sort_by,
             sort_order: sort_order,
+            page_size: page_size,
             pageOrientation: pageOrientation,
         };
         renderReportList(businessName, reportName, filename, notes, reportConfig);
@@ -523,10 +546,15 @@
 
     // Page orientation feature config
     $('#pageOrientation').change(function(event) {
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('input[name="sort_order"]:checked').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('#pageOrientation').val();
         reportConfig = {
             sort_by: sort_by,
             sort_order: sort_order,
-            pageOrientation: $(this).val(),
+            page_size: page_size,
+            pageOrientation: pageOrientation,
         };
         renderReportList(businessName, reportName, filename, notes, reportConfig);
     });
