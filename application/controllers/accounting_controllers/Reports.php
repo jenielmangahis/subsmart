@@ -21610,6 +21610,15 @@ class Reports extends MY_Controller {
                 $socialSecurity = 6.2;
                 $medicare = 1.45;
 
+                $total = [
+                    'gross_hours' => 0.00,
+                    'gross_pay' => 0.00,
+                    'adjusted_gross_pay' => 0.00,
+                    'employee_taxes' => 0.00,
+                    'net_pay' => 0.00,
+                    'employer_taxes' => 0.00,
+                    'total_payroll_cost' => 0.00
+                ];
                 $data = [];
                 foreach($paychecks as $paycheck)
                 {
@@ -21643,9 +21652,23 @@ class Reports extends MY_Controller {
                             'pay_method' => $paycheck->pay_method,
                             'total_payroll_cost' => number_format(floatval($paycheck->total_pay), 2)
                         ];
+
+                        $total['gross_hours'] += floatval($payrollItem->employee_hours);
+                        $total['gross_pay'] += floatval($paycheck->total_pay);
+                        $total['adjusted_gross_pay'] += floatval($paycheck->total_pay);
+                        $total['employee_taxes'] += floatval($payrollItem->employee_taxes);
+                        $total['net_pay'] += floatval($paycheck->net_pay);
+                        $total['employer_taxes'] += floatval($payrollItem->employer_taxes);
+                        $total['total_payroll_cost'] += floatval($paycheck->total_pay);
                     }
                 }
 
+                foreach($total as $index => $val)
+                {
+                    $total[$index] = number_format($val, 2);
+                }
+
+                $this->page_data['totals'] = $total;
                 $this->page_data['paychecks'] = $data;
 
                 $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees';
@@ -21846,6 +21869,7 @@ class Reports extends MY_Controller {
             "taxable_sales_summary",
             "customer_contact_list",
             "vendor_contact_list",
+            "audit_log_list",
         );
         
         // Conditional Statements on the array
@@ -22258,6 +22282,253 @@ class Reports extends MY_Controller {
                     $account_number = ($returnDatas->account_number) ? $returnDatas->account_number : "—";
 
                     $row_data = array($vendor, $phone_numbers, $email, $fullname, $address, $account_number);
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                echo $response;
+            }
+
+            // Fetch Audit Log list data
+            if ($reportType == "audit_log_list") {
+                
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
+
+                // ====== Generate PDF File ============================================================
+                tcpdf();
+                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf->setCreator(PDF_CREATOR);
+                $pdf->setAuthor($businessName);
+                $pdf->setTitle($reportName);
+                $pdf->setSubject("Report");
+                $pdf->setPrintHeader(false);
+                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+                $pdf->setFont('helvetica', '', 10, '', true);
+                $pdf->setFontSubsetting(false);
+                $pdf->AddPage($reportConfig['pageOrientation']);
+
+                $title = '
+                    <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
+                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
+                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
+                        <tr><td></td></tr>
+                    </table>
+                ';
+
+                $tableColumns = '
+                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
+                        <tr>
+                            <th class="COLUMN_NAME">DATE CHANGED</th>
+                            <th class="COLUMN_NAME">USER</th>
+                            <th class="COLUMN_NAME">EVENT</th>
+                            <th class="COLUMN_NAME">NAME</th>
+                            <th class="COLUMN_NAME">DATE</th>
+                            <th class="COLUMN_NAME">AMOUNT</th>
+                        </tr>
+                    </table>
+                ';
+
+                $tableContent = '
+                    <table cellpadding="0" cellspacing="4" border="0">
+                ';
+
+                $response = '';
+
+                foreach ($returnData as $returnDatas) {
+                    $date_changed = ($returnDatas->date_changed) ? date("M d, Y", strtotime($returnDatas->date_changed)) : "&mdash;";
+                    $user = ($returnDatas->user) ? $returnDatas->user : "&mdash;";
+                    $event = ($returnDatas->event) ? $returnDatas->event : "&mdash;";
+                    $name = ($returnDatas->name) ? $returnDatas->name : "&mdash;";
+                    $date = ($returnDatas->date) ? date("m/d/Y", strtotime($returnDatas->date)) : "&mdash;";
+                    $amount = ($returnDatas->amount) ? $returnDatas->amount : "&mdash;";
+                    $history = ($returnDatas->history) ? $returnDatas->history : "&mdash;";
+
+                    if ($user == 1) {
+                        $user = "Office Manager";
+                    } else if ($user == 2) {
+                        $user = "Partner";
+                    } else if ($user == 3) {
+                        $user = "Team Leader";
+                    } else if ($user == 4) {
+                        $user = "Standard User";
+                    } else if ($user == 5) {
+                        $user = "Field Sales";
+                    } else if ($user == 6) {
+                        $user = "Field Tech";
+                    } else if ($user == 7) {
+                        $user = "Admin";
+                    } else {
+                        $user = "&mdash;";
+                    }
+
+                    $response .= '<tr>';
+                    $response .= '<td>'.$date_changed.'</td>';
+                    $response .= '<td>'.$user.'</td>';
+                    $response .= '<td>'.$event.'</td>';
+                    $response .= '<td>'.$name.'</td>';
+                    $response .= '<td>'.$date.'</td>';
+                    $response .= '<td>'.$amount.'</td>';
+                    $response .= '<td><button class="nsm-button small">View</button></td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$date_changed.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$user.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$event.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$name.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$date.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$amount.'</td>';
+                    $tableContent .= '</tr>';
+                }
+
+                $tableContent .= '
+                    </table>
+                ';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
+                        <tr><td></td></tr>
+                        <tr><td></td></tr>
+                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table {
+                            width: 100% !important;
+                        }
+                        .tableHeader {
+                            border-bottom: 1px solid gray; 
+                            border-top: 1px solid gray;
+                        }
+                        .COLUMN_NAME {
+                            font-size: 12px;
+                        }
+                        .TD_NAME {
+                            font-size: 11px;
+                        }
+                        .BUSINESS_NAME {
+                            font-weight: bold;
+                            font-size: 20px;
+                            margin: 100px;
+                        }
+                        .REPORT_NAME {
+                            font-size: 13.5px;
+                        }
+                        .reportNotes {
+                            text-align: left;
+                            font-size: 11.5px;
+                        }
+                        .reportDate {
+                            text-align: center;
+                        }
+                    </style>
+                ';
+
+                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
+                $pdf->writeHTML($renderHTML, true, false, true, false, '');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = 5;
+
+                $businessNameStyle = array(
+                    'font-size' => 13,
+                    'font-style' => 'bold',
+                    'halign' => 'center', 
+                    'valign' => 'center', 
+                );
+
+                $reportNameStyle = array(
+                    'font-size' => 11,
+                    'halign' => 'center', 
+                    'valign' => 'center',
+                ); 
+
+                $headerStyle = array(
+                    'font-style' => 'bold',
+                    'font-size' => 10,
+                    'border' => 'top,bottom',
+                    'border-style' => 'thin',
+                    'border-color' => '000000',
+                    'valign' => 'center', 
+                );
+
+                $contentStyle = array(
+                    'font-size' => 10,
+                    'halign' => 'left', 
+                );
+
+                $reportDateStyle = array(
+                    'font-size' => 10,
+                    'valign' => 'center', 
+                    'halign' => 'center', 
+                );
+
+                $headerData = array(
+                    'DATE CHANGED', 
+                    'USER', 
+                    'EVENT', 
+                    'NAME', 
+                    'DATE',
+                    'AMOUNT',
+                );
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $row = 6;
+                foreach ($returnData as $returnDatas) {
+                    $date_changed = ($returnDatas->date_changed) ? date("M d, Y", strtotime($returnDatas->date_changed)) : "—";
+                    $user = ($returnDatas->user) ? $returnDatas->user : "—";
+                    $event = ($returnDatas->event) ? $returnDatas->event : "—";
+                    $name = ($returnDatas->name) ? $returnDatas->name : "—";
+                    $date = ($returnDatas->date) ? date("m/d/Y", strtotime($returnDatas->date)) : "—";
+                    $amount = ($returnDatas->amount) ? $returnDatas->amount : "—";
+                    $history = ($returnDatas->history) ? $returnDatas->history : "—";
+
+                    if ($user == 1) {
+                        $user = "Office Manager";
+                    } else if ($user == 2) {
+                        $user = "Partner";
+                    } else if ($user == 3) {
+                        $user = "Team Leader";
+                    } else if ($user == 4) {
+                        $user = "Standard User";
+                    } else if ($user == 5) {
+                        $user = "Field Sales";
+                    } else if ($user == 6) {
+                        $user = "Field Tech";
+                    } else if ($user == 7) {
+                        $user = "Admin";
+                    } else {
+                        $user = "—";
+                    }
+
+                    $row_data = array($date_changed, $user, $event, $name, $date, $amount);
                     $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
                     $row++;
                 }
@@ -47233,6 +47504,17 @@ class Reports extends MY_Controller {
 
                 $socialSecurity = 6.2;
                 $medicare = 1.45;
+
+                $totals = [
+                    'gross_hours' => 0.00,
+                    'gross_pay' => 0.00,
+                    'adjusted_gross_pay' => 0.00,
+                    'employee_taxes' => 0.00,
+                    'net_pay' => 0.00,
+                    'employer_taxes' => 0.00,
+                    'total_payroll_cost' => 0.00
+                ];
+
                 $data = [];
 
                 foreach($paychecks as $paycheck)
@@ -47267,13 +47549,31 @@ class Reports extends MY_Controller {
                             'pay_method' => $paycheck->pay_method,
                             'total_payroll_cost' => number_format(floatval($paycheck->total_pay), 2)
                         ];
+
+                        $totals['gross_hours'] += floatval($payrollItem->employee_hours);
+                        $totals['gross_pay'] += floatval($paycheck->total_pay);
+                        $totals['adjusted_gross_pay'] += floatval($paycheck->total_pay);
+                        $totals['employee_taxes'] += floatval($payrollItem->employee_taxes);
+                        $totals['net_pay'] += floatval($paycheck->net_pay);
+                        $totals['employer_taxes'] += floatval($payrollItem->employer_taxes);
+                        $totals['total_payroll_cost'] += floatval($paycheck->total_pay);
                     }
+                }
+
+                foreach($totals as $index => $val)
+                {
+                    $totals[$index] = number_format($val, 2);
                 }
 
                 $paychecks = $data;
 
                 $preparedTimestamp = "l, F j, Y h:i A eP";
                 $date = date($preparedTimestamp);
+
+                if(isset($post['columns'])) {
+                    $post['columns'] = str_replace('%20', ' ', $post['columns']);
+                    $post['columns'] = explode(',', $post['columns']);
+                }
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
@@ -47303,6 +47603,63 @@ class Reports extends MY_Controller {
                     $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
                     $row += 2;
 
+                    $data = [];
+                    $style = [];
+                    foreach($post['fields'] as $field)
+                    {
+                        switch($field) {
+                            case 'Pay Date' :
+                                $data[] = 'Total';
+                            break;
+                            case 'Name' :
+                                $data[] = '';
+                            break;
+                            case 'Hours' :
+                                $text = "Gross: ".$totals['gross_hours']."\n";
+                                $text .= "Adjusted Gross: ";
+
+                                $data[] = $text;
+                            break;
+                            case 'Gross Pay' :
+                                if(!in_array('Hours', $post['fields'])) {
+                                    $text = "Gross: ".$totals['gross_pay']."\n";
+                                    $text .= "Adjusted Gross: ".$totals['adjusted_gross_pay'];
+                                } else {
+                                    $text = $totals['gross_pay']."\n";
+                                    $text .= $totals['adjusted_gross_pay'];
+                                }
+
+                                $data[] = $text;
+                            break;
+                            case 'Other Pay' :
+                                $data[] = '';
+                            break;
+                            case 'Employee Taxes and Deductions' :
+                                $text = "Total: ".$totals['employee_taxes']."\n";
+                                $text .= "Employee Taxes: ".$totals['employee_taxes'];
+
+                                $data[] = $text;
+                            break;
+                            case 'Net Pay' :
+                                $data[] = $totals['net_pay'];
+                            break;
+                            case 'Employer Taxes and Contributions' :
+                                $text = "Total: ".$totals['employer_taxes']."\n";
+                                $text .= "Employee Taxes: ".$totals['employer_taxes'];
+
+                                $data[] = $text;
+                            break;
+                            case 'Total Payroll Cost' :
+                                $data[] = $totals['total_payroll_cost'];
+                            break;
+                        }
+
+                        $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                    }
+
+                    $writer->writeSheetRow('Sheet1', $data, $style);
+                    $row++;
+
                     foreach($paychecks as $paycheck)
                     {
                         $data = [];
@@ -47310,7 +47667,61 @@ class Reports extends MY_Controller {
 
                         foreach($post['fields'] as $field)
                         {
-                            $data[] = $row[strtolower(str_replace(' ', '_', $field))];
+                            switch($field) {
+                                case 'Pay Date' :
+                                    $text = $paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                    $text .= !isset($post['columns']) || isset($post['columns']) && in_array('Pay Period', $post['columns']) ? $paycheck['pay_period'] : '';
+
+                                    $data[] = $text;
+                                break;
+                                case 'Hours' :
+                                    $text = "Gross: ".$paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                    $text .= "Adjusted Gross: ";
+
+                                    $data[] = $text;
+                                break;
+                                case 'Gross Pay' :
+                                    if(!in_array('Hours', $post['fields'])) {
+                                        $text = "Gross: ".$paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                        $text .= "Adjusted Gross: ".$paycheck[strtolower(str_replace(' ', '_', $field))];
+                                    } else {
+                                        $text = $paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                        $text .= $paycheck[strtolower(str_replace(' ', '_', $field))];
+                                    }
+
+                                    $data[] = $text;
+                                break;
+                                case 'Employee Taxes and Deductions' :
+                                    $text = "Total: ".$paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                    $text .= "Employee Taxes: ".$paycheck[strtolower(str_replace(' ', '_', $field))];
+
+                                    if($post['total-display'] !== 'totals-only') {
+                                        $text .= "\n";
+                                        $text .= "SS: ".$paycheck['ss_tax']."\n";
+                                        $text .= "Med: ".$paycheck['medicare_tax'];
+                                    }
+
+                                    $data[] = $text;
+                                break;
+                                case 'Employer Taxes and Contributions' :
+                                    $text = "Total: ".$paycheck[strtolower(str_replace(' ', '_', $field))]."\n";
+                                    $text .= "Employer Taxes: ".$paycheck[strtolower(str_replace(' ', '_', $field))];
+
+                                    if($post['total-display'] !== 'totals-only') {
+                                        $text .= "\n";
+                                        $text .= "FUL SUI: ".$paycheck['employer_sui_tax']."\n";
+                                        $text .= "FUTA: ".$paycheck['employer_futa_tax']."\n";
+                                        $text .= "SS: ".$paycheck['employer_ss_tax']."\n";
+                                        $text .= "Med: ".$paycheck['employer_medicare_tax'];
+                                    }
+
+                                    $data[] = $text;
+                                break;
+                                default :
+                                    $data[] = $paycheck[strtolower(str_replace(' ', '_', $field))];
+                                break;
+                            }
+
                             $style[] = ['color' => '#000000'];
                         }
 
@@ -47344,59 +47755,178 @@ class Reports extends MY_Controller {
                         </table>
                         <br /><br /><br />
 
-                        <table style="width: 100%;">
+                        <table style="width: 100%; font-size: 8px">
                             <thead>
                                 <tr>';
+                                $widthDiff = 100;
+                                $colWidth = [];
                                 foreach($post['fields'] as $field)
                                 {
-                                    $html .= '<td>'.$field.'</td>';
+                                    $width = 7;
+                                    $align = 'right';
+                                    switch($field) {
+                                        case 'Pay Date' :
+                                            $width = 10;
+                                            $align = 'left';
+                                        break;
+                                        case 'Name' :
+                                            $align = 'left';
+                                        break;
+                                        case 'Hours' :
+                                            $width = 15;
+                                        break;
+                                        case 'Gross Pay' :
+                                            if(!in_array('Hours', $post['fields'])) {
+                                                $width = 15;
+                                            }
+                                        break;
+                                        case 'Employee Taxes and Deductions' :
+                                            $width = 20;
+                                        break;
+                                        case 'Employer Taxes and Contributions' :
+                                            $width = 20;
+                                        break;
+                                    }
+                                    $widthDiff -= $width;
+                                    $colWidth[$field] = $width;
+                                }
+
+                                $additionalWidth = number_format($widthDiff / count($post['fields']), 2);
+
+                                foreach($post['fields'] as $field)
+                                {
+                                    $width = $colWidth[$field] + floatval($additionalWidth);
+                                    $html .= '<td style="width: '.$width.'%; text-align: '.$align.'; border: 1px solid black">'.str_replace('and', '&', $field).'</td>';
                                 }
                     $html .= '</tr>
                             </thead>
                             <tbody>';
+                                $html .= '<tr>';
+                                foreach($post['fields'] as $field)
+                                {
+                                    $width = $colWidth[$field] + floatval($additionalWidth);
+
+                                    switch($field) {
+                                        case 'Pay Date' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                            $html .= '<b>Total</b>';
+                                            $html .= '</td>';
+                                        break;
+                                        case 'Name' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%"></td>';
+                                        break;
+                                        case 'Hours' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                            $html .= '<p style="margin: 0"><b>Gross:</b> '.$totals['gross_hours'].'h</p>';
+                                            $html .= '<p style="margin: 0"><b>Adjusted Gross:</b></p>';
+                                            $html .= '</td>';
+                                        break;
+                                        case 'Gross Pay' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                            if(!in_array('Hours', $post['fields'])) {
+                                                $html .= '<p style="margin: 0"><b>Gross:</b> '.$totals['gross_pay'].'</p>';
+                                                $html .= '<p style="margin: 0"><b>Adjusted Gross:</b> '.$totals['adjusted_gross_pay'].'</p>';
+                                            } else {
+                                                $html .= '<p style="margin: 0">'.$totals['gross_pay'].'</p>';
+                                                $html .= '<p style="margin: 0">'.$totals['adjusted_gross_pay'].'</p>';
+                                            }
+                                            $html .= '</td>';
+                                        break;
+                                        case 'Other Pay' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%"></td>';
+                                        break;
+                                        case 'Employee Taxes and Deductions' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                            $html .= '<p style="margin: 0"><b>Total:</b> '.$totals['employee_taxes'].'</p>';
+                                            $html .= '<p style="margin: 0"><b>Employee Taxes:</b> '.$totals['employee_taxes'].'</p>';
+                                            // if($post['total-display'] !== 'totals-only') {
+                                            //     $html .= '<p style="margin: 0">SS: '.$paycheck['ss_tax'].'</p>';
+                                            //     $html .= '<p style="margin: 0">Med: '.$paycheck['medicare_tax'].'</p>';
+                                            // }
+                                            $html .= '</td>';
+                                        break;
+                                        case 'Net Pay' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">'.$totals['net_pay'].'</td>';
+                                        break;
+                                        case 'Employer Taxes and Contributions' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                            $html .= '<p style="margin: 0"><b>Total:</b> '.$totals['employer_taxes'].'</p>';
+                                            $html .= '<p style="margin: 0"><b>Employer Taxes:</b> '.$totals['employer_taxes'].'</p>';
+                                            // if($post['total-display'] !== 'totals-only') {
+                                            //     $html .= '<p style="margin: 0">FL SUI: '.$paycheck['employer_sui_tax'].'</p>';
+                                            //     $html .= '<p style="margin: 0">FUTA: '.$paycheck['employer_futa_tax'].'</p>';
+                                            //     $html .= '<p style="margin: 0">SS: '.$paycheck['employer_ss_tax'].'</p>';
+                                            //     $html .= '<p style="margin: 0">Med: '.$paycheck['employer_medicare_tax'].'</p>';
+                                            // }
+                                            $html .= '</td>';
+                                        break;
+                                        case 'Total Payroll Cost' :
+                                            $html .= '<td style="border: 1px solid black; width: '.$width.'%">'.$totals['total_payroll_cost'].'</td>';
+                                        break;
+                                    }
+
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                                $html .= '</tr>';
                                 foreach($paychecks as $paycheck)
                                 {
                                     $html .= '<tr>';
+
                                     foreach($post['fields'] as $field)
                                     {
+                                        $width = $colWidth[$field] + floatval($additionalWidth);
+
                                         switch($field) {
                                             case 'Pay Date' :
-                                                $html .= '<td>';
-                                                $html .= '<p style="margin: 0"><b>'.$field.'</b></p>';
-                                                $html .= in_array($post['columns'], 'Pay Period') ? '<p style="margin: 0"><b>'.$paycheck['pay_period'].'</b></p>' : '';
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                                $html .= '<p style="margin: 0"><b>'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</b></p>';
+                                                $html .= isset($post['columns']) && in_array('Pay Period', $post['columns']) || !isset($post['columns']) ? '<p style="margin: 0">'.$paycheck['pay_period'].'</p>' : '';
                                                 $html .= '</td>';
                                             break;
                                             case 'Hours' :
-                                                $html .= '<td style="text-align: right">';
-                                                $html .= '<div style="display: flex; flex-wrap: wrap; margin: 0 -1.5rem;">';
-                                                $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem; width: 50%"><b>Gross</b></div>';
-                                                $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem; width: 50%">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</div>';
-                                                $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem; width: 50%"><b>Adjusted Gross</b></div>';
-                                                $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem; width: 50%">&nbsp;</div>';
-                                                $html .= '</div>';
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                                $html .= '<p style="margin: 0"><b>Gross:</b> '.$paycheck[strtolower(str_replace(' ', '_', $field))].'h</p>';
+                                                $html .= '<p style="margin: 0"><b>Adjusted Gross:</b></p>';
                                                 $html .= '</td>';
                                             break;
                                             case 'Gross Pay' :
-                                                $html .= '<td style="text-align: right">';
-                                                // $html .= '<div style="display: flex; flex-wrap: wrap; margin: 0 -1.5rem;">';
-                                                // $html .= in_array($post['columns'], 'Pay Period') ? '<div style="flex: 0 0 auto; padding: 0 1.5rem;"><b>Gross</b></div>' : '';
-                                                // $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem;">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</div>';
-                                                // $html .= in_array($post['columns'], 'Pay Period') ? '<div style="flex: 0 0 auto; padding: 0 1.5rem;"><b>Adjusted Gross</b></div>' : '';
-                                                // $html .= '<div style="flex: 0 0 auto; padding: 0 1.5rem;">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</div>';
-                                                // $html .= '</div>';
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                                if(!in_array('Hours', $post['fields'])) {
+                                                    $html .= '<p style="margin: 0"><b>Gross:</b> '.$paycheck[strtolower(str_replace(' ', '_', $field))].'</p>';
+                                                    $html .= '<p style="margin: 0"><b>Adjusted Gross:</b> '.$paycheck[strtolower(str_replace(' ', '_', $field))].'</p>';
+                                                } else {
+                                                    $html .= '<p style="margin: 0">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</p>';
+                                                    $html .= '<p style="margin: 0">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</p>';
+                                                }
                                                 $html .= '</td>';
                                             break;
                                             case 'Other Pay' :
-                                                $html .= '<td></td>';
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%"></td>';
                                             break;
-                                            case 'Employee Taxes & Deductions' :
-                                                $html .= '<td></td>';
+                                            case 'Employee Taxes and Deductions' :
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                                $html .= '<p style="margin: 0"><b>Total:</b> '.$paycheck['employee_taxes'].'</p>';
+                                                $html .= '<p style="margin: 0"><b>Employee Taxes:</b> '.$paycheck['employee_taxes'].'</p>';
+                                                if($post['total-display'] !== 'totals-only') {
+                                                    $html .= '<p style="margin: 0">SS: '.$paycheck['ss_tax'].'</p>';
+                                                    $html .= '<p style="margin: 0">Med: '.$paycheck['medicare_tax'].'</p>';
+                                                }
+                                                $html .= '</td>';
                                             break;
-                                            case 'Employer Taxes & Contributions' :
-                                                $html .= '<td></td>';
+                                            case 'Employer Taxes and Contributions' :
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">';
+                                                $html .= '<p style="margin: 0"><b>Total:</b> '.$paycheck['employer_taxes'].'</p>';
+                                                $html .= '<p style="margin: 0"><b>Employer Taxes:</b> '.$paycheck['employer_taxes'].'</p>';
+                                                if($post['total-display'] !== 'totals-only') {
+                                                    $html .= '<p style="margin: 0">FL SUI: '.$paycheck['employer_sui_tax'].'</p>';
+                                                    $html .= '<p style="margin: 0">FUTA: '.$paycheck['employer_futa_tax'].'</p>';
+                                                    $html .= '<p style="margin: 0">SS: '.$paycheck['employer_ss_tax'].'</p>';
+                                                    $html .= '<p style="margin: 0">Med: '.$paycheck['employer_medicare_tax'].'</p>';
+                                                }
+                                                $html .= '</td>';
                                             break;
                                             default :
-                                                $html .= '<td>'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                                $html .= '<td style="border: 1px solid black; width: '.$width.'%">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</td>';
                                             break;
                                         }
                                     }
@@ -47415,7 +47945,7 @@ class Reports extends MY_Controller {
                     $fileName = str_replace(' ', '_', $companyName).'_Payroll_Details';
 
                     tcpdf();
-                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $obj_pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
                     $title = "Payroll Details";
                     $obj_pdf->SetTitle($title);
                     $obj_pdf->setPrintHeader(false);
@@ -47423,7 +47953,7 @@ class Reports extends MY_Controller {
                     $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
                     $obj_pdf->SetDefaultMonospacedFont('helvetica');
                     $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetMargins(5, PDF_MARGIN_TOP, 5);
                     $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
                     $obj_pdf->SetFont('helvetica', '', 9);
                     $obj_pdf->setFontSubsetting(false);

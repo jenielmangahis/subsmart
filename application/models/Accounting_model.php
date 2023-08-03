@@ -28,6 +28,7 @@ class Accounting_model extends MY_Model {
             $this->db->from('acs_profile');
             $this->db->where('company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
@@ -38,6 +39,30 @@ class Accounting_model extends MY_Model {
             $this->db->from('accounting_vendors');
             $this->db->where('company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Vendor Contact List data in Database
+        if ($reportType == "vendor_contact_list") {
+            $this->db->select('id, company AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, CONCAT(f_name, " ", m_name, " ", l_name, " ", suffix) AS fullname, CONCAT(street, ", ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
+            $this->db->from('accounting_vendors');
+            $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Audit log list data in Database
+        if ($reportType == "audit_log_list") {
+            $this->db->select('customer_audit_logs.id, customer_audit_logs.date_created AS date_changed, users.user_type AS user, customer_audit_logs.module AS module, customer_audit_logs.remarks AS event, CONCAT(users.FName, " ", users.LName) AS name, customer_audit_logs.date_created AS date, "$0.00" AS amount, "" AS history');
+            $this->db->from('customer_audit_logs');
+            $this->db->join('users', 'users.id = customer_audit_logs.user_id', 'left');
+            // $this->db->where('company_id', $companyID); not applicable
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }

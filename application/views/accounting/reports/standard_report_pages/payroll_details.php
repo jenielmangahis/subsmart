@@ -118,6 +118,66 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td <?=isset($columns) && !in_array('Hours', $columns) ? 'style="display: none"' : ''?> class="text-end">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6"><b>Gross</b></div>
+                                                    <div class="col-12 col-md-6"><b><?=$totals['gross_hours']?>h</b></div>
+                                                    <div class="col-12 col-md-6"><b>Adjusted Gross</b></div>
+                                                    <div class="col-12 col-md-6">&nbsp;</div>
+                                                </div>
+                                            </td>
+                                            <td <?=isset($columns) && !in_array('Gross Pay', $columns) ? 'style="display: none"' : ''?> class="text-end">
+                                                <div class="row">
+                                                    <?php if(isset($columns) && !in_array('Hours', $columns)) : ?>
+                                                    <div class="col-12 col-md-6"><b>Gross</b></div>
+                                                    <div class="col-12 col-md-6"><b><?=$totals['gross_pay']?></b></div>
+                                                    <div class="col-12 col-md-6"><b>Adjusted Gross</b></div>
+                                                    <div class="col-12 col-md-6"><b><?=$totals['adjusted_gross_pay']?></b></div>
+                                                    <?php else : ?>
+                                                    <div class="col-12"><b><?=$totals['gross_pay']?></b></div>
+                                                    <div class="col-12"><b><?=$totals['adjusted_gross_pay']?></b></div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
+                                            <td <?=isset($columns) && !in_array('Other Pay', $columns) ? 'style="display: none"' : ''?> class="text-end"></td>
+                                            <td <?=isset($columns) && !in_array('Employee Taxes and Deductions', $columns) ? 'style="display: none"' : ''?> class="text-end">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6"><b>Total</b></div>
+                                                    <div class="col-12 col-md-6"><b><?=$totals['employee_taxes']?></b></div>
+                                                    <div class="col-12 col-md-6"><b><b>Employee Taxes</b></div>
+                                                    <div class="col-12 col-md-6"><?=$totals['employee_taxes']?></b></div>
+                                                    <?php if(!isset($total_display) || isset($total_display) && $total_display === 'total-and-details') : ?>
+                                                    <!-- <div class="col-12 col-md-6">SS</div>
+                                                    <div class="col-12 col-md-6"><?=$paycheck['ss_tax']?></div>
+                                                    <div class="col-12 col-md-6">Med</div>
+                                                    <div class="col-12 col-md-6"><?=$paycheck['medicare_tax']?></div> -->
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
+                                            <td <?=isset($columns) && !in_array('Net Pay', $columns) ? 'style="display: none"' : ''?>><b><?=$totals['net_pay']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Employer Taxes and Contributions', $columns) ? 'style="display: none"' : ''?> class="text-end">
+                                                <div class="row">
+                                                        <div class="col-12 col-md-6"><b>Total</b></div>
+                                                        <div class="col-12 col-md-6"><b><?=$totals['employer_taxes']?></b></div>
+                                                        <div class="col-12 col-md-6"><b>Employer Taxes</b></div>
+                                                        <div class="col-12 col-md-6"><b><?=$totals['employer_taxes']?></b></div>
+                                                        <?php if(!isset($total_display) || isset($total_display) && $total_display === 'total-and-details') : ?>
+                                                        <!-- <div class="col-12 col-md-6">FL SUI</div>
+                                                        <div class="col-12 col-md-6"><?=$paycheck['employer_sui_tax']?></div>
+                                                        <div class="col-12 col-md-6">FUTA</div>
+                                                        <div class="col-12 col-md-6"><?=$paycheck['employer_futa_tax']?></div>
+                                                        <div class="col-12 col-md-6">SS</div>
+                                                        <div class="col-12 col-md-6"><?=$paycheck['employer_ss_tax']?></div>
+                                                        <div class="col-12 col-md-6">Med</div>
+                                                        <div class="col-12 col-md-6"><?=$paycheck['employer_medicare_tax']?></div> -->
+                                                        <?php endif; ?>
+                                                    </div>
+                                            </td>
+                                            <td <?=isset($columns) && !in_array('Total Payroll Cost', $columns) ? 'style="display: none"' : ''?> class="text-end"><b><?=$totals['total_payroll_cost']?></b></td>
+                                        </tr>
                                         <?php if(count($paychecks) > 0) : ?>
                                         <?php foreach($paychecks as $index => $paycheck) : ?>
                                         <tr>
@@ -140,12 +200,12 @@
                                                 <div class="row">
                                                     <?php if(isset($columns) && !in_array('Hours', $columns)) : ?>
                                                     <div class="col-12 col-md-6"><b>Gross</b></div>
-                                                    <div class="col-12 col-md-6"><?=$paycheck['gross_pay']?>h</div>
+                                                    <div class="col-12 col-md-6"><?=$paycheck['gross_pay']?></div>
                                                     <div class="col-12 col-md-6"><b>Adjusted Gross</b></div>
-                                                    <div class="col-12 col-md-6"><?=$paycheck['employee_taxes']?></div>
+                                                    <div class="col-12 col-md-6"><?=$paycheck['gross_pay']?></div>
                                                     <?php else : ?>
                                                     <div class="col-12"><?=$paycheck['gross_pay']?></div>
-                                                    <div class="col-12"><?=$paycheck['employee_taxes']?></div>
+                                                    <div class="col-12"><?=$paycheck['gross_pay']?></div>
                                                     <?php endif; ?>
                                                 </div>
                                             </td>
