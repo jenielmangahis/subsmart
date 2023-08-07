@@ -37,8 +37,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet"
         href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <!-- <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>"> -->
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"> -->
 
     <!-- Multi select -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
@@ -73,7 +73,7 @@ if ($this->session->userdata('usertimezone') == null) {
         src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js">
     </script>
 
-<script src="<?php echo $url->assets ?>frontend/js/report/main.js"></script>
+<!-- <script src="<?php echo $url->assets ?>frontend/js/report/main2.js"></script> -->
 
     <!-- taxes page -->
     <link
@@ -107,7 +107,7 @@ if ($this->session->userdata('usertimezone') == null) {
     ?>
 
     <!-- Jquery JS -->
-    <!-- <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script> -->
+    <!-- <script src="<?php //base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script> -->
     <!-- <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script> -->
     <script>
         var base_url = '<?= base_url() ?>';
@@ -118,7 +118,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
     <?php echo put_header_assets(); ?>
         
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
     <style>

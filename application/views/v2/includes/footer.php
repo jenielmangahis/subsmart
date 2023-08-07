@@ -20,10 +20,40 @@
     </div>
     <!-- DataTables -->
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <!-- <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"> -->
+    
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js">
+</script>
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js">
+</script>
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/jszip.min.js">
+</script>
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/pdfmake.min.js">
+</script>
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/vfs_fonts.js">
+</script>
+<script
+    src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.html5.min.js">
+</script>
+<!-- Validate  -->
+<script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js">
+</script>
+<script src="<?php echo $url->assets ?>plugins/jquery.validate.min.js"></script>
+<script
+    src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js">
+</script>
     <!-- Chart JS -->
     <script src="<?= base_url("assets/js/v2/chart.min.js") ?>"></script> 
     <!-- Boostrap JS -->
     <script src="<?= base_url("assets/js/v2/bootstrap.bundle.min.js") ?>" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
     
     <!-- Timepicker -->
     <script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
@@ -39,7 +69,7 @@
     <script type="text/javascript" src="<?= base_url("assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js") ?>"></script>
     <!-- Datetimepicker -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/moment.min.js") ?>"></script>
-    <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datetimepicker.min.js") ?>"></script>
+    <!-- <script type="text/javascript" src="<?php //base_url("assets/js/v2/bootstrap-datetimepicker.min.js") ?>"></script> -->
     <!-- Sidebar counbter -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/sidebar-counter.js") ?>"></script>
     <!-- Select2 -->
@@ -524,7 +554,7 @@
     <?php echo put_footer_assets();?>
     
 <!-- taxes page -->
-<script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script>
+<!-- <script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script> -->
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 <!-- global script that can be use all over the site pages -->
 <script>

@@ -126,7 +126,7 @@ class Reports extends MY_Controller {
             case "yearly_closeout":
                 return $this->setFilterByMonths($startDate, $endDate);
 
-            case "profit_loss":
+            case "profit_and_loss":
                 return $this->setProfitLoss($startDate, $endDate);
 
             case "payments_type_summary":
@@ -158,9 +158,21 @@ class Reports extends MY_Controller {
 
             case "estimates_summary":
                 return $this->setEstimates();
+
+            case "sales_by_items":
+                return $this->paymentByItemCSV($startDate, $endDate);
+
+            case "expenses_by_category_summary":
+                return $this->expenseByCategoryCSV($startDate, $endDate);
+
+            case "expense_by_vendor":
+                return $this->expenseByCategoryMonthVendorCSV($startDate, $endDate);
+
+            case "work_order_status":
+                return $this->workOrderByStatusCSV($startDate, $endDate);
         }
     }
-
+    
     public function getUsers() {
 
         $user_id =  logged('id');
@@ -209,7 +221,7 @@ class Reports extends MY_Controller {
             $paid_invoice = dollar_format(get_reports_by_date($startDate, $endDate, $dt->format("m"), 'paid_invoice'));
             $due_invoice = dollar_format(get_reports_by_date($startDate, $endDate, $dt->format("m"), 'due_invoice'));
 
-            array_push($months, array($dt->format("M, Y"), $num_estimate, $amount_estimate, '$0.00', $num_invoice, $amount_invoice, $paid_invoice, $due_invoice, '0', '$0.00'));
+            array_push($months, array($dt->format("M, Y"), $num_estimate, $amount_estimate, '$0.00', $num_invoice, $amount_invoice, $paid_invoice, $due_invoice, '$0.00', '$0.00'));
         }
 
         return $months;
@@ -419,6 +431,26 @@ class Reports extends MY_Controller {
         echo json_encode($payments);
     }
 
+    public function expenseByCustomer()
+    {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $payments = getExpenseCustomer($startDate, $endDate);
+
+        echo json_encode($payments);
+    }
+
+    public function expenseByCategoryCSV($startDate, $endDate) {
+        // $startDate = $this->input->get('startDate');
+        // $endDate = $this->input->get('endDate');
+
+        $payments = getExpenseCategory($startDate, $endDate);
+
+        // echo json_encode($payments);
+        return $payments;
+    }
+
     public function expenseByCategoryMonth() {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');
@@ -437,6 +469,15 @@ class Reports extends MY_Controller {
         echo json_encode($payments);
     }
 
+    public function expenseByCategoryMonthVendorCSV($startDate, $endDate) {
+        // $startDate = $this->input->get('startDate');
+        // $endDate = $this->input->get('endDate');
+
+        $payments = getExpenseVendor($startDate, $endDate);
+
+        return $payments;
+    }
+
     public function paymentByItem() {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');
@@ -444,6 +485,25 @@ class Reports extends MY_Controller {
         $payments = getPaymentByItem($startDate, $endDate);
 
         echo json_encode($payments);
+    }
+
+    public function paymentByItemCSV($startDate, $endDate)
+    {
+        $months = [];
+        $month_counter = 0;
+
+        $period = $this->getDateInterval($startDate, $endDate);
+        $i = 0;
+        foreach ($period as $dt) {
+            $payments = getPaymentByItem($startDate, $endDate);
+            $month_counter = false;
+
+            // foreach ($payments as $payment) {
+            //     array_push($months, $payment);
+            // }
+        }
+
+        return $payments;
     }
 
     public function paymentByCustomerGroup() {
@@ -620,6 +680,28 @@ class Reports extends MY_Controller {
 
         echo json_encode($months);
     }
+    
+    public function workOrderByStatusCSV($startDate, $endDate) {
+        // $startDate = $this->input->get('startDate');
+        // $endDate = $this->input->get('endDate');
+
+        $months = [];
+        $month_counter = 0;
+
+        $period = $this->getDateInterval($startDate, $endDate);
+        $i = 0;
+        // foreach ($period as $dt) {
+            $payments = getworkOrderByStatus($startDate, $endDate);
+            $month_counter = false;
+
+            foreach ($payments as $payment) {
+                array_push($months, $payment);
+            }
+        // }
+
+        // echo json_encode($months);
+        return $months;
+    }
 
     public function customerTaxByMonth()
     {
@@ -668,7 +750,7 @@ class Reports extends MY_Controller {
         $generated = array("Report generated on: ". date('d M Y'));   
         if ($type === "monthly_closeout" || $type === "yearly_closeout") {    
             $fields = array('Month', '# of Estimates', 'Estimated', 'Accepted', '# of Invoices', 'Invoiced', 'Paid', 'Due', '# of Expenses', 'Total Expense');
-        } else if($type === "profit_loss") {
+        } else if($type === "profit_and_loss") {
             $fields = array('Name', 'Balance');
         } else if($type === "payments_type_summary") {
             $fields = array('Month', 'Total Sales');
@@ -687,6 +769,16 @@ class Reports extends MY_Controller {
             $fields = array('Source', 'Residential #', 'Residential Invoiced', 'Commercial #', 'Commercial Invoiced');
         } else if($type === "customer_source") {
             $fields = array('Source', 'Customer Count (total)', 'Residential Count', 'Commercial Count');
+        } else if($type === "invoice_by_date") {
+            $fields = array('Date', '# of Invoices', 'Invoiced', 'Paid', 'Due', 'Tip', 'Fees');
+        } else if($type === "sales_by_items") {
+            $fields = array('Item', 'Invoice', 'Date Issued', 'Total QTY', 'Total Sales');
+        } else if($type === "expenses_by_category_summary") {
+            $fields = array('Category', 'Vendor', 'Payment Date', 'Payment Method', 'Ref. No', 'Total');
+        } else if($type === "expense_by_vendor") {
+            $fields = array('Vendor Name', 'Payment Date', 'Ref. No', 'Amount');
+        } else if($type === "work_order_status") {
+            $fields = array('Work Order #', 'Date Issued', 'Customer', 'Status');
         }
         
         fputcsv($f, $head, $delimiter);
@@ -706,7 +798,7 @@ class Reports extends MY_Controller {
                     $csvData = array($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7], $data[8], $data[9]);
                     fputcsv($f, $csvData, $delimiter);
                 }
-            } else if($type === "profit_loss") {
+            } else if($type === "profit_and_loss") {
                 $revenue = array('Revenue', $datas[0]);
                 $invoice = array('Invoices Paid', $datas[1]);
                 $expenses = array('Expenses', $datas[2]);
@@ -759,6 +851,36 @@ class Reports extends MY_Controller {
                     fputcsv($f, $csvData, $delimiter);
                 }
             } else if($type === "customer_source") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "estimates_summary") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "invoice_by_date") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "sales_by_items") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3], $data[4]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "expenses_by_category_summary") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3], $data[4], $data[5]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "expense_by_vendor") {
+                foreach ($datas as $data) {
+                    $csvData = array($data[0], $data[1], $data[2], $data[3]);
+                    fputcsv($f, $csvData, $delimiter);
+                }
+            } else if($type === "work_order_status") {
                 foreach ($datas as $data) {
                     $csvData = array($data[0], $data[1], $data[2], $data[3]);
                     fputcsv($f, $csvData, $delimiter);
