@@ -36,35 +36,106 @@ class ActiveCampaignApi
 
     public function createContact($account_url, $token, $contact)
     {
-        $client = new \GuzzleHttp\Client();
+        $data = array();
+        $error_message = ''; 
 
-        $response = $client->request('POST', $account_url . '/api/3/contacts', [
-          'body' => json_encode($contact),
-          'headers' => [
-            'Api-Token' => $token,
-            'accept' => 'application/json',            
-            'content-type' => 'application/json'
-          ]
-        ]);
+        try{
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $account_url . '/api/3/contacts', [
+              'body' => json_encode($contact),
+              'headers' => [
+                'Api-Token' => $token,
+                'accept' => 'application/json',            
+                'content-type' => 'application/json'
+              ]
+            ]);
 
-        $data = json_decode($response->getBody());
-        return $data;
+            $data = json_decode($response->getBody());
+        }catch(Exception $e){
+            $errors = json_decode($e->getResponse()->getBody()->getContents(), true);
+            if( !$errors ){
+                $error_message = $e->getMessage();
+            }else{                
+                $error_message = $errors['errors'][0]['title'];
+            }
+        }
+
+        $result = ['data' => $data, 'error_message' => $error_message];        
+        return $result;
     }
 
-    public function getLists($account_url, $token)
+    public function addContactToList($account_url, $token, $contactList)
+    {
+        $data = array();
+        $error_message = ''; 
+
+        try{
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $account_url . '/api/3/contactLists', [
+              'body' => json_encode($contactList),
+              'headers' => [
+                'Api-Token' => $token,
+                'accept' => 'application/json',            
+                'content-type' => 'application/json'
+              ]
+            ]);
+
+            $data = json_decode($response->getBody());
+        }catch(Exception $e){
+           $error_message = $e->getMessage();
+        }
+
+        $result = ['data' => $data, 'error_message' => $error_message];        
+        return $result;
+    }
+
+    public function addContactToAutomation($account_url, $token, $contactAutomation)
+    {
+        $data = array();
+        $error_message = ''; 
+
+        try{
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $account_url . '/api/3/contactAutomations', [
+              'body' => json_encode($contactAutomation),
+              'headers' => [
+                'Api-Token' => $token,
+                'accept' => 'application/json',            
+                'content-type' => 'application/json'
+              ]
+            ]);
+
+            $data = json_decode($response->getBody());
+        }catch(Exception $e){
+           $error_message = $e->getMessage();
+        }
+
+        $result = ['data' => $data, 'error_message' => $error_message];        
+        return $result;
+    }
+
+    public function getLists($account_url, $token, $list_id = 0)
     {
         $error_message = '';
         $lists = array();
 
         try {
             $client = new \GuzzleHttp\Client();
-
-            $response = $client->request('GET', $account_url . '/api/3/lists', [
-              'headers' => [
-                'accept' => 'application/json',
-                'Api-Token' => $token
-              ],
-            ]);
+            if( $list_id > 0 ){
+                $response = $client->request('GET', $account_url . '/api/3/lists/'.$list_id, [
+                  'headers' => [
+                    'accept' => 'application/json',
+                    'Api-Token' => $token
+                  ],
+                ]);
+            }else{
+                $response = $client->request('GET', $account_url . '/api/3/lists', [
+                  'headers' => [
+                    'accept' => 'application/json',
+                    'Api-Token' => $token
+                  ],
+                ]);
+            }            
 
             $lists = json_decode($response->getBody());    
         } catch (Exception $e) {

@@ -49,6 +49,23 @@ class ActiveCampaignExportCustomerLogs_model extends MY_Model
         return $query;
     }
 
+    public function getAllNotSync($limit = 0)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);           
+        $this->db->where('is_sync', 0);
+        $this->db->where('is_with_error', 0);
+        
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllByCompanyId($company_id, $filters=array())
     {
         $this->db->select('*');

@@ -1066,5 +1066,191 @@ class Cron_Api extends MYF_Controller {
         }
         echo $total_imported;        
     }
+
+    public function activeCampaignCustomerExport()
+    {
+        $this->load->library('ActiveCampaignApi');
+        $this->load->model('CompanyApiConnector_model');        
+        $this->load->model('ActiveCampaignExportCustomerLogs_model');
+
+        $customerExport = $this->ActiveCampaignExportCustomerLogs_model->getAllNotSync(10);
+        $total_exported = 0;
+        foreach( $customerExport as $customer ){  
+            $companyActiveCampaign = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($customer->company_id,'active_campaign');                  
+            if( $companyActiveCampaign  && $companyActiveCampaign->status == 1 ){
+                $company_total_exported = $companyActiveCampaign->active_campaign_customer_total_exported;
+                $company_total_failed   = $companyActiveCampaign->active_campaign_customer_total_failed;
+
+                if( $customer->customer_email != '' ){                                
+                    $customer_phone = '';
+                    if( $customer->customer_phone != '' ){
+                        $customer_phone = formatPhoneNumber($customer->customer_phone);
+                    }     
+
+                    $export_data = [
+                        'contact' => [
+                            'email' => $customer->customer_email,
+                            'firstName' => $customer->customer_firstname,
+                            'lastName' => $customer->customer_lastname,
+                            'phone' => $customer_phone
+                        ]            
+                    ];
+
+                    $activeCampaign = new ActiveCampaignApi;
+                    $export_result  = $activeCampaign->createContact($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $export_data);
+                    if( $export_result['data'] ){
+                        $export_customer = [
+                            'active_campaign_customer_id' => $export_result['data']->contact->id,
+                            'active_campaign_customer_hash' => $export_result['data']->contact->hash,                            
+                            'is_sync' => 1,
+                            'is_with_error' => 0,
+                            'error_message' => '',
+                            'action_date' => date("Y-m-d H:i:S")
+                        ];                        
+
+                        $company_total_exported++;
+                        $total_exported++;
+                    }else{
+                        $export_customer = [                            
+                            'is_sync' => 0,
+                            'is_with_error' => 1,
+                            'error_message' => $export_result['error_message'],
+                            'action_date' => date("Y-m-d H:i:S")
+                        ];
+
+                        $company_total_failed++;
+                    }
+
+                    $this->CompanyApiConnector_model->update($companyActiveCampaign->id,['active_campaign_customer_total_exported' => $company_total_exported, 'active_campaign_customer_total_failed' => $company_total_failed]);
+                    $this->ActiveCampaignExportCustomerLogs_model->update($customer->id, $export_customer);                
+                }else{
+                    $export_customer = [                            
+                        'is_sync' => 0,
+                        'is_with_error' => 1,
+                        'error_message' => 'Invalid email',
+                        'action_date' => date("Y-m-d H:i:S")
+                    ];
+
+                    $company_total_failed++;
+
+                    $this->CompanyApiConnector_model->update($companyActiveCampaign->id,['active_campaign_customer_total_failed' => $company_total_failed]);
+                    $this->ActiveCampaignExportCustomerLogs_model->update($customer->id, $export_customer);
+                }
+            }            
+        }
+
+        echo 'Total Exported : ' . $total_exported;
+    }
+
+    public function activeCampaignListAutomationExport()
+    {
+        $this->load->library('ActiveCampaignApi');
+        $this->load->model('CompanyApiConnector_model');        
+        $this->load->model('ActiveCampaignExportListAutomationLogs_model');
+        $this->load->model('ActiveCampaignExportCustomerLogs_model');
+
+        $total_exported = 0;
+
+        $listAutomationExport = $this->ActiveCampaignExportListAutomationLogs_model->getAllNotSync(10);
+        foreach( $listAutomationExport as $listAutomation ){
+            $customerExportData     = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($listAutomation->customer_id);
+            $companyActiveCampaign  = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($listAutomation->company_id,'active_campaign'); 
+            if( $customerExportData && ($companyActiveCampaign && $companyActiveCampaign->status == 1) ){
+
+                $company_total_list_exported = $companyActiveCampaign->active_campaign_list_total_exported;
+                $company_total_list_failed   = $companyActiveCampaign->active_campaign_list_total_failed;
+
+                $company_total_automation_exported = $companyActiveCampaign->active_campaign_automation_total_exported;
+                $company_total_automation_failed   = $companyActiveCampaign->active_campaign_automation_total_failed;
+
+                if( $customerExportData->is_sync == 1 && $customerExportData->active_campaign_customer_id > 0 ){
+
+                    $activeCampaign = new ActiveCampaignApi;                    
+                    if( $listAutomation->type == $this->ActiveCampaignExportListAutomationLogs_model->typeAutomation() ){
+                        $contactAutomation = [
+                            'contactAutomation' => [
+                                'automation' => $listAutomation->object_id,
+                                'contact' => $customerExportData->active_campaign_customer_id
+                            ]            
+                        ];
+                        $automationList = $activeCampaign->addContactToAutomation($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $contactAutomation);
+                        if( $automationList['error_message'] == '' ){
+                            $export_list_automation = [
+                                'active_campaign_id' => $automationList['data']->contactAutomation->id,
+                                'is_sync' => 1,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];
+                            $total_exported++;
+                            $company_total_automation_exported++;
+
+                        }else{
+                            $export_list_automation = [
+                                'is_sync' => 0,
+                                'is_with_error' => 1,
+                                'error_message' => $contactList['error_message'],
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];
+                            $company_total_automation_failed++;
+                        }
+                    }else{
+                        $contactList = [
+                            'contactList' => [
+                                'list' => $listAutomation->object_id,
+                                'contact' => $customerExportData->active_campaign_customer_id,
+                                'status' => 1                
+                            ]            
+                        ];
+                        $contactList = $activeCampaign->addContactToList($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $contactList);  
+                        if( $contactList['error_message'] == '' ){
+                            $export_list_automation = [
+                                'active_campaign_id' => $contactList['data']->contactList->id,
+                                'is_sync' => 1,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];
+                            $total_exported++;
+                            $company_total_list_exported++;
+                        }else{
+                            $export_list_automation = [
+                                'is_sync' => 0,
+                                'is_with_error' => 1,
+                                'error_message' => $contactList['error_message'],
+                                'action_date' => date("Y-m-d H:i:s")
+                            ];
+                            $company_total_list_failed++;
+                        }  
+                    }
+                }else{
+                    if( $listAutomation->type == $this->ActiveCampaignExportListAutomationLogs_model->typeAutomation() ){
+                        $company_total_automation_failed++;
+                    }else{
+                        $company_total_list_failed++;
+                    }
+
+                    $export_list_automation = [
+                        'is_sync' => 0,
+                        'is_with_error' => 1,
+                        'error_message' => 'Customer not found in your Active Campaign Account',
+                        'action_date' => date("Y-m-d H:i:s")
+                    ];
+                }
+
+                $data_company_api_connector = [
+                    'active_campaign_list_total_exported' => $company_total_list_exported,
+                    'active_campaign_list_total_failed' => $company_total_list_failed,
+                    'active_campaign_automation_total_exported' => $company_total_automation_exported,
+                    'active_campaign_automation_total_failed' => $company_total_automation_failed,
+                ];
+
+                $this->CompanyApiConnector_model->update($companyActiveCampaign->id,$data_company_api_connector);
+                $this->ActiveCampaignExportListAutomationLogs_model->update($listAutomation->id, $export_list_automation);
+            }
+        }
+
+        echo 'Total Exported : ' . $total_exported;
+    }
         
 }

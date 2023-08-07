@@ -60,7 +60,7 @@
                             <span class="api-label f-green">You are connected</span>
                         </div>
                         <div class="col-4">
-                            <a href="javascript:void(0);" class="nsm-button primary btn-disconnect-mailchimp">Disconnect</a>
+                            <a href="javascript:void(0);" class="nsm-button primary" id="btn-disconnect-mailchimp">Disconnect</a>
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -167,6 +167,14 @@
             </div>
         </div>
 
+        <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -182,7 +190,7 @@
             $('#mailchimp-export-modal').modal('show');
         });
 
-        $('.btn-disconnect-mailchimp').on('click', function(){
+        $('#btn-disconnect-mailchimp').on('click', function(){
             Swal.fire({            
                 html: "Disconnect your MailChimp Account?",
                 icon: 'question',
@@ -206,7 +214,7 @@
                                 {                                
                                     $('#loading_modal').modal('hide');
                                     Swal.fire({                        
-                                        text: "MailChimp Account was successfully disconnected.",
+                                        text: "MailChimp account was successfully disconnected.",
                                         icon: 'success',
                                         showCancelButton: false,
                                         confirmButtonText: 'Okay'

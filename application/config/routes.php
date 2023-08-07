@@ -1209,6 +1209,7 @@ $route['tools/_disconnect_mailchimp_account'] = 'Tools/ajax_disconnect_mailchimp
 $route['tools/_verify_connect_active_campaign'] = 'Tools/ajax_verify_connect_active_campaign';
 $route['tools/_create_active_campaign_export_list'] = 'Tools/ajax_create_active_campaign_export_list';
 $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_active_campaign_export_automation';
+$route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1356,6 +1357,8 @@ $route['cron_api/qb_payroll_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
 $route['cron_api/qb_employee_sync'] = 'Cron_Api/syncQbPayrollEmployees';
 $route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet';
 $route['cron_api/export_customer_mailchimp_list'] = 'Cron_Api/exportCustomerMailChimpList';
+$route['cron_api/export_customer_active_campaign_contacts'] = 'Cron_Api/activeCampaignCustomerExport';
+$route['cron_api/export_customer_active_campaign_list_automation'] = 'Cron_Api/activeCampaignListAutomationExport';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';

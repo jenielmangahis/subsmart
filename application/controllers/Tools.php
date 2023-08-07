@@ -331,6 +331,25 @@ class Tools extends MY_Controller {
     }    
 
     public function active_campaign() {
+        $this->load->library('ActiveCampaignApi');
+        $this->load->model('CompanyApiConnector_model');
+
+        $company_id    = logged('company_id');        
+        $companyActiveCampaign = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'active_campaign'); 
+
+        $activeCampaignLists = array();
+        $activeCampaignAutomations = array();
+        if( $companyActiveCampaign && $companyActiveCampaign->status == 1 ){
+            $activeCampaign = new ActiveCampaignApi;
+            $activeCampaignContacts = $activeCampaign->getContacts($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token);
+            $activeCampaignLists    = $activeCampaign->getLists($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token);
+            $activeCampaignAutomations = $activeCampaign->getAutomations($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token);
+        }
+
+        $this->page_data['activeCampaignLists']   = $activeCampaignLists;
+        $this->page_data['activeCampaignAutomations'] = $activeCampaignAutomations;
+        $this->page_data['activeCampaignContacts'] = $activeCampaignContacts;
+        $this->page_data['companyActiveCampaign'] = $companyActiveCampaign;
         $this->page_data['page']->title = 'Active Campaign';
         $this->page_data['page']->parent = 'Tools';
 
@@ -1803,15 +1822,27 @@ class Tools extends MY_Controller {
             $activeCampaign = new ActiveCampaignApi;
             $contacts       = $activeCampaign->getContacts($post['api_url'], $post['api_key']);            
             if( $contacts['error_message'] == '' ){
-                $data_active_campaign = [                            
-                    'company_id' => $company_id,
-                    'active_campaign_token' => $post['api_key'],
-                    'active_campaign_account_url' => $post['api_url'], 
-                    'api_name' => 'active_campaign',
-                    'status' => 1,
-                    'created' => date("Y-m-d H:i:s")
-                ];    
-                $this->CompanyApiConnector_model->create($data_active_campaign);
+                $companyActiveCampaignApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'active_campaign');
+                if( $companyActiveCampaignApi ){
+                    $data_active_campaign = [                                                    
+                        'active_campaign_token' => $post['api_key'],
+                        'active_campaign_account_url' => $post['api_url'],                         
+                        'status' => 1,
+                        'created' => date("Y-m-d H:i:s")
+                    ];    
+                    $this->CompanyApiConnector_model->update($companyActiveCampaignApi->id, $data_active_campaign);  
+                }else{
+                    $data_active_campaign = [                            
+                        'company_id' => $company_id,
+                        'active_campaign_token' => $post['api_key'],
+                        'active_campaign_account_url' => $post['api_url'], 
+                        'api_name' => 'active_campaign',
+                        'status' => 1,
+                        'created' => date("Y-m-d H:i:s")
+                    ];    
+                    $this->CompanyApiConnector_model->create($data_active_campaign);    
+                }
+                
 
                 $is_success = 1;
                 $msg = '';
@@ -1828,6 +1859,7 @@ class Tools extends MY_Controller {
 
     public function ajax_create_active_campaign_export_list()
     {
+        $this->load->library('ActiveCampaignApi');
         $this->load->model('CompanyApiConnector_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('ActiveCampaignExportListAutomationLogs_model');
@@ -1851,41 +1883,65 @@ class Tools extends MY_Controller {
         }
 
         if( $is_success == 1 ){
-            foreach( $post['company_customer'] as $cid ){
-                $customer = $this->AcsProfile_model->getByProfId($cid);
-                $exportCustomer = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($cid);
-                if( $customer && empty($exportCustomer) ){
-                    $data_export_customer = [
-                        'company_id' => $company_id,
-                        'customer_id' => $cid,
-                        'active_campaign_customer_id' => 0,
-                        'is_sync' => 0,
-                        'is_with_error' => 0,
-                        'error_message' => '',
-                        'date_created' => date("Y-m-d H:i:s")
-                    ];
 
-                    $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
-                }
+            $companyActiveCampaign = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'active_campaign'); 
 
-                $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getListByCustomerIdAndObjectId($cid, $post['active_campaign_list']);
-                if( !$exportList ){
-                    $data_export_list = [
-                        'company_id' => $company_id,
-                        'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeList(),
-                        'object_id' => $post['active_campaign_list'],
-                        'customer_id' => $cid,
-                        'is_sync' => 0,
-                        'is_with_error' => 0,
-                        'error_message' => '',
-                        'date_created' => date("Y-m-d H:i:s")
-                    ];
+            $activeCampaign = new ActiveCampaignApi;
+            $list           = $activeCampaign->getLists($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $post['active_campaign_list']);
+            if( $list['error_message'] == '' ){
+                foreach( $post['company_customer'] as $cid ){
+                    $customer = $this->AcsProfile_model->getByProfId($cid);
+                    $exportCustomer = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($cid);
+                    if( $customer){
+                        if( empty($exportCustomer) ){
 
-                    $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
+                            $customer_phone = '';
+                            if( $customer->phone_m != '' ){
+                                $customer_phone = formatPhoneNumber($customer->phone_m);
+                            }     
 
-                    $total_export++;
-                }
-            }            
+                            $data_export_customer = [
+                                'company_id' => $company_id,
+                                'customer_id' => $cid,
+                                'active_campaign_customer_id' => 0,
+                                'active_campaign_customer_hash' => '',
+                                'customer_firstname' => $customer->first_name,
+                                'customer_lastname' => $customer->last_name,
+                                'customer_email' => $customer->email,
+                                'customer_phone' => $phone_m,
+                                'is_sync' => 0,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
+
+                            $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
+                        }                    
+
+                        $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getListByCustomerIdAndObjectId($cid, $post['active_campaign_list']);
+                        if( !$exportList ){
+                            $data_export_list = [
+                                'company_id' => $company_id,
+                                'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeList(),
+                                'object_id' => $list['lists']->list->id,
+                                'object_name' => $list['lists']->list->name,
+                                'customer_id' => $cid,
+                                'is_sync' => 0,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
+
+                            $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
+
+                            $total_export++;
+                        }
+                    }                
+                } 
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find list';
+            }                       
         }
 
         if( $total_export <= 0 ){
@@ -1928,41 +1984,48 @@ class Tools extends MY_Controller {
 
             $activeCampaign = new ActiveCampaignApi;
             $automation     = $activeCampaign->getAutomations($companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $post['active_campaign_automation']);
-            if( $automation['automations'] ){
+            if( $automation['error_message'] == '' ){
                 foreach( $post['company_customer'] as $cid ){
                     $customer = $this->AcsProfile_model->getByProfId($cid);
                     $exportCustomer = $this->ActiveCampaignExportCustomerLogs_model->getByCustomerId($cid);
-                    if( $customer && empty($exportCustomer) ){
-                        $data_export_customer = [
-                            'company_id' => $company_id,
-                            'customer_id' => $cid,
-                            'active_campaign_customer_id' => 0,
-                            'is_sync' => 0,
-                            'is_with_error' => 0,
-                            'error_message' => '',
-                            'date_created' => date("Y-m-d H:i:s")
-                        ];
+                    if( $customer ){
+                        if( empty($exportCustomer) ){
+                            $data_export_customer = [
+                                'company_id' => $company_id,
+                                'customer_id' => $cid,
+                                'active_campaign_customer_id' => 0,
+                                'active_campaign_customer_hash' => '',
+                                'customer_firstname' => $customer->first_name,
+                                'customer_lastname' => $customer->last_name,
+                                'customer_email' => $customer->email,
+                                'customer_phone' => $phone_m,
+                                'is_sync' => 0,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
 
-                        $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
-                    }
+                            $this->ActiveCampaignExportCustomerLogs_model->create($data_export_customer);
+                        }                        
 
-                    $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getAutomationByCustomerIdAndObjectId($cid, $automation['automations']->automation->id);
-                    if( !$exportList ){
-                        $data_export_list = [
-                            'company_id' => $company_id,
-                            'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeAutomation(),
-                            'object_id' => $automation['automations']->automation->id,
-                            'object_name' => $automation['automations']->automation->name,
-                            'customer_id' => $cid,
-                            'is_sync' => 0,
-                            'is_with_error' => 0,
-                            'error_message' => '',
-                            'date_created' => date("Y-m-d H:i:s")
-                        ];
+                        $exportList = $this->ActiveCampaignExportListAutomationLogs_model->getAutomationByCustomerIdAndObjectId($cid, $automation['automations']->automation->id);
+                        if( !$exportList ){
+                            $data_export_list = [
+                                'company_id' => $company_id,
+                                'type' => $this->ActiveCampaignExportListAutomationLogs_model->typeAutomation(),
+                                'object_id' => $automation['automations']->automation->id,
+                                'object_name' => $automation['automations']->automation->name,
+                                'customer_id' => $cid,
+                                'is_sync' => 0,
+                                'is_with_error' => 0,
+                                'error_message' => '',
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
 
-                        $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
+                            $this->ActiveCampaignExportListAutomationLogs_model->create($data_export_list);
 
-                        $total_export++;
+                            $total_export++;
+                        }
                     }
                 } 
             }else{
@@ -1978,5 +2041,72 @@ class Tools extends MY_Controller {
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function ajax_disconnect_active_campaign_account()
+    {
+        $this->load->model('CompanyApiConnector_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find Active Campaign Account.';
+
+        $company_id = logged('company_id');
+        $companyActiveCampaignApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'active_campaign');
+        if( $companyActiveCampaignApi ){
+            $this->CompanyApiConnector_model->update($companyActiveCampaignApi->id, ['status' => 0]);
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function active_campaign_list_automation_logs()
+    {
+        $this->load->model('ActiveCampaignExportListAutomationLogs_model');
+
+        $company_id = logged('company_id');
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'active_campaign_export_list_automation_logs.is_with_error', 'value' => 1];
+            }
+            $activeCampaignListAutomationLogs = $this->ActiveCampaignExportListAutomationLogs_model->getAllByCompanyId($company_id, $search);                        
+        }else{
+            $activeCampaignListAutomationLogs = $this->ActiveCampaignExportListAutomationLogs_model->getAllByCompanyId($company_id);            
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Active Campaign';
+        $this->page_data['page']->parent = 'Tools';
+        $this->page_data['activeCampaignListAutomationLogs'] = $activeCampaignListAutomationLogs;
+        $this->load->view('v2/pages/tools/active_campaign_list_automation_logs', $this->page_data);
+    }
+
+    public function active_campaign_customer_logs()
+    {
+        $this->load->model('ActiveCampaignExportCustomerLogs_model');
+
+        $company_id = logged('company_id');
+        $filter     = 'all';
+
+        if( get('filter') ){
+            $filter = get('filter');
+            if( get('filter') == 'errors' ){                
+                $search['search'][] = ['field' => 'active_campaign_export_customer_logs.is_with_error', 'value' => 1];
+            }
+            $activeCampaignExportCustomerLogs = $this->ActiveCampaignExportCustomerLogs_model->getAllByCompanyId($company_id, $search);                        
+        }else{
+            $activeCampaignExportCustomerLogs = $this->ActiveCampaignExportCustomerLogs_model->getAllByCompanyId($company_id);            
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Active Campaign';
+        $this->page_data['page']->parent = 'Tools';
+        $this->page_data['activeCampaignExportCustomerLogs'] = $activeCampaignExportCustomerLogs;
+        $this->load->view('v2/pages/tools/active_campaign_customer_logs', $this->page_data);
     }
 }
