@@ -2174,7 +2174,8 @@ function get_customer_groups()
     $CI =& get_instance();
     $CI->load->model('CustomerGroup_model', 'customerGroup_model');
 
-    return $CI->customerGroup_model->getByWhere(array('user_id' => logged('id')));
+    // return $CI->customerGroup_model->getByWhere(array('user_id' => logged('id')));
+    return $CI->customerGroup_model->getByWhere(array('company_id' => logged('company_id')));
 }
 
 
@@ -2507,13 +2508,18 @@ function get_invoice_by_id($invoice_id, $key = '')
 /**
  * return invoice details based on ID
  */
-function get_reports_by_date($start_date, $end_date, $month, $action)
+function get_reports_by_date($start_date2, $end_date2, $month, $action)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Estimate_model', 'estimate_model');
     $company_id = logged('company_id');
+    
     $final_res = 0;
+    
+    $start_date = date("Y-m-d", strtotime($start_date2));
+    $end_date = date("Y-m-d", strtotime($end_date2));
+    
 
     switch ($action) {
         case 'num_estimate':
@@ -2589,7 +2595,8 @@ function report_totals_by_month($results, $month, $action)
                 $date = explode("-",$result->estimate_date);
                 $totals = unserialize($result->estimate_eqpt_cost);
                 if ($date[1] == $month) {
-                    $grand_total += (floatval($totals['eqpt_cost']) + floatval($totals['sales_tax']) + floatval($totals['inst_cost']) + floatval($totals['one_time']) + floatval($totals['m_monitoring']));
+                    // $grand_total += (floatval($totals['eqpt_cost']) + floatval($totals['sales_tax']) + floatval($totals['inst_cost']) + floatval($totals['one_time']) + floatval($totals['m_monitoring']));
+                    $grand_total += floatval($result->grand_total);
                 }
             }
             break;
@@ -2608,7 +2615,8 @@ function report_totals_by_month($results, $month, $action)
                 $totals = unserialize($result->invoice_totals);
                 $date = explode("-",$result->date_issued);
                 if ($date[1] == $month) {
-                    $grand_total += floatval($totals['grand_total']);
+                    // $grand_total += floatval($totals['grand_total']);
+                    $grand_total += $result->grand_total;
                 }
             }
             break;
@@ -2919,7 +2927,7 @@ function getAccountReceivable($start_date, $end_date, $month) {
             }
             $monthly_due = floatval(floatval($result->grand_total) - floatval($monthly_paid));
             $due_invoice += $monthly_due;
-            $new_date=date_format(date_create($result->date_issued),"d-M-Y");
+            $new_date=date_format(date_create($result->date_issued),"Y-m-d");
             array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->first_name .' '.get_customer_by_id($result->customer_id)->last_name, dollar_format(floatval($result->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
         }
     }
@@ -2960,13 +2968,13 @@ function getAccountReceivableResCom($start_date, $end_date, $month) {
             $monthly_paid = 0;
             $monthly_tip = 0;
             $monthly_fees = 0;
-            $totals = unserialize($result->invoice_totals);
+            // $totals = unserialize($result->invoice_totals);
             if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
                 $res_num_invoice += 1;
-                $res_total_invoice += floatval($totals['grand_total']);
+                $res_total_invoice += $result->grand_total;
             } else {
                 $com_num_invoice += 1;
-                $com_total_invoice += floatval($totals['grand_total']);
+                $com_total_invoice += $result->grand_total;
             }
             $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
             foreach ($invoices as $inv) {
@@ -2980,17 +2988,17 @@ function getAccountReceivableResCom($start_date, $end_date, $month) {
                 $monthly_tip += $inv->invoice_tip;
                 $monthly_paid += $inv->invoice_amount;
             }
-            $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+            $monthly_due = floatval(floatval($result->grand_total) - floatval($monthly_paid));
             if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
                 $res_due_invoice += $monthly_due;
             } else {
                 $com_due_invoice += $monthly_due;
             }
-            $new_date=date_format(date_create($result->date_issued),"d-M-Y");
+            $new_date=date_format(date_create($result->date_issued),"Y-m-d");
             if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
-                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', '', '', '', '', '', '', dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', '', '', '', '', '', '', dollar_format(floatval($result->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
             } else {
-                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees), '', '', '', '', '', '',));
+                array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, '', dollar_format(floatval($result->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees), '', '', '', '', '', '',));
             }
         }
     }
@@ -3593,10 +3601,10 @@ function getPaymentByCustomerGroup($start_date, $end_date) {
                     if ($group === $cusGroup->title) {
                         $count += 1;
                         $grand_count += 1;
-                        $totals1 = unserialize($result2->invoice_totals);
-                        $total_invoice += floatval($totals1['grand_total']);
-                        $total_sales += floatval($totals1['grand_total']);
-                        $grand_total += floatval($totals1['grand_total']);
+                        // $totals1 = unserialize($result2->invoice_totals);
+                        $total_invoice += $result->grand_total;
+                        $total_sales += $result->grand_total;
+                        $grand_total += $result->grand_total;
                     }
                 }
             }
@@ -3647,23 +3655,23 @@ function getCustomerSource($start_date, $end_date) {
         $com = 0;
         $com_invoice = 0;
         foreach ($results as $result) {
-            if (get_customer_by_id($result->customer_id)->source_id === $cusSource->id) {
+            if (get_customer_by_id($result->customer_id)->customer_source_id === $cusSource->id) {
                 if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
                     $res_total += 1;
                     $res += 1;
                     $totals1 = unserialize($result->invoice_totals);
-                    $res_invoice += floatval($totals1['grand_total']);
-                    $res_invoice_total += floatval($totals1['grand_total']);
+                    $res_invoice += $result->grand_total;
+                    $res_invoice_total += $result->grand_total;
                 } else if (get_customer_by_id($result->customer_id)->customer_type == "Commercial") {
                     $com_total += 1;
                     $com += 1;
                     $totals1 = unserialize($result->invoice_totals);
-                    $com_invoice += floatval($totals1['grand_total']);
-                    $com_invoice_total += floatval($totals1['grand_total']);
+                    $com_invoice += $result->grand_total;
+                    $com_invoice_total += $result->grand_total;
                 }
             }
         }
-        array_push($fn, array($cusSource->source_name, $res, dollar_format($res_invoice), $com, dollar_format($com_invoice)));
+        array_push($fn, array($cusSource->title, $res, dollar_format($res_invoice), $com, dollar_format($com_invoice)));
     }
 
     array_push($fn, array("Total", $res_total, dollar_format($res_invoice_total), $com_total, dollar_format($com_invoice_total)));
@@ -3758,6 +3766,60 @@ function getExpenseCategory($start_date, $end_date) {
     return $fn;
 }
 
+function getExpenseCustomer($start_date, $end_date)
+{
+    $CI =& get_instance();
+    $CI->load->model('Accounting_expense', 'accounting_expense');
+    $CI->load->model('Accounting_expense_category', 'accounting_expense_category');
+    $CI->load->model('Accounting_list_category', 'accounting_list_category');
+    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
+    $CI->load->model('Customer_model', 'customer_model');
+    $company_id = logged('company_id');
+    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    
+        
+        // $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        // foreach($vendors as $vendor) 
+        // {
+        //     array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        // }
+
+
+        $customers = $CI->customer_model->get();
+        foreach($results as $result) 
+        {
+            array_push($fn, array("-",$result->payee_type, "", "", "", "", ""));
+            
+            foreach ($customers as $customer) {
+                $categories = $CI->accounting_expense_category->getByWhere(array('category_id' => $list->id,'expenses_id' => $result->vendor_id));
+        //         foreach($categories as $category) 
+        //         {
+
+        //         //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        //         // $lists = $CI->accounting_list_category->getByWhere(array('id' => $category->category_id));
+        //         // foreach($lists as $list) 
+        //         // {
+        //             //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        //             $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        //             foreach($vendors as $vendor) 
+        //             {
+        //                 array_push($fn, array(" "," ", $vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        //             }
+        //         }
+        }
+
+    }
+
+    // array_push($fn, array("Total", "", "", "", ""));
+    return $fn;
+}
+
 function getExpense($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Accounting_expense', 'accounting_expense');
@@ -3838,10 +3900,10 @@ function getExpenseVendor($start_date, $end_date) {
         //             $grand_total += floatval($result->grand_total);
         //         }
         //     }
-        $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        $vendors = $CI->accountingVendors_model->getByWhere(array('id' => $result->vendor_id));
         foreach($vendors as $vendor) 
         {
-            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->ref_no, dollar_format($result->total_amount)));
         }
 
             // array_push($fn, array($result->vendor_id, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
@@ -3920,7 +3982,7 @@ function getCustomerBySource() {
         $com = 0;
         $cus = 0;
         foreach ($customers as $customer) {
-            if ($customer->source_id === $cusSource->id) {
+            if ($customer->customer_source_id === $cusSource->id) {
                 if ($customer->customer_type == "Residential") {
                     $res_total += 1;
                     $res += 1;
@@ -3934,7 +3996,7 @@ function getCustomerBySource() {
                 }
             }
         }
-        array_push($fn, array($cusSource->source_name, $cus, $res, $com));
+        array_push($fn, array($cusSource->title, $cus, $res, $com));
     }
 
     array_push($fn, array("Total", $cus_total, $res_total, $com_total));

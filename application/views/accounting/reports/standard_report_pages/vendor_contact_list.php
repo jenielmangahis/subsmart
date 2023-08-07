@@ -1,396 +1,716 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style type="text/css">
-    .hide-toggle::after {
-        display: none !important;
+<?php include viewPath('v2/includes/accounting_header'); ?>
+
+<style>
+    .saveCustomize {
+        display: none;
     }
 
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
+    table {
+        width: 100% !important;
     }
 
-    .btn-transparent {
-        color: #6B6C72 !important;
+    .customizeContainer {
+        display: none;
     }
 
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
+    .customizeComponent {
+        background: #00000008;
     }
 
-    .action-bar ul li a:after {
-        width: 0 !important;
+    .dateToContainer {
+        position: relative;
+        width: 35px;
     }
-    .action-bar ul li a > i {
-        font-size: 20px !important;
+
+    .dateTo {
+        position: absolute;
+        bottom: 0px;
     }
-    .action-bar ul li {
-        margin-right: 5px !important;
+
+    .verticalRuleContainer {
+        position: relative;
+        width: 0px;
     }
-    .action-bar ul li .dropdown-menu .dropdown-item {
-        font-size: 1rem;
-        padding-right: 0 !important;
+
+    .vr {
+        position: absolute;
+        bottom: 0px;
+        height: 55px;
     }
-    .action-bar ul li .dropdown-menu .dropdown-item:hover {
-        background-color: #f8f9fa;
+
+    .customizeRunReportContainer {
+        position: relative;
     }
-    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
-       background-color: revert;
+
+    .customizeRunReport {
+        position: absolute;
+        bottom: 11px;
+        border-radius: 100px;
     }
-    .report-container .action-bar li a {
-        font-size: 14px !important;
+
+    .accountingMethodContainer {
+        position: relative;
+        width: 180px;
     }
-    .report-container .action-bar li a i {
-        font-size: unset !important;
+
+    .accountingRadio {
+        position: absolute;
+        bottom: 5px;
     }
-    .report-container #report-table {
-        font-size: 12px !important;
+
+    .pdfAttachmentCheckbox,
+    .xlsxAttachmentCheckbox {
+        width: 18px;
+        height: 18px;
     }
-    .report-container .report-footer {
-        font-size: 10px;
+
+    .borderRadius0 > * {
+        border-radius: 0px;
+    }
+
+    .pdfAttachment {
+        margin-bottom: -1px;
+    }
+
+    .modal-body {
+        padding-top: 10px;
+    }
+
+    .nsm-table td {
+        padding: 5px 5px 5px 0px;
     }
 </style>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="page-title-box">
 
+<div class="container-fluid">
+    <!-- <div class="row mb-1">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="float-end">
+                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                    <span>Filter <i class='bx bx-fw bx-chevron-down'></i></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                    <p class="m-0">Rows/columns</p>
+                    <div class="row grid-mb">
+                        <div class="col-12">
+                            <label for="filter-group-by">Group by</label>
+                            <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
+                                <option value="none" selected>None</option>
+                                <option value="Customer">Customer</option>
+                                <option value="Phone Numbers">Phone Numbers</option>
+                                <option value="Email">Email</option>
+                                <option value="Billing">Billing</option>
+                                <option value="Shipping Address">Shipping Address</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button type="submit" class="nsm-button primary">Run Report</button>
+                        </div>
+                    </div>
+                </ul>
+                <button type="button" class="nsm-button openCustomize"><i class='bx bx-fw bx-customize'></i> Customize</button>
+                <button type="button" class="nsm-button primary saveCustomize"><i class='bx bx-fw bx-save'></i> Save customization</button>
             </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk" style="padding-bottom:0px;">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Vendor Contact List Report</h3>
-                                </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div> -->
+    <!-- <div class="row addMargin3">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10 customizeContainer">
+            <div class="float-end">
+            </div>
+            <div class="card">
+                <div class="card-body customizeComponent">
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Report Period</label>
+                                <select class="form-select">
+                                    <option value="all-dates">All Dates</option>
+                                    <option value="custom">Custom</option>
+                                    <option value="today">Today</option>
+                                    <option value="this-week">This Week</option>
+                                    <option value="this-week-to-date">This Week-to-date</option>
+                                    <option value="this-month">This Month</option>
+                                    <option value="this-month-to-date" selected="">This Month-to-date</option>
+                                    <option value="this-quarter">This Quarter</option>
+                                    <option value="this-quarter-to-date">This Quarter-to-date</option>
+                                    <option value="this-year">This Year</option>
+                                    <option value="this-year-to-date">This Year-to-date</option>
+                                    <option value="this-year-to-last-month">This Year-to-last-month</option>
+                                    <option value="yesterday">Yesterday</option>
+                                    <option value="recent">Recent</option>
+                                    <option value="last-week">Last Week</option>
+                                    <option value="last-week-to-date">Last Week-to-date</option>
+                                    <option value="last-month">Last Month</option>
+                                    <option value="last-month-to-date">Last Month-to-date</option>
+                                    <option value="last-quarter">Last Quarter</option>
+                                    <option value="last-quarter-to-date">Last Quarter-to-date</option>
+                                    <option value="last-year">Last Year</option>
+                                    <option value="last-year-to-date">Last Year-to-date</option>
+                                    <option value="since-30-days-ago">Since 30 Days Ago</option>
+                                    <option value="since-60-days-ago">Since 60 Days Ago</option>
+                                    <option value="since-90-days-ago">Since 90 Days Ago</option>
+                                    <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                    <option value="next-week">Next Week</option>
+                                    <option value="next-4-weeks">Next 4 Weeks</option>
+                                    <option value="next-month">Next Month</option>
+                                    <option value="next-quarter">Next Quarter</option>
+                                    <option value="next-year">Next Year</option>
+                                </select>
                             </div>
-                            <div class="row align-items-center">
-                                <div class="col-sm-6">
-                                    <h6><a href="/accounting/reports" class="text-info"><i class="fa fa-chevron-left"></i> Back to report list</a></h6>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">&nbsp;</label>
+                            <input class="form-control" type="date">
+                        </div>
+                        <div class="col-md-1 dateToContainer">
+                            <label class="form-label dateTo">To</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold">&nbsp;</label>
+                            <input class="form-control" type="date">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Tax Agency</label>
+                                <select class="form-select">
+                                    <option value="All">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2 accountingMethodContainer">
+                            <label class="form-label fw-bold">Accounting method</label>
+                            <div class="accountingRadio">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="CashRadio" value="Cash">
+                                  <label class="form-check-label" for="CashRadio">Cash</label>
                                 </div>
-                                <div class="col-sm-6">
-                                    <a href="javascript:void(0);" id="add-new-account-button" class="btn btn-success float-right">
-                                        Save customization
-                                    </a>
-                                    <a href="#" class="btn btn-transparent mr-2 float-right" style="padding: 10px 12px !important">
-                                        Customize
-                                    </a>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="AccrualRadio" value="Accrual">
+                                  <label class="form-check-label" for="AccrualRadio">Accrual</label>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3">
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-3">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label for="row-columns">Rows/columns</label>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <div class="form-row">
-                                                                <div class="col-4 d-flex align-items-center">
-                                                                    <label>Group by</label>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <select id="row-columns" class="form-control">
-                                                                        <option value="none" selected>None</option>
-                                                                        <option value="city">City</option>
-                                                                        <option value="state">State</option>
-                                                                        <option value="zip">Zip</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                        <div class="col-md-1 verticalRuleContainer">
+                            <div class="vr"></div>
+                        </div>
+                        <div class="col-md-2 customizeRunReportContainer">
+                            <button class="btn btn-success customizeRunReport">Run Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div> -->
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="col-lg-12">
+                                <span class="float-start">
+                                    <button type="button" class="nsm-button" data-bs-toggle="dropdown"><span>Settings</span><i class='bx bx-fw bx-chevron-down'></i></button>
+                                    <ul class="dropdown-menu p-3" style="width: 200px">
+                                        <form id="sortReportForm" method="POST">
+                                            <div class="row">
+                                                <div class="col-lg-12 mb-2">
+                                                    <label class="fw-bold mb-1">Sort By</label>
+                                                    <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                        <option value="id" selected>Default</option>
+                                                        <option value="vendor">Vendor</option>
+                                                        <option value="phone_numbers">Phone Numbers</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="fullname">Full Name</option>
+                                                        <option value="address">Address</option>
+                                                        <option value="account_number">Account #</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-12 mb-2">
+                                                    <div class="form-check">
+                                                        <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" value="ASC">
+                                                        <label for="sort-asc" class="form-check-label">Ascending order</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="radio" id="sort-desc" name="sort_order" class="form-check-input" value="DESC" checked>
+                                                        <label for="sort-desc" class="form-check-label">Descending order</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-2 border-left d-flex align-items-center justify-content-center">
-                                                    <button class="btn btn-transparent">Run Report</button>
+                                                <div class="col-lg-12 mb-2"><hr class="m-0"></div>
+                                                <div class="col-lg-12 mb-2">
+                                                    <label class="fw-bold mb-1">Page Size</label>
+                                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                                        <option value="10" selected>10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                        <option value="500">500</option>
+                                                    </select>
                                                 </div>
+                                                <div class="col-lg-12 mb-1"><button class="nsm-button primary small" type="submit">Apply</button></div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </form>
+                                    </ul>
+                                    <button class="nsm-button addNotes">Add Notes</button>
+                                </span>
+                                <span class="float-end">
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                    <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
+                                    </ul>
+                                    <button class="nsm-button border-0 primary"><i class="bx bx-fw bx-cog"></i></button>
+                                    <!-- Example single danger button -->
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="nsm-card-content">
+                            <div class="row mt-4 mb-2">
+                                <div class="col-lg-12">
+                                    <center>
+                                        <h3 id="businessName"><?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?></h3>
+                                    </center>
                                 </div>
-
-                                <div class="row report-container">
-                                    <div class="col">
-                                        <div class="m-auto border" style="width: 60%">
-                                            <div class="container-fluid">
-                                                <div class="row border-bottom">
-                                                    <div class="col-md-6" style="font-size: 10px !important">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle text-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        Sort <i class="fa fa-caret-down text-info"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <p class="m-0">Sort by</p>
-                                                                        <select name="sort_by" id="sort-by" class="form-control">
-                                                                            <option value="default" selected>Default</option>
-                                                                            <option value="1099-printed">1099 Printed</option>
-                                                                            <option value="account-no">Account #</option>
-                                                                            <option value="billing-rate">Billing Rate</option>
-                                                                            <option value="city">City</option>
-                                                                            <option value="company-name">Company Name</option>
-                                                                            <option value="country">Country</option>
-                                                                            <option value="create-date">Create Date</option>
-                                                                            <option value="created-by">Created By</option>
-                                                                            <option value="email">Email</option>
-                                                                            <option value="first-name">First Name</option>
-                                                                            <option value="full-name">Full Name</option>
-                                                                            <option value="last-modified">Last Modified</option>
-                                                                            <option value="last-modified-by">Last Modified By</option>
-                                                                            <option value="last-name">Last Name</option>
-                                                                            <option value="note">Note</option>
-                                                                            <option value="other">Other</option>
-                                                                            <option value="phone">Phone</option>
-                                                                            <option value="state">State</option>
-                                                                            <option value="street">Street</option>
-                                                                            <option value="tax-id">Tax ID</option>
-                                                                            <option value="terms">Terms</option>
-                                                                            <option value="track-1099">Track 1099</option>
-                                                                            <option value="website">Website</option>
-                                                                            <option value="zip">ZIP</option>
-                                                                        </select>
-                                                                        <p class="m-0">Sort in</p>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="radio" id="sort-asc" name="sort_order" checked>
-                                                                            <label for="sort-asc">Ascending order</label>
-                                                                        </div>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="radio" id="sort-desc" name="sort_order">
-                                                                            <label for="sort-desc">Descending order</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                                <li><a href="#" class="text-info">Add notes</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="action-bar h-100 d-flex align-items-center">
-                                                            <ul class="ml-auto">
-                                                                <li><a href="#"><i class="fa fa-envelope"></i></a></li>
-                                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-download"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                                        <a class="dropdown-item" href="#">Export to Excel</a>
-                                                                        <a class="dropdown-item" href="#">Export to PDF</a>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-cog"></i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                                        <p class="m-0">Display density</p>
-                                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="checkbox" checked="checked" id="compact-display">
-                                                                            <label for="compact-display">Compact</label>
-                                                                        </div>
-                                                                        <p class="m-0">Change columns</p>
-                                                                        <div class="row">
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-vendor">
-                                                                                    <label for="col-vendor">Vendor</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified">
-                                                                                    <label for="col-last-modified">Last Modified</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-phone-numbers">
-                                                                                    <label for="col-phone-numbers">Phone Numbers</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-create-date">
-                                                                                    <label for="col-create-date">Create Date</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified-by">
-                                                                                    <label for="col-last-modified-by">Last Modified By</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-email">
-                                                                                    <label for="col-email">Email</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-created-by">
-                                                                                    <label for="col-created-by">Cerated By</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-phone">
-                                                                                    <label for="col-phone">Phone</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-full-name">
-                                                                                    <label for="col-full-name">Full Name</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row hidden-cols" style="display: none">
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-address">
-                                                                                    <label for="col-address">Address</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-track-1099">
-                                                                                    <label for="col-track-1099">Track 1099</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-account-no">
-                                                                                    <label for="col-account-no">Account #</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-tax-id">
-                                                                                    <label for="col-tax-id">Tax ID</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-city">
-                                                                                    <label for="col-city">City</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-country">
-                                                                                    <label for="col-country">Country</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-company-name">
-                                                                                    <label for="col-company-name">Company Name</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-1099-printed">
-                                                                                    <label for="col-1099-printed">1099 Printed</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-terms">
-                                                                                    <label for="col-terms">Terms</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-note">
-                                                                                    <label for="col-note">Note</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-state">
-                                                                                    <label for="col-state">State</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-name">
-                                                                                    <label for="col-last-name">Last Name</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-website">
-                                                                                    <label for="col-website">Website</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-other">
-                                                                                    <label for="col-other">Other</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-billing-rate">
-                                                                                    <label for="col-billing-rate">Billing Rate</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-street">
-                                                                                    <label for="col-street">Street</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-zip">
-                                                                                    <label for="col-zip">ZIP</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-first-name">
-                                                                                    <label for="col-first-name">First Name</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="m-0"><a href="#" class="text-info" id="show-cols"><i class="fa fa-caret-down text-info"></i> Show More</a></p>
-                                                                        <p class="m-0"><a href="#" class="text-info">Reorder columns</a></p>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12 text-center">
-                                                        <h4><span class="company-name">nSmarTrac</span> <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Vendor Contact List</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <table class="table" style="width: 100%;" id="report-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>VENDOR</th>
-                                                                    <th>PHONE NUMBERS</th>
-                                                                    <th>EMAIL</th>
-                                                                    <th>FULL NAME</th>
-                                                                    <th>ADDRESS</th>
-                                                                    <th>ACCOUNT #</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Test Vendor</td>
-                                                                    <td>Phone: (123) 456-7890</td>
-                                                                    <td>testing@email.com</td>
-                                                                    <td>John Doe</td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row report-footer">
-                                                    <div class="col-12 text-center">
-                                                        <p><?=date("l, F j, Y h:i A eP")?></p>
-                                                    </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-12">
+                                    <center>
+                                        <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                    </center>
+                                </div>
+                            </div>
+                            <!-- <div class="row mb-3"> 
+                                <div class="col-lg-12">
+                                    <center>
+                                        <h5><small id="reportDate">April - June, 2023</small></h5>
+                                    </center>
+                                </div>
+                            </div> -->
+                            <div class="mb-4"></div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <table id="vendorcontactlist_table" class="nsm-table w-100 border-0" data-tableName="Test Table 1">
+                                        <thead>
+                                            <tr>
+                                                <th>VENDOR</th>
+                                                <th>PHONE NUMBERS</th>
+                                                <th>EMAIL</th>
+                                                <th>FULL NAME</th>
+                                                <th>ADDRESS</th>
+                                                <th>ACCOUNT #</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <center>
+                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
                                                 </div>
                                             </div>
-                                            <!-- end of container fluid -->
                                         </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <center class="mt-4 mb-4"><?php echo date("l, F j, Y h:i A eP") ?></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+<!-- START: MODALS -->
+
+<!-- START: PRINT/SAVE MODAL -->
+<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3 mt-1 mb-3">
+                        <h6>Report print settings</h6>
+                        <hr>
+                        <div class="form-group mb-2">
+                            <label>Orientation</label>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
+<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="sendEmailForm">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-2">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-2">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-2">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1 mb-2">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-1">
+                            <div class="form-group">
+                                <h6>Attachment</h6>
+                                <div class="row">
+                                    <div class="input-group borderRadius0 pdfAttachment">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                    </div>
+                                    <div class="input-group borderRadius0">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- end card -->
-                </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary sendEmail"><span class="sendEmail_Loader"></span>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container-fluid -->
     </div>
 </div>
+<!-- END: EMAIL REPORT MODAL -->
+<!-- END: MODALS -->
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        CKEDITOR.replace( 'emailBody', {
+            toolbarGroups: [
+                { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            ], height: '165px',
+        });
+        
+        $('select').select2('destroy'); // Disable Select2
+    });
 
-<!-- page wrapper end -->
-<?php include viewPath('includes/footer_accounting'); ?>
+    var businessName = $("#businessName").text();
+    var reportName = $("#reportName").text();
+    var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+    var notes = $("#notesContent").text();
+    var reportID = "<?php echo $reportTypeId; ?>";
+    var sort_by = $('select[name="sort_by"]').val();
+    var sort_order = $('input[name="sort_order"]:checked').val();
+    var page_size = $('select[name="page_size"]').val();
+    var pageOrientation = $('#pageOrientation').val();
+    var reportConfig = {
+        sort_by: sort_by,
+        sort_order: sort_order,
+        page_size: page_size,
+        pageOrientation: pageOrientation,
+    };
+
+    // Render result function
+    function renderReportList(businessName, reportName, filename, notes, reportConfig) {
+        $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
+        $("#vendorcontactlist_table > tbody").empty().html('<tr><td colspan="6"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('accounting_controllers/Reports/getReportData/vendor_contact_list'); ?>",
+            data: { 
+                businessName: this.businessName, 
+                reportName: this.reportName, 
+                filename: this.filename, 
+                notes: this.notes, 
+                reportConfig: this.reportConfig, 
+            },
+            success: function(data) {
+                $("#vendorcontactlist_table > tbody").empty().html(data);
+                loadReportPreview();
+            }
+        });
+    }
+
+    // Fetch report notes function
+    function getReportNotes(reportID) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('accounting_controllers/reports/getNotes'); ?>",
+            data: { reportID: this.reportID, },
+            success: function(data) {
+                notes = data;
+                $('#notesContent').html("Loading notes...");
+                $('#notesContent').html(data);
+                $("#NOTES").val(data);
+                (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
+                renderReportList(businessName, reportName, filename, notes, reportConfig);
+            }
+        });
+    } getReportNotes(reportID);
+
+    // Preview .pdf report in embedded frame function
+    function loadReportPreview() {
+        $('#pdfPreview').hide();
+        $('#pdfPreview').attr(
+            'src', 
+            '<?php echo base_url("assets/pdf/accounting/"); ?>' + filename + '.pdf?' + Math.round(Math.random() * 1000000)
+        ).on('load', function() {
+            $('.dataLoader').remove();
+            $('#pdfPreview').show();
+        });
+    }
+
+    // Sort feature config
+    $('#sortReportForm').submit(function(event) {
+        event.preventDefault();
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('input[name="sort_order"]:checked').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('#pageOrientation').val();
+        reportConfig = {
+            sort_by: sort_by,
+            sort_order: sort_order,
+            page_size: page_size,
+            pageOrientation: pageOrientation,
+        };
+        renderReportList(businessName, reportName, filename, notes, reportConfig);
+    });
+
+    // Page orientation feature config
+    $('#pageOrientation').change(function(event) {
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('input[name="sort_order"]:checked').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('#pageOrientation').val();
+        reportConfig = {
+            sort_by: sort_by,
+            sort_order: sort_order,
+            page_size: page_size,
+            pageOrientation: pageOrientation,
+        };
+        renderReportList(businessName, reportName, filename, notes, reportConfig);
+    });
+
+    // Add notes script
+    $('#addNotesForm').submit(function(event) {
+        event.preventDefault();
+        // =========
+        $("#vendorcontactlist_table > tbody").empty().html('<tr><td colspan="6"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
+        // =========
+        var reportNotes = $("#NOTES").val();
+        // =========
+        $('#notesContent').html(reportNotes);
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
+        (reportNotes !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
+        // =========
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('accounting_controllers/reports/saveNotes'); ?>",
+            data: { 
+                reportID: reportID,
+                reportNotes: reportNotes,
+            },
+            success: function(data) {
+                notes = $("#notesContent").text();
+                renderReportList(businessName, reportName, filename, notes, reportConfig);
+            }
+        });
+
+    });
+
+    // Send report in email script
+    $('#sendEmailForm').submit(function(event) {
+        event.preventDefault();
+        $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
+        var emailTo = $("#emailTo").val();
+        var emailCC = $("#emailCC").val();
+        var emailSubject = $("#emailSubject").val();
+        var emailBody = $("#emailBody").html();
+        var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
+        var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
+        var attachmentConfig = {
+            reportFilePathPDF: filename + ".pdf",
+            reportFilePathXLSX: filename + ".xlsx",
+            customAttachmentNamePDF: customAttachmentNamePDF,
+            customAttachmentNameXLSX: customAttachmentNameXLSX,
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('AccountingMailer/emailReport/vendor_contact_list'); ?>",
+            data: {
+                emailTo: emailTo,
+                emailCC: emailCC,
+                emailSubject: emailSubject,
+                emailBody: emailBody,
+                attachmentConfig: attachmentConfig,
+            },
+            success: function(data) {
+                $(".sendEmail").removeAttr('disabled').empty().append('Send');
+                if (data == "true") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Report was emailed successfully!',
+                    }).then((result) => {
+                        $("#emailCloseModal").click();
+                    });
+                } else {
+                    $(".sendEmail").removeAttr('disabled').empty().append('Send');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to send report!',
+                    });
+                }
+            }
+        });
+    });
+
+    // Export Report to PDF feature
+    $("#exportToPDF, .savePDF").click(function(event) {
+        event.preventDefault();
+        var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".pdf";
+        var link = $("<a>", {
+            href: filePath,
+            download: filename + ".pdf",
+        });
+        $("body").append(link);
+        link[0].click();
+        link.remove();
+    });
+
+    // Export Report to XLSX feature
+    $("#exportToXLSX").click(function(event) {
+        event.preventDefault();
+        var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".xlsx";
+        var link = $("<a>", {
+            href: filePath,
+            download: filename + ".xlsx",
+        });
+        $("body").append(link);
+        link[0].click();
+        link.remove();
+    });
+
+    // Show/hide script
+    $('.addNotes').on('click', function(event) {
+        $("#notesContent").hide();
+        $("#addNotesForm").show();
+        $("#NOTES").focus();
+    });
+    $('#cancelNotes').on('click', function(event) {
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
+    });
+    $(".openCustomize").click(function(event) {
+        $(".openCustomize").hide();
+        $(".saveCustomize").show();
+        $(".customizeContainer").show();
+        $(".addMargin3").addClass('mb-3');
+
+    });
+    $(".saveCustomize").click(function(event) {
+        $(".openCustomize").show();
+        $(".saveCustomize").hide();
+        $(".customizeContainer").hide();
+        $(".addMargin3").removeClass('mb-3');
+    });
+</script>
+<?php include viewPath('v2/includes/footer'); ?>

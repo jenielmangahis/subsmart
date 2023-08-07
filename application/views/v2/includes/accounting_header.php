@@ -34,9 +34,11 @@ if ($this->session->userdata('usertimezone') == null) {
     <!-- Select2 -->
     <link rel="stylesheet" href="<?= base_url("assets/plugins/select2/dist/css/select2.min.css") ?>" />
     <!-- Datepicker -->
-    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
+    <!-- <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>"> -->
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"> -->
 
     <!-- Multi select -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/multiple-select.min.css") ?>">
@@ -47,8 +49,66 @@ if ($this->session->userdata('usertimezone') == null) {
     <!-- Dropzone -->
     <link rel="stylesheet" href="<?=base_url("assets/plugins/dropzone/dist/dropzone.css")?>">
 
+    
+    <!-- added  -->
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+
+    <!-- <link href="<?php echo $url->assets ?>dashboard/css/style.css"
+        rel="stylesheet" type="text/css"> -->
+    <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+    <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
+    <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css"
+    rel="stylesheet"> -->
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- <link
+        href="<?php echo $url->assets ?>css/jquery.dataTables.min.css"
+        rel="stylesheet" type="text/css"> -->
+
+    <script src="<?php echo $url->assets ?>push_notification/push.js"></script>
+    <script
+        src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js">
+    </script>
+
+<!-- <script src="<?php echo $url->assets ?>frontend/js/report/main2.js"></script> -->
+
+    <!-- taxes page -->
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/responsive.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/slick.min.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/slick-theme.min.css"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- taxes page -->
+    <!--    Clock CSS-->
+    <link href="<?php echo $url->assets ?>css/timesheet/clock.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="<?php echo $url->assets ?>css/notification/notification.css"
+        rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
+    <!--    ICONS CSS-->
+    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css"
+        rel="stylesheet" type="text/css">
+
+
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <?php
+    if ($this->uri->segment(2) != "tracklocation" && $this->uri->segment(1) != "trac360") {
+        echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU" async></script>';
+    }
+    ?>
+
     <!-- Jquery JS -->
-    <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
+    <!-- <script src="<?php //base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script> -->
+    <!-- <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script> -->
     <script>
         var base_url = '<?= base_url() ?>';
         var surveyBaseUrl = '<?= base_url() ?>';
@@ -58,7 +118,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
     <?php echo put_header_assets(); ?>
         
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
     <style>
@@ -66,10 +126,14 @@ if ($this->session->userdata('usertimezone') == null) {
             color: "green";
         }
     </style>
+    
 </head>
 
 
 <body>
+    
+<input type="hidden" id="siteurl"
+            value="<?php echo url(); ?>">
     <div class="nsm-container">
         <div class="nsm-sidebar-bg general-transition" style="min-height: 100%;"></div>
         <div class="nsm-sidebar general-transition">
@@ -878,3 +942,211 @@ if ($this->session->userdata('usertimezone') == null) {
                             </li>
                         </ul>
                     </div>
+                    
+    <script type="text/javascript">
+        var user_id = <?= $user_id ?> ;
+
+        var
+            current_user_company_id = <?=logged('company_id')?> ;
+        var all_notifications_html = '';
+        var notification_badge_value = 0;
+        var notification_html_holder_ctr = 0;
+
+        function countChar(val) {
+            var len = val.value.length;
+            if (len >= 300) {
+                val.value = val.value.substring(0, 300);
+            } else {
+                $('#charNum').text(300 - len);
+            }
+        };
+
+        function bell_acknowledged() {
+
+            // console.log("solod");
+            $('#notifyBadge').hide();
+            if (notification_badge_value > 0) {
+                notification_badge_value = 0;
+                $.ajax({
+                    url: baseURL + '/timesheet/notif_user_acknowledge',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log("Bell Acknowledged");
+                    }
+                });
+            }
+
+
+        }
+        let notificationClockInOut = (function() {
+            return function() {
+                $.ajax({
+                    url: baseURL + "Timesheet/getCount_NotificationsAll",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        notifycount: notification_badge_value
+                    },
+                    success: function(data) {
+                        // console.log(data);
+                        if (notification_badge_value != data.badgeCount) {
+                            notification_badge_value = data.badgeCount;
+                            // $('#notifyBadge').html(notification_badge_value);
+                            // $('#nfcount').html(data.notifyCount);
+                            // $('#notifyBadge').show();
+                            // $('#autoNotifications').html(data.autoNotifications);
+                            notification_viewer();
+                            // console.log(data.notifyCount);
+                        }
+                        if (data.notifyCount < 1) {
+                            $('#autoNotifications').html("<div>No new notification</div>");
+                        }
+                        // setTimeout(notificationClockInOut, 5000);
+                    }
+                });
+            }
+        })();
+
+        let notification_viewer = (function() {
+            return function() {
+                $.ajax({
+                    url: baseURL + "/Timesheet/getNotificationsAll",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        badgeCount: notification_badge_value
+                    },
+                    success: function(data) {
+                        // alert(data.badgeCount);
+                        if (data.notifyCount > 0) {
+                            $('#notifyBadge').html(data.badgeCount);
+                            $('#nfcount').html(data.notifyCount);
+                            $('#autoNotifications').html(data.autoNotifications);
+                            notification_badge_value = data.badgeCount;
+                            if (data.badgeCount > 0) {
+                                // alert(data.badgeCount);
+                                $('#notifyBadge').show();
+                            } else {
+                                $('#notifyBadge').hide();
+                            }
+                        }
+
+
+
+
+                        // console.log(data.notifyCount+0);
+                        // setTimeout(notificationClockInOut, 5000);
+                    }
+                });
+            }
+        })();
+
+        $(document).ready(function() {
+            var TimeStamp = null;
+            notification_viewer();
+            // notificationClockInOut();
+        });
+
+        async function notificationRing() {
+            const audio = new Audio();
+            audio.src = baseURL + '/assets/css/notification/notification_tone2.mp3';
+            audio.muted = false;
+            try {
+                await audio.play();
+            } catch (err) {
+                // console.log('error');
+            }
+        }
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('nsmarttrac');
+        channel.bind('my-event', function(data) {
+
+            console.log(data.user_id);
+            if (data.notif_action_made == "over8less9") {
+                if (data.user_id == user_id) {
+                    notificationRing();
+                    Push.Permission.GRANTED;
+                    Push.create("Hey! " + data.FName, {
+                        body: "It's time for you to clock out. Do you still need more time?",
+                        icon: data.profile_img,
+                        timeout: 20000,
+                        onClick: function() {
+                            window.focus();
+                            this.close();
+                        }
+                    });
+                }
+            } else {
+
+                if (data.user_id != user_id && data.company_id == current_user_company_id) {
+                    notificationRing();
+                    // console.log("posk");
+
+                    // console.log(data.profile_img);
+                    Push.Permission.GRANTED; // 'granted'
+                    Push.create(data.FName + " " + data.LName, {
+                        body: data.content_notification,
+                        icon: data.profile_img,
+                        timeout: 20000,
+                        onClick: function() {
+                            window.focus();
+                            this.close();
+                        }
+                    });
+                }
+                if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout" && data
+                    .company_id == current_user_company_id) {
+                    notification_badge_value++;
+                    $('#notifyBadge').html(notification_badge_value);
+                    $('#notifyBadge').show();
+                    var current_notifs = $('#autoNotifications').html();
+                    $('#autoNotifications').html(data.html + current_notifs);
+                }
+                if (data.notif_action_made == "autoclockout") {
+                    if (data.user_id == user_id) {
+                        notificationRing();
+                        Push.Permission.GRANTED;
+                        Push.create("Hey! " + data.FName + " you have been auto clocked out.", {
+                            body: "We haven't heard from you since the last time clock notification.",
+                            icon: data.profile_img,
+                            timeout: 20000,
+                            onClick: function() {
+                                window.focus();
+                                this.close();
+                            }
+                        });
+                    }
+                }
+            }
+
+        });
+        $(document).ready(function() {
+            // var timeZoneFormatted = new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
+            var offset = new Date().getTimezoneOffset();
+            var offset_zone = (offset / 60) * (-1);
+            if (offset_zone >= 0) {
+                offset_zone = "+" + offset_zone;
+            }
+            $.ajax({
+                url: "<?= base_url() ?>/timesheet/timezonesetter",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    offset_zone: "GMT" + offset_zone
+                },
+                success: function(data) {}
+            });
+
+
+
+
+        });
+    </script>

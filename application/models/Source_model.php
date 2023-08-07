@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Source_model extends MY_Model
 {
-    public $table = 'sources';
+    public $table = 'customer_sources';
 
     public function getAll($filters)
     {
@@ -35,6 +35,17 @@ class Source_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+
+    // public function get() {
+
+    //     $this->db->select('*');
+    //     $this->db->from($this->table);
+    //     $this->db->where('company_id', logged('company_id'));
+
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
 }
 
 /* End of file Source_model.php */

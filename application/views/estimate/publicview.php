@@ -613,7 +613,7 @@ span.sc-item {
                               </div>
                             </div>
                             <br class="clear"/>    
-                            <table class="table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
+                            <table class="table table-print table-items" style="width: 100%; border-collapse: collapse;margin-top: 55px;">
                             <thead>
                                 <tr>
                                     <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
@@ -621,6 +621,7 @@ span.sc-item {
                                     <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
                                     <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
                                     <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
+                                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax</th>
                                     <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
                                     <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                                 </tr>
@@ -630,30 +631,39 @@ span.sc-item {
                                 <tr>
                                     <td colspan="7" style="padding:15px;"><b>Option 1</b></td>
                                 </tr>
-                              <?php foreach($items_dataOP1 as $itemData1){ ?>
+                              <?php 
+                              $subtotalVal = 0;
+                              $taxesVal = 0;
+                              $grandTotalVal = 0;
+                              foreach($items_dataOP1 as $itemData1){ ?>
                                     <tr class="table-items__tr">
                                       <td valign="top" style="width:30px; text-align:center;"></td>
                                       <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
                                       <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
                                       <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->costing,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->tax; ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
                                       <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->total,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php 
+                              $subtotalVal += $itemData1->cost;
+                              $taxesVal += $itemData1->tax;
+                              $grandTotalVal += $itemData1->total;
+                                } ?>
                                 
                                 <tr><td colspan="7"><hr/></td></tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($subtotalVal, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($taxesVal, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->option1_total, 2); ?></b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($grandTotalVal, 2); ?></b></td>
                                 </tr>
                                 <tr>
                                     <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
@@ -769,7 +779,11 @@ span.sc-item {
                                     <td colspan="7" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
                                 </tr>
 
-                            <?php }else{ ?>
+                            <?php }else{ 
+                              $subtotalValA = 0;
+                              $taxesValA = 0;
+                              $grandTotalValA = 0;
+                              ?>
                                 <?php foreach($items_data as $itemData){ ?>
                                     <tr class="table-items__tr">
                                       <td valign="top" style="width:30px; text-align:center;"></td>
@@ -777,24 +791,29 @@ span.sc-item {
                                       <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
                                       <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= number_format($itemData->tax,2); ?></td>
                                       <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
                                       <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
                                     </tr>
-                                  <?php } ?>
+                                  <?php 
+                                  $subtotalValA += $itemData->iCost;
+                                  $taxesValA += $itemData->tax;
+                                  $grandTotalValA += $itemData->total;
+                                } ?>
                                 
-                                <tr><td colspan="7"><hr/></td></tr>
-                                <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                <!-- <tr><td colspan="7"><hr/></td></tr> -->
+                                <tr style="border:solid white 1px;">
+                                  <td colspan="6" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($subtotalValA, 2); ?></p></td>
                                 </tr>
-                                <tr>
-                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                <tr style="border:solid white 1px;">
+                                  <td colspan="6" style="text-align: right;"><p>Taxes</p></td>
                                   <td colspan="2" style="text-align: right;">
-                                    <p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
+                                    <p>$ <?= number_format((float)$taxesValA, 2); ?></p></td>
                                 </tr>
-                                <tr>
-                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->grand_total, 2); ?></b></td>
+                                <tr style="border:solid white 1px;">
+                                  <td colspan="6" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$grandTotalValA, 2); ?></b></td>
                                 </tr>
                             <?php } ?>
                             </tbody>
