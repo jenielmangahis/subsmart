@@ -13,8 +13,7 @@
 </style>
 
 
-<input type="hidden" id="siteurl"
-            value="<?php echo url(); ?>">
+<!-- <input type="hidden" id="siteurl" value="<?php echo site_url(); ?>"> -->
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/reports_subtabs'); ?>
@@ -356,17 +355,7 @@
                                             <th class="text-center">Fees</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="">
-                                    <!-- <tbody id="reportEstimateBody"> -->
-                                        <?php foreach($estimates as $est){ ?>
-                                        <tr>
-                                            <td class="text-center"><?php echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
-                                            <td class="text-center"><?php echo $est->estimate_number; ?></td>
-                                            <td class="text-center"><?php echo $est->estimate_type; ?></td>
-                                            <td class="text-center"><?php echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
-                                            <td class="text-center">$<?php echo number_format($est->grand_total,2); ?></td>
-                                        </tr>
-                                        <?php } ?> 
+                                    <tbody>
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "account-receivable-com-vs-res") : ?>
@@ -433,7 +422,7 @@
                                             <th class="text-left">Customer</th>
                                             <!-- <th class="text-left">Type</th> -->
                                             <th class="text-right">Due Date</th>
-                                            <th class="text-right">Status</th>
+                                            <th class="text-right">Ref. No</th>
                                             <th class="text-right">Total</th>
                                         </tr>
                                     </thead>
@@ -783,6 +772,14 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+<!-- <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
+<!-- <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap.js"></script> -->
+<!-- <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script> -->
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 
 <script>
     $(document).ready(function(){

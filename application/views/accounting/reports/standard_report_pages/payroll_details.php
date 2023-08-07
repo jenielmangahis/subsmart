@@ -118,6 +118,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if(count($paychecks) > 0) : ?>
                                         <tr>
                                             <td><b>Total</b></td>
                                             <td></td>
@@ -147,8 +148,8 @@
                                                 <div class="row">
                                                     <div class="col-12 col-md-6"><b>Total</b></div>
                                                     <div class="col-12 col-md-6"><b><?=$totals['employee_taxes']?></b></div>
-                                                    <div class="col-12 col-md-6"><b><b>Employee Taxes</b></div>
-                                                    <div class="col-12 col-md-6"><?=$totals['employee_taxes']?></b></div>
+                                                    <div class="col-12 col-md-6"><b>Employee Taxes</b></div>
+                                                    <div class="col-12 col-md-6"><b><?=$totals['employee_taxes']?></b></div>
                                                     <?php if(!isset($total_display) || isset($total_display) && $total_display === 'total-and-details') : ?>
                                                     <!-- <div class="col-12 col-md-6">SS</div>
                                                     <div class="col-12 col-md-6"><?=$paycheck['ss_tax']?></div>
@@ -178,7 +179,6 @@
                                             </td>
                                             <td <?=isset($columns) && !in_array('Total Payroll Cost', $columns) ? 'style="display: none"' : ''?> class="text-end"><b><?=$totals['total_payroll_cost']?></b></td>
                                         </tr>
-                                        <?php if(count($paychecks) > 0) : ?>
                                         <?php foreach($paychecks as $index => $paycheck) : ?>
                                         <tr>
                                             <td>

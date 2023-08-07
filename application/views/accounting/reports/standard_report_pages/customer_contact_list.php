@@ -71,6 +71,14 @@
     .pdfAttachment {
         margin-bottom: -1px;
     }
+
+    .modal-body {
+        padding-top: 10px;
+    }
+
+    .nsm-table td {
+        padding: 5px 5px 5px 0px;
+    }
 </style>
 
 <div class="container-fluid">
@@ -252,8 +260,8 @@
                                     <button class="nsm-button addNotes">Add Notes</button>
                                 </span>
                                 <span class="float-end">
-                                    <button data-bs-toggle="modal" data-bs-target="#EMAIL_REPORT_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
-                                    <button data-bs-toggle="modal" data-bs-target="#PRINT_SAVE_MODAL" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
                                     <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
@@ -276,7 +284,7 @@
                             <div class="row mb-2">
                                 <div class="col-lg-12">
                                     <center>
-                                        <h5><strong id="reportName">Customer Contact List Report</strong></h5>
+                                        <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
                                     </center>
                                 </div>
                             </div>
@@ -349,8 +357,8 @@
 <!-- START: MODALS -->
 
 <!-- START: PRINT/SAVE MODAL -->
-<div class="modal" id="PRINT_SAVE_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg" style="max-width: 1120px;">
+<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
@@ -395,7 +403,7 @@
 </div>
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
-<div class="modal" id="EMAIL_REPORT_MODAL" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -405,28 +413,28 @@
             <div class="modal-body">
                 <form id="sendEmailForm">
                     <div class="row">
-                        <div class="col-sm-12 mt-1 mb-3">
+                        <div class="col-sm-12 mt-1 mb-2">
                             <div class="form-group">
                                 <h6>To</h6>
                                 <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-3">
+                        <div class="col-sm-12 mt-1 mb-2">
                             <div class="form-group">
                                 <h6>CC</h6>
                                 <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-3">
+                        <div class="col-sm-12 mt-1 mb-2">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" required>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-3">
+                        <div class="col-sm-12 mt-1 mb-2">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <textarea id="emailBody" class="form-control"></textarea required>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-1">
@@ -435,12 +443,12 @@
                                 <div class="row">
                                     <div class="input-group borderRadius0 pdfAttachment">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="pdfReportFilename" class="form-control" type="text" value="Customer Contact List Report" required>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
                                     </div>
                                     <div class="input-group borderRadius0">
                                         <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="xlsxReportFileName" class="form-control" type="text" value="Customer Contact List Report" required>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
                                     </div>
                                 </div>
@@ -466,7 +474,19 @@
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        CKEDITOR.replace( 'emailBody', {
+            toolbarGroups: [
+                { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            ], height: '165px',
+        });
+        
+        $('select').select2('destroy'); // Disable Select2
+    });
+
     var businessName = $("#businessName").text();
     var reportName = $("#reportName").text();
     var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
@@ -485,6 +505,7 @@
 
     // Render result function
     function renderReportList(businessName, reportName, filename, notes, reportConfig) {
+        $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
         $("#customercontactlist_table > tbody").empty().html('<tr><td colspan="5"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         $.ajax({
             type: "POST",
@@ -522,10 +543,14 @@
 
     // Preview .pdf report in embedded frame function
     function loadReportPreview() {
+        $('#pdfPreview').hide();
         $('#pdfPreview').attr(
             'src', 
             '<?php echo base_url("assets/pdf/accounting/"); ?>' + filename + '.pdf?' + Math.round(Math.random() * 1000000)
-        );
+        ).on('load', function() {
+            $('.dataLoader').remove();
+            $('#pdfPreview').show();
+        });
     }
 
     // Sort feature config
@@ -594,7 +619,7 @@
         var emailTo = $("#emailTo").val();
         var emailCC = $("#emailCC").val();
         var emailSubject = $("#emailSubject").val();
-        var emailBody = $("#emailBody").val();
+        var emailBody = $("#emailBody").html();
         var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
         var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
         var attachmentConfig = {

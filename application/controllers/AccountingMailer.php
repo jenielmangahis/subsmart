@@ -50,6 +50,7 @@ class AccountingMailer extends MY_Controller{
             "customer_contact_list",
             "vendor_contact_list",
             "audit_log_list",
+            "expenses_by_vendor_summary",
         );
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {

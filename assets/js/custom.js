@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery(document).ready(function($){
   // $("#yrMybus").datetimepicker({
   //   viewMode: 'years',
   //   format: 'YYYY'
@@ -3266,11 +3266,11 @@ $(document).on("click", "#add_another_new_invoice", function (e) {
 });
 
 // signature for Technician
-$("#smoothed1a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
+// $("#smoothed1a").signaturePad({
+//   drawOnly: true,
+//   drawBezierCurves: true,
+//   lineTop: 200,
+// });
 
 function myFunction() {
   var x = document.getElementById("sign");
@@ -3314,11 +3314,11 @@ $("#company_representative_approval_signature1a").on("click touchstart",
 );
 
 // signature for Technician
-$("#smoothed2a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
+// $("#smoothed2a").signaturePad({
+//   drawOnly: true,
+//   drawBezierCurves: true,
+//   lineTop: 200,
+// });
 $("#primary_account_holder_signature2a").on("click touchstart", function () {
   var canvas = document.getElementById("primary_account_holder_signature2a");
   var dataURL = canvas.toDataURL("image/png");
@@ -3326,11 +3326,11 @@ $("#primary_account_holder_signature2a").on("click touchstart", function () {
 });
 
 // signature for Technician
-$("#smoothed3a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
+// $("#smoothed3a").signaturePad({
+//   drawOnly: true,
+//   drawBezierCurves: true,
+//   lineTop: 200,
+// });
 $("#secondary_account_holder_signature3a").on("click touchstart", function () {
   var canvas = document.getElementById("secondary_account_holder_signature3a");
   var dataURL = canvas.toDataURL("image/png");
