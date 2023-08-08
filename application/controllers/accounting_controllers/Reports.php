@@ -50367,7 +50367,7 @@ class Reports extends MY_Controller {
 
                                     if($post['total-display'] !== 'totals-only') {
                                         $text .= "\n";
-                                        $text .= "FUL SUI: ".$paycheck['employer_sui_tax']."\n";
+                                        $text .= "FL SUI: ".$paycheck['employer_sui_tax']."\n";
                                         $text .= "FUTA: ".$paycheck['employer_futa_tax']."\n";
                                         $text .= "SS: ".$paycheck['employer_ss_tax']."\n";
                                         $text .= "Med: ".$paycheck['employer_medicare_tax'];
@@ -50676,7 +50676,6 @@ class Reports extends MY_Controller {
                     'start_date' => $start_date,
                     'end_date' => $end_date
                 ];
-
 
                 $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
                     return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
@@ -51041,6 +51040,1094 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Payroll_Summary.pdf', 'D');
+                }
+            break;
+            case 'Payroll Summary by Employee' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $status = [
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ];
+
+                if(!empty($post['status'])) {
+                    switch($post['status']) {
+                        case 'active' :
+                            $status = [
+                                "1"
+                            ];
+                        break;
+                        case 'inactive' :
+                            $status = [
+                                "0",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                    }
+                }
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+
+                $totals = [
+                    'gross_hours' => 0.00,
+                    'gross_pay' => 0.00,
+                    'adjusted_gross_pay' => 0.00,
+                    'employee_taxes' => 0.00,
+                    'net_pay' => 0.00,
+                    'employer_taxes' => 0.00,
+                    'futa_employer' => 0.00,
+                    'ss_employer' => 0.00,
+                    'medicare_employer' => 0.00,
+                    'fl_sui_employer' => 0.00,
+                    'total_payroll_cost' => 0.00
+                ];
+                $data = [];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    $flag = true;
+
+                    if(!in_array($emp->status, $status)) {
+                        $flag = false;
+                    }
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    if($flag) {
+                        switch($post['group-by']) {
+                            case 'weekly' :
+                                $ddate = $paycheck->pay_date;
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'bi-weekly' :
+
+                            break;
+                            case 'monthly' :
+                                $key = date("m-Y", strtotime($paycheck->pay_date));
+                                $name = date("F Y", strtotime($paycheck->pay_date));
+                            break;
+                            case 'quarterly' :
+                                $month = date("n", strtotime($paycheck->pay_date));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($paycheck->pay_date));
+                                        $name = "January - March ".date("Y", strtotime($paycheck->pay_date));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($paycheck->pay_date));
+                                        $name = "April - June ".date("Y", strtotime($paycheck->pay_date));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($paycheck->pay_date));
+                                        $name = "July - September ".date("Y", strtotime($paycheck->pay_date));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($paycheck->pay_date));
+                                        $name = "October - December ".date("Y", strtotime($paycheck->pay_date));
+                                    break;
+                                }
+                            break;
+                            case 'yearly' :
+                                $key = date("Y", strtotime($paycheck->pay_date));
+                                $name = date("Y", strtotime($paycheck->pay_date));
+                            break;
+                            default :
+                                $key = $paycheck->employee_id;
+                                $name = "$emp->LName, $emp->FName";
+                            break;
+                        }
+
+                        if(!is_null($data[$paycheck->employee_id])) {
+                            $data[$paycheck->employee_id]['hours'] += floatval($payrollItem->employee_hours);
+                            $data[$paycheck->employee_id]['gross_pay'] += floatval($paycheck->total_pay);
+                            $data[$paycheck->employee_id]['commission'] += floatval($payrollItem->employee_commission);
+                            $data[$paycheck->employee_id]['adjusted_gross'] += floatval($paycheck->total_pay);
+                            $data[$paycheck->employee_id]['employee_taxes'] += floatval($payrollItem->employee_taxes);
+                            $data[$paycheck->employee_id]['ss_tax'] += $empSocial;
+                            $data[$paycheck->employee_id]['medicare_tax'] += $empMedicare;
+                            $data[$paycheck->employee_id]['net_pay'] += floatval($paycheck->net_pay);
+                            $data[$paycheck->employee_id]['employer_taxes'] += floatval($payrollItem->employer_taxes);
+                            $data[$paycheck->employee_id]['total_payroll_cost'] += floatval($paycheck->total_pay);
+                        } else {
+                            $data[$paycheck->employee_id] = [
+                                'name' => $name,
+                                'hours' => floatval($payrollItem->employee_hours),
+                                'gross_pay' => floatval($paycheck->total_pay),
+                                'commission' => floatval($payrollItem->employee_commission),
+                                'other_pay' => '',
+                                'adjusted_gross' => floatval($paycheck->total_pay),
+                                'employee_taxes' => floatval($payrollItem->employee_taxes),
+                                'ss_tax' => $empSocial,
+                                'medicare_tax' => $empMedicare,
+                                'net_pay' => floatval($paycheck->net_pay),
+                                'employer_taxes' => floatval($payrollItem->employer_taxes),
+                                'total_payroll_cost' => floatval($paycheck->total_pay)
+                            ];
+                        }
+
+                        $totals['hours'] += floatval($payrollItem->employee_hours);
+                        $totals['gross_pay'] += floatval($paycheck->total_pay);
+                        $totals['commission'] += floatval($payrollItem->employee_commission);
+                        $totals['adjusted_gross'] += floatval($paycheck->total_pay);
+                        $totals['employee_taxes'] += floatval($payrollItem->employee_taxes);
+                        $totals['federal_income_tax'] += 0.00;
+                        $totals['ss_tax'] += $empSocial;
+                        $totals['medicare_tax'] += $empMedicare;
+                        $totals['net_pay'] += floatval($paycheck->net_pay);
+                        $totals['employer_taxes'] += floatval($payrollItem->employer_taxes);
+                        $totals['futa_employer'] += 0.00;
+                        $totals['ss_employer'] += 0.00;
+                        $totals['medicare_employer'] += 0.00;
+                        $totals['fl_sui_employer'] += 0.00;
+                        $totals['total_payroll_cost'] += floatval($paycheck->total_pay);
+                    }
+                }
+
+                if(count($data) > 0) {
+                    foreach($totals as $index => $val)
+                    {
+                        if($index !== 'hours') {
+                            $totals[$index] = number_format($val, 2);
+                        }
+                    }
+                }
+
+                $paychecks = $data;
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if(isset($post['columns'])) {
+                    $post['columns'] = str_replace('%20', ' ', $post['columns']);
+                    $post['columns'] = explode(',', $post['columns']);
+                }
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if($post['display-by'] === 'row')
+                    {
+                        $data = [];
+                        $style = [];
+                        foreach($post['fields'] as $field)
+                        {
+                            switch($field) {
+                                case 'Name' :
+                                    $data[] = 'Total';
+                                break;
+                                case 'Hours' :
+                                    $text = "Gross: ".$totals['hours']."\n";
+                                    $text .= "Adjusted Gross: ";
+
+                                    $data[] = $text;
+                                break;
+                                case 'Gross Pay' :
+                                    if(!in_array('Hours', $post['fields'])) {
+                                        $text = "Gross: ".$totals['gross_pay']."\n";
+                                        $text .= "Adjusted Gross: ".$totals['adjusted_gross'];
+                                    } else {
+                                        $text = $totals['gross_pay']."\n";
+                                        $text .= $totals['adjusted_gross'];
+                                    }
+
+                                    $data[] = $text;
+                                break;
+                                case 'Other Pay' :
+                                    $data[] = '';
+                                break;
+                                case 'Employee Taxes and Deductions' :
+                                    $text = "Total: ".$totals['employee_taxes']."\n";
+                                    $text .= "Employee Taxes: ".$totals['employee_taxes'];
+
+                                    $data[] = $text;
+                                break;
+                                case 'Net Pay' :
+                                    $data[] = $totals['net_pay'];
+                                break;
+                                case 'Employer Taxes and Contributions' :
+                                    $text = "Total: ".$totals['employer_taxes']."\n";
+                                    $text .= "Employee Taxes: ".$totals['employer_taxes'];
+
+                                    $data[] = $text;
+                                break;
+                                case 'Total Payroll Cost' :
+                                    $data[] = $totals['total_payroll_cost'];
+                                break;
+                            }
+
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+
+                        foreach($paychecks as $paycheck)
+                        {
+                            $data = [];
+                            $style = [];
+
+                            foreach($post['fields'] as $field)
+                            {
+                                switch($field) {
+                                    case 'Hours' :
+                                        $text = "Gross: ".$paycheck[strtolower(str_replace(' ', '_', $field))]."h\n";
+                                        $text .= "Adjusted Gross: ";
+
+                                        $data[] = $text;
+                                    break;
+                                    case 'Gross Pay' :
+                                        if(!in_array('Hours', $post['fields'])) {
+                                            $text = "Gross: ".number_format($paycheck[strtolower(str_replace(' ', '_', $field))], 2)."\n";
+                                            $text .= "Adjusted Gross: ".number_format($paycheck[strtolower(str_replace(' ', '_', $field))], 2);
+                                        } else {
+                                            $text = number_format($paycheck[strtolower(str_replace(' ', '_', $field))], 2)."\n";
+                                            $text .= number_format($paycheck[strtolower(str_replace(' ', '_', $field))], 2);
+                                        }
+
+                                        $data[] = $text;
+                                    break;
+                                    case 'Employee Taxes and Deductions' :
+                                        $text = "Total: ".number_format($paycheck['employee_taxes'], 2)."\n";
+                                        $text .= "Employee Taxes: ".number_format($paycheck['employee_taxes'], 2);
+
+                                        if($post['total-display'] !== 'totals-only') {
+                                            $text .= "\n";
+                                            $text .= "SS: ".number_format($paycheck['ss_tax'], 2)."\n";
+                                            $text .= "Med: ".number_format($paycheck['medicare_tax'], 2);
+                                        }
+
+                                        $data[] = $text;
+                                    break;
+                                    case 'Employer Taxes and Contributions' :
+                                        $text = "Total: ".number_format($paycheck['employer_taxes'], 2)."\n";
+                                        $text .= "Employer Taxes: ".number_format($paycheck['employer_taxes'], 2);
+
+                                        if($post['total-display'] !== 'totals-only') {
+                                            $text .= "\n";
+                                            $text .= "FL SUI: ".number_format($paycheck['fl_sui_employer'], 2)."\n";
+                                            $text .= "FUTA: ".number_format($paycheck['futa_emplyoer'], 2)."\n";
+                                            $text .= "SS: ".number_format($paycheck['ss_employer'], 2)."\n";
+                                            $text .= "Med: ".number_format($paycheck['medicare_employer'], 2);
+                                        }
+
+                                        $data[] = $text;
+                                    break;
+                                    default :
+                                        $text = $paycheck[strtolower(str_replace(' ', '_', $field))];
+                                        if($field === 'Net Pay' || $field === 'Total Payroll Cost') {
+                                            $text = number_format($text, 2);
+                                        }
+                                        $data[] = $text;
+                                    break;
+                                }
+
+                                $style[] = ['color' => '#000000'];
+                            }
+
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+                    } else {
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Hours', $post['columns'])) {
+                            $hours = [
+                                'Hours',
+                                $totals['hours'].'h'
+                            ];
+                            $hoursStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Gross Pay', $post['columns'])) {
+                            $grossPay = [
+                                'Gross Pay',
+                                $totals['gross_pay']
+                            ];
+                            $grossPayStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $commission = [
+                                    'Commission',
+                                    $totals['commission']
+                                ];
+                                $commissionStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+                            }
+
+                            $adjustedGross = [
+                                'Adjusted Gross',
+                                $totals['adjusted_gross']
+                            ];
+                            $adjustedGrossStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Employee Taxes and Deductions', $post['columns'])) {
+                            $employeeTaxesTotal = [
+                                'Employee Taxes & Deductions',
+                                $totals['employee_taxes']
+                            ];
+                            $employeeTaxesTotalStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+
+                            $employeeTaxes = [
+                                'Employee Taxes',
+                                $totals['employee_taxes']
+                            ];
+                            $employeeTaxesStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $federalIncomeTax = [
+                                    'Federal Income Tax',
+                                    $totals['federal_income_tax']
+                                ];
+                                $federalIncomeTaxStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+
+                                $socialSecurity = [
+                                    'Social Security',
+                                    $totals['ss_tax']
+                                ];
+                                $socialSecurityStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+
+                                $medicare = [
+                                    'Medicare',
+                                    $totals['medicare_tax']
+                                ];
+                                $medicareStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+                            }
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Net Pay', $post['columns'])) {
+                            $netPay = [
+                                'Net Pay',
+                                $totals['net_pay']
+                            ];
+                            $netPayStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Employer Taxes and Contributions', $post['columns'])) {
+                            $employerTaxesTotal = [
+                                'Employer Taxes & Contributions',
+                                $totals['employer_taxes']
+                            ];
+                            $employerTaxesTotalStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+
+                            $employerTaxes = [
+                                'Employer Taxes',
+                                $totals['employer_taxes']
+                            ];
+                            $employerTaxesStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $futa = [
+                                    'FUTA',
+                                    $totals['futa_employer']
+                                ];
+                                $futaStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+
+                                $socialSecurityEmployer = [
+                                    'Social Security Employer',
+                                    $totals['ss_employer']
+                                ];
+                                $socialSecurityEmployerStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+
+                                $medicareEmployer = [
+                                    'Medicare Employer',
+                                    $totals['medicare_employer']
+                                ];
+                                $medicareEmployerStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+
+                                $flSUIEmployer = [
+                                    'FL SUI Employer',
+                                    $totals['fl_sui_employer']
+                                ];
+                                $flSUIEmployerStyle = [
+                                    ['color' => '#000000'],
+                                    ['color' => '#000000']
+                                ];
+                            }
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Total Payroll Cost', $post['columns'])) {
+                            $totalPayrollCost = [
+                                'Total Payroll Cost',
+                                $totals['total_payroll_cost']
+                            ];
+                            $totalPayrollCostStyle = [
+                                ['color' => '#000000', 'font-style' => 'bold'],
+                                ['color' => '#000000', 'font-style' => 'bold']
+                            ];
+                        }
+
+                        foreach($paychecks as $paycheck)
+                        {
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Hours', $post['columns'])) {
+                                $hours[] = $paycheck['hours'].'h';
+                                $hoursStyle[] = ['color' => '#000000'];
+                            }
+
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Gross Pay', $post['columns'])) {
+                                $grossPay[] = number_format($paycheck['gross_pay'], 2);
+                                $grossPayStyle[] = ['color' => '#000000'];
+
+                                if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                    $commission[] = number_format($paycheck['commission'], 2);
+                                    $commissionStyle[] = ['color' => '#000000'];
+                                }
+
+                                $adjustedGross[] = number_format($paycheck['adjusted_gross'], 2);
+                                $adjustedGrossStyle[] = ['color' => '#000000'];
+                            }
+
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Employee Taxes and Deductions', $post['columns'])) {
+                                $employeeTaxesTotal[] = number_format($paycheck['employee_taxes'], 2);
+                                $employeeTaxesTotalStyle[] = ['color' => '#000000'];
+
+                                $employeeTaxes[] = number_format($paycheck['employee_taxes'], 2);
+                                $employeeTaxesStyle[] = ['color' => '#000000'];
+
+                                if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                    $federalIncomeTax[] = number_format($paycheck['federal_income_tax'], 2);
+                                    $federalIncomeTaxStyle[] = ['color' => '#000000'];
+
+                                    $socialSecurity[] = number_format($paycheck['ss_tax'], 2);
+                                    $socialSecurityStyle[] = ['color' => '#000000'];
+
+                                    $medicare[] = number_format($paycheck['medicare_tax'], 2);
+                                    $medicareStyle[] = ['color' => '#000000'];
+                                }
+                            }
+
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Net Pay', $post['columns'])) {
+                                $netPay[] = number_format($paycheck['net_pay'], 2);
+                                $netPayStyle[] = ['color' => '#000000'];
+                            }
+
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Employer Taxes and Contributions', $post['columns'])) {
+                                $employerTaxesTotal[] = number_format($paycheck['employer_taxes'], 2);
+                                $employerTaxesTotalStyle[] = ['color' => '#000000'];
+
+                                $employerTaxes[] = number_format($paycheck['employer_taxes'], 2);
+                                $employerTaxesStyle[] = ['color' => '#000000'];
+
+                                if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                    $futa[] = number_format($paycheck['futa_employer'], 2);
+                                    $futaStyle[] = ['color' => '#000000'];
+
+                                    $socialSecurityEmployer[] = number_format($paycheck['ss_employer'], 2);
+                                    $socialSecurityEmployerStyle[] = ['color' => '#000000'];
+
+                                    $medicareEmployer[] = number_format($paycheck['medicare_employer'], 2);
+                                    $medicareEmployerStyle[] = ['color' => '#000000'];
+
+                                    $flSUIEmployer[] = number_format($paycheck['fl_sui_employer'], 2);
+                                    $flSUIEmployerStyle[] = ['color' => '#000000'];
+                                }
+                            }
+
+                            if(!isset($post['columns']) || isset($post['columns']) && in_array('Total Payroll Cost', $post['columns'])) {
+                                $totalPayrollCost[] = number_format($paycheck['total_payroll_cost'], 2);
+                                $totalPayrollCostStyle[] = ['color' => '#000000'];
+                            }
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Hours', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $hours, $hoursStyle);
+                            $row++;
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Gross Pay', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $grossPay, $grossPayStyle);
+                            $row++;
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $writer->writeSheetRow('Sheet1', $commission, $commissionStyle);
+                                $row++;
+                            }
+
+                            $writer->writeSheetRow('Sheet1', $adjustedGross, $adjustedGrossStyle);
+                            $row++;
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Employee Taxes and Deductions', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $employeeTaxesTotal, $employeeTaxesTotalStyle);
+                            $row++;
+
+                            $writer->writeSheetRow('Sheet1', $employeeTaxes, $employeeTaxesStyle);
+                            $row++;
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $writer->writeSheetRow('Sheet1', $federalIncomeTax, $federalIncomeTaxStyle);
+                                $row++;
+
+                                $writer->writeSheetRow('Sheet1', $socialSecurity, $socialSecurityStyle);
+                                $row++;
+
+                                $writer->writeSheetRow('Sheet1', $medicare, $medicareStyle);
+                                $row++;
+                            }
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Net Pay', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $netPay, $netPayStyle);
+                            $row++;
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Employer Taxes and Contributions', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $employerTaxesTotal, $employerTaxesTotalStyle);
+                            $row++;
+
+                            $writer->writeSheetRow('Sheet1', $employerTaxes, $employerTaxesStyle);
+                            $row++;
+
+                            if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                $writer->writeSheetRow('Sheet1', $futa, $futaStyle);
+                                $row++;
+
+                                $writer->writeSheetRow('Sheet1', $socialSecurityEmployer, $socialSecurityEmployerStyle);
+                                $row++;
+
+                                $writer->writeSheetRow('Sheet1', $medicareEmployer, $medicareEmployerStyle);
+                                $row++;
+
+                                $writer->writeSheetRow('Sheet1', $flSUIEmployer, $flSUIEmployerStyle);
+                                $row++;
+                            }
+                        }
+
+                        if(!isset($post['columns']) || isset($post['columns']) && in_array('Total Payroll Cost', $post['columns'])) {
+                            $writer->writeSheetRow('Sheet1', $totalPayrollCost, $totalPayrollCostStyle);
+                            $row++;
+                        }
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Summary_by_Employee';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Payroll_Summary_by_Employee.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                if($post['display-by'] === 'row')
+                                {
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        switch($field) {
+                                            case 'Name' :
+                                                $align = 'left';
+                                            break;
+                                            case 'Other Pay' :
+                                                $align = 'left';
+                                            break;
+                                            default :
+                                                $align = 'right';
+                                            break;
+                                        }
+    
+                                        $html .= '<td style="text-align: '.$align.'; border: 1px solid black">'.$field.'</td>';
+                                    }   
+                                } else {
+                                    $html .= '<td style="border: 1px solid black">Payroll</td>';
+                                    $html .= '<td style="text-align: right; border: 1px solid black">Total</td>';
+
+                                    foreach($paychecks as $paycheck)
+                                    {
+                                        $html .= '<td style="text-align: right; border: 1px solid black">'.$paycheck['name'].'</td>';
+                                    }
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if($post['display-by'] === 'row')
+                                {
+                                    $html .= '<tr>';
+                                    foreach($post['fields'] as $field)
+                                    {
+                                        switch($field) {
+                                            case 'Name' :
+                                                $html .= '<td style="border: 1px solid black">';
+                                                $html .= '<b>Total</b>';
+                                                $html .= '</td>';
+                                            break;
+                                            case 'Hours' :
+                                                $html .= '<td style="border: 1px solid black">';
+                                                $html .= '<p style="margin: 0"><b>Gross:</b> '.$totals['hours'].'h</p>';
+                                                $html .= '<p style="margin: 0"><b>Adjusted Gross:</b></p>';
+                                                $html .= '</td>';
+                                            break;
+                                            case 'Gross Pay' :
+                                                $html .= '<td style="border: 1px solid black">';
+                                                if(!in_array('Hours', $post['fields'])) {
+                                                    $html .= '<p style="margin: 0"><b>Gross:</b> '.$totals['gross_pay'].'</p>';
+                                                    $html .= '<p style="margin: 0"><b>Adjusted Gross:</b> '.$totals['adjusted_gross'].'</p>';
+                                                } else {
+                                                    $html .= '<p style="margin: 0">'.$totals['gross_pay'].'</p>';
+                                                    $html .= '<p style="margin: 0">'.$totals['adjusted_gross'].'</p>';
+                                                }
+                                                $html .= '</td>';
+                                            break;
+                                            case 'Other Pay' :
+                                                $html .= '<td style="border: 1px solid black"></td>';
+                                            break;
+                                            case 'Employee Taxes and Deductions' :
+                                                $html .= '<td style="border: 1px solid black">';
+                                                $html .= '<p style="margin: 0"><b>Total:</b> '.$totals['employee_taxes'].'</p>';
+                                                $html .= '<p style="margin: 0"><b>Employee Taxes:</b> '.$totals['employee_taxes'].'</p>';
+                                                // if($post['total-display'] !== 'totals-only') {
+                                                //     $html .= '<p style="margin: 0">SS: '.$paycheck['ss_tax'].'</p>';
+                                                //     $html .= '<p style="margin: 0">Med: '.$paycheck['medicare_tax'].'</p>';
+                                                // }
+                                                $html .= '</td>';
+                                            break;
+                                            case 'Net Pay' :
+                                                $html .= '<td style="border: 1px solid black">'.$totals['net_pay'].'</td>';
+                                            break;
+                                            case 'Employer Taxes and Contributions' :
+                                                $html .= '<td style="border: 1px solid black">';
+                                                $html .= '<p style="margin: 0"><b>Total:</b> '.$totals['employer_taxes'].'</p>';
+                                                $html .= '<p style="margin: 0"><b>Employer Taxes:</b> '.$totals['employer_taxes'].'</p>';
+                                                // if($post['total-display'] !== 'totals-only') {
+                                                //     $html .= '<p style="margin: 0">FL SUI: '.$paycheck['employer_sui_tax'].'</p>';
+                                                //     $html .= '<p style="margin: 0">FUTA: '.$paycheck['employer_futa_tax'].'</p>';
+                                                //     $html .= '<p style="margin: 0">SS: '.$paycheck['employer_ss_tax'].'</p>';
+                                                //     $html .= '<p style="margin: 0">Med: '.$paycheck['employer_medicare_tax'].'</p>';
+                                                // }
+                                                $html .= '</td>';
+                                            break;
+                                            case 'Total Payroll Cost' :
+                                                $html .= '<td style="border: 1px solid black">'.$totals['total_payroll_cost'].'</td>';
+                                            break;
+                                        }
+
+                                        $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                    }
+                                    $html .= '</tr>';
+                                    foreach($paychecks as $paycheck)
+                                    {
+                                        $html .= '<tr>';
+
+                                        foreach($post['fields'] as $field)
+                                        {
+                                            switch($field) {
+                                                case 'Hours' :
+                                                    $html .= '<td style="border: 1px solid black">';
+                                                    $html .= '<p style="margin: 0"><b>Gross:</b> '.$paycheck[strtolower(str_replace(' ', '_', $field))].'h</p>';
+                                                    $html .= '<p style="margin: 0"><b>Adjusted Gross:</b></p>';
+                                                    $html .= '</td>';
+                                                break;
+                                                case 'Gross Pay' :
+                                                    $html .= '<td style="border: 1px solid black">';
+                                                    if(!in_array('Hours', $post['fields'])) {
+                                                        $html .= '<p style="margin: 0"><b>Gross:</b> '.number_format($paycheck['gross_pay'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0"><b>Adjusted Gross:</b> '.number_format($paycheck['adjusted_gross'], 2).'</p>';
+                                                    } else {
+                                                        $html .= '<p style="margin: 0">'.number_format($paycheck['gross_pay'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0">'.number_format($paycheck['adjusted_gross'], 2).'</p>';
+                                                    }
+                                                    $html .= '</td>';
+                                                break;
+                                                case 'Other Pay' :
+                                                    $html .= '<td style="border: 1px solid black"></td>';
+                                                break;
+                                                case 'Employee Taxes and Deductions' :
+                                                    $html .= '<td style="border: 1px solid black">';
+                                                    $html .= '<p style="margin: 0"><b>Total:</b> '.number_format($paycheck['employee_taxes'], 2).'</p>';
+                                                    $html .= '<p style="margin: 0"><b>Employee Taxes:</b> '.number_format($paycheck['employee_taxes'], 2).'</p>';
+                                                    if($post['total-display'] !== 'totals-only') {
+                                                        $html .= '<p style="margin: 0">SS: '.number_format($paycheck['ss_tax'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0">Med: '.number_format($paycheck['medicare_tax'], 2).'</p>';
+                                                    }
+                                                    $html .= '</td>';
+                                                break;
+                                                case 'Employer Taxes and Contributions' :
+                                                    $html .= '<td style="border: 1px solid black">';
+                                                    $html .= '<p style="margin: 0"><b>Total:</b> '.number_format($paycheck['employer_taxes'], 2).'</p>';
+                                                    $html .= '<p style="margin: 0"><b>Employer Taxes:</b> '.number_format($paycheck['employer_taxes'], 2).'</p>';
+                                                    if($post['total-display'] !== 'totals-only') {
+                                                        $html .= '<p style="margin: 0">FL SUI: '.number_format($paycheck['employer_sui_tax'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0">FUTA: '.number_format($paycheck['employer_futa_tax'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0">SS: '.number_format($paycheck['employer_ss_tax'], 2).'</p>';
+                                                        $html .= '<p style="margin: 0">Med: '.number_format($paycheck['employer_medicare_tax'], 2).'</p>';
+                                                    }
+                                                    $html .= '</td>';
+                                                break;
+                                                default :
+                                                    if($field === 'Name') {
+                                                        $html .= '<td style="border: 1px solid black">'.$paycheck[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                                    } else {
+                                                        $html .= '<td style="border: 1px solid black">'.number_format($paycheck[strtolower(str_replace(' ', '_', $field))], 2).'</td>';
+                                                    }
+                                                break;
+                                            }
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                } else {
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Hours', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Hours</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['hours'].'h</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$paycheck['hours'].'h</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Gross Pay', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Gross Pay</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['gross_pay'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['gross_pay'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+            
+                                        if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Commission</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['commission'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['commission'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+                                        }
+            
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Adjusted gross</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['adjusted_gross'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['adjusted_gross'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+            
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Employee Taxes and Deductions', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Employee Taxes & Deductions</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['employee_taxes'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['employee_taxes'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+            
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Employee Taxes</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['employee_taxes'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['employee_taxes'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+            
+                                        if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Federal Income Tax</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['federal_income_tax'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['federal_income_tax'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Social Security</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['ss_tax'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['ss_tax'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+            
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Medicare</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['medicare_tax'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['medicare_tax'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+                                        }
+                                    }
+            
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Net Pay', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Net Pay</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['net_pay'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['net_pay'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+            
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Employer Taxes and Contributions', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Employer Taxes & Contributions</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['employer_taxes'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['employer_taxes'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+            
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Employer Taxes</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['employer_taxes'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['employer_taxes'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+            
+                                        if(is_null($post['total-display']) || $post['total-display'] === 'total-and-details') {
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">FUTA</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['futa_employer'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['futa_employer'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Social Security Employer</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['ss_employer'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['ss_employer'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+            
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">Medicare Employer</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['medicare_employer'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['medicare_employer'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+            
+                                            $html .= '<tr>';
+                                            $html .= '<td style="border: 1px solid black">FL SUI Employer</td>';
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.$totals['fl_sui_employer'].'</td>';
+                                            foreach($paychecks as $paycheck) {
+                                                $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['fl_sui_employer'], 2).'</td>';
+                                            }
+                                            $html .= '</tr>';
+                                        }
+                                    }
+            
+                                    if(!isset($post['columns']) || isset($post['columns']) && in_array('Total Payroll Cost', $post['columns'])) {
+                                        $html .= '<tr>';
+                                        $html .= '<td style="border: 1px solid black"><b>Total Payroll Cost</b></td>';
+                                        $html .= '<td style="text-align: right; border: 1px solid black"><b>'.$totals['total_payroll_cost'].'</b></td>';
+                                        foreach($paychecks as $paycheck) {
+                                            $html .= '<td style="text-align: right; border: 1px solid black">'.number_format($paycheck['total_payroll_cost'], 2).'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="12">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Summary_by_Employee';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Payroll Summary by Employee";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    // $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetMargins(5, PDF_MARGIN_TOP, 5);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Payroll_Summary_by_Employee.pdf', 'D');
                 }
             break;
         }

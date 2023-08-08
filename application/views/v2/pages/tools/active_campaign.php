@@ -53,7 +53,7 @@
                     </div>
                 <?php } ?>  
 
-                <?php if( $companyActiveCampaign ){ ?>
+                <?php if( $companyActiveCampaign && $companyActiveCampaign->status == 1 ){ ?>
                     <div class="row g-3">
                         <div class="col-3">
                             <div class="nsm-counter h-100">
@@ -96,7 +96,7 @@
                         </div>                   
                     </div>
                     <div class="row" style="margin-top:85px;">                                     
-                        <!-- <div class="col-10">
+                        <div class="col-10">
                             <a class="nsm-button primary" id="btn-active-campaign-export-customer-list" href="javascript:void(0);">
                                 <i class='bx bx-export'></i> Export Customer to List
                             </a>
@@ -105,8 +105,8 @@
                             </a>
                         </div>
                         <div class="col-2" style="text-align:right;">
-                            <a class="nsm-button primary">Disconnect</a>
-                        </div> -->
+                            <a class="nsm-button primary" id="btn-active-campaign-disconnect" href="javascript:void(0);">Disconnect</a>
+                        </div>
                     </div>
                     <div class="row mt-3">   
                         <div class="col-12" id="attendance-list">
@@ -120,19 +120,25 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td>Exported Contacts</td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_customer_total_exported); ?></td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_customer_total_failed);  ?></td>
+                                    </tr>
+                                    <tr>
                                         <td>Exported Contacts to List</td>
-                                        <td>0</td>
-                                        <td>0</td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_list_total_exported); ?></td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_list_total_failed); ?></td>
                                     </tr>
                                     <tr>
                                         <td>Exported Contacts to Automation</td>
-                                        <td>0</td>
-                                        <td>0</td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_automation_total_exported); ?></td>
+                                        <td><?= intval($companyActiveCampaign->active_campaign_automation_total_failed); ?></td>
                                     </tr>
                                 </tbody>
-                            </table>                            
-                        </div>  
-                    </div>
+                            </table>                                                                                    
+                        </div>                          
+                        <a href="<?= base_url('tools/active_campaign_list_automation_logs') ?>" class="nsm-button default mt-4" style="width:5%;">View Logs</a>                        
+                    </div>                    
                 <?php }else{ ?>
                     <form id="frm-connect-active-campaign" method="POST">                        
                         <div class="mb-4">
@@ -233,11 +239,22 @@
             </div>
         </div>
 
+        <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $('#active-campaign-export-list-modal').modal({backdrop: 'static', keyboard: false});
+        $('#active-campaign-export-automation-modal').modal({backdrop: 'static', keyboard: false});
 
         $('#active-campaign-list').select2({
             dropdownParent: $("#active-campaign-export-list-modal"),
@@ -329,6 +346,53 @@
             }
         }
 
+        $('#btn-active-campaign-disconnect').on('click', function(){
+            Swal.fire({            
+                html: "Disconnect your Active Campaign Account?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    var url = base_url + "tools/_disconnect_active_campaign_account";
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        dataType: 'json',
+                        beforeSend: function(data) {
+                            $('#loading_modal').modal('show');
+                            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Disconnecting Active Campaign Account....');
+                        },
+                        success: function(data) {                                                
+                            setTimeout(
+                                function() 
+                                {                                
+                                    $('#loading_modal').modal('hide');
+                                    Swal.fire({                        
+                                        text: "MailChimp Account was successfully disconnected.",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });                    
+                                }, 
+                            1000);                                        
+                        },
+                        complete : function(){
+                            
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }
+                    });
+                }
+            });
+        });
+
         $('#frm-connect-active-campaign').on('submit', function(e){
             e.preventDefault();
 
@@ -350,7 +414,7 @@
                     if( o.is_success == 1 ){                           
                         Swal.fire({
                             title: 'Connect Successful!',
-                            html: "You can now export your customer to your Active Campaign list.",
+                            html: "You can now export your customer to your Active Campaign List and Automation.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -379,16 +443,15 @@
             var url = base_url + 'tools/_create_active_campaign_export_list';
             var formData = new FormData($('#frm-export-list')[0]);               
 
-            setTimeout(function () {
-              $.ajax({
-                 type: "POST",
-                 url: url,
-                 dataType: 'json',
-                 contentType: false,
-                 cache: false,
-                 processData:false,
-                 data: formData,
-                 beforeSend: function(data) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,
+                data: formData,
+                beforeSend: function(data) {
                     $('#btn-export-list').html('<span class="bx bx-loader bx-spin"></span>');
                 },
                 success: function(o)
@@ -417,8 +480,7 @@
                     $('#btn-export-list').html('Save');
                     $('#active-campaign-export-list-modal').modal('hide');                
                 },
-              });
-            }, 800);
+            });
         });
 
         $('#frm-export-automation').on('submit', function(e){
@@ -427,46 +489,44 @@
             var url = base_url + 'tools/_create_active_campaign_export_automation';
             var formData = new FormData($('#frm-export-automation')[0]);               
 
-            setTimeout(function () {
-              $.ajax({
-                 type: "POST",
-                 url: url,
-                 dataType: 'json',
-                 contentType: false,
-                 cache: false,
-                 processData:false,
-                 data: formData,
-                 beforeSend: function(data) {
-                    $('#btn-export-automation').html('<span class="bx bx-loader bx-spin"></span>');
-                },
-                success: function(o)
-                {          
-                    if( o.is_success == 1 ){                           
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            html: "Active Campaign export customer to automation was successfully created.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                            location.reload();
-                            //}
-                        });
-                    }else{
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: o.msg
-                      });
-                    }                     
-                },
-                complete : function(){
-                    $('#btn-export-automation').html('Save');
-                    $('#active-campaign-export-automation-modal').modal('hide');                
-                },
-              });
-            }, 800);
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,
+                data: formData,
+            beforeSend: function(data) {
+                $('#btn-export-automation').html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            success: function(o)
+            {          
+                if( o.is_success == 1 ){                           
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        html: "Active Campaign export customer to automation was successfully created.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                }                     
+            },
+            complete : function(){
+                $('#btn-export-automation').html('Save');
+                $('#active-campaign-export-automation-modal').modal('hide');                
+            },
+          });
         });
     });
 </script>

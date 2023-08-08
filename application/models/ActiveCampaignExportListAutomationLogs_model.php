@@ -43,9 +43,10 @@ class ActiveCampaignExportListAutomationLogs_model extends MY_Model
 
     public function getAllByCompanyId($company_id, $filters=array())
     {
-        $this->db->select('*');
+        $this->db->select('*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');
         $this->db->from($this->table);        
-        $this->db->where('company_id', $company_id); 
+        $this->db->join('acs_profile', 'active_campaign_export_list_automation_logs.customer_id  = acs_profile.prof_id', 'left');     
+        $this->db->where('active_campaign_export_list_automation_logs.company_id', $company_id); 
 
         if ( !empty($filters['search']) ){
             $this->db->group_start();
@@ -55,7 +56,7 @@ class ActiveCampaignExportListAutomationLogs_model extends MY_Model
             $this->db->group_end();
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->order_by('active_campaign_export_list_automation_logs.id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -83,6 +84,23 @@ class ActiveCampaignExportListAutomationLogs_model extends MY_Model
         
         $query = $this->db->get()->row();
         return $query;
+    }
+
+    public function getAllNotSync($limit = 0)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);           
+        $this->db->where('is_sync', 0);
+        $this->db->where('is_with_error', 0);
+        
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function typeAutomation()
