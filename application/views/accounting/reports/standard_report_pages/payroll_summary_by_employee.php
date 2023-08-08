@@ -131,10 +131,10 @@
                                     <thead>
                                         <tr>
                                             <?php if(empty($display_by) || $display_by === 'col') : ?>
-                                            <td>PAYROLL</td>
-                                            <td class="text-end">TOTAL</td>
+                                            <td data-name="Payroll">PAYROLL</td>
+                                            <td data-name="Total" class="text-end">TOTAL</td>
                                             <?php foreach($data as $row) : ?>
-                                            <td class="text-end"><?=$row['name']?></td>
+                                            <td data-name="<?=$row['name']?>" class="text-end"><?=$row['name']?></td>
                                             <?php endforeach; ?>
                                             <?php else : ?>
                                             <td data-name="Name"><?=empty($group_by) ? 'NAME' : 'TIME PERIOD'?></td>
