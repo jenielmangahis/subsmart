@@ -1111,14 +1111,41 @@ class Cron_Api extends MYF_Controller {
                         $company_total_exported++;
                         $total_exported++;
                     }else{
-                        $export_customer = [                            
-                            'is_sync' => 0,
-                            'is_with_error' => 1,
-                            'error_message' => $export_result['error_message'],
-                            'action_date' => date("Y-m-d H:i:S")
-                        ];
+                        if( $export_result['error_message'] == 'Email address already exists in the system.' ){
+                            $query = ['email' => $customer->customer_email];
+                            $activeCampaignContact  = $activeCampaign->getContact($query, $companyActiveCampaign->active_campaign_account_url, $companyActiveCampaign->active_campaign_token, $export_data);
+                            if( $activeCampaignContact['contacts']->contacts[0] ){
+                                $export_customer = [
+                                    'active_campaign_customer_id' => $activeCampaignContact['contacts']->contacts[0]->id,
+                                    'active_campaign_customer_hash' => $activeCampaignContact['contacts']->contacts[0]->hash,                            
+                                    'is_sync' => 1,
+                                    'is_with_error' => 0,
+                                    'error_message' => '',
+                                    'action_date' => date("Y-m-d H:i:S")
+                                ];                        
 
-                        $company_total_failed++;
+                                $company_total_exported++;
+                                $total_exported++;
+                            }else{
+                                $export_customer = [                            
+                                    'is_sync' => 0,
+                                    'is_with_error' => 1,
+                                    'error_message' => $export_result['error_message'],
+                                    'action_date' => date("Y-m-d H:i:S")
+                                ];
+
+                                $company_total_failed++;  
+                            }
+                        }else{
+                            $export_customer = [                            
+                                'is_sync' => 0,
+                                'is_with_error' => 1,
+                                'error_message' => $export_result['error_message'],
+                                'action_date' => date("Y-m-d H:i:S")
+                            ];
+
+                            $company_total_failed++;
+                        }                        
                     }
 
                     $this->CompanyApiConnector_model->update($companyActiveCampaign->id,['active_campaign_customer_total_exported' => $company_total_exported, 'active_campaign_customer_total_failed' => $company_total_failed]);

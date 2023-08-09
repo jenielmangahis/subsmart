@@ -50,7 +50,7 @@
 
     .accountingMethodContainer {
         position: relative;
-        width: 180px;
+        width: 150px;
     }
 
     .accountingRadio {
@@ -216,6 +216,13 @@
         </div>
         <div class="col-lg-1"></div>
     </div> -->
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="nsm-callout primary"><button><i class="bx bx-x"></i></button><?php echo $page->description ?></div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
@@ -414,32 +421,31 @@
             <div class="modal-body">
                 <form id="sendEmailForm">
                     <div class="row">
-                        <div class="col-sm-12 mt-1 mb-2">
+                        <div class="col-sm-12 mt-1">
                             <div class="form-group">
                                 <h6>To</h6>
                                 <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-2">
+                        <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>CC</h6>
                                 <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-2">
+                        <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
                                 <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1 mb-2">
+                        <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
-                                </div>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-1">
+                        <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Attachment</h6>
                                 <div class="row">

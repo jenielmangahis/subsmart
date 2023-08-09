@@ -242,6 +242,20 @@ class DocuSign extends MYF_Controller
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['client'] = $filteredClient;
 
+        #custom service ticket location
+        $this->db->where('id', $document->ticket_id);
+        $service_ticket = $this->db->get('tickets')->row();
+        $tickets_accessKeys = [
+            'service_location',
+            'acs_city',
+            'acs_state',
+            'acs_zip'
+        ];
+        $filteredTickets = array_filter( (array)$service_ticket , function($v) use ($tickets_accessKeys) {
+            return in_array($v, $tickets_accessKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        $autoPopulateData['service_ticket'] = $filteredTickets;
+
         #acs alarm details
         $this->db->where('fk_prof_id', $customer_id);
         $acs_alarm = $this->db->get('acs_alarm')->row();

@@ -76,6 +76,8 @@ function Signing(hash) {
 
     const { emergency_primary_contact_fname, emergency_primary_contact_lname, emergency_primary_contact_phone } = window.__esigndata.auto_populate_data.primary_emergency_contacts;
 
+    const { service_location, acs_city, acs_state, acs_zip } = window.__esigndata.auto_populate_data.service_ticket;
+
     const { emergency_secondary_contact_fname, emergency_secondary_contact_lname, emergency_secondary_contact_phone } = window.__esigndata.auto_populate_data.secondary_emergency_contacts;
 
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
@@ -107,7 +109,11 @@ function Signing(hash) {
     }
 
     if( field_name == "State" ) {
-      return state;
+      if( acs_state != '' ){
+        return acs_state;
+      }else{
+        return state;  
+      }       
     }
 
     if( field_name == "County" ) {
@@ -115,11 +121,20 @@ function Signing(hash) {
     }
 
     if( field_name == "ZIP" ) {
-      return zip_code;
+      if( acs_zip != '' ){
+        return acs_zip;
+      }else{
+        return zip_code;
+      }      
     }
 
     if( field_name == "Address" ) {
-      return mail_add;
+      if( service_location != '' ){
+        return service_location;
+      }else{
+        return mail_add;  
+      }
+      
     }
 
     if( field_name == "Date of Birth" ) {
@@ -276,11 +291,19 @@ function Signing(hash) {
       }
       
       if( specs_field_name.name === "city" || specs_field_name.name === "City" ) {
-        return city;        
+        if( acs_city != '' ){
+          return acs_city;        
+        }else{
+          return city;          
+        }        
       }
       
       if( specs_field_name.name === "state" ) {
-        return state;
+        if( acs_state != '' ){
+          return acs_state;
+        }else{
+          return state;  
+        }        
       }
 
       if( specs_field_name.name === "zip_code" || specs_field_name.name === "zip" ) {
@@ -1053,7 +1076,7 @@ function Signing(hash) {
       }
 
       // requires assets/js/esign/docusign/input.autoresize.js
-      $input.autoresize({ minWidth: width ? width : 100 });
+      $input.autoresize({ minWidth: width ? width : 140 });
 
       $input.prop("required", isRequired);
       $input.prop("readonly", isReadOnly);
