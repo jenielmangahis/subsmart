@@ -68,7 +68,7 @@
 
     .accountingMethodContainer {
         position: relative;
-        width: 180px;
+        width: 150px;
     }
 
     .accountingRadio {
