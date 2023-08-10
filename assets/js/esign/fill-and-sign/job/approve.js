@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return `${template.name} (default)`;
     };
 
-    const response = await fetch("/DocuSign/apiTemplates?all=true");
+    const response = await fetch("/ci/nsmart_v2/DocuSign/apiTemplates?all=true");
     const jsonData = await response.json();
     const templates = jsonData.data;
 
@@ -134,8 +134,9 @@ window.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData();
       formData.append("id", $jobIdInput.value);
       formData.append("status", "Approved");
-
-      const response = await fetch("/job/update_jobs_status", {
+      formData.append("action", "approve_job");
+      
+      const response = await fetch(base_url + "job/update_jobs_status", {
         method: "POST",
         body: formData,
       });

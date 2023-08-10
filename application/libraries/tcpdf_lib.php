@@ -1,8 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Tcpdf_lib
-{
+class Tcpdf_lib {
     protected $ci;
 
     public function __construct()

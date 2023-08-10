@@ -1615,6 +1615,7 @@ class Job extends MY_Controller
             }
 
             unset($input['id']);
+            unset($input['action']);
             $up = $this->general->update_with_key($input, $id, "jobs");
 
             $input['ticket_status'] = $input['status'];

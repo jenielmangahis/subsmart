@@ -67,6 +67,8 @@ class Workcalender extends MY_Controller
             'assets/js/bootstrap-multiselect.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.js',
             'assets/js/v2/drawer/drawer.min.js',
+            'assets/js/esign/fill-and-sign/job/approve.js',
+            'assets/js/esign/fill-and-sign/ticket/approve.js'
         ));
 
 
@@ -827,7 +829,7 @@ class Workcalender extends MY_Controller
 
         //Jobs
         $scheduled_workorder_ids = array();
-        $jobs = $this->Jobs_model->get_all_company_scheduled_jobs($company_id);        
+        $jobs = $this->Jobs_model->get_all_company_active_jobs($company_id);        
         foreach ($jobs as $j) {
             if( $j->work_order_id > 0 ){
                 $scheduled_workorder_ids[] = $j;
