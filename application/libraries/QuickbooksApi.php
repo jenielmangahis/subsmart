@@ -36,7 +36,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
@@ -52,7 +52,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
@@ -68,7 +68,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
@@ -89,7 +89,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
@@ -110,7 +110,7 @@ class QuickbooksApi
             'accessTokenKey' => $access_token,
             'refreshTokenKey' => $refresh_token,
             'QBORealmID' => $realm_id,                
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $companyInfo = $dataService->getCompanyInfo();
@@ -120,25 +120,44 @@ class QuickbooksApi
     public function refresh_token($refresh_token, $realm_id){
 
         $dataService = DataService::Configure(array(
-        'auth_mode' => 'oauth2',
-        'ClientID' => $this->CI->config->item('qb_client_id'),
-        'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),            
-        'refreshTokenKey' => $refresh_token,
-        'QBORealmId' => $realm_id,
-        'baseUrl' => "development"
+            'auth_mode' => 'oauth2',
+            'ClientID' => $this->CI->config->item('qb_client_id'),
+            'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),            
+            'refreshTokenKey' => $refresh_token,
+            'QBORealmId' => $realm_id,
+            'baseUrl' => $this->CI->config->item('qb_base_url')
+        ));
+
+        $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();        
+        try {
+            $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
+            $error = $OAuth2LoginHelper->getLastError();
+            if($error){
+                $refreshedAccessTokenObj = '';
+            }else{
+                //Refresh Token is called successfully
+                $dataService->updateOAuth2Token($refreshedAccessTokenObj);
+            }           
+        } catch (Exception $e) {
+            $refreshedAccessTokenObj = '';
+        }
+        
+
+        return $refreshedAccessTokenObj;
+    }
+
+    public function revoke_token($refresh_token, $realm_id){
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => $this->CI->config->item('qb_client_id'),
+            'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),            
+            'refreshTokenKey' => $refresh_token,
+            'QBORealmId' => $realm_id,
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-        $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
-        $error = $OAuth2LoginHelper->getLastError();
-        if($error){
-            $refreshedAccessTokenObj = '';
-        }else{
-            //Refresh Token is called successfully
-            $dataService->updateOAuth2Token($refreshedAccessTokenObj);
-        }       
-
-        return $refreshedAccessTokenObj;
+        $revokeToken = $OAuth2LoginHelper->revokeToken($refresh_token);        
     }
 
     public function get_qb_company_info($accessToken){
@@ -148,7 +167,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
         $accessToken = $_SESSION['sessionAccessToken'];
         //$oauth2LoginHelper = $dataService->getOAuth2LoginHelper();
@@ -167,7 +186,7 @@ class QuickbooksApi
             'ClientSecret' =>  $this->CI->config->item('qb_client_secret'),
             'RedirectURI' => $this->CI->config->item('qb_redirect_uri'),
             'scope' => $this->CI->config->item('qb_auth_scope'),
-            'baseUrl' => "development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));
 
         $accessToken = $_SESSION['sessionAccessToken'];
@@ -195,6 +214,7 @@ class QuickbooksApi
         $is_imported = false;
         $err_msg = 'Cannot import data';
         $qb_user_id = 0;
+        $err_code   = '';
 
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
@@ -203,7 +223,7 @@ class QuickbooksApi
             'accessTokenKey' => $access_token,
             'refreshTokenKey' => $refresh_token,
             'QBORealmID' => $realm_id,
-            'baseUrl' => "Development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));        
         
         $theResourceObj = Employee::create($user_data);
@@ -211,7 +231,8 @@ class QuickbooksApi
         $resultingObj = $dataService->Add($theResourceObj);
         $error        = $dataService->getLastError();
         if ($error) {
-            $err_msg = $error->getResponseBody();
+            $err_msg  = $error->getIntuitErrorDetail();
+            $err_code = $error->getIntuitErrorCode();
             /*echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
             echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
             echo "The Response message is: " . $error->getResponseBody() . "\n";*/
@@ -220,9 +241,9 @@ class QuickbooksApi
             $qb_user_id  = $resultingObj->Id;
             $is_imported = true;
             $err_msg = "";            
-        }
+        }        
 
-        $result = ['is_imported' => $is_imported, 'err_msg' => $err_msg, 'qb_user_id' => $qb_user_id];
+        $result = ['is_imported' => $is_imported, 'err_code' => $err_code, 'err_msg' => $err_msg, 'qb_user_id' => $qb_user_id];
         return $result;
     }
 
@@ -230,6 +251,7 @@ class QuickbooksApi
         $is_imported = false;
         $err_msg = 'Cannot import data';
         $qb_timesheet_id = 0;
+        $err_code   = '';
 
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
@@ -238,7 +260,7 @@ class QuickbooksApi
             'accessTokenKey' => $access_token,
             'refreshTokenKey' => $refresh_token,
             'QBORealmID' => $realm_id,
-            'baseUrl' => "Development"
+            'baseUrl' => $this->CI->config->item('qb_base_url')
         ));        
         
         $theResourceObj = TimeActivity::create($timesheet_data);
@@ -246,7 +268,8 @@ class QuickbooksApi
         $resultingObj = $dataService->Add($theResourceObj);
         $error        = $dataService->getLastError();
         if ($error) {
-            $err_msg = $error->getResponseBody();
+            $err_msg  = $error->getIntuitErrorDetail();
+            $err_code = $error->getIntuitErrorCode();
             /*echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
             echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
             echo "The Response message is: " . $error->getResponseBody() . "\n";*/
@@ -257,7 +280,7 @@ class QuickbooksApi
             $err_msg = "";            
         }
 
-        $result = ['is_imported' => $is_imported, 'err_msg' => $err_msg, 'qb_timesheet_id' => $qb_timesheet_id];
+        $result = ['is_imported' => $is_imported, 'err_msg' => $err_msg, 'err_code' => $err_code, 'qb_timesheet_id' => $qb_timesheet_id];
         return $result;
     }
 }

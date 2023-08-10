@@ -22121,6 +22121,157 @@ class Reports extends MY_Controller {
                     return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
                 }, ARRAY_FILTER_USE_BOTH);
 
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.006;
+
+                $data = [
+                    'federal_income_total_wages' => 0.00,
+                    'federal_income_excess_wages' => 0.00,
+                    'federal_income_taxable_wages' => 0.00,
+                    'federal_income_tax_amount' => 0.00,
+                    'federal_income_tax_percentage' => 0.00,
+                    'ss_total_wages' => 0.00,
+                    'ss_excess_wages' => 0.00,
+                    'ss_taxable_wages' => 0.00,
+                    'ss_tax_amount' => 0.00,
+                    'ss_tax_percentage' => 0.00,
+                    'ss_employer_total_wages' => 0.00,
+                    'ss_employer_excess_wages' => 0.00,
+                    'ss_employer_taxable_wages' => 0.00,
+                    'ss_employer_tax_amount' => 0.00,
+                    'ss_employer_tax_percentage' => 0.00,
+                    'medicare_total_wages' => 0.00,
+                    'medicare_excess_wages' => 0.00,
+                    'medicare_taxable_wages' => 0.00,
+                    'medicare_tax_amount' => 0.00,
+                    'medicare_tax_percentage' => 0.00,
+                    'medicare_employer_total_wages' => 0.00,
+                    'medicare_employer_excess_wages' => 0.00,
+                    'medicare_employer_taxable_wages' => 0.00,
+                    'medicare_employer_tax_amount' => 0.00,
+                    'medicare_employer_tax_percentage' => 0.00,
+                    'futa_employer_total_wages' => 0.00,
+                    'futa_employer_excess_wages' => 0.00,
+                    'futa_employer_taxable_wages' => 0.00,
+                    'futa_employer_tax_amount' => 0.00,
+                    'futa_employer_tax_percentage' => 0.00,
+                    'fl_sui_employer_total_wages' => 0.00,
+                    'fl_sui_employer_excess_wages' => 0.00,
+                    'fl_sui_employer_taxable_wages' => 0.00,
+                    'fl_sui_employer_tax_amount' => 0.00,
+                    'fl_sui_employer_tax_percentage' => 0.00,
+                    'federal_taxes' => 0.00,
+                    'federal_unemployment' => 0.00,
+                    'fl_unemployment' => 0.00
+                ];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    $data['ss_tax_amount'] += $empSocial;
+                    $data['medicare_tax_amount'] += $empMedicare;
+                    $data['federal_taxes'] += $empSocial;
+                    $data['federal_taxes'] += $empMedicare;
+                }
+
+                $this->page_data['data'] = $data;
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees';
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'payroll_tax_liability' :
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $this->page_data['start_date'] = date('m/d/Y');
+                    $this->page_data['end_date'] = date('m/d/Y');
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.006;
+
+                $data = [
+                    'federal_taxes_tax_amount' => 0.00,
+                    'federal_taxes_tax_paid' => 0.00,
+                    'federal_taxes_tax_owed' => 0.00,
+                    'federal_income_tax_amount' => 0.00,
+                    'federal_income_tax_paid' => 0.00,
+                    'federal_income_tax_owed' => 0.00,
+                    'ss_tax_amount' => 0.00,
+                    'ss_tax_paid' => 0.00,
+                    'ss_tax_owed' => 0.00,
+                    'ss_employer_tax_amount' => 0.00,
+                    'ss_employer_tax_paid' => 0.00,
+                    'ss_employer_tax_owed' => 0.00,
+                    'medicare_tax_amount' => 0.00,
+                    'medicare_tax_paid' => 0.00,
+                    'medicare_tax_owed' => 0.00,
+                    'medicare_employer_tax_amount' => 0.00,
+                    'medicare_employer_tax_paid' => 0.00,
+                    'medicare_employer_tax_owed' => 0.00,
+                    'federal_unemployment_tax_amount' => 0.00,
+                    'federal_unemployment_tax_paid' => 0.00,
+                    'federal_unemployment_tax_owed' => 0.00,
+                    'futa_employer_tax_amount' => 0.00,
+                    'futa_employer_tax_paid' => 0.00,
+                    'futa_employer_tax_owed' => 0.00,
+                    'fl_unemployment_tax_amount' => 0.00,
+                    'fl_unemployment_tax_paid' => 0.00,
+                    'fl_unemployment_tax_owed' => 0.00,
+                    'fl_sui_employer_tax_amount' => 0.00,
+                    'fl_sui_employer_tax_paid' => 0.00,
+                    'fl_sui_employer_tax_owed' => 0.00
+                ];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    $data['ss_tax_amount'] += $empSocial;
+                    $data['ss_tax_owed'] += $empSocial;
+                    $data['medicare_tax_amount'] += $empMedicare;
+                    $data['medicare_tax_owed'] += $empMedicare;
+                    $data['federal_taxes_tax_amount'] += $empSocial;
+                    $data['federal_taxes_tax_owed'] += $empSocial;
+                    $data['federal_taxes_tax_amount'] += $empMedicare;
+                    $data['federal_taxes_tax_owed'] += $empMedicare;
+                }
+
+                $this->page_data['data'] = $data;
                 $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for all employees';
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
@@ -50212,6 +50363,66 @@ class Reports extends MY_Controller {
                     return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
                 }, ARRAY_FILTER_USE_BOTH);
 
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.006;
+
+                $table = [
+                    'federal_income_total_wages' => 0.00,
+                    'federal_income_excess_wages' => 0.00,
+                    'federal_income_taxable_wages' => 0.00,
+                    'federal_income_tax_amount' => 0.00,
+                    'federal_income_tax_percentage' => 0.00,
+                    'ss_total_wages' => 0.00,
+                    'ss_excess_wages' => 0.00,
+                    'ss_taxable_wages' => 0.00,
+                    'ss_tax_amount' => 0.00,
+                    'ss_tax_percentage' => 0.00,
+                    'ss_employer_total_wages' => 0.00,
+                    'ss_employer_excess_wages' => 0.00,
+                    'ss_employer_taxable_wages' => 0.00,
+                    'ss_employer_tax_amount' => 0.00,
+                    'ss_employer_tax_percentage' => 0.00,
+                    'medicare_total_wages' => 0.00,
+                    'medicare_excess_wages' => 0.00,
+                    'medicare_taxable_wages' => 0.00,
+                    'medicare_tax_amount' => 0.00,
+                    'medicare_tax_percentage' => 0.00,
+                    'medicare_employer_total_wages' => 0.00,
+                    'medicare_employer_excess_wages' => 0.00,
+                    'medicare_employer_taxable_wages' => 0.00,
+                    'medicare_employer_tax_amount' => 0.00,
+                    'medicare_employer_tax_percentage' => 0.00,
+                    'futa_employer_total_wages' => 0.00,
+                    'futa_employer_excess_wages' => 0.00,
+                    'futa_employer_taxable_wages' => 0.00,
+                    'futa_employer_tax_amount' => 0.00,
+                    'futa_employer_tax_percentage' => 0.00,
+                    'fl_sui_employer_total_wages' => 0.00,
+                    'fl_sui_employer_excess_wages' => 0.00,
+                    'fl_sui_employer_taxable_wages' => 0.00,
+                    'fl_sui_employer_tax_amount' => 0.00,
+                    'fl_sui_employer_tax_percentage' => 0.00,
+                    'federal_taxes' => 0.00,
+                    'federal_unemployment' => 0.00,
+                    'fl_unemployment_tax' => 0.00
+                ];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    $table['ss_tax_amount'] += $empSocial;
+                    $table['medicare_tax_amount'] += $empMedicare;
+                    $table['federal_taxes'] += $empSocial;
+                    $table['federal_taxes'] += $empMedicare;
+                }
+
                 $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
 
                 $data = [
@@ -50220,80 +50431,80 @@ class Reports extends MY_Controller {
                         '',
                         '',
                         '',
-                        '0.00',
+                        number_format($table['federal_taxes'], 2),
                         ''
                     ],
                     [
                         "Federal Income Tax",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['federal_income_total_wages'], 2),
+                        number_format($table['federal_income_excess_wages'], 2),
+                        number_format($table['federal_income_taxable_wages'], 2),
+                        number_format($table['federal_income_tax_amount'], 2),
+                        number_format($table['federal_income_tax_percentage'], 2).'%'
                     ],
                     [
                         "Social Security",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['ss_total_wages'], 2),
+                        number_format($table['ss_excess_wages'], 2),
+                        number_format($table['ss_taxable_wages'], 2),
+                        number_format($table['ss_tax_amount'], 2),
+                        number_format($table['ss_tax_percentage'], 2).'%'
                     ],
                     [
                         "Social Security Employer",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['ss_employer_total_wages'], 2),
+                        number_format($table['ss_employer_excess_wages'], 2),
+                        number_format($table['ss_employer_taxable_wages'], 2),
+                        number_format($table['ss_employer_tax_amount'], 2),
+                        number_format($table['ss_employer_tax_percentage'], 2).'%'
                     ],
                     [
                         "Medicare",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['medicare_total_wages'], 2),
+                        number_format($table['medicare_excess_wages'], 2),
+                        number_format($table['medicare_taxable_wages'], 2),
+                        number_format($table['medicare_tax_amount'], 2),
+                        number_format($table['medicare_tax_percentage'], 2).'%'
                     ],
                     [
                         "Medicare Employer",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['medicare_employer_total_wages'], 2),
+                        number_format($table['medicare_employer_excess_wages'], 2),
+                        number_format($table['medicare_employer_taxable_wages'], 2),
+                        number_format($table['medicare_employer_tax_amount'], 2),
+                        number_format($table['medicare_employer_tax_percentage'], 2).'%'
                     ],
                     [
                         "Federal Unemployment",
                         '',
                         '',
                         '',
-                        '0.00',
+                        number_format($table['federal_unemployment'], 2),
                         ''
                     ],
                     [
                         "FUTA Employer",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['futa_employer_total_wages'], 2),
+                        number_format($table['futa_employer_excess_wages'], 2),
+                        number_format($table['futa_employer_taxable_wages'], 2),
+                        number_format($table['futa_employer_tax_amount'], 2),
+                        number_format($table['futa_employer_tax_percentage'], 2).'%'
                     ],
                     [
                         "FL Unemployment Tax",
                         '',
                         '',
                         '',
-                        '0.00',
+                        number_format($table['fl_unemployment'], 2),
                         ''
                     ],
                     [
                         "FL SUI Employer",
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0.00',
-                        '0%'
+                        number_format($table['fl_sui_employer_total_wages'], 2),
+                        number_format($table['fl_sui_employer_excess_wages'], 2),
+                        number_format($table['fl_sui_employer_taxable_wages'], 2),
+                        number_format($table['fl_sui_employer_tax_amount'], 2),
+                        number_format($table['fl_sui_employer_tax_percentage'], 2).'%'
                     ],
                 ];
 
@@ -50504,8 +50715,7 @@ class Reports extends MY_Controller {
                     $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
                     $obj_pdf->SetDefaultMonospacedFont('helvetica');
                     $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-                    // $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-                    $obj_pdf->SetMargins(5, PDF_MARGIN_TOP, 5);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
                     $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
                     $obj_pdf->SetFont('helvetica', '', 9);
                     $obj_pdf->setFontSubsetting(false);
@@ -50513,6 +50723,343 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Payroll_Tax_and_Wage_Summary.pdf', 'D');
+                }
+            break;
+            case 'Payroll Tax Liability' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.006;
+
+                $table = [
+                    'federal_taxes_tax_amount' => 0.00,
+                    'federal_taxes_tax_paid' => 0.00,
+                    'federal_taxes_tax_owed' => 0.00,
+                    'federal_income_tax_amount' => 0.00,
+                    'federal_income_tax_paid' => 0.00,
+                    'federal_income_tax_owed' => 0.00,
+                    'ss_tax_amount' => 0.00,
+                    'ss_tax_paid' => 0.00,
+                    'ss_tax_owed' => 0.00,
+                    'ss_employer_tax_amount' => 0.00,
+                    'ss_employer_tax_paid' => 0.00,
+                    'ss_employer_tax_owed' => 0.00,
+                    'medicare_tax_amount' => 0.00,
+                    'medicare_tax_paid' => 0.00,
+                    'medicare_tax_owed' => 0.00,
+                    'medicare_employer_tax_amount' => 0.00,
+                    'medicare_employer_tax_paid' => 0.00,
+                    'medicare_employer_tax_owed' => 0.00,
+                    'federal_unemployment_tax_amount' => 0.00,
+                    'federal_unemployment_tax_paid' => 0.00,
+                    'federal_unemployment_tax_owed' => 0.00,
+                    'futa_employer_tax_amount' => 0.00,
+                    'futa_employer_tax_paid' => 0.00,
+                    'futa_employer_tax_owed' => 0.00,
+                    'fl_unemployment_tax_amount' => 0.00,
+                    'fl_unemployment_tax_paid' => 0.00,
+                    'fl_unemployment_tax_owed' => 0.00,
+                    'fl_sui_employer_tax_amount' => 0.00,
+                    'fl_sui_employer_tax_paid' => 0.00,
+                    'fl_sui_employer_tax_owed' => 0.00
+                ];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+
+                    $table['ss_tax_amount'] += $empSocial;
+                    $table['ss_tax_owed'] += $empSocial;
+                    $table['medicare_tax_amount'] += $empMedicare;
+                    $table['medicare_tax_owed'] += $empMedicare;
+                    $table['federal_taxes_tax_amount'] += $empSocial;
+                    $table['federal_taxes_tax_owed'] += $empSocial;
+                    $table['federal_taxes_tax_amount'] += $empMedicare;
+                    $table['federal_taxes_tax_owed'] += $empMedicare;
+                }
+
+                $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+
+                $data = [
+                    [
+                        "Federal Taxes (941/943/944)",
+                        number_format($table['federal_taxes_tax_amount'], 2),
+                        number_format($table['federal_taxes_tax_paid'], 2),
+                        number_format($table['federal_taxes_tax_owed'], 2)
+                    ],
+                    [
+                        "Federal Income Tax",
+                        number_format($table['federal_income_tax_amount'], 2),
+                        number_format($table['federal_income_tax_paid'], 2),
+                        number_format($table['federal_income_tax_owed'], 2)
+                    ],
+                    [
+                        "Social Security",
+                        number_format($table['ss_tax_amount'], 2),
+                        number_format($table['ss_tax_paid'], 2),
+                        number_format($table['ss_tax_owed'], 2)
+                    ],
+                    [
+                        "Social Security Employer",
+                        number_format($table['ss_employer_tax_amount'], 2),
+                        number_format($table['ss_employer_tax_paid'], 2),
+                        number_format($table['ss_employer_tax_owed'], 2)
+                    ],
+                    [
+                        "Medicare",
+                        number_format($table['medicare_tax_amount'], 2),
+                        number_format($table['medicare_tax_paid'], 2),
+                        number_format($table['medicare_tax_owed'], 2)
+                    ],
+                    [
+                        "Medicare Employer",
+                        number_format($table['medicare_employer_tax_amount'], 2),
+                        number_format($table['medicare_employer_tax_paid'], 2),
+                        number_format($table['medicare_employer_tax_owed'], 2)
+                    ],
+                    [
+                        "Federal Unemployment",
+                        number_format($table['federal_unemployment_tax_amount'], 2),
+                        number_format($table['federal_unemployment_tax_paid'], 2),
+                        number_format($table['federal_unemployment_tax_owed'], 2)
+                    ],
+                    [
+                        "FUTA Employer",
+                        number_format($table['futa_employer_tax_amount'], 2),
+                        number_format($table['futa_employer_tax_paid'], 2),
+                        number_format($table['futa_employer_tax_owed'], 2)
+                    ],
+                    [
+                        "FL Unemployment Tax",
+                        number_format($table['fl_unemployment_tax_amount'], 2),
+                        number_format($table['fl_unemployment_tax_paid'], 2),
+                        number_format($table['fl_unemployment_owed'], 2)
+                    ],
+                    [
+                        "FL SUI Employer",
+                        number_format($table['fl_sui_employer_tax_amount'], 2),
+                        number_format($table['fl_sui_employer_tax_paid'], 2),
+                        number_format($table['fl_sui_employer_tax_owed'], 2)
+                    ],
+                ];
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    $style = [
+                        [
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ],
+                        [
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold']
+                        ],
+                        [
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000'],
+                            ['color' => '#000000']
+                        ]
+                    ];
+
+                    foreach($data as $index => $inputRow)
+                    {
+                        if(!in_array('Tax Percentage', $post['fields'])) {
+                            unset($inputRow[5]);
+                            unset($$style[$index][5]);
+                        }
+                        $writer->writeSheetRow('Sheet1', $inputRow, $style[$index]);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Tax_and_Wage_Summary';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Payroll_Tax_and_Wage_Summary.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field)
+                                {
+                                    $html .= '<td style="border: 1px solid black">'.$field.'</td>';
+                                }
+                    $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                foreach($data as $row)
+                                {
+                                    $html .= '<tr>';
+                                    foreach($row as $index => $val)
+                                    {
+                                        if(in_array($row[0], ['Federal Taxes (941/943/944)', 'Federal Unemployment', 'FL Unemployment Tax'])) {
+                                            $html .= '<td style="border: 1px solid black"><b>'.$val.'</b></td>';
+                                        } else {
+                                            $html .= '<td style="border: 1px solid black">'.$val.'</td>';
+                                        }
+                                    }
+                                    $html .= '</tr>';
+                                }
+                    $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="12">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Payroll_Tax_Liability';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Payroll Tax Liability";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Payroll_Tax_Liability.pdf', 'D');
                 }
             break;
         }
