@@ -2983,6 +2983,16 @@
         });
     });
 
+    $(document).on('click', '#approveThisJob', function(){        
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#approveThisJobModal').modal('show');
+    });
+
+    $(document).on('click', '#approveThisTicket', function(){        
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#approveThisTicketModal').modal('show');
+    });
+
     $('#quick-add-event-form').submit(function(e){
         e.preventDefault();
 

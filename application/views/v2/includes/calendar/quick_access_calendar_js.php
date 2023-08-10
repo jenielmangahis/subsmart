@@ -369,6 +369,11 @@ $(function(){
         }else{
             location.href = base_url + 'workcalender';
         }
+    });    
+
+    $(document).on('click', '#approveThisJob', function(){        
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#approveThisJobModal').modal('show');
     });
 
     $(document).on('click', '.quick-calendar-tile', function(){

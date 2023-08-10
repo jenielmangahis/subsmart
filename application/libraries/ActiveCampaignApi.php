@@ -34,6 +34,30 @@ class ActiveCampaignApi
         return $return;
     }
 
+    public function getContact($search, $account_url, $token)
+    {
+        $error_message = '';
+        $contacts = array();
+        $query =  http_build_query($search);
+        try {
+            $client = new \GuzzleHttp\Client();
+
+            $response = $client->request('GET', $account_url . '/api/3/contacts?'.$query, [
+              'headers' => [
+                'accept' => 'application/json',
+                'Api-Token' => $token
+              ],
+            ]);
+
+            $contacts = json_decode($response->getBody());    
+        } catch (Exception $e) {
+           $error_message = $e->getMessage(); 
+        }
+        
+        $return = ['contacts' => $contacts, 'error_message' => $error_message];
+        return $return;
+    }
+
     public function createContact($account_url, $token, $contact)
     {
         $data = array();

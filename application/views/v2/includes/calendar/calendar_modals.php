@@ -625,6 +625,102 @@
     </div>
 </div>
 
+<div class="modal fade" id="approveThisJobModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Send Esign</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="update_status_to_omw" method="post">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
+                        </div>
+                        <div class="col-sm-12 mb-4">
+                            <div class="nsm-loader" style="height: 100px; min-height: unset;">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            </div>
+
+                            <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
+                                <i class="bx bx-meh-blank"></i>
+                                <span>No eSign template found.</span>
+                            </div>
+
+                            <div class="esign-templates d-none mt-1">
+                                <label class="mb-1">Select your template below:</label>
+                                <div class="dropdown">
+                                    <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown button
+                                    </button>
+                                    <ul class="dropdown-menu"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
+                        <i class="bx bx-loader-alt bx-spin" style="margin-right: 5px;"></i>
+                        <span>Send eSign</span>
+                        </button>
+                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="nsm-button" data-action="approve" id="approveThisJob" style="display: none;">Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="approveThisTicketModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Send Esign</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="update_status_to_omw" method="post">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
+                        </div>
+                        <div class="col-sm-12 mb-4">
+                            <div class="nsm-loader" style="height: 100px; min-height: unset;">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            </div>
+
+                            <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
+                                <i class="bx bx-meh-blank"></i>
+                                <span>No eSign template found.</span>
+                            </div>
+
+                            <div class="esign-templates d-none mt-1">
+                                <label class="mb-1">Select your template below:</label>
+                                <div class="dropdown">
+                                    <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown button
+                                    </button>
+                                    <ul class="dropdown-menu"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button disabled type="button" class="nsm-button primary ticket-approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
+                        <i class="bx bx-loader-alt bx-spin" style="margin-right: 5px;"></i>
+                        <span>Send eSign</span>
+                        </button>
+                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="nsm-button" data-action="approve" id="approveThisTicket" style="display: none;">Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="modal-quick-edit-tc-off" tabindex="-1" aria-labelledby="modal-quick-edit-tc-off-label" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <form id="quick-edit-tc-off-form" method="POST">
