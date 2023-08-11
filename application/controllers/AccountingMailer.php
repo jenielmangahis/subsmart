@@ -51,6 +51,7 @@ class AccountingMailer extends MY_Controller{
             "vendor_contact_list",
             "audit_log_list",
             "expenses_by_vendor_summary",
+            "inventory_valuation_summary",
         );
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {
@@ -68,4 +69,8 @@ class AccountingMailer extends MY_Controller{
         }
 
     }
+
+    // public function testPdf() {
+    //     $this->load->helper('pdf_custom_helper');
+    // }
 }

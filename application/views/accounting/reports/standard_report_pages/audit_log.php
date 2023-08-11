@@ -87,35 +87,6 @@
 </style>
 
 <div class="container-fluid">
-<!--     <div class="row mb-1 d-none">
-        <div class="col-lg-1"></div>
-        <div class="col-lg-10">
-            <div class="float-end">
-                <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                    <p class="m-0">Rows/columns</p>
-                    <div class="row grid-mb">
-                        <div class="col-12">
-                            <label for="filter-group-by">Group by</label>
-                            <select class="nsm-field form-select" name="filter_group_by" id="filter-group-by">
-                                <option value="none" selected>None</option>
-                                <option value="Customer">Customer</option>
-                                <option value="Phone Numbers">Phone Numbers</option>
-                                <option value="Email">Email</option>
-                                <option value="Billing">Billing</option>
-                                <option value="Shipping Address">Shipping Address</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <button type="submit" class="nsm-button primary">Run Report</button>
-                        </div>
-                    </div>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-1"></div>
-    </div> -->
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
@@ -143,7 +114,6 @@
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
                                     </ul>
                                     <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>
-                                    <!-- Example single danger button -->
                                 </span>
                             </div>
                         </div>
@@ -163,17 +133,21 @@
                                     </center>
                                 </div>
                             </div>
-                            <!-- <div class="row mb-3"> 
+                            <div class="row mb-3 d-none"> 
                                 <div class="col-lg-12">
                                     <center>
-                                        <h5><small id="reportDate">April - June, 2023</small></h5>
+                                        <h5><small id="reportDate"></small></h5>
                                     </center>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="mb-4"></div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <table id="auditloglist_table" class="nsm-table w-100 border-0" data-tableName="Test Table 1">
+                                    <?php 
+                                        $tableID = "auditloglist_table"; 
+                                        $reportCategory = "audit_log_list"; 
+                                    ?>
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
                                                 <th>DATE CHANGED</th>
@@ -234,7 +208,7 @@
 
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
-<div class="modal" id="reportSettings" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -245,7 +219,8 @@
                 <form id="reportSettingsForm" method="POST">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="row mb-3">
+                            <!-- FOR LATER UPDATES -->
+                            <!-- <div class="row mb-3">
                                 <div class="col-md-4">
                                     <div class="col-md-12">
                                         <label class="form-label fw-xnormal">User</label>
@@ -293,23 +268,23 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label fw-xnormal">Company Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox" checked></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($head) ? strtoupper($company_title) : strtoupper($clients->business_name); ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="form-label fw-xnormal">Report Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox" checked></div>
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label class="form-label fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="form-select">
                                         <option value="C" selected>Center</option>
@@ -317,7 +292,7 @@
                                         <option value="R">Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <label class="form-label fw-xnormal">Footer Align</label>
                                     <select name="footer_align" id="footer-align" class="form-select">
                                         <option value="C" selected>Center</option>
@@ -527,11 +502,17 @@
         $('select').select2('destroy'); // Disable Select2
     });
 
+    var BASE_URL = window.location.origin;
+    var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
+    var REPORT_ID = "<?php echo $reportTypeId; ?>";
+    // =========================
+    var theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
+    var theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
     var businessName = $("#businessName").text();
     var reportName = $("#reportName").text();
+    var reportDate = $("#reportDate").text();
     var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
     var notes = $("#notesContent").text();
-    var reportID = "<?php echo $reportTypeId; ?>";
     var sort_by = $('select[name="sort_by"]').val();
     var sort_order = $('input[name="sort_order"]:checked').val();
     var page_size = $('select[name="page_size"]').val();
@@ -543,13 +524,15 @@
         pageOrientation: pageOrientation,
     };
 
-    // get new variable data function
-    function getNewVariableData() {
+    // update variable data function
+    function updateDataOnVariable() {
+        theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
+        theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
         businessName = $("#businessName").text();
         reportName = $("#reportName").text();
+        reportDate = $("#reportDate").text();
         filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
         notes = $("#notesContent").text();
-        reportID = "<?php echo $reportTypeId; ?>";
         sort_by = $('select[name="sort_by"]').val();
         sort_order = $('input[name="sort_order"]:checked').val();
         page_size = $('select[name="page_size"]').val();
@@ -563,22 +546,25 @@
     }
 
     // Render result function
-    function renderReportList(businessName, reportName, filename, notes, reportConfig) {
-        $(".settingsApplyButton").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Please wait...');
+    function renderReportList(theadColumnNames, theadTotalColumn, businessName, reportName, reportDate, filename, notes, reportConfig) {
+        $(".settingsApplyButton").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
-        $("#auditloglist_table > tbody").empty().html('<tr><td colspan="7"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
+        $("#<?php echo $tableID; ?> > tbody").empty().html('<tr><td colspan="7"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('accounting_controllers/Reports/getReportData/audit_log_list'); ?>",
+            url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
             data: { 
-                businessName: this.businessName, 
+                theadColumnNames: this.theadColumnNames,
+                theadTotalColumn: this.theadTotalColumn,
+                businessName: this.businessName,
                 reportName: this.reportName, 
+                reportDate: this.reportDate, 
                 filename: this.filename, 
                 notes: this.notes, 
                 reportConfig: this.reportConfig, 
             },
             success: function(data) {
-                $("#auditloglist_table > tbody").empty().html(data);
+                $("#<?php echo $tableID; ?> > tbody").empty().html(data);
                 loadReportPreview();
                 $(".settingsApplyButton").removeAttr('disabled').empty().append('Apply');
                 $('#reportSettings').modal('hide');
@@ -587,28 +573,28 @@
     }
 
     // Fetch report notes function
-    function getReportNotes(reportID) {
+    function getReportNotes(REPORT_ID) {
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('accounting_controllers/reports/getNotes'); ?>",
-            data: { reportID: this.reportID, },
+            url: BASE_URL + "/accounting_controllers/reports/getNotes",
+            data: { reportID: this.REPORT_ID, },
             success: function(data) {
                 notes = data;
                 $('#notesContent').html("Loading notes...");
                 $('#notesContent').html(data);
                 $("#NOTES").val(data);
                 (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
-                renderReportList(businessName, reportName, filename, notes, reportConfig);
+                renderReportList(theadColumnNames, theadTotalColumn, businessName, reportName, reportDate, filename, notes, reportConfig);
             }
         });
-    } getReportNotes(reportID);
+    } getReportNotes(REPORT_ID);
 
     // Preview .pdf report in embedded frame function
     function loadReportPreview() {
         $('#pdfPreview').hide();
         $('#pdfPreview').attr(
             'src', 
-            '<?php echo base_url("assets/pdf/accounting/"); ?>' + filename + '.pdf?' + Math.round(Math.random() * 1000000)
+            BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)
         ).on('load', function() {
             $('.dataLoader').remove();
             $('#pdfPreview').show();
@@ -618,14 +604,14 @@
     // Sort feature config
     $('#reportSettingsForm').submit(function(event) {
         event.preventDefault();
-        getNewVariableData();
-        renderReportList(businessName, reportName, filename, notes, reportConfig);
+        updateDataOnVariable();
+        renderReportList(theadColumnNames, theadTotalColumn, businessName, reportName, reportDate, filename, notes, reportConfig);
     });
 
     // Page orientation feature config
     $('#pageOrientation').change(function(event) {
-        getNewVariableData();
-        renderReportList(businessName, reportName, filename, notes, reportConfig);
+        updateDataOnVariable();
+        renderReportList(theadColumnNames, theadTotalColumn, businessName, reportName, reportDate, filename, notes, reportConfig);
     });
 
     // Add notes script
@@ -641,9 +627,9 @@
         // =========
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('accounting_controllers/reports/saveNotes'); ?>",
+            url: BASE_URL + "/accounting_controllers/reports/saveNotes",
             data: { 
-                reportID: reportID,
+                reportID: REPORT_ID,
                 reportNotes: reportNotes,
             },
             success: function(data) {
@@ -651,8 +637,8 @@
                 $(".noteSaveButton").removeAttr('disabled').empty().append('Save');
                 $("#notesContent").show();
                 $("#addNotesForm").hide();
-                getNewVariableData();
-                renderReportList(businessName, reportName, filename, notes, reportConfig);
+                updateDataOnVariable();
+                renderReportList(theadColumnNames, theadTotalColumn, businessName, reportName, reportDate, filename, notes, reportConfig);
             }
         });
     });
@@ -676,7 +662,7 @@
 
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('AccountingMailer/emailReport/audit_log_list'); ?>",
+            url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
             data: {
                 emailTo: emailTo,
                 emailCC: emailCC,
@@ -709,7 +695,7 @@
     // Export Report to PDF feature
     $("#exportToPDF, .savePDF").click(function(event) {
         event.preventDefault();
-        var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".pdf";
+        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf";
         var link = $("<a>", {
             href: filePath,
             download: filename + ".pdf",
@@ -722,7 +708,7 @@
     // Export Report to XLSX feature
     $("#exportToXLSX").click(function(event) {
         event.preventDefault();
-        var filePath = "<?php echo base_url('assets/pdf/accounting/'); ?>" + filename + ".xlsx";
+        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".xlsx";
         var link = $("<a>", {
             href: filePath,
             download: filename + ".xlsx",
@@ -739,21 +725,9 @@
         $("#NOTES").focus();
     });
     $('#cancelNotes').on('click', function(event) {
+        $(".addNotes").focus();
         $("#notesContent").show();
         $("#addNotesForm").hide();
-    });
-    $(".openCustomize").click(function(event) {
-        $(".openCustomize").hide();
-        $(".saveCustomize").show();
-        $(".customizeContainer").show();
-        $(".addMargin3").addClass('mb-3');
-
-    });
-    $(".saveCustomize").click(function(event) {
-        $(".openCustomize").show();
-        $(".saveCustomize").hide();
-        $(".customizeContainer").hide();
-        $(".addMargin3").removeClass('mb-3');
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

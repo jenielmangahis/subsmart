@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="row g-3 justify-content-center">
-                    <div class="col-auto">
+                    <div class="col-6">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -106,95 +106,34 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
-                                            <td data-name="Tax Types">TAX TYPES</td>
-                                            <td data-name="Total Wages">TOTAL WAGES</td>
-                                            <td data-name="Excess Wages">EXCESS WAGES</td>
-                                            <td data-name="Taxable Wages">TAXABLE WAGES</td>
-                                            <td data-name="Tax Amount">TAX AMOUNT</td>
-                                            <td data-name="Tax Percentage" <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>>TAX PERCENTAGE</td>
+                                            <td data-name="Name">NAME</td>
+                                            <td data-name="Commission">COMMISSION</td>
+                                            <td data-name="Total">TOTAL</td>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php if(count($employees) > 0) : ?>
+                                        <?php foreach($employees as $index => $employee) : ?>
                                         <tr>
-                                            <td><b>Federal Taxes (941/943/944)</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b><?=number_format($data['federal_taxes'], 2)?></b></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td><?=$employee['name']?></td>
+                                            <td><?=number_format($employee['commission'], 2)?></td>
+                                            <td><?=number_format($employee['total'], 2)?></td>
                                         </tr>
+                                        <?php endforeach; ?>
                                         <tr>
-                                            <td>Federal Income Tax</td>
-                                            <td><?=number_format($data['federal_income_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['federal_income_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['federal_income_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['federal_income_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['federal_income_tax_percentage'], 2)?>%</td>
+                                            <td><b>Total pay</b></td>
+                                            <td><b><?=number_format($totals['commission'], 2)?></b></td>
+                                            <td><b><?=number_format($totals['total'], 2)?></b></td>
                                         </tr>
+                                        <?php else : ?>
                                         <tr>
-                                            <td>Social Security</td>
-                                            <td><?=number_format($data['ss_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['ss_tax_percentage'], 2)?>%</td>
+                                            <td colspan="3">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>Social Security Employer</td>
-                                            <td><?=number_format($data['ss_employer_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_employer_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_employer_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['ss_employer_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['ss_employer_tax_percentage'], 2)?>%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Medicare</td>
-                                            <td><?=number_format($data['medicare_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['medicare_tax_percentage'], 2)?>%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Medicare Employer</td>
-                                            <td><?=number_format($data['medicare_employer_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_employer_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_employer_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['medicare_employer_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['medicare_employer_tax_percentage'], 2)?>%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Federal Unemployment</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b><?=number_format($data['federal_unemployment'], 2)?></b></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>></td>
-                                        </tr>
-                                        <tr>
-                                            <td>FUTA Employer</td>
-                                            <td><?=number_format($data['futa_employer_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['futa_employer_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['futa_employer_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['futa_employer_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['futa_employer_tax_percentage'], 2)?>%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>FL Unemployment Tax</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b><?=number_format($data['fl_unemployment'], 2)?></b></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>></td>
-                                        </tr>
-                                        <tr>
-                                            <td>FL SUI Employer</td>
-                                            <td><?=number_format($data['fl_sui_employer_tax_wages'], 2)?></td>
-                                            <td><?=number_format($data['fl_sui_employer_excess_wages'], 2)?></td>
-                                            <td><?=number_format($data['fl_sui_employer_taxable_wages'], 2)?></td>
-                                            <td><?=number_format($data['fl_sui_employer_tax_amount'], 2)?></td>
-                                            <td <?=isset($columns) && !in_array('Tax Percentage', $columns) ? 'style="display: none"' : ''?>><?=number_format($data['fl_sui_employer_tax_percentage'], 2)?>%</td>
-                                        </tr>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>

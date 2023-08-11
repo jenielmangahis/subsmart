@@ -61,6 +61,10 @@ $('#filter-report-period').on('change', function() {
     }
 });
 
+$('#filter-report-period-from, #filter-report-period-to').on('change', function() {
+    $('#filter-report-period').val('custom').trigger('change');
+});
+
 $('#run-report').on('click', function(e) {
     e.preventDefault();
 
@@ -97,34 +101,6 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
-$('input[name="select_columns"]').on('change', function(e) {
-    if($('input[name="select_columns"]:checked').length === $('input[name="select_columns"]').length) {
-        $('#select-all-columns').html('Unselect all');
-        $('#select-all-columns').attr('id', 'unselect-all-columns');
-    } else {
-        $('#unselect-all-columns').html('Select All');
-        $('#unselect-all-columns').attr('id', 'select-all-columns');
-    }
-});
-
-$(document).on('click', '#select-all-columns', function(e) {
-    e.preventDefault();
-
-    $('input[name="select_columns"]').prop('checked', true);
-
-    $(this).html('Unselect all');
-    $(this).attr('id', 'unselect-all-columns');
-});
-
-$(document).on('click', '#unselect-all-columns', function(e) {
-    e.preventDefault();
-
-    $('input[name="select_columns"]').prop('checked', false);
-
-    $(this).html('Select all');
-    $(this).attr('id', 'select-all-columns');
-});
-
 $('#run-report-button').on('click', function() {
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     var currentUrl = currUrl.replace('#', '');
@@ -135,7 +111,7 @@ $('#run-report-button').on('click', function() {
         var querySplit = query.split('&');
 
         var notIncluded = [
-            'columns'
+            'status',
         ];
         $.each(querySplit, function(key, value) {
             var selectedVal = value.split('=');
@@ -145,14 +121,7 @@ $('#run-report-button').on('click', function() {
         });
     }
 
-    var columns = [];
-    $('input[name="select_columns"]:checked').each(function() {
-        columns.push($(this).next().text().replace('&', 'and').trim());
-    });
-
-    if(columns.length < $('input[name="select_columns"]').length) {
-        url += `columns=${columns}&`;
-    }
+    url += $('#filter-employee').val() !== 'all' ? `status=${$('#filter-employee').val()}&` : '';
 
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 

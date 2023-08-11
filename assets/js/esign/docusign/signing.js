@@ -104,74 +104,198 @@ function Signing(hash) {
       return total_due;
     }
 
-    if( field_name == "City" ) {
-      return city;
+    if( field_name == "City" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return city;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return city;
+      }          
     }
 
     if( field_name == "State" ) {
-      if( acs_state != '' ){
-        return acs_state;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          if( acs_state === '' || typeof acs_state === 'undefined' ){      
+            return state;
+          }else{
+            return acs_state;  
+          }
+          
+        }else{
+          return fieldValue['value'];
+        }
       }else{
-        return state;  
-      }       
+        if( acs_state === '' || typeof acs_state === 'undefined' ){    
+          return state;  
+        }else{
+          return acs_state;  
+        }        
+      }  
     }
 
     if( field_name == "County" ) {
-      return county_name;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return county_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return county_name;
+      }     
     }
 
     if( field_name == "ZIP" ) {
-      if( acs_zip != '' ){
-        return acs_zip;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          if( acs_zip === '' || typeof acs_zip === 'undefined' ){
+            return zip_code;
+          }else{
+            return acs_zip;      
+          }
+        }else{
+          return fieldValue['value'];
+        }
       }else{
-        return zip_code;
+        if( acs_zip === '' || typeof acs_zip === 'undefined' ){
+          return zip_code;
+        }else{
+          return acs_zip;   
+        }
       }      
     }
 
     if( field_name == "Address" ) {
-      if( service_location != '' ){
-        return service_location;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          if( service_location === '' || typeof service_location === 'undefined' ){ 
+            return mail_add;
+          }else{
+            return service_location;  
+          }          
+        }else{
+          return fieldValue['value'];
+        }
       }else{
-        return mail_add;  
+        if( service_location === '' || typeof service_location === 'undefined' ){ 
+          return mail_add;
+        }else{
+          return service_location;  
+        }
       }
-      
     }
 
     if( field_name == "Date of Birth" ) {
-      return date_of_birth;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return date_of_birth;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return date_of_birth;
+      }
     }
 
     if( field_name == "Social Security Number" ) {
-      return ssn;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return ssn;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return ssn;
+      }
     }
 
-    if( field_name == "Subscriber Name" ) {
-      return first_name + " " + last_name;
+    if( field_name == "Subscriber Name" ) {      
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return first_name + " " + last_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return first_name + " " + last_name;
+      }
     }
 
     if( field_name == "Subscriber Email" ) {
-      return email;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return email;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return email;
+      }
     }
 
     if( field_name == "Primary Contact Name" ){
-      return emergency_primary_contact_fname + " " + emergency_primary_contact_lname;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_primary_contact_fname + " " + emergency_primary_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_primary_contact_fname + " " + emergency_primary_contact_lname;
+      }
     }
 
     if( field_name == "Primary Contact First Name" ){
-      return emergency_primary_contact_fname;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_primary_contact_fname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_primary_contact_fname;
+      }
     }
 
     if( field_name == "Primary Contact Last Name" ){
-      return emergency_primary_contact_lname;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_primary_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_primary_contact_lname;
+      }
     }
 
     if( field_name == "Primary Contact Number" ){
-      return emergency_primary_contact_phone;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_primary_contact_phone;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_primary_contact_phone;
+      }
     }
 
 
     if( field_name == "Secondary Contact Name" ){
-      return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+      }      
     }
 
     if( field_name == "Secondary Contact First Name" ){
@@ -188,19 +312,51 @@ function Signing(hash) {
 
 
     if( field_name == "Primary Contact" ){
-      return phone_m;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return phone_m;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return phone_m;
+      }
     }
 
     if( field_name == "Secondary Contact" ){
-      return phone_h;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return phone_h;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return phone_h;
+      }
     }
 
     if( field_name == "Access Password" ){
-      return access_password;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return access_password;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return access_password;
+      }
     }
 
     if( field_name == "Equipment" ){
-      return equipment;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return equipment;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return equipment;
+      }
     }
 
     if( field_name == "Esign Envelope ID" ){      
@@ -208,47 +364,136 @@ function Signing(hash) {
     }
 
     if( field_name == "Card Holder Name" ){
-      return card_fname + " " + card_lname;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return card_fname + " " + card_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return card_fname + " " + card_lname;
+      }
     }
 
     if( field_name == "Card Number" ){
-      return credit_card_num;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return credit_card_num;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return credit_card_num;
+      }
     }
 
     if( field_name == "Checking Account Number" ){
-      return check_num;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return check_num;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return check_num;
+      }
     }
 
     if( field_name == "Card Expiration" ){
-      return credit_card_exp;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return credit_card_exp;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return credit_card_exp;
+      }
     }
 
     if( field_name == "ABA" ){
-      return routing_num;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return routing_num;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return routing_num;
+      }
     }
 
     if( field_name == "CS Account Number" ){
-      return alarm_cs_account;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return alarm_cs_account;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return alarm_cs_account;
+      }
     }
 
     if( field_name == "Abort Code" ){
-      return passcode;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return passcode;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return passcode;
+      }
     }
 
     if( field_name == 'Account Number' ){
-      return acct_num;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return acct_num;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return acct_num;
+      }
     }
 
     if( field_name == "Equipment Cost" ){
-      return equipment_cost;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return equipment_cost;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return equipment_cost;
+      }
     }
 
     if( field_name == "One Time Activation (OTP)" ){
-      return otps;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return otps;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return otps;
+      }
     }
 
     if( field_name == "Monthly Monitoring Rate" ){
-      return monthly_monitoring;
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return monthly_monitoring;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return monthly_monitoring;
+      }      
+      
     }
 
     if( field_name == "kW DC" ){
@@ -547,7 +792,7 @@ function Signing(hash) {
         $element.addClass(`${baseClassName}--isRequired`);
       }
 
-      console.log(JSON.stringify(field, null, 4));
+      //console.log(JSON.stringify(field, null, 4));
       const inputName = `${name}-${field.unique_key}`;
       $element.append(`
             <div class="form-check">

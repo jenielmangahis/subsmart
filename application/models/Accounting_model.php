@@ -51,7 +51,7 @@ class Accounting_model extends MY_Model {
             $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            // $this->db->limit($reportConfig['page_size']); // Not Applicable
+            $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
@@ -126,6 +126,20 @@ class Accounting_model extends MY_Model {
             }
 
             return $arrayStdObject;
+        }
+
+        // Get Inventory Valuation Summary data in Database
+        if ($reportType == "inventory_valuation_summary") {
+            $this->db->select('items.id AS id, SUBSTRING(MD5(items.id), 1, 10) AS product_sku, items.title AS product_name, items.type AS product_type, (items_has_storage_loc.qty + items_has_storage_loc.initial_qty) AS product_quantity, (items.price * (items_has_storage_loc.qty + items_has_storage_loc.initial_qty)) AS product_asset_value, items.price AS product_calculated_average');
+            $this->db->from('items');
+            $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
+            $this->db->where('items.type', "Product");
+            $this->db->where('(items_has_storage_loc.qty + items_has_storage_loc.initial_qty) >', 0);
+            $this->db->where('items.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
         }
 
     }

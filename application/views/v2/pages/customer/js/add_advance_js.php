@@ -503,7 +503,7 @@
                 success: function(data)
                 {
                     document.getElementById('overlay').style.display = "none";
-                    if(success){
+                    if(data){
                         <?php if(isset($profile_info)): ?>
                         sucess("Customer Information has been Updated Successfully!",data.profile_id);
                         <?php else: ?>
@@ -556,7 +556,7 @@
         }
         function sucess(information,id){
             Swal.fire({
-                title: 'Good job!',
+                //title: 'Good job!',
                 text: information,
                 icon: 'success',
                 showCancelButton: false,
