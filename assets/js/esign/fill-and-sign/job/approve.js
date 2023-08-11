@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return `${template.name} (default)`;
     };
 
-    const response = await fetch("/ci/nsmart_v2/DocuSign/apiTemplates?all=true");
+    const response = await fetch("/DocuSign/apiTemplates?all=true");
     const jsonData = await response.json();
     const templates = jsonData.data;
 

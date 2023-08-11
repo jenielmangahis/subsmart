@@ -22,6 +22,9 @@
 }
 </style>
 <div class="">
+    <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
+    <input type="hidden" value="<?= $jobs_data->status ?>" id="esignJobStatus" />
+    <input type="hidden" value="<?= $jobs_data->customer_id; ?>" id="customer_id">
     <div class="row">
         <div class="col-md-12">
         <div class="right-text">
@@ -84,12 +87,15 @@
                             <td align="right" class="job-status">
                                 <b><?=  $jobs_data->status; ?></b>
                             </td>
-                        </tr>
+                        </tr>                        
                     </tbody>
                 </table>
+                <?php if( $jobs_data->status == 'Started' ){ ?>
+                <a class="nsm nsm-button primary" style="float: right;margin-top: 10px;" href="javascript:void(0);" id="approveThisJob">Send Esign</a>   
+                <?php } ?>
             </div>            
         </div>
-        <div class="row mt-5">
+        <div class="row mt-3">
             <div class="col-md-8">
                 <h6 class="title-border">FROM :</h6>
                 <div style="padding:0px 9px; font-size: 14px;">
