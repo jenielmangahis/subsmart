@@ -574,15 +574,91 @@ class DocuSign extends MYF_Controller
         echo json_encode(['data' => $data, 'view' => $view]);
     }
 
+    public function apiListManage($view)
+    {
+        $view = strtolower($view);
+        $documents = $this->getManageData($view);
+        $data = [];
+
+        foreach ($documents as $document) {
+            if ($view === 'deleted') {
+                $trashedAt = strtotime($document->trashed_at);
+                $timeDiff = strtotime('now') - $trashedAt;
+                $isMoreThan24Hours = $timeDiff > 86400;
+
+                if ($isMoreThan24Hours) {
+                    $this->db->where('id', $document->id);
+                    $this->db->update('user_docfile', ['status' => 'Deleted']);
+                    // continue;
+                }
+            }
+
+            $this->db->where('docfile_id', $document->id);
+            $document->recipients = $this->db->get('user_docfile_recipients')->result();
+
+            if ($document->status === 'Waiting for Others') {
+                // makes sure to order recipients.
+                $recipientsCopy = array_merge([], $document->recipients);
+                usort($recipientsCopy, function ($recipientA, $recipientB) {
+                    return (int) $recipientA->id - (int) $recipientB->id;
+                });
+
+                $nextSignsInPerson = current(array_filter($recipientsCopy, function ($recipient) {
+                    return $recipient->role === 'Signs in Person' && is_null($recipient->completed_at);
+                }));
+
+                if ($nextSignsInPerson) {
+                    $document->next_recipient = $nextSignsInPerson;
+
+                    $message = json_encode([
+                        'recipient_id' => $document->next_recipient->id,
+                        'document_id' => $document->id
+                    ]);
+
+                    $hash = encrypt($message, $this->password);
+                    $document->next_recipient->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+                }
+            }
+
+            array_push($data, $document);
+        }
+
+        if ($view === 'action_required') {
+            foreach ($data as $document) {
+                $recipientId = null;
+                foreach ($document->recipients as $recipient) {
+                    if ($recipient->email === logged('email')) {
+                        $recipientId = $recipient->id;
+                        break;
+                    }
+                }
+
+                $message = json_encode([
+                    'recipient_id' => $recipientId,
+                    'document_id' => $document->id
+                ]);
+                $hash = encrypt($message, $this->password);
+                $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+            }
+        }
+        header('content-type: application/json');
+        echo json_encode(['data' => $data, 'view' => $view]);
+    }
+
     private function getManageData($view)
     {
+        $companyId = logged('company_id');
+
         $view = strtolower($view);
        
         if ($view === 'action_required') {
             return $this->getActionRequired();
         }
-
-        $this->db->where('user_id', logged('id'));
+        $this->db->join('acs_profile', 'user_docfile.customer_id = acs_profile.prof_id', 'left');        
+        $this->db->where('user_docfile.unique_key <>', '');
+        $this->db->where('user_docfile.company_id >', 0);
+        $this->db->where('user_docfile.company_id', $companyId);
+        //$this->db->where('user_id', logged('id'));
         switch ($view) {
             case 'sent':
                 $this->db->select('docfile_id');
@@ -591,29 +667,34 @@ class DocuSign extends MYF_Controller
                 $docfileIds = $this->db->get('user_docfile_recipients')->result();
                 $docfileIds = array_column($docfileIds, 'docfile_id');
 
-                $this->db->where_not_in('status', ['Trashed', 'Deleted']);
-                $this->db->where_in('id', empty($docfileIds) ? [-1] : $docfileIds);
+                $this->db->where_not_in('user_docfile.status', ['Trashed', 'Deleted']);
+                $this->db->where_in('user_docfile.id', empty($docfileIds) ? [-1] : $docfileIds);
                 break;
 
             case 'drafts':
-                $this->db->where('status', 'Draft');
+                $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+                $this->db->where('user_docfile.status', 'Draft');
                 break;
 
             case 'deleted':
-                $this->db->where('status', 'Deleted');
+                $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+                $this->db->where('user_docfile.status', 'Deleted');
                 break;
             
-            case 'completed':
-                $this->db->where('status', 'Completed');
+            case 'completed':            
+                $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+                $this->db->where('user_docfile.status', 'Completed');
                 break;
 
             case 'inbox':
-                $this->db->where('status !=', 'Deleted');
-                $this->db->where('status !=', 'Trashed');
+                $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+                $this->db->where('user_docfile.status !=', 'Deleted');
+                $this->db->where('user_docfile.status !=', 'Trashed');
                 break;
 
             default:
-                $this->db->where('status !=', 'Deleted');
+                $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+                $this->db->where('user_docfile.status !=', 'Deleted');
                 break;
         }
 
@@ -2047,6 +2128,47 @@ SQL;
         return $this->db->get('acs_profile')->row();
     }
 
+    public function getTicketCustomer($ticketid)
+    {
+        $ticket = $this->_getTicketCustomer($ticketid);
+        $ticket->id = $ticketid;
+        $ticket->employee = $this->getTicketEmployee($ticket);
+        $ticket->admin = $this->getCompanyAdmin();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $ticket]);
+    }
+
+    private function _getTicketCustomer($ticketid)
+    {
+        $this->db->where('id', $ticketid);
+        $this->db->select('customer_id');
+        $job = $this->db->get('tickets')->row();
+
+        if (!$job) {
+            return null;
+        }
+
+        $this->db->where('prof_id', $job->customer_id);
+        return $this->db->get('acs_profile')->row();
+    }
+
+    private function getTicketEmployee($ticket)
+    {
+        $this->db->where('id', $ticket);
+        $this->db->select('sales_rep');
+        $ticket = $this->db->get('tickets')->row();
+
+        if (!$ticket) {
+            return null;
+        }
+
+        $this->db->where('id', $ticket->sales_rep);
+        $employee = $this->db->get('users')->row();
+
+        return $employee;
+    }
+
     private function getJobEmployee($job)
     {
         $employee = null;
@@ -2545,6 +2667,41 @@ SQL;
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
     }
+
+    public function apiGetDocuSignList()
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getDocuSignList()]);
+    }
+
+    private function getDocuSignList()
+    {
+        $cid = logged('company_id');
+
+        $query = <<<SQL
+        SELECT `user_docfile_recipients`.`docfile_id` FROM `user_docfile_recipients`
+        LEFT JOIN `user_docfile` ON `user_docfile`.`id` = `user_docfile_recipients`.`docfile_id`
+        WHERE `user_docfile`.`company_id` = ? AND
+        `user_docfile_recipients`.`sent_at` IS NOT NULL AND `user_docfile_recipients`.`completed_at` IS NULL
+SQL;
+
+        $results = $this->db->query($query, [$cid])->result();
+        $docfileIds = array_map(function ($result) {
+            return $result->docfile_id;
+        }, $results);
+
+        if (empty($docfileIds)) {
+            return [];
+        }
+
+        $this->db->where('status <>', 'Trashed');
+        $this->db->where('status <>', 'Deleted');
+        $this->db->where_in('id', $docfileIds);
+        $this->db->order_by('id', 'DESC');
+        return $this->db->get('user_docfile')->result();
+    }
+
+
 
     public function apiGetHash()
     {

@@ -45,6 +45,22 @@ const columns = {
         </div>
     `;
   },
+  subject: function (_, _, row) {
+    return  row.subject;
+  },
+  rowIcon: function(_, _, row){
+    return '<div class="table-row-icon"><i class="bx bx-file"></i></div>';
+  },
+  docfileid: function(_, _, row){
+    return '<b>' + row.unique_key + '</b>';
+  },
+  customerName: function(_, _, row){
+    if( row.customer_firstname === null || row.customer_lastname === null ){
+      return 'Customer nof found';
+    }else{
+      return row.customer_firstname + ' ' + row.customer_lastname;  
+    }
+  },
   status: function (_, _, row) {
     const { recipients } = row;
 
@@ -247,6 +263,114 @@ const columns = {
 
     return dropdown;
   },
+  managerTools: function (_, _, row) {
+    if (row.signing_url) {
+      return `
+        <a href="${row.signing_url}" class="nsm-button" target="_blank" style="margin: 0;">
+          Continue Signing
+        </a>
+      `;
+    }
+
+    const menu = {};
+    const { status } = row;
+
+    const isVoided = /^voided$/i.test(status);
+    const isDraft = /^draft$/i.test(status);
+    const isSent = /^waiting for others$/i.test(status);
+    const isDeleted = /^trashed$/i.test(status);
+    const isCompleted = /^completed$/i.test(status);
+
+    const DELETE = "delete";
+    const CONTINUE = "continue";
+    const VOID = "void";
+    const RESEND = "resend";
+    const COPY = "copy";
+    const HISTORY = "history";
+    const SAVE_AS_TEMPLATE = "save as template";
+    const VIEW = "view";
+
+    switch (true) {
+      case isVoided:
+        menu.primary = DELETE;
+        menu.secondary = [HISTORY];
+        break;
+
+      case isDraft:
+        menu.primary = CONTINUE;
+        menu.secondary = [DELETE, HISTORY];
+        break;
+
+      case isDeleted:
+        menu.primary = CONTINUE;
+        menu.secondary = [HISTORY];
+        break;
+
+      case isSent:
+        menu.primary = RESEND;
+        menu.secondary = [COPY, DELETE, VOID, HISTORY, SAVE_AS_TEMPLATE];
+        break;
+
+      case isCompleted:
+        menu.primary = VIEW;
+        menu.secondary = [HISTORY, SAVE_AS_TEMPLATE];
+        break;
+    }
+
+    const { primary, secondary } = menu;
+
+    if (!primary) {
+      return "";
+    }
+
+    const primaryMenu = `
+      <li>
+        <a class="dropdown-item action text-capitalize" data-action="${primary}" href="#">
+          ${primary}
+        </a>
+      </li>
+
+    `;
+
+    let secondaryMenu = "";
+    if (secondary && secondary.length) {
+      const secondaryMenuItems = secondary.map((action) => {
+        return `
+        <li>
+          <a class="dropdown-item action text-capitalize" data-action="${action}" href="#">
+            ${action}
+          </a>
+        </li>
+        `;
+      });
+
+      secondaryMenu = secondaryMenuItems.join("");
+    }
+
+    const dropdown = `
+      <div class="dropdown table-management">
+        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          ${primaryMenu}          
+        </ul>
+      </div>
+    `;
+
+    if (row.next_recipient && row.next_recipient.signing_url) {
+      return `
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <a href="${row.next_recipient.signing_url}" class="nsm-button" target="_blank" style="margin: 0; margin-right: 8px;">
+          Continue Signing (${row.next_recipient.name})
+          </a>
+          ${dropdown}
+        </div>
+      `;
+    }
+
+    return dropdown;
+  },
   lastChanged: function (_, _, row) {
     let { updated_at } = row;
     updated_at = updated_at || row.created_at;
@@ -256,8 +380,8 @@ const columns = {
 
     return `
       <div>
-        <div>${sentOnDate}</div>
-        <div class='text-secondary'>${sentOnTime}</div>
+        <div>${sentOnDate} <span class='text-secondary'>${sentOnTime}</span></div>
+        
       </div>
     `;
   },

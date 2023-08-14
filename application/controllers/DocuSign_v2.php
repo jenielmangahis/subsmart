@@ -170,6 +170,31 @@ class DocuSign_v2 extends MYF_Controller
         $this->load->view('v2/pages/esign/docusign/manage', $this->page_data);
     }
 
+    public function manager()
+    {   
+        $this->checkLogin();
+
+        add_css([
+            'https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css',
+            'assets/css/esign/docusign/manage/manage.css',
+            'assets/css/esign/docusign/template-create/template-create.css',
+            'assets/css/esign/esign-builder/esign-builder.css',
+            'assets/css/esign/esign.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js',
+            'assets/js/esign/docusign/v2/manage.js',
+        ]);
+        
+        $this->page_data['page']->title = 'eSign Manager';
+        $this->load->view('v2/pages/esign/docusign/manager', $this->page_data);
+    }
+
     public function apiManage($view)
     {
         $view = strtolower($view);
