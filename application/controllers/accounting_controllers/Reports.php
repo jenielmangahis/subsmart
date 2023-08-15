@@ -72,6 +72,7 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('accounting_paychecks_model');
         $this->load->model('accounting_payroll_model');
+        $this->load->model('Business_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -329,7 +330,7 @@ class Reports extends MY_Controller {
             "assets/js/v2/printThis.js"
         ]);
 
-// CUSTOMER CONTACT LIST
+        $this->page_data['companyInfo'] = $this->Business_model->getByCompanyId(logged('company_id'));
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
@@ -23971,6 +23972,135 @@ class Reports extends MY_Controller {
                 $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for '.$this->page_data['filter_status'].' employees';
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
+            case 'total_payroll_cost' :
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $this->page_data['start_date'] = date('m/d/Y');
+                    $this->page_data['end_date'] = date('m/d/Y');
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $total_pay = [
+                    'paycheck_wages' => 0.00,
+                    'non_paycheck_wages' => 0.00,
+                    'reimbursements' => 0.00,
+                    'subtotal' => 0.00
+                ];
+                $company_contributions = [
+                    'subtotal' => 0.00
+                ];
+                $employer_taxes = [
+                    'ss_employer' => 0.00,
+                    'medicare_employer' => 0.00,
+                    'futa_employer' => 0.00,
+                    'fl_sui_employer' => 0.00,
+                    'subtotal' => 0.00
+                ];
+
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.6;
+                foreach($paychecks as $paycheck)
+                {
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+                    $empFuta = ($empTotalPay / 100) * $futa;
+
+                    $total_pay['paycheck_wages'] += floatval($paycheck->total_pay);
+                    $total_pay['subtotal'] += floatval($paycheck->total_pay);
+
+                    $employer_taxes['ss_employer'] += $empSocial;
+                    $employer_taxes['medicare_employer'] += $empMedicare;
+                    $employer_taxes['futa_employer'] += $empFuta;
+
+                    $employer_taxes['subtotal'] += $empSocial;
+                    $employer_taxes['subtotal'] += $empMedicare;
+                    $employer_taxes['subtotal'] += $empFuta;
+                }
+
+                $total_payroll_cost = $total_pay['subtotal'] + $company_contributions['subtotal'] + $employer_taxes['subtotal'];
+                $this->page_data['total_pay'] = $total_pay;
+                $this->page_data['company_contributions'] = $company_contributions;
+                $this->page_data['employer_taxes'] = $employer_taxes;
+                $this->page_data['total_payroll_cost'] = $total_payroll_cost;
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date']));
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'vacation_and_sick_leave' :
+                if(!empty(get('status'))) {
+                    $this->page_data['filter_status'] = get('status');
+                }
+
+                $this->page_data['report_title'] = 'Time off';
+                $this->page_data['time_offs'] = [];
+                $this->page_data['report_period'] = 'Current balance for active employees';
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case "workers'_compensation" :
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $this->page_data['start_date'] = date('m/d/Y');
+                    $this->page_data['end_date'] = date('m/d/Y');
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $totals = [
+                    'premium_wage_paid' => 0.00,
+                    'tips_paid' => 0.00,
+                    'employee_taxes_paid_by_employer' => 0.00,
+                    'wages_paid' => 0.00
+                ];
+
+                $this->page_data['comps'] = [];
+                $this->page_data['totals'] = $totals;
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date']));
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -24151,7 +24281,7 @@ class Reports extends MY_Controller {
     }
 
     public function getReportData($reportType) {
-        $this->load->helper("pdf_helper");
+        $this->load->helper("report_helper");
         $this->load->library('PHPXLSXWriter');
         $theadColumnNames = $this->input->post('theadColumnNames');
         $theadTotalColumn = $this->input->post('theadTotalColumn');
@@ -24173,8 +24303,65 @@ class Reports extends MY_Controller {
             "expenses_by_vendor_summary",
             "inventory_valuation_summary",
         );
-        
-        // Conditional Statements on the array
+
+        // ====== Default PDF Report Settings ============================================================
+        $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->setCreator(PDF_CREATOR);
+        $pdf->setAuthor($businessName);
+        $pdf->setTitle($reportName);
+        $pdf->setSubject("Report");
+
+        if ($reportConfig['pageHeaderRepeat'] == true) {
+            ($businessName == "&nbsp;") ? $businessName = "" : "";
+            ($reportName == "&nbsp;") ? $businessName = "" : "";
+            // Header Config Param: logoURL, showLogo, headerRepeat, headerPosition, businessName, reportDate, reportName
+            $pdf->setHeaderContent($reportConfig['businessLogoURL'], $reportConfig['showHideLogo'],  $reportConfig['pageHeaderRepeat'],  $reportConfig['header_align'],  $businessName,  $reportName,  $reportDate );
+            $tableColumns = '<div><table cellpadding="13" cellspacing="13" border="0"><tr><th></th></tr></table></div>';
+        } else {
+            if ($reportConfig['showHideLogo'] == true) {
+                $pdf->setHeaderContent($reportConfig['businessLogoURL'], $reportConfig['showHideLogo'],  $reportConfig['pageHeaderRepeat'],  $reportConfig['header_align'],  $businessName,  $reportName,  $reportDate );
+            }
+            if ($reportConfig['header_align'] == "L") {
+                $marginLeft = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                ($reportConfig['showHideLogo'] == true) ? $header = $marginLeft : $header = '';
+                $header .=' 
+                    <table class="HEADER_INFO" cellpadding="1" cellspacing="0" border="0" style="text-align: left;">
+                        <tr><td class="BUSINESS_NAME"><h2>'.$businessName.'</h2></td></tr>
+                        <tr><td class="REPORT_NAME" style="font-size: 15.3px;">'.$reportName.'</td></tr>
+                        <tr><td class="REPORT_DATE">'.$reportDate.'</td></tr>
+                    </table>
+                ';
+            }
+            if ($reportConfig['header_align'] == "C") {
+                $header .=' 
+                    <table class="HEADER_INFO" cellpadding="1" cellspacing="0" border="0" style="text-align: center;">
+                        <tr><td class="BUSINESS_NAME"><h2>'.$businessName.'</h2></td></tr>
+                        <tr><td class="REPORT_NAME" style="font-size: 15.3px;">'.$reportName.'</td></tr>
+                        <tr><td class="REPORT_DATE">'.$reportDate.'</td></tr>
+                    </table>
+                ';
+            }
+            if ($reportConfig['header_align'] == "R") {
+                $header .=' 
+                    <table class="HEADER_INFO" cellpadding="1" cellspacing="0" border="0" style="text-align: right;">
+                        <tr><td class="BUSINESS_NAME"><h2>'.$businessName.'</h2></td></tr>
+                        <tr><td class="REPORT_NAME" style="font-size: 15.3px;">'.$reportName.'</td></tr>
+                        <tr><td class="REPORT_DATE">'.$reportDate.'</td></tr>
+                    </table>
+                ';
+            }
+            $tableColumns = '<div><table cellpadding="0" cellspacing="0" border="0"></table></div>';
+        }
+
+        $pdf->setFooterContent($reportConfig['footer_align'], date("l, F j, Y h:i A eP"));
+        $pdf->setMargins(10, 8, 10);
+        $pdf->setHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setFont('helvetica', 'N', 12.5);
+        $pdf->AddPage($reportConfig['pageOrientation'], "A4");
+        // ====== Default PDF Report Settings ============================================================
+
         if (in_array($reportType, $accountingValidReports)) {
             
             // Fetch Sales Tax Liability Report data
@@ -24192,424 +24379,6 @@ class Reports extends MY_Controller {
                 
             }
             
-            // Fetch Customer Contact List Report data
-            if ($reportType == "customer_contact_list") {
-
-                // Request Data in accounting model
-                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
-                
-                // ====== Generate PDF File ============================================================
-                tcpdf();
-                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                $pdf->setCreator(PDF_CREATOR);
-                $pdf->setAuthor($businessName);
-                $pdf->setTitle($reportName);
-                $pdf->setSubject("Report");
-                $pdf->setPrintHeader(false);
-                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-                $pdf->setFont('helvetica', '', 10, '', true);
-                $pdf->setFontSubsetting(false);
-                $pdf->AddPage($reportConfig['pageOrientation']);
-
-                $title = '
-                    <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
-                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
-                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
-                        <tr><td></td></tr>
-                    </table>
-                ';
-
-                $tableColumns = '
-                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
-                        <tr>
-                            <th class="COLUMN_NAME">CUSTOMER</th>
-                            <th class="COLUMN_NAME">PHONE NUMBER</th>
-                            <th class="COLUMN_NAME">EMAIL</th>
-                            <th class="COLUMN_NAME">BILLING ADDRESS</th>
-                            <th class="COLUMN_NAME">SHIPPING ADDRESS</th>
-                        </tr>
-                    </table>
-                ';
-
-                $tableContent = '
-                    <table cellpadding="0" cellspacing="4" border="0">
-                ';
-
-                $response = '';
-
-                foreach ($returnData as $returnDatas) {
-                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "&mdash;";
-                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "&mdash;";
-                    $email = ($returnDatas->email) ? $returnDatas->email : "&mdash;";
-                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "&mdash;";
-                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "&mdash;";
-
-                    $response .= '<tr>';
-                    $response .= '<td>'.$customer.'</td>';
-                    $response .= '<td>'.$phoneNumber.'</td>';
-                    $response .= '<td>'.$email.'</td>';
-                    $response .= '<td>'.$billingAddress.'</td>';
-                    $response .= '<td>'.$shippingAddress.'</td>';
-                    $response .= '</tr>';
-
-                    $tableContent .= '<tr>';
-                    $tableContent .= '<td class="TD_NAME">'.$customer.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$phoneNumber.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$email.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$billingAddress.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$shippingAddress.'</td>';
-                    $tableContent .= '</tr>';
-                }
-
-                $tableContent .= '
-                    </table>
-                ';
-
-                $bottomContent = '
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr><td></td></tr>
-                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
-                        <tr><td></td></tr>
-                        <tr><td></td></tr>
-                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
-                    </table>
-                ';
-
-                $styles = '
-                    <style>
-                        table {
-                            width: 100% !important;
-                        }
-                        .tableHeader {
-                            border-bottom: 1px solid gray; 
-                            border-top: 1px solid gray;
-                        }
-                        .COLUMN_NAME {
-                            font-size: 12px;
-                        }
-                        .TD_NAME {
-                            font-size: 11px;
-                        }
-                        .BUSINESS_NAME {
-                            font-weight: bold;
-                            font-size: 20px;
-                            margin: 100px;
-                        }
-                        .REPORT_NAME {
-                            font-size: 13.5px;
-                        }
-                        .reportNotes {
-                            text-align: left;
-                            font-size: 11.5px;
-                        }
-                        .reportDate {
-                            text-align: center;
-                        }
-                    </style>
-                ';
-
-                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
-                $pdf->writeHTML($renderHTML, true, false, true, false, '');
-                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
-                // ====== Generate PDF File ============================================================
-
-                // ====== Generate XLSX File ===========================================================
-                $writer = new XLSXWriter();
-                $worksheet_name = $reportName;
-                $totalColumn = 4;
-
-                $businessNameStyle = array(
-                    'font-size' => 13,
-                    'font-style' => 'bold',
-                    'halign' => 'center', 
-                    'valign' => 'center', 
-                );
-
-                $reportNameStyle = array(
-                    'font-size' => 11,
-                    'halign' => 'center', 
-                    'valign' => 'center',
-                ); 
-
-                $headerStyle = array(
-                    'font-style' => 'bold',
-                    'font-size' => 10,
-                    'border' => 'top,bottom',
-                    'border-style' => 'thin',
-                    'border-color' => '000000',
-                    'valign' => 'center', 
-                );
-
-                $contentStyle = array(
-                    'font-size' => 10,
-                    'halign' => 'left', 
-                );
-
-                $reportDateStyle = array(
-                    'font-size' => 10,
-                    'valign' => 'center', 
-                    'halign' => 'center', 
-                );
-
-                $headerData = array(
-                    'CUSTOMER', 
-                    'PHONE NUMBER', 
-                    'EMAIL', 
-                    'BILLING ADDRESS', 
-                    'SHIPPING ADDRESS'
-                );
-
-                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
-                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
-                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
-                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
-                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
-                $row = 6;
-                foreach ($returnData as $returnDatas) {
-                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "—";
-                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "—";
-                    $email = ($returnDatas->email) ? $returnDatas->email : "—";
-                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "—";
-                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "—";
-
-                    $row_data = array($customer, $phoneNumber, $email, $billingAddress, $shippingAddress);
-                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
-                    $row++;
-                }
-
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
-                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
-
-                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
-                $writer->writeToFile($excel_file_path);
-                // ====== Generate XLSX File ===========================================================
-
-                // Return the requested data into html
-                if ($response) {
-                    echo $response;
-                } else {
-                    echo "<td colspan='5'><center>No records found.</center></td>";
-                }
-            }
-
-            // Fetch Vendor Contact List data
-            if ($reportType == "vendor_contact_list") {
-                
-                // Request Data in accounting model
-                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
-
-                // ====== Generate PDF File ============================================================
-                tcpdf();
-                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                $pdf->setCreator(PDF_CREATOR);
-                $pdf->setAuthor($businessName);
-                $pdf->setTitle($reportName);
-                $pdf->setSubject("Report");
-                $pdf->setPrintHeader(false);
-                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-                $pdf->setFont('helvetica', '', 10, '', true);
-                $pdf->setFontSubsetting(false);
-                $pdf->AddPage($reportConfig['pageOrientation']);
-
-                $title = '
-                    <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
-                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
-                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
-                        <tr><td></td></tr>
-                    </table>
-                ';
-
-                $tableColumns = '
-                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
-                        <tr>
-                            <th class="COLUMN_NAME">VENDOR</th>
-                            <th class="COLUMN_NAME">PHONE NUMBERS</th>
-                            <th class="COLUMN_NAME">EMAIL</th>
-                            <th class="COLUMN_NAME">FULL NAME</th>
-                            <th class="COLUMN_NAME">ADDRESS</th>
-                            <th class="COLUMN_NAME">ACCOUNT #</th>
-                        </tr>
-                    </table>
-                ';
-
-                $tableContent = '
-                    <table cellpadding="0" cellspacing="4" border="0">
-                ';
-
-                $response = '';
-
-                foreach ($returnData as $returnDatas) {
-                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "&mdash;";
-                    $phone_numbers = ($returnDatas->phone_numbers) ? $returnDatas->phone_numbers : "&mdash;";
-                    $email = ($returnDatas->email) ? $returnDatas->email : "&mdash;";
-                    $fullname = ($returnDatas->fullname) ? $returnDatas->fullname : "&mdash;";
-                    $address = ($returnDatas->address) ? $returnDatas->address : "&mdash;";
-                    $account_number = ($returnDatas->account_number) ? $returnDatas->account_number : "&mdash;";
-
-                    $response .= '<tr>';
-                    $response .= '<td>'.$vendor.'</td>';
-                    $response .= '<td>'.$phone_numbers.'</td>';
-                    $response .= '<td>'.$email.'</td>';
-                    $response .= '<td>'.$fullname.'</td>';
-                    $response .= '<td>'.$address.'</td>';
-                    $response .= '<td>'.$account_number.'</td>';
-                    $response .= '</tr>';
-
-                    $tableContent .= '<tr>';
-                    $tableContent .= '<td class="TD_NAME">'.$vendor.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$phone_numbers.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$email.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$fullname.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$address.'</td>';
-                    $tableContent .= '<td class="TD_NAME">'.$account_number.'</td>';
-                    $tableContent .= '</tr>';
-                }
-
-                $tableContent .= '
-                    </table>
-                ';
-
-                $bottomContent = '
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr><td></td></tr>
-                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
-                        <tr><td></td></tr>
-                        <tr><td></td></tr>
-                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
-                    </table>
-                ';
-
-                $styles = '
-                    <style>
-                        table {
-                            width: 100% !important;
-                        }
-                        .tableHeader {
-                            border-bottom: 1px solid gray; 
-                            border-top: 1px solid gray;
-                        }
-                        .COLUMN_NAME {
-                            font-size: 12px;
-                        }
-                        .TD_NAME {
-                            font-size: 11px;
-                        }
-                        .BUSINESS_NAME {
-                            font-weight: bold;
-                            font-size: 20px;
-                            margin: 100px;
-                        }
-                        .REPORT_NAME {
-                            font-size: 13.5px;
-                        }
-                        .reportNotes {
-                            text-align: left;
-                            font-size: 11.5px;
-                        }
-                        .reportDate {
-                            text-align: center;
-                        }
-                    </style>
-                ';
-
-                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
-                $pdf->writeHTML($renderHTML, true, false, true, false, '');
-                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
-                // ====== Generate PDF File ============================================================
-
-                // ====== Generate XLSX File ===========================================================
-                $writer = new XLSXWriter();
-                $worksheet_name = $reportName;
-                $totalColumn = 5;
-
-                $businessNameStyle = array(
-                    'font-size' => 13,
-                    'font-style' => 'bold',
-                    'halign' => 'center', 
-                    'valign' => 'center', 
-                );
-
-                $reportNameStyle = array(
-                    'font-size' => 11,
-                    'halign' => 'center', 
-                    'valign' => 'center',
-                ); 
-
-                $headerStyle = array(
-                    'font-style' => 'bold',
-                    'font-size' => 10,
-                    'border' => 'top,bottom',
-                    'border-style' => 'thin',
-                    'border-color' => '000000',
-                    'valign' => 'center', 
-                );
-
-                $contentStyle = array(
-                    'font-size' => 10,
-                    'halign' => 'left', 
-                );
-
-                $reportDateStyle = array(
-                    'font-size' => 10,
-                    'valign' => 'center', 
-                    'halign' => 'center', 
-                );
-
-                $headerData = array(
-                    'VENDOR', 
-                    'PHONE NUMBERS', 
-                    'EMAIL', 
-                    'FULL NAME', 
-                    'ADDRESS',
-                    'ACCOUNT #',
-                );
-
-                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
-                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
-                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
-                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
-                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
-                $row = 6;
-                foreach ($returnData as $returnDatas) {
-                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "—";
-                    $phone_numbers = ($returnDatas->phone_numbers) ? $returnDatas->phone_numbers : "—";
-                    $email = ($returnDatas->email) ? $returnDatas->email : "—";
-                    $fullname = ($returnDatas->fullname) ? $returnDatas->fullname : "—";
-                    $address = ($returnDatas->address) ? $returnDatas->address : "—";
-                    $account_number = ($returnDatas->account_number) ? $returnDatas->account_number : "—";
-
-                    $row_data = array($vendor, $phone_numbers, $email, $fullname, $address, $account_number);
-                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
-                    $row++;
-                }
-
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
-                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
-
-                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
-                $writer->writeToFile($excel_file_path);
-                // ====== Generate XLSX File ===========================================================
-
-                // Return the requested data into html
-                if ($response) {
-                    echo $response;
-                } else {
-                    echo "<td colspan='6'><center>No records found.</center></td>";
-                }
-            }
-
             // Fetch Audit Log list data
             if ($reportType == "audit_log_list") {
                 
@@ -24617,47 +24386,12 @@ class Reports extends MY_Controller {
                 $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
 
                 // ====== Generate PDF File ============================================================
-                tcpdf();
-                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                $pdf->setCreator(PDF_CREATOR);
-                $pdf->setAuthor($businessName);
-                $pdf->setTitle($reportName);
-                $pdf->setSubject("Report");
-                $pdf->setPrintHeader(false);
-                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-                $pdf->setFont('helvetica', '', 10, '', true);
-                $pdf->setFontSubsetting(false);
-                $pdf->AddPage($reportConfig['pageOrientation']);
-
-                $title = '
-                    <table cellpadding="0" cellspacing="0" border="0" style="text-align:center;">
-                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
-                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
-                        <tr><td></td></tr>
-                    </table>
-                ';
-
-                $tableColumns = '
-                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
-                        <tr>
-                ';
-
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
                 for ($i = 0; $i < $theadTotalColumn - 1; $i++) { 
-                    $tableColumns .= "<th class='COLUMN_NAME'>$theadColumnNames[$i]</th>";
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
                 }
-
-                $tableColumns .= '
-                        </tr>
-                    </table>
-                ';
-
-                $tableContent = '
-                    <table cellpadding="0" cellspacing="4" border="0">
-                ';
-
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
                 $response = '';
 
                 foreach ($returnData as $returnDatas) {
@@ -24685,24 +24419,18 @@ class Reports extends MY_Controller {
                         $action = "onclick='window.open(`$base_url/workorder/view/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
                     } else if ($module == "Invoice") { 
                         $action = "onclick='window.open(`$base_url/invoice/genview/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
-                    } 
-                    else if ($module == "Taskhub") { 
+                    } else if ($module == "Taskhub") { 
                         $action = "onclick='window.open(`$base_url/taskhub/view/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
-                    } 
-                    else if ($module == "Customer") { 
+                    } else if ($module == "Customer") { 
                         $action = "onclick='window.open(`$base_url/customer/preview_/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
                         $amount = "&mdash;";
-                    } 
-                    else if ($module == "Estimate") { 
+                    } else if ($module == "Estimate") { 
                         $action = "onclick='window.open(`$base_url/estimate/view/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
-                    } 
-                    else if ($module == "Event" || $module == "Events") { 
+                    } else if ($module == "Event" || $module == "Events") { 
                         $action = "onclick='window.open(`$base_url/events/event_add/$obj_id`, `_blank`,`location=yes, height=650, width=1200, scrollbars=yes, status=yes`)'";
-                    } 
-                    else if ($module == "Appointment") { 
+                    } else if ($module == "Appointment") { 
                         $action = "onclick='$(`.historyPreviewModalBody`).text(`Fetching Result...`); $(`.historyPreviewModalTitle`).text(`$module Preview`); $.ajax({ type: `POST`, url: `$base_url/calendar/_view_appointment`, data: { appointment_id: $obj_id }, success: function(response) { $(`.historyPreviewModalBody`).empty().html(response); } }); $(`#historyPreviewModal`).modal(`show`);'";
-                    } 
-                    else if ($module == "Jobs") { 
+                    } else if ($module == "Jobs") { 
                         $action = "onclick='$(`.historyPreviewModalBody`).text(`Fetching Result...`); $(`.historyPreviewModalTitle`).text(`$module Preview`); $.ajax({ type: `POST`, url: `$base_url/job/_quick_view_details`, data: { appointment_id: $obj_id }, success: function(response) { $(`.historyPreviewModalBody`).empty().html(response); } }); $(`#historyPreviewModal`).modal(`show`);'";
                     } else { 
                         $action = ""; 
@@ -24728,55 +24456,28 @@ class Reports extends MY_Controller {
                     $tableContent .= '</tr>';
                 }
 
-                $tableContent .= '
-                    </table>
-                ';
-
-                $bottomContent = '
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr><td></td></tr>
-                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
-                        <tr><td></td></tr>
-                        <tr><td></td></tr>
-                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
-                    </table>
-                ';
+                $tableContent .= '</table>';
 
                 $styles = '
                     <style>
-                        table {
-                            width: 100% !important;
-                        }
-                        .tableHeader {
-                            border-bottom: 1px solid gray; 
-                            border-top: 1px solid gray;
-                        }
-                        .COLUMN_NAME {
-                            font-size: 12px;
-                        }
-                        .TD_NAME {
-                            font-size: 11px;
-                        }
-                        .BUSINESS_NAME {
-                            font-weight: bold;
-                            font-size: 20px;
-                            margin: 100px;
-                        }
-                        .REPORT_NAME {
-                            font-size: 13.5px;
-                        }
-                        .reportNotes {
-                            text-align: left;
-                            font-size: 11.5px;
-                        }
-                        .reportDate {
-                            text-align: center;
-                        }
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
                     </style>
                 ';
 
-                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
-                $pdf->writeHTML($renderHTML, true, false, true, false, '');
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
                 $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
                 // ====== Generate PDF File ============================================================
 
@@ -24784,51 +24485,26 @@ class Reports extends MY_Controller {
                 $writer = new XLSXWriter();
                 $worksheet_name = $reportName;
                 $totalColumn = $theadTotalColumn - 2;
-
-                $businessNameStyle = array(
-                    'font-size' => 13,
-                    'font-style' => 'bold',
-                    'halign' => 'center', 
-                    'valign' => 'center', 
-                );
-
-                $reportNameStyle = array(
-                    'font-size' => 11,
-                    'halign' => 'center', 
-                    'valign' => 'center',
-                ); 
-
-                $headerStyle = array(
-                    'font-style' => 'bold',
-                    'font-size' => 10,
-                    'border' => 'top,bottom',
-                    'border-style' => 'thin',
-                    'border-color' => '000000',
-                    'valign' => 'center', 
-                );
-
-                $contentStyle = array(
-                    'font-size' => 10,
-                    'halign' => 'left', 
-                );
-
-                $reportDateStyle = array(
-                    'font-size' => 10,
-                    'valign' => 'center', 
-                    'halign' => 'center', 
-                );
-
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
                 $headerData = array();
+
                 for ($i = 0; $i < $theadTotalColumn - 1; $i++) { 
                     array_push($headerData, $theadColumnNames[$i]);
                 }
 
                 $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
-                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
                 $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
-                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
                 $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
-                $row = $theadTotalColumn - 1;
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn);
+
+                $row = $theadTotalColumn - 2;
                 foreach ($returnData as $returnDatas) {
                     $date_changed = ($returnDatas->date_changed) ? date("M d, Y", strtotime($returnDatas->date_changed)) : "—";
                     $user = ($returnDatas->user) ? $returnDatas->user : "—";
@@ -24838,248 +24514,20 @@ class Reports extends MY_Controller {
                     $amount = ($returnDatas->amount) ? $returnDatas->amount : "—";
                     $history = ($returnDatas->history) ? $returnDatas->history : "—";
 
-                    if ($user == 1) {
-                        $user = "Office Manager";
-                    } else if ($user == 2) {
-                        $user = "Partner";
-                    } else if ($user == 3) {
-                        $user = "Team Leader";
-                    } else if ($user == 4) {
-                        $user = "Standard User";
-                    } else if ($user == 5) {
-                        $user = "Field Sales";
-                    } else if ($user == 6) {
-                        $user = "Field Tech";
-                    } else if ($user == 7) {
-                        $user = "Admin";
-                    } else {
-                        $user = "—";
-                    }
+                    if ($user == 1) { $user = "Office Manager"; } 
+                    else if ($user == 2) {$user = "Partner";} 
+                    else if ($user == 3) {$user = "Team Leader";} 
+                    else if ($user == 4) {$user = "Standard User";} 
+                    else if ($user == 5) {$user = "Field Sales";} 
+                    else if ($user == 6) {$user = "Field Tech";} 
+                    else if ($user == 7) {$user = "Admin";} 
+                    else {$user = "—";}
 
                     $row_data = array($date_changed, $user, $event, $name, $date, $amount);
                     $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
                     $row++;
                 }
 
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
-                $writer->markMergedCell($worksheet_name, $row-2, 0, $row-2, $totalColumn);
-                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
-
-                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
-                $writer->writeToFile($excel_file_path);
-                // ====== Generate XLSX File ===========================================================
-
-                // Return the requested data into html
-                if ($response) {
-                    echo $response;
-                } else {
-                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
-                }
-            }
-
-            // Fetch Expenses by Vendor Summary data
-            if ($reportType == "expenses_by_vendor_summary") {
-
-                 // Request Data in accounting model
-                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
-
-                // ====== Generate PDF File ============================================================
-                tcpdf();
-                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                $pdf->setCreator(PDF_CREATOR);
-                $pdf->setAuthor($businessName);
-                $pdf->setTitle($reportName);
-                $pdf->setSubject("Report");
-                $pdf->setPrintHeader(false);
-                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-                $pdf->setFont('helvetica', '', 10, '', true);
-                $pdf->setFontSubsetting(false);
-                $pdf->AddPage($reportConfig['pageOrientation']);
-
-                $title = '
-                    <table cellpadding="2" cellspacing="0" border="0" style="text-align:center;">
-                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
-                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
-                        <tr><td class="REPORT_DATE">'.$reportDate.'</td></tr>
-                        <tr><td></td></tr>
-                    </table>
-                ';
-
-                $tableColumns = '
-                    <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
-                        <tr>
-                            <th class="COLUMN_NAME PLACE_LEFT"></th>
-                            <th class="COLUMN_NAME PLACE_RIGHT">TOTAL</th>
-                        </tr>
-                    </table>
-                ';
-
-                $tableContent = '
-                    <table cellpadding="0" cellspacing="4" border="0">
-                ';
-
-                $response = '';
-                $totalExpense = 0.0;
-                foreach ($returnData as $returnDatas) {
-                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "&mdash;";
-                    $expense = ($returnDatas->expense) ? $returnDatas->expense : 0.0;
-
-                    $response .= '<tr>';
-                    $response .= '<td class="PLACE_LEFT">'.$vendor.'</td>';
-                    $response .= '<td class="PLACE_RIGHT">$'.number_format($expense, 2, ".", ",").'</td>';
-                    $response .= '</tr>';
-
-                    $tableContent .= '<tr>';
-                    $tableContent .= '<td class="TD_NAME PLACE_LEFT">'.$vendor.'</td>';
-                    $tableContent .= '<td class="TD_NAME PLACE_RIGHT">$'.number_format($expense, 2, ".", ",").'</td>';
-                    $tableContent .= '</tr>';
-
-                    // Calculate Total Expense
-                    $totalExpense += $expense;
-                }
-
-                // TOTAL
-                $response .= '<tr><td></td><td></td></tr>';
-                $response .= '<tr>';
-                $response .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
-                $response .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalExpense, 2, ".", ",").'</strong></td>';
-                $response .= '</tr>';
-                $tableContent .= '<tr><td></td><td></td></tr>';
-                $tableContent .= '<tr>';
-                $tableContent .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
-                $tableContent .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalExpense, 2, ".", ",").'</strong></td>';
-                $tableContent .= '</tr>';
-
-                $tableContent .= '
-                    </table>
-                ';
-
-                $bottomContent = '
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr><td></td></tr>
-                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
-                        <tr><td></td></tr>
-                        <tr><td></td></tr>
-                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
-                    </table>
-                ';
-
-                $styles = '
-                    <style>
-                        table {
-                            width: 100% !important;
-                        }
-                        .tableHeader {
-                            border-bottom: 1px solid gray; 
-                            border-top: 1px solid gray;
-                        }
-                        .COLUMN_NAME {
-                            font-size: 12px;
-                        }
-                        .TD_NAME {
-                            font-size: 11px;
-                        }
-                        .BUSINESS_NAME {
-                            font-weight: bold;
-                            font-size: 20px;
-                            margin: 100px;
-                        }
-                        .REPORT_NAME {
-                            font-size: 13.5px;
-                        }
-                        .REPORT_DATE {
-                            font-size: 12px;
-                            margin: 10px;
-                        }
-                        .reportNotes {
-                            text-align: left;
-                            font-size: 11.5px;
-                        }
-                        .reportDate {
-                            text-align: center;
-                        }
-                        .PLACE_LEFT {
-                            text-align: left;
-                        }
-                        .PLACE_RIGHT {
-                            text-align: right;
-                        }
-                    </style>
-                ';
-
-                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
-                $pdf->writeHTML($renderHTML, true, false, true, false, '');
-                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
-                // ====== Generate PDF File ============================================================
-
-                // ====== Generate XLSX File ===========================================================
-                $writer = new XLSXWriter();
-                $worksheet_name = $reportName;
-                $totalColumn = 1;
-
-                $businessNameStyle = array(
-                    'font-size' => 13,
-                    'font-style' => 'bold',
-                    'halign' => 'center', 
-                    'valign' => 'center', 
-                );
-
-                $reportNameStyle = array(
-                    'font-size' => 11,
-                    'halign' => 'center', 
-                    'valign' => 'center',
-                ); 
-
-                $headerStyle = array(
-                    'font-style' => 'bold',
-                    'font-size' => 10,
-                    'border' => 'top,bottom',
-                    'border-style' => 'thin',
-                    'border-color' => '000000',
-                    'valign' => 'center', 
-                );
-
-                $contentStyle = array(
-                    'font-size' => 10,
-                    'halign' => 'left', 
-                );
-
-                $reportDateStyle = array(
-                    'font-size' => 9,
-                    'valign' => 'center', 
-                    'halign' => 'center', 
-                );
-
-                $headerData = array(
-                    '', 
-                    'TOTAL', 
-                );
-
-                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
-                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
-                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
-                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
-                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
-                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn);
-                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
-                $row = 7;
-                foreach ($returnData as $returnDatas) {
-                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "—";
-                    $expense = ($returnDatas->expense) ? $returnDatas->expense : 0.0;
-
-                    $row_data = array($vendor, number_format($expense, 2, ".", ""));
-                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
-                    $row++;
-                }
-
-                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
-                $writer->writeSheetRow($worksheet_name, ["TOTAL", number_format($totalExpense, 2, ".", "")], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
@@ -25095,58 +24543,23 @@ class Reports extends MY_Controller {
                 if ($response) {
                     echo $response;
                 } else {
-                    echo "<td colspan='2'><center>No records found.</center></td>";
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
                 }
             }
 
             // Fetch Inventory Valuation Summary data
             if ($reportType == "inventory_valuation_summary") {
-                
+
                 // Request Data in accounting model
                 $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
 
                 // ====== Generate PDF File ============================================================
-                tcpdf();
-                $pdf = new TCPDF($reportConfig['pageOrientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                $pdf->setCreator(PDF_CREATOR);
-                $pdf->setAuthor($businessName);
-                $pdf->setTitle($reportName);
-                $pdf->setSubject("Report");
-                $pdf->setPrintHeader(false);
-                $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-                $pdf->setFont('helvetica', '', 10, '', true);
-                $pdf->setFontSubsetting(false);
-                $pdf->AddPage($reportConfig['pageOrientation']);
-
-                $title = '
-                    <table cellpadding="2" cellspacing="0" border="0" style="text-align:center;">
-                        <tr><td class="BUSINESS_NAME">'.$businessName.'</td></tr>
-                        <tr><td class="REPORT_NAME">'.$reportName.'</td></tr>
-                        <tr><td class="REPORT_DATE">'.$reportDate.'</td></tr>
-                        <tr><td></td></tr>
-                    </table>
-                ';
-
-                $tableColumns = '
-                <table class="tableHeader" cellpadding="0" cellspacing="4" border="0">
-                    <tr>
-                ';
-
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
                 for ($i = 0; $i < $theadTotalColumn; $i++) { 
                     $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
                 }
-
-                $tableColumns .= '
-                    </tr>
-                </table>
-                ';
-
-                $tableContent = '
-                    <table cellpadding="0" cellspacing="4" border="0">
-                ';
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
 
                 $response = '<tr>';
                 $response .= '<td colspan="'.$theadTotalColumn.'">&#9660; <strong>PRODUCT</strong></td>';
@@ -25207,125 +24620,61 @@ class Reports extends MY_Controller {
                 $tableContent .= '<td>&emsp;</td>';
                 $tableContent .= '</tr>';
 
-                $tableContent .= '
-                    </table>
-                ';
+                $tableContent .= '</table>';
 
                 $bottomContent = '
                     <table cellpadding="0" cellspacing="0" border="0">
                         <tr><td></td></tr>
-                        <tr><td class="reportNotes">Note: '.$notes.'</td></tr>
-                        <tr><td></td></tr>
-                        <tr><td></td></tr>
-                        <tr><td class="reportDate">'.date("l, F j, Y h:i A eP").'</td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
                     </table>
                 ';
 
                 $styles = '
                     <style>
-                        table {
-                            width: 100% !important;
-                        }
-                        .tableHeader {
-                            border-bottom: 1px solid gray; 
-                            border-top: 1px solid gray;
-                        }
-                        .COLUMN_NAME {
-                            font-size: 12px;
-                        }
-                        .TD_NAME {
-                            font-size: 11px;
-                        }
-                        .BUSINESS_NAME {
-                            font-weight: bold;
-                            font-size: 20px;
-                            margin: 100px;
-                        }
-                        .REPORT_NAME {
-                            font-size: 13.5px;
-                        }
-                        .REPORT_DATE {
-                            font-size: 12px;
-                            margin: 10px;
-                        }
-                        .reportNotes {
-                            text-align: left;
-                            font-size: 11.5px;
-                        }
-                        .reportDate {
-                            text-align: center;
-                        }
-                        .PLACE_LEFT {
-                            text-align: left;
-                        }
-                        .PLACE_RIGHT {
-                            text-align: right;
-                        }
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
                     </style>
                 ';
 
-                $renderHTML = $title . $tableColumns . $tableContent . $bottomContent . $styles;
-                $pdf->writeHTML($renderHTML, true, false, true, false, '');
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
                 $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
-                // ====== Generate PDF File ============================================================
 
                 // ====== Generate XLSX File ===========================================================
                 $writer = new XLSXWriter();
                 $worksheet_name = $reportName;
                 $totalColumn = $theadTotalColumn - 1;
-
-                $businessNameStyle = array(
-                    'font-size' => 13,
-                    'font-style' => 'bold',
-                    'halign' => 'center', 
-                    'valign' => 'center', 
-                );
-
-                $reportNameStyle = array(
-                    'font-size' => 11,
-                    'halign' => 'center', 
-                    'valign' => 'center',
-                ); 
-
-                $headerStyle = array(
-                    'font-style' => 'bold',
-                    'font-size' => 10,
-                    'border' => 'top,bottom',
-                    'border-style' => 'thin',
-                    'border-color' => '000000',
-                    'valign' => 'center', 
-                );
-
-                $contentStyle = array(
-                    'font-size' => 10,
-                    'halign' => 'left', 
-                );
-
-                $categoryStyle = array(
-                    'font-size' => 10,
-                    'font-style' => 'bold',
-                    'halign' => 'left', 
-                );
-
-                $reportDateStyle = array(
-                    'font-size' => 9,
-                    'valign' => 'center', 
-                    'halign' => 'center', 
-                );
-
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
                 $headerData = array();
-                for ($i = 0; $i < $theadTotalColumn; $i++) { 
+
+                for ($i = 0; $i < $totalColumn + 1; $i++) { 
                     array_push($headerData, $theadColumnNames[$i]);
                 }
 
                 $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
-                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
                 $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
-                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
                 $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
-                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn);
                 $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
-                $row = $theadTotalColumn;
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn);
+
+                $row = $totalColumn + 1;
                 $writer->writeSheetRow($worksheet_name, ["PRODUCT", "", "", "", "", ""], $categoryStyle);
                 foreach ($returnData as $returnDatas) {
                     $product_name = ($returnDatas->product_name) ? $returnDatas->product_name : "—";
@@ -25338,6 +24687,7 @@ class Reports extends MY_Controller {
                     $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
                     $row++;
                 }
+
                 $writer->writeSheetRow($worksheet_name, ["", "", "", "TOTAL", $totalAssetValue, ""], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
@@ -25358,8 +24708,391 @@ class Reports extends MY_Controller {
                 }
             }
 
+            // Fetch Customer Contact List data
+            if ($reportType == "customer_contact_list") {
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
 
-        // If $reportType was not in the $accountingValidReports then return die() method
+                // ====== Generate PDF File ============================================================
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
+                for ($i = 0; $i < $theadTotalColumn - 1; $i++) { 
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
+                }
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+                $response = '';
+
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "&mdash;";
+                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "&mdash;";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "&mdash;";
+                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "&mdash;";
+                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "&mdash;";
+
+                    $response .= '<tr>';
+                    $response .= '<td>'.$customer.'</td>';
+                    $response .= '<td>'.$phoneNumber.'</td>';
+                    $response .= '<td>'.$email.'</td>';
+                    $response .= '<td>'.$billingAddress.'</td>';
+                    $response .= '<td>'.$shippingAddress.'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$customer.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$phoneNumber.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$email.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$billingAddress.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$shippingAddress.'</td>';
+                    $tableContent .= '</tr>';
+                }
+
+                $tableContent .= '</table>';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
+                    </style>
+                ';
+
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = $theadTotalColumn;
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
+                $headerData = array();
+
+                for ($i = 0; $i < $totalColumn; $i++) { 
+                    array_push($headerData, $theadColumnNames[$i]);
+                }
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn);
+
+                $row = $totalColumn;
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "—";
+                    $phoneNumber = ($returnDatas->phoneNumber) ? $returnDatas->phoneNumber : "—";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "—";
+                    $billingAddress = ($returnDatas->billingAddress) ? $returnDatas->billingAddress : "—";
+                    $shippingAddress = ($returnDatas->shippingAddress) ? $returnDatas->shippingAddress : "—";
+
+                    $row_data = array($customer, $phoneNumber, $email, $billingAddress, $shippingAddress);
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
+                $writer->markMergedCell($worksheet_name, $row+2, 0, $row+2, $totalColumn);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                if ($response) {
+                    echo $response;
+                } else {
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
+                }
+            }
+
+            // Fetch Customer Contact List data
+            if ($reportType == "vendor_contact_list") {
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
+
+                // ====== Generate PDF File ============================================================
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
+                for ($i = 0; $i < $theadTotalColumn; $i++) { 
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
+                }
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+                $response = '';
+
+                foreach ($returnData as $returnDatas) {
+                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "&mdash;";
+                    $phone_numbers = ($returnDatas->phone_numbers) ? $returnDatas->phone_numbers : "&mdash;";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "&mdash;";
+                    $fullname = ($returnDatas->fullname) ? $returnDatas->fullname : "&mdash;";
+                    $address = ($returnDatas->address) ? $returnDatas->address : "&mdash;";
+                    $account_number = ($returnDatas->account_number) ? $returnDatas->account_number : "&mdash;";
+
+                    $response .= '<tr>';
+                    $response .= '<td>'.$vendor.'</td>';
+                    $response .= '<td>'.$phone_numbers.'</td>';
+                    $response .= '<td>'.$email.'</td>';
+                    $response .= '<td>'.$fullname.'</td>';
+                    $response .= '<td>'.$address.'</td>';
+                    $response .= '<td>'.$account_number.'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$vendor.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$phone_numbers.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$email.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$fullname.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$address.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$account_number.'</td>';
+                    $tableContent .= '</tr>';
+                }
+
+                $tableContent .= '</table>';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
+                    </style>
+                ';
+
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = $theadTotalColumn;
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
+                $headerData = array();
+
+                for ($i = 0; $i < $totalColumn; $i++) { 
+                    array_push($headerData, $theadColumnNames[$i]);
+                }
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn - 1) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn - 1);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn - 1);
+
+                $row = $totalColumn - 1;
+                foreach ($returnData as $returnDatas) {
+                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "—";
+                    $phone_numbers = ($returnDatas->phone_numbers) ? $returnDatas->phone_numbers : "—";
+                    $email = ($returnDatas->email) ? $returnDatas->email : "—";
+                    $fullname = ($returnDatas->fullname) ? $returnDatas->fullname : "—";
+                    $address = ($returnDatas->address) ? $returnDatas->address : "—";
+                    $account_number = ($returnDatas->account_number) ? $returnDatas->account_number : "—";
+
+                    $row_data = array($vendor, $phone_numbers, $email, $fullname, $address, $account_number);
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row, 0, $row, $totalColumn);
+                $writer->markMergedCell($worksheet_name, $row+2, 0, $row+2, $totalColumn);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                if ($response) {
+                    echo $response;
+                } else {
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
+                }
+            }
+
+            // Fetch Expenses by Vendor Summary data
+            if ($reportType == "expenses_by_vendor_summary") {
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
+
+                // ====== Generate PDF File ============================================================
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
+                for ($i = 0; $i < $theadTotalColumn; $i++) { 
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
+                }
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+
+                $response = '';
+                $totalExpense = 0.0;
+                foreach ($returnData as $returnDatas) {
+                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "&mdash;";
+                    $expense = ($returnDatas->expense) ? $returnDatas->expense : 0.0;
+
+                    $response .= '<tr>';
+                    $response .= '<td class="PLACE_LEFT">'.$vendor.'</td>';
+                    $response .= '<td class="PLACE_RIGHT">$'.number_format($expense, 2, ".", ",").'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME PLACE_LEFT">'.$vendor.'</td>';
+                    $tableContent .= '<td class="TD_NAME PLACE_RIGHT">$'.number_format($expense, 2, ".", ",").'</td>';
+                    $tableContent .= '</tr>';
+
+                    // Calculate Total Expense
+                    $totalExpense += $expense;
+                }
+
+                // TOTAL
+                $response .= '<tr><td></td><td></td></tr>';
+                $response .= '<tr>';
+                $response .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
+                $response .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalExpense, 2, ".", ",").'</strong></td>';
+                $response .= '</tr>';
+                $tableContent .= '<tr><td></td><td></td></tr>';
+                $tableContent .= '<tr>';
+                $tableContent .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
+                $tableContent .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalExpense, 2, ".", ",").'</strong></td>';
+                $tableContent .= '</tr>';
+
+                $tableContent .= '</table>';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
+                    </style>
+                ';
+
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = $theadTotalColumn;
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
+                $headerData = array();
+
+                for ($i = 0; $i < $totalColumn; $i++) { 
+                    array_push($headerData, $theadColumnNames[$i]);
+                }
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn - 1) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn - 1);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn - 1);
+
+                $row = $totalColumn;
+                foreach ($returnData as $returnDatas) {
+                    $vendor = ($returnDatas->vendor) ? $returnDatas->vendor : "—";
+                    $expense = ($returnDatas->expense) ? $returnDatas->expense : 0.0;
+
+                    $row_data = array($vendor, number_format($expense, 2, ".", ""));
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, ["TOTAL", number_format($totalExpense, 2, ".", "")], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row+5, 0, $row+5, $totalColumn-1);
+                $writer->markMergedCell($worksheet_name, $row+7, 0, $row+7, $totalColumn-1);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                if ($response) {
+                    echo $response;
+                } else {
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
+                }
+            }
+
         } else { die("unable to get report data."); }
     }
 
@@ -50412,7 +50145,7 @@ class Reports extends MY_Controller {
                     }
                 }
 
-                $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
 
                 $preparedTimestamp = "l, F j, Y h:i A eP";
                 $date = date($preparedTimestamp);
@@ -50740,7 +50473,7 @@ class Reports extends MY_Controller {
                     return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
                 }, ARRAY_FILTER_USE_BOTH);
 
-                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
 
                 $socialSecurity = 6.2;
                 $medicare = 1.45;
@@ -51265,7 +50998,7 @@ class Reports extends MY_Controller {
                     return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
                 }, ARRAY_FILTER_USE_BOTH);
 
-                $report_period = 'Paychecks from '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
 
                 $socialSecurity = 6.2;
                 $medicare = 1.45;
@@ -51870,7 +51603,7 @@ class Reports extends MY_Controller {
 
                 $paychecks = $data;
 
-                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
 
                 $preparedTimestamp = "l, F j, Y h:i A eP";
                 $date = date($preparedTimestamp);
@@ -52806,7 +52539,7 @@ class Reports extends MY_Controller {
                     $table['federal_taxes'] += $empMedicare;
                 }
 
-                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
 
                 $data = [
                     [
@@ -53196,7 +52929,7 @@ class Reports extends MY_Controller {
                     $table['federal_taxes_tax_owed'] += $empMedicare;
                 }
 
-                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for all employees';
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
 
                 $data = [
                     [
@@ -53826,6 +53559,662 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Total_Pay.pdf', 'D');
+                }
+            break;
+            case 'Total Payroll Cost' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $total_pay = [
+                    'paycheck_wages' => 0.00,
+                    'non_paycheck_wages' => 0.00,
+                    'reimbursements' => 0.00,
+                    'subtotal' => 0.00
+                ];
+                $company_contributions = [
+                    'subtotal' => 0.00
+                ];
+                $employer_taxes = [
+                    'ss_employer' => 0.00,
+                    'medicare_employer' => 0.00,
+                    'futa_employer' => 0.00,
+                    'fl_sui_employer' => 0.00,
+                    'subtotal' => 0.00
+                ];
+
+                $socialSecurity = 6.2;
+                $medicare = 1.45;
+                $futa = 0.6;
+                foreach($paychecks as $paycheck)
+                {
+                    $empTotalPay = floatval($paycheck->total_pay);
+                    $empSocial = ($empTotalPay / 100) * $socialSecurity;
+                    $empMedicare = ($empTotalPay / 100) * $medicare;
+                    $empFuta = ($empTotalPay / 100) * $futa;
+
+                    $total_pay['paycheck_wages'] += floatval($paycheck->total_pay);
+                    $total_pay['subtotal'] += floatval($paycheck->total_pay);
+
+                    $employer_taxes['ss_employer'] += $empSocial;
+                    $employer_taxes['medicare_employer'] += $empMedicare;
+                    $employer_taxes['futa_employer'] += $empFuta;
+
+                    $employer_taxes['subtotal'] += $empSocial;
+                    $employer_taxes['subtotal'] += $empMedicare;
+                    $employer_taxes['subtotal'] += $empFuta;
+                }
+
+                $total_payroll_cost = $total_pay['subtotal'] + $company_contributions['subtotal'] + $employer_taxes['subtotal'];
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    $rows = [
+                        [
+                            'Total pay',
+                            ''
+                        ],
+                        [
+                            'Paycheck wages',
+                            number_format($total_pay['paycheck_wages'], 2)
+                        ],
+                        [
+                            'Non-paycheck wages',
+                            number_format($total_pay['non_paycheck_wages'], 2)
+                        ],
+                        [
+                            'Reimbursements',
+                            number_format($total_pay['reimbursements'], 2)
+                        ],
+                        [
+                            'Subtotal',
+                            number_format($total_pay['subtotal'], 2)
+                        ],
+                        [
+                            'Company Contributions',
+                            ''
+                        ],
+                        [
+                            'Subtotal',
+                            number_format($company_contributions['subtotal'], 2)
+                        ],
+                        [
+                            'Employer taxes',
+                            ''
+                        ],
+                        [
+                            'Social Security Employer',
+                            number_format($employer_taxes['ss_employer'], 2)
+                        ],
+                        [
+                            'Medicare Employer',
+                            number_format($employer_taxes['medicare_employer'], 2)
+                        ],
+                        [
+                            'FUTA Employer',
+                            number_format($employer_taxes['futa_employer'], 2)
+                        ],
+                        [
+                            'FL SUI Employer',
+                            number_format($employer_taxes['fl_sui_employer'], 2)
+                        ],
+                        [
+                            'Subtotal',
+                            number_format($employer_taxes['subtotal'], 2)
+                        ],
+                        [
+                            'Total payroll cost',
+                            number_format($total_payroll_cost, 2)
+                        ],
+                    ];
+                    foreach($rows as $data)
+                    {
+                        $style = [];
+                        switch($data[0]) {
+                            case 'Total pay' :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                            break;
+                            case 'Subtotal' :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                            break;
+                            case 'Company Contributions' :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                            break;
+                            case 'Employer taxes' :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                            break;
+                            case 'Total payroll cost' :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                                }
+                            break;
+                            default :
+                                foreach($data as $r)
+                                {
+                                    $style[] = ['color' => '#000000'];
+                                }
+                            break;
+                        }
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Total_Payroll_Cost';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Total_Payroll_Cost.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>
+                                    <td>Item</td>
+                                    <td>Amount</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>Total pay</b></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Paycheck wages</td>
+                                    <td>'.number_format($total_pay['paycheck_wages'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Non-paycheck wages</td>
+                                    <td>'.number_format($total_pay['non_paycheck_wages'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Reimbursements</td>
+                                    <td>'.number_format($total_pay['reimbursements'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Subtotal</b></td>
+                                    <td><b>'.number_format($total_pay['subtotal'], 2).'</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Company Contributions</b></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Subtotal</b></td>
+                                    <td><b>'.number_format($company_contributions['subtotal'], 2).'</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Employer taxes</b></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Social Security Employer</td>
+                                    <td>'.number_format($employer_taxes['ss_employer'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Medicare Employer</td>
+                                    <td>'.number_format($employer_taxes['medicare_employer'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>FUTA Employer</td>
+                                    <td>'.number_format($employer_taxes['futa_employer'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>FL SUI Employer</td>
+                                    <td>'.number_format($employer_taxes['fl_sui_employer'], 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Subtotal</b></td>
+                                    <td><b>'.number_format($employer_taxes['subtotal'], 2).'</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total payroll cost</b></td>
+                                    <td><b>'.number_format($total_payroll_cost, 2).'</b></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="12">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Total_Payroll_Cost';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Total Payroll Cost";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Total_Payroll_Cost.pdf', 'D');
+                }
+            break;
+            case 'Vacation and Sick Leave' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = 'Time off';
+
+                $report_period = 'Current balance for active employees';
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                $time_offs = [];
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if(count($time_offs) > 0) {
+                        foreach($time_offs as $time_off)
+                        {
+                            $data = [];
+                            $style = [];
+    
+                            foreach($post['fields'] as $field)
+                            {
+                                $data[] = $time_off[strtolower(str_replace(' ', '_', $field))];
+                                $style[] = ['color' => '#000000'];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+                    } else {
+                        $row--;
+                        $text = [
+                            "No results found."
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $text, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Vacation_and_Sick_Leave';
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Vacation_and_Sick_Leave.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                            $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if(count($time_offs) > 0) {
+                                    foreach($time_offs as $time_off) {
+                                        $html .= '<tr>';
+                                        foreach($post['fields'] as $field) {
+                                            $html .= '<td>'.$time_off[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                } else {
+                                    $html .= '<tr style="text-align: center">
+                                        <td colspan="'.count($post['fields']).'">No results found.</td>
+                                    </tr>';
+                                }
+                            $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="'.count($post['fields']).'">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName).'_Vacation_and_Sick_Leave';
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Vacation and Sick Leave";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName).'_Vacation_and_Sick_Leave.pdf', 'D');
+                }
+            break;
+            case "Workers' Compensation" :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+
+                $totals = [
+                    'premium_wage_paid' => 0.00,
+                    'tips_paid' => 0.00,
+                    'employee_taxes_paid_by_employer' => 0.00,
+                    'wages_paid' => 0.00
+                ];
+
+                $comps = [];
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                $time_offs = [];
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if(count($comps) > 0) {
+                        foreach($comps as $comp)
+                        {
+                            $data = [];
+                            $style = [];
+    
+                            foreach($post['fields'] as $field)
+                            {
+                                $data[] = $comp[strtolower(str_replace(' ', '_', $field))];
+                                $style[] = ['color' => '#000000'];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+                    } else {
+                        $row--;
+                        $text = [
+                            "No results found."
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $text, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Workers'_Compensation";
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Workers'_Compensation.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                            $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if(count($comps) > 0) {
+                                    foreach($comps as $comp) {
+                                        $html .= '<tr>';
+                                        foreach($post['fields'] as $field) {
+                                            $html .= '<td>'.$comp[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                } else {
+                                    $html .= '<tr style="text-align: center">
+                                        <td colspan="'.count($post['fields']).'">No results found.</td>
+                                    </tr>';
+                                }
+                            $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="'.count($post['fields']).'">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Workers'_Compensation";
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Workers' Compensation";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName)."_Workers'_Compensation.pdf", 'D');
                 }
             break;
         }

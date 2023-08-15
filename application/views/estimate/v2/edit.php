@@ -618,9 +618,9 @@ echo put_header_assets();
                                                         <input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?= $count; ?>" value="<?php echo $data->qty; ?>">
                                                     </td>
                                                     <td width="10%">
-                                                        <input type="text" class="form-control price hidden_mobile_view" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
-                                                        <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>">
-                                                        <div class="show_mobile_view"><?php echo $data->costing; ?></div>
+                                                        <input type="text" class="form-control price hidden_mobile_view" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->price; ?>">
+                                                        <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->price * $data->qty; ?>">
+                                                        <div class="show_mobile_view"><?php echo $data->price; ?></div>
                                                     </td>
                                                     <td class="hidden_mobile_view" width="10%">
                                                         <input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $count; ?>" id="discount_<?php echo $count; ?>" min="0" value="<?php echo $data->discount; ?>" />
@@ -630,13 +630,13 @@ echo put_header_assets();
                                                     </td>
                                                     <td class="hidden_mobile_view" width="10%">
                                                         <?php
-                                                        $total_item_price = $data->costing * $data->qty;
+                                                        $total_item_price = $data->price * $data->qty;
                                                         $tax = $data->tax > 0 ? $data->tax : 0;
                                                         $discount = $data->discount > 0 ? $data->discount : 0;
                                                         $total_row_price = ($total_item_price + $tax) - $data->discount;
                                                         ?>
                                                         <input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
-                                                        <span id="span_total_<?php echo $count; ?>"><?php echo number_format($total_row_price, 2); ?></span>
+                                                        <span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
                                                     </td>
                                                     <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                                 </tr>
@@ -1725,4 +1725,3 @@ echo put_header_assets();
         // cal_total_due();
     });
 </script>
-<script src="<?= base_url("assets/js/custom.js") ?>"></script>
