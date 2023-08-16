@@ -24050,12 +24050,83 @@ class Reports extends MY_Controller {
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
             case 'vacation_and_sick_leave' :
+                $status = [
+                    "1"
+                ];
+
+                $this->page_data['filter_status'] = 'active';
+
                 if(!empty(get('status'))) {
                     $this->page_data['filter_status'] = get('status');
+
+                    switch(get('status')) {
+                        case 'all' :
+                            $status = [
+                                "0",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                        case 'inactive' :
+                            $status = [
+                                "0",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                    }
+                }
+
+                $requests = $this->timesheet_model->getLeaveRequest();
+
+                $time_offs = [];
+                foreach($requests as $request)
+                {
+                    $emp = $this->users_model->getUser($request->user_id);
+
+                    $flag = true;
+                    if(!in_array($emp->status, $status)) {
+                        $flag = false;
+                    }
+
+                    if($flag) {
+                        $pto = $this->timesheet_model->getPTOById($request->pto_id);
+                        $leaveDate = $this->timesheet_model->get_leavedates($request->id);
+    
+                        switch($request->status) {
+                            case '1' :
+                                $reqStatus = 'Approved';
+                            break;
+                            case '2' :
+                                $reqStatus = 'Denied';
+                            break;
+                            default :
+                                $reqStatus = 'Pending';
+                            break;
+                        }
+    
+                        date_default_timezone_set("UTC");
+                        $the_date = strtotime($leaveDate[0]->date_time);
+                        date_default_timezone_set($this->session->userdata('usertimezone'));
+                        $leave_date = date("Y-m-d H:i:s", $the_date);
+
+                        $time_offs[] = [
+                            'employee' => "$emp->LName, $emp->FName",
+                            'type' => $pto->name,
+                            'date_filed' => date('m/d/Y', strtotime($request->date_created)),
+                            'leave_date' => date('m/d/Y', strtotime($leave_date)),
+                            'status' => $reqStatus
+                        ];
+                    }
                 }
 
                 $this->page_data['report_title'] = 'Time off';
-                $this->page_data['time_offs'] = [];
+                $this->page_data['time_offs'] = $time_offs;
                 $this->page_data['report_period'] = 'Current balance for active employees';
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
@@ -24096,9 +24167,67 @@ class Reports extends MY_Controller {
                     'wages_paid' => 0.00
                 ];
 
-                $this->page_data['comps'] = [];
+                $comps = [];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    if(array_key_exists($emp->id, $comps)) {
+                        $comps[$emp->id]['wages_paid'] += floatval($paycheck->total_pay);
+                    } else {
+                        $comps[$emp->id] = [
+                            'employee' => "$emp->LName, $emp->FName",
+                            'state' => $emp->state,
+                            'workers_comp_class' => 'No Name Specified',
+                            'premium_wage_paid' => 0.00,
+                            'tips_paid' => 0.00,
+                            'employee_taxes_paid_by_employer' => 0.00,
+                            'wages_paid' => floatval($paycheck->total_pay)
+                        ];
+                    }
+
+                    $totals['wages_paid'] += floatval($paycheck->total_pay);
+                }
+
+                $this->page_data['comps'] = $comps;
                 $this->page_data['totals'] = $totals;
                 $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date']));
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'retirement_plans' :
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $this->page_data['start_date'] = date('m/d/Y');
+                    $this->page_data['end_date'] = date('m/d/Y');
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $this->page_data['plans'] = [];
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for '.$this->page_data['filter_status'].' employees';
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
         }
@@ -24302,6 +24431,7 @@ class Reports extends MY_Controller {
             "audit_log_list",
             "expenses_by_vendor_summary",
             "inventory_valuation_summary",
+            "customer_balance_summary",
         );
 
         // ====== Default PDF Report Settings ============================================================
@@ -25074,6 +25204,137 @@ class Reports extends MY_Controller {
 
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, ["TOTAL", number_format($totalExpense, 2, ".", "")], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row+5, 0, $row+5, $totalColumn-1);
+                $writer->markMergedCell($worksheet_name, $row+7, 0, $row+7, $totalColumn-1);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                if ($response) {
+                    echo $response;
+                } else {
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
+                }
+            }
+
+            // Fetch Customer Balance Summary data
+            if ($reportType == "customer_balance_summary") {
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
+
+                // ====== Generate PDF File ============================================================
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
+                for ($i = 0; $i < $theadTotalColumn; $i++) { 
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
+                }
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+
+                $response = '';
+                $totalBalance = 0.0;
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "&mdash;";
+                    $balance = ($returnDatas->balance) ? $returnDatas->balance : 0.0;
+
+                    $response .= '<tr>';
+                    $response .= '<td class="PLACE_LEFT">'.$customer.'</td>';
+                    $response .= '<td class="PLACE_RIGHT">$'.number_format($balance, 2, ".", ",").'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME PLACE_LEFT">'.$customer.'</td>';
+                    $tableContent .= '<td class="TD_NAME PLACE_RIGHT">$'.number_format($balance, 2, ".", ",").'</td>';
+                    $tableContent .= '</tr>';
+
+                    // Calculate Total Balance
+                    $totalBalance += $balance;
+                }
+
+                // TOTAL
+                $response .= '<tr><td></td><td></td></tr>';
+                $response .= '<tr>';
+                $response .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
+                $response .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalBalance, 2, ".", ",").'</strong></td>';
+                $response .= '</tr>';
+                $tableContent .= '<tr><td></td><td></td></tr>';
+                $tableContent .= '<tr>';
+                $tableContent .= '<td class="TD_NAME PLACE_LEFT"><strong>TOTAL</strong></td>';
+                $tableContent .= '<td class="TD_NAME PLACE_RIGHT"><strong>$'.number_format($totalBalance, 2, ".", ",").'</strong></td>';
+                $tableContent .= '</tr>';
+
+                $tableContent .= '</table>';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
+                    </style>
+                ';
+
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = $theadTotalColumn;
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
+                $headerData = array();
+
+                for ($i = 0; $i < $totalColumn; $i++) { 
+                    array_push($headerData, $theadColumnNames[$i]);
+                }
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn - 1) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn - 1);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn - 1);
+
+                $row = $totalColumn;
+                foreach ($returnData as $returnDatas) {
+                    $customer = ($returnDatas->customer) ? $returnDatas->customer : "—";
+                    $balance = ($returnDatas->balance) ? $returnDatas->balance : 0.0;
+
+                    $row_data = array($customer, number_format($balance, 2, ".", ""));
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, ["TOTAL", number_format($totalBalance, 2, ".", "")], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
                 $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
@@ -53896,11 +54157,84 @@ class Reports extends MY_Controller {
                 $companyName = $this->page_data['clients']->business_name;
                 $reportName = 'Time off';
 
-                $report_period = 'Current balance for active employees';
+                $status = [
+                    "1"
+                ];
+
+                $filter_status = 'active';
+
+                if(!empty($post['status'])) {
+                    $filter_status = $post['status'];
+
+                    switch($post['status']) {
+                        case 'all' :
+                            $status = [
+                                "0",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                        case 'inactive' :
+                            $status = [
+                                "0",
+                                "2",
+                                "3",
+                                "4",
+                                "5"
+                            ];
+                        break;
+                    }
+                }
+
+                $report_period = 'Current balance for '.$filter_status.' employees';
                 $preparedTimestamp = "l, F j, Y h:i A eP";
                 $date = date($preparedTimestamp);
 
+                $requests = $this->timesheet_model->getLeaveRequest();
+
                 $time_offs = [];
+                foreach($requests as $request)
+                {
+                    $emp = $this->users_model->getUser($request->user_id);
+
+                    $flag = true;
+                    if(!in_array($emp->status, $status)) {
+                        $flag = false;
+                    }
+
+                    if($flag) {
+                        $pto = $this->timesheet_model->getPTOById($request->pto_id);
+                        $leaveDate = $this->timesheet_model->get_leavedates($request->id);
+    
+                        switch($request->status) {
+                            case '1' :
+                                $reqStatus = 'Approved';
+                            break;
+                            case '2' :
+                                $reqStatus = 'Denied';
+                            break;
+                            default :
+                                $reqStatus = 'Pending';
+                            break;
+                        }
+    
+                        date_default_timezone_set("UTC");
+                        $the_date = strtotime($leaveDate[0]->date_time);
+                        date_default_timezone_set($this->session->userdata('usertimezone'));
+                        $leave_date = date("Y-m-d H:i:s", $the_date);
+
+                        $time_offs[] = [
+                            'employee' => "$emp->LName, $emp->FName",
+                            'type' => $pto->name,
+                            'date_filed' => date('m/d/Y', strtotime($request->date_created)),
+                            'leave_date' => date('m/d/Y', strtotime($leave_date)),
+                            'status' => $reqStatus
+                        ];
+                    }
+                }
 
                 if($post['type'] === 'excel') {
                     $writer = new XLSXWriter();
@@ -54077,6 +54411,28 @@ class Reports extends MY_Controller {
                 ];
 
                 $comps = [];
+                foreach($paychecks as $paycheck)
+                {
+                    $emp = $this->users_model->getUser($paycheck->employee_id);
+                    $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+                    $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+                    if(array_key_exists($emp->id, $comps)) {
+                        $comps[$emp->id]['wages_paid'] += floatval($paycheck->total_pay);
+                    } else {
+                        $comps[$emp->id] = [
+                            'employee' => "$emp->LName, $emp->FName",
+                            'state' => $emp->state,
+                            'workers_comp_class' => 'No Name Specified',
+                            'premium_wage_paid' => 0.00,
+                            'tips_paid' => 0.00,
+                            'employee_taxes_paid_by_employer' => 0.00,
+                            'wages_paid' => floatval($paycheck->total_pay)
+                        ];
+                    }
+
+                    $totals['wages_paid'] += floatval($paycheck->total_pay);
+                }
 
                 $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
                 $preparedTimestamp = "l, F j, Y h:i A eP";
@@ -54120,13 +54476,35 @@ class Reports extends MY_Controller {
     
                             foreach($post['fields'] as $field)
                             {
-                                $data[] = $comp[strtolower(str_replace(' ', '_', $field))];
+                                $data[] = is_float($comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
                                 $style[] = ['color' => '#000000'];
                             }
     
                             $writer->writeSheetRow('Sheet1', $data, $style);
                             $row++;
                         }
+
+                        $data = [
+                            "Total",
+                            '',
+                            '',
+                            number_format($totals['premium_wage_paid'], 2),
+                            number_format($totals['tips_paid'], 2),
+                            number_format($totals['employee_taxes_paid_by_employer'], 2),
+                            number_format($totals['wages_paid'], 2)
+                        ];
+                        $style = [
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                            ['color' => '#000000', 'font-style' => 'bold']
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
                     } else {
                         $row--;
                         $text = [
@@ -54177,10 +54555,20 @@ class Reports extends MY_Controller {
                                     foreach($comps as $comp) {
                                         $html .= '<tr>';
                                         foreach($post['fields'] as $field) {
-                                            $html .= '<td>'.$comp[strtolower(str_replace(' ', '_', $field))].'</td>';
+                                            $text = is_float($comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $comp[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
+                                            $html .= '<td>'.$text.'</td>';
                                         }
                                         $html .= '</tr>';
                                     }
+                                    $html .= '<tr>
+                                        <td><b>Total</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>'.number_format($totals['premium_wage_paid'], 2).'</b></td>
+                                        <td><b>'.number_format($totals['tips_paid'], 2).'</b></td>
+                                        <td><b>'.number_format($totals['employee_taxes_paid_by_employer'], 2).'</b></td>
+                                        <td><b>'.number_format($totals['wages_paid'], 2).'</b></td>
+                                    </tr>';
                                 } else {
                                     $html .= '<tr style="text-align: center">
                                         <td colspan="'.count($post['fields']).'">No results found.</td>
@@ -54215,6 +54603,180 @@ class Reports extends MY_Controller {
                     ob_end_clean();
                     $obj_pdf->writeHTML($html, true, false, true, false, '');
                     $obj_pdf->Output(str_replace(' ', '_', $companyName)."_Workers'_Compensation.pdf", 'D');
+                }
+            break;
+            case 'Retirement Plans' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $plans = [];
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if(count($plans) > 0) {
+                        foreach($plans as $plan)
+                        {
+                            $data = [];
+                            $style = [];
+    
+                            foreach($post['fields'] as $field)
+                            {
+                                $data[] = is_float($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
+                                $style[] = ['color' => '#000000'];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+                    } else {
+                        $row--;
+                        $text = [
+                            "No results found."
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $text, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Retirement_Plans";
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Retirement_Plans.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                            $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if(count($plans) > 0) {
+                                    foreach($plans as $plan) {
+                                        $html .= '<tr>';
+                                        foreach($post['fields'] as $field) {
+                                            $text = is_float($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
+                                            $html .= '<td>'.$text.'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                } else {
+                                    $html .= '<tr style="text-align: center">
+                                        <td colspan="'.count($post['fields']).'">No results found.</td>
+                                    </tr>';
+                                }
+                            $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="'.count($post['fields']).'">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Retirement_Plans";
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Retirement Plans";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName)."_Retirement_Plans.pdf", 'D');
                 }
             break;
         }

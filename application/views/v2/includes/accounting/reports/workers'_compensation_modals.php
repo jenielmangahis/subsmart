@@ -9,21 +9,22 @@
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <tr>
+                            <td data-name="Employee">EMPLOYEE</td>
                             <td data-name="State">STATE</td>
                             <td data-name="Workers' Comp Class">WORKERS' COMP CLASS</td>
                             <td data-name="Premium Wage Paid">PREMIUM WAGE PAID</td>
@@ -36,8 +37,9 @@
                         <?php if(count($comps) > 0) : ?>
                         <?php foreach($comps as $index => $comp) : ?>
                         <tr>
+                            <td><?=$comp['employee']?></td>
                             <td><?=$comp['state']?></td>
-                            <td><?=$comp['workers_comp_class'], 2?></td>
+                            <td><?=$comp['workers_comp_class']?></td>
                             <td><?=number_format($comp['premium_wage_paid'], 2)?></td>
                             <td><?=number_format($comp['tips_paid'], 2)?></td>
                             <td><?=number_format($comp['employee_taxes_paid_by_employer'], 2)?></td>
@@ -47,6 +49,7 @@
                         <tr>
                             <td><b>Total</b></td>
                             <td></td>
+                            <td></td>
                             <td><b><?=number_format($totals['premium_wage_paid'], 2)?></b></td>
                             <td><b><?=number_format($totals['tips_paid'], 2)?></b></td>
                             <td><b><?=number_format($totals['employee_taxes_paid_by_employer'], 2)?></b></td>
@@ -54,7 +57,7 @@
                         </tr>
                         <?php else : ?>
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -64,7 +67,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -90,21 +93,22 @@
                 <table class="w-100" id="report_table_print">
                     <thead>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
                         <tr>
+                            <td data-name="Employee">EMPLOYEE</td>
                             <td data-name="State">STATE</td>
                             <td data-name="Workers' Comp Class">WORKERS' COMP CLASS</td>
                             <td data-name="Premium Wage Paid">PREMIUM WAGE PAID</td>
@@ -117,8 +121,9 @@
                         <?php if(count($comps) > 0) : ?>
                         <?php foreach($comps as $index => $comp) : ?>
                         <tr>
+                            <td><?=$comp['employee']?></td>
                             <td><?=$comp['state']?></td>
-                            <td><?=$comp['workers_comp_class'], 2?></td>
+                            <td><?=$comp['workers_comp_class']?></td>
                             <td><?=number_format($comp['premium_wage_paid'], 2)?></td>
                             <td><?=number_format($comp['tips_paid'], 2)?></td>
                             <td><?=number_format($comp['employee_taxes_paid_by_employer'], 2)?></td>
@@ -128,6 +133,7 @@
                         <tr>
                             <td><b>Total</b></td>
                             <td></td>
+                            <td></td>
                             <td><b><?=number_format($totals['premium_wage_paid'], 2)?></b></td>
                             <td><b><?=number_format($totals['tips_paid'], 2)?></b></td>
                             <td><b><?=number_format($totals['employee_taxes_paid_by_employer'], 2)?></b></td>
@@ -135,7 +141,7 @@
                         </tr>
                         <?php else : ?>
                         <tr>
-                            <td colspan="6">
+                            <td colspan="7">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -145,7 +151,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>

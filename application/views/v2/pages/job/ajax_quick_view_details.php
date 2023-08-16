@@ -89,10 +89,7 @@
                             </td>
                         </tr>                        
                     </tbody>
-                </table>
-                <?php if( $jobs_data->status == 'Started' ){ ?>
-                <a class="nsm nsm-button primary" style="float: right;margin-top: 10px;" href="javascript:void(0);" id="approveThisJob">Send Esign</a>   
-                <?php } ?>
+                </table>                
             </div>            
         </div>
         <div class="row mt-3">

@@ -60,15 +60,27 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
-                                            <td data-name=""></td>
+                                            <td data-name="Employee">EMPLOYEE</td>
+                                            <td data-name="Type">TYPE</td>
+                                            <td data-name="Date Filed">DATE FILED</td>
+                                            <td data-name="Leave Date">LEAVE DATE</td>
+                                            <td data-name="Status">STATUS</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if(count($time_offs) > 0) : ?>
-
+                                        <?php foreach($time_offs as $time_off) : ?>
+                                        <tr>
+                                            <td><?=$time_off['employee']?></td>
+                                            <td><?=$time_off['type']?></td>
+                                            <td><?=$time_off['date_filed']?></td>
+                                            <td><?=$time_off['leave_date']?></td>
+                                            <td><?=$time_off['status']?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="35">
+                                            <td colspan="5">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>

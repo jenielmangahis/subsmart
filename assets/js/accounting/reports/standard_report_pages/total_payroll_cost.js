@@ -101,35 +101,6 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
-$('#run-report-button').on('click', function() {
-    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
-    var currentUrl = currUrl.replace('#', '');
-    var urlSplit = currentUrl.split('?');
-    var query = urlSplit[1];
-
-    if(query !== undefined) {
-        var querySplit = query.split('&');
-
-        var notIncluded = [
-            'status',
-        ];
-        $.each(querySplit, function(key, value) {
-            var selectedVal = value.split('=');
-            if(notIncluded.includes(selectedVal[0]) === false) {
-                url += value+'&';
-            }
-        });
-    }
-
-    url += $('#filter-employee').val() !== 'all' ? `status=${$('#filter-employee').val()}&` : '';
-
-    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
-        url = url.slice(0, -1); 
-    }
-
-    location.href = url;
-});
-
 $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
 });

@@ -142,6 +142,20 @@ class Accounting_model extends MY_Model {
             return $data->result();
         }
 
+        // Get Customer Balance Summary data in Database
+        if ($reportType == "customer_balance_summary") {
+            $this->db->select('acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, SUM(invoices.total_due) AS balance');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('acs_profile.prof_id, customer');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 
 }

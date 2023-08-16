@@ -100,7 +100,7 @@ table.dataTable.no-footer {
 <script type="text/javascript">
 window.addEventListener('DOMContentLoaded', async (event) => {
   const urlParams = new URLSearchParams(window.location.search);
-  const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetDocuSignList`);
   const { data } = await response.json();
 
@@ -109,7 +109,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 });
 $(document).ready(function(){
     const $table = $("#esignListTable");
-    const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+    const prefixURL = "";
     const table = $table.DataTable({
         //searching: false,
 

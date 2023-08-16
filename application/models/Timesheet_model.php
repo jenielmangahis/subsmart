@@ -923,6 +923,12 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get('timesheet_pto');
         return $query->result();
     }
+    public function getPTOById($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->get('timesheet_pto');
+        return $query->row();
+    }
 
     //Adding PTO type
     public function savedPTO($id, $type)

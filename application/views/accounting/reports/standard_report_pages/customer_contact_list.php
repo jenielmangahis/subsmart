@@ -81,6 +81,14 @@
         padding: 5px 5px 5px 0px;
     }
 
+    .PLACE_LEFT {
+        text-align: left;
+    }
+
+    .PLACE_RIGHT {
+        text-align: right;
+    }
+
     #sort-by {
         width: 125px;
     }

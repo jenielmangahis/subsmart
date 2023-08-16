@@ -85,6 +85,14 @@
         font-weight: 500;
     }
 
+    .PLACE_LEFT {
+        text-align: left;
+    }
+
+    .PLACE_RIGHT {
+        text-align: right;
+    }
+
     #sort-by {
         width: 125px;
     }

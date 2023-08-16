@@ -48,6 +48,23 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('eSign_v2/manager') ?>'">
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <img class="nsm-card-img" src="<?php echo base_url('uploads/image/esign/esignmanager.png') ?>">
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="nsm-card-title mt-4">
+                                            <span>eSign Manager</span>
+                                        </div>
+                                        <label class="nsm-subtitle d-block">eSign Lists.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="button" onclick="location.href='<?php echo base_url('vault_v2/mylibrary') ?>'">
                             <div class="nsm-card-content">
                                 <div class="row">
@@ -185,7 +202,7 @@
                                 </div>
                             </div>
                         </div>
-                    <?php endif; ?>
+                    <?php endif; ?>                    
                 </div>
             </div>
         </div>

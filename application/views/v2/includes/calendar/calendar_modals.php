@@ -619,6 +619,7 @@
                 <button type="button" class="nsm-button primary" data-id="" data-type="" id="upcoming-schedule-view-more-details"><i class="bx bx-window-open"></i> View More Details</button>
                  <button type="button" class="nsm-button primary" data-id="" data-type="" id="quick-add-gcalendar"><i class="bx bxl-google"></i> Add to Google Calendar</button>
                 <button type="button" class="nsm-button primary quick-edit-schedule" data-id="" data-type="" id="edit-upcoming-schedule"><i class='bx bx-edit-alt'></i> Edit</button>
+                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
                 <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
             </div>           
         </div>        
@@ -681,7 +682,7 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <form id="update_status_to_omw" method="post">
+                <form id="ticket_update_status_to_omw" method="post">
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
                             <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>

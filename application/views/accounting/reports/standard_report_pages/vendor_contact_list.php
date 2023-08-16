@@ -81,6 +81,14 @@
         padding: 5px 5px 5px 0px;
     }
 
+    .PLACE_LEFT {
+        text-align: left;
+    }
+
+    .PLACE_RIGHT {
+        text-align: right;
+    }
+
     #sort-by {
         width: 125px;
     }
@@ -305,7 +313,7 @@
                                     <label class="mb-1 fw-xnormal">Page Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
                                         <option value="9999" selected>All</option>
-                                        <option value="10" selected>10</option>
+                                        <option value="10">10</option>
                                         <option value="25">25</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
