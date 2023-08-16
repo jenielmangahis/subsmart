@@ -52,6 +52,7 @@ class AccountingMailer extends MY_Controller{
             "audit_log_list",
             "expenses_by_vendor_summary",
             "inventory_valuation_summary",
+            "customer_balance_summary",
         );
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {

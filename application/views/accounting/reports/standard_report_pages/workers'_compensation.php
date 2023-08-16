@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
@@ -59,9 +59,6 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -107,24 +104,39 @@
                                     <thead>
                                         <tr>
                                             <td data-name="Employee">EMPLOYEE</td>
-                                            <td data-name="Employee Deductions">EMPLOYEE DEDUCTIONS</td>
-                                            <td data-name="Company Contributions">COMPANY CONTRIBUTIONS</td>
-                                            <td data-name="Plan Total">PLAN TOTAL</td>
+                                            <td data-name="State">STATE</td>
+                                            <td data-name="Workers' Comp Class">WORKERS' COMP CLASS</td>
+                                            <td data-name="Premium Wage Paid">PREMIUM WAGE PAID</td>
+                                            <td data-name="Tips Paid">TIPS PAID</td>
+                                            <td data-name="Employee Taxes Paid by Employer">EMPLOYEE TAXES PAID BY EMPLOYER</td>
+                                            <td data-name="Wages Paid">WAGES PAID</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(count($plans) > 0) : ?>
-                                        <?php foreach($plans as $plan) : ?>
+                                        <?php if(count($comps) > 0) : ?>
+                                        <?php foreach($comps as $index => $comp) : ?>
                                         <tr>
-                                            <td><?=$plan['employee']?></td>
-                                            <td><?=$plan['employee_deductions']?></td>
-                                            <td><?=$plan['company_contributions']?></td>
-                                            <td><?=$plan['plan_total']?></td>
+                                            <td><?=$comp['employee']?></td>
+                                            <td><?=$comp['state']?></td>
+                                            <td><?=$comp['workers_comp_class']?></td>
+                                            <td><?=number_format($comp['premium_wage_paid'], 2)?></td>
+                                            <td><?=number_format($comp['tips_paid'], 2)?></td>
+                                            <td><?=number_format($comp['employee_taxes_paid_by_employer'], 2)?></td>
+                                            <td><?=number_format($comp['wages_paid'], 2)?></td>
                                         </tr>
                                         <?php endforeach; ?>
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><b><?=number_format($totals['premium_wage_paid'], 2)?></b></td>
+                                            <td><b><?=number_format($totals['tips_paid'], 2)?></b></td>
+                                            <td><b><?=number_format($totals['employee_taxes_paid_by_employer'], 2)?></b></td>
+                                            <td><b><?=number_format($totals['wages_paid'], 2)?></b></td>
+                                        </tr>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="4">
+                                            <td colspan="7">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>

@@ -5,7 +5,7 @@ echo put_header_assets();
 ?>
 
 <!-- Script for autosaving form -->
-<script src="<?= base_url("assets/js/estimate/autosave-standard-update.js") ?>"></script>
+<!-- <script src="<?= base_url("assets/js/estimate/autosave-standard-update.js") ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -636,7 +636,7 @@ echo put_header_assets();
                                                         $total_row_price = ($total_item_price + $tax) - $data->discount;
                                                         ?>
                                                         <input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
-                                                        <span id="span_total_<?php echo $count; ?>"><?php echo number_format($total_row_price, 2); ?></span>
+                                                        <span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
                                                     </td>
                                                     <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                                 </tr>
@@ -1725,4 +1725,3 @@ echo put_header_assets();
         // cal_total_due();
     });
 </script>
-<script src="<?= base_url("assets/js/custom.js") ?>"></script>

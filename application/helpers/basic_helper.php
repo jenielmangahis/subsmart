@@ -2616,7 +2616,7 @@ function report_totals_by_month($results, $month, $action)
                 $date = explode("-",$result->date_issued);
                 if ($date[1] == $month) {
                     // $grand_total += floatval($totals['grand_total']);
-                    $grand_total += $result->grand_total;
+                    $grand_total += floatval($result->grand_total);
                 }
             }
             break;
@@ -2971,10 +2971,10 @@ function getAccountReceivableResCom($start_date, $end_date, $month) {
             // $totals = unserialize($result->invoice_totals);
             if (get_customer_by_id($result->customer_id)->customer_type == "Residential") {
                 $res_num_invoice += 1;
-                $res_total_invoice += $result->grand_total;
+                $res_total_invoice += floatval($result->grand_total);
             } else {
                 $com_num_invoice += 1;
-                $com_total_invoice += $result->grand_total;
+                $com_total_invoice += floatval($result->grand_total);
             }
             $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
             foreach ($invoices as $inv) {
