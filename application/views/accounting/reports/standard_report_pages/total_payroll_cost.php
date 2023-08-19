@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
@@ -59,9 +59,6 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#settings-modal">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -106,31 +103,67 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
-                                            <td data-name="Employee">EMPLOYEE</td>
-                                            <td data-name="Employee Deductions">EMPLOYEE DEDUCTIONS</td>
-                                            <td data-name="Company Contributions">COMPANY CONTRIBUTIONS</td>
-                                            <td data-name="Plan Total">PLAN TOTAL</td>
+                                            <td data-name="Item">ITEM</td>
+                                            <td data-name="Amount">AMOUNT</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(count($plans) > 0) : ?>
-                                        <?php foreach($plans as $plan) : ?>
                                         <tr>
-                                            <td><?=$plan['employee']?></td>
-                                            <td><?=$plan['employee_deductions']?></td>
-                                            <td><?=$plan['company_contributions']?></td>
-                                            <td><?=$plan['plan_total']?></td>
+                                            <td><b>Total pay</b></td>
+                                            <td></td>
                                         </tr>
-                                        <?php endforeach; ?>
-                                        <?php else : ?>
                                         <tr>
-                                            <td colspan="4">
-                                                <div class="nsm-empty">
-                                                    <span>No results found.</span>
-                                                </div>
-                                            </td>
+                                            <td>Paycheck wages</td>
+                                            <td><?=number_format($total_pay['paycheck_wages'], 2)?></td>
                                         </tr>
-                                        <?php endif; ?>
+                                        <tr>
+                                            <td>Non-paycheck wages</td>
+                                            <td><?=number_format($total_pay['non_paycheck_wages'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Reimbursements</td>
+                                            <td><?=number_format($total_pay['reimbursements'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Subtotal</b></td>
+                                            <td><b><?=number_format($total_pay['subtotal'], 2)?></b></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Company Contributions</b></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Subtotal</b></td>
+                                            <td><b><?=number_format($company_contributions['subtotal'], 2)?></b></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Employer taxes</b></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Social Security Employer</td>
+                                            <td><?=number_format($employer_taxes['ss_employer'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Medicare Employer</td>
+                                            <td><?=number_format($employer_taxes['medicare_employer'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>FUTA Employer</td>
+                                            <td><?=number_format($employer_taxes['futa_employer'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>FL SUI Employer</td>
+                                            <td><?=number_format($employer_taxes['fl_sui_employer'], 2)?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Subtotal</b></td>
+                                            <td><b><?=number_format($employer_taxes['subtotal'], 2)?></b></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Total payroll cost</b></td>
+                                            <td><b><?=number_format($total_payroll_cost, 2)?></b></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

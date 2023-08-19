@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">

@@ -1192,7 +1192,7 @@ class Accounting_modals extends MY_Controller
         $postData = $this->input->post();
         $socialSecurity = 6.2;
         $medicare = 1.45;
-        $futa = 0.006;
+        $futa = 0.6;
         $sui = 0.00;
         // $sui = 2.7;
 
@@ -1208,10 +1208,10 @@ class Accounting_modals extends MY_Controller
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;
             $empMedicare = ($empTotalPay / 100) * $medicare;
-            $empTax = $empSocial + $empMedicare;
+            $empTax = number_format($empSocial + $empMedicare, 2);
             $employeeSUI = ($empTotalPay / 100) * $sui;
 
-            $netPay = $empTotalPay - $empTax;
+            $netPay = $empTotalPay - floatval($empTax);
 
             $employees[] = [
                 'id' => $emp->id,
@@ -1221,7 +1221,7 @@ class Accounting_modals extends MY_Controller
                 'total_pay' => number_format($empTotalPay, 2, '.', ','),
                 'employee_tax' => number_format($empTax, 2, '.', ','),
                 'net_pay' => number_format($netPay, 2, '.', ','),
-                'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
+                'employee_futa' => number_format(($empTotalPay / 100) * $futa, 2, '.', ','),
                 'employee_sui' => number_format($employeeSUI, 2, '.', ',')
             ];
         }
