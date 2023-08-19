@@ -45,6 +45,8 @@
 }
 </style>
 <div class="nsm-page-content quick-view-schedule-container" style="padding:2%;">
+    <input type="hidden" value="<?= $tickets->id ?>" id="esignTicketId" />
+    <input type="hidden" value="<?= $tickets->customer_id; ?>" id="ticket_customer_id">
     <div class="row">
         <div class="col-md-6">
             <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="margin-top: 33px; max-width: 130px; max-height: 130px;" class="compLogo"/> 
@@ -81,6 +83,7 @@
                 </tr>
                 <?php } ?>
             </table>
+            <a class="nsm nsm-button primary" style="float: right;margin-top: 10px;" href="javascript:void(0);" id="approveThisTicket">Send Esign</a>
         </div>
     </div>
     <br />

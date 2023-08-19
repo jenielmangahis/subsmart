@@ -24,7 +24,7 @@ class Esign extends MY_Controller {
     }
 
 	public function index()
-	{
+	{		
 		$this->load->model('Users_sign_model', 'Users_sign_model');
 		$this->page_data['users'] = $this->Users_sign_model->getUser(logged('id'));
 		$this->checkLogin();
@@ -262,6 +262,7 @@ class Esign extends MY_Controller {
 		]);
 
 		$this->load->view('esign/files', $this->page_data);
+		//$this->load->view('v2/pages/esign/files', $this->page_data);
 	}
 
 	public function apiGetDocumentRecipients($id)

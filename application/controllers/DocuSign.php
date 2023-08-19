@@ -678,7 +678,7 @@ class DocuSign extends MYF_Controller
 
             case 'deleted':
                 $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
-                $this->db->where('user_docfile.status', 'Deleted');
+                $this->db->where('user_docfile.status', 'Trashed');
                 break;
             
             case 'completed':            
@@ -698,6 +698,8 @@ class DocuSign extends MYF_Controller
                 break;
         }
 
+        $this->db->order_by('updated_at', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
         return $this->db->get('user_docfile')->result();
     }
 
@@ -3465,7 +3467,9 @@ SQL;
 
     public function apiGetEsignDetails($documentId)
     {
-        $this->db->where('id', $documentId);
+        $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');
+        $this->db->join('acs_profile', 'user_docfile.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('user_docfile.id', $documentId);
         $document = $this->db->get('user_docfile')->row();
 
         if (is_null($document)) {
@@ -3493,10 +3497,17 @@ SQL;
     {
         $query = $this->input->get('query', TRUE);
 
-        $this->db->like('name', $query, 'both');
-        $this->db->or_like('subject', $query, 'both');
-        $this->db->or_like('unique_key', $query, 'both');
-        $this->db->where('status', 'Completed');
+        $this->db->select('user_docfile.*,acs_profile.first_name AS customer_firstname,acs_profile.last_name AS customer_lastname');
+        $this->db->join('acs_profile', 'user_docfile.customer_id = acs_profile.prof_id', 'left');
+        $this->db->group_start();
+            $this->db->like('user_docfile.name', $query, 'both');
+            $this->db->or_like('user_docfile.subject', $query, 'both');
+            $this->db->or_like('user_docfile.unique_key', $query, 'both');
+            $this->db->or_like('acs_profile.first_name', $query, 'both');
+            $this->db->or_like('acs_profile.last_name', $query, 'both');
+        $this->db->group_end();
+        $this->db->where('user_docfile.status', 'Completed');
+        $this->db->where('user_docfile.unique_key !=', '');
         $results = $this->db->get('user_docfile')->result();
 
 
