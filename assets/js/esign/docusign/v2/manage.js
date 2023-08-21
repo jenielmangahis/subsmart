@@ -79,7 +79,9 @@ const columns = {
         case "trashed":
           badge = "error";
           break;
-
+        case "draft":
+          badge = "warning";
+          break
         case "completed":
           badge = "success";
           break;
@@ -147,10 +149,10 @@ const columns = {
                         aria-valuemax="${totalRecipients}"
                         style="width: ${totalSignedPercent}%"
                     ></div>
-                </div>
-                ${totalRecipientsSigned}/${totalRecipients}
+                </div>                                
             </div>
-            <div>${status}</div>
+            <span class="progress-count">${totalRecipientsSigned}/${totalRecipients}</span> - 
+            <div class="label-waiting">${status}</div>
         </div>
     `;
   },
@@ -391,34 +393,45 @@ const actions = {
   view: function (row) {
     window.open(`/DocuSign/viewCompletedEsign/${row.id}`, "_blank");
   },
-  delete: async function (row, table) {
-    const $deleteModal = $("#confirmDelete");
-    $deleteModal.modal("show");
-
-    $deleteModal.find(".btn-danger").off();
-    $deleteModal.find(".btn-danger").on("click", async function () {
-      const $this = $(this);
-
-      $this.prop("disabled", true);
-      $this.find(".spinner-border").removeClass("d-none");
-
-      const response = await fetch(`${prefixURL}/DocuSign/apiTrash/${row.id}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-      table.row($(`#row${row.id}`)).remove().draw(); // prettier-ignore
-
-      $this.prop("disabled", false);
-      $this.find(".spinner-border").addClass("d-none");
-      $deleteModal.modal("hide");
+  delete: async function (row, table) {    
+    Swal.fire({            
+        title: "Delete Envelope",
+        html: "You can find all your deleted envelopes in your Deleted bin within 24 hours before they're removed permanently.",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+          const response = fetch(`${prefixURL}/DocuSign/apiTrash/${row.id}`, {
+            method: "DELETE",
+          }).then(function() {
+            Swal.fire({                        
+                text: "Envelope was successfully deleted",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                //if (result.value) {                    
+                    table.row($(`#row${row.id}`)).remove().draw(); // prettier-ignore
+                //}
+            });
+          }).catch(function() {
+            console.log("error");
+          });
+          //const data = await response.json();
+        }
     });
   },
   resend: async function (row, _, event) {
     const $this = $(event.target);
+    const $noticeModal = $("#loading_modal");
 
     $this.prop("disabled", true);
     $this.find(".spinner-border").removeClass("d-none");
+
+    $noticeModal.modal('show');
+    $noticeModal.find('.modal-body').html('<span class="bx bx-loader bx-spin"></span> Resending envelope....');
 
     const response = await fetch(`${prefixURL}/DocuSign/send`, {
       method: "POST",
@@ -430,6 +443,17 @@ const actions = {
     });
 
     const data = await response.json();
+
+    $noticeModal.modal('hide');
+    Swal.fire({                        
+        text: "Envelope was successfully sent.",
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonText: 'Okay'
+    }).then((result) => {
+        
+    }); 
+
     $this.prop("disabled", false);
     $this.find(".spinner-border").addClass("d-none");
   },
@@ -474,10 +498,10 @@ const actions = {
     });
   },
   continue: function (row) {
-    if (!row.recipients.length) {
+    /*if (!row.recipients.length) {
       window.location = `${prefixURL}/esign/Files?signing_id=${row.id}&next_step=3`;
       return;
-    }
+    }*/
 
     window.location = `${prefixURL}/esign/Files?id=${row.id}&next_step=2`;
   },
@@ -564,23 +588,32 @@ $(document).ready(function () {
   });
 
   const table = $table.DataTable({
-    searching: false,
+    //searching: false,
 
     ajax: `${prefixURL}/DocuSign/apiManage/${view.toLowerCase()}`,
     columns: [
       {
         sortable: false,
-        ordering: false,
-        render: columns.name,
+        render: columns.rowIcon,
       },
       {
         sortable: false,
-        ordering: false,
+        render: columns.docfileid,
+      },
+      {
+        sortable: false,
+        render: columns.customerName,
+      },
+      {
+        sortable: false,
+        render: columns.subject,
+      },
+      {
+        sortable: false,
         render: columns.status,
       },
       {
         render: columns.lastChanged,
-        ordering: 'desc',
       },
       {
         sortable: false,
@@ -594,6 +627,10 @@ $(document).ready(function () {
     createdRow: function (row, data) {
       $(row).attr("data-id", data.id);
     },
+  });
+
+  $("#custom-esign-search").keyup(function() {             
+      table.search($(this).val()).draw();
   });
 
   table.on("draw", function () {

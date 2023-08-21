@@ -122,8 +122,20 @@
                                                                 <h5><?=$employee->pay_schedule->name?></h5>
                                                             </div>
                                                             <div class="col-12 col-md-4">
+                                                                <h6>Work location</h6>
+                                                                <h5><?=!is_null($empWorksite) ? $empWorksite : '-'?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
                                                                 <h6>Employee ID</h6>
                                                                 <h5><?=!in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '-'?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Job title</h6>
+                                                                <h5><?=!empty($employmentDetails->job_title) ? $employmentDetails->job_title : '-'?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Workers' comp class</h6>
+                                                                <h5><?=!empty($employmentDetails->workers_comp_class) ? $employmentDetails->workers_comp_class : '-'?></h5>
                                                             </div>
                                                         </div>
                                                     </div>

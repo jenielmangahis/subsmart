@@ -11,6 +11,7 @@ function TemplateCreate() {
   let files = [];
   let workorder = undefined;
   let job = undefined;
+  let ticket = undefined;
   let customer = undefined;
   let customerId = undefined;
 
@@ -311,12 +312,17 @@ function TemplateCreate() {
         completed_message: $completedMessage.val(),
         workorder_id: workorder ? workorder.id : null,
         job_id: job ? job.id : null,
+        ticket_id : ticket ? ticket.id : null
       };
 
       const urlParams = new URLSearchParams(window.location.search);
       customerId = urlParams.get("customer_id");
       if (job && !payload.job_id) {
         payload.job_id = urlParams.get("job_id");
+      }
+
+      if (ticket && !payload.ticket_id) {
+        payload.ticket_id = urlParams.get("ticket_id");
       }
 
       const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}/${customerId}`;
@@ -679,6 +685,13 @@ function TemplateCreate() {
     job = data;
   }
 
+  async function getTicketCustomer(customerId) {
+    const endpoint = `${prefixURL}/DocuSign/getTicketCustomer/${customerId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    ticket = data;
+  }
+
   async function getCustomer(customerId) {
     const endpoint = `${prefixURL}/DocuSign/getCustomer/${customerId}`;
     const response = await fetch(endpoint);
@@ -710,6 +723,7 @@ function TemplateCreate() {
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
       const jobId = urlParams.get("job_id");
+      const ticketId = urlParams.get("ticket_id");
 
       if (workorderId) {
         await getWorkorderCustomer(workorderId);
@@ -718,6 +732,10 @@ function TemplateCreate() {
       if (jobId) {
         await getJobCustomer(jobId);
       }
+
+      if(ticketId) {
+        await getTicketCustomer(ticketId);
+      } 
 
       if (customerId) {
         await getCustomer(customerId);

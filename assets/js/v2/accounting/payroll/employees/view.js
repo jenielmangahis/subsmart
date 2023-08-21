@@ -88,3 +88,34 @@ $('#edit-pay-types-modal #pay-type').on('change', function() {
         break;
     }
 });
+
+$('#work-location').on('change', function() {
+    if($(this).val() === 'add') {
+        $('#edit-employment-details-modal').modal('hide');
+        $('#add-worksite-modal').modal('show');
+    }
+});
+
+$('#add-worksite-form').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+    
+    $.ajax({
+        url: '/accounting/employees/add-work-location',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            var result = JSON.parse(res);
+
+            $('#edit-employment-details-modal #work-location option:selected').removeAttr('selected');
+            $('#edit-employment-details-modal #work-location').append(`<option value="${result.id}" selected>${result.name}</option>`);
+            $('#edit-employment-details-modal #work-location').trigger('change');
+
+            $('#add-worksite-modal').modal('hide');
+            $('#edit-employment-details-modal').modal('show');
+        }
+    });
+});

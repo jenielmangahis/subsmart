@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const $results = $modal.querySelector("#esignsearchresults");
   const $emptyMessage = $modal.querySelector(".nsm-empty");
   const $loader = $modal.querySelector("#esignsearchloader");
-  const $template = $modal.querySelector("#esignsearchresulttemplate");
+  const $template = $modal.querySelector("#esignsearchresulttemplate");  
 
   let typingTimeout = undefined;
 
@@ -35,7 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const $wrapper = document.createDocumentFragment();
       jsonData.data.forEach((item) => {
         const $item = document.importNode($template.content, true);
-        $item.querySelector(".name").textContent = item.name;
+        if( item.unique_key === null  ){
+          $item.querySelector(".docfile-id").textContent = '---';
+        }else{
+          $item.querySelector(".docfile-id").innerHTML = "<i class='bx bx-file'></i> "+item.unique_key;  
+        }
+          
+        if( item.customer_firstname === null && item.customer_lastname === null ){
+          $item.querySelector(".customer").innerHTML = "<i class='bx bx-user'></i> Customer : Customer Not Found";           
+        }else{
+          $item.querySelector(".customer").innerHTML = "<i class='bx bx-user'></i> Customer : " + item.customer_firstname + ' ' + item.customer_lastname;        
+        }     
+
+        $item.querySelector(".subject").innerHTML = "<i class='bx bx-info-circle'></i> Subject : " + item.subject;             
 
         const actions = {
           view: onClickViewEsign,

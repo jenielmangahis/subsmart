@@ -965,6 +965,23 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result()[0];
     }
+
+    public function getTOtalJobTypeBaseAmount($employee_id){
+        $this->db->select('jobtypebase_amount');
+        $this->db->where('jobtypebase_amount !=', 'NULL');
+        $this->db->from("jobs");
+        $query = $this->db->get();
+        $result = $query->result();
+
+        $amount = 0.0;
+
+        for ($i = 0; $i < count($result); $i++) { 
+            $jobtypebase_amount = json_decode($result[$i]->jobtypebase_amount, true);
+            $amount += $jobtypebase_amount[$employee_id];
+        }
+
+        return $amount;
+    }
 }
 
 

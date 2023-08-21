@@ -21,8 +21,13 @@
                                     <div class="col-12">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
-                                            <option value="this-quarter" <?=empty($filter_date) || $filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="last-pay-date" <?=empty($filter_date) || $filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
+                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
+                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
+                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last Month</option>
                                             <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
                                             <option value="first-quarter" <?=$filter_date === 'first-quarter' ? 'selected' : ''?>>First quarter</option>
                                             <option value="second-quarter" <?=$filter_date === 'second-quarter' ? 'selected' : ''?>>Second quarter</option>
                                             <option value="third-quarter" <?=$filter_date === 'third-quarter' ? 'selected' : ''?>>Third quarter</option>
@@ -30,6 +35,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
                                 <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-report-period-from">From</label>
@@ -37,15 +43,14 @@
                                             <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-report-period-from">
                                         </div>
                                     </div>
-                                    <?php if($filter_date !== 'custom') : ?>
                                     <div class="col-12 col-md-6">
                                         <label for="filter-report-period-to">To</label>
                                         <div class="nsm-field-group calendar">
                                             <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-report-period-to">
                                         </div>
                                     </div>
-                                    <?php endif; ?>
                                 </div>
+                                <?php endif; ?>
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-center">
                                         <button type="button" class="nsm-button primary" id="run-report">
@@ -101,34 +106,25 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
-                                            <td data-name="Worksite">WORKSITE</td>
-                                            <?php foreach($months as $month) : ?>
-                                            <td data-name="No. of Employees (<?=$month?>)">NO. OF EMPLOYEES (<?=$month?>)</td>
-                                            <?php endforeach; ?>
-                                            <td data-name="Quarterly Wages">QUARTERLY WAGES</td>
+                                            <td data-name="Employee">EMPLOYEE</td>
+                                            <td data-name="SSN">SSN</td>
+                                            <td data-name="External Payroll ID">EXTERNAL PAYROLL ID</td>
+                                            <td data-name="Deductions">DEDUCTIONS</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(count($worksites) > 0) : ?>
-                                        <?php foreach($worksites as $worksite) : ?>
+                                        <?php if(count($plans) > 0) : ?>
+                                        <?php foreach($plans as $plan) : ?>
                                         <tr>
-                                            <td><?=$worksite['name']?></td>
-                                            <?php foreach($months as $month) : ?>
-                                            <td><?=$worksite[strtolower($month)]?></td>
-                                            <?php endforeach; ?>
-                                            <td><?=number_format($worksite['quarterly_wages'], 2)?></td>
+                                            <td><?=$plan['employee']?></td>
+                                            <td><?=$plan['ssn']?></td>
+                                            <td><?=$plan['external_payroll_id']?></td>
+                                            <td><?=$plan['deductions']?></td>
                                         </tr>
                                         <?php endforeach; ?>
-                                        <tr>
-                                            <td><b>Total</b></td>
-                                            <?php foreach($months as $month) : ?>
-                                            <td><b><?=$totals[strtolower($month)]?></b></td>
-                                            <?php endforeach; ?>
-                                            <td><b><?=number_format($totals['quarterly_wages'], 2)?></b></td>
-                                        </tr>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="<?=count($months) + 2?>">
+                                            <td colspan="4">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>

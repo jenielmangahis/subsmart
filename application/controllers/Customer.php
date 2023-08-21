@@ -1918,7 +1918,8 @@ class Customer extends MY_Controller
         add_css([
             'assets/css/customer/add_advance/add_advance.css',
         ]);
-
+        $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
+        $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getLeadSourceData();
