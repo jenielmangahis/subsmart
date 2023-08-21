@@ -2716,68 +2716,70 @@ class Accounting_modals extends MY_Controller
             $employees = [];
 
             if ($payrollId > 0) {
-                $paychecks = [];
-                foreach ($data['employees'] as $key => $value) {
-                    $emp = $this->users_model->getUser($value);
-                    $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
-                    $empTotalPay = (floatval(str_replace(',', '', $empPayDetails->pay_rate)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $data['commission'][$key])) + floatval(str_replace(',', '', $data['bonus'][$key]));
-    
-                    $empSocial = ($empTotalPay / 100) * 6.2;
-                    $empMedicare = ($empTotalPay / 100) * 1.45;
-                    $empTax = $empSocial + $empMedicare;
-    
-                    $employees[] = [
-                        'payroll_id' => $payrollId,
-                        'employee_id' => $value,
-                        'employee_hours' => $data['reg_pay_hours'][$key],
-                        'employee_commission' => $data['commission'][$key],
-                        'employee_bonus' => $data['bonus'][$key],
-                        'employee_total_pay' => floatval(str_replace(',', '', $empTotalPay)),
-                        'employee_taxes' => floatval(str_replace(',', '', $empTax)),
-                        'employee_net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
-                        'employee_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
+                if(count($data['employees']) > 0) {
+                    $paychecks = [];
+                    foreach ($data['employees'] as $key => $value) {
+                        $emp = $this->users_model->getUser($value);
+                        $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
+                        $empTotalPay = (floatval(str_replace(',', '', $empPayDetails->pay_rate)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $data['commission'][$key])) + floatval(str_replace(',', '', $data['bonus'][$key]));
+        
+                        $empSocial = ($empTotalPay / 100) * 6.2;
+                        $empMedicare = ($empTotalPay / 100) * 1.45;
+                        $empTax = $empSocial + $empMedicare;
+        
+                        $employees[] = [
+                            'payroll_id' => $payrollId,
+                            'employee_id' => $value,
+                            'employee_hours' => $data['reg_pay_hours'][$key],
+                            'employee_commission' => $data['commission'][$key],
+                            'employee_bonus' => $data['bonus'][$key],
+                            'employee_total_pay' => floatval(str_replace(',', '', $empTotalPay)),
+                            'employee_taxes' => floatval(str_replace(',', '', $empTax)),
+                            'employee_net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                            'employee_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
+                        ];
+
+                        $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployee($employees[array_key_last($employees)]);
+                        $paychecks[] = [
+                            'company_id' => $company_id,
+                            'payroll_id' => $payrollId,
+                            'payroll_item_id' => $payrollEmpId,
+                            'employee_id' => $value,
+                            'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                            'total_pay' => floatval(str_replace(',', '', $empTotalPay)),
+                            'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                            'status' => 1
+                        ];
+                    }
+
+                    // $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
+                    $insertPaychecks = $this->accounting_paychecks_model->insert_by_batch($paychecks);
+
+                    $totalNetPay = array_sum(array_column($employees, 'employee_net_pay'));
+                    $account = $this->chart_of_accounts_model->getById($data['pay_from_account']);
+                    $balance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $totalNetPay));
+
+                    $update = $this->chart_of_accounts_model->updateBalance(['id' => $data['pay_from_account'], 'company_id' => $company_id, 'balance' => $balance]);
+
+                    $accTransacData = [
+                        'account_id' => $account->id,
+                        'transaction_type' => 'Paycheck',
+                        'transaction_id' => $payrollId,
+                        'amount' => floatval(str_replace(',', '', $totalNetPay)),
+                        'transaction_date' => date('Y-m-d', strtotime($data['pay_date'])),
+                        'type' => 'decrease'
                     ];
 
-                    $paychecks[] = [
-                        'company_id' => $company_id,
-                        'payroll_id' => $payrollId,
-                        'employee_id' => $value,
-                        'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
-                        'total_pay' => floatval(str_replace(',', '', $empTotalPay)),
-                        'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
-                        'status' => 1
-                    ];
+                    $this->accounting_account_transactions_model->create($accTransacData);
+
+                    $return['data'] = $payrollId;
+                    $return['success'] = $payrollId && $payrollEmpId ? true : false;
+                    $return['message'] = $payrollId && $payrollEmpId ? 'Entry Successful!' : 'An unexpected error occured!';
+                } else {
+                    $return['data'] = null;
+                    $return['success'] = false;
+                    $return['message'] = 'Nothing inserted.';
                 }
-            }
-
-            if (count($employees) > 0) {
-                $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
-                $insertPaychecks = $this->accounting_paychecks_model->insert_by_batch($paychecks);
-
-                $totalNetPay = array_sum(array_column($employees, 'employee_net_pay'));
-                $account = $this->chart_of_accounts_model->getById($data['pay_from_account']);
-                $balance = floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $totalNetPay));
-
-                $update = $this->chart_of_accounts_model->updateBalance(['id' => $data['pay_from_account'], 'company_id' => $company_id, 'balance' => $balance]);
-
-                $accTransacData = [
-                    'account_id' => $account->id,
-                    'transaction_type' => 'Paycheck',
-                    'transaction_id' => $payrollId,
-                    'amount' => floatval(str_replace(',', '', $totalNetPay)),
-                    'transaction_date' => date('Y-m-d', strtotime($data['pay_date'])),
-                    'type' => 'decrease'
-                ];
-
-                $this->accounting_account_transactions_model->create($accTransacData);
-
-                $return['data'] = $payrollId;
-                $return['success'] = $payrollId && $payrollEmpId ? true : false;
-                $return['message'] = $payrollId && $payrollEmpId ? 'Entry Successful!' : 'An unexpected error occured!';
-            } else {
-                $return['data'] = null;
-                $return['success'] = false;
-                $return['message'] = 'Nothing inserted.';
             }
         }
 
@@ -11227,6 +11229,17 @@ class Accounting_modals extends MY_Controller
             case 'custom-report-group' :
                 $return = $this->get_custom_report_group_choices($return, $search);
             break;
+            case 'filter-report-worksites' :
+                $return = [
+                    'results' => [
+                        [
+                            'id' => 'all',
+                            'text' => 'All locations'
+                        ]
+                    ]
+                ];
+                $return = $this->get_company_worksites($return, $search);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -12193,6 +12206,33 @@ class Accounting_modals extends MY_Controller
                 $choices['results'][] = [
                     'id' => $group->id,
                     'text' => $group->name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
+    public function get_company_worksites($choices, $search = null)
+    {
+        $this->load->model('accounting_worksites_model');
+        $sites = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
+
+        foreach($sites as $site)
+        {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($site->name, $search);
+                if($stripos !== false) {
+                    $searched = substr($site->name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $site->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $site->name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $site->id,
+                    'text' => $site->name
                 ];
             }
         }

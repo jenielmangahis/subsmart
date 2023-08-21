@@ -66,7 +66,8 @@
                                                     $p->payscale_name !== "Base (Weekly Rate)" && 
                                                     $p->payscale_name !== "Base (Weekly Rate)" &&
                                                     $p->payscale_name !== "Compensation (Base Amount)" && 
-                                                    $p->payscale_name !== "Compensation (Hourly Rate)") : 
+                                                    $p->payscale_name !== "Compensation (Hourly Rate)" && 
+                                                    $p->payscale_name !== "Job Type Base (Install/Service)") : 
                                             ?>
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>

@@ -457,7 +457,8 @@
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>                    
                     <!-- <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($commission->totalCommission) ? number_format((float)$commission->totalCommission,2,'.','') : 0.0 ?>"> -->
-                    <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($office_info->rep_comm) ? number_format((float)$office_info->rep_comm,2,'.','') : 0.0 ?>">
+                    <!-- <input type="number" step="0.01" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($office_info->rep_comm) ? number_format((float)$office_info->rep_comm,2,'.','') : 0.0 ?>"> -->
+                    <input type="number" step="any" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php echo ($sales_tech_commission->salesrep_commission) ? number_format((float)$sales_tech_commission->salesrep_commission,2,'.','') : 0.0 ?>">
                 </div>
             </div>
         </div>
@@ -524,7 +525,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" id="tech_comm" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
+                    <!-- <input type="number" step="0.01" class="form-control input_select" id="tech_comm" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>"> -->
+                    <input type="number" step="any" class="form-control input_select" id="tech_comm" name="tech_comm" value="<?php echo ($sales_tech_commission->techrep_commission) ? number_format((float)$sales_tech_commission->techrep_commission,2,'.','') : 0.0 ?>">
                 </div>
             </div>
         </div>

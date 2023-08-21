@@ -171,6 +171,24 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Work location</label>
+                                <select class="nsm-field form-select" id="work-location" name="work_location" required>
+                                    <option value="" disabled>Select work location</option>
+                                    <option value="add">&plus; Add new</option>
+                                    <?php foreach($worksites as $worksite) : ?>
+                                        <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Job title</label>
+                                <input type="text" class="nsm-field form-control" id="job-title" name="job_title" value="<?=!empty($employmentDetails) ? $employmentDetails->job_title : ''?>">
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>
+                                <input type="text" class="nsm-field form-control" id="workers-comp-class" name="workers_comp_class" value="<?=!empty($employmentDetails) ? $employmentDetails->workers_comp_class : ''?>">
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
@@ -354,6 +372,47 @@
                 <div class="col-12">
                     <label for="notes">Notes for <?=$employee->FName?></label>
                     <textarea name="notes" id="notes" class="form-control nsm-field"><?=$pay_details->notes?></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+        </div>
+    </div>
+    </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" id="add-worksite-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <form id="add-worksite-form">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title content-title">Add work location</span>
+            <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control nsm-field" id="name" name="name" required>
+                </div>
+                <div class="col-12">
+                    <label for="street">Street</label>
+                    <input type="text" class="form-control nsm-field" id="street" name="street" required>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control nsm-field" id="city" name="city" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="state">State</label>
+                    <input type="text" class="form-control nsm-field" id="state" name="state" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="zip-code">ZIP code</label>
+                    <input type="text" class="form-control nsm-field" id="zip-code" name="zip_code" required>
                 </div>
             </div>
         </div>

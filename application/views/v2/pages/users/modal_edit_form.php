@@ -181,7 +181,7 @@
             <hr class="mb-0">
             <div class="col-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Salary</label>
-                <span><?php echo ($commission->totalSalary) ? "$" . number_format($commission->totalSalary, 2) : "$0"; ?></span>
+                <span><?php echo ($totalSalary) ? "$" . number_format($totalSalary, 2) : "$0"; ?></span>
             </div>
             <div class="col-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Commission</label>
@@ -281,9 +281,6 @@
         if (selectedPayscaleOption.includes("Base (Hourly Rate)") || selectedPayscaleOption.includes("Base (Weekly Rate)") || selectedPayscaleOption.includes("Base (Monthly Rate)")) {
             $('select[name="empCommission"]').find('option[value="2"]').prop("selected", true);
             $('select[name="empCommissionPercentage"]').val("0");
-        } else {
-            $('select[name="empCommission"]').val(<?php echo $user->commission_id; ?>);
-            $('select[name="empCommissionPercentage"]').val(<?php echo $user->commission_percentage; ?>);
         }
     }
 
@@ -325,7 +322,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').fadeIn('fast');
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Job Type Base(Install/Service)")) {
+        } else if (selectedOption.includes("Job Type Base (Install/Service)")) {
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();

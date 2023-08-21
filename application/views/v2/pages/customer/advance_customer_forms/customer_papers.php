@@ -75,7 +75,7 @@
                 </label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" class="form-control nsm-field" name="rep_paid" id="rep_paid"  min="0" step="0.01">
+                    <input type="number" class="form-control nsm-field" name="rep_paid" id="rep_paid"  min="0" step="any" value="<?php echo ($sales_tech_paid->salesrep_paid) ? number_format((float)$sales_tech_paid->salesrep_paid,2,'.','') : 0.0 ?>">
                 </div>
             </div>
             <div class="col-12 col-md">
@@ -84,7 +84,7 @@
                 </label>
                 <div class="input-group">
                     <span class="input-group-text">$</span>
-                    <input type="number" class="form-control nsm-field" name="tech_paid" id="tech_paid"  min="0">
+                    <input type="number" class="form-control nsm-field" name="tech_paid" id="tech_paid"  min="0" step="any" value="<?php echo ($sales_tech_paid->techrep_paid) ? number_format((float)$sales_tech_paid->techrep_paid,2,'.','') : 0.0 ?>">
                 </div>
             </div>
             <div class="col-12 col-md">

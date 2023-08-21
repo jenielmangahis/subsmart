@@ -2149,6 +2149,23 @@ class Job extends MY_Controller
     }
 
 
+    // public function testController() {
+    //      $getEmployeePayscalePayload = array(
+    //         'select' => 'jobtypebase_amount',
+    //         'table' => 'jobs',
+    //         'where' => array(
+    //             'id' => 1058,
+    //         )
+    //     );
+    //     $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+    //     $jobtypebase_amount = json_decode($getEmployeePayscaleInfo->jobtypebase_amount, true);
+
+    //     echo "<pre>";
+    //     print_r ($jobtypebase_amount);
+    //     echo "</pre>";
+    // }
+
+
     public function save_job()
     {
         $this->load->helper(array('hashids_helper'));
@@ -2234,6 +2251,269 @@ class Job extends MY_Controller
 
             $job_location = $customer->mail_add;
 
+
+            // Job Type Base Amount Implementation
+            $jobtypebase_amount;
+            if ($input['job_type'] == "Install" || $input['job_type'] == "Service") {
+                $jobtypebase_amount = array();
+                if ($input['employee_id'] !== 0 || $input['employee_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+                if ($input['employee2_id'] !== 0 || $input['employee2_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee2_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee2_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+                if ($input['employee3_id'] !== 0 || $input['employee3_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee3_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee3_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+                if ($input['employee4_id'] !== 0 || $input['employee4_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee4_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee4_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+                if ($input['employee5_id'] !== 0 || $input['employee5_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee5_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee5_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+                if ($input['employee6_id'] !== 0 || $input['employee6_id'] !== "") {
+                    $getEmployeePayscalePayload = array(
+                        'select' => 'users.id, users.payscale_id, payscale.payscale_name, users.jobtypebase_amount',
+                        'table' => 'users',
+                        'join' => array(
+                            'table' => 'payscale',
+                            'statement' => 'users.payscale_id = payscale.id',
+                            'join_as' => 'left'
+                        ),
+                        'where' => array(
+                            'users.id' => $input['employee6_id'],
+                            'payscale.payscale_name' => "Job Type Base (Install/Service)"
+                        )
+                    );
+                    $getEmployeePayscaleInfo    = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                    
+                    if ($getEmployeePayscaleInfo) {
+                        $jobtypebase_amount[$input['employee6_id']] = $getEmployeePayscaleInfo->jobtypebase_amount;
+                    }
+                }
+            }
+            // End of Job Type Base Amount Implementation
+
+            // Commission Feature for Tech Rep
+            $jobTechCommission_amount = array();
+            $techcommission_total = 0.0;
+            if ($input['employee2_id'] !== 0 || $input['employee2_id'] !== "") {
+                $getEmployeePayscalePayload = array(
+                    'select' => 'users.id, users.commission_id, users.commission_percentage',
+                    'table' => 'users',
+                    'where' => array(
+                        'users.id' => $input['employee2_id'],
+                    )
+                );
+                $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                if ($getEmployeePayscaleInfo->commission_id == 0) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += (($input['item_price'][$i] - $input['item_cost'][$i]) * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee2_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                } 
+                if ($getEmployeePayscaleInfo->commission_id == 1) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += ($input['item_price'][$i] * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee2_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                }
+            }
+            if ($input['employee3_id'] !== 0 || $input['employee3_id'] !== "") {
+                $getEmployeePayscalePayload = array(
+                    'select' => 'users.id, users.commission_id, users.commission_percentage',
+                    'table' => 'users',
+                    'where' => array(
+                        'users.id' => $input['employee3_id'],
+                    )
+                );
+                $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                if ($getEmployeePayscaleInfo->commission_id == 0) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += (($input['item_price'][$i] - $input['item_cost'][$i]) * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee3_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                } 
+                if ($getEmployeePayscaleInfo->commission_id == 1) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += ($input['item_price'][$i] * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee3_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                }
+            }
+            if ($input['employee4_id'] !== 0 || $input['employee4_id'] !== "") {
+                $getEmployeePayscalePayload = array(
+                    'select' => 'users.id, users.commission_id, users.commission_percentage',
+                    'table' => 'users',
+                    'where' => array(
+                        'users.id' => $input['employee4_id'],
+                    )
+                );
+                $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                if ($getEmployeePayscaleInfo->commission_id == 0) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += (($input['item_price'][$i] - $input['item_cost'][$i]) * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee4_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                } 
+                if ($getEmployeePayscaleInfo->commission_id == 1) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += ($input['item_price'][$i] * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee4_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                }
+            }
+            if ($input['employee5_id'] !== 0 || $input['employee5_id'] !== "") {
+                $getEmployeePayscalePayload = array(
+                    'select' => 'users.id, users.commission_id, users.commission_percentage',
+                    'table' => 'users',
+                    'where' => array(
+                        'users.id' => $input['employee5_id'],
+                    )
+                );
+                $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                if ($getEmployeePayscaleInfo->commission_id == 0) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += (($input['item_price'][$i] - $input['item_cost'][$i]) * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee5_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                } 
+                if ($getEmployeePayscaleInfo->commission_id == 1) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += ($input['item_price'][$i] * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee5_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                }
+            }
+            if ($input['employee6_id'] !== 0 || $input['employee6_id'] !== "") {
+                $getEmployeePayscalePayload = array(
+                    'select' => 'users.id, users.commission_id, users.commission_percentage',
+                    'table' => 'users',
+                    'where' => array(
+                        'users.id' => $input['employee6_id'],
+                    )
+                );
+                $getEmployeePayscaleInfo = $this->general->get_data_with_param($getEmployeePayscalePayload, false);
+                if ($getEmployeePayscaleInfo->commission_id == 0) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += (($input['item_price'][$i] - $input['item_cost'][$i]) * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee6_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                } 
+                if ($getEmployeePayscaleInfo->commission_id == 1) {
+                    $commissionAmount = 0.0;
+                    for ($i = 0; $i < count($input['item_id']); $i++) {
+                        $commissionAmount += ($input['item_price'][$i] * $getEmployeePayscaleInfo->commission_percentage) * $input['item_qty'][$i];
+                    }
+                    $jobTechCommission_amount[$input['employee6_id']] = $commissionAmount;
+                    $techcommission_total += $commissionAmount;
+                }
+            }
+            // End of Commission Feature for Tech Rep
+
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => $estimate_id,
@@ -2244,6 +2524,7 @@ class Job extends MY_Controller
                 'employee4_id' => $input['employee4_id'],
                 'employee5_id' => $input['employee5_id'],
                 'employee6_id' => $input['employee6_id'],
+                'jobtypebase_amount' => json_encode($jobtypebase_amount),
                 'job_name' => $input['job_name'],
                 'job_location' => $job_location,
                 'job_description' => $input['job_description'],
@@ -2269,6 +2550,8 @@ class Job extends MY_Controller
                 'date_issued' => $input['start_date'],
                 'work_order_id' => $job_workorder_id,
                 'commission' => $input['commission_amount'],
+                'tech_commission' => json_encode($jobTechCommission_amount),
+                'tech_commission_total' => $techcommission_total,
                 'fix_cost' => $input['input_totalFixCost'],
                 'margin' => $input['input_totalEquipmentMargin'],
                 'amount_collected' => $input['input_totalAmountCollected'],
@@ -2594,6 +2877,10 @@ class Job extends MY_Controller
             'work_order_id' => $input['work_order_id']
         ];
         echo json_encode($return);
+    }
+
+    public function testController() {
+
     }
 
     public function delete()
