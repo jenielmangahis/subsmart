@@ -20,6 +20,8 @@ class Employees extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('accounting_worksites_model');
+        $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
 
         $this->page_data['page']->title = 'Employees';
         $this->page_data['page']->parent = 'Payroll';
@@ -314,6 +316,20 @@ class Employees extends MY_Controller {
         $this->page_data['filter_from'] = date("m/d/Y", $start_date);
         $this->page_data['filter_to'] = date("m/d/Y", $end_date);
 
+        $employmentDetails = $this->employment_details_model->get_employment_details($id);
+        $empWorksite = $this->accounting_worksites_model->get_by_id($employmentDetails->work_location_id);
+        $this->page_data['employmentDetails'] = $employmentDetails;
+        $this->page_data['worksites'] = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
+
+        $address = '';
+        if(!empty($empWorksite)) {
+            $address .= !in_array($empWorksite->street, ['', null]) ? $empWorksite->street."<br>" : '';
+            $address .= !in_array($empWorksite->city, ['', null]) ? $empWorksite->city.', ' : '';
+            $address .= !in_array($empWorksite->state, ['', null]) ? $empWorksite->state.' ' : '';
+            $address .= !in_array($empWorksite->zip_code, ['', null]) ? $empWorksite->zip_code : '';
+        }
+
+        $this->page_data['empWorksite'] = $address;
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
 
@@ -472,8 +488,14 @@ class Employees extends MY_Controller {
                     $data = [
                         'employee_number' => $this->input->post('employee_number'),
                         'date_hired' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'payscale_id' => $this->input->post('payscale'),
+                        'payscale_id' => $this->input->post('empPayscale'),
                         'user_type' => $this->input->post('user_type'),
+                    ];
+
+                    $employmentDetails = [
+                        'work_location_id' => $this->input->post('work_location'),
+                        'job_title' => $this->input->post('job_title'),
+                        'workers_comp_class' => $this->input->post('workers_comp_class')
                     ];
                 break;
                 case 'pay-types' :
@@ -508,6 +530,10 @@ class Employees extends MY_Controller {
 
                 $this->users_model->insertEmployeePayDetails($payDetails);
             }
+        }
+
+        if(isset($employmentDetails)) {
+            $this->employment_details_model->update_employment_details($id, $employmentDetails);
         }
 
         redirect($_SERVER['HTTP_REFERER']);
@@ -1086,5 +1112,15 @@ class Employees extends MY_Controller {
 
         $this->page_data['page']->title = 'Paycheck list';
         $this->load->view('v2/pages/accounting/payroll/employees/paycheck_list', $this->page_data);
+    }
+
+    public function add_work_location()
+    {
+        $post = $this->input->post();
+        $post['company_id'] = logged('company_id');
+
+        $id = $this->accounting_worksites_model->create($post);
+
+        echo json_encode(['id' => $id, 'name' => $post['name']]);
     }
 }

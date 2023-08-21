@@ -1170,7 +1170,7 @@ class Users extends MY_Controller
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
-
+		$this->page_data['totalSalary'] = $this->Users_model->getTOtalJobTypeBaseAmount($user_id);
 		$this->page_data['commission'] = $this->Users_model->getTotalCommission($user_id);
         $this->page_data['roles'] = $roles;
 	    $this->page_data['user'] = $get_user;
@@ -1179,8 +1179,15 @@ class Users extends MY_Controller
 	    $this->load->view('v2/pages/users/modal_edit_form', $this->page_data);
 
 		//echo $data;
-
 	}
+
+	// public function testController() {
+	// 	$test = $this->Users_model->getTOtalJobTypeBaseAmount(5);
+	// 	echo "<pre>";
+	// 	print_r ($test);
+	// 	echo "</pre>";
+	// }
+
 
 	private $user_path = './uploads/users/user-profile/';
 	public function profilePhoto()

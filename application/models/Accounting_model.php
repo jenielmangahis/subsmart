@@ -156,6 +156,18 @@ class Accounting_model extends MY_Model {
             return $data->result();
         }
 
+        // Get Physical Inventory Worksheet data in Database
+        if ($reportType == "physical_inventory_worksheet") {
+            $this->db->select('items.id AS id, items.title AS product, items.description AS description, items_has_storage_loc.qty AS qty_on_hand, items.re_order_points AS reorder_points, items.qty_order AS qty_on_po, items_has_storage_loc.initial_qty AS physical_count');
+            $this->db->from('items');
+            $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id ', 'left');
+            $this->db->where('items.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 
 }

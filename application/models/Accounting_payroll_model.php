@@ -43,4 +43,10 @@ class Accounting_payroll_model extends MY_Model {
 		$query = $this->db->get('accounting_payroll_employees');
 		return $query->row();
 	}
+
+	public function insertPayrollEmployee($data)
+	{
+		$this->db->insert('accounting_payroll_employees', $data);
+		return $this->db->insert_id();
+	}
 }

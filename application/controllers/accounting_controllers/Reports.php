@@ -73,6 +73,8 @@ class Reports extends MY_Controller {
         $this->load->model('accounting_paychecks_model');
         $this->load->model('accounting_payroll_model');
         $this->load->model('Business_model');
+        $this->load->model('accounting_worksites_model');
+        $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
 
         add_css(array(
             // "assets/css/accounting/banking.css?v='rand()'",
@@ -300,15 +302,68 @@ class Reports extends MY_Controller {
     public function ffcra_cares_act_report()
     {
         add_footer_js([
-            'assets/js/accounting/reports/standard_report_pages/ffcra_cares_act_report.js'
+            'assets/js/accounting/reports/standard_report_pages/ffcra_cares_act_report.js',
+            "assets/js/v2/printThis.js"
         ]);
 
+        $this->page_data['modalsView'] = 'ffcra_cares_act_report_modals';
         $this->page_data['company_users'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "FFCRA Cares Act Report";
 
-        $this->page_data['page']->title = 'FFCRA Cares Act Report';
+        $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+        usort($paychecks, function($a, $b) {
+            return strtotime($a->pay_date) < strtotime($b->pay_date);
+        });
+
+        if(count($paychecks) > 0) {
+            $this->page_data['paycheck_date'] = date("M d Y", strtotime($paychecks[0]->pay_date));
+            $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+            $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+        } else {
+            $this->page_data['paycheck_date'] = date('M d Y');
+            $this->page_data['start_date'] = date('m/d/Y');
+            $this->page_data['end_date'] = date('m/d/Y');
+        }
+
+        if(!empty(get('date'))) {
+            $this->page_data['filter_date'] = get('date');
+            $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+            $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+        }
+
+        $dateFilter = [
+            'start_date' => $this->page_data['start_date'],
+            'end_date' => $this->page_data['end_date']
+        ];
+
+        $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+            return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $employees = [];
+        foreach($paychecks as $paycheck)
+        {
+            $emp = $this->users_model->getUser($paycheck->employee_id);
+
+            if(in_array($paycheck->employee_id, $employees)) {
+                
+            } else {
+                $employees[$paycheck->employee_id] = [
+                    'name' => "$emp->FName $emp->LName",
+                ];
+            }
+        }
+
+        $this->page_data['plans'] = [];
+        $this->page_data['report_period'] = 'Last Paycheck '.$this->page_data['paycheck_date'];
+
+        $this->page_data['employees'] = $employees;
+
+        $this->page_data['company_name'] = $this->page_data['clients']->business_name;
+        $this->page_data['report_title'] = 'FFCRA CARES Act Report';
+        $this->page_data['page']->title = 'FFCRA CARES Act Report';
         $this->page_data['page']->parent = 'Reports';
         $this->load->view('accounting/reports/standard_report_pages/ffcra_cares_act_report', $this->page_data);
     }
@@ -22662,6 +22717,155 @@ class Reports extends MY_Controller {
                 $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for '.$this->page_data['filter_status'].' employees';
                 $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
             break;
+            case 'state_mandated_retirement_plans' :
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $this->page_data['start_date'] = date('m/d/Y');
+                    $this->page_data['end_date'] = date('m/d/Y');
+                }
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                }
+
+                $dateFilter = [
+                    'start_date' => $this->page_data['start_date'],
+                    'end_date' => $this->page_data['end_date']
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $this->page_data['plans'] = [];
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date'])).' for '.$this->page_data['filter_status'].' employees';
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
+            case 'multiple_worksites' :
+                $date = date("m/d/Y");
+
+                if(!empty(get('date'))) {
+                    $this->page_data['filter_date'] = get('date');
+                    $this->page_data['start_date'] = str_replace('-', '/', get('from'));
+                    if(get('date') !== 'custom') {
+                        $this->page_data['end_date'] = str_replace('-', '/', get('to'));
+                    } else {
+                        $date = str_replace('-', '/', get('from'));
+                    }
+                }
+
+                if(empty(get('date')) || get('date') === 'custom') {
+                    $currentQuarter = floor(intval(date("m", strtotime($date))) / 3 + 1);
+                    switch($currentQuarter) {
+                        case 1.00 :
+                            $this->page_data['start_date'] = date("01/01/Y", strtotime($date));
+                            $this->page_data['end_date'] = date("03/31/Y", strtotime($date));
+                        break;
+                        case 2.00 :
+                            $this->page_data['start_date'] = date("04/01/Y", strtotime($date));
+                            $this->page_data['end_date'] = date("06/30/Y", strtotime($date));
+                        break;
+                        case 3.00 :
+                            $this->page_data['start_date'] = date("07/01/Y", strtotime($date));
+                            $this->page_data['end_date'] = date("09/30/Y", strtotime($date));
+                        break;
+                        case 4.00 :
+                            $this->page_data['start_date'] = date("10/01/Y", strtotime($date));
+                            $this->page_data['end_date'] = date("12/31/Y", strtotime($date));
+                        break;
+                    }
+                }
+
+                $startMonth = intval(date("m", strtotime($this->page_data['start_date'])));
+                $endMonth = intval(date("m", strtotime($this->page_data['end_date'])));
+
+                $months = [];
+
+                $totals = [
+                    'quarterly_wages' => 0.00,
+                ];
+                do {
+                    $month = date("M", strtotime("$startMonth/01/".date("Y")));
+
+                    $months[] = $month;
+                    $totals[strtolower($month)] = 0;
+                    $startMonth++;
+                } while($startMonth <= $endMonth);
+
+                $worksites = [];
+                $sites = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
+
+                if(!empty(get('location'))) {
+                    $this->page_data['filter_location'] = new stdClass();
+                    $this->page_data['filter_location']->id = get('location');
+
+                    $id = get('location');
+                    $sites = array_filter($sites, function($v, $k) use ($id) {
+                        return $v->id === $id;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $this->page_data['filter_location']->name = $sites[0]->name;
+                }
+
+                foreach($sites as $site)
+                {
+                    $employmentDetails = $this->employment_details_model->get_employment_details_by_worksite($site->id);
+
+                    $address = '';
+                    $address .= !in_array($site->street, ['', null]) ? $site->street."\n" : '';
+                    $address .= !in_array($site->city, ['', null]) ? $site->city.', ' : '';
+                    $address .= !in_array($site->state, ['', null]) ? $site->state.' ' : '';
+                    $address .= !in_array($site->zip_code, ['', null]) ? $site->zip_code : '';
+
+                    $worksite = [
+                        'name' => $site->name,
+                        'address' => trim($address),
+                        'quarterly_wages' => 0.00
+                    ];
+
+                    $startMonth = intval(date("m", strtotime($this->page_data['start_date'])));
+
+                    do {
+                        $month = date("M", strtotime("$startMonth/01/".date("Y", strtotime($this->page_data['start_date']))));
+                        $start = date("m/01/Y", strtotime("$startMonth/01/".date("Y", strtotime($this->page_data['start_date']))));
+                        $end = date("m/t/Y", strtotime("$startMonth/01/".date("Y", strtotime($this->page_data['end_date']))));
+
+                        $worksite[strtolower($month)] = 0;
+
+                        foreach($employmentDetails as $detail)
+                        {
+                            $emp = $this->users_model->getUser($detail->user_id);
+
+                            if(strtotime($emp->date_hired) >= strtotime($start) &&
+                            strtotime($emp->date_hired) <= strtotime($end))
+                            {
+                                $worksite[strtolower($month)]++;
+                                $totals[strtolower($month)]++;
+                            }
+                        }
+                        $startMonth++;
+                    } while($startMonth <= $endMonth);
+
+                    $worksites[] = $worksite;
+                }
+
+                $this->page_data['months'] = $months;
+                $this->page_data['worksites'] = $worksites;
+                $this->page_data['totals'] = $totals;
+                $this->page_data['report_title'] = 'Multiple Worksites Report (MWR)';
+                $this->page_data['report_period'] = 'From '.date("M d, Y", strtotime($this->page_data['start_date'])).' to '.date("M d, Y", strtotime($this->page_data['end_date']));
+                $this->page_data['prepared_timestamp'] = "l, F j, Y h:i A eP";
+            break;
         }
 
         $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
@@ -22864,6 +23068,7 @@ class Reports extends MY_Controller {
             "expenses_by_vendor_summary",
             "inventory_valuation_summary",
             "customer_balance_summary",
+            "physical_inventory_worksheet",
         );
 
         // ====== Default PDF Report Settings ============================================================
@@ -23773,6 +23978,135 @@ class Reports extends MY_Controller {
                 $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
                 $writer->markMergedCell($worksheet_name, $row+5, 0, $row+5, $totalColumn-1);
                 $writer->markMergedCell($worksheet_name, $row+7, 0, $row+7, $totalColumn-1);
+
+                $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
+                $writer->writeToFile($excel_file_path);
+                // ====== Generate XLSX File ===========================================================
+
+                // Return the requested data into html
+                if ($response) {
+                    echo $response;
+                } else {
+                    echo "<td colspan='$theadTotalColumn'><center>No records found.</center></td>";
+                }
+            }
+
+            // Fetch Physical Inventory Worksheet data
+            if ($reportType == "physical_inventory_worksheet") {
+                // Request Data in accounting model
+                $returnData = $this->accounting_model->fetchReportData($reportType, $reportConfig);
+
+                // ====== Generate PDF File ============================================================
+                $tableColumns .= '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0"><tr>';
+                for ($i = 0; $i < $theadTotalColumn; $i++) { 
+                    $tableColumns .= '<th class="COLUMN_NAME">'.$theadColumnNames[$i].'</th>';
+                }
+                $tableColumns .= '</tr></table>';
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+                $response = '';
+
+                foreach ($returnData as $returnDatas) {
+                    $product = ($returnDatas->product) ? $returnDatas->product : "&mdash;";
+                    $description = ($returnDatas->description) ? $returnDatas->description : "&mdash;";
+                    $qty_on_hand = ($returnDatas->qty_on_hand) ? $returnDatas->qty_on_hand : "&mdash;";
+                    $reorder_points = ($returnDatas->reorder_points) ? $returnDatas->reorder_points : "&mdash;";
+                    $qty_on_po = ($returnDatas->qty_on_po) ? $returnDatas->qty_on_po : "&mdash;";
+                    $physical_count = ($returnDatas->physical_count) ? $returnDatas->physical_count : "&mdash;";
+
+                    $response .= '<tr>';
+                    $response .= '<td>'.$product.'</td>';
+                    $response .= '<td>'.$description.'</td>';
+                    $response .= '<td>'.$qty_on_hand.'</td>';
+                    $response .= '<td>'.$reorder_points.'</td>';
+                    $response .= '<td>'.$qty_on_po.'</td>';
+                    $response .= '<td>'.$physical_count.'</td>';
+                    $response .= '</tr>';
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$product.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$description.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$qty_on_hand.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$reorder_points.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$qty_on_po.'</td>';
+                    $tableContent .= '<td class="TD_NAME">'.$physical_count.'</td>';
+                    $tableContent .= '</tr>';
+                }
+
+                $tableContent .= '</table>';
+
+                $bottomContent = '
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr><td></td></tr>
+                        <tr><td class="reportNotes">'.$notes.'</td></tr>
+                    </table>
+                ';
+
+                $styles = '
+                    <style>
+                        table { width: 100% !important; } 
+                        .tableHeader { border-bottom: 1px solid gray;  border-top: 1px solid gray; }
+                        .COLUMN_NAME { font-size: 12px; }
+                        .TD_NAME { font-size: 11px; }
+                        .reportNotes { text-align: left; font-size: 11.5px; }
+                        .reportDate { text-align: center; }
+                        .PLACE_LEFT { text-align: left; }
+                        .PLACE_RIGHT { text-align: right; }
+                    </style>
+                ';
+
+                if ($reportConfig['pageHeaderRepeat'] == false) {
+                    $renderHTML = $header . $tableColumns . $tableContent . $bottomContent . $styles;
+                } else {
+                    $renderHTML = $tableColumns . $tableContent . $bottomContent . $styles;
+                }
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // ====== Generate PDF File ============================================================
+
+                // ====== Generate XLSX File ===========================================================
+                $writer = new XLSXWriter();
+                $worksheet_name = $reportName;
+                $totalColumn = $theadTotalColumn;
+                $businessNameStyle = array( 'font-size' => 13, 'font-style' => 'bold', 'halign' => 'center',  'valign' => 'center' );
+                $reportNameStyle = array( 'font-size' => 11, 'halign' => 'center',  'valign' => 'center' ); 
+                $reportDateStyle = array( 'font-size' => 10, 'valign' => 'center',  'halign' => 'center' );
+                $headerStyle = array( 'font-style' => 'bold', 'font-size' => 10, 'border' => 'top,bottom', 'border-style' => 'thin', 'border-color' => '000000', 'valign' => 'center' );
+                $contentStyle = array( 'font-size' => 10, 'halign' => 'left' );
+                $headerData = array();
+
+                for ($i = 0; $i < $totalColumn; $i++) { 
+                    array_push($headerData, $theadColumnNames[$i]);
+                }
+
+                $writer->writeSheetRow($worksheet_name, [$businessName], $businessNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportName], $reportNameStyle);
+                $writer->writeSheetRow($worksheet_name, [$reportDate], $reportDateStyle);
+                $writer->writeSheetRow($worksheet_name, $headerData, $headerStyle);
+                $writer->markMergedCell($worksheet_name, 0, 0, 0, $totalColumn - 1) - 1;
+                $writer->markMergedCell($worksheet_name, 1, 0, 1, $totalColumn - 1);
+                $writer->markMergedCell($worksheet_name, 2, 0, 2, $totalColumn - 1);
+
+                $row = $totalColumn;
+                foreach ($returnData as $returnDatas) {
+                    $product = ($returnDatas->product) ? $returnDatas->product : "—";
+                    $description = ($returnDatas->description) ? $returnDatas->description : "—";
+                    $qty_on_hand = ($returnDatas->qty_on_hand) ? $returnDatas->qty_on_hand : "—";
+                    $reorder_points = ($returnDatas->reorder_points) ? $returnDatas->reorder_points : "—";
+                    $qty_on_po = ($returnDatas->qty_on_po) ? $returnDatas->qty_on_po : "—";
+                    $physical_count = ($returnDatas->physical_count) ? $returnDatas->physical_count : "—";
+
+                    $row_data = array($product, $description, $qty_on_hand, $reorder_points, $qty_on_po, $physical_count);
+                    $writer->writeSheetRow($worksheet_name, $row_data, $contentStyle);
+                    $row++;
+                }
+
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [$notes], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [""], $contentStyle);
+                $writer->writeSheetRow($worksheet_name, [date("l, F j, Y h:i A eP")], $reportDateStyle);
+                $writer->markMergedCell($worksheet_name, $row-1, 0, $row-1, $totalColumn - 1);
+                $writer->markMergedCell($worksheet_name, $row+1, 0, $row+1, $totalColumn - 1);
 
                 $excel_file_path = FCPATH . 'assets/pdf/accounting/' . $filename . '.xlsx';
                 $writer->writeToFile($excel_file_path);
@@ -52788,6 +53122,460 @@ class Reports extends MY_Controller {
                     $obj_pdf->Output(str_replace(' ', '_', $companyName)."_Retirement_Plans.pdf", 'D');
                 }
             break;
+            case 'State Mandated Retirement Plans' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = $reportType->name;
+
+                $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+                usort($paychecks, function($a, $b) {
+                    return strtotime($a->pay_date) < strtotime($b->pay_date);
+                });
+
+                if(count($paychecks) > 0) {
+                    $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                    $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+                } else {
+                    $start_date = date('m/d/Y');
+                    $end_date = date('m/d/Y');
+                }
+
+                if(!empty($post['date'])) {
+                    $filter_date = $post['date'];
+                    $start_date = str_replace('-', '/', $post['from']);
+                    $end_date = str_replace('-', '/', $post['to']);
+                }
+
+                $dateFilter = [
+                    'start_date' => $start_date,
+                    'end_date' => $end_date
+                ];
+
+                $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+                    return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $plans = [];
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date)).' for '.$filter_status.' employees';
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if(count($plans) > 0) {
+                        foreach($plans as $plan)
+                        {
+                            $data = [];
+                            $style = [];
+    
+                            foreach($post['fields'] as $field)
+                            {
+                                $data[] = is_float($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
+                                $style[] = ['color' => '#000000'];
+                            }
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+                    } else {
+                        $row--;
+                        $text = [
+                            "No results found."
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $text, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName)."_State_Mandated_Retirement_Plans";
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=State_Mandated_Retirement_Plans.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                            $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if(count($plans) > 0) {
+                                    foreach($plans as $plan) {
+                                        $html .= '<tr>';
+                                        foreach($post['fields'] as $field) {
+                                            $text = is_float($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))]) ? number_format($plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))], 2) : $plan[strtolower(str_replace(' ', '_', str_replace("'", '', $field)))];
+                                            $html .= '<td>'.$text.'</td>';
+                                        }
+                                        $html .= '</tr>';
+                                    }
+                                } else {
+                                    $html .= '<tr style="text-align: center">
+                                        <td colspan="'.count($post['fields']).'">No results found.</td>
+                                    </tr>';
+                                }
+                            $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="'.count($post['fields']).'">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName)."_State_Mandated_Retirement_Plans";
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "State Mandated Retirement Plans";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName)."_State_Mandated_Retirement_Plans.pdf", 'D');
+                }
+            break;
+            case 'Multiple Worksites' :
+                $companyName = $this->page_data['clients']->business_name;
+                $reportName = "Multiple Worksites Report (MWR)";
+
+                $date = date("m/d/Y");
+
+                if(!empty($post['date'])) {
+                    $start_date = str_replace('-', '/', get('from'));
+                    if($post['date'] !== 'custom') {
+                        $end_date = str_replace('-', '/', get('to'));
+                    } else {
+                        $date = str_replace('-', '/', get('from'));
+                    }
+                }
+
+                if(empty($post['date']) || $post['date'] === 'custom') {
+                    $currentQuarter = floor(intval(date("m", strtotime($date))) / 3 + 1);
+                    switch($currentQuarter) {
+                        case 1.00 :
+                            $start_date = date("01/01/Y", strtotime($date));
+                            $end_date = date("03/31/Y", strtotime($date));
+                        break;
+                        case 2.00 :
+                            $start_date = date("04/01/Y", strtotime($date));
+                            $end_date = date("06/30/Y", strtotime($date));
+                        break;
+                        case 3.00 :
+                            $start_date = date("07/01/Y", strtotime($date));
+                            $end_date = date("09/30/Y", strtotime($date));
+                        break;
+                        case 4.00 :
+                            $start_date = date("10/01/Y", strtotime($date));
+                            $end_date = date("12/31/Y", strtotime($date));
+                        break;
+                    }
+                }
+
+                $startMonth = intval(date("m", strtotime($start_date)));
+                $endMonth = intval(date("m", strtotime($end_date)));
+
+                $months = [];
+
+                $totals = [
+                    'quarterly_wages' => 0.00,
+                ];
+                do {
+                    $month = date("M", strtotime("$startMonth/01/".date("Y")));
+
+                    $months[] = $month;
+                    $totals[strtolower($month)] = 0;
+                    $startMonth++;
+                } while($startMonth <= $endMonth);
+
+                $worksites = [];
+                $sites = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
+
+                if(!empty($post['location'])) {
+                    $id = $post['location'];
+                    $sites = array_filter($sites, function($v, $k) use ($id) {
+                        return $v->id === $id;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                foreach($sites as $site)
+                {
+                    $employmentDetails = $this->employment_details_model->get_employment_details_by_worksite($site->id);
+
+                    $address = '';
+                    $address .= !in_array($site->street, ['', null]) ? $site->street."\n" : '';
+                    $address .= !in_array($site->city, ['', null]) ? $site->city.', ' : '';
+                    $address .= !in_array($site->state, ['', null]) ? $site->state.' ' : '';
+                    $address .= !in_array($site->zip_code, ['', null]) ? $site->zip_code : '';
+
+                    $worksite = [
+                        'name' => $site->name,
+                        'address' => trim($address),
+                        'quarterly_wages' => 0.00
+                    ];
+
+                    $startMonth = intval(date("m", strtotime($start_date)));
+
+                    do {
+                        $month = date("M", strtotime("$startMonth/01/".date("Y", strtotime($start_date))));
+                        $start = date("m/01/Y", strtotime("$startMonth/01/".date("Y", strtotime($start_date))));
+                        $end = date("m/t/Y", strtotime("$startMonth/01/".date("Y", strtotime($end_date))));
+
+                        $worksite[strtolower($month)] = 0;
+
+                        foreach($employmentDetails as $detail)
+                        {
+                            $emp = $this->users_model->getUser($detail->user_id);
+
+                            if(strtotime($emp->date_hired) >= strtotime($start) &&
+                            strtotime($emp->date_hired) <= strtotime($end))
+                            {
+                                $worksite[strtolower($month)]++;
+                                $totals[strtolower($month)]++;
+                            }
+                        }
+                        $startMonth++;
+                    } while($startMonth <= $endMonth);
+
+                    $worksites[] = $worksite;
+                }
+
+                $report_period = 'From '.date("M d, Y", strtotime($start_date)).' to '.date("M d, Y", strtotime($end_date));
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                $date = date($preparedTimestamp);
+
+                if($post['type'] === 'excel') {
+                    $writer = new XLSXWriter();
+                    $row = 0;
+
+                    $header = [];
+
+                    foreach($post['fields'] as $field)
+                    {
+                        $header[] = 'string';
+                    }
+
+                    $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+    
+                    $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                    $row++;
+
+                    $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+                    $row += 2;
+
+                    if(count($worksites) > 0) {
+                        foreach($worksites as $worksite)
+                        {
+                            $data = [
+                                $worksite['name']
+                            ];
+
+                            $style = [
+                                ['color' => '#000000']
+                            ];
+
+                            foreach($months as $month)
+                            {
+                                $data[] = $worksite[strtolower($month)];
+                                $style[] = ['color' => '#000000'];
+                            }
+                            $data[] = number_format($worksite['quarterly_wages'], 2);
+                            $style[] = ['color' => '#000000'];
+    
+                            $writer->writeSheetRow('Sheet1', $data, $style);
+                            $row++;
+                        }
+
+                        $data = [
+                            "Total"
+                        ];
+                        $style = [
+                            ['color' => '#000000', 'font-style' => 'bold'],
+                        ];
+
+                        foreach($months as $month)
+                        {
+                            $data[] = $totals[strtolower($month)];
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+                        }
+
+                        $data[] = number_format($totals['quarterly_wages'], 2);
+                        $style[] = ['color' => '#000000', 'font-style' => 'bold'];
+
+                        $writer->writeSheetRow('Sheet1', $data, $style);
+                        $row++;
+                    } else {
+                        $row--;
+                        $text = [
+                            "No results found."
+                        ];
+
+                        $writer->writeSheetRow('Sheet1', $text, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+                        $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+                        $row++;
+                        $row++;
+                    }
+
+                    $writer->writeSheetRow('Sheet1', []);
+                    $writer->writeSheetRow('Sheet1', []);
+
+                    $row += 1;
+
+                    $writer->writeSheetRow('Sheet1', [$date], ['halign' => 'center', 'valign' => 'center']);
+                    $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Multiple_Worksites";
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;filename=Multiple_Worksites.xlsx");
+                    header('Cache-Control: max-age=0');
+                    $writer->writeToStdOut();
+                } else {
+                    $html = '
+                        <table style="padding-top: -40px;">
+                            <tr>
+                                <td style="text-align: center">
+                                    <h2 style="margin: 0">'.$companyName.'</h2>
+                                    <h3 style="margin: 0">'.$reportName.'</h3>
+                                    <h4 style="margin: 0">'.$report_period.'</h4>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br /><br />
+
+                        <table style="width: 100%; font-size: 8px">
+                            <thead>
+                                <tr>';
+                                foreach($post['fields'] as $field) {
+                                    $html .= '<td>'.$field.'</td>';
+                                }
+                            $html .= '</tr>
+                            </thead>
+                            <tbody>';
+                                if(count($worksites) > 0) {
+                                    foreach($worksites as $worksite) {
+                                        $html .= '<tr>';
+                                        $html .= '<td>'.$worksite['name'].'</td>';
+                                        foreach($months as $month)
+                                        {
+                                            $html .= '<td>'.$worksite[strtolower($month)].'</td>';
+                                        }
+                                        $html .= '<td>'.number_format($worksite['quarterly_wages'], 2).'</td>';
+                                        $html .= '</tr>';
+                                    }
+                                    $html .= '<tr>';
+                                    $html .= '<td><b>Total</b></td>';
+                                    foreach($months as $month)
+                                    {
+                                        $html .= '<td><b>'.$totals[strtolower($month)].'</b></td>';
+                                    }
+                                    $html .= '<td><b>'.number_format($totals['quarterly_wages'], 2).'</b></td>';
+                                    $html .= '</tr>';
+                                } else {
+                                    $html .= '<tr style="text-align: center">
+                                        <td colspan="'.count($post['fields']).'">No results found.</td>
+                                    </tr>';
+                                }
+                            $html .= '</tbody>
+                            <tfoot>
+                                <tr style="text-align: center">
+                                    <td colspan="'.count($post['fields']).'">
+                                        <p style="margin: 0">'.$date.'</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>';
+
+                    $fileName = str_replace(' ', '_', $companyName)."_Multiple_Worksites";
+
+                    tcpdf();
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $title = "Multiple Worksites Report (MWR)";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->setPrintHeader(false);
+                    $obj_pdf->setPrintFooter(false);
+                    $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_end_clean();
+                    $obj_pdf->writeHTML($html, true, false, true, false, '');
+                    $obj_pdf->Output(str_replace(' ', '_', $companyName)."_Multiple_Worksites.pdf", 'D');
+                }
+            break;
         }
     }
 
@@ -53166,5 +53954,1549 @@ class Reports extends MY_Controller {
 
         $base64String = base64_encode($obj_pdf->Output($fileName, 'S'));
         echo $base64String;
+    }
+
+    public function ffcra_cares_act_report_export()
+    {
+        $post = $this->input->post();
+
+        $this->load->library('PHPXLSXWriter');
+        $this->load->helper('pdf_helper');
+
+        $companyName = $this->page_data['clients']->business_name;
+        $reportName = 'FFCRA CARES Act Report';
+
+        $paychecks = $this->accounting_paychecks_model->get_company_paychecks(logged('company_id'));
+
+        usort($paychecks, function($a, $b) {
+            return strtotime($a->pay_date) < strtotime($b->pay_date);
+        });
+
+        if(count($paychecks) > 0) {
+            $paycheck_date = date("M d Y", strtotime($paychecks[0]->pay_date));
+            $start_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+            $end_date = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+        } else {
+            $paycheck_date = date('M d Y');
+            $start_date = date('m/d/Y');
+            $end_date = date('m/d/Y');
+        }
+
+        if(!empty($post['date'])) {
+            $filter_date = $post['date'];
+            $start_date = str_replace('-', '/', $post['from']);
+            $end_date = str_replace('-', '/', $post['to']);
+        }
+
+        $dateFilter = [
+            'start_date' => $start_date,
+            'end_date' => $end_date
+        ];
+
+        $paychecks = array_filter($paychecks, function($v, $k) use ($dateFilter) {
+            return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $employees = [];
+        foreach($paychecks as $paycheck)
+        {
+            $emp = $this->users_model->getUser($paycheck->employee_id);
+
+            if(in_array($paycheck->employee_id, $employees)) {
+                
+            } else {
+                $employees[$paycheck->employee_id] = [
+                    'name' => "$emp->FName $emp->LName",
+                ];
+            }
+        }
+
+        $rows = [
+            [
+                'FFCRA & CARES ACT WAGES, TAXES & CREDITS',
+                '',
+                ''
+            ],
+            [
+                'FFCRA Wages',
+                '',
+                ''
+            ],
+            [
+                'Total FFCRA Sick Lv Wages',
+                '',
+                ''
+            ],
+            [
+                'Total FFCRA Wages',
+                '',
+                ''
+            ],
+            [
+                'FFCRA ER Health Premium',
+                '',
+                ''
+            ],
+            [
+                'Total FFCRA Health Premium',
+                '',
+                ''
+            ],
+            [
+                'Total FFCRA Wages and ER Health Premium',
+                '',
+                ''
+            ],
+            [
+                'CARES Act Wages',
+                '',
+                ''
+            ],
+            [
+                'Total Reg and OT Emp Retn Credit Wages',
+                '',
+                ''
+            ],
+            [
+                'Total CARES Act Credits',
+                '',
+                ''
+            ],
+            [
+                'Total FFCRA & CARES Act Credits',
+                '',
+                ''
+            ]
+        ];
+
+        foreach($rows as $index => $row)
+        {
+            foreach($employees as $employee)
+            {
+                $rows[$index][] = '';
+            }
+            $rows[$index][] = '';
+        }
+
+        $report_period = 'Last Paycheck '.$paycheck_date;
+
+        if($post['type'] === 'excel') {
+            $writer = new XLSXWriter();
+            $row = 0;
+
+            $header = [];
+
+            foreach($post['fields'] as $field)
+            {
+                $header[] = 'string';
+            }
+
+            $writer->writeSheetHeader('Sheet1', $header, array('suppress_row'=>true));
+
+            $writer->writeSheetRow('Sheet1', [$companyName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+            $writer->markMergedCell('Sheet1', 0, 0, 0, count($post['fields']) - 1);
+            $row++;
+
+            $writer->writeSheetRow('Sheet1', [$reportName], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+            $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+            $row++;
+
+            $writer->writeSheetRow('Sheet1', [$report_period], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
+            $writer->markMergedCell('Sheet1', $row, 0, $row, count($post['fields']) - 1);
+            $row++;
+
+            $writer->writeSheetRow('Sheet1', $post['fields'], ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+            $row += 2;
+
+            foreach($rows as $data)
+            {
+                $style = [];
+
+                foreach($data as $d)
+                {
+                    switch($data[0]) {
+                        case 'Total FFCRA Sick Lv Wages' :
+                            $style[] = ['color' => '#000000', 'border' => 'bottom'];
+                        break;
+                        case 'Total FFCRA Wages' :
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                        break;
+                        case 'Total FFCRA Health Premium' :
+                            $style[] = ['color' => '#000000', 'border' => 'bottom'];
+                        break;
+                        case 'Total FFCRA Wages and ER Health Premium' :
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                        break;
+                        case 'Total Reg and OT Emp Retn Credit Wages' :
+                            $style[] = ['color' => '#000000', 'border' => 'bottom'];
+                        break;
+                        case 'Total CARES Act Credits' :
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                        break;
+                        case 'Total FFCRA & CARES Act Credits' :
+                            $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                        break;
+                        default :
+                            $style[] = ['color' => '#000000'];
+                        break;
+                    }
+                }
+
+                $writer->writeSheetRow('Sheet1', $data, $style);
+                $row++;
+            }
+
+            $writer->writeSheetRow('Sheet1', []);
+            $writer->writeSheetRow('Sheet1', []);
+
+            $row++;
+
+            $fileName = str_replace(' ', '_', $companyName)."_FFCRA_Cares_Act_Report";
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment;filename=FFCRA_Cares_Act_Report.xlsx");
+            header('Cache-Control: max-age=0');
+            $writer->writeToStdOut();
+        } else {
+            $html = '
+                <table style="padding-top: -40px;">
+                    <tr>
+                        <td style="text-align: center">
+                            <h2 style="margin: 0">'.$companyName.'</h2>
+                            <h3 style="margin: 0">'.$reportName.'</h3>
+                            <h4 style="margin: 0">'.$report_period.'</h4>
+                        </td>
+                    </tr>
+                </table>
+                <br /><br /><br />
+
+                <table style="width: 100%; font-size: 8px">
+                    <thead>
+                        <tr>';
+                        foreach($post['fields'] as $field) {
+                            $html .= '<td style="border-bottom: 1px solid black;"><b>'.$field.'</b></td>';
+                        }
+                    $html .= '</tr>
+                    </thead>
+                    <tbody>';
+                        foreach($rows as $data)
+                        {
+                            $html .= '<tr>';
+                            foreach($data as $d)
+                            {
+                                switch($data[0]) {
+                                    case 'Total FFCRA Sick Lv Wages' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                    break;
+                                    case 'Total FFCRA Wages' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                                    break;
+                                    case 'Total FFCRA Health Premium' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'border' => 'bottom'];
+                                    break;
+                                    case 'Total FFCRA Wages and ER Health Premium' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                                    break;
+                                    case 'Total Reg and OT Emp Retn Credit Wages' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'border' => 'bottom'];
+                                    break;
+                                    case 'Total CARES Act Credits' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                                    break;
+                                    case 'Total FFCRA & CARES Act Credits' :
+                                        $html .= '<td style="border-bottom: 1px solid black"><b>'.$d.'</b></td>';
+                                        // $style[] = ['color' => '#000000', 'font-style' => 'bold', 'border' => 'bottom'];
+                                    break;
+                                    default :
+                                        $html .= '<td>'.$d.'</td>';
+                                        // $style[] = ['color' => '#000000'];
+                                    break;
+                                }
+                            }
+                            $html .= '</tr>';
+                        }
+                    $html .= '</tbody>
+                </table>';
+
+            $fileName = str_replace(' ', '_', $companyName)."_FFCRA_Cares_Act_Report";
+
+            tcpdf();
+            $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $title = "FFCRA Cares Act Report";
+            $obj_pdf->SetTitle($title);
+            $obj_pdf->setPrintHeader(false);
+            $obj_pdf->setPrintFooter(false);
+            $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            $obj_pdf->SetDefaultMonospacedFont('helvetica');
+            $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+            $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+            $obj_pdf->SetFont('helvetica', '', 9);
+            $obj_pdf->setFontSubsetting(false);
+            $obj_pdf->AddPage();
+            ob_end_clean();
+            $obj_pdf->writeHTML($html, true, false, true, false, '');
+            $obj_pdf->Output(str_replace(' ', '_', $companyName)."_FFCRA_Cares_Act_Report.pdf", 'D');
+        }
+    }
+
+    public function email($reportTypeId)
+    {
+        $this->load->library('email');
+        $this->load->helper('pdf_helper');
+
+        $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
+        $post = $this->input->post();
+
+        switch($reportType->name) {
+            case 'Recent/Edited Time Activities' :
+                $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
+
+                $activities = [];
+                foreach($timeActivities as $timeActivity) {
+                    $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                    $productName = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+                    switch($timeActivity->name_key) {
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($timeActivity->name_id);
+                            $employeeName = $employee->FName . ' ' . $employee->LName;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                            $employeeName = $vendor->display_name;
+                        break;
+                    }
+
+                    $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+                    $hours = substr($timeActivity->time, 0, -3);
+                    $time = explode(':', $hours);
+                    $hr = $time[0] + ($time[1] / 60);
+
+                    $total = $hr * $price;
+
+                    $rates = number_format(floatval($timeActivity->hourly_rate), 2);
+                    $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
+                    if(!empty($post['divide-by-100'])) {
+                        $rates = floatval($rates) / 100;
+                        $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $rates = number_format(floatval($rates), 0);
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = '('.$rates.')';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = $rates.'-';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($rates, 0, 1) === '-') {
+                                $rates = '<span class="text-danger">'.$rates.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($rates, 0, 1) === '(' && substr($rates, -1) === ')') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rates, -1) === '-') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $activities[] = [
+                        'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($timeActivity->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($timeActivity->updated_at)),
+                        'last_modified_by' => '',
+                        'customer_id' => $timeActivity->customer_id,
+                        'customer' => $customerName,
+                        'employee_id' => $timeActivity->name_id,
+                        'employee_key' => $timeActivity->name_key,
+                        'employee' => $employeeName,
+                        'item_id' => $timeActivity->service_id,
+                        'product_service' => $productName,
+                        'memo_description' => $timeActivity->description,
+                        'rates' => !empty($timeActivity->hourly_rate) ? $rates : '',
+                        'duration' => substr($timeActivity->time, 0, -3),
+                        'start_time' => substr($timeActivity->start_time, 0, -3),
+                        'end_time' => substr($timeActivity->end_time, 0, -3),
+                        'break' => substr($timeActivity->break_duration, 0, -3),
+                        'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
+                        'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'invoice_date' => '',
+                        'amount' => $timeActivity->billable === '1' ? $amount : ''
+                    ];
+                }
+
+                if(!empty($post['limit'])) {
+                    $activities = array_slice($activities, 0, intval($post['limit']));
+                }
+
+                if(!empty($post['date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', $post['from']),
+                        'end-date' => str_replace('-', '/', $post['to'])
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['activity_date']) >= strtotime($filters['start-date']) && strtotime($v['activity_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => !empty($post['column']) ? str_replace('-', '_', $post['column']) : 'last_modified',
+                    'order' => empty($post['order']) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $a[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $b[$sort['column']]);
+                        }
+                    }
+                });
+
+                if(!empty($post['customer'])) {
+                    if(!in_array($post['customer'], ['all', 'not-specified', 'specified'])) {
+                        $customer = $this->accounting_customers_model->get_by_id($post['customer']);
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+                        $filters = [
+                            'customer_id' => $post['customer']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['customer'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['product-service'])) {
+                    if(!in_array($post['product-service'], ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID($post['product-service']);
+
+                        $filters = [
+                            'item_id' => $post['product-service']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+
+                        if($post['product-service'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['employee'])) {
+                    if(!in_array($post['employee'], ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', $post['employee']);
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['employee'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['create-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['last-modified-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['billable'])) {
+                    $filters = [
+                        'billable' => $post['billable']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return $v['billable'] === ucfirst($filters['billable']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['memo'])) {
+                    $filters = [
+                        'memo' => $post['memo']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+                $html = '
+                    <table style="padding-top:-40px;">
+                        <tr>
+                            <td style="text-align: '.$headerAlignment.'">';
+                                $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                $html .= !empty($post['show-report-period']) ? '<h4 style="margin: 0">Created/Edited: Since '.date("F j, Y").'</h4>' : '';
+                            $html .= '</td>
+                        </tr>
+                    </table>
+                    <br /><br /><br />
+
+                    <table style="width="100%;>
+                    <thead>
+                        <tr>';
+                        foreach($post['fields'] as $field) {
+                            $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                        }
+                    $html .= '</tr>
+                    </thead>
+                    <tbody>';
+
+                    foreach($activities as $activity) {
+                        $html .= '<tr>';
+                        foreach($post['fields'] as $field) {
+                            $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        }
+                        $html .= '</tr>';
+                    }
+                
+                $html .= '</tbody>';
+                $html .= '<tfoot>';
+                if(!empty($reportNote) && !empty($reportNote->notes)) {
+                $html .= '<tr>
+                        <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="'.count($post['fields']).'">
+                            <h4><b>Notes</b></h4>
+                            '.$reportNote->notes.'
+                        </td>
+                    </tr>';
+                }
+                $html .= '<tr style="text-align: '.$footerAlignment.'">
+                            <td colspan="'.count($post['fields']).'">
+                                <p style="margin: 0">'.$date.'</p>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>';
+
+                $title = "Recent/Edited Time Activities";
+            break;
+            case 'Time Activities by Employee Detail' :
+                $timeActivities = $this->accounting_single_time_activity_model->get_company_time_activities(['company_id' => logged('company_id')]);
+
+                $activities = [];
+                foreach($timeActivities as $timeActivity) {
+                    $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                    $productName = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+                    switch($timeActivity->name_key) {
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($timeActivity->name_id);
+                            $employeeName = $employee->FName . ' ' . $employee->LName;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                            $employeeName = $vendor->display_name;
+                        break;
+                    }
+
+                    $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+                    $hours = substr($timeActivity->time, 0, -3);
+                    $time = explode(':', $hours);
+                    $hr = $time[0] + ($time[1] / 60);
+
+                    $total = $hr * $price;
+
+                    $rates = number_format(floatval($timeActivity->hourly_rate), 2);
+                    $amount = $timeActivity->billable === '1' ? number_format($total, 2) : '';
+                    if(!empty($post['divide-by-100'])) {
+                        $rates = floatval($rates) / 100;
+                        $amount = number_format(floatval($amount) / 100, 2);
+
+                        $ratesExplode = explode('.', $rates);
+
+                        $rates = number_format($rates, strlen($ratesExplode[1]) > 1 ? strlen($ratesExplode[1]) : 2 );
+                    }
+
+                    if(!empty($post['without-cents'])) {
+                        $rates = number_format(floatval($rates), 0);
+                        $amount = number_format(floatval($amount), 0);
+                    }
+
+                    if(!empty($post['negative-numbers'])) {
+                        switch($post['negative-numbers']) {
+                            case '(100)' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = '('.$rates.')';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = '('.$amount.')';
+                                }
+                            break;
+                            case '100-' :
+                                if(substr($rates, 0, 1) === '-') {
+                                    $rates = str_replace('-', '', $rates);
+                                    $rates = $rates.'-';
+                                }
+        
+                                if(substr($amount, 0, 1) === '-') {
+                                    $amount = str_replace('-', '', $amount);
+                                    $amount = $amount.'-';
+                                }
+                            break;
+                        }
+                    }
+
+                    if(!empty($post['show-in-red'])) {
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($rates, 0, 1) === '-') {
+                                $rates = '<span class="text-danger">'.$rates.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($rates, 0, 1) === '(' && substr($rates, -1) === ')') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($rates, -1) === '-') {
+                                        $rates = '<span class="text-danger">'.$rates.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+
+                        if(empty($post['negative-numbers'])) {
+                            if(substr($amount, 0, 1) === '-') {
+                                $amount = '<span class="text-danger">'.$amount.'</span>';
+                            }
+                        } else {
+                            switch($post['negative-numbers']) {
+                                case '(100)' :
+                                    if(substr($amount, 0, 1) === '(' && substr($amount, -1) === ')') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                                case '100-' :
+                                    if(substr($amount, -1) === '-') {
+                                        $amount = '<span class="text-danger">'.$amount.'</span>';
+                                    }
+                                break;
+                            }
+                        }
+                    }
+
+                    $activities[] = [
+                        'activity_date' => date("m/d/Y", strtotime($timeActivity->date)),
+                        'create_date' => date("m/d/Y h:i:s A", strtotime($timeActivity->created_at)),
+                        'created_by' => '',
+                        'last_modified' => date("m/d/Y h:i:s A", strtotime($timeActivity->updated_at)),
+                        'last_modified_by' => '',
+                        'customer_id' => $timeActivity->customer_id,
+                        'customer' => $customerName,
+                        'employee_id' => $timeActivity->name_id,
+                        'employee_key' => $timeActivity->name_key,
+                        'employee' => $employeeName,
+                        'item_id' => $timeActivity->service_id,
+                        'product_service' => $productName,
+                        'memo_description' => $timeActivity->description,
+                        'rates' => !empty($timeActivity->hourly_rate) ? $rates : '',
+                        'duration' => substr($timeActivity->time, 0, -3),
+                        'start_time' => substr($timeActivity->start_time, 0, -3),
+                        'end_time' => substr($timeActivity->end_time, 0, -3),
+                        'break' => substr($timeActivity->break_duration, 0, -3),
+                        'taxable' => $timeActivity->taxable === '1' ? 'Yes' : '',
+                        'billable' => $timeActivity->billable === '1' ? 'Yes' : 'No',
+                        'invoice_date' => '',
+                        'amount' => $timeActivity->billable === '1' ? $amount : ''
+                    ];
+                }
+
+                $start_date = date("m/01/Y");
+                $end_date = date("m/d/Y");
+                $report_period = date("F 1-j, Y");
+                if(!empty($post['date'])) {
+                    if($post['date'] !== 'all-dates') {
+                        $start_date = str_replace('-', '/', $post['from']);
+                        $end_date = str_replace('-', '/', $post['to']);
+                    }
+
+                    switch($post['date']) {
+                        case 'all-dates' :
+                            $report_period = 'All Dates';
+                        break;
+                        case 'today' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'yesterday' :
+                            $report_period = date("F j, Y", strtotime($start_date));
+                        break;
+                        case 'this-month' :
+                            $report_period = date("F Y");
+                        break;
+                        case 'last-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'next-month' :
+                            $report_period = date("F Y", strtotime($start_date));
+                        break;
+                        case 'this-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'next-quarter' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'this-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'last-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'next-year' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y", strtotime($startDate));
+                        break;
+                        case 'this-year-to-last-month' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $report_period = $startMonth.'-'.$endMonth.' '.date("Y");
+                        break;
+                        case 'since-30-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-60-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-90-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        case 'since-365-days-ago' :
+                            $startDate = date("F j, Y", strtotime($start_date));
+
+                            $report_period = 'Since '.$startDate;
+                        break;
+                        default : 
+                            $startDate = date("F j, Y", strtotime($start_date));
+                            $endDate = date("F j, Y", strtotime($end_date));
+
+                            $startMonth = date("F", strtotime($startDate));
+                            $endMonth = date("F", strtotime($endDate));
+
+                            $startYear = date("Y", strtotime($startDate));
+                            $endYear = date("Y", strtotime($endDate));
+
+                            if($startMonth === $endMonth && $startYear === $endYear) {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("j, Y", strtotime($endDate));
+                            } else if($startYear !== $endYear) {
+                                $report_period = date("F j, Y", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            } else {
+                                $report_period = date("F j", strtotime($startDate)).' - '.date("F j, Y", strtotime($endDate));
+                            }
+                        break;
+                    }
+                }
+
+                if($post['date'] !== 'all-dates') {
+                    $filters = [
+                        'start-date' => $start_date,
+                        'end-date' => $end_date
+                    ];
+    
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['activity_date']) >= strtotime($filters['start-date']) && strtotime($v['activity_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['customer'])) {
+                    if(!in_array($post['customer'], ['all', 'not-specified', 'specified'])) {
+                        $customer = $this->accounting_customers_model->get_by_id($post['customer']);
+                        $customerName = $customer->first_name . ' ' . $customer->last_name;
+                        $filter_customer->name = $customerName;
+
+                        $filters = [
+                            'customer_id' => $post['customer']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['customer_id'] === $filters['customer_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['customer'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['customer_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['product-service'])) {
+                    if(!in_array($post['product-service'], ['all', 'not-specified', 'specified'])) {
+                        $item = $this->items_model->getByID($post['product-service']);
+
+                        $filters = [
+                            'item_id' => $post['product-service']
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['item_id'] === $filters['item_id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['product-service'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['item_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['employee'])) {
+                    if(!in_array($post['employee'], ['all', 'not-specified', 'specified'])) {
+                        $explode = explode('-', $post['employee']);
+
+                        switch($explode[0]) {
+                            case 'employee' :
+                                $employee = $this->users_model->getUserByID($explode[1]);
+                            break;
+                            case 'vendor' :
+                                $vendor = $this->vendors_model->get_vendor_by_id($explode[1]);
+                            break;
+                        }
+
+                        $filters = [
+                            'key' => $explode[0],
+                            'id' => $explode[1]
+                        ];
+
+                        $activities = array_filter($activities, function($v, $k) use ($filters) {
+                            return $v['employee_key'] === $filters['key'] && $v['employee_id'] === $filters['id'];
+                        }, ARRAY_FILTER_USE_BOTH);
+                    } else {
+                        if($post['employee'] === 'not-specified') {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        } else {
+                            $activities = array_filter($activities, function($v, $k) {
+                                return !empty($v['employee_id']);
+                            }, ARRAY_FILTER_USE_BOTH);
+                        }
+                    }
+                }
+
+                if(!empty($post['create-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['create-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['create_date']) >= strtotime($filters['start-date']) && strtotime($v['create_date']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['last-modified-date'])) {
+                    $filters = [
+                        'start-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-from'])),
+                        'end-date' => str_replace('-', '/', str_replace('-', '/', $post['last-modified-date-to']))
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return strtotime($v['last_modified']) >= strtotime($filters['start-date']) && strtotime($v['last_modified']) <= strtotime($filters['end-date']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['billable'])) {
+                    $filters = [
+                        'billable' => $post['billable']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return $v['billable'] === ucfirst($filters['billable']);
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                if(!empty($post['memo'])) {
+                    $filters = [
+                        'memo' => $post['memo']
+                    ];
+
+                    $activities = array_filter($activities, function($v, $k) use ($filters) {
+                        return stripos($v['memo_desc'], trim($filters['memo'])) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+                }
+
+                $sort = [
+                    'column' => !empty($post['column']) ? str_replace('-', '_', $post['column']) : 'last_modified',
+                    'order' => empty($post['order']) ? 'asc' : 'desc'
+                ];
+
+                usort($activities, function($a, $b) use ($sort) {
+                    if(strpos($sort['column'], 'date') !== false || in_array($sort['column'], ['break', 'duration', 'end_time', 'start_time', 'last_modified'])) {
+                        if($a[$sort['column']] === $b[$sort['column']]) {
+                            return strtotime($b['create_date']) > strtotime($a['create_date']);
+                        }
+
+                        if($sort['order'] === 'asc') {
+                            return strtotime($a[$sort['column']]) > strtotime($b[$sort['column']]);
+                        } else {
+                            return strtotime($a[$sort['column']]) < strtotime($b[$sort['column']]);
+                        }
+                    } else {
+                        if($sort['order'] === 'asc') {
+                            return strcmp($a[$sort['column']], $b[$sort['column']]);
+                        } else {
+                            return strcmp($b[$sort['column']], $a[$sort['column']]);
+                        }
+                    }
+                });
+
+                $grouped = [];
+                if($post['group-by'] !== 'none')
+                {
+                    switch($post['group-by']) {
+                        case 'customer' :
+                            usort($activities, function($a, $b) {
+                                return strcmp($a['customer'], $b['customer']); 
+                            });
+                        break;
+                        case 'product-service' :
+                            usort($activities, function($a, $b) {
+                                return strcmp($a['product_service'], $b['product_service']);
+                            });
+                        break;
+                        case 'day' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        case 'month' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        case 'quarter' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        case 'year' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        case 'week' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        case 'work-week' :
+                            usort($activities, function($a, $b) {
+                                return strtotime($a['activity_date']) > strtotime($b['activity_date']);
+                            });
+                        break;
+                        default :
+                            usort($activities, function($a, $b) {
+                                return strcmp($a['employee'], $b['employee']);
+                            });
+                        break;
+                    }
+
+                    foreach($activities as $activity)
+                    {
+                        switch($post['group-by']) {
+                            case 'customer' :
+                                $key = $activity['customer_id'];
+                                $name = $activity['customer'];
+                            break;
+                            case 'product-service' :
+                                $key = $activity['item_id'];
+                                $name = $activity['product_service'];
+                            break;
+                            case 'day' :
+                                $key = str_replace('/', '-', $activity['activity_date']);
+                                $name = date("F j, Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'work-week' :
+                                $ddate = $activity['activity_date'];
+                                $date = new DateTime($ddate);
+                                $week = intval($date->format("W"));
+                                $year = date('Y', strtotime($ddate));
+
+                                $key = $week.'-'.$year;
+
+                                $day = date("l", strtotime($ddate));
+                                switch($day) {
+                                    case 'Monday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -1 day'));
+                                    break;
+                                    case 'Tuesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -2 days'));
+                                    break;
+                                    case 'Wednesday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -3 days'));
+                                    break;
+                                    case 'Thursday' :
+                                        $weekStart = date("F j, Y", strtotime($ddate.' -4 days'));
+                                    break;
+                                    case 'Friday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -5 days'));
+                                    break;
+                                    case 'Saturday' :
+                                        $weekStart = date("F j", strtotime($ddate.' -6 days'));
+                                    break;
+                                    case 'Sunday' :
+                                        $weekStart = date("F j", strtotime($ddate));
+                                    break;
+                                }
+
+                                $weekEnd = date("F j, Y", strtotime($weekStart.' +6 days'));
+                                $weekStartMonth = date("F", strtotime($weekStart));
+                                $weekEndMonth = date("F", strtotime($weekEnd));
+                                $weekStartYear = date("Y", strtotime($weekStart));
+                                $weekEndYear = date("Y", strtotime($weekEnd));
+
+                                if($weekStartMonth === $weekEndMonth && $weekStartYear === $weekEndYear) {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("j, Y", strtotime($weekEnd));
+                                } else if($weekStartYear !== $weekEndYear) {
+                                    $name = date("F j, Y", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                } else {
+                                    $name = date("F j", strtotime($weekStart)).' - '.date("F j, Y", strtotime($weekEnd));
+                                }
+                            break;
+                            case 'month' :
+                                $key = date("m-Y", strtotime($activity['activity_date']));
+                                $name = date("F Y", strtotime($activity['activity_date']));
+                            break;
+                            case 'quarter' :
+                                $month = date("n", strtotime($activity['activity_date']));
+
+                                $quarter = ceil($month / 3);
+
+                                switch($quarter) {
+                                    case 1 :
+                                        $key = date("01-03-Y", strtotime($activity['activity_date']));
+                                        $name = "January - March ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 2 :
+                                        $key = date("04-06-Y", strtotime($activity['activity_date']));
+                                        $name = "April - June ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 3 :
+                                        $key = date("07-09-Y", strtotime($activity['activity_date']));
+                                        $name = "July - September ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                    case 4:
+                                        $key = date("10-12-Y", strtotime($activity['activity_date']));
+                                        $name = "October - December ".date("Y", strtotime($activity['activity_date']));
+                                    break;
+                                }
+                            break;
+                            case 'year' :
+                                $key = date("Y", strtotime($activity['activity_date']));
+                                $name = date("Y", strtotime($activity['activity_date']));
+                            break;
+                            default :
+                                $key = $activity['employee_key'].'-'.$activity['employee_id'];
+                                $name = $activity['employee'];
+                            break;
+                        }
+                        if(array_key_exists($key, $grouped)) {
+                            $grouped[$key]['activities'][] = $activity;
+                            $duration = $grouped[$key]['duration_total'];
+                            $amount = $grouped[$key]['amount_total'];
+
+                            $durationExplode = explode(':', $duration);
+                            $totalHrs = intval($durationExplode[0]);
+                            $totalMins = intval($durationExplode[1]);
+
+                            $actDuration = $activity['duration'];
+                            $actDurationExplode = explode(':', $actDuration);
+                            $actHrs = intval($actDurationExplode[0]);
+                            $actMins = intval($actDurationExplode[1]);
+                            $actAmount = $activity['amount'];
+
+                            $totalHrs += $actHrs;
+                            $totalMins += $actMins;
+
+                            if($totalMins >= 60) {
+                                do {
+                                    $totalHrs++;
+                                    $totalMins -= 60;
+                                } while($totalMins >= 60);
+                            }
+
+                            if(strlen($totalHrs) === 1) {
+                                $totalHrs = '0'.$totalHrs;
+                            }
+
+                            if(strlen($totalMins) === 1) {
+                                $totalMins = '0'.$totalMins;
+                            }
+
+                            $grouped[$key]['duration_total'] = $totalHrs.':'.$totalMins;
+                            $grouped[$key]['amount_total'] = number_format(floatval($amount) + floatval($actAmount), 2);
+                        } else {
+                            $grouped[$key] = [
+                                'name' => $name,
+                                'duration_total' => $activity['duration'],
+                                'amount_total' => $activity['amount'],
+                                'activities' => [
+                                    $activity
+                                ]
+                            ];
+                        }
+                    }
+                } else {
+                    $grouped = $activities;
+                }
+
+                $activities = $grouped;
+
+                $companyName = $this->page_data['clients']->business_name;
+                if(!empty($post['company-name'])) {
+                    $companyName = str_replace('%20', ' ', $post['company-name']);
+                }
+                $reportName = $reportType->name;
+                if(!empty($post['report-title'])) {
+                    $reportName = str_replace('%20', ' ', $post['report-title']);
+                }
+
+                $headerAlignment = 'center';
+                if(!empty($post['header-alignment'])) {
+                    $headerAlignment = $post['header-alignment'];
+                }
+
+                $footerAlignment = 'center';
+                if(!empty($post['footer-alignment'])) {
+                    $footerAlignment = $post['footer-alignment'];
+                }
+
+                $preparedTimestamp = "l, F j, Y h:i A eP";
+                if(!empty($post['show-date-prepared'])) {
+                    $preparedTimestamp = str_replace("l, F j, Y", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+
+                if(!empty($post['show-time-prepared'])) {
+                    $preparedTimestamp = str_replace("h:i A eP", "", $preparedTimestamp);
+                    $preparedTimestamp = trim($preparedTimestamp);
+                }
+                $date = date($preparedTimestamp);
+
+                $reportNote = $this->accounting_report_type_notes_model->get_note(logged('company_id'), $reportTypeId);
+
+                $html = '
+                    <table style="padding-top:-40px;">
+                        <tr>
+                            <td style="text-align: '.$headerAlignment.'">';
+                                $html .= empty($post['show-company-name']) ? '<h2 style="margin: 0">'.$companyName.'</h2>' : '';
+                                $html .= empty($post['show-report-title']) ? '<h3 style="margin: 0">'.$reportName.'</h3>' : '';
+                                $html .= empty($post['show-report-period']) ? '<h4 style="margin: 0">Activity: '.$report_period.'</h4>' : '';
+                            $html .= '</td>
+                        </tr>
+                    </table>
+                    <br /><br /><br />
+
+                    <table style="width="100%;>
+                    <thead>
+                        <tr>';
+                        foreach($post['fields'] as $field) {
+                            $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>'.$field.'</b></th>';
+                        }
+                    $html .= '</tr>
+                    </thead>
+                    <tbody>';
+
+                if($post['group-by'] === 'none') {
+                    foreach($activities as $activity) {
+                        $html .= '<tr>';
+                        foreach($post['fields'] as $field) {
+                            $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $activity[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                        }
+                        $html .= '</tr>';
+                    }
+                } else {
+                    foreach($activities as $activity)
+                    {
+                        $html .= '<tr>
+                            <td colspan="'.count($post['fields']).'"><b>'.$activity['name'].'</b></td>
+                        </tr>';
+                        
+                        foreach($activity['activities'] as $act)
+                        {
+                            $html .= '<tr>';
+                            foreach($post['fields'] as $field) {
+                                $html .= '<td>'.str_replace('class="text-danger"', 'style="color: red"', $act[strtolower(str_replace(' ', '_', str_replace('/', '_', $field)))]).'</td>';
+                            }
+                            $html .= '</tr>';
+                        }
+
+                        $count = array_search('Duration', $post['fields']);
+                        if($count === false) {
+                            $count = array_search('Amount', $post['fields']);
+                        }
+                        if($count === false) {
+                            $count = count($post['fields']);
+                        }
+
+                        $total = '<td style="border-top: 1px solid black" colspan="'.$count.'"><b>Total for '.$activity['name'].'</b></td>';
+                        foreach($post['fields'] as $index => $field)
+                        {
+                            if($index > $count - 1) {
+                                $value = $field === 'Duration' || $field === 'Amount' ? $activity[strtolower($field).'_total'] : '';
+                                $total .= '<td style="border-top: 1px solid black"><b>'.$value.'</b></td>';
+                            }
+                        }
+
+                        $html .= '<tr>';
+                        $html .= $total;
+                        $html .= '</tr>';
+                    }
+                }
+                
+                $html .= '</tbody>';
+                $html .= '<tfoot>';
+                if(!empty($reportNote) && !empty($reportNote->notes)) {
+                $html .= '<tr>
+                        <td colspan="'.count($post['fields']).'" style="border-bottom: 1px solid black"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="'.count($post['fields']).'">
+                            <h4><b>Notes</b></h4>
+                            '.$reportNote->notes.'
+                        </td>
+                    </tr>';
+                }
+                $html .= '<tr style="text-align: '.$footerAlignment.'">
+                            <td colspan="'.count($post['fields']).'">
+                                <p style="margin: 0">'.$date.'</p>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>';
+
+                $title = "Time Activities by Employee Detail";
+            break;
+        }
+
+        $givenFileName = str_replace('/', '', $post['email_file_name']);
+        $fileName = "$givenFileName.pdf";
+
+        $businessProfile = $this->business_model->getByCompanyId(logged('company_id'));
+
+        tcpdf();
+        $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('helvetica', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        $obj_pdf->AddPage();
+        ob_end_clean();
+        $obj_pdf->writeHTML($html, true, false, true, false, '');
+        $obj_pdf->Output(getcwd()."/assets/pdf/$fileName", 'F');
+
+        // $config = array(
+        //     'protocol' => 'smtp',
+        //     'smtp_host' => 'smtp.mailtrap.io',
+        //     'smtp_port' => 2525,
+        //     'smtp_user' => '5b2aef044d0368',
+        //     'smtp_pass' => 'ffd30560600991',
+        //     'crlf' => "\r\n",
+        //     'newline' => "\r\n"
+        // );
+
+        // $this->email->initialize($config);
+        $this->email->clear(true);
+        $this->email->from($businessProfile->business_email);
+        $this->email->to($post['email_to']);
+        $this->email->cc($post['email_cc']);
+        $this->email->subject($post['email_subject']);
+        $this->email->message($post['email_body']);
+
+        $this->email->attach(getcwd()."/assets/pdf/$fileName");
+        $send = $this->email->send();
+
+        unlink(getcwd()."/assets/pdf/$fileName");
+
+        echo json_encode([
+            'success' => $send,
+            'message' => $send ? "Email sent successfully!" : "Failed to send email."
+        ]);
     }
 }

@@ -573,4 +573,91 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
+    public function getJobSalesTechCommission($customer_id) {
+        $this->db->select('commission AS salesrep_commission, tech_commission_total AS techrep_commission');
+        $this->db->from("jobs");       
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id DESC');
+        $this->db->limit(1);
+        $query = $this->db->get(); 
+        return $query->result();
+    }
+
+    public function getJobSalesTechPaid($customer_id) {
+        $this->db->select('employee_id, employee2_id, employee3_id, employee4_id, employee5_id, employee6_id, commission AS salesrep_commission, tech_commission_total as techrep_commission');
+        $this->db->from("jobs");       
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id DESC');
+        $this->db->limit(1);
+        $query = $this->db->get(); 
+        $jobResult = $query->result()[0];  
+        // ============
+        $totalSalesRepPaid = 0;
+        $totalTechRepPaid = 0;
+
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee_id);
+        $query = $this->db->get(); 
+        $userResult_1 = $query->result()[0];
+        if ($userResult_1->payscale == "Base (Hourly Rate)") { $totalSalesRepPaid += $userResult_1->base_hourly; }
+        if ($userResult_1->payscale == "Base (Weekly Rate)") { $totalSalesRepPaid += $userResult_1->base_weekly; }
+        if ($userResult_1->payscale == "Base (Montly Rate)") { $totalSalesRepPaid += $userResult_1->base_monthly; }
+        // =================
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee2_id);
+        $query = $this->db->get(); 
+        $userResult_2 = $query->result()[0];
+        if ($userResult_2->payscale == "Base (Hourly Rate)") { $totalTechRepPaid += $userResult_2->base_hourly; }
+        if ($userResult_2->payscale == "Base (Weekly Rate)") { $totalTechRepPaid += $userResult_2->base_weekly; }
+        if ($userResult_2->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_2->base_monthly; }
+        // =================
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee3_id);
+        $query = $this->db->get(); 
+        $userResult_3 = $query->result()[0];
+        if ($userResult_3->payscale == "Base (Hourly Rate)") { $totalTechRepPaid += $userResult_3->base_hourly; }
+        if ($userResult_3->payscale == "Base (Weekly Rate)") { $totalTechRepPaid += $userResult_3->base_weekly; }
+        if ($userResult_3->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_3->base_monthly; }
+        // =================
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee4_id);
+        $query = $this->db->get(); 
+        $userResult_4 = $query->result()[0];
+        if ($userResult_4->payscale == "Base (Hourly Rate)") { $totalTechRepPaid += $userResult_4->base_hourly; }
+        if ($userResult_4->payscale == "Base (Weekly Rate)") { $totalTechRepPaid += $userResult_4->base_weekly; }
+        if ($userResult_4->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_4->base_monthly; }
+        // =================
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee5_id);
+        $query = $this->db->get(); 
+        $userResult_5 = $query->result()[0];
+        if ($userResult_5->payscale == "Base (Hourly Rate)") { $totalTechRepPaid += $userResult_5->base_hourly; }
+        if ($userResult_5->payscale == "Base (Weekly Rate)") { $totalTechRepPaid += $userResult_5->base_weekly; }
+        if ($userResult_5->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_5->base_monthly; }
+        // =================
+        $this->db->select('payscale.payscale_name AS payscale, users.base_hourly AS base_hourly, users.base_weekly AS base_weekly, users.base_monthly AS base_monthly');
+        $this->db->from("users");
+        $this->db->join('payscale', 'payscale.id = users.payscale_id', 'left');
+        $this->db->where('users.id', $jobResult->employee6_id);
+        $query = $this->db->get(); 
+        $userResult_6 = $query->result()[0];
+        if ($userResult_6->payscale == "Base (Hourly Rate)") { $totalTechRepPaid += $userResult_6->base_hourly; }
+        if ($userResult_6->payscale == "Base (Weekly Rate)") { $totalTechRepPaid += $userResult_6->base_weekly; }
+        if ($userResult_6->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_6->base_monthly; }
+        // =================
+        $returnData = new stdClass();
+        $returnData->salesrep_paid = $totalSalesRepPaid + $jobResult->salesrep_commission;
+        $returnData->techrep_paid = $totalTechRepPaid + $jobResult->techrep_commission;
+        return $returnData;    
+    }
 }
