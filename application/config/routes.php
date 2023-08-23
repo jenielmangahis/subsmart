@@ -658,6 +658,7 @@ $route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_con
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 $route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees/paycheck_list';
+$route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';
@@ -713,6 +714,7 @@ $route['accounting/reports/analytics'] = 'accounting_controllers/reports/analyti
 $route['accounting/reports/payscale'] = 'accounting_controllers/reports/payscale';
 $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_log';
 $route['accounting/reports/ffcra-cares-act-report'] = 'accounting_controllers/reports/ffcra_cares_act_report';
+$route['accounting/reports/ffcra-cares-act-report/export'] = 'accounting_controllers/reports/ffcra_cares_act_report_export';
 $route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 $route['accounting/reports/(:any)/export']['post'] = 'accounting_controllers/reports/export/$1';
 $route['accounting/reports/(:any)/update-note']['post'] = 'accounting_controllers/reports/update_note/$1';
@@ -720,6 +722,7 @@ $route['accounting/reports/add-custom-report-group']['post'] = 'accounting_contr
 $route['accounting/reports/save-custom-report']['post'] = 'accounting_controllers/reports/save_custom_report';
 $route['accounting/reports/check-custom-report-name']['post'] = 'accounting_controllers/reports/check_name';
 $route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_controllers/reports/generate_paychecks_pdf';
+$route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/reports/email/$1';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 

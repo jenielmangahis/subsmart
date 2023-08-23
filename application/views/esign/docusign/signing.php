@@ -248,7 +248,7 @@
     <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
-            $("#signatureModal").on("shown.bs.modal", () => {
+            $("#signatureModal").on("shown.bs.modal", () => {                
                 $(".canvas-placeholder").fitText();
             });
         });

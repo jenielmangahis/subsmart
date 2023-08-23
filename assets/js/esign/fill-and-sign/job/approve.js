@@ -120,7 +120,8 @@ window.addEventListener("DOMContentLoaded", () => {
       customer_id: customerId,
     });
 
-    window.location = `/eSign_v2/templatePrepare?${params}`;
+    window.open(`/eSign_v2/templatePrepare?${params}`, '_blank');
+    //window.location = `/eSign_v2/templatePrepare?${params}`;
   });
 
   async function updateJobToApproved() {

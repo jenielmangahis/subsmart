@@ -29,9 +29,6 @@ class Workorder extends MY_Controller
         $this->load->model('General_model', 'general');
         
         $user_id = getLoggedUserID();
-
-        // add css and js file path so that they can be attached on this page dynamically
-        // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/frontend/css/workorder/main.css',

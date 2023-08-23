@@ -1474,6 +1474,9 @@
                 $('#send-esign').attr('data-type', appointment_type);
                 $('#send-esign').attr('data-id', appointment_id);
 
+                $('#send-ticket-esign').attr('data-type', appointment_type);
+                $('#send-ticket-esign').attr('data-id', appointment_id);
+
                 $('#delete-upcoming-schedule').attr('data-type', appointment_type);
                 $('#delete-upcoming-schedule').attr('data-id', appointment_id);
                 $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
@@ -1482,6 +1485,12 @@
                     $('#send-esign').css('display', 'none');
                 }else{
                     $('#send-esign').css('display', 'inline-block');
+                }
+
+                if( appointment_type != 'service_ticket' ){
+                    $('#send-ticket-esign').css('display', 'none');
+                }else{
+                    $('#send-ticket-esign').css('display', 'inline-block');
                 }
 
                 showLoader($(".view-schedule-container")); 
@@ -2997,7 +3006,7 @@
         $('#approveThisJobModal').modal('show');
     });
 
-    $(document).on('click', '#approveThisTicket', function(){        
+    $(document).on('click', '#send-ticket-esign', function(){        
         $('#modal-quick-view-upcoming-schedule').modal('hide');
         $('#approveThisTicketModal').modal('show');
     });

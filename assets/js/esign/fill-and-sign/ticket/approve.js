@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return `${template.name} (default)`;
     };
 
-    const response = await fetch("/ci/nsmart_v2/DocuSign/apiTemplates?all=true");
+    const response = await fetch("/DocuSign/apiTemplates?all=true");
     const jsonData = await response.json();
     const templates = jsonData.data;
 
@@ -79,74 +79,23 @@ window.addEventListener("DOMContentLoaded", () => {
     disableApproveAndEsignButton();
   });
 
-  $approveButton.addEventListener("click", async () => {
-    disableApproveAndEsignButton();
-    const response = await updateJobToApproved();
-    enableApproveAndEsignButton();
-
-    if (!response.success) return;
-
-    $($modal).modal("hide");
-    const swalResponse = await Swal.fire({
-      title: "Job is approved",
-      icon: "success",
-      text: "Invoice is now available for your review",
-      confirmButtonText: "See Invoice",
-    });
-
-    const jobId = $("input[id=esignJobId]").val();
-    if (swalResponse.isConfirmed) {
-      window.open(`/job/viewInvoice/${jobId}`, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-      window.location.reload();
-    } else if (swalResponse.dismiss) {
-      window.location.reload();
-    }
-  });
-
   $approveAndEsignButton.addEventListener("click", async () => {
-    disableApproveAndEsignButton();
-    const response = await updateJobToApproved();
+    disableApproveAndEsignButton();    
     enableApproveAndEsignButton();
-
-    if (!response.success) return;
 
     const esignId = $esignTemplatesToggle.dataset.id;
-    const customerId = $("#customer_id").val();
-    const jobId = $("input[id=esignJobId]").val();
+    const customerId = $("#ticket_customer_id").val();
+    const ticketId = $("input[id=esignTicketId]").val();
 
     const params = new URLSearchParams({
       id: esignId,
-      job_id: jobId,
+      ticket_id: ticketId,
       customer_id: customerId,
     });
 
-    window.location = `/eSign_v2/templatePrepare?${params}`;
+    window.location = `/ci/nsmart_v2/eSign_v2/templatePrepare?s{params}`;
+
   });
-
-  async function updateJobToApproved() {
-    const $jobIdInput = document.querySelector("input[id=esignJobId]");
-
-    if (!$jobIdInput) {
-      return false;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("id", $jobIdInput.value);
-      formData.append("status", "Approved");
-      formData.append("action", "approve_job");
-      
-      const response = await fetch(base_url + "job/update_jobs_status", {
-        method: "POST",
-        body: formData,
-      });
-
-      return response.json();
-    } catch (error) {
-      alert("Something went wrong");
-      return false;
-    }
-  }
 
   function disableApproveAndEsignButton() {
     $approveAndEsignButtonLoader.classList.remove("d-none");

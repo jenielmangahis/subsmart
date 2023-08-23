@@ -17,7 +17,7 @@ export async function onClickViewEsign() {
   const esignId = this.dataset.id;
   const { data } = await api.getEsignDetails(esignId);
 
-  $title.textContent = data.name;
+  $title.innerHTML = '<i class="bx bx-file"></i> ' + data.unique_key;
 
   const $recipients = $modal.querySelector(".esign-recipients");
   $recipients.innerHTML = "";
@@ -47,6 +47,19 @@ export async function onClickViewEsign() {
 
   const $createdAt = $modal.querySelector(".esign-created-at");
   $createdAt.textContent = moment(data.created_at).format(DATE_FORMAT);
+
+  const $esignSubject = $modal.querySelector(".esign-subject");
+  $esignSubject.textContent = data.subject;
+
+  const $esignTemplate = $modal.querySelector(".esign-template");
+  $esignTemplate.textContent = data.name;
+
+  const $esignCustomer = $modal.querySelector(".esign-customer");
+  if( data.customer_firstname === null && data.customer_lastname === null ){
+    $esignCustomer.textContent = 'Customer Not Found';
+  }else{
+    $esignCustomer.textContent = data.customer_firstname + ' ' + data.customer_lastname;  
+  }  
 
   const $link = $modal.querySelector(".esign-link");
   $link.textContent = data.signing_url;
