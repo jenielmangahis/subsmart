@@ -575,3 +575,49 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal" id="email_report_modal" tabindex="-1" aria-labelledby="email_report_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="email_report_modal_label">Email Time Activities by Employee Detail List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="send-email-form">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="email-to">To</label>
+                        <input type="email" class="nsm-field form-control" value="" id="email-to" name="email_to" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-cc">CC</label>
+                        <input type="email" class="nsm-field form-control" value="" id="email-cc" name="email_cc">
+                    </div>
+                    <div class="col-12">
+                        <label for="email-subject">Subject</label>
+                        <input type="text" class="nsm-field form-control" value="Your <?=$report_title?> Report" id="email-subject" name="email_subject" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-body">Body</label>
+                        <textarea name="email_body" id="email-body" maxlength="4000" class="nsm-field form-control mb-3" required>Hello
+
+Attached is the <?=$report_title?> report for <?=$company_name?>. 
+
+Regards
+<?=$this->page_data['users']->FName.' '.$this->page_data['users']->LName?></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-file-name">Report file name</label>
+                        <input type="text" class="nsm-field form-control" value="<?=$report_title?> Report" id="email-file-name" name="email_file_name" required>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button primary" id="btn_send_report">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

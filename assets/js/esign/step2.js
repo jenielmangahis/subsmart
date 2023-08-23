@@ -1,3 +1,4 @@
+console.log('test');
 // https://stackoverflow.com/a/494348/8062659
 function createElementFromHTML(htmlString) {
   var div = document.createElement("div");

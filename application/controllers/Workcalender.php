@@ -186,10 +186,6 @@ class Workcalender extends MY_Controller
             $this->page_data['workorder']->customer = get_customer_by_id($this->page_data['workorder']->customer_id);
         }
 
-//        echo '<pre>';
-//        print_r($this->page_data['workorder']);
-//        die;
-
         die($this->load->view('workcalender/short-details', $this->page_data, true));
     }
 

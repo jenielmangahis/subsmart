@@ -83,15 +83,15 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
   function createForm() {
     const roles = [
       {
-        icon: "fa-pencil",
+        icon: "bx-pencil",
         value: "Needs to Sign",
       },
       {
-        icon: "fa-pencil",
+        icon: "bx-pencil",
         value: "Signs in Person",
       },
       {
-        icon: "fa-clone",
+        icon: "bxs-copy-alt",
         value: "Receives a copy",
       },
     ];
@@ -109,7 +109,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
         <input type="hidden" name="color" value="${color}">
 
         <a class="clos-bx">
-            <i class="bx bx-x"></i>
+            <i class='bx bxs-x-circle'></i>
         </a>
         <div class="row">
             <div class="col-md-7 col-sm-7">
@@ -117,6 +117,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                     <div class="form-group">
                         <label>Name *</label>
                         <input type="text" data-key="name" name="name" value="${name}" class="form-control" required>
+                        <a href="#" tabindex="-1"><i class='bx bxs-contact'></i></a>
                     </div>
                     <div class="form-group">
                         <label>Email *</label>
@@ -126,33 +127,24 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                 </div>
             </div>
             <div class="col-md-5 col-sm-5">
-                <div class="action-envlo">
-                    <ul style="list-style-type: none; margin: 0; padding: 0; margin-top: 18px;">
-                        <li class="dropdown" data-key="role">
-                            <a href="#" class="nsm-button dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" style="display: inline-block; margin: 0;">
-                                <i class="fa ${role.icon}"></i>
-                                ${role.value}
-                            </a>
-                            <ul class="dropdown-menu">
-                                ${roles
-                                  .map(
-                                    (currRole) =>
-                                      `<li>
-                                        <a class="dropdown-item" href="#">
-                                          <i class="fa ${currRole.icon}"></i>
-                                          ${currRole.value}
-                                        </a>
-                                      </li>`
-                                  )
-                                  .join("")}
-                            </ul>
-                        </li>
-                        <li class="dropdown"><a href="#" class="dropdown-toggle d-none" data-toggle="dropdown">More</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#"><i class="fa fa-key"></i>Add access authentication</a></li>
-                                <li><a href="#"><i class="fa fa-comment"></i>Add private message</a></li>
-                            </ul>
-                        </li>
+                <div class="dropdown table-management esign-file-actions">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuTools" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="bx ${role.icon}"></i> ${role.value}
+                  </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuTools">
+                        ${roles
+                        .map(
+                          (currRole) =>
+                            `<li>
+                              <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="bx ${currRole.icon}"></i>
+                                ${currRole.value}
+                              </a>
+                            </li>`
+                        )
+                        .join("")}
+                        <li class='d-none'><a href="javascript:void(0);" class="dropdown-item"><i class="bx bxs-key"></i>Add access authentication</a></li>
+                        <li class='d-none'><a href="javascript:void(0);" class="dropdown-item"><i class="bx bx-comment-detail"></i>Add private message</a></li>
                     </ul>
                 </div>
             </div>
@@ -286,7 +278,7 @@ function Step2() {
       },
     });
 
-    window.location = `${prefixURL}/esign/Files?id=${docId}&next_step=3`;
+    window.location = `${prefixURL}/esign_v2/Files?id=${docId}&next_step=3`;
   }
 
   function attachEventHandlers() {

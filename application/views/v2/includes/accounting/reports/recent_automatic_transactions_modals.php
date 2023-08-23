@@ -112,13 +112,13 @@
                         <?php else : ?>
                         <tr class="group-header">
                             <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
-                            <td><b><?=$transaction['amount_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['debit_total']?></b></td>
-                            <td><b><?=$transaction['credit_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                         </tr>
                         <?php foreach($transaction['transactions'] as $tran) : ?>
                         <tr>
@@ -163,13 +163,13 @@
                         <?php endforeach; ?>
                         <tr class="group-total">
                             <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
-                            <td><b><?=$transaction['amount_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['debit_total']?></b></td>
-                            <td><b><?=$transaction['credit_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                         </tr>
                         <?php endif; ?>
                         <?php endforeach; ?>
@@ -314,13 +314,13 @@
                         <?php else : ?>
                         <tr class="group-header">
                             <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b><?=$transaction['name']?></b></td>
-                            <td><b><?=$transaction['amount_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['debit_total']?></b></td>
-                            <td><b><?=$transaction['credit_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                         </tr>
                         <?php foreach($transaction['transactions'] as $tran) : ?>
                         <tr>
@@ -365,13 +365,13 @@
                         <?php endforeach; ?>
                         <tr class="group-total">
                             <td colspan="<?=isset($columns) ? $total_index : '27'?>"><b>Total for <?=$transaction['name']?></b></td>
-                            <td><b><?=$transaction['amount_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['debit_total']?></b></td>
-                            <td><b><?=$transaction['credit_total']?></b></td>
-                            <td></td>
-                            <td><b><?=$transaction['tax_amount_total']?></b></td>
-                            <td><b><?=$transaction['taxable_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['credit_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['tax_amount_total']?></b></td>
+                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['taxable_amount_total']?></b></td>
                         </tr>
                         <?php endif; ?>
                         <?php endforeach; ?>
@@ -454,7 +454,7 @@
                                                     <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
                                                 </select>
                                             </div>
-                                            <?php if(!empty($filter_date) && $filter_date !== 'all-dates') : ?>
+                                            <?php if(!empty($filter_date)) : ?>
                                             <div class="col-12 col-md-4">
                                                 <label for="from">From</label>
                                                 <div class="nsm-field-group calendar">
@@ -1381,6 +1381,52 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button primary" id="run-report-button">Run report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" id="email_report_modal" tabindex="-1" aria-labelledby="email_report_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="email_report_modal_label">Email Time Activities by Employee Detail List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="send-email-form">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="email-to">To</label>
+                        <input type="email" class="nsm-field form-control" value="" id="email-to" name="email_to" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-cc">CC</label>
+                        <input type="email" class="nsm-field form-control" value="" id="email-cc" name="email_cc">
+                    </div>
+                    <div class="col-12">
+                        <label for="email-subject">Subject</label>
+                        <input type="text" class="nsm-field form-control" value="Your <?=$report_title?> Report" id="email-subject" name="email_subject" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-body">Body</label>
+                        <textarea name="email_body" id="email-body" maxlength="4000" class="nsm-field form-control mb-3" required>Hello
+
+Attached is the <?=$report_title?> report for <?=$company_name?>. 
+
+Regards
+<?=$this->page_data['users']->FName.' '.$this->page_data['users']->LName?></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="email-file-name">Report file name</label>
+                        <input type="text" class="nsm-field form-control" value="<?=$report_title?> Report" id="email-file-name" name="email_file_name" required>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button primary" id="btn_send_report">Send</button>
             </div>
         </div>
     </div>

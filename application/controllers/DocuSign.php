@@ -2145,19 +2145,19 @@ SQL;
     {
         $this->db->where('id', $ticketid);
         $this->db->select('customer_id');
-        $job = $this->db->get('tickets')->row();
+        $ticket = $this->db->get('tickets')->row();
 
-        if (!$job) {
+        if (!$ticket) {
             return null;
         }
 
-        $this->db->where('prof_id', $job->customer_id);
+        $this->db->where('prof_id', $ticket->customer_id);
         return $this->db->get('acs_profile')->row();
     }
 
     private function getTicketEmployee($ticket)
     {
-        $this->db->where('id', $ticket);
+        $this->db->where('id', $ticket->id);
         $this->db->select('sales_rep');
         $ticket = $this->db->get('tickets')->row();
 

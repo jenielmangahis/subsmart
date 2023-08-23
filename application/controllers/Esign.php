@@ -18,7 +18,6 @@ class Esign extends MY_Controller {
 
         // JS to add only Job module
         add_footer_js(array(
-			// 'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js',
             'assets/textEditor/summernote-bs4.js'
         ));
     }
@@ -245,24 +244,29 @@ class Esign extends MY_Controller {
 		$this->page_data['recipients'] = $recipients;
 
 		add_css([
+			'assets/esign/css/bootstrap.min.css', //needed in v2
 			'assets/css/esign/esign-builder/esign-builder.css',
 			'assets/css/esign/docusign/docusign.css'
 		]);
 
 		add_footer_js([
 			// 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+			'assets/esign/js/bootstrap.min.js', //needed in v2
 			'assets/js/esign/libs/pdf.js',
 			'assets/js/esign/libs/pdf.worker.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
 			'assets/js/esign/docusign/input.autoresize.js',
 			'assets/js/esign/step1.js',
-			'assets/js/esign/step2.js',
+			'assets/js/esign/v2/step2.js',
+			//'assets/js/esign/step2.js',
 			'assets/js/esign/step3.js',
 		]);
 
-		$this->load->view('esign/files', $this->page_data);
-		//$this->load->view('v2/pages/esign/files', $this->page_data);
+		$this->page_data['title'] = 'eSign : Files';
+		$this->page_data['page']->title = 'eSign Files';
+        $this->page_data['page']->parent = 'Tools';
+		//$this->load->view('esign/files', $this->page_data);
+		$this->load->view('v2/pages/esign/files', $this->page_data);
 	}
 
 	public function apiGetDocumentRecipients($id)

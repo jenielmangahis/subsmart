@@ -13,12 +13,6 @@ class Tools extends MY_Controller {
         $this->load->config('api_credentials');        
     }
 
-    /* public function index()
-      {
-      $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-      $this->load->view('tools/business_tools', $this->page_data);
-      } */
-
     public function api_connectors() {
         $this->page_data['page']->title = 'API Connectors';
         $this->page_data['page']->parent = 'Tools';
@@ -893,8 +887,7 @@ class Tools extends MY_Controller {
 
             }else{
                 $msg = 'Email not valid';
-            }
-            
+            }            
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg, 'user_email' => $user_email];

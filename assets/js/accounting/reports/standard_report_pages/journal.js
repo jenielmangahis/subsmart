@@ -87,6 +87,69 @@ $('input[name="col_chk"]').on('change', function() {
     });
 });
 
+$("#btn_send_report").on("click", function() {
+    $('#send-email-form').submit();
+});
+
+$('#send-email-form').validate({
+    rules: {
+        email_to: {
+            required: true,
+            email: true
+        },
+        email_subject: 'required',
+        email_body: 'required',
+        email_file_name: 'required'
+    }
+});
+
+$('#send-email-form').on('submit', function(e) {
+    e.preventDefault();
+    var data = new FormData(this);
+
+    if($(this).find('.nsm-field.form-control.error').length < 1) {
+        var currentUrl = currUrl.replace('#', '');
+        var urlSplit = currentUrl.split('?');
+        var query = urlSplit[1];
+
+        var fields = $('#reports-table thead tr td:visible:not(.table-icon)');
+        fields.each(function() {
+            data.append('fields[]', $(this).attr('data-name'));
+        });
+
+        if(query !== undefined) {
+            var querySplit = query.split('&');
+
+            $.each(querySplit, function(key, value) {
+                var selectedVal = value.split('=');
+
+                data.append(selectedVal[0], selectedVal[1]);
+            });
+        }
+
+        $.ajax({
+            url: `/accounting/reports/${reportId}/email`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                Swal.fire({
+                    text: res.message,
+                    icon: res.success ? 'success' : 'error',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+
+                $('#email_report_modal').modal('hide');
+            }
+        });
+    }
+});
+
 $("#btn_print_report").on("click", function() {
     $("#report_table_print").printThis();
 });

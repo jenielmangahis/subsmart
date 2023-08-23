@@ -201,7 +201,7 @@
                         </div>
                     </div>
 
-                    <?php if ($users->company_id == 1 /*nsmartrac company*/) : ?>
+                    <?php //if ($users->company_id == 1 /*nsmartrac company*/) : ?>
                         <div class="col-12 col-md-3">
                             <div class="nsm-card primary p-5" role="button" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
                                 <div class="nsm-card-content">
@@ -219,7 +219,7 @@
                                 </div>
                             </div>
                         </div>
-                    <?php endif; ?>                    
+                    <?php //endif; ?>                    
                 </div>
             </div>
         </div>

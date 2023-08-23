@@ -203,7 +203,7 @@
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#email_report_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_report_modal">
