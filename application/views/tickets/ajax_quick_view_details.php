@@ -82,8 +82,7 @@
                     <td align="right"><?php echo $tickets->business_name; ?></td>
                 </tr>
                 <?php } ?>
-            </table>
-            <a class="nsm nsm-button primary" style="float: right;margin-top: 10px;" href="javascript:void(0);" id="approveThisTicket">Send Esign</a>
+            </table>            
         </div>
     </div>
     <br />

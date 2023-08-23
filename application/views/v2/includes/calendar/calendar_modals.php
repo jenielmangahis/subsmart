@@ -620,6 +620,7 @@
                  <button type="button" class="nsm-button primary" data-id="" data-type="" id="quick-add-gcalendar"><i class="bx bxl-google"></i> Add to Google Calendar</button>
                 <button type="button" class="nsm-button primary quick-edit-schedule" data-id="" data-type="" id="edit-upcoming-schedule"><i class='bx bx-edit-alt'></i> Edit</button>
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
+                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
                 <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
             </div>           
         </div>        
