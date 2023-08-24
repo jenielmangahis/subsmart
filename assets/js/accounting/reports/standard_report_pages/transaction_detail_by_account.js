@@ -196,6 +196,28 @@ $('select').each(function() {
             dropdownParent: $(this).closest('.modal')
         });
     }
+
+    if($(this).attr('id') === 'filter-product-service') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-item'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
