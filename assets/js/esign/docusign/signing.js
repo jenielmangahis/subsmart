@@ -1133,7 +1133,8 @@ function Signing(hash) {
 
       const customer_card = window.__esigndata.auto_populate_data.billing;
       const customer_cost_due = window.window.__esigndata.auto_populate_data.cost_due;;
-
+      let group_input_class = field.original_field_name;      
+      group_input_class = 'input-group-' + group_input_class.replace(/\s+/g, '-').toLowerCase();
       if (customer && specs.name && !value) {
         if (String(specs.name.toLowerCase()).startsWith("zip")) {
           value =
@@ -1145,7 +1146,7 @@ function Signing(hash) {
             customer[specs.name] ||
             customer[specs.name.toLowerCase()] ||
             customer["mail_add"] ||
-            customer["subdivision"];
+            customer["subdivision"];            
         } else if (specs.name.toLowerCase() === "password") {
           value =
             customer[specs.name] ||
@@ -1266,7 +1267,7 @@ function Signing(hash) {
       }
       const html = `
         <div class="docusignField" style="position: relative; display: flex; align-items: center;">
-          <input class="${custom_class}" type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
+          <input class="${custom_class} input-group ${group_input_class}" data-name="${group_input_class}" type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
           <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
             <span class="sr-only">Loading...</span>
           </div>
@@ -1627,6 +1628,14 @@ function Signing(hash) {
   function attachEventHandlers() {
     const $fontItems = $fontSelect.find(".dropdown-item");
     const $fontItemText = $fontSelect.find(".dropdown-toggle");
+    const $groupInput   = $('.input-group');
+    
+    $groupInput.on('change', function(){
+      let class_name  = $(this).attr('data-name');
+      let input_value = $(this).val();
+      $('.'+class_name).val(input_value);
+    });
+
     $fontItems.on("click", (event) => {
       event.preventDefault();
       event.stopPropagation();

@@ -11349,6 +11349,23 @@ class Accounting_modals extends MY_Controller
         if(!isset($choices['results'])) {
             $choices['results'] = [];
         }
+
+        if($field === 'report'  && count($choices['results']) < 1) {
+            $choices['results'][] = [
+                'id' => 'all',
+                'text' => 'All'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'not-specified',
+                'text' => 'Not Specified'
+            ];
+
+            $choices['results'][] = [
+                'id' => 'specified',
+                'text' => 'Specified'
+            ];
+        }
         foreach ($vendors as $vendor) {
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);

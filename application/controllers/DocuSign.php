@@ -987,7 +987,13 @@ class DocuSign extends MYF_Controller
 
     private function sendCompletedNotice(array $envelope, array $recipients)
     {
-        $companyId = logged('company_id');
+        //User Docfile
+        $this->db->select('*');
+        $this->db->where('id', $envelope['id']);        
+        $docFile = $this->db->get('user_docfile')->row();
+        
+        //$companyId = logged('company_id');
+        $companyId = $docFile->company_id;
         $this->db->where('company_id', $companyId);
         $this->db->select('business_name, address, business_phone, business_email');
         $company = $this->db->get('business_profile')->row();
