@@ -380,7 +380,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     return;
   }
 
-  const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+  const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
   const { data } = await response.json();
 

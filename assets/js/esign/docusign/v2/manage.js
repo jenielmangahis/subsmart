@@ -495,6 +495,17 @@ const actions = {
       $this.prop("disabled", false);
       $this.find(".spinner-border").addClass("d-none");
       $voidModal.modal("hide");
+
+      Swal.fire({                        
+          text: "Envelope was successfully updated",
+          icon: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'Okay'
+      }).then((result) => {
+          //if (result.value) {                    
+          
+          //}
+      });
     });
   },
   continue: function (row) {
@@ -597,19 +608,19 @@ $(document).ready(function () {
         render: columns.rowIcon,
       },
       {
-        sortable: false,
+        sortable: true,
         render: columns.docfileid,
       },
       {
-        sortable: false,
+        sortable: true,
         render: columns.customerName,
       },
       {
-        sortable: false,
+        sortable: true,
         render: columns.subject,
       },
       {
-        sortable: false,
+        sortable: true,
         render: columns.status,
       },
       {
