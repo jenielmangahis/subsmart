@@ -970,11 +970,11 @@ SQL;
 
     public function apiEmailCustomerLetter()
     {
-        header('content-type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        //header('content-type: application/json');
+        /*if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
-        }
+        }*/
 
         $storePath = FCPATH . 'uploads/esigneditor/';
         if (!file_exists($storePath)) {
@@ -990,9 +990,23 @@ SQL;
         move_uploaded_file($_FILES['pdf']['tmp_name'], $pdfPath);
 
         include APPPATH . 'controllers/DocuSign.php';
-        $mail = getMailInstance();
-        $mailTemplate = file_get_contents(VIEWPATH . 'esign/esigneditor/email/customer-letter.html');
 
+        $mailTemplate = file_get_contents(VIEWPATH . 'esign/esigneditor/email/customer-letter.html');
+        $data = ['%message%' => $message];
+        $mailContent = strtr($mailTemplate, $data);
+
+        $subject = '[nSmarTrac] ' . $subject;
+        $mail = email__getInstance();
+        $mail->FromName = 'NsmarTrac';
+        $mail->addAddress($email, $email);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $mailContent;
+        $mail->addAttachment($pdfPath, $pdfName . '.pdf');
+        $isSent = $mail->Send();
+
+        /*$mail = getMailInstance();
+        $mailTemplate = file_get_contents(VIEWPATH . 'esign/esigneditor/email/customer-letter.html');
         $data = ['%message%' => $message];
         $mailContent = strtr($mailTemplate, $data);
 
@@ -1002,9 +1016,9 @@ SQL;
 
         $mail->AddAttachment($pdfPath, $pdfName . '.pdf');
         $isSent = $mail->send();
-        $mail->ClearAllRecipients();
+        $mail->ClearAllRecipients();*/
 
-        if (file_exists($pdfPath)) {
+        /*if (file_exists($pdfPath)) {
             unlink($pdfPath);
         }
 
@@ -1025,7 +1039,8 @@ SQL;
 
         $this->db->where_in('id', $ids);
         $letters = $this->db->get('esign_editor_customer_letters')->result();
-        echo json_encode(['data' => $letters, 'is_sent' => $isSent]);
+        echo json_encode(['data' => $letters, 'is_sent' => $isSent]);*/
+        echo json_encode(['data' => [], 'is_sent' => $isSent]);
 
     }
 

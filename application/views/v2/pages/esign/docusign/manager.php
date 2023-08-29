@@ -120,15 +120,15 @@ $(document).ready(function(){
             render: columns.rowIcon,
           },
           {
-            sortable: false,
+            sortable: true,
             render: columns.docfileid,
           },
           {
-            sortable: false,
+            sortable: true,
             render: columns.customerName,
           },
           {
-            sortable: false,
+            sortable: true,
             render: columns.subject,
           },
           {

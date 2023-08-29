@@ -175,5 +175,6 @@ ini_set('max_input_vars', 30000);
   }
 </style>
 
-<script src="https://localhost/nsmartrac/assets/js/v2/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<?php include viewPath('includes/footer');?>
+<!-- <script src="https://localhost/nsmartrac/assets/js/v2/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
+<?php include viewPath('v2/includes/footer'); ?>
+<?php //include viewPath('includes/footer');?>

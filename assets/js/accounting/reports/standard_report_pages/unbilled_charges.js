@@ -695,74 +695,93 @@ $('input[name="col_chk"]').on('change', function() {
         $(`#print_preview_report_modal tbody tr td[data-name="${name}"]`).hide();
     });
 
-    var totalColumns = [
-        'Amount',
-    ];
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
 
-    if(totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name)) {
-        $('#reports-table thead tr').prepend('<td data-name=""></td>');
-        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse').prepend(`<td data-name=""></td>`);
-        
-        $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    var groupBy = 'customer';
+    if(query !== undefined) {
+        var querySplit = query.split('&');
 
-        $('#print_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
-        $('#print_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
 
-        $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
-
-        $('#print_preview_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
-        $('#print_preview_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
-        
-        $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
-    }
-
-    if($($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name === 'Balance') {
-        $('#reports-table thead tr td[data-name=""]').remove();
-        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
-
-        $('#reports-table tbody tr[data-bs-toggle="collapse"] td[data-name="Balance"], #reports-table tbody tr.group-total td[data-name="Balance"]').hide();
-        $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
-
-
-        $('#print_report_modal thead tr:last-child td[data-name=""]').remove();
-        $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
-
-        $('#print_report_modal tbody tr.group-header td[data-name="Balance"], #print_report_modal tbody tr.group-total td[data-name="Balance"]').hide();
-        $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
-        
-
-        $('#print_preview_report_modal thead tr:last-child td[data-name=""]').remove();
-        $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
-
-        $('#print_preview_report_modal tbody tr.group-header td[data-name="Balance"], #print_preview_report_modal tbody tr.group-total td[data-name="Balance"]').hide();
-        $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
-    }
-
-    if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Amount' && $($('#reports-table thead tr td:visible')[0]).data().name !== 'Balance' ||
-    $($('#reports-table thead tr td:visible')[0]).data().name !== '') {
-        $('#reports-table thead tr td[data-name=""]').remove();
-        $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
-
-        $('#print_report_modal thead tr td[data-name=""]').remove();
-        $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
-
-        $('#print_preview_report_modal thead tr td[data-name=""]').remove();
-        $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
-
-        var colspan = 0;
-        $('#reports-table thead tr td:visible').each(function() {
-            var name = $(this).data().name;
-
-            if(name === 'Amount' || name === 'Balance') {
-                return false;
-            } else {
-                colspan++;
+            if(selectedVal[0] === 'group-by') {
+                groupBy = selectedVal[1];
             }
         });
+    }
 
-        $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', colspan);
-        $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
-        $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+    if(groupBy !== 'none') {
+        var totalColumns = [
+            'Amount',
+        ];
+    
+        if(totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name)) {
+            $('#reports-table thead tr').prepend('<td data-name=""></td>');
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse').prepend(`<td data-name=""></td>`);
+            
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+    
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_preview_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+            
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+    
+        if($($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name === 'Balance') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td[data-name="Balance"], #reports-table tbody tr.group-total td[data-name="Balance"]').hide();
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+    
+            $('#print_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_report_modal tbody tr.group-header td[data-name="Balance"], #print_report_modal tbody tr.group-total td[data-name="Balance"]').hide();
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+            
+    
+            $('#print_preview_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_preview_report_modal tbody tr.group-header td[data-name="Balance"], #print_preview_report_modal tbody tr.group-total td[data-name="Balance"]').hide();
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+    
+        if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Amount' && $($('#reports-table thead tr td:visible')[0]).data().name !== 'Balance' ||
+        $($('#reports-table thead tr td:visible')[0]).data().name !== '') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+    
+            $('#print_report_modal thead tr td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_preview_report_modal thead tr td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            var colspan = 0;
+            $('#reports-table thead tr td:visible').each(function() {
+                var name = $(this).data().name;
+    
+                if(name === 'Amount' || name === 'Balance') {
+                    return false;
+                } else {
+                    colspan++;
+                }
+            });
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+        }
     }
 });
 
