@@ -25,7 +25,7 @@
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
                             <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
-                                <p class="m-0"><?=$report_period?></p>
+                                <p class="m-0">Activity: <?=$report_period?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -33,88 +33,97 @@
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>>POSTING</td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>>ACTIVITY DATE</td>
                             <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
                             <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
                             <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>ACCOUNT</td>
                             <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>VENDOR</td>
                             <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
                             <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>>PRODUCT/SERVICE</td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>>QTY</td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>>RATE</td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>>RATES</td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>>DURATION</td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>>START TIME</td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>>END TIME</td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>>BREAK</td>
                             <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>>TAXABLE</td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>>BILLABLE</td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>>BALANCE</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $index => $transaction) : ?>
+                        <?php if(count($activities) > 0) : ?>
+                        <?php foreach($activities as $index => $activity) : ?>
                         <?php if($group_by === 'none') : ?>
                         <tr>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
-                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
-                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
-                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
-                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$transaction['account']?></td>
-                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer']?></td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$transaction['vendor']?></td>
-                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$transaction['employee']?></td>
-                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$transaction['product_service']?></td>
-                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$transaction['memo_desc']?></td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>><?=$transaction['qty']?></td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>><?=$transaction['rate']?></td>
-                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$transaction['taxable']?></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['amount']?></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><?=$transaction['balance']?></td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['activity_date']?></td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$activity['created_by']?></td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$activity['last_modified_by']?></td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$activity['customer']?></td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$activity['employee']?></td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$activity['product_service']?></td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$activity['memo_desc']?></td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$activity['rates']?></td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$activity['duration']?></td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['start_time']?></td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['end_time']?></td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$activity['break']?></td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$activity['taxable']?></td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$activity['billable']?></td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['invoice_date']?></td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$activity['amount']?></td>
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b><?=$transaction['name']?></b></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) || $columns[0] === 'Balance' ? 'style="display: none"' : ''?>></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '10'?>"><b><?=$activity['name']?></b></td>
+                            <td data-name="Duration"><b><?=$activity['duration_total']?></b></td>
+                            <td data-name="Start Time"></td>
+                            <td data-name="End Time"></td>
+                            <td data-name="Break"></td>
+                            <td data-name="Taxable"></td>
+                            <td data-name="Billable"></td>
+                            <td data-name="Invoice Date"></td>
+                            <td data-name="Amount"><b><?=$activity['amount_total']?></b></td>
                         </tr>
-                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                        <?php foreach($activity['activities'] as $act) : ?>
                         <tr>
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
-                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
-                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
-                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified']?></td>
-                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified_by']?></td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$tran['account']?></td>
-                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$tran['customer']?></td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$tran['vendor']?></td>
-                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$tran['employee']?></td>
-                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$tran['product_service']?></td>
-                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$tran['memo_desc']?></td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>><?=$tran['qty']?></td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>><?=$tran['rate']?></td>
-                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$tran['taxable']?></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['amount']?></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><?=$tran['balance']?></td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$act['activity_date']?></td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($act['create_date']))?></td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$act['created_by']?></td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($act['last_modified']))?></td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$act['last_modified_by']?></td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$act['customer']?></td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$act['employee']?></td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$act['product_service']?></td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$act['memo_desc']?></td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$act['rates']?></td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$act['duration']?></td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$act['start_time']?></td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$act['end_time']?></td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$act['break']?></td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$act['taxable']?></td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$act['billable']?></td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$act['invoice_date']?></td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$act['amount']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b>Total for <?=$transaction['name']?></b></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) || $columns[0] === 'Balance' ? 'style="display: none"' : ''?>></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '10'?>"><b>Total for <?=$activity['name']?></b></td>
+                            <td data-name="Duration"><b><?=$activity['duration_total']?></b></td>
+                            <td data-name="Start Time"></td>
+                            <td data-name="End Time"></td>
+                            <td data-name="Break"></td>
+                            <td data-name="Taxable"></td>
+                            <td data-name="Billable"></td>
+                            <td data-name="Invoice Date"></td>
+                            <td data-name="Amount"><b><?=$activity['amount_total']?></b></td>
                         </tr>
                         <?php endif; ?>
                         <?php endforeach; ?>
@@ -172,7 +181,7 @@
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
                             <td colspan="19" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
-                                <p class="m-0"><?=$report_period?></p>
+                                <p class="m-0">Activity: <?=$report_period?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -180,88 +189,97 @@
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>>POSTING</td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>>ACTIVITY DATE</td>
                             <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>CREATE DATE</td>
                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
                             <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
                             <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>ACCOUNT</td>
                             <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>VENDOR</td>
                             <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
                             <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>>PRODUCT/SERVICE</td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>>QTY</td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>>RATE</td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>>RATES</td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>>DURATION</td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>>START TIME</td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>>END TIME</td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>>BREAK</td>
                             <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>>TAXABLE</td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>>BILLABLE</td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>>BALANCE</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $index => $transaction) : ?>
+                        <?php if(count($activities) > 0) : ?>
+                        <?php foreach($activities as $index => $activity) : ?>
                         <?php if($group_by === 'none') : ?>
                         <tr>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
-                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
-                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
-                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
-                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$transaction['account']?></td>
-                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer']?></td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$transaction['vendor']?></td>
-                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$transaction['employee']?></td>
-                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$transaction['product_service']?></td>
-                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$transaction['memo_desc']?></td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>><?=$transaction['qty']?></td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>><?=$transaction['rate']?></td>
-                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$transaction['taxable']?></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['amount']?></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><?=$transaction['balance']?></td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['activity_date']?></td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['create_date']))?></td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$activity['created_by']?></td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($activity['last_modified']))?></td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$activity['last_modified_by']?></td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$activity['customer']?></td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$activity['employee']?></td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$activity['product_service']?></td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$activity['memo_desc']?></td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$activity['rates']?></td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$activity['duration']?></td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['start_time']?></td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$activity['end_time']?></td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$activity['break']?></td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$activity['taxable']?></td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$activity['billable']?></td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$activity['invoice_date']?></td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$activity['amount']?></td>
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b><?=$transaction['name']?></b></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) || $columns[0] === 'Balance' ? 'style="display: none"' : ''?>></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '10'?>"><b><?=$activity['name']?></b></td>
+                            <td data-name="Duration"><b><?=$activity['duration_total']?></b></td>
+                            <td data-name="Start Time"></td>
+                            <td data-name="End Time"></td>
+                            <td data-name="Break"></td>
+                            <td data-name="Taxable"></td>
+                            <td data-name="Billable"></td>
+                            <td data-name="Invoice Date"></td>
+                            <td data-name="Amount"><b><?=$activity['amount_total']?></b></td>
                         </tr>
-                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                        <?php foreach($activity['activities'] as $act) : ?>
                         <tr>
                             <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
                             <td data-name=""></td>
                             <?php endif; ?>
-                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
-                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
-                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
-                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
-                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
-                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
-                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified']?></td>
-                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified_by']?></td>
-                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$tran['account']?></td>
-                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$tran['customer']?></td>
-                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>><?=$tran['vendor']?></td>
-                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$tran['employee']?></td>
-                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$tran['product_service']?></td>
-                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$tran['memo_desc']?></td>
-                            <td data-name="Qty" <?=isset($columns) && !in_array('Qty', $columns) ? 'style="display: none"' : ''?>><?=$tran['qty']?></td>
-                            <td data-name="Rate" <?=isset($columns) && !in_array('Rate', $columns) ? 'style="display: none"' : ''?>><?=$tran['rate']?></td>
-                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$tran['taxable']?></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['amount']?></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><?=$tran['balance']?></td>
+                            <td data-name="Activity Date" <?=isset($columns) && !in_array('Activity Date', $columns) ? 'style="display: none"' : ''?>><?=$act['activity_date']?></td>
+                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($act['create_date']))?></td>
+                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$act['created_by']?></td>
+                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=date("m/d/Y H:i:s A", strtotime($act['last_modified']))?></td>
+                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$act['last_modified_by']?></td>
+                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$act['customer']?></td>
+                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$act['employee']?></td>
+                            <td data-name="Product/Service" <?=isset($columns) && !in_array('Product/Service', $columns) ? 'style="display: none"' : ''?>><?=$act['product_service']?></td>
+                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$act['memo_desc']?></td>
+                            <td data-name="Rates" <?=isset($columns) && !in_array('Rates', $columns) ? 'style="display: none"' : ''?>><?=$act['rates']?></td>
+                            <td data-name="Duration" <?=isset($columns) && !in_array('Duration', $columns) ? 'style="display: none"' : ''?>><?=$act['duration']?></td>
+                            <td data-name="Start Time" <?=isset($columns) && !in_array('Start Time', $columns) ? 'style="display: none"' : ''?>><?=$act['start_time']?></td>
+                            <td data-name="End Time" <?=isset($columns) && !in_array('End Time', $columns) ? 'style="display: none"' : ''?>><?=$act['end_time']?></td>
+                            <td data-name="Break" <?=isset($columns) && !in_array('Break', $columns) ? 'style="display: none"' : ''?>><?=$act['break']?></td>
+                            <td data-name="Taxable" <?=isset($columns) && !in_array('Taxable', $columns) ? 'style="display: none"' : ''?>><?=$act['taxable']?></td>
+                            <td data-name="Billable" <?=isset($columns) && !in_array('Billable', $columns) ? 'style="display: none"' : ''?>><?=$act['billable']?></td>
+                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$act['invoice_date']?></td>
+                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$act['amount']?></td>
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b>Total for <?=$transaction['name']?></b></td>
-                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
-                            <td data-name="Balance" <?=isset($columns) && !in_array('Balance', $columns) || $columns[0] === 'Balance' ? 'style="display: none"' : ''?>></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '10'?>"><b>Total for <?=$activity['name']?></b></td>
+                            <td data-name="Duration"><b><?=$activity['duration_total']?></b></td>
+                            <td data-name="Start Time"></td>
+                            <td data-name="End Time"></td>
+                            <td data-name="Break"></td>
+                            <td data-name="Taxable"></td>
+                            <td data-name="Billable"></td>
+                            <td data-name="Invoice Date"></td>
+                            <td data-name="Amount"><b><?=$activity['amount_total']?></b></td>
                         </tr>
                         <?php endif; ?>
                         <?php endforeach; ?>
@@ -309,15 +327,15 @@
                                     <div class="accordion-body">
                                         <div class="row g-3 grid-mb">
                                             <div class="col-12 col-md-4">
-                                                <label for="report-period-date"><b>Report period</b></label>
-                                                <select name="report_period_date" id="report-period-date" class="nsm-field form-control">
-                                                    <option value="all-dates" <?=empty($filter_date) || $filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                                <label for="time-activity-date"><b>Time Activity Date</b></label>
+                                                <select name="time_activity_date" id="time-activity-date" class="nsm-field form-control">
+                                                    <option value="all-dates" <?=$filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
                                                     <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                     <option value="today" <?=$filter_date === 'today' ? 'selected' : ''?>>Today</option>
                                                     <option value="this-week" <?=$filter_date === 'this-week' ? 'selected' : ''?>>This Week</option>
                                                     <option value="this-week-to-date" <?=$filter_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
                                                     <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This Month</option>
-                                                    <option value="this-month-to-date" <?=$filter_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                                    <option value="this-month-to-date" <?=empty($filter_date) || $filter_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
                                                     <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This Quarter</option>
                                                     <option value="this-quarter-to-date" <?=$filter_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
                                                     <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This Year</option>
@@ -344,17 +362,17 @@
                                                     <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
                                                 </select>
                                             </div>
-                                            <?php if(!empty($filter_date)) : ?>
+                                            <?php if(!empty($filter_date) && $filter_date !== 'all-dates' || empty($filter_date)) : ?>
                                             <div class="col-12 col-md-4">
                                                 <label for="from">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="report-period-date-from">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="time-activity-date-from">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label for="to">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="report-period-date-to">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="time-activity-date-to">
                                                 </div>
                                             </div>
                                             <?php endif; ?>
@@ -420,14 +438,13 @@
                                             <div class="col-12 col-md-4">
                                                 <select id="custom-group-by" class="form-control nsm-field">
                                                     <option value="none" <?=$group_by === 'none' ? 'selected' : ''?>>None</option>
-                                                    <option value="account" <?=$group_by === 'account' ? 'selected' : ''?>>Account</option>
-                                                    <option value="transaction-type" <?=$group_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
                                                     <option value="customer" <?=empty($group_by) || $group_by === 'customer' ? 'selected' : ''?>>Customer</option>
-                                                    <option value="vendor" <?=$group_by === 'vendor' ? 'selected' : ''?>>Vendor</option>
+                                                    <option value="customer-type" <?=$group_by === 'customer-type' ? 'selected' : ''?>>Customer Type</option>
                                                     <option value="employee" <?=$group_by === 'employee' ? 'selected' : ''?>>Employee</option>
                                                     <option value="product-service" <?=$group_by === 'product-service' ? 'selected' : ''?>>Product/Service</option>
                                                     <option value="day" <?=$group_by === 'day' ? 'selected' : ''?>>Day</option>
                                                     <option value="week" <?=$group_by === 'week' ? 'selected' : ''?>>Week</option>
+                                                    <option value="work-week" <?=$group_by === 'work-week' ? 'selected' : ''?>>Work Week</option>
                                                     <option value="month" <?=$group_by === 'month' ? 'selected' : ''?>>Month</option>
                                                     <option value="quarter" <?=$group_by === 'quarter' ? 'selected' : ''?>>Quarter</option>
                                                     <option value="year" <?=$group_by === 'year' ? 'selected' : ''?>>Year</option>
@@ -441,41 +458,17 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-date" <?=isset($columns) && in_array('Date', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-date">
-                                                                Date
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-activity-date" <?=isset($columns) && in_array('Activity Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-activity-date">
+                                                                Activity Date
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-transaction-type" <?=isset($columns) && in_array('Transaction Type', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-transaction-type">
-                                                                Transaction Type
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-num" <?=isset($columns) && in_array('Num', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-num">
-                                                                Num
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-posting" <?=isset($columns) && in_array('Posting', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-posting">
-                                                                Posting
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-create-date" <?=isset($columns) && in_array('Created Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-create-date" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-create-date">
-                                                                Created Date
+                                                                Create Date
                                                             </label>
                                                         </div>
                                                     </div>
@@ -505,25 +498,9 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-account" <?=isset($columns) && in_array('Account', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-account">
-                                                                Account
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-customer" <?=isset($columns) && in_array('Customer', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-customer">
                                                                 Customer
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-vendor" <?=isset($columns) && in_array('Vendor', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-vendor">
-                                                                Vendor
                                                             </label>
                                                         </div>
                                                     </div>
@@ -553,17 +530,41 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-qty" <?=isset($columns) && in_array('Qty', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-qty">
-                                                                Qty
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-rates" <?=isset($columns) && in_array('Rates', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-rates">
+                                                                Rates
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-rate" <?=isset($columns) && in_array('Rate', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-rate">
-                                                                Rate
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-duration" <?=isset($columns) && in_array('Duration', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-duration">
+                                                                Duration
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-start-time" <?=isset($columns) && in_array('Start Time', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-start-time">
+                                                                Start Time
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-end-time" <?=isset($columns) && in_array('End Time', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-end-time">
+                                                                End Time
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-break" <?=isset($columns) && in_array('Break', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-break">
+                                                                Break
                                                             </label>
                                                         </div>
                                                     </div>
@@ -577,17 +578,25 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-amount" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-amount">
-                                                                Amount
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-billable" <?=isset($columns) && in_array('Billable', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-billable">
+                                                                Billable
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-balance" <?=isset($columns) && in_array('Balance', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-balance">
-                                                                Balance
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-invoice-date" <?=isset($columns) && in_array('Invoice Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-invoice-date">
+                                                                Invoice Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-amount" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-amount">
+                                                                Amount
                                                             </label>
                                                         </div>
                                                     </div>
@@ -617,93 +626,6 @@
                                         <div class="row grid-mb g-3">
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_transaction_type) ? 'checked' : '' ?> name="allow_filter_transaction_type" value="1" id="allow-filter-transaction-type">
-                                                    <label class="form-check-label" for="allow-filter-transaction-type">
-                                                        Transaction Type
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="filter_transaction_type" id="filter-transaction-type" class="nsm-field form-control">
-                                                    <option value="all" <?=!isset($filter_transaction_type) || $filter_transaction_type === 'all' ? 'selected' : '' ?>>All</option>
-                                                    <option value="posting" <?=$filter_transaction_type === 'posting' ? 'selected' : '' ?>>Posting</option>
-                                                    <option value="non-posting" <?=$filter_transaction_type === 'non-posting' ? 'selected' : '' ?>>Non-Posting</option>
-                                                    <option value="credit-card-expense" <?=$filter_transaction_type === 'credit-card-expense' ? 'selected' : '' ?>?>Credit Card Expense</option>
-                                                    <option value="check" <?=$filter_transaction_type === 'check' ? 'selected' : '' ?>>Check</option>
-                                                    <option value="invoice" <?=$filter_transaction_type === 'invoice' ? 'selected' : '' ?>>Invoice</option>
-                                                    <option value="payment" <?=$filter_transaction_type === 'payment' ? 'selected' : '' ?>>Payment</option>
-                                                    <option value="journal-entry" <?=$filter_transaction_type === 'journal-entry' ? 'selected' : '' ?>>Journal Entry</option>
-                                                    <option value="bill" <?=$filter_transaction_type === 'bill' ? 'selected' : '' ?>>Bill</option>
-                                                    <option value="credit-card-credit" <?=$filter_transaction_type === 'credit-card-credit' ? 'selected' : '' ?>>Credit Card Credit</option>
-                                                    <option value="vendor-credit" <?=$filter_transaction_type === 'vendor-credit' ? 'selected' : '' ?>>Vendor Credit</option>
-                                                    <option value="credit" <?=$filter_transaction_type === 'credit' ? 'selected' : '' ?>>Credit</option>
-                                                    <option value="bill-payment-check" <?=$filter_transaction_type === 'bill-payment-check' ? 'selected' : '' ?>>Bill Payment (Check)</option>
-                                                    <option value="bill-payment-credit-card" <?=$filter_transaction_type === 'bill-payment-credit-card' ? 'selected' : '' ?>>Bill Payment (Credit Card)</option>
-                                                    <option value="paycheck" <?=$filter_transaction_type === 'paycheck' ? 'selected' : '' ?>>Paycheck</option>
-                                                    <option value="charge" <?=$filter_transaction_type === 'charge' ? 'selected' : '' ?>>Charge</option>
-                                                    <option value="transfer" <?=$filter_transaction_type === 'transfer' ? 'selected' : '' ?>>Transfer</option>
-                                                    <option value="deposit" <?=$filter_transaction_type === 'deposit' ? 'selected' : '' ?>>Deposit</option>
-                                                    <option value="statement" <?=$filter_transaction_type === 'statement' ? 'selected' : '' ?>>Statement</option>
-                                                    <option value="billable-expense-charge" <?=$filter_transaction_type === 'billable-expense-charge' ? 'selected' : '' ?>>Billable Expense Charge</option>
-                                                    <option value="time-charge" <?=$filter_transaction_type === 'time-charge' ? 'selected' : '' ?>>Time Charge</option>
-                                                    <option value="cash-expense" <?=$filter_transaction_type === 'cash-expense' ? 'selected' : '' ?>>Cash Expense</option>
-                                                    <option value="sales-receipt" <?=$filter_transaction_type === 'sales-receipt' ? 'selected' : '' ?>>Sales Receipt</option>
-                                                    <option value="credit-memo" <?=$filter_transaction_type === 'credit-memo' ? 'selected' : '' ?>>Credit Memo</option>
-                                                    <option value="refund" <?=$filter_transaction_type === 'refund' ? 'selected' : '' ?>>Refund</option>
-                                                    <option value="estimate" <?=$filter_transaction_type === 'estimate' ? 'selected' : '' ?>>Estimate</option>
-                                                    <option value="obsolete-payroll-adjustment" <?=$filter_transaction_type === 'obsolete-payroll-adjustment' ? 'selected' : '' ?>>Obsolete Payroll Adjustment</option>
-                                                    <option value="liability-payment-check" <?=$filter_transaction_type === 'liability-payment-check' ? 'selected' : '' ?>>Liability Payment (Check)</option>
-                                                    <option value="liability-payment-credit-card" <?=$filter_transaction_type === 'liability-payment-credit-card' ? 'selected' : '' ?>>Liability Payment (Credit Card)</option>
-                                                    <option value="payroll-ytd" <?=$filter_transaction_type === 'payroll-ytd' ? 'selected' : '' ?>>Payroll YTD</option>
-                                                    <option value="liability-refund" <?=$filter_transaction_type === 'liability-refund' ? 'selected' : '' ?>>Liability Refund</option>
-                                                    <option value="prior-liability-payments" <?=$filter_transaction_type === 'prior-liability-payments' ? 'selected' : '' ?>>Prior Liability Payments</option>
-                                                    <option value="direct-deposit-withdrawal" <?=$filter_transaction_type === 'direct-deposit-withdrawal' ? 'selected' : '' ?>>Direct Deposit Withdrawal</option>
-                                                    <option value="liability-payment-epay" <?=$filter_transaction_type === 'liability-payment-epay' ? 'selected' : '' ?>>Liability Payment (E-pay)</option>
-                                                    <option value="liability-payment-marked-paid" <?=$filter_transaction_type === 'liability-payment-marked-paid' ? 'selected' : '' ?>>Liability Payment (Marked Paid)</option>
-                                                    <option value="inventory-qty-adjust" <?=$filter_transaction_type === 'inventory-qty-adjust' ? 'selected' : '' ?>>Inventory Qty Adjust</option>
-                                                    <option value="purchase-order" <?=$filter_transaction_type === 'purchase-order' ? 'selected' : '' ?>>Purchase Order</option>
-                                                    <option value="payroll-check" <?=$filter_transaction_type === 'payroll-check' ? 'selected' : '' ?>>Payroll Check</option>
-                                                    <option value="tax-payment" <?=$filter_transaction_type === 'tax-payment' ? 'selected' : '' ?>>Tax Payment</option>
-                                                    <option value="payroll-adjustment" <?=$filter_transaction_type === 'payroll-adjustment' ? 'selected' : '' ?>>Payroll Adjustment</option>
-                                                    <option value="payroll-refund" <?=$filter_transaction_type === 'payroll-refund' ? 'selected' : '' ?>>Payroll Refund</option>
-                                                    <option value="sales-tax-payment" <?=$filter_transaction_type === 'sales-tax-payment' ? 'selected' : '' ?>>Sales Tax Payment</option>
-                                                    <option value="sales-tax-adjustment" <?=$filter_transaction_type === 'sales-tax-adjustment' ? 'selected' : '' ?>>Sales Tax Adjustment</option>
-                                                    <option value="job" <?=$filter_transaction_type === 'job' ? 'selected' : '' ?>>Job</option>
-                                                    <option value="expense" <?=$filter_transaction_type === 'expense' ? 'selected' : '' ?>>Expense</option>
-                                                    <option value="service-tax-partial-utilisation" <?=$filter_transaction_type === 'service-tax-partial-utilisation' ? 'selected' : '' ?>>Service Tax Partial Utilisation</option>
-                                                    <option value="service-tax-defer" <?=$filter_transaction_type === 'service-tax-defer' ? 'selected' : '' ?>>Service Tax Defer</option>
-                                                    <option value="service-tax-reversal" <?=$filter_transaction_type === 'service-tax-reversal' ? 'selected' : '' ?>>Service Tax Reversal</option>
-                                                    <option value="service-tax-refund" <?=$filter_transaction_type === 'service-tax-refund' ? 'selected' : '' ?>>Service Tax Refund</option>
-                                                    <option value="service-tax-gross-adjustment" <?=$filter_transaction_type === 'service-tax-gross-adjustment' ? 'selected' : '' ?>>Service Tax Gross Adjustment</option>
-                                                    <option value="reverse-charge" <?=$filter_transaction_type === 'reverse-charge' ? 'selected' : '' ?>>Reverse Charge</option>
-                                                    <option value="inventory-starting-value-from-desktop" <?=$filter_transaction_type === 'inventory-starting-value-from-desktop' ? 'selected' : '' ?>>Inventory Starting Value from Desktop</option>
-                                                    <option value="inventory-starting-value" <?=$filter_transaction_type === 'inventory-starting-value' ? 'selected' : '' ?>>Inventory Starting Value</option>
-                                                    <option value="credit-card-payment" <?=$filter_transaction_type === 'credit-card-payment' ? 'selected' : '' ?>>Credit Card Payment</option>
-                                                    <option value="revenue-recognition" <?=$filter_transaction_type === 'revenue-recognition' ? 'selected' : '' ?>>Revenue Recognition</option>
-                                                    <option value="employee-non-reimbursable-expense" <?=$filter_transaction_type === 'employee-non-reimbursable-expense' ? 'selected' : '' ?>>Employee Non-Reimbursable Expense</option>
-                                                    <option value="employee-reimbursement" <?=$filter_transaction_type === 'employee-reimbursement' ? 'selected' : '' ?>>Employee Reimbursement</option>
-                                                    <option value="employee-reimbursable-expense" <?=$filter_transaction_type === 'employee-reimbursable-expense' ? 'selected' : '' ?>>Employee Reimbursable Expense</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_distribution_account) ? 'checked' : '' ?> name="allow_filter_distribution_account" value="1" id="allow-filter-distribution-account">
-                                                    <label class="form-check-label" for="allow-filter-distribution-account">
-                                                        Distribution Account
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="filter_distribution_account" id="filter-distribution-account" class="nsm-field form-control">
-                                                    <?php if(isset($filter_distribution_account)) : ?>
-                                                    <option value="<?=$filter_distribution_account->id?>" selected><?=$filter_distribution_account->name?></option>
-                                                    <?php else : ?>
-                                                    <option value="all" selected>All</option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" <?=isset($filter_customer) ? 'checked' : '' ?> name="allow_filter_customer" value="1" id="allow-filter-customer">
                                                     <label class="form-check-label" for="allow-filter-customer">
                                                         Customer
@@ -714,40 +636,6 @@
                                                 <select name="filter_customer" id="filter-customer" class="nsm-field form-control">
                                                     <?php if(isset($filter_customer)) : ?>
                                                     <option value="<?=$filter_customer->id?>" selected><?=$filter_customer->name?></option>
-                                                    <?php else : ?>
-                                                    <option value="all" selected>All</option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" <?=isset($filter_vendor) ? 'checked' : '' ?> name="allow_filter_vendor" value="1" id="allow-filter-vendor">
-                                                    <label class="form-check-label" for="allow-filter-vendor">
-                                                        Vendor
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="filter_vendor" id="filter-vendor" class="nsm-field form-control">
-                                                    <?php if(isset($filter_vendor)) : ?>
-                                                    <option value="<?=$filter_vendor->id?>" selected><?=$filter_vendor->name?></option>
-                                                    <?php else : ?>
-                                                    <option value="all" selected>All</option>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" <?=isset($employee) ? 'checked' : '' ?> type="checkbox" name="allow_filter_employee" value="1" id="allow-filter-employee">
-                                                    <label class="form-check-label" for="allow-filter-employee">
-                                                        Employee
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="filter_employee" id="filter-employee" class="nsm-field form-control">
-                                                    <?php if(isset($employee)) : ?>
-                                                    <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>
@@ -772,36 +660,150 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" <?=isset($filter_amount) ? 'checked' : '' ?> type="checkbox" name="allow_filter_amount" value="1" id="allow-filter-amount">
-                                                    <label class="form-check-label" for="allow-filter-amount">
-                                                        Amount
+                                                    <input class="form-check-input" <?=isset($employee) ? 'checked' : '' ?> type="checkbox" name="allow_filter_employee" value="1" id="allow-filter-employee">
+                                                    <label class="form-check-label" for="allow-filter-employee">
+                                                        Employee
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <input type="text" class="nsm-field form-control" value="<?=isset($filter_amount) ? $filter_amount : ''?>" name="filter_amount" id="filter-amount">
+                                                <select name="filter_employee" id="filter-employee" class="nsm-field form-control">
+                                                    <?php if(isset($employee)) : ?>
+                                                    <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
+                                                    <?php else : ?>
+                                                    <option value="all" selected>All</option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" <?=isset($filter_memo) ? 'checked' : '' ?> type="checkbox" name="allow_filter_memo" value="1" id="allow-filter-memo">
+                                                    <input class="form-check-input" <?=isset($create_date) ? 'checked' : '' ?> type="checkbox" name="allow_filter_create_date" value="1" id="allow-filter-create-date">
+                                                    <label class="form-check-label" for="allow-filter-create-date">
+                                                        Create Date
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <select name="filter_create_date" id="filter-create-date" class="nsm-field form-control">
+                                                    <option value="all-dates" <?=empty($create_date) || $create_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="custom" <?=$create_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                    <option value="today" <?=$create_date === 'today' ? 'selected' : ''?>>Today</option>
+                                                    <option value="this-week" <?=$create_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                                    <option value="this-week-to-date" <?=$create_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                                    <option value="this-month" <?=$create_date === 'custom' ? 'this-month' : ''?>>This Month</option>
+                                                    <option value="this-month-to-date" <?=$create_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                                    <option value="this-quarter" <?=$create_date === 'custom' ? 'this-quarter' : ''?>>This Quarter</option>
+                                                    <option value="this-quarter-to-date" <?=$create_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                                    <option value="this-year" <?=$create_date === 'custom' ? 'this-year' : ''?>>This Year</option>
+                                                    <option value="this-year-to-date" <?=$create_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                                    <option value="this-year-to-last-month" <?=$create_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                                    <option value="yesterday" <?=$create_date === 'custom' ? 'yesterday' : ''?>>Yesterday</option>
+                                                    <option value="recent" <?=$create_date === 'custom' ? 'recent' : ''?>>Recent</option>
+                                                    <option value="last-week" <?=$create_date === 'custom' ? 'last-week' : ''?>>Last Week</option>
+                                                    <option value="last-week-to-date" <?=$create_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                                    <option value="last-month" <?=$create_date === 'custom' ? 'last-month' : ''?>>Last Month</option>
+                                                    <option value="last-month-to-date" <?=$create_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                                    <option value="last-quarter" <?=$create_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                                    <option value="last-quarter-to-date" <?=$create_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                                    <option value="last-year" <?=$create_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                                    <option value="last-year-to-date" <?=$create_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                                    <option value="since-30-days-ago" <?=$create_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-60-days-ago" <?=$create_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                                    <option value="since-90-days-ago" <?=$create_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                                    <option value="since-365-days-ago" <?=$create_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
+                                                </select>
+                                            </div>
+                                            <?php if(!empty($create_date) && $create_date !== 'all-dates') : ?>
+                                            <div class="col-12 col-md-6">
+                                                <label for="filter-create-date-from">From</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$create_date_from?>" id="filter-create-date-from">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label for="filter-create-date-to">To</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$create_date_to?>" id="filter-create-date-to">
+                                                </div>
+                                            </div>
+                                            <?php endif; ?>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=isset($last_modified_date) ? 'checked' : '' ?> type="checkbox" name="allow_filter_last_modified_date" value="1" id="allow-filter-last-modified-date">
+                                                    <label class="form-check-label" for="allow-filter-last-modified-date">
+                                                        Last Modified Date
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <select name="filter_last_modified_date" id="filter-last-modified-date" class="nsm-field form-control">
+                                                    <option value="all-dates" <?=empty($last_modified_date) || $last_modified_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
+                                                    <option value="custom" <?=$last_modified_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                    <option value="today" <?=$last_modified_date === 'today' ? 'selected' : ''?>>Today</option>
+                                                    <option value="this-week" <?=$last_modified_date === 'this-week' ? 'selected' : ''?>>This Week</option>
+                                                    <option value="this-week-to-date" <?=$last_modified_date === 'this-week-to-date' ? 'selected' : ''?>>This Week-to-date</option>
+                                                    <option value="this-month" <?=$last_modified_date === 'custom' ? 'this-month' : ''?>>This Month</option>
+                                                    <option value="this-month-to-date" <?=$last_modified_date === 'this-month-to-date' ? 'selected' : ''?>>This Month-to-date</option>
+                                                    <option value="this-quarter" <?=$last_modified_date === 'custom' ? 'this-quarter' : ''?>>This Quarter</option>
+                                                    <option value="this-quarter-to-date" <?=$last_modified_date === 'this-quarter-to-date' ? 'selected' : ''?>>This Quarter-to-date</option>
+                                                    <option value="this-year" <?=$last_modified_date === 'custom' ? 'this-year' : ''?>>This Year</option>
+                                                    <option value="this-year-to-date" <?=$last_modified_date === 'this-year-to-date' ? 'selected' : ''?>>This Year-to-date</option>
+                                                    <option value="this-year-to-last-month" <?=$last_modified_date === 'this-year-to-last-month' ? 'selected' : ''?>>This Year-to-last-month</option>
+                                                    <option value="yesterday" <?=$last_modified_date === 'custom' ? 'yesterday' : ''?>>Yesterday</option>
+                                                    <option value="recent" <?=$last_modified_date === 'custom' ? 'recent' : ''?>>Recent</option>
+                                                    <option value="last-week" <?=$last_modified_date === 'custom' ? 'last-week' : ''?>>Last Week</option>
+                                                    <option value="last-week-to-date" <?=$last_modified_date === 'last-week-to-date' ? 'selected' : ''?>>Last Week-to-date</option>
+                                                    <option value="last-month" <?=$last_modified_date === 'custom' ? 'last-month' : ''?>>Last Month</option>
+                                                    <option value="last-month-to-date" <?=$last_modified_date === 'last-month-to-date' ? 'selected' : ''?>>Last Month-to-date</option>
+                                                    <option value="last-quarter" <?=$last_modified_date === 'last-quarter' ? 'selected' : ''?>>Last Quarter</option>
+                                                    <option value="last-quarter-to-date" <?=$last_modified_date === 'last-quarter-to-date' ? 'selected' : ''?>>Last Quarter-to-date</option>
+                                                    <option value="last-year" <?=$last_modified_date === 'last-year' ? 'selected' : ''?>>Last Year</option>
+                                                    <option value="last-year-to-date" <?=$last_modified_date === 'last-year-to-date' ? 'selected' : ''?>>Last Year-to-date</option>
+                                                    <option value="since-30-days-ago" <?=$last_modified_date === 'since-30-days-ago' ? 'selected' : ''?>>Since 30 Days Ago</option>
+                                                    <option value="since-60-days-ago" <?=$last_modified_date === 'since-60-days-ago' ? 'selected' : ''?>>Since 60 Days Ago</option>
+                                                    <option value="since-90-days-ago" <?=$last_modified_date === 'since-90-days-ago' ? 'selected' : ''?>>Since 90 Days Ago</option>
+                                                    <option value="since-365-days-ago" <?=$last_modified_date === 'since-365-days-ago' ? 'selected' : ''?>>Since 365 Days Ago</option>
+                                                </select>
+                                            </div>
+                                            <?php if(!empty($last_modified_date) && $last_modified_date !== 'all-dates') : ?>
+                                            <div class="col-12 col-md-6">
+                                                <label for="last-modified-from">From</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=empty($last_modified_date) || $last_modified_date === 'since-30-days-ago' ? date("m/d/Y", strtotime("-30 days")) : $last_modified_date_from?>" id="filter-last-modified-date-from">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label for="last-modified-to">To</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="nsm-field form-control date" value="<?=$last_modified_date === 'all-dates' ? '' : $last_modified_date_to?>" id="filter-last-modified-date-to">
+                                                </div>
+                                            </div>
+                                            <?php endif; ?>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=isset($billable) ? 'checked' : '' ?> type="checkbox" name="allow_filter_billable" value="1" id="allow-filter-billable">
+                                                    <label class="form-check-label" for="allow-filter-billable">
+                                                        Billable
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <select name="filter_billable" id="filter-billable" class="nsm-field form-control">
+                                                    <option value="all" <?=empty($billable) || $billable === 'all' ? 'selected' : ''?>>All</option>
+                                                    <option value="yes" <?=$billable === 'yes' ? 'selected' : ''?>>Billable</option>
+                                                    <option value="no" <?=$billable === 'no' ? 'selected' : ''?>>Non-Billable</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=isset($memo) ? 'checked' : '' ?> type="checkbox" name="allow_filter_memo" value="1" id="allow-filter-memo">
                                                     <label class="form-check-label" for="allow-filter-memo">
                                                         Memo
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <input type="text" class="nsm-field form-control" value="<?=isset($filter_memo) ? $filter_memo : ''?>" name="filter_memo" id="filter-memo">
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" <?=isset($filter_num) ? 'checked' : '' ?> type="checkbox" name="allow_filter_num" value="1" id="allow-filter-num">
-                                                    <label class="form-check-label" for="allow-filter-num">
-                                                        Num
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <input type="text" class="nsm-field form-control" value="<?=isset($filter_num) ? $filter_num : ''?>" name="filter_num" id="filter-num">
+                                                <input type="text" class="nsm-field form-control" value="<?=isset($memo) ? $memo : ''?>" name="filter_memo" id="filter-memo">
                                             </div>
                                         </div>
                                     </div>
@@ -928,7 +930,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="email_report_modal_label">Email Unbilled Charges Report</span>
+                <span class="modal-title content-title" id="email_report_modal_label">Email Time Activities by Customer Detail Report</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">

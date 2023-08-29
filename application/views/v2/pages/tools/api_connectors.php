@@ -74,7 +74,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+                    <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
@@ -114,7 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-12 col-md-3">
                         <?php 
                             $is_enabled = 0;
@@ -138,7 +138,7 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12 col-md-6">
+                                            <!-- <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">                                                    
                                                     <input class="form-check-input chk_api_enabled" data-apiname="zapier" type="checkbox" id="switch_zapier" <?= $is_enabled == 1 ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_zapier">Enabled</label>
@@ -146,7 +146,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="nsm-subtitle text-success">$5.00/Month</label>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <?php if( $is_enabled == 1 ){ ?>
                                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zapier'); ?>'">Manage</button>
@@ -212,7 +212,7 @@
                         </div>
                     </div>
                                         
-                    <div class="col-12 col-md-3">
+                    <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
@@ -252,8 +252,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-3">
+                    </div> -->
+                    <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
@@ -293,7 +293,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="button">
@@ -589,7 +589,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-3">
+                    <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
@@ -618,7 +618,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="button">
@@ -653,7 +653,7 @@
                     
                 </div>
 
-                <div class="row g-3 mt-3">
+                <!-- <div class="row g-3 mt-3">
                     <div class="col-12">
                         <hr>
                     </div>
@@ -757,7 +757,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

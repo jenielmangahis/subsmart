@@ -113,7 +113,7 @@
                                 <div class="row g-3">
                                     <div class="col-12">
                                         <label for="custom-report-name">Custom report name</label>
-                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Recent Automatic Transactions">
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Unbilled charges">
                                     </div>
                                     <div class="col-12">
                                         <label for="custom-report-group">Add this report to a group</label>
@@ -349,7 +349,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
                                             </ul>
                                         </div>
                                     </div>
@@ -479,42 +478,6 @@
                                             </td>
                                         </tr>
                                         <?php endif; ?>
-                                        <!-- <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i> Test Customer</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                            <td>&emsp;06/13/2022</td>
-                                            <td>Charge</td>
-                                            <td>123</td>
-                                            <td>No</td>
-                                            <td></td>
-                                            <td>22,544.77</td>
-                                            <td>22,544.77</td>
-                                        </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;<b>Total for Test Customer</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>TOTAL</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$22,544.77</b></td>
-                                            <td></td>
-                                        </tr> -->
                                     </tbody>
                                 </table>
 

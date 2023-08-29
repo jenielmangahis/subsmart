@@ -16,11 +16,11 @@
                 <span>Quickbooks Payroll</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Nice Job'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/nicejob') ?>'">
+        <!-- <li class="<?php if($page->title == 'Nice Job'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/nicejob') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Nicejob</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Zapier'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/zapier') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Zapier</span>
@@ -36,10 +36,10 @@
                 <span>Active Campaign</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'API Integration'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/api_integration') ?>'">
+        <!-- <li class="<?php if($page->title == 'API Integration'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/api_integration') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>API Integration</span>
             </a>
-        </li>
+        </li> -->
     </ul>
 </div>

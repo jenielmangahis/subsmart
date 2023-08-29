@@ -578,7 +578,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="email_report_modal_label">Email Time Activities by Employee Detail List</span>
+                <span class="modal-title content-title" id="email_report_modal_label">Email Account List Report</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
@@ -586,19 +586,19 @@
                 <div class="row">
                     <div class="col-12">
                         <label for="email-to">To</label>
-                        <input type="email" class="nsm-field form-control" value="" id="email-to" name="email_to" required>
+                        <input type="email" class="nsm-field form-control mb-3" value="" id="email-to" name="email_to" required>
                     </div>
                     <div class="col-12">
                         <label for="email-cc">CC</label>
-                        <input type="email" class="nsm-field form-control" value="" id="email-cc" name="email_cc">
+                        <input type="email" class="nsm-field form-control mb-3" value="" id="email-cc" name="email_cc">
                     </div>
                     <div class="col-12">
                         <label for="email-subject">Subject</label>
-                        <input type="text" class="nsm-field form-control" value="Your <?=$report_title?> Report" id="email-subject" name="email_subject" required>
+                        <input type="text" class="nsm-field form-control mb-3" value="Your <?=$report_title?> Report" id="email-subject" name="email_subject" required>
                     </div>
                     <div class="col-12">
                         <label for="email-body">Body</label>
-                        <textarea name="email_body" id="email-body" maxlength="4000" class="nsm-field form-control mb-3" required>Hello
+                        <textarea name="email_body" id="email-body" style="min-height: 140px" maxlength="4000" class="nsm-field form-control mb-3" required>Hello
 
 Attached is the <?=$report_title?> report for <?=$company_name?>. 
 

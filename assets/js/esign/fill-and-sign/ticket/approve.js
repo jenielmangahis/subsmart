@@ -5,7 +5,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const $empty = $modal.querySelector(".nsm-empty");
   const $esignButton = $modal.querySelector(".ticket-approve-and-esign");
 
-  const $esignTemplates = $modal.querySelector(".esign-templates");
+  const $esignTemplates = $modal.querySelector("#ticket_update_status_to_omw .esign-templates");
   const $esignTemplatesToggle =
     $esignTemplates.querySelector(".dropdown-toggle");
   const $esignTemplatesMenu = $esignTemplates.querySelector(".dropdown-menu");
@@ -93,7 +93,7 @@ window.addEventListener("DOMContentLoaded", () => {
       customer_id: customerId,
     });
 
-    window.location = `/ci/nsmart_v2/eSign_v2/templatePrepare?s{params}`;
+    window.open(`/eSign_v2/templatePrepare?${params}`, '_blank');
 
   });
 

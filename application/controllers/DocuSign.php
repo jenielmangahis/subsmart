@@ -504,6 +504,8 @@ class DocuSign extends MYF_Controller
 
     public function apiManage($view)
     {
+        ini_set('max_execution_time', '0');
+
         $view = strtolower($view);
         $documents = $this->getManageData($view);
         $data = [];
@@ -2669,10 +2671,13 @@ SQL;
             return [];
         }
 
-        $this->db->where('status <>', 'Trashed');
-        $this->db->where('status <>', 'Deleted');
-        $this->db->where_in('id', $docfileIds);
-        $this->db->order_by('id', 'DESC');
+        $this->db->select('user_docfile.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname');  
+        $this->db->join('acs_profile', 'user_docfile.customer_id = acs_profile.prof_id', 'left');       
+        $this->db->where('user_docfile.status <>', 'Trashed');
+        $this->db->where('user_docfile.status <>', 'Deleted');
+        $this->db->where_in('user_docfile.id', $docfileIds);
+        $this->db->where('user_docfile.unique_key <>', '');
+        $this->db->order_by('user_docfile.id', 'DESC');
         return $this->db->get('user_docfile')->result();
     }
 
