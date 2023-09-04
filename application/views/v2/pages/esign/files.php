@@ -1157,6 +1157,18 @@ echo put_header_assets();
 <?php endif; ?>
 <script>
 $(function(){
+
+    var is_with_action = 0;
+    $(window).bind('beforeunload', function(){
+      if( is_with_action == 0 ){
+        return 'Are you sure you want to leave?';
+      }      
+    });
+
+    $(document).on('click', '.esignBuilder__submit', function(){
+        is_with_action = 1;
+    });
+
     $(document).on('click', '.dropdown-menu li a', function(){            
       $(this).parent().parent().parent().find(".btn:first-child").val($(this).text());
       $(this).parent().parent().parent().find(".btn:first-child").html($(this).html());      

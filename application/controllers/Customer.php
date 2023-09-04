@@ -116,6 +116,8 @@ class Customer extends MY_Controller
      */
     public function getCustomerLists()
     {
+        $this->load->model('Jobs_model');
+
         $data  = array();
         $start = $_POST['start'];
         $draw = $this->input->post('draw');
@@ -124,6 +126,7 @@ class Customer extends MY_Controller
         $search = ['search' => $search];    
         $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
         $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        
         $all_customer_ids = [];
         foreach($allCustomers as $c){
             if( !in_array($c->prof_id, $all_customer_ids) ){
@@ -146,8 +149,13 @@ class Customer extends MY_Controller
         $data = [];
         $customer_ids = [];        
         foreach($customers as $customer){      
+<<<<<<< HEAD
             //if( !in_array($customer->prof_id, $customer_ids) ){
                 $customer_ids[] = $customer->prof_id;   
+=======
+            if( !in_array($customer->prof_id, $customer_ids) ){
+                $customer_ids[$customer->prof_id] = $customer->prof_id;   
+>>>>>>> staging-master
                 switch (strtoupper($customer->status)){
                     case "INSTALLED":
                         $badge = "success";
@@ -243,7 +251,11 @@ class Customer extends MY_Controller
                         array_push($data_arr, "$".$job_amount);
                     }
                     if (in_array('phone', $enabled_table_headers)){
+<<<<<<< HEAD
                         array_push($data_arr, formatPhoneNumber($customer->phone_m));                        
+=======
+                        array_push($data_arr, formatPhoneNumber($customer->phone_m));
+>>>>>>> staging-master
                     }
                     if (in_array('status', $enabled_table_headers)){
                         $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
