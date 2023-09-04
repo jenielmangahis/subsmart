@@ -1997,6 +1997,15 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * from timesheet_attendance WHERE id = " . $att_id)->row();
         return $qry;
     }
+
+    public function get_employee_attendance_with_date_range($user_id, $start_date, $end_date)
+    {
+        $this->db->where('DATE(date_created) >=', $start_date);
+        $this->db->where('DATE(date_created) <=', $end_date);
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get($this->attn_tbl);
+        return $query->result();
+    }
 }
 
 

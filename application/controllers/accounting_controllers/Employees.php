@@ -290,12 +290,12 @@ class Employees extends MY_Controller {
 		$roles = $this->users_model->getRoles($cid);
         $this->page_data['roles'] = $roles;
 
-        $role_id = logged('role');
-		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['payscale'] = $this->PayScale_model->getAll();
-		}else{
+        // $role_id = logged('role');
+		// if( $role_id == 1 || $role_id == 2 ){
+		// 	$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		// }else{
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}
+		// }
 
         $current_month = date('m');
         $current_year = date('Y');
@@ -504,7 +504,7 @@ class Employees extends MY_Controller {
                         'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
                         'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
                         'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                        'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+                        'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('pay_frequency') : null,
                     ];
                 break;
                 case 'notes' :

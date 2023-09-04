@@ -34,7 +34,7 @@
             <thead>
                 <tr>
                     <td class="table-icon text-center">
-                        <input class="form-check-input select-all table-select" type="checkbox">
+                        <input class="form-check-input select-all table-select" type="checkbox" checked>
                     </td>
                     <td data-name="Employee">EMPLOYEE</td>
                     <td data-name="Pay Method">PAY METHOD</td>
@@ -46,7 +46,40 @@
                 </tr>
             </thead>
             <tbody>
-                <?php if(count($payDetails) > 0) : ?>
+                <?php $commissionTotal = 0.00; ?>
+                <?php if(count($employees)) : ?>
+                <?php foreach($employees as $employee) : $commissionTotal += floatval(str_replace(',', '', $employee->commission));?>
+                <tr>
+                    <td>
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="<?=$employee->id?>" checked>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="#" class="text-decoration-none"><?=$employee->LName.', '.$employee->FName?></a>
+                        <?php 
+                            if($employee->pay_details->pay_type === 'hourly') {
+                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($employee->pay_details->pay_rate), 2, '.', ',')).'</span>/hour';
+                            } else if($employee->pay_details->pay_type === 'salary') {
+                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($employee->pay_details->pay_rate), 2, '.', ',')).'</span>/'.str_replace('per-', '', $employee->pay_details->salary_frequency);
+                            } else {
+                                $payRate = 'Commission only';
+                            }
+                        ?>
+                        <p class="m-0"><?=$payRate?></p>
+                    </td>
+                    <td><?=$employee->pay_details->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
+                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></td>
+                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->commission)), 2)?></td>
+                    <td>
+                        <input type="text" name="memo[]" class="form-control nsm-field">
+                    </td>
+                    <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></p></td>
+                    <td><p class="m-0 text-end"><span class="total-pay">$<?=number_format(floatval(str_replace(',', '', $employee->total_pay)), 2)?></span></p></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+                <!-- <?php if(count($payDetails) > 0) : ?>
                 <?php foreach($payDetails as $payDetail) : ?>
                 <?php $employee = $this->users_model->getUserByID($payDetail->user_id); ?>
                 <tr>
@@ -86,7 +119,7 @@
                     <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
                 </tr>
                 <?php endforeach;?>
-                <?php endif; ?>
+                <?php endif; ?> -->
             </tbody>
             <tfoot>
                 <tr class="text-end">
@@ -94,7 +127,7 @@
                     <td></td>
                     <td>TOTAL</td>
                     <td>0.00</td>
-                    <td>$0.00</td>
+                    <td>$<?=number_format($commissionTotal, 2)?></td>
                     <td></td>
                     <td>0.00</td>
                     <td>$0.00</td>

@@ -184,7 +184,7 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Sales by Customer Summary data in Database
-        if ($reportType == "sales_customer_summary") {
+        if ($reportType == "sales_by_customer_summary") {
             $this->db->select('invoices.id AS invoice_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, SUM(invoices_items.total) AS total');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
@@ -198,6 +198,42 @@ class Accounting_model extends MY_Model {
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
+        }
+
+        // Get Sales by Customer Detail data in Database
+        if ($reportType == "sales_by_customer_detail") {
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (invoices_items.qty * items.price) AS amount, invoices.total_due AS balance');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('invoices.customer_id, customer');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
+
+        // Get Sales by Customer Type Detail data in Database
+        if ($reportType == "sales_by_customer_type_detail") {
+            $this->db->select('invoices.customer_id AS customer_id, acs_profile.customer_type AS customer_type, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (invoices_items.qty * items.price) AS amount, invoices.total_due AS balance');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('acs_profile.customer_type');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
         }
 
     }

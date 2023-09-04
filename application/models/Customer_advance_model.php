@@ -186,6 +186,7 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->order_by('prof_id', "DESC");
         $this->db->where("acs_profile.company_id", $cid);
+        $this->db->group_by('acs_profile.prof_id'); 
         $query = $this->db->get();
         return $query->result();
     }
@@ -257,7 +258,7 @@ class Customer_advance_model extends MY_Model {
                 $this->db->or_like('acs_profile.business_name', $param['search'], 'both'); 
             $this->db->group_end();   
         }                
-        //$this->db->group_by('acs_profile.prof_id'); 
+        $this->db->group_by('acs_profile.prof_id'); 
         $this->db->order_by('acs_profile.first_name', 'ASC');
         $query = $this->db->get();
         return $query->result();

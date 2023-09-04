@@ -47,7 +47,7 @@
                                 <div class="col-lg-12">
                                     <?php 
                                         $tableID = "salesbycustomersummary_table"; 
-                                        $reportCategory = "sales_customer_summary"; 
+                                        $reportCategory = "sales_by_customer_summary"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>

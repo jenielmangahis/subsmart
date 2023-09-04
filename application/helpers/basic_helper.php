@@ -4491,6 +4491,7 @@ if (!function_exists('is_admin_logged')) {
             'tech' => 'Tech',
             'plan_type' => 'Plan Type',
             'subscription_amount' => 'Subscription Amount',
+            'job_amount' => 'Job Amount',
             'phone' => 'Phone',
             'status' => 'Status'
         ];
