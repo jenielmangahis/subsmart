@@ -1452,14 +1452,65 @@ function initialize() {
 
 $(document).ready(function(){
  
-    $('#customer-id').change(function(){
-    var id  = $(this).val();
-    // alert(id);
+    $('#customer-id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection
+    });
 
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
+
+    $('#customer-id').change(function(){
+        var id  = $(this).val();
+        load_customer_location(id);
+    });
+
+    <?php if( $default_cust_id > 0 ){ ?>
+        load_customer_location('<?= $default_cust_id; ?>');
+    <?php } ?>
+
+    function load_customer_location(customer_id){
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
-            data: {id : id },
+            data: {id : customer_id },
             dataType: 'json',
             success: function(response){
                 // alert('success');
@@ -1475,7 +1526,7 @@ $(document).ready(function(){
        
                 }
         });
-    });
+    }
 });
 
 </script>

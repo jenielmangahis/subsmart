@@ -114,7 +114,7 @@ table.dataTable.no-footer {
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> New Customer
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">
+                            <button type="button" class="nsm-button primary" id="print-customer-list" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                         </div>
@@ -137,7 +137,7 @@ table.dataTable.no-footer {
                                     <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
                                     <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
-                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
+                                    <?php if (in_array('job_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
                                     <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
                                     <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
                                     <td data-name="Manage"></td>
@@ -313,7 +313,6 @@ table.dataTable.no-footer {
                                     <td data-name="Phone">Phone</td>
                                     <td data-name="Status">Status</td>
                                     <td data-name="Manage"></td>
-                                    <td data-name="Manage"></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -378,11 +377,33 @@ table.dataTable.no-footer {
             let phone = $(this).attr("data-id");
 
             window.open('tel:' + phone);
-        });
+        });       
 
-        $("#btn_print_customer_list").on("click", function() {
-            $("#customer_table_print").printThis();
+        $('#print-customer-list').on('click', function(){
+            var profid = $(this).attr('data-id');
+            var url = base_url + 'customer/_get_customer_lists';
+
+            $('#print_customer_list_modal').modal('show');
+            $("#print-customer-list-container").html('<span class="bx bx-loader bx-spin"></span> loading customer list...');
+
+            setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: url,             
+                data: {},
+                success: function(o)
+                {          
+                    $("#print-customer-list-container").html(o);                
+                }
+            });
+            }, 800);
         });
+    });
+
+    
+
+    $(document).on('click', '#btn_print_customer_list', function(){
+        $("#customer_table_print_ajax").printThis();
     });
 
     $(document).on('click', '.btn-messages', function(){

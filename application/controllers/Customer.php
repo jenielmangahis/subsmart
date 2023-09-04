@@ -56,7 +56,7 @@ class Customer extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
         
@@ -88,6 +88,27 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/list', $this->page_data);
     }
 
+    public function ajax_customer_lists()
+    {
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $enabled_table_headers = array();
+        if( isset($customer_settings[0] )){
+            $enabled_table_headers = unserialize($customer_settings[0]->headers);
+        }
+
+        $search = ['search' => ''];    
+        $this->page_data['profiles'] = $this->customer_ad_model->getCustomerLists($search,0,0);
+        $this->page_data['enabled_table_headers'] = $enabled_table_headers;
+        $this->load->view('v2/pages/customer/ajax_customer_lists', $this->page_data);
+    }
+
     /**
      * This function will fetch customer list from post request of datatable server side processing
      * 
@@ -103,7 +124,6 @@ class Customer extends MY_Controller
         $search = ['search' => $search];    
         $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
         $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
-
         $all_customer_ids = [];
         foreach($allCustomers as $c){
             if( !in_array($c->prof_id, $all_customer_ids) ){
@@ -126,7 +146,7 @@ class Customer extends MY_Controller
         $data = [];
         $customer_ids = [];        
         foreach($customers as $customer){      
-            if( !in_array($customer->prof_id, $customer_ids) ){
+            //if( !in_array($customer->prof_id, $customer_ids) ){
                 $customer_ids[] = $customer->prof_id;   
                 switch (strtoupper($customer->status)){
                     case "INSTALLED":
@@ -210,8 +230,20 @@ class Customer extends MY_Controller
                         $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                         array_push($data_arr, "$".$subs_amt);
                     }
+                    if (in_array('job_amount', $enabled_table_headers)){
+                        $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
+                        $this->db->from('job_items');
+                        $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
+                        $this->db->where('jobs.customer_id', $customer->prof_id);
+                        $totalJobItems = $this->db->get()->row();
+                        $job_amount    = 0;
+                        if( $totalJobItems->total_amount > 0 ){
+                            $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
+                        }
+                        array_push($data_arr, "$".$job_amount);
+                    }
                     if (in_array('phone', $enabled_table_headers)){
-                        array_push($data_arr, $customer->phone_m);
+                        array_push($data_arr, formatPhoneNumber($customer->phone_m));                        
                     }
                     if (in_array('status', $enabled_table_headers)){
                         $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
@@ -236,13 +268,16 @@ class Customer extends MY_Controller
                     }
                     array_push($data_arr, $name);
                     //email
-                    array_push($data_arr, $customer->email);
+                    //array_push($data_arr, $customer->email);
                     //industry
-                    if( $customer->industry_type_id > 0 ){
-                        array_push($data_arr, $customer->industry_type);
-                    }else{
-                        array_push($data_arr, 'Not Specified');           
+                    if( logged('company_id') == 1 ){
+                        if( $customer->industry_type_id > 0 ){
+                            array_push($data_arr, $customer->industry_type);
+                        }else{
+                            array_push($data_arr, 'Not Specified');           
+                        }
                     }
+                    
                     //city
                     array_push($data_arr, $customer->city);
                     //state
@@ -251,20 +286,37 @@ class Customer extends MY_Controller
                     $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
                     array_push($data_arr, $lead);
                     //added
-                    array_push($data_arr, $customer->entered_by);
+                    $added_by = trim($customer->entered_by) != '' ? $customer->entered_by : '---';
+                    array_push($data_arr, $added_by);
                     //sales rep
-                    $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
+                    $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
+                    if( $sales_rep == '' ){
+                        $sales_rep = '---';
+                    }
                     array_push($data_arr, $sales_rep);
                     //tech
                     $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
                     array_push($data_arr, $techician);
                     //plan type
-                    array_push($data_arr, $customer->system_type);
+                    $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+                    array_push($data_arr, $plan_type);
                     //sub amount
                     $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                     array_push($data_arr, "$".$subs_amt);
+                    //job amount
+                    $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
+                    $this->db->from('job_items');
+                    $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
+                    $this->db->where('jobs.customer_id', $customer->prof_id);
+                    $totalJobItems = $this->db->get()->row();
+                    $job_amount    = 0;
+                    if( $totalJobItems->total_amount > 0 ){
+                        $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
+                    }
+                    array_push($data_arr, "$".$job_amount);
                     //phone
-                    array_push($data_arr, $customer->phone_m);
+                    $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
+                    array_push($data_arr, formatPhoneNumber($phone));
                     //status
                     $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
                     array_push($data_arr, $stat);
@@ -289,7 +341,7 @@ class Customer extends MY_Controller
                             <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='".base_url('invoice/add/')."'>Invoice</a>
+                            <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                         </li>
                         <li>
                             <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
@@ -315,7 +367,7 @@ class Customer extends MY_Controller
                 
 
                 $start++;
-            }            
+            //}            
         }
         $output = array(
             "draw" => $draw,
@@ -3760,7 +3812,7 @@ class Customer extends MY_Controller
     }
 
     public function customer_export()
-    {
+    {        
         $user_id = logged('id');
         $items =  $this->customer_ad_model->getExportData();
 
@@ -3779,12 +3831,16 @@ class Customer extends MY_Controller
             'select' => '*',
         );
         $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
-        $fieldCompanyValues = explode(',', $importFieldSettings->value);
-
+        if( $importFieldSettings->value != '' ){
+            $fieldCompanyValues = explode(',', $importFieldSettings->value);
+        }else{
+            $fieldCompanyValues = [ '5','6','7','8','9','10','11'];
+        }
+        
         $fields = array();
         $fieldNames = array();
         foreach($fieldCompanyValues as $field) {
-            foreach($importFieldsList as $importSetting) {
+            foreach($importFieldsList as $importSetting) {                
                 if($field == $importSetting->id) {
                     array_push($fields,$importSetting->field_description);
                     array_push($fieldNames,$importSetting->field_name);
@@ -5066,9 +5122,11 @@ class Customer extends MY_Controller
     public function save_customer_headers(){
         $input = $this->input->post();
         $headers = array();
-        foreach( $input['headers'] as $key => $value ){
-            $headers[] = $key;
-        }
+        if( isset($input['headers']) ){
+            foreach( $input['headers'] as $key => $value ){
+                $headers[] = $key;
+            }
+        }       
 
         if( logged('company_id') == 58 ){
             foreach( $input['solarHeader'] as $key => $value ){
@@ -5077,8 +5135,10 @@ class Customer extends MY_Controller
         }
 
         if( logged('company_id') == 31 ){
-            foreach( $input['alarmHeader'] as $key => $value ){
-                $headers[] = $key;
+            if( isset($input['alarmHeader']) ){
+                foreach( $input['alarmHeader'] as $key => $value ){
+                    $headers[] = $key;
+                }            
             }            
         }
 
