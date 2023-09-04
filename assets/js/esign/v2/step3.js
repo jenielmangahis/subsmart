@@ -845,7 +845,7 @@ function Step3() {
             showCancelButton: true,
             cancelButtonText: "Cancel"
         }).then((result) => {
-            if (result.value) {
+            if (result.value) {              
               if (userInfo !== undefined) {
                 return handleSelfSigningOnSubmit({ event, evenlopeId: fileId, files });
               }
