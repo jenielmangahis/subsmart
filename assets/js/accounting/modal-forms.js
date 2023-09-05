@@ -241,6 +241,9 @@ $(function() {
         var payDate = selected[0].dataset.pay_date;
 
         $('div#payrollModal input#payDate').val(payDate);
+        $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
+            $(this).trigger('change');
+        });
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
@@ -249,8 +252,8 @@ $(function() {
         // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
 
         payrollFormData.set('pay_from_account', $('#bank-account').val());
-        payrollFormData.set('pay_period', $('#payPeriod').val());
-        payrollFormData.set('pay_date', $('#payDate').val());
+        payrollFormData.set('pay_period', $('#payrollModal #payPeriod').val());
+        payrollFormData.set('pay_date', $('#payrollModal #payDate').val());
 
         $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
             var row = $(this).closest('tr');
@@ -413,11 +416,10 @@ $(function() {
                             case 3 :
                                 if(res.pay_details.pay_method !== 'commission') {
                                     $(this).html(parseFloat(res.total_hrs).toFixed(2));
-                                    // $(this).html(`<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control nsm-field text-end regular-pay-hours">`);
                                 }
                             break;
                             case 4 :
-                                $(this).html(parseFloat(res.commission).toFixed(2));
+                                $(this).html(res.commission !== null ? formatter.format(parseFloat(res.commission)) : formatter.format(parseFloat(0.00)));
                             break;
                             case 5 :
                                 $(this).html(`<input type="text" name="memo[]" class="form-control nsm-field">`);
@@ -426,7 +428,7 @@ $(function() {
                                 $(this).html(`<p class="m-0 text-end">${parseFloat(res.total_hrs).toFixed(2)}</p>`);
                             break;
                             case 7 :
-                                $(this).html(`<p class="m-0 text-end"><span class="total-pay">$${parseFloat(res.total_pay).toFixed(2)}</span></p>`);
+                                $(this).html(`<p class="m-0 text-end"><span class="total-pay">${formatter.format(parseFloat(res.total_pay))}</span></p>`);
                             break;
                         }
                     });
@@ -9200,7 +9202,7 @@ const payrollTotal = () => {
 
             hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);
     
-            var empCommission = $(this).children('td:nth-child(5)').html();
+            var empCommission = $(this).children('td:nth-child(5)').html().replace('$', '');
             if (empCommission !== "" && empCommission !== undefined) {
                 empCommission = parseFloat(empCommission);
             } else {
