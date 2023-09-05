@@ -968,49 +968,85 @@ $('#commission-payroll-modal #payroll-table thead .select-all').on('change', fun
     $('#commission-payroll-modal #payroll-table tbody .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
+$('#commission-payroll-modal #pay-period-start, #commission-payroll-modal #pay-period-end').on('change', function() {
+    $('#commission-payroll-modal #payroll-table tbody .select-one:checked').each(function() {
+        $(this).trigger('change');
+    });
+});
+
 $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', function() {
     var row = $(this).closest('tr');
     
     if($(this).prop('checked')) {
-        row.find('td:nth-child(3)').html(row.data().method);
-        row.find('td:nth-child(4)').html('<input type="number" name="commission[]" step="0.01" class="form-control nsm-field text-end">');
-        row.find('td:nth-child(5)').html('<input type="text" name="memo[]" class="form-control nsm-field">');
-        row.find('td:nth-child(6)').html('<p class="m-0"><span class="total-pay">$0.00</span></p>');
+        var data = new FormData();
+        data.set('employee_id', $(this).val());
+        data.set('pay_period', $('#commission-payroll-modal #pay-period-start').val()+'-'+$('#commission-payroll-modal #pay-period-end').val());
+
+        $.ajax({
+            url: '/accounting/get-employee-pay-details',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+                row.children('td').each(function(index, value)  {
+                    switch(index) {
+                        case 2 :
+                            $(this).html(res.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check');
+                        break;
+                        case 3 :
+                            $(this).html(res.commission !== null ? formatter.format(parseFloat(res.commission)) : formatter.format(parseFloat(0.00)));
+                        break;
+                        case 4 :
+                            $(this).html(`<input type="text" name="memo[]" class="form-control nsm-field">`);
+                        break;
+                        case 5 :
+                            $(this).html(`<p class="m-0 text-end"><span class="total-pay">${res.commission !== null ? formatter.format(parseFloat(res.commission)) : formatter.format(parseFloat(0.00))}</span></p>`);
+                        break;
+                    }
+                });
+
+                commissionTotal();
+            }
+        });
     } else {
-        row.find('td:not(:first-child, :nth-child(2))').html('');
+        $(this).parent().parent().parent().children('td').each(function(index, value) {
+            if (index > 1) {
+                $(this).html('');
+            }
+        });
+
+        commissionTotal();
     }
 });
 
-$(document).on('change', '#commission-payroll-modal #payroll-table tbody [name="commission[]"]', function() {
-    if($(this).val() !== '') {
-        $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
-        $(this).closest('tr').find('.total-pay').html(formatter.format($(this).val()));
-    } else {
-        $(this).closest('tr').find('.total-pay').html('$0.00');
-    }
-
+const commissionTotal = () => {
     var total = 0.00;
-    $('#commission-payroll-modal #payroll-table tbody [name="commission[]"]').each(function() {
-        if($(this).val() !== "") {
-            total += parseFloat($(this).val());
-        }
+    $('#commission-payroll-modal #payroll-table tbody .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var commission = row.find('.total-pay').html().replace('$', '').trim();
+
+        total += parseFloat(commission);
     });
 
+    $('#commission-payroll-modal h2.total-pay').html(formatter.format(parseFloat(total)));
     $('#commission-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)').html(formatter.format(parseFloat(total)));
     $('#commission-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
-});
+}
 
 $('#commission-payroll-modal #preview-payroll').on('click', function() {
     payrollForm = $('div#commission-payroll-modal div.modal-body').html();
     payrollFormData = new FormData();
 
     payrollFormData.set('pay_from_account', $('#commission-payroll-modal #bank-account').val());
-    payrollFormData.set('pay_date', $('#payDate').val());
+    payrollFormData.set('pay_period', $('#commission-payroll-modal #pay-period-start').val()+'-'+$('#commission-payroll-modal #pay-period-end').val());
+    payrollFormData.set('pay_date', $('#commission-payroll-modal #payDate').val());
 
     $('#commission-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
         var row = $(this).closest('tr');
         payrollFormData.append('employees[]', $(this).val());
-        payrollFormData.append('commission[]', row.find('[name="commission[]"]').val());
+        payrollFormData.append('commission[]', row.find('td:nth-child(4)').html().replace('$', ''));
         payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
     });
 

@@ -200,7 +200,7 @@ class Employees extends MY_Controller {
                     if($empPayDetails->pay_type === 'hourly') {
                         $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
                     } else if($empPayDetails->pay_type === 'salary') {
-                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.str_replace('per-', '', $empPayDetails->salary_frequency);
                     } else {
                         $payRate = 'Commission only';
                     }
@@ -208,6 +208,8 @@ class Employees extends MY_Controller {
                     $payMethod = 'Missing';
                     $payRate = 'Missing';
                 }
+
+                $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d"), date("Y-m-d"))->commission;
 
                 if(isset($filters['search']) && $filters['search'] !== "") {
                     if(stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false) {
@@ -218,7 +220,8 @@ class Employees extends MY_Controller {
                             'pay_method' => $payMethod,
                             'status' => $empStatus,
                             'email_address' => $employee->email,
-                            'phone_number' => $employee->phone
+                            'phone_number' => $employee->phone,
+                            'commission' => $commission
                         ];
                     }
                 } else {
@@ -229,7 +232,8 @@ class Employees extends MY_Controller {
                         'pay_method' => $payMethod,
                         'status' => $empStatus,
                         'email_address' => $employee->email,
-                        'phone_number' => $employee->phone
+                        'phone_number' => $employee->phone,
+                        'commission' => $commission
                     ];
                 }
             }
@@ -270,7 +274,7 @@ class Employees extends MY_Controller {
             if($empPayDetails->pay_type === 'hourly') {
                 $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
             } else if($empPayDetails->pay_type === 'salary') {
-                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.str_replace('per-', '', $empPayDetails->salary_frequency);
             } else {
                 $employee->pay_rate = 'Commission only';
             }
@@ -499,6 +503,10 @@ class Employees extends MY_Controller {
                     ];
                 break;
                 case 'pay-types' :
+                    $data = [
+                        'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : 0.00
+                    ];
+
                     $payDetails = [
                         'pay_type' => $this->input->post('pay_type'),
                         'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,

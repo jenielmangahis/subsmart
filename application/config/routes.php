@@ -377,6 +377,7 @@ $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
 $route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
 $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_form';
 $route['accounting/get-payroll-form/(:any)'] = 'accounting_modals/get_payroll_form/$1';
+$route['accounting/get-employee-pay-details']['post'] = 'accounting_modals/get_employee_pay_details';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-statement-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
