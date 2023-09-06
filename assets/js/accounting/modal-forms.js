@@ -8,7 +8,7 @@ var modalName = '';
 var tagsListModal = '';
 var timesheetInputs = 'input.day-input';
 var payrollForm = '';
-var payrollFormData = [];
+var payrollFormData = new FormData();
 const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
 var recurrInterval = '';
 var recurringDays = '';
@@ -248,8 +248,12 @@ $(function() {
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
         payrollForm = $('div#payrollModal div.modal-body').html();
-        payrollFormData = new FormData();
+        // payrollFormData = new FormData();
         // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
+
+        for (const pair of payrollFormData.entries()) {
+            payrollFormData.delete(pair[0]);
+        }
 
         payrollFormData.set('pay_from_account', $('#bank-account').val());
         payrollFormData.set('pay_period', $('#payrollModal #payPeriod').val());

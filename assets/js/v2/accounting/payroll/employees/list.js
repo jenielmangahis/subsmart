@@ -1019,6 +1019,11 @@ $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', fun
 
         commissionTotal();
     }
+    
+    var checked = $('#commission-payroll-modal #payroll-table .select-one:checked').length;
+    var count = $('#commission-payroll-modal #payroll-table .select-one').length;
+
+    $('#commission-payroll-modal #payroll-table .select-all').prop('checked', checked === count);
 });
 
 const commissionTotal = () => {
@@ -1035,13 +1040,18 @@ const commissionTotal = () => {
     $('#commission-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
 }
 
-$('#commission-payroll-modal #preview-payroll').on('click', function() {
+$(document).on('click', '#commission-payroll-modal #preview-payroll', function() {
+    var el = $(this);
+    var parent = el.parent();
     payrollForm = $('div#commission-payroll-modal div.modal-body').html();
-    payrollFormData = new FormData();
 
-    payrollFormData.set('pay_from_account', $('#commission-payroll-modal #bank-account').val());
-    payrollFormData.set('pay_period', $('#commission-payroll-modal #pay-period-start').val()+'-'+$('#commission-payroll-modal #pay-period-end').val());
-    payrollFormData.set('pay_date', $('#commission-payroll-modal #payDate').val());
+    for (const pair of payrollFormData.entries()) {
+        payrollFormData.delete(pair[0]);
+    }
+
+    payrollFormData.append('pay_from_account', $('#commission-payroll-modal #bank-account').val());
+    payrollFormData.append('pay_period', $('#commission-payroll-modal #pay-period-start').val()+'-'+$('#commission-payroll-modal #pay-period-end').val());
+    payrollFormData.append('pay_date', $('#commission-payroll-modal #payDate').val());
 
     $('#commission-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
         var row = $(this).closest('tr');
@@ -1104,15 +1114,52 @@ $('#commission-payroll-modal #preview-payroll').on('click', function() {
                     aspectRatio: 1.5,
                   }
             });
+
+            el.remove();
+            parent.prepend(`<button type="submit" class="nsm-button success">Submit Payroll</button>`);
+            $('#commission-payroll-modal #close-payroll-modal').html('Back');
+            $('#commission-payroll-modal #close-payroll-modal').removeAttr('data-bs-dismiss');
+            $('#commission-payroll-modal #close-payroll-modal').attr('id', 'back-payroll-form');
+        }
+    });
+});
+
+$(document).on('click', '#commission-payroll-modal #back-payroll-form', function() {
+    $('#commission-payroll-modal .modal-body').html(payrollForm);
+
+    $('#commission-payroll-modal #bank-account').val(payrollFormData.get('pay_from_account')).trigger('change');
+    $('#commission-payroll-modal #payDate').val(payrollFormData.get('pay_date'));
+    var payPeriod = payrollFormData.get('pay_period').split('-');
+    var start = payPeriod[0];
+    var end = payPeriod[1];
+    $('#commission-payroll-modal #pay-period-start').val(start);
+    $('#commission-payroll-modal #pay-period-end').val(end);
+
+    var employees = payrollFormData.getAll('employees[]');
+
+    $('#commission-payroll-modal #payroll-table tr td .select-one').each(function() {
+        if(employees.includes($(this).val())) {
+            $(this).prop('checked', true);
+        } else {
+            $(this).prop('checked', false);
         }
     });
 
-    $(this).html('Submit Payroll');
-    $(this).attr('type', 'submit');
-    $(this).removeAttr('id');
-    $('#commission-payroll-modal #close-payroll-modal').html('Back');
-    $('#commission-payroll-modal #close-payroll-modal').removeAttr('data-bs-dismiss');
-    $('#commission-payroll-modal #close-payroll-modal').removeAttr('id');
+    if(employees.length === $('#commission-payroll-modal #payroll-table tr td .select-one').length) {
+        $('#commission-payroll-modal #payroll-table thead .select-all').prop('checked', true);
+    } else {
+        $('#commission-payroll-modal #payroll-table thead .select-all').prop('checked', false);
+    }
+
+    var memos = payrollFormData.getAll('memo[]');
+    for(i = 0; i < memos.length; i++)
+    {
+        $(`#commission-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="memo[]"]').val(memos[i]);
+    }
+
+    $(this).parent().html('<button type="button" class="nsm-button primary" data-bs-dismiss="modal" id="close-payroll-modal">Close</button>');
+    $('#commission-payroll-modal .modal-footer button[type="submit"]').parent().prepend(`<button type="button" class="nsm-button success" id="preview-payroll">Preview payroll</button>`);
+    $('#commission-payroll-modal .modal-footer button[type="submit"]').remove();
 });
 
 function upcomingPayPeriods(el)
