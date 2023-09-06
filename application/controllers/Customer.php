@@ -116,8 +116,6 @@ class Customer extends MY_Controller
      */
     public function getCustomerLists()
     {
-        $this->load->model('Jobs_model');
-
         $data  = array();
         $start = $_POST['start'];
         $draw = $this->input->post('draw');
@@ -126,7 +124,6 @@ class Customer extends MY_Controller
         $search = ['search' => $search];    
         $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
         $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
-        
         $all_customer_ids = [];
         foreach($allCustomers as $c){
             if( !in_array($c->prof_id, $all_customer_ids) ){
@@ -149,13 +146,8 @@ class Customer extends MY_Controller
         $data = [];
         $customer_ids = [];        
         foreach($customers as $customer){      
-<<<<<<< HEAD
             //if( !in_array($customer->prof_id, $customer_ids) ){
                 $customer_ids[] = $customer->prof_id;   
-=======
-            if( !in_array($customer->prof_id, $customer_ids) ){
-                $customer_ids[$customer->prof_id] = $customer->prof_id;   
->>>>>>> staging-master
                 switch (strtoupper($customer->status)){
                     case "INSTALLED":
                         $badge = "success";
@@ -251,11 +243,7 @@ class Customer extends MY_Controller
                         array_push($data_arr, "$".$job_amount);
                     }
                     if (in_array('phone', $enabled_table_headers)){
-<<<<<<< HEAD
                         array_push($data_arr, formatPhoneNumber($customer->phone_m));                        
-=======
-                        array_push($data_arr, formatPhoneNumber($customer->phone_m));
->>>>>>> staging-master
                     }
                     if (in_array('status', $enabled_table_headers)){
                         $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
@@ -347,10 +335,10 @@ class Customer extends MY_Controller
                             <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='mailto:".$customer->email."'>Email</a>
+                            <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
                         </li>
                         <li>
-                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
+                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
                         </li>
                         <li>
                             <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
@@ -359,10 +347,10 @@ class Customer extends MY_Controller
                             <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='".base_url('job/new_job1/')."'>Schedule</a>
+                            <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='#'>Message</a>
+                            <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
                         </li>
                     </ul>
                 </div>";
@@ -6774,12 +6762,21 @@ class Customer extends MY_Controller
                 'to_email' => $post['customer_email'],
                 'subject' => $post['customer_email_suject'],
                 'message' => $post['customer_email_message'],
-                'is_sent' => 0,
+                'is_sent' => 1,
                 'date_created' => date("Y-m-d H:i:s")
             ];
 
             $this->AcsSentEmail_model->create($data_acs_emails);
 
+            //Send Email
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($post['customer_email'], $post['customer_email']);
+            $mail->isHTML(true);
+            $mail->Subject = $post['customer_email_suject'];
+            $mail->Body    = $post['customer_email_message'];
+            $sendEmail = $mail->Send();
+            
             $is_success = 1;
             $msg = '';
         }
@@ -6788,4 +6785,5 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+    
 }

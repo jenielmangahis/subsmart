@@ -510,7 +510,6 @@
 </form>
 </div>
 
-<?php if($commission_pays !== null && count($commission_pays) > 0) : ?>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="commission-only-form">
@@ -534,6 +533,18 @@
                             <h6>Balance <?=str_replace('$-', '-$', '$'.number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ','))?></h6>
                         </div>
                         <div class="col-12 col-md-2">
+                            <label for="pay-period-start">Pay period start</label>
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="form-control nsm-field date" name="pay_period_start" id="pay-period-start" value="<?php echo date('m/d/Y') ?>"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label for="pay-period-end">Pay period end</label>
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="form-control nsm-field date" name="pay_period_end" id="pay-period-end" value="<?php echo date('m/d/Y') ?>"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
                             <label for="payDate">Pay date</label>
                             <div class="nsm-field-group calendar">
                                 <input type="text" class="form-control nsm-field date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>"/>
@@ -554,13 +565,29 @@
                                         </td>
                                         <td>EMPLOYEE</td>
                                         <td>PAY METHOD</td>
-                                        <td>COMMISSION</td>
+                                        <td class="text-end">COMMISSION</td>
                                         <td>MEMO</td>
-                                        <td>TOTAL PAY</td>
+                                        <td class="text-end">TOTAL PAY</td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($payDetails as $payDetail) : ?>
+                                    <?php foreach($employees as $employee) : ?>
+                                    <tr>
+                                        <td>
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" value="<?=$employee['id']?>" checked>
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/employees/view/' . $employee['id']) ?>'"><?=$employee['name']?></td>
+                                        <td><?=$employee['pay_method'] === 'Direct deposit' ? 'Direct deposit' : 'Paper check'?></td>
+                                        <td class="text-end"><?=str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee['commission'])), 2))?></td>
+                                        <td>
+                                            <input type="text" name="memo[]" class="form-control nsm-field">
+                                        </td>
+                                        <td><p class="m-0 text-end"><span class="total-pay"><?=str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee['commission'])), 2))?></span></p></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                    <!-- <?php foreach($payDetails as $payDetail) : ?>
                                         <?php $employee = $this->users_model->getUser($payDetail->user_id);?>
                                         <tr data-method="<?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?>">
                                             <td>
@@ -578,7 +605,7 @@
                                             </td>
                                             <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
                                         </tr>
-                                    <?php endforeach;?>
+                                    <?php endforeach;?> -->
                                 </tbody>
                                 <tfoot>
                                     <tr class="text-end">
@@ -635,4 +662,3 @@
     <!--end of modal-->
 </form>
 </div>
-<?php endif; ?>
