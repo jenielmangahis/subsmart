@@ -1,4 +1,5 @@
 var base_url = document.getElementById('siteurl').value;
+// var base_url = 'https://localhost/new/nsmartrac/';
 
 var options = {
   urlFilterReports: base_url + "reports/filterReports",
@@ -17,20 +18,24 @@ var options = {
   urlReportPreview: base_url + "reports/preview",
   //updates
   urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
-  urlfilterReportsExpenseByCategoryMonth: base_url + "reports/expenseByCategory",
+  urlFilterReportsExpenseByCategoryMonth: base_url + "reports/expenseByCategoryMonth",
   urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
   urlfilterWorkOrderByEmployee: base_url + "reports/workOrderByEmployee",
   urlfilterWorkOrderByStatus: base_url + "reports/workOrderByStatus",
   urlfilterCustomerTaxByMonth: base_url + "reports/customerTaxByMonth",
   urlfilterReportsExpenseByMonthByVendor: base_url + "reports/expenseByCategoryMonthVendor",
+  urlFilterReportsExpenseByCustomer: base_url + "reports/expenseByCustomer",
+  
   
 };
 
 function selectReport(startdate, endDate) {
   var type = window.location.pathname.split("/");
+  // alert(type);
 
-  switch (type[5]) {
+  switch (type[6]) {
     case "monthly-closeout":
+      // alert(type);
       filterReportsByMonths(startdate, endDate);
       break;
 
@@ -110,6 +115,10 @@ function selectReport(startdate, endDate) {
       filterReportsExpenseByMonthByVendor(startdate, endDate);
       break;
 
+      case "expense-by-month-by-customer":
+        filterReportsExpenseByCustomer(startdate, endDate);
+        break;
+
   }
 }
 
@@ -123,12 +132,17 @@ function filterReportsByMonths(startDate, endDate) {
       $("#reportTable").fadeOut();
     },
     success: function (response) {
+      // alert('test');
+      // console.log('test' + response);
       var obj = JSON.parse(response);
       $("#tableToListReport tbody").empty();
       obj.monthly.forEach(monthlyCloseout);
 
       $(".loader").fadeOut();
       $("#reportTable").fadeIn();
+    },
+    error: function () {
+      alert("An error has occurred");
     },
   });
 }
@@ -317,10 +331,25 @@ function filterReportsExpenseByCategoryMonth(startDate, endDate) {
     type: "GET",
     data: { startDate: startDate, endDate: endDate },
     success: function (response) {
-      // var obj = JSON.parse(response);
-      // $("#tableToListReport tbody").empty();
-      // obj.forEach(expenseAppend);
-      alert('test');
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(expenseAppend);
+      // alert('test');
+    },
+  });
+}
+
+function filterReportsExpenseByCustomer(startDate, endDate)
+{
+  $.ajax({
+    url: options.urlFilterReportsExpenseByCustomer,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(expenseAppend);
+      // alert('test');
     },
   });
 }
@@ -1446,13 +1475,14 @@ window.onload = function () {
 
   selectReport(currYear + "-01-01", currYear + "-12-31");
   var type = window.location.pathname.split("/");
+  // alert(type);
 
- // if (type[3] === "summary") {
+ if (type[3] === "summary") {
     google.charts.load("current", { packages: ["corechart", "line"] });
     google.charts.setOnLoadCallback(profileChart);
     google.charts.setOnLoadCallback(jobsChart);
     google.charts.setOnLoadCallback(dealsChart);
- // }
+ }
 };
 
 $(function () {
