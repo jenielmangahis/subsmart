@@ -1914,7 +1914,8 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            // $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } else {
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['person_tracking']);
@@ -11462,7 +11463,11 @@ class Accounting_modals extends MY_Controller
             if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) &&
             $this->input->get('modal') !== 'printChecksModal' &&
             $field !== 'sales-tax-category' && !is_null($this->input->get('modal'))) {
-                array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+                if($field === 'person-tracking') {
+                    array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add New Vendor']);
+                } else {
+                    array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add New']);
+                }
             }
         }
 

@@ -6072,7 +6072,7 @@ $(function() {
 
         var data = new FormData(this);
         if (!data.has('payee_type')) {
-            var type = dropdownEl.attr('id');
+            var type = dropdownEl.attr('id') === 'person_tracking' ? 'vendor' : dropdownEl.attr('id');
 
             if (type === undefined) {
                 type = dropdownEl.attr('name').includes('customer') ? 'customer' : type;
@@ -10085,7 +10085,8 @@ const submitModalForm = (event, el) => {
 
             if(res.success === true) {
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
-                    $(el).children().modal('hide');
+                    // $(el).children().modal('hide');
+                    location.reload();
                 }
 
                 if(submitType !== 'save-and-close' && submitType !== 'save-and-new' && modalId !== '#payBillsModal') {

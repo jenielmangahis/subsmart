@@ -58,6 +58,7 @@ class AccountingMailer extends MY_Controller{
             "sales_by_customer_summary",
             "sales_by_customer_detail",
             "sales_by_customer_type_detail",
+            "sales_by_product_service_detail",
         );
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {
