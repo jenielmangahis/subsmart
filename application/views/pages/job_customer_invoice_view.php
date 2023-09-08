@@ -96,10 +96,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 </style>
 <?php if($onlinePaymentAccount->converge_merchant_id != '' && $onlinePaymentAccount->converge_merchant_user_id != ''){ ?>
-    <!-- Remove demo in url for production -->    
-    <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
-    <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
-    <!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+    <!-- Remove demo in url for production -->   
+     <!--Demo  -->
+    <!-- <script src="https://api.demo.convergepay.com/hosted-payments/Checkout.js"></script>
+    <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+    <!-- Production -->
+    <script src="https://api.convergepay.com/hosted-payments/Checkout.js"></script>
+    <!-- <script src="https://convergepay.com/hosted-payments/PayWithConverge.js"></script> -->
+    <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <?php } ?>
 <?php 
 function frontIsMobile() {

@@ -10917,7 +10917,14 @@ class Accounting_modals extends MY_Controller
             $data = [
                 'fk_user_id' => logged('id'),
                 'company_id' => logged('company_id'),
-                'business_name' => trim($post['payee_name'])
+                'business_name' => trim($post['payee_name']),
+                'customer_type' => $post['customer_type'],
+                'mail_add' => $post['street'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip_code' => $post['zip_code'],
+                'email' => $post['email'],
+                'phone_m' => $post['mobile']
             ];
 
             switch (strval($nameCount)) {

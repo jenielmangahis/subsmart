@@ -398,18 +398,69 @@ table.dataTable.no-footer {
             });
             }, 800);
         });
-    });
 
-    
+        $('#delete-customer').on('click', function(){
+            
+        });
+
+        $(document).on('click', '.delete-customer', function(){
+            var cid = $(this).attr('data-id');
+            Swal.fire({            
+                html: "Delete selected customer?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    var url = base_url + "customer/_delete_customer";
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {cid:cid},
+                        dataType: 'json',
+                        beforeSend: function(result) {
+                            
+                        },
+                        success: function(result) {                                                                        
+                            if(result.is_success  == 1){
+                                Swal.fire({
+                                    html: 'Customer record was deleted successfully',                        
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    CUSTOMER_LIST_TABLE.ajax.reload();  
+                                });                                  
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }                               
+                        },
+                        complete : function(){
+                            
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }
+                    });
+                }
+            });
+        });
+    });   
 
     $(document).on('click', '#btn_print_customer_list', function(){
         $("#customer_table_print_ajax").printThis();
     });
 
-    $(document).on('click', '.btn-messages', function(){
+    $(document).on('click', '.sms-messages', function(){
 
         var profid = $(this).attr('data-id');
-        var url = base_url + 'customer/_get_messages';
+        //var url = base_url + 'customer/_get_messages';
+        var url = base_url + 'customer/_load_customer_sms_messages';
 
         $('#messages_modal').modal('show');
         $(".modal-messages-container").html('<span class="bx bx-loader bx-spin"></span>');
@@ -425,6 +476,61 @@ table.dataTable.no-footer {
              }
           });
         }, 800);
+    });
+
+    $(document).on('click', '.send-email', function(){
+        var customer_email = $(this).attr('data-email');
+        var customer_eid   = $(this).attr('data-id');
+        
+        $('#send_email_modal').modal('show');
+        $('#customer-email').val(customer_email);
+        $('#customer-send-email-eid').val(customer_eid);
+        $('#email-message').val('');
+        $('#email-subject').val('');
+    });    
+
+    $(document).on('submit', '#frm-send-email', function(e){
+        e.preventDefault();
+        
+        var url = base_url + 'customer/_send_email';
+        $.ajax({
+            type: "POST",
+            url: url,   
+            dataType: "json",          
+            data: $('#frm-send-email').serialize(),
+            beforeSend: function(data) {
+                $("#btn_send_email").html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            success: function(o)
+            {          
+                $("#btn_send_email").html('Send');
+                if(o.is_success  == 1){
+                    Swal.fire({
+                        html: 'Email sent',                        
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                    $("#send_email_modal").modal('hide');                
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: o.msg
+                    });
+                }                
+            },
+            complete : function(){
+                            
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+
+        $("#btn_send_email").html('<span class="bx bx-loader bx-spin"></span>');
     });
 
     $(document).on('submit', '#frm-send-message', function(e){

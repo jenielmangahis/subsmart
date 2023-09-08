@@ -524,6 +524,11 @@ class Customer_model extends MY_Model
         }
     }
 
+    public function deleteCustomer($id)
+    {
+        $this->db->delete($this->table, array("prof_id" => $id));        
+    }
+
     // public function update_ibiz_phone($data)
     // {
     //     extract($data);

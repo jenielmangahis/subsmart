@@ -62,6 +62,51 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
+    public function getAllSettingsSalesAreaByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('fk_comp_id', $company_id);
+        $this->db->order_by('sa_id', 'DESC');
+        $query = $this->db->get('ac_salesarea');
+        return $query->result();
+    }
+
+    public function getAllSettingsLeadSourceByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('fk_company_id', $company_id);
+        $this->db->order_by('ls_id', 'DESC');
+        $query = $this->db->get('ac_leadsource');
+        return $query->result();
+    }
+
+    public function getAllSettingsLeadTypesByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('lead_id', 'DESC');
+        $query = $this->db->get('ac_leadtypes');
+        return $query->result();
+    }
+
+    public function getAllSettingsRatePlansByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('ac_rateplan');
+        return $query->result();
+    }
+
+    public function getAllSettingsActivationFeeByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('ac_activationfee');
+        return $query->result();
+    }
+
     public function get_data_by_id($fieldname,$fieldvalue,$tablename)
     {
         $this->db->select('*');

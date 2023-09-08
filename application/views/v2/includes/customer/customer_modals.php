@@ -567,3 +567,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="send_email_modal" tabindex="-1" aria-labelledby="send_email_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="frm-send-email">
+            <input type="hidden" name="cid" id="customer-send-email-eid" />
+            <div class="modal-header">
+                <span class="modal-title content-title">Send Email</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Customer Email" name="customer_email" id="customer-email" class="nsm-field form-control mb-2" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Subject" name="customer_email_suject" id="email-subject" class="nsm-field form-control mb-2" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <textarea class="nsm-field form-control mb-2" style="height:250px;" name="customer_email_message" id="email-message" placeholder="Message" required></textarea>                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn_send_email">Send</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
