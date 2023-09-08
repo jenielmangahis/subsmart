@@ -335,10 +335,10 @@ class Customer extends MY_Controller
                             <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='mailto:".$customer->email."'>Email</a>
+                            <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
                         </li>
                         <li>
-                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='<?= $customer->phone_m; ?>'>Call</a>
+                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
                         </li>
                         <li>
                             <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
@@ -347,10 +347,13 @@ class Customer extends MY_Controller
                             <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='".base_url('job/new_job1/')."'>Schedule</a>
+                            <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='#'>Message</a>
+                            <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
                         </li>
                     </ul>
                 </div>";
@@ -2967,6 +2970,7 @@ class Customer extends MY_Controller
         // customer_ad_model
         if(empty($input['lead_id'])){
             unset($input['lead_id']);
+            $input['company_id'] = logged('company_id');
             if($this->customer_ad_model->add($input,"ac_leadtypes")){
                 echo "Success";
             }else{
@@ -3060,6 +3064,7 @@ class Customer extends MY_Controller
         // customer_ad_model
         if(empty($input['sa_id'])){
             unset($input['sa_id']);
+            $input['fk_comp_id'] = logged('company_id');
             if($this->customer_ad_model->add($input,"ac_salesarea")){
                 echo "Sales Area Added!";
             }else{
@@ -3089,6 +3094,7 @@ class Customer extends MY_Controller
         // customer_ad_model
         if(empty($input['ls_id'])){
             unset($input['ls_id']);
+            $input['fk_company_id'] = logged('company_id');
             if($this->customer_ad_model->add($input,"ac_leadsource")){
                 echo "Lead Source Added!";
             }else{
@@ -5318,6 +5324,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9); 
 
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
@@ -5327,7 +5334,7 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($company_id);
 
         $this->load->view('v2/pages/customer/settings_sales_area', $this->page_data);
     }
@@ -5341,6 +5348,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9); 
 
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
@@ -5350,7 +5358,7 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadsource","ls_id");
+        $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id);
         
         $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
     }
@@ -5364,6 +5372,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9); 
 
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
@@ -5373,7 +5382,7 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+        $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($company_id);
 
         $this->load->view('v2/pages/customer/settings_lead_types', $this->page_data);
     }
@@ -5387,6 +5396,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9); 
 
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
@@ -5396,7 +5406,7 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
+        $this->page_data['rate_plans'] = $this->customer_ad_model->getAllSettingsRatePlansByCompanyId($company_id);
         
         $this->load->view('v2/pages/customer/settings_rate_plans', $this->page_data);
     }
@@ -5410,6 +5420,7 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9); 
 
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
@@ -5419,16 +5430,7 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        // get activation fee
-        $activation_fee_query = array(
-            'table' => 'ac_activationfee',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'select' => '*',
-        );
-        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
-
+        $this->page_data['activation_fee'] = $this->customer_ad_model->getAllSettingsActivationFeeByCompanyId($company_id);
         $this->load->view('v2/pages/customer/settings_activation_fee', $this->page_data);
     }
 
@@ -5457,6 +5459,7 @@ class Customer extends MY_Controller
             'table' => 'ac_system_package_type',
             'order' => array(
                 'order_by' => 'id',
+                'ordering' => 'DESC'
             ),
             'select' => '*',
         );
@@ -6762,12 +6765,21 @@ class Customer extends MY_Controller
                 'to_email' => $post['customer_email'],
                 'subject' => $post['customer_email_suject'],
                 'message' => $post['customer_email_message'],
-                'is_sent' => 0,
+                'is_sent' => 1,
                 'date_created' => date("Y-m-d H:i:s")
             ];
 
             $this->AcsSentEmail_model->create($data_acs_emails);
 
+            //Send Email
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($post['customer_email'], $post['customer_email']);
+            $mail->isHTML(true);
+            $mail->Subject = $post['customer_email_suject'];
+            $mail->Body    = $post['customer_email_message'];
+            $sendEmail = $mail->Send();
+            
             $is_success = 1;
             $msg = '';
         }
@@ -6776,4 +6788,63 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+
+    public function ajax_lead_send_email(){
+        $is_success = 1;
+        $msg = 'Cannot send email';
+
+        $post = $this->input->post();
+        if( $post['lead_email_suject'] == '' ){
+            $msg = 'Please enter email subject';
+            $is_success = 0;
+        }
+
+        if( $post['lead_email'] == '' ){
+            $msg = 'Please enter customer email';
+            $is_success = 0;
+        }
+
+        if( $post['lead_email_message'] == '' ){
+            $msg = 'Please enter email message';
+            $is_success = 0;
+        }       
+        
+        if( $is_success == 1 ){
+            //Send Email
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($post['lead_email'], $post['lead_email']);
+            $mail->isHTML(true);
+            $mail->Subject = $post['lead_email_suject'];
+            $mail->Body    = $post['lead_email_message'];
+            $sendEmail = $mail->Send();
+            
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function ajax_delete_customer(){
+        $this->load->model('Customer_model');
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $customer   = $this->Customer_model->getCustomer($post['cid']);
+        if( $customer && $customer->company_id == $company_id ){
+            $this->Customer_model->deleteCustomer($post['cid']);
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
+    
 }
