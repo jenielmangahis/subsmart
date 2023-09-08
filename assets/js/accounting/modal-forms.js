@@ -5440,6 +5440,11 @@ $(function() {
                                 minimumResultsForSearch: -1,
                                 dropdownParent: $('#modal-container #payee-modal')
                             });
+
+                            $('#modal-container #payee-modal #customer-type').select2({
+                                minimumResultsForSearch: -1,
+                                dropdownParent: $('#modal-container #payee-modal')
+                            });
                         }
 
                         $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-backdrop', 'static');
@@ -6049,6 +6054,7 @@ $(function() {
         e.preventDefault();
 
         var data = new FormData(this);
+        var hasPayeeType = data.has('payee_type');
         if (!data.has('payee_type')) {
             var type = dropdownEl.attr('id');
 
@@ -6081,7 +6087,11 @@ $(function() {
                 }
 
                 if (dropdownEl !== null) {
-                    dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`).trigger('change');
+                    if(hasPayeeType) {
+                        dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`).trigger('change');
+                    } else {
+                        dropdownEl.append(`<option value="${res.payee.id}" selected>${name}</option>`).trigger('change');
+                    }
                 }
 
                 $('#modal-container #payee-modal').modal('hide');
@@ -6091,6 +6101,60 @@ $(function() {
 
     $(document).on('hidden.bs.modal', '#modal-container #payee-modal', function() {
         $('#modal-container #payee-modal').remove();
+    });
+
+    $(document).on('change', '#modal-container #payee-modal #payee_type', function() {
+        if($(this).val() === 'customer') {
+            var fields = `<div class="col-12">
+                <label for="email">Email</label>
+                <input data-type="customer_email" type="email" class="form-control nsm-field mb-2" name="email" id="email" required />
+            </div>
+            <div class="col-12">
+                <label for="phone-m">Mobile</label>
+                <input type="text" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
+            </div>
+            <div class="col-12 mb-2">
+                <label for="customer-type">Customer Type</label>
+                <select id="customer-type"  name="customer_type"  data-customer-source="dropdown"  class="form-control input_select" required>
+                    <option value="Residential">Residential</option>
+                    <option value="Business">Business</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="street">Address</label>
+                <input name="street" id="street" class="form-control nsm-field mb-2" placeholder="Street" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <input name="city" type="text" class="form-control nsm-field mb-2" placeholder="City" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <input name="state" type="text" class="form-control nsm-field mb-2" placeholder="State" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <input name="zip_code" type="text" class="form-control nsm-field mb-2" placeholder="ZIP Code" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <input name="country" type="text" class="form-control nsm-field mb-2" placeholder="Country">
+            </div>`;
+            $(fields).insertBefore($(this).parent());
+
+            $('#modal-container #payee-modal #customer-type').select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #payee-modal')
+            });
+
+            $('#modal-container #payee-modal #add-payee-details').remove();
+        } else {
+            $('#modal-container #payee-modal #email').parent().remove();
+            $('#modal-container #payee-modal #phone-m').parent().remove();
+            $('#modal-container #payee-modal #customer-type').parent().remove();
+            $('#modal-container #payee-modal #street').parent().remove();
+            $('#modal-container #payee-modal input[name="city"]').parent().remove();
+            $('#modal-container #payee-modal input[name="state"]').parent().remove();
+            $('#modal-container #payee-modal input[name="zip_code"]').parent().remove();
+            $('#modal-container #payee-modal input[name="country"]').parent().remove();
+            $('#modal-container #payee-modal .modal-footer').prepend(`<button type="button" class="nsm-button" id="add-payee-details"><i class="bx bx-fw bx-plus"></i> Details</button>`);
+        }
     });
 
     $(document).on('click', '#modal-container #payee-modal #add-payee-details', function() {
@@ -6219,93 +6283,93 @@ $(function() {
                 $('#modal-container #vendor-modal').modal('show');
             });
         } else {
-            $.get('/accounting/get-add-customer-details-modal', function(result) {
-                $('#modal-container').append(result);
+            // $.get('/accounting/get-add-customer-details-modal', function(result) {
+            //     $('#modal-container').append(result);
 
-                var customerAttachment = new Dropzone(`#customerAttachment`, {
-                    url: '/accounting/attachments/attach',
-                    maxFilesize: 20,
-                    uploadMultiple: true,
-                    // maxFiles: 1,
-                    addRemoveLinks: true,
-                    init: function() {
-                        this.on("success", function(file, response) {
-                            var ids = JSON.parse(response)['attachment_ids'];
-                            for (i in ids) {
-                                if ($('#customer-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                                    $('#modal-container #customer-modal #custAttachment').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                                }
+            //     var customerAttachment = new Dropzone(`#customerAttachment`, {
+            //         url: '/accounting/attachments/attach',
+            //         maxFilesize: 20,
+            //         uploadMultiple: true,
+            //         // maxFiles: 1,
+            //         addRemoveLinks: true,
+            //         init: function() {
+            //             this.on("success", function(file, response) {
+            //                 var ids = JSON.parse(response)['attachment_ids'];
+            //                 for (i in ids) {
+            //                     if ($('#customer-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+            //                         $('#modal-container #customer-modal #custAttachment').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+            //                     }
 
-                                custAttIds.push(ids[i]);
-                            }
-                            custAttFiles.push(file);
-                        });
-                    },
-                    removedfile: function(file) {
-                        var ids = custAttIds;
-                        var index = custAttFiles.map(function(d, index) {
-                            if (d == file) return index;
-                        }).filter(isFinite)[0];
+            //                     custAttIds.push(ids[i]);
+            //                 }
+            //                 custAttFiles.push(file);
+            //             });
+            //         },
+            //         removedfile: function(file) {
+            //             var ids = custAttIds;
+            //             var index = custAttFiles.map(function(d, index) {
+            //                 if (d == file) return index;
+            //             }).filter(isFinite)[0];
 
-                        $('#modal-container #customer-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+            //             $('#modal-container #customer-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
-                        //remove thumbnail
-                        var previewElement;
-                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-                    }
-                });
+            //             //remove thumbnail
+            //             var previewElement;
+            //             return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            //         }
+            //     });
 
-                $('#modal-container #customer-modal select').select2({
-                    minimumResultsForSearch: -1,
-                    dropdownParent: $('#modal-container #customer-modal')
-                });
+            //     $('#modal-container #customer-modal select').select2({
+            //         minimumResultsForSearch: -1,
+            //         dropdownParent: $('#modal-container #customer-modal')
+            //     });
 
-                $('#modal-container #customer-modal .date').datepicker({
-                    format: 'mm/dd/yyyy',
-                    orientation: 'bottom',
-                    autoclose: true
-                });
+            //     $('#modal-container #customer-modal .date').datepicker({
+            //         format: 'mm/dd/yyyy',
+            //         orientation: 'bottom',
+            //         autoclose: true
+            //     });
 
-                switch (nameSplit.length.toString()) {
-                    case '1':
-                        $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
-                        break;
-                    case '2':
-                        $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
-                        $('#modal-container #customer-modal #l_name').val(nameSplit[1]);
-                        break;
-                    case '3':
-                        $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
-                        $('#modal-container #customer-modal #m_name').val(nameSplit[1]);
-                        $('#modal-container #customer-modal #l_name').val(nameSplit[2]);
-                        break;
-                    case '4':
-                        $('#modal-container #customer-modal #title').val(nameSplit[0]);
-                        $('#modal-container #customer-modal #f_name').val(nameSplit[1]);
-                        $('#modal-container #customer-modal #m_name').val(nameSplit[2]);
-                        $('#modal-container #customer-modal #l_name').val(nameSplit[3]);
-                        break;
-                    case '5':
-                        $('#modal-container #customer-modal #title').val(nameSplit[0]);
-                        $('#modal-container #customer-modal #f_name').val(nameSplit[1]);
-                        $('#modal-container #customer-modal #m_name').val(nameSplit[2]);
-                        $('#modal-container #customer-modal #l_name').val(nameSplit[3]);
-                        $('#modal-container #customer-modal #suffix').val(nameSplit[4]);
-                        break;
-                }
+            //     switch (nameSplit.length.toString()) {
+            //         case '1':
+            //             $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
+            //             break;
+            //         case '2':
+            //             $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
+            //             $('#modal-container #customer-modal #l_name').val(nameSplit[1]);
+            //             break;
+            //         case '3':
+            //             $('#modal-container #customer-modal #f_name').val(nameSplit[0]);
+            //             $('#modal-container #customer-modal #m_name').val(nameSplit[1]);
+            //             $('#modal-container #customer-modal #l_name').val(nameSplit[2]);
+            //             break;
+            //         case '4':
+            //             $('#modal-container #customer-modal #title').val(nameSplit[0]);
+            //             $('#modal-container #customer-modal #f_name').val(nameSplit[1]);
+            //             $('#modal-container #customer-modal #m_name').val(nameSplit[2]);
+            //             $('#modal-container #customer-modal #l_name').val(nameSplit[3]);
+            //             break;
+            //         case '5':
+            //             $('#modal-container #customer-modal #title').val(nameSplit[0]);
+            //             $('#modal-container #customer-modal #f_name').val(nameSplit[1]);
+            //             $('#modal-container #customer-modal #m_name').val(nameSplit[2]);
+            //             $('#modal-container #customer-modal #l_name').val(nameSplit[3]);
+            //             $('#modal-container #customer-modal #suffix').val(nameSplit[4]);
+            //             break;
+            //     }
 
-                $('#modal-container #customer-modal #display_name').val(name);
-                $('#modal-container #customer-modal #print_on_check_name').val(name);
-                $('#modal-container #payee-modal').modal('hide');
+            //     $('#modal-container #customer-modal #display_name').val(name);
+            //     $('#modal-container #customer-modal #print_on_check_name').val(name);
+            //     $('#modal-container #payee-modal').modal('hide');
 
-                $('#modal-container #customer-modal').attr('data-bs-backdrop', 'static');
-                $('#modal-container #customer-modal').attr('data-bs-keyboard', 'false');
-                $('#modal-container #customer-modal').modal('show');
-                // $('#modal-container #customer-modal').modal({
-                //     backdrop: 'static',
-                //     keyboard: false
-                // });
-            });
+            //     $('#modal-container #customer-modal').attr('data-bs-backdrop', 'static');
+            //     $('#modal-container #customer-modal').attr('data-bs-keyboard', 'false');
+            //     $('#modal-container #customer-modal').modal('show');
+            //     // $('#modal-container #customer-modal').modal({
+            //     //     backdrop: 'static',
+            //     //     keyboard: false
+            //     // });
+            // });
         }
     });
 
