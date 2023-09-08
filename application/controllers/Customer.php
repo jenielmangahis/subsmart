@@ -351,9 +351,12 @@ class Customer extends MY_Controller
                         </li>
                         <li>
                             <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+<<<<<<< HEAD
                         </li>
                         <li>
                             <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
+=======
+>>>>>>> 1f7af1a8d109c8591c0321d1422a82ed5518bfdf
                         </li>
                     </ul>
                 </div>";
@@ -6788,6 +6791,7 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+<<<<<<< HEAD
 
     public function ajax_lead_send_email(){
         $is_success = 1;
@@ -6846,5 +6850,7 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+=======
+>>>>>>> 1f7af1a8d109c8591c0321d1422a82ed5518bfdf
     
 }
