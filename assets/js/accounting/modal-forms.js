@@ -9205,6 +9205,12 @@ $(function() {
             }
         });
     });
+
+    $(document).on('hide.bs.modal', '#modal-container #modal-form .modal', function(e) {
+        e.preventDefault();
+
+        location.reload();
+    });
 });
 
 const convertToDecimal = (el) => {

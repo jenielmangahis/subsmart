@@ -81,7 +81,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '8'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$template['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '8'?>"><b><?=$template['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['amount_total']?></b></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
@@ -147,6 +147,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="35">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="35" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
@@ -246,7 +254,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '8'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$template['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '8'?>"><b><?=$template['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$template['amount_total']?></b></td>
                             <td <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>></td>
                             <td <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>></td>
@@ -312,6 +320,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="35">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="35" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>

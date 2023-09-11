@@ -80,6 +80,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
@@ -178,6 +186,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?php if($show_report_basis === null) : ?><?=!isset($accounting_method) ? 'Accrual basis' : 'Cash basis' ?><?php endif; ?> <?=date($prepared_timestamp)?>
