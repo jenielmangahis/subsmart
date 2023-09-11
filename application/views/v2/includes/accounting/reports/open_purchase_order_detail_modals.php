@@ -652,7 +652,7 @@
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-taxable-amount" <?=isset($columns) && in_array('Taxable Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-taxable-amount">
-                                                                TaxableAmount
+                                                                Taxable Amount
                                                             </label>
                                                         </div>
                                                     </div>
@@ -726,9 +726,31 @@
                                                     <?php if(isset($filter_vendor)) : ?>
                                                     <option value="<?=$filter_vendor->id?>" selected><?=$filter_vendor->name?></option>
                                                     <?php else : ?>
-                                                    <option value="all" selected>all</option>
+                                                    <option value="all" selected>All</option>
                                                     <?php endif; ?>
                                                 </select>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=isset($filter_memo) ? 'checked' : '' ?> type="checkbox" name="allow_filter_memo" value="1" id="allow-filter-memo">
+                                                    <label class="form-check-label" for="allow-filter-memo">
+                                                        Memo
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <input type="text" class="nsm-field form-control" value="<?=isset($filter_memo) ? $filter_memo : ''?>" name="filter_memo" id="filter-memo">
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=isset($filter_num) ? 'checked' : '' ?> type="checkbox" name="allow_filter_num" value="1" id="allow-filter-num">
+                                                    <label class="form-check-label" for="allow-filter-num">
+                                                        Num
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <input type="text" class="nsm-field form-control" value="<?=isset($filter_num) ? $filter_num : ''?>" name="filter_num" id="filter-num">
                                             </div>
                                         </div>
                                     </div>

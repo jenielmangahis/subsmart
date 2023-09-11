@@ -315,7 +315,7 @@ $('#run-report-button').on('click', function() {
         url += `columns=${columns}&`;
     }
 
-    url += $('#allow-filter-account').prop('checked') && $('#filter-distribution-account').val() !== 'all' ? `account=${$('#filter-distribution-account').val()}&` : '';
+    url += $('#allow-filter-account').prop('checked') && $('#filter-account').val() !== 'all' ? `account=${$('#filter-account').val()}&` : '';
     url += $('#allow-filter-vendor').prop('checked') && $('#filter-vendor').val() !== 'specified' ? `vendor=${$('#filter-vendor').val()}&` : '';
     url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date=${$('#filter-create-date').val()}&` : '';
     url += $('#allow-filter-create-date').prop('checked') && $('#filter-create-date').val() !== 'all-dates' ? `create-date-from=${$('#filter-create-date-from').val().replaceAll('/', '-')}&` : '';
@@ -493,9 +493,24 @@ $('#save-note').on('click', function(e) {
             if($('#report-note').val().trim() === '') {
                 $('#add-notes, #edit-notes').text('Add notes');
                 $('#add-notes, #edit-notes').attr('id', 'add-notes');
+
+                if($('#print_report_modal table tfoot tr:first-child p').length > 0) {
+                    $('#print_report_modal table tfoot tr:first-child').remove();
+                }
+
+                if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
+                    $('#print_preview_report_modal #report_table_print tfoot tr:first-child').remove();
+                }
             } else {
                 $('#add-notes, #edit-notes').text('Edit notes');
                 $('#add-notes, #edit-notes').attr('id', 'edit-notes');
+
+                $('#print_report_modal table tfoot, #print_preview_report_modal #report_table_print tfoot').prepend(`<tr>
+                    <td colspan="19">
+                        <p class="m-0"><b>Note</b></p>
+                        ${$('#report-note').val().trim().replaceAll("\n", "<br />")}
+                    </td>
+                </tr>`);
             }
 
             $('#report-note-cont').html($('#report-note').val().trim().replaceAll('\n', '<br>'));

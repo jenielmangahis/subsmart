@@ -88,6 +88,7 @@ $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_send_login_details'] = 'Customer/ajax_send_login_details';
 $route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address';
 $route['customer/_update_address_mobile'] = 'Customer/ajax_update_address_mobile';
+$route['customer/_delete_customer'] = 'Customer/ajax_delete_customer';
 
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
 $route['customer/_send_email'] = 'Customer/ajax_send_email';
@@ -880,6 +881,7 @@ $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
 $route['video_estimate'] = 'Inquiries/video_estimate';
+$route['leads/_lead_send_email'] = 'Customer/ajax_lead_send_email';
 
 //paypal
 $route['subscription/index'] = 'Subscription/index';
@@ -1471,6 +1473,7 @@ $route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messag
 $route['sms/_use_sms_template'] = 'Sms/ajax_use_sms_template';
 $route['customer/_get_phone_number'] = 'Customer/ajax_get_phone_number';
 $route['messages/_sms_list'] = 'Sms/ajax_sms_list';
+$route['messages/_company_lead_send'] = 'Sms/ajax_company_lead_send_sms';
 
 
 //Calls

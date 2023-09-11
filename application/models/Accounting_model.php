@@ -253,6 +253,21 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();            
         }
+
+        // Get Vendor Balance Summary data in Database
+        if ($reportType == "vendor_balance_summary") {
+            $this->db->select('accounting_vendors.id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.created_at AS date');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where('accounting_vendors.f_name !=', '');
+            $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 
 }

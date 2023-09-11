@@ -113,7 +113,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b><?=$transaction['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
                             <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
@@ -189,6 +189,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="36">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="36" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
@@ -320,7 +328,7 @@
                         </tr>
                         <?php else : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '28'?>"><b><?=$transaction['name']?></b></td>
                             <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
                             <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['debit_total']?></b></td>
@@ -396,6 +404,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="36">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="36" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>

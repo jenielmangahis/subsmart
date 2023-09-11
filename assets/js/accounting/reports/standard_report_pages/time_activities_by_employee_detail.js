@@ -356,9 +356,24 @@ $('#save-note').on('click', function(e) {
             if($('#report-note').val().trim() === '') {
                 $('#add-notes, #edit-notes').text('Add notes');
                 $('#add-notes, #edit-notes').attr('id', 'add-notes');
+
+                if($('#print_report_modal table tfoot tr:first-child p').length > 0) {
+                    $('#print_report_modal table tfoot tr:first-child').remove();
+                }
+
+                if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
+                    $('#print_preview_report_modal #report_table_print tfoot tr:first-child').remove();
+                }
             } else {
                 $('#add-notes, #edit-notes').text('Edit notes');
                 $('#add-notes, #edit-notes').attr('id', 'edit-notes');
+
+                $('#print_report_modal table tfoot, #print_preview_report_modal #report_table_print tfoot').prepend(`<tr>
+                    <td colspan="19">
+                        <p class="m-0"><b>Note</b></p>
+                        ${$('#report-note').val().trim().replaceAll("\n", "<br />")}
+                    </td>
+                </tr>`);
             }
 
             $('#report-note-cont').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
