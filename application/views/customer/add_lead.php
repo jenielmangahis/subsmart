@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-5 mb-3">
                                         <span>Sales Area</span>
                                         <select class="form-select" id="fk_sa_id" name="fk_sa_id">
                                             <?php
@@ -83,7 +83,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-7 mb-3">
                                         <span>Assigned To</span>
                                         <select class="form-select" id="fk_assign_id" name="fk_assign_id">
                                             <?php
@@ -145,43 +145,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <span>Birthdate</span>
                                         <input class="form-control" type="date" name="date_of_birth" id="date_of_birt" value="<?php if(isset($leads_data)){ echo $leads_data->date_of_birth; } ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <span>Address</span>
-                                        <input class="form-control" type="text" name="address" id="customer_address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required>
+                                    <div class="col-md-3 mb-3">
+                                        <span>Cell Phone</span>
+                                        <input class="form-control phone_number" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required>
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <span>Country</span>
-                                        <input class="form-control" type="text" name="country" id="country" value="<?php if(isset($leads_data)){ echo $leads_data->country; } ?>" required>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span>State</span>
-                                        <input class="form-control" type="text" name="state" id="state" value="<?php if(isset($leads_data)){ echo $leads_data->state; } ?>" required>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span>City</span>
-                                        <input class="form-control" type="text" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" required>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span>County</span>
-                                        <input class="form-control" type="text" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>" required>
-                                    </div>
-                                    <div class="col-md-2 mb-3">
-                                        <span>Zip</span>
-                                        <input class="form-control" type="text" name="zip" id="zip" value="<?php if(isset($leads_data)){ echo $leads_data->zip; } ?>" required>
+                                        <span>Email Address</span>
+                                        <input class="form-control" type="email" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span>Home/Panel Phone</span>
                                         <input class="form-control phone_number" type="text" name="phone_home" id="phone_home" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?php if(isset($leads_data)){ echo $leads_data->phone_home; } ?>">
                                     </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span>Address</span>
+                                        <input class="form-control" type="text" name="address" id="customer_address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <span>Country</span>
+                                        <input class="form-control" type="text" name="country" id="country" value="<?php if(isset($leads_data)){ echo $leads_data->country; } ?>" required>
+                                    </div>
                                     <div class="col-md-3 mb-3">
-                                        <span>Cell Phone</span>
-                                        <input class="form-control phone_number" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required>
+                                        <span>State</span>
+                                        <input class="form-control" type="text" name="state" id="state" value="<?php if(isset($leads_data)){ echo $leads_data->state; } ?>" required>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span>Email Address</span>
-                                        <input class="form-control" type="email" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>">
+                                    <div class="col-md-3 mb-3">
+                                        <span>City</span>
+                                        <input class="form-control" type="text" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" required>
                                     </div>
-                                    <div class="col-md-9 mb-3">
+                                    <div class="col-md-3 mb-3">
+                                        <span>County</span>
+                                        <input class="form-control" type="text" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <span>Zip</span>
+                                        <input class="form-control" type="text" name="zip" id="zip" value="<?php if(isset($leads_data)){ echo $leads_data->zip; } ?>" required>
+                                    </div>                                    
+                                    <div class="col-md-3 mb-3">
                                         <span>Social Security Number</span>
                                         <input class="form-control" type="text" maxlength="11" placeholder="xxx-xx-xxxx" class="form-control" name="sss_num" id="sss_num" value="<?php echo $leads_data->sss_num; ?>">
                                     </div>

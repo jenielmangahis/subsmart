@@ -41,6 +41,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_sales_area') ?>">Sales Area</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_lead_source') ?>">Lead Source</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_lead_types') ?>">Lead Types</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('customer/status') ?>">Status</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_rate_plans') ?>">Rate Plan</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_activation_fee') ?>">Activation Fee</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>

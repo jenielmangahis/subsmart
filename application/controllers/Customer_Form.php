@@ -16,7 +16,9 @@ class Customer_Form extends MY_Controller
     public function apiGetSalesAreas()
     {
         $this->load->model('Customer_advance_model', 'customer_ad_model');
-        $retval = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        //$retval = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $company_id = logged('company_id');
+        $retval = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($company_id);
 
         $search = strtolower($this->input->get('search'));
         if (!empty($search)) {
@@ -32,10 +34,16 @@ class Customer_Form extends MY_Controller
     public function apiGetRatePlans()
     {
         $this->load->model('General_model', 'general');
-        $retval = $this->general->get_data_with_param([
+
+        $get_rate_plan = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+            ),
             'table' => 'ac_rateplan',
             'select' => 'id,amount',
-        ]);
+        );
+
+        $retval = $this->general->get_data_with_param($get_rate_plan);
 
         $search = strtolower($this->input->get('search'));
         if (!empty($search)) {
@@ -55,10 +63,16 @@ class Customer_Form extends MY_Controller
     public function apiGetActivationFees()
     {
         $this->load->model('General_model', 'general');
-        $retval = $this->general->get_data_with_param([
+
+        $get_activation_fee = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+            ),
             'table' => 'ac_activationfee',
             'select' => 'id,amount',
-        ]);
+        );
+
+        $retval = $this->general->get_data_with_param($get_activation_fee);
 
         $search = strtolower($this->input->get('search'));
         if (!empty($search)) {

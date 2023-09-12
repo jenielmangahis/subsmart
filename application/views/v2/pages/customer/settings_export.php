@@ -95,29 +95,29 @@
                                                         <?php endif; ?>    
                                                     <?php endforeach; ?>
                                                 </div>
-
-                                                <div class="col-md-2">
+                                                <?php if( $company_id == 24 || $company_id == 31 || $company_id == 58 ){ ?>
+                                                    <div class="col-md-2">
                                                     <h5>Alarm Information</h5>
-                                                    <?php foreach ($importFieldsList as $header): ?>
-                                                        <?php if($header->field_category == 4): ?>
-                                                            <?php
-                                                            $checked  = '';
-                                                                if (in_array($header->id, $fieldsValue)) {
-                                                                    $checked = 'checked="checked"';
-                                                                }
-                                                            ?>
-                                                            <div class="col-12">
-                                                                <div class="d-block">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                        <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                        <?php foreach ($importFieldsList as $header): ?>
+                                                            <?php if($header->field_category == 4): ?>
+                                                                <?php
+                                                                $checked  = '';
+                                                                    if (in_array($header->id, $fieldsValue)) {
+                                                                        $checked = 'checked="checked"';
+                                                                    }
+                                                                ?>
+                                                                <div class="col-12">
+                                                                    <div class="d-block">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                            <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    <?php endforeach; ?>
-                                                </div>
-
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                <?php } ?>
                                                 <div class="col-md-2">
                                                     <h5>Contact Information</h5>
                                                     <?php foreach ($importFieldsList as $header):?>

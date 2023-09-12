@@ -37,7 +37,7 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Amount">Amount</td>
-                            <td data-name="Date Created">Date Created</td>
+                            <td data-name="Date Created" style="width:10%;">Date Created</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>

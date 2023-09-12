@@ -93,6 +93,10 @@ $route['customer/_delete_customer'] = 'Customer/ajax_delete_customer';
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
 $route['customer/_send_email'] = 'Customer/ajax_send_email';
 $route['customer/_get_customer_lists'] = 'Customer/ajax_customer_lists';
+$route['customer/status'] = 'Customer/settingStatus';
+$route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
+$route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
+$route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';

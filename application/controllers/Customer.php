@@ -1045,6 +1045,28 @@ class Customer extends MY_Controller
 
     }
 
+    public function settingStatus()
+    {
+        $this->page_data['page']->title = 'Customer Status';
+        $this->page_data['page']->parent = 'Customers';
+        $this->hasAccessModule(9); 
+
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+
+        $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
+    }
+
     public function settings()
     {
         $this->page_data['page']->title = 'Customer Settings';
@@ -1892,10 +1914,10 @@ class Customer extends MY_Controller
         $get_customer_groups = array(
             'where' => array(
                     'company_id' => logged('company_id')
-                ),
-                'table' => 'customer_groups',
-                'select' => '*',
-            );
+            ),
+            'table' => 'customer_groups',
+            'select' => '*',
+        );
 
         $get_login_user = array(
             'where' => array(
@@ -1930,6 +1952,18 @@ class Customer extends MY_Controller
             'table' => 'ac_system_package_type',
             'select' => '*',
         );
+
+        $get_customer_status = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+            ),
+            'or_where' => array(
+                'company_id' => 0,
+            ),
+            'table' => 'acs_cust_status',
+            'select' => '*',
+        );
+
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
 
@@ -1955,7 +1989,8 @@ class Customer extends MY_Controller
         $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
     
         // fetch customer statuses
-        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
@@ -2543,6 +2578,7 @@ class Customer extends MY_Controller
         $input_papers['submitted'] = $input['submitted'];
         $input_papers['funded'] = $input['funded'];
         $input_papers['charged_back'] = $input['charged_back'];
+        //$input_papers['paperwork'] = $input['paperwork'];
         $check = array(
             'where' => array(
                 'customer_id' => $id
@@ -3819,6 +3855,8 @@ class Customer extends MY_Controller
 
     public function customer_export()
     {        
+        $this->load->model('Users_model');
+
         $user_id = logged('id');
         $items =  $this->customer_ad_model->getExportData();
 
@@ -3827,6 +3865,7 @@ class Customer extends MY_Controller
             'select' => '*',
         );
         $importFieldsList = $this->general->get_data_with_param($getImportFields);
+        $emergency_contacts_fields = ['contact_name1', 'first_relation', 'contact_phone1', 'contact_name2', 'second_relation', 'contact_phone2', 'contact_name3', 'third_relation', 'contact_phone3'];
         
         $getCompanyImportSettings= array(
             'where' => array(
@@ -3845,25 +3884,170 @@ class Customer extends MY_Controller
         
         $fields = array();
         $fieldNames = array();
+        $is_with_emergency_contacts = 0;
         foreach($fieldCompanyValues as $field) {
             foreach($importFieldsList as $importSetting) {                
                 if($field == $importSetting->id) {
                     array_push($fields,$importSetting->field_description);
                     array_push($fieldNames,$importSetting->field_name);
+                    if( in_array($importSetting->field_name, $emergency_contacts_fields) ){
+                        $is_with_emergency_contacts = 0;
+                    }
                 }
             }
         }
+        
         $delimiter = ",";
         $time      = time();
         $filename  = "customers_list_".$time.".csv";
         $f = fopen('php://memory', 'w');
         fputcsv($f, $fields, $delimiter);
 
-        if (!empty($items)) {
+        if (!empty($items)) {            
             foreach ($items as $item) {
+                if( $is_with_emergency_contacts == 1 ){
+                    $eContacts = array();
+                    $emergencyContacts = $this->customer_ad_model->getAllCustomerEmergencyContactsByCustomerId($item->prof_id);
+                    foreach($emergencyContacts as $e){
+                        $eContacts[] = $e;
+                    }
+                }
+
+                // if( $item->prof_id == 4898 ){
+                //     echo "<pre>";
+                //     print_r($fieldNames);
+                //     print_r($eContacts);
+                //     exit;
+                // }
                 $csvData = array();
                 foreach($fieldNames as $fieldName){
-                    array_push($csvData, $item->$fieldName);
+                    $is_custom_field = 0;
+                    if( $fieldName == 'customer_group_id' ){
+                        $customerGroup = $this->customer_ad_model->getCustomerGroupById($item->$fieldName);
+                        if( $customerGroup ){
+                            array_push($csvData, $customerGroup->name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+
+                        $is_custom_field = 1;
+                    }     
+                    
+                    if( $fieldName == 'fk_sa_id' ){
+                        $salesArea = $this->customer_ad_model->getASalesAreaById($item->$fieldName);
+                        if( $salesArea ){
+                            array_push($csvData, $salesArea->sa_name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'fk_sales_rep_office' || $fieldName == 'technician' ){
+                        $user = $this->Users_model->getUserByID($item->$fieldName);
+                        if( $user ){
+                            $name = $user->FName . ' ' . $user->LName;
+                            array_push($csvData, $name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_name1' ){
+                        if( isset($eContacts[0]) ){
+                            $name = $eContacts[0]->first_name . ' ' . $eContacts[0]->last_name;
+                            array_push($csvData, $name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;                        
+                    }
+
+                    if( $fieldName == 'first_relation' ){
+                        if( isset($eContacts[0]) ){
+                            array_push($csvData, $eContacts[0]->relation);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_phone1' ){
+                        if( isset($eContacts[0]) ){
+                            array_push($csvData, $eContacts[0]->phone);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_name2' ){
+                        if( isset($eContacts[1]) ){
+                            $name = $eContacts[1]->first_name . ' ' . $eContacts[1]->last_name;
+                            array_push($csvData, $name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'second_relation' ){
+                        if( isset($eContacts[1]) ){
+                            array_push($csvData, $eContacts[1]->relation);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_phone2' ){
+                        if( isset($eContacts[1]) ){
+                            array_push($csvData, $eContacts[1]->phone);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_name3' ){
+                        if( isset($eContacts[2]) ){
+                            $name = $eContacts[2]->first_name . ' ' . $eContacts[2]->last_name;
+                            array_push($csvData, $name);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'third_relation' ){
+                        if( isset($eContacts[2]) ){
+                            array_push($csvData, $eContacts[2]->relation);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $fieldName == 'contact_phone3' ){
+                        if( isset($eContacts[2]) ){
+                            array_push($csvData, $eContacts[2]->phone);
+                        }else{
+                            array_push($csvData, '---');
+                        }
+                        $is_custom_field = 1;
+                    }
+
+                    if( $is_custom_field == 0 ){
+                        if( trim($item->$fieldName) != '' ){
+                            array_push($csvData, $item->$fieldName);  
+                        }else{
+                            array_push($csvData, '---');  
+                        }
+                        
+                    }
+                    
                 }
                 fputcsv($f, $csvData, $delimiter);
             }
@@ -4477,9 +4661,11 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Customers';
 
         $this->hasAccessModule(9);
+        $company_id = logged('company_id');
         // pass the $this so that we can use it to load view, model, library or helper classes
        // $customerGroup = new CustomerGroup($this);
-        $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
+        //$this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
+        $this->page_data['customerGroups'] =  $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id);
         // $this->load->view('customer/group/list', $this->page_data);
         $this->load->view('v2/pages/customer/group/list', $this->page_data);
     }
@@ -6838,6 +7024,64 @@ class Customer extends MY_Controller
         $customer   = $this->Customer_model->getCustomer($post['cid']);
         if( $customer && $customer->company_id == $company_id ){
             $this->Customer_model->deleteCustomer($post['cid']);
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function ajax_add_customer_status(){
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['name'] != '' ){
+            $post['company_id'] = logged('company_id');
+            if($this->customer_ad_model->add($post,"acs_cust_status")){
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;        
+    }
+
+    public function ajax_update_customer_status(){
+        $is_success = 0;
+        $msg  = 'Cannot save data';
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){   
+            $status = ['name' => $post['name']];         
+            $this->general->update_with_key_field($status, $post['cs_id'],'acs_cust_status','id');
+            $is_success = 1;
+            $msg = '';            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;       
+    }
+
+    public function ajax_delete_customer_status(){        
+        $is_success = 0;
+        $msg  = 'Cannot find data';
+
+        $post = $this->input->post();
+        $deletion_query = array(
+            'where' => array(
+                'id' => $post['csid']
+            ),
+            'table' => 'acs_cust_status'
+        );
+        if($this->general->delete_($deletion_query)){
             $is_success = 1;
             $msg = '';
         }

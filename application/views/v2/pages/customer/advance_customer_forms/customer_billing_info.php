@@ -100,7 +100,7 @@
                         </select>
                     </div>
                     <div class="col-md-12">
-                        <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 12px;position: absolute;">
+                        <a href="<?= base_url() ?>customer/settings_rate_plans" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 12px;position: absolute;">
                             <span class="fa fa-plus"></span> Manage Rate Plan </a>&nbsp;&nbsp;
                     </div>
                 </div>
@@ -420,10 +420,10 @@
         <hr>
         <?php if(isset($billing_info)): ?>
             <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
-                <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Subscription</button>
+                <button type="button" class="nsm-button primary"><span class="fa fa-plus"></span> Add Subscription</button>
             </a>
             <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
-                <button type="button" class="btn btn-primary"><span class="fa fa-list"></span> View Subscription</button>
+                <button type="button" class="nsm-button primary"><span class="fa fa-list"></span> View Subscription</button>
             </a>
         <?php endif; ?>
 
