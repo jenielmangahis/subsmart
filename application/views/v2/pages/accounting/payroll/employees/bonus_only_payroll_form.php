@@ -36,7 +36,7 @@
                         <td>PAY METHOD</td>
                         <td>BONUS</td>
                         <td>MEMO</td>
-                        <td><?=$bonusPayType === 'gross-pay' ? 'TOTAL PAY' : 'GROSS PAY'?></td>
+                        <td class="text-end"><?=$bonusPayType === 'gross-pay' ? 'TOTAL PAY' : 'GROSS PAY'?></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
                             <td>
                                 <input type="text" name="memo[]" class="form-control nsm-field">
                             </td>
-                            <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
+                            <td><p class="m-0 text-end"><span class="total-pay">$0.00</span></p></td>
                         </tr>
                     <?php endforeach;?>
                     <?php endif; ?>

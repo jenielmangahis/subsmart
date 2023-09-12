@@ -796,13 +796,34 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one'
     var row = $(this).closest('tr');
 
     if($(this).prop('checked')) {
-        row.find('td:nth-child(3)').html(row.data().method);
-        row.find('td:nth-child(4)').html('<input type="number" name="bonus[]" step="0.01" class="form-control nsm-field text-end">');
-        row.find('td:nth-child(5)').html('<input type="text" name="memo[]" class="form-control nsm-field">');
-        row.find('td:nth-child(6)').html('<p class="m-0"><span class="total-pay">$0.00</span></p>');
+        row.children('td').each(function(index, value)  {
+            switch(index) {
+                case 2 :
+                    $(this).html(row.data().method);
+                break;
+                case 3 :
+                    $(this).html('<input type="number" name="bonus[]" step="0.01" class="form-control nsm-field text-end">');
+                break;
+                case 4 :
+                    $(this).html(`<input type="text" name="memo[]" class="form-control nsm-field">`);
+                break;
+                case 5 :
+                    $(this).html(`<p class="m-0 text-end"><span class="total-pay">$0.00</span></p>`);
+                break;
+            }
+        });
     } else {
-        row.find('td:not(:first-child, :nth-child(2))').html('');
+        row.find('td').each(function(index, value) {
+            if (index > 1) {
+                $(this).html('');
+            }
+        });
     }
+
+    var checked = $('#bonus-payroll-modal #payroll-table .select-one:checked').length;
+    var count = $('#bonus-payroll-modal #payroll-table .select-one').length;
+
+    $('#bonus-payroll-modal #payroll-table .select-all').prop('checked', checked === count);
 });
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
@@ -822,6 +843,7 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus
 
     $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)').html(formatter.format(parseFloat(total)));
     $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
+    $('#bonus-payroll-modal h2.total-pay').html(formatter.format(parseFloat(total)));
 });
 
 $(document).on('click', '#bonus-payroll-modal #bonus-pay-select', function() {
@@ -830,11 +852,16 @@ $(document).on('click', '#bonus-payroll-modal #bonus-pay-select', function() {
 });
 
 $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
+    var el = $(this);
+    var parent = el.parent();
     payrollForm = $('#bonus-payroll-modal .modal-body').html();
-    payrollFormData = new FormData();
 
-    payrollFormData.set('pay_from_account', $('#bonus-payroll-modal #bank-account').val());
-    payrollFormData.set('pay_date', $('#payDate').val());
+    for (const pair of payrollFormData.entries()) {
+        payrollFormData.delete(pair[0]);
+    }
+
+    payrollFormData.append('pay_from_account', $('#bonus-payroll-modal #bank-account').val());
+    payrollFormData.append('pay_date', $('#bonus-payroll-modal #payDate').val());
 
     $('#bonus-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
         var row = $(this).closest('tr');
@@ -897,39 +924,71 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
                     aspectRatio: 1.5,
                   }
             });
+
+            el.remove();
+            parent.prepend(`<button type="submit" class="nsm-button success">Submit Payroll</button>`);
+            $('#bonus-payroll-modal #bonus-pay-select').html('Back');
+            $('#bonus-payroll-modal #bonus-pay-select').removeAttr('data-bs-dismiss');
+            $('#bonus-payroll-modal #bonus-pay-select').attr('id', 'back-payroll-form');
         }
     });
-
-    $(this).html('Submit Payroll');
-    $(this).attr('type', 'submit');
-    $(this).removeAttr('id');
-    $('#bonus-payroll-modal #bonus-pay-select').attr('id', 'back-payroll-form');
 });
 
 $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
-    $('div#bonus-payroll-modal div.modal-body').html(payrollForm);
+    $('#bonus-payroll-modal .modal-body').html(payrollForm);
 
-    $('div#bonus-payroll-modal #bank-account').val(payrollFormData.get('pay_from'));
-    $('div#bonus-payroll-modal #payDate').val(payrollFormData.get('pay_date'));
+    $('#bonus-payroll-modal #bank-account').val(payrollFormData.get('pay_from_account')).trigger('change');
+    $('#bonus-payroll-modal #payDate').val(payrollFormData.get('pay_date'));
 
-    $('div#bonus-payroll-modal div.modal-body table tbody tr').each(function() {
-        if($(this).children('td:nth-child(4)').children('input').length === 0) {
-            $(this).find('.select-one').prop('checked', false)
+    var employees = payrollFormData.getAll('employees[]');
+
+    $('#bonus-payroll-modal #payroll-table tr td .select-one').each(function() {
+        if(employees.includes($(this).val())) {
+            $(this).prop('checked', true);
+        } else {
+            $(this).prop('checked', false);
         }
     });
 
-    $('div#bonus-payroll-modal div.modal-body table tbody tr td:nth-child(4) input[name="bonus[]"]').each(function(index,value) {
-        $(this).val(payrollFormData.getAll('bonus[]')[index]);
-    });
+    if(employees.length === $('#bonus-payroll-modal #payroll-table tr td .select-one').length) {
+        $('#bonus-payroll-modal #payroll-table thead .select-all').prop('checked', true);
+    } else {
+        $('#bonus-payroll-modal #payroll-table thead .select-all').prop('checked', false);
+    }
 
-    $('div#bonus-payroll-modal div.modal-body table tbody tr td:nth-child(5) input[name="memo[]"]').each(function(index,value) {
-        $(this).val(payrollFormData.getAll('memo[]')[index]);
-    });
+    var bonus = payrollFormData.getAll('bonus[]');
+    var memos = payrollFormData.getAll('memo[]');
+    for(i = 0; i < memos.length; i++)
+    {
+        $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="bonus[]"]').val(bonus[i]);
+        $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="memo[]"]').val(memos[i]);
+    }
 
-    $(this).parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="bonus-pay-select">Back</button>');
-    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').html('Preview Payroll');
-    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
-    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').prop('type', 'button');
+    $(this).parent().html('<button type="button" class="nsm-button primary" id="bonus-pay-select">Back</button>');
+    $('#bonus-payroll-modal .modal-footer button[type="submit"]').parent().prepend(`<button type="button" class="nsm-button success" id="preview-payroll">Preview payroll</button>`);
+    $('#bonus-payroll-modal .modal-footer button[type="submit"]').remove();
+
+    $('#bonus-payroll-modal .modal-body select#bank-account').next().remove();
+    $('#bonus-payroll-modal .modal-body select#bank-account').select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'bank-account',
+                    modal: 'bonus-payroll-modal'
+                }
+
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect,
+        dropdownParent: $('#bonus-payroll-modal')
+    });
 });
 
 $('#commission-payroll-modal .modal-body select:not(#bank-account)').select2({
@@ -977,7 +1036,13 @@ $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', fun
         row.find('td:nth-child(5)').html('<input type="text" name="memo[]" class="form-control nsm-field">');
         row.find('td:nth-child(6)').html('<p class="m-0"><span class="total-pay">$0.00</span></p>');
     } else {
-        row.find('td:not(:first-child, :nth-child(2))').html('');
+        row.find('td').each(function(index, value) {
+            if (index > 1) {
+                $(this).html('');
+            }
+        });
+
+        commissionTotal();
     }
 });
 
@@ -1071,12 +1136,43 @@ $('#commission-payroll-modal #preview-payroll').on('click', function() {
         }
     });
 
-    $(this).html('Submit Payroll');
-    $(this).attr('type', 'submit');
-    $(this).removeAttr('id');
-    $('#commission-payroll-modal #close-payroll-modal').html('Back');
-    $('#commission-payroll-modal #close-payroll-modal').removeAttr('data-bs-dismiss');
-    $('#commission-payroll-modal #close-payroll-modal').removeAttr('id');
+    if(employees.length === $('#commission-payroll-modal #payroll-table tr td .select-one').length) {
+        $('#commission-payroll-modal #payroll-table thead .select-all').prop('checked', true);
+    } else {
+        $('#commission-payroll-modal #payroll-table thead .select-all').prop('checked', false);
+    }
+
+    var memos = payrollFormData.getAll('memo[]');
+    for(i = 0; i < memos.length; i++)
+    {
+        $(`#commission-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="memo[]"]').val(memos[i]);
+    }
+
+    $(this).parent().html('<button type="button" class="nsm-button primary" data-bs-dismiss="modal" id="close-payroll-modal">Close</button>');
+    $('#commission-payroll-modal .modal-footer button[type="submit"]').parent().prepend(`<button type="button" class="nsm-button success" id="preview-payroll">Preview payroll</button>`);
+    $('#commission-payroll-modal .modal-footer button[type="submit"]').remove();
+
+    $('#commission-payroll-modal .modal-body select#bank-account').next().remove();
+    $('#commission-payroll-modal .modal-body select#bank-account').select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'bank-account',
+                    modal: 'commission-payroll-modal'
+                }
+
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect,
+        dropdownParent: $('#commission-payroll-modal')
+    });
 });
 
 function upcomingPayPeriods(el)

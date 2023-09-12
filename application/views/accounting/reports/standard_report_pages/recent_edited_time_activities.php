@@ -341,7 +341,7 @@
                                     <?php endif; ?>
                                     <?php if(isset($show_report_period)) : ?>
                                     <div class="col-12 grid-mb">
-                                        <p class="m-0">Created/Edited: Since <?=date("F j, Y")?></p>
+                                        <p class="m-0">Created/Edited: Since <?=date("F j, Y", strtotime("-30 days"))?></p>
                                     </div>
                                     <?php endif; ?>
                                 </div>

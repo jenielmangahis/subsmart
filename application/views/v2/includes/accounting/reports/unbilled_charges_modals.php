@@ -129,6 +129,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="19">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="19" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
@@ -276,6 +284,14 @@
                         <?php endif; ?>
                     </tbody>
                     <tfoot>
+                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                        <tr>
+                            <td colspan="19">
+                                <p class="m-0"><b>Note</b></p>
+                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td colspan="19" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
