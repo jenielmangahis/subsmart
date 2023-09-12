@@ -47,6 +47,7 @@
                         <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
                     <?php } ?>
                 </select>
+                <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/group') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Customer Group</a>&nbsp;&nbsp;
             </div>
         </div>
         <?php if($company_id == 1): ?>

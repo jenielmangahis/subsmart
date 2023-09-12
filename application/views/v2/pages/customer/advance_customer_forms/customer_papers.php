@@ -46,15 +46,15 @@
                 </label>
                 <div class="input-group">
                     <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="scanned_date">
+                        <input class="form-check-input mt-0" <?= isset($papers->paperwork) ? "checked" : "" ?> type="checkbox" value="scanned_date">
                     </div>
                     <select class="nsm-field form-select" name="paperwork" id="paperwork">
                         <option value="" selected="selected">Select</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Pending Kept">Pending Kept</option>
-                        <option value="Pending Sent">Pending Sent</option>
-                        <option value="None">None</option>
+                        <option value="Approved" <?= $papers->paperwork == 'Approved' ? 'selected="selected"' : ''; ?>>Approved</option>
+                        <option value="Rejected" <?= $papers->paperwork == 'Rejected' ? 'selected="selected"' : ''; ?>>Rejected</option>
+                        <option value="Pending Kept" <?= $papers->paperwork == 'Pending Kept' ? 'selected="selected"' : ''; ?>>Pending Kept</option>
+                        <option value="Pending Sent" <?= $papers->paperwork == 'Pending Sent' ? 'selected="selected"' : ''; ?>>Pending Sent</option>
+                        <option value="None" <?= $papers->paperwork == 'None' ? 'selected="selected"' : ''; ?>>None</option>
                     </select>
                 </div>
             </div>

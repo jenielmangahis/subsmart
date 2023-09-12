@@ -218,7 +218,7 @@
                 "                    <input type=\"text\" class=\"form-control\" name=\"custom_value[]\" id=\"office_custom_field1\" value=\"\" />\n" +
                 "                </div>\n" +
                 "                <div class=\"col-md-2\">\n" +
-                "                    <button style=\"margin-top: 23px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><i class='bx bx-trash'></i></button>\n" +
+                "                    <button style=\"margin-top: 22px; font-size:12px;\" type=\"button\" class=\"nsm-button primary items_remove_btn remove_item_row\"><i class='bx bx-trash'></i></button>\n" +
                 "                </div>\n" +
                 "            </div>";
             $("#custom_field").append(custom_field_form);

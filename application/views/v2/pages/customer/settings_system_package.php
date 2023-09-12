@@ -37,7 +37,7 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
-                            <td data-name="Date Created">Date Created</td>
+                            <td data-name="Date Created" style="width:10%;">Date Created</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -132,9 +132,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }
                     $("#new_system_package_modal").modal('hide');
@@ -169,9 +169,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }
                     $("#edit_system_package_modal").modal('hide');
@@ -210,9 +210,9 @@
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             }
                         },

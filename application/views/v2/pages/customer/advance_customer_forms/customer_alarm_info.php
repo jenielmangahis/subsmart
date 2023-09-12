@@ -336,7 +336,7 @@
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
                     </select>
-                    <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
+                    <!-- <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp; -->
                 </div>
             </div>
             <div class="row form_line field-custom-name-container">
@@ -610,8 +610,8 @@
                 <div class="input-group">
                     <input data-type="access_info_pass" type="text" class="form-control" name="access_password" id="password" data-value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
                     <div class="input-group-append">
-                        <button data-action="access_info_generate_pass" class="btn btn-primary" type="button" style="padding: 0;width: 35px;">
-                            <i class="fa fa-refresh"></i>
+                        <button data-action="access_info_generate_pass" class="nsm-button primary" type="button" style="font-size:17px;padding: 0;width: 35px;margin-top:5px;margin-left:5px;">
+                            <i class='bx bx-refresh'></i>
                         </button>
                     </div>
                 </div>
@@ -621,7 +621,7 @@
         <div class="row form_line mt-2">
             <div class="col-md-6"></div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-primary btn-md" name="reset_password" data-id="<?= $access_info->fk_prof_id; ?>" id="btn-notify-customer-new-pw" >Send Email Reset </button>
+                <button type="button" class="nsm-button primary btn-md" name="reset_password" data-id="<?= $access_info->fk_prof_id; ?>" id="btn-notify-customer-new-pw" >Send Email Reset </button>
             </div>
         </div>
         <?php endif; ?>
@@ -650,7 +650,7 @@
                         <input type="text" class="form-control" name="custom_value[]" value="<?= $field->value; ?>" />
                     </div>
                     <div class="col-md-2">
-                        <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
+                        <button style="margin-top: 22px; font-size:12px;" type="button" class="nsm-button primary items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             <?php endforeach; ?>

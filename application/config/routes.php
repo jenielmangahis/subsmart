@@ -93,6 +93,10 @@ $route['customer/_delete_customer'] = 'Customer/ajax_delete_customer';
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
 $route['customer/_send_email'] = 'Customer/ajax_send_email';
 $route['customer/_get_customer_lists'] = 'Customer/ajax_customer_lists';
+$route['customer/status'] = 'Customer/settingStatus';
+$route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
+$route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
+$route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -378,6 +382,7 @@ $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
 $route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
 $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_form';
 $route['accounting/get-payroll-form/(:any)'] = 'accounting_modals/get_payroll_form/$1';
+$route['accounting/get-employee-pay-details']['post'] = 'accounting_modals/get_employee_pay_details';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-statement-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';

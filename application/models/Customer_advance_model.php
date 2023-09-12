@@ -71,12 +71,49 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
+    public function getASalesAreaById($id)
+    {
+        $this->db->select('*');        
+        $this->db->where('sa_id', $id);        
+        $query = $this->db->get('ac_salesarea');
+        return $query->row();
+    }
+
     public function getAllSettingsLeadSourceByCompanyId($company_id)
     {
         $this->db->select('*');        
         $this->db->where('fk_company_id', $company_id);
         $this->db->order_by('ls_id', 'DESC');
         $query = $this->db->get('ac_leadsource');
+        return $query->result();
+    }
+
+    public function getAllSettingsCustomerStatusByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('company_id', $company_id);
+        $this->db->or_where('company_id', 0);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('acs_cust_status');
+        return $query->result();
+    }
+
+    public function getAllSettingsCustomerGroupByCompanyId($company_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('company_id', $company_id);
+        $this->db->or_where('company_id', 0);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('customer_groups');
+        return $query->result();
+    }
+
+    public function getAllCustomerEmergencyContactsByCustomerId($customer_id)
+    {
+        $this->db->select('*');        
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get('contacts');
         return $query->result();
     }
 
@@ -96,6 +133,14 @@ class Customer_advance_model extends MY_Model {
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get('ac_rateplan');
         return $query->result();
+    }
+
+    public function getCustomerGroupById($id)
+    {
+        $this->db->select('*');        
+        $this->db->where('id', $id);        
+        $query = $this->db->get('customer_groups');
+        return $query->row();
     }
 
     public function getAllSettingsActivationFeeByCompanyId($company_id)
