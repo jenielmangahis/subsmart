@@ -129,6 +129,7 @@
                                                 </div>
                                                 <div class="col-4 d-flex align-items-end">
                                                     <button type="submit" class="nsm-button success">Add</button>
+                                                    <button class="nsm-button" id="cancel-new-custom-report-group">Cancel</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -442,6 +443,21 @@
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
+
+                                <div class="row">
+                                    <div class="col-12 d-none" id="report-note-form">
+                                        <textarea name="report_note" id="report-note" maxlength="4000" class="nsm-field form-control mb-3" placeholder="Add notes or include additional info with your report"><?=!is_null($reportNote) ? str_replace("<br />", "", $reportNote->notes) : ''?></textarea>
+                                        <label for="report-note">4000 characters max</label>
+                                        <button class="nsm-button primary float-end" id="save-note">Save</button>
+                                        <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
+                                    </div>
+                                    <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
+                                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                                        <p class="m-0"><b>Note</b></p>
+                                        <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
