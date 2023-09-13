@@ -279,11 +279,21 @@ $('#add-new-custom-report-group').on('click', function(e) {
     e.preventDefault();
 
     $(this).parent().next().removeClass('d-none');
+    $(this).addClass('d-none');
+});
+
+$('#cancel-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $('#custom-group-name').val('');
+    $('#add-new-custom-report-group').removeClass('d-none');
+    $('#new-custom-report-group').parent().addClass('d-none');
 });
 
 $('#new-custom-report-group').on('submit', function(e) {
     e.preventDefault();
 
+    var form = $(this);
     var data = new FormData();
     data.set('name', $('#custom-group-name').val());
 
@@ -298,6 +308,8 @@ $('#new-custom-report-group').on('submit', function(e) {
 
             $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
             $('#custom-group-name').val('');
+            $('#add-new-custom-report-group').removeClass('d-none');
+            form.parent().addClass('d-none');
         }
     });
 });
@@ -497,19 +509,31 @@ $('#save-note').on('click', function(e) {
                 if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
                     $('#print_preview_report_modal #report_table_print tfoot tr:first-child').remove();
                 }
+
+                $('#report-note-cont').html('');
             } else {
                 $('#add-notes, #edit-notes').text('Edit notes');
                 $('#add-notes, #edit-notes').attr('id', 'edit-notes');
 
-                $('#print_report_modal table tfoot, #print_preview_report_modal #report_table_print tfoot').prepend(`<tr>
-                    <td colspan="19">
-                        <p class="m-0"><b>Note</b></p>
-                        ${$('#report-note').val().trim().replaceAll("\n", "<br />")}
-                    </td>
-                </tr>`);
+                if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
+                    $('#print_report_modal table tfoot tr:first-child td span, #print_preview_report_modal #report_table_print tfoot tr:first-child td span').html(`${$('#report-note').val().trim().replaceAll("\n", "<br />")}`);
+                } else {
+                    $('#print_report_modal table tfoot, #print_preview_report_modal #report_table_print tfoot').prepend(`<tr>
+                        <td colspan="19">
+                            <p class="m-0"><b>Note</b></p>
+                            <span>${$('#report-note').val().trim().replaceAll("\n", "<br />")}</span>
+                        </td>
+                    </tr>`);
+                }
+
+                if($('#report-note-cont p, #report-note-cont span').length > 0) {
+                    $('#report-note-cont span').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
+                } else {
+                    $('#report-note-cont').append(`<p class="m-0"><b>Note</b></p>`);
+                    $('#report-note-cont').append(`<span>${$('#report-note').val().trim().replaceAll('\n', '<br>')}</span>`);
+                }
             }
 
-            $('#report-note-cont').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
             $('#report-note-form').addClass('d-none');
             $('#report-note-cont').removeClass('d-none');
         }
