@@ -269,4 +269,10 @@
         $("#notesContent").show();
         $("#addNotesForm").hide();
     });
+
+    // Realtime character counter on report notes.
+    $("#NOTES").on('input', function() {
+        let textLength = $("#NOTES").val().length;
+        $(".noteCharMax").text(textLength + " / 4000 characters max");
+    });
 </script>

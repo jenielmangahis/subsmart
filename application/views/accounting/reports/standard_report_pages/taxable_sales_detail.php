@@ -302,7 +302,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="float-start">4000 characters max</div>
+                                                <div class="float-start noteCharMax">4000 characters max</div>
                                                 <div class="float-end">
                                                     <button type="button" id="NOTE_CLOSE_MODAL" class="nsm-button">Cancel</button>
                                                     <button type="submit" class="nsm-button primary">Save</button>
