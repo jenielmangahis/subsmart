@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="float-start">
+                                                <div class="float-start noteCharMax">
                                                     4000 characters max
                                                 </div>
                                                 <div class="float-end">
@@ -178,14 +178,14 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox enableDisableBusinessName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox enableDisableReportName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
                                     </div>
                                 </div>

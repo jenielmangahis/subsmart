@@ -105,7 +105,7 @@ $(function() {
         }
     });
 
-    $(document).on('keyup', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
+    $(document).on('keyup', timesheetInputs + ', div#singleTimeModal input#time, div#singleTimeModal input#break', function(e) {
         var el = $(this);
         var charLimit = el.val().length;
         var regex = el.val().match("^([0-1][0-9]|[2][0-3])(:|)([0-5][0-9])$");
@@ -118,7 +118,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', timesheetInputs + ', div#singleTimeModal input#time', function(e) {
+    $(document).on('change', timesheetInputs + ', div#singleTimeModal input#time, div#singleTimeModal input#break', function(e) {
         var elVal = $(this).val().trim();
         var split = elVal.search(':') >= 0 ? elVal.split(':') : (elVal.includes('.') && !elVal.includes(':') ? elVal.split('.') : elVal);
         var split1 = "00";
@@ -145,7 +145,7 @@ $(function() {
             $(this).val(split1 + ":" + split2);
         }
 
-        if ($(this).attr('id') !== 'time') {
+        if ($(this).attr('id') !== 'time' && $(this).attr('id') !== 'break') {
             computeTotalHours();
             computeTotalBill();
         }
@@ -1463,7 +1463,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', 'div#singleTimeModal select#startTime, div#singleTimeModal select#endTime, div#singleTimeModal input#time, #singleTimeModal #billable, #singleTimeModal #hourlyRate, #singleTimeModal #taxable', function() {
+    $(document).on('change', 'div#singleTimeModal select#startTime, div#singleTimeModal select#endTime, div#singleTimeModal input#time, div#singleTimeModal input#break, #singleTimeModal #billable, #singleTimeModal #hourlyRate, #singleTimeModal #taxable', function() {
         timeActivitySummary();
     });
 
@@ -7087,7 +7087,7 @@ $(function() {
             location.reload();
         });
     });
-
+//singletimemodal
     $(document).on('click', '#modal-container form #singleTimeModal #delete-time-activity', function(e) {
         e.preventDefault();
 
@@ -9228,7 +9228,7 @@ $(function() {
         });
     });
 
-    $(document).on('hide.bs.modal', '#modal-container #modal-form .modal', function(e) {
+    $(document).on('click', '#modal-container #modal-form .modal button[data-bs-dismiss="modal"]', function(e) {
         e.preventDefault();
 
         location.reload();
@@ -9317,26 +9317,71 @@ const tableWeekDate = (el) => {
         startDate = new Date(startDate.getTime() + 86400000);
     }
 }
-
+//
 const timeActivitySummary = (el) => {
     var date = $('div#singleTimeModal input#date').val();
     var time = $('div#singleTimeModal input#time').val();
+    var breakTime = $('div#singleTimeModal input#break').val();
     var billable = $('div#singleTimeModal input#billable').prop('checked');
     var hourlyRate = $('div#singleTimeModal input#hourlyRate').val()
     hourlyRate = formatter.format(parseFloat(hourlyRate));
     var taxable = $('div#singleTimeModal input#taxable').prop('checked');
     var timeSplit = time !== "" ? time.split(':') : "";
+    var breakSplit = breakTime !== "" ? breakTime.split(':') : "";
     var hour = 0;
     var minutes = 0;
 
     if ($('div#singleTimeModal input#startEndTime').prop('checked') === false && time !== "") {
         hour = parseInt(timeSplit[0]);
         minutes = parseInt(timeSplit[1]);
+
+        if(time === '00:00') {
+            $('#singleTimeModal #summary').remove();
+        } else {
+            var hourText = hour > 1 ? 'hours' : hour !== 0 ? 'hour' : '';
+            var minuteText = minutes > 1 ? 'minutes' : minutes !== 0 ? 'minute' : '';
+            var summary = hour > 0 ? hour+' '+hourText+' ' : '';
+            summary += minutes > 0 ? minutes+' '+minuteText : '';
+    
+            var totalHours = hour > 9 ? hour : '0'+hour;
+            totalHours += ":";
+            totalHours += minutes > 9 ? minutes : '0'+minutes;
+
+            if(billable) {
+                if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
+                    summary += ' at '+hourlyRate+' per hour ='
+    
+                    var totalHrsSplit = totalHours.split(':');
+                    var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
+    
+                    var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
+                    var totalTime = parseFloat(totalHrsSplit[0]) + minutesDecimal;
+    
+                    var totalBill = totalTime * rate;
+                    totalBill = formatter.format(parseFloat(totalBill));
+                    summary += ' '+totalBill;
+                    summary += taxable ? ' plus tax' : '';
+                }
+            }
+    
+            if (summary.trim() !== "") {
+                if ($('div#singleTimeModal div#summary').length === 0) {
+                    var toAppend = `<div id="summary">
+                        <label for="summary">Summary</label>
+                        <p>${summary.trim()}</p>
+                    </div>`;
+    
+                    $(toAppend).insertAfter($('#singleTimeModal #description').parent());
+                } else {
+                    $('div#singleTimeModal div#summary p').html(summary.trim());
+                }
+            }
+        }
     } else if ($('div#singleTimeModal input#startEndTime').prop('checked') === true) {
         var startTime = $('div#singleTimeModal select#startTime').val();
         var endTime = $('div#singleTimeModal select#endTime').val();
 
-        if (startTime !== "" && endTime !== "") {
+        if (startTime !== "" && endTime !== "" && startTime !== null && endTime !== null) {
             var start = new Date(date + " " + startTime).getTime();
             var end = new Date(date + " " + endTime).getTime();
             var duration = end - start;
@@ -9346,63 +9391,108 @@ const timeActivitySummary = (el) => {
             hour = hour < 0 ? hour + 24 : hour;
             minutes = minutes < 0 ? minutes + 60 : minutes;
 
-            if (timeSplit !== "") {
-                hour = hour - parseInt(timeSplit[0]);
-                minutes = minutes - parseInt(timeSplit[1]);
+            if (breakSplit !== "") {
+                var totalMins = minutes;
 
-                if (minutes < 0) {
-                    for (i = 1; minutes < 0; i++) {
-                        minutes = minutes + 60;
-                        hour = hour - 1;
+                if(hour > 0) {
+                    for(i = 1; hour > 0; i++)
+                    {
+                        totalMins += 60;
+                        hour--;
+                    }
+                }
+
+                var breakHours = parseInt(breakSplit[0]);
+                var breakMins = parseInt(breakSplit[1]);
+                if(breakHours > 0) {
+                    for(i = 1; breakHours > 0; i++)
+                    {
+                        breakMins += 60;
+                        breakHours--;
+                    }
+                }
+
+                var minutes = totalMins - breakMins;
+                
+                for(hour = 0; minutes > 60; hour++)
+                {
+                    minutes -= 60;
+                }
+
+                var totalHours = hour > 9 ? hour : '0'+hour;
+                totalHours += ":";
+                totalHours += minutes > 9 ? minutes : '0'+minutes;
+
+                if(breakMins > totalMins) {
+                    var summary = "The break time cannot exceed the total time worked. Please correct.";
+                } else {
+                    var hourText = hour > 1 ? 'hours' : hour !== 0 ? 'hour' : '';
+                    var minuteText = minutes > 1 ? 'minutes' : minutes !== 0 ? 'minute' : '';
+                    var summary = hour > 0 ? hour+' '+hourText+' ' : '';
+                    summary += minutes > 0 ? minutes+' '+minuteText : '';
+
+                    if(billable) {
+                        if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
+                            summary += ' at '+hourlyRate+' per hour ='
+            
+                            var totalHrsSplit = totalHours.split(':');
+                            var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
+            
+                            var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
+                            var totalTime = parseFloat(totalHrsSplit[0]) + minutesDecimal;
+            
+                            var totalBill = totalTime * rate;
+                            totalBill = formatter.format(parseFloat(totalBill));
+                            summary += ' '+totalBill;
+                            summary += taxable ? ' plus tax' : '';
+                        }
+                    }
+                }
+            } else {
+                var hourText = hour > 1 ? 'hours' : hour !== 0 ? 'hour' : '';
+                var minuteText = minutes > 1 ? 'minutes' : minutes !== 0 ? 'minute' : '';
+                var summary = hour > 0 ? hour+' '+hourText+' ' : '';
+                summary += minutes > 0 ? minutes+' '+minuteText : '';
+
+                var totalHours = hour > 9 ? hour : '0'+hour;
+                totalHours += ":";
+                totalHours += minutes > 9 ? minutes : '0'+minutes;
+
+                if(billable) {
+                    if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
+                        summary += ' at '+hourlyRate+' per hour ='
+        
+                        var totalHrsSplit = totalHours.split(':');
+                        var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
+        
+                        var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
+                        var totalTime = parseFloat(totalHrsSplit[0]) + minutesDecimal;
+        
+                        var totalBill = totalTime * rate;
+                        totalBill = formatter.format(parseFloat(totalBill));
+                        summary += ' '+totalBill;
+                        summary += taxable ? ' plus tax' : '';
                     }
                 }
             }
-        }
-    }
 
-    var totalHours = hour.length > 1 ? hour : '0'+hour;
-    totalHours += ":";
-    totalHours += minutes.length > 1 ? hour : '0'+minutes;
+            $('#singleTimeModal #time').val(totalHours);
 
-    if(totalHours !== "00:00" && Number.isInteger(hour) && Number.isInteger(minutes)) {
-        var hourText = hour > 1 ? 'hours' : hour !== 0 ? 'hour' : '';
-        var minuteText = minutes > 1 ? 'minutes' : minutes !== 0 ? 'minute' : '';
-        var summary = hour > 0 ? hour : '';
-        summary += ' ' + hourText + ' ';
-        summary += minutes > 0 ? minutes : '';
-        summary += ' ' + minuteText;
-
-        if(billable) {
-            if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
-                summary += ' at '+hourlyRate+' per hour ='
-
-                var totalHrsSplit = totalHours.split(':');
-                var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
-
-                var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
-                totalHours = parseFloat(totalHrsSplit[0]) + minutesDecimal;
-
-                var totalBill = totalHours * rate;
-                totalBill = formatter.format(parseFloat(totalBill));
-                summary += ' '+totalBill;
-                summary += taxable ? ' plus tax' : '';
-            }
-        }
-
-        if (summary.trim() !== "") {
-            if ($('div#singleTimeModal div#summary').length === 0) {
-                var toAppend = `<div id="summary">
-                    <label for="summary">Summary</label>
-                    <p>${summary.trim()}</p>
-                </div>`;
-
-                $(toAppend).insertAfter($('#singleTimeModal #description').parent());
+            if (summary.trim() !== "" && totalHours !== "00:00") {
+                if ($('div#singleTimeModal div#summary').length === 0) {
+                    var toAppend = `<div id="summary">
+                        <label for="summary">Summary</label>
+                        <p>${summary.trim()}</p>
+                    </div>`;
+    
+                    $(toAppend).insertAfter($('#singleTimeModal #description').parent());
+                } else {
+                    $('div#singleTimeModal div#summary p').html(summary.trim());
+                }
             } else {
-                $('div#singleTimeModal div#summary p').html(summary.trim());
+                $('#singleTimeModal #summary').remove();
             }
         }
-    } else {
-        $('#singleTimeModal #summary').remove();
     }
 }
 
@@ -10669,15 +10759,19 @@ const showHiddenFields = (el) => {
         if($(el).prop('checked') === true) {
             $('div#singleTimeModal select#startTime, select#endTime').parent().show();
             $('div#singleTimeModal select#startTime, select#endTime').prop('required', true);
-            $('div#singleTimeModal label[for="time"]').html('Break');
-            $('div#singleTimeModal input#time').removeAttr('required');
-            $('div#singleTimeModal input#time').val('');
+            $('div#singleTimeModal input#time').parent().addClass('d-none');
+            $('div#singleTimeModal input#break').parent().removeClass('d-none');
+            // $('div#singleTimeModal label[for="time"]').html('Break');
+            // $('div#singleTimeModal input#time').removeAttr('required');
+            // $('div#singleTimeModal input#time').val('');
             $('div#singleTimeModal div#summary').remove();
         } else {
             $('select#startTime, select#endTime').parent().hide();
             $('select#startTime, select#endTime').removeAttr('required');
-            $('label[for="time"]').html('Time');
-            $('input#time').prop('required', true);
+            $('div#singleTimeModal input#time').parent().removeClass('d-none');
+            $('div#singleTimeModal input#break').parent().addClass('d-none');
+            // $('label[for="time"]').html('Time');
+            // $('input#time').prop('required', true);
         }
     }
 
