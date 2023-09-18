@@ -523,6 +523,9 @@
                                 <table class="nsm-table grid-mb" id="reports-table">
                                     <thead>
                                         <tr>
+                                            <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
+                                            <td data-name=""></td>
+                                            <?php endif; ?>
                                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>DATE</td>
                                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>TRANSACTION TYPE</td>
                                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>NUM</td>
@@ -531,29 +534,166 @@
                                             <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>CREATED BY</td>
                                             <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED</td>
                                             <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST MODIFIED BY</td>
-                                            <td data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>VENDOR</td>
+                                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>>CUSTOMER</td>
+                                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>>EMPLOYEE</td>
                                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>MEMO/DESCRIPTION</td>
                                             <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>ACCOUNT</td>
                                             <td data-name="Split" <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>>SPLIT</td>
-                                            <td data-name="PO Status" <?=isset($columns) && !in_array('PO Status', $columns) ? 'style="display: none"' : ''?>>PO STATUS</td>
+                                            <td data-name="Ref No." <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>>REF #</td>
+                                            <td data-name="Sales Rep" <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>>SALES REP</td>
+                                            <td data-name="P.O. Number" <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>>P.O. NUMBER</td>
+                                            <td data-name="Billing Address" <?=isset($columns) && !in_array('Billing Address', $columns) ? 'style="display: none"' : ''?>>BILLING ADDRESS</td>
+                                            <td data-name="Shipping Address" <?=isset($columns) && !in_array('Shipping Address', $columns) ? 'style="display: none"' : ''?>>SHIPPING ADDRESS</td>
                                             <td data-name="Ship Via" <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>>SHIP VIA</td>
+                                            <td data-name="Payment Method" <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>>PAYMENT METHOD</td>
                                             <td data-name="Terms" <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>>TERMS</td>
                                             <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>>DUE DATE</td>
                                             <td data-name="Customer/Vendor Message" <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>>CUSTOMER/VENDOR MESSAGE</td>
-                                            <td data-name="A/P Paid" <?=isset($columns) && !in_array('A/P Paid', $columns) ? 'style="display: none"' : ''?>>A/P PAID</td>
+                                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>>INVOICE DATE</td>
+                                            <td data-name="A/R Paid" <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>>A/R PAID</td>
                                             <td data-name="Clr" <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>>CLR</td>
+                                            <td data-name="Sales Printed" <?=isset($columns) && !in_array('Sales Printed', $columns) ? 'style="display: none"' : ''?>>SALES PRINTED</td>
                                             <td data-name="Check Printed" <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>>CHECK PRINTED</td>
                                             <td data-name="Sent" <?=isset($columns) && !in_array('Sent', $columns) ? 'style="display: none"' : ''?>>SENT</td>
                                             <td data-name="Delivery Address" <?=isset($columns) && !in_array('Delivery Address', $columns) ? 'style="display: none"' : ''?>>DELIVERY ADDRESS</td>
+                                            <td data-name="Paid by MAS" <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>>PAID BY MAS</td>
                                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>AMOUNT</td>
                                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>>OPEN BALANCE</td>
                                             <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>>ONLINE BANKING</td>
                                             <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>>TAX AMOUNT</td>
                                             <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>>TAXABLE AMOUNT</td>
+                                            <?php foreach($tag_groups as $group) : ?>
+                                            <td data-name="<?=$group['name']?>" <?=isset($columns) && !in_array($group['name'], $columns) ? 'style="display: none"' : ''?>><?=strtoupper($group['name'])?></td>
+                                            <?php endforeach; ?>
+                                            <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>>UNGROUPED TAGS</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        <?php if(count($transactions) > 0) : ?>
+                                        <?php foreach($transactions as $index => $transaction) : ?>
+                                        <?php if($group_by === 'none') : ?>
+                                        <tr>
+                                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['date']?></td>
+                                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$transaction['transaction_type']?></td>
+                                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$transaction['num']?></td>
+                                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$transaction['posting']?></td>
+                                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['create_date']?></td>
+                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['created_by']?></td>
+                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified']?></td>
+                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$transaction['last_modified_by']?></td>
+                                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer']?></td>
+                                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$transaction['employee']?></td>
+                                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$transaction['memo_description']?></td>
+                                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$transaction['account']?></td>
+                                            <td data-name="Split" <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>><?=$transaction['split']?></td>
+                                            <td data-name="Ref No." <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ref_no']?></td>
+                                            <td data-name="Sales Rep" <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>><?=$transaction['sales_rep']?></td>
+                                            <td data-name="P.O. Number" <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>><?=$transaction['po_number']?></td>
+                                            <td data-name="Billing Address" <?=isset($columns) && !in_array('Billing Address', $columns) ? 'style="display: none"' : ''?>><?=$transaction['billing_address']?></td>
+                                            <td data-name="Shipping Address" <?=isset($columns) && !in_array('Shipping Address', $columns) ? 'style="display: none"' : ''?>><?=$transaction['shipping_address']?></td>
+                                            <td data-name="Ship Via" <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ship_via']?></td>
+                                            <td data-name="Payment Method" <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>><?=$transaction['payment_method']?></td>
+                                            <td data-name="Terms" <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>><?=$transaction['terms']?></td>
+                                            <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['due_date']?></td>
+                                            <td data-name="Customer/Vendor Message" <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>><?=$transaction['customer_vendor_message']?></td>
+                                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$transaction['invoice_date']?></td>
+                                            <td data-name="A/R Paid" <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ar_paid']?></td>
+                                            <td data-name="Clr" <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>><?=$transaction['clr']?></td>
+                                            <td data-name="Sales Printed" <?=isset($columns) && !in_array('Sales Printed', $columns) ? 'style="display: none"' : ''?>><?=$transaction['sales_printed']?></td>
+                                            <td data-name="Check Printed" <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>><?=$transaction['check_printed']?></td>
+                                            <td data-name="Sent" <?=isset($columns) && !in_array('Sent', $columns) ? 'style="display: none"' : ''?>><?=$transaction['sent']?></td>
+                                            <td data-name="Delivery Address" <?=isset($columns) && !in_array('Delivery Address', $columns) ? 'style="display: none"' : ''?>><?=$transaction['delivery_address']?></td>
+                                            <td data-name="Paid by MAS" <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>><?=$transaction['paid_by_mas']?></td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['amount']?></td>
+                                            <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><?=$transaction['open_balance']?></td>
+                                            <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>><?=$transaction['online_banking']?></td>
+                                            <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['tax_amount']?></td>
+                                            <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><?=$transaction['taxable_amount']?></td>
+                                            <?php foreach($tag_groups as $group) : ?>
+                                            <td data-name="<?=$group['name']?>" <?=isset($columns) && !in_array($group['name'], $columns) ? 'style="display: none"' : ''?>><?=$transaction[str_replace(' ', '_', strtolower($group['name']))]?></td>
+                                            <?php endforeach; ?>
+                                            <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>><?=$transaction['ungrouped_tags']?></td>
+                                        </tr>
+                                        <?php else : ?>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
+                                            <td colspan="<?=isset($columns) ? $total_index : '31'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                                            <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <?php foreach($tag_groups as $group) : ?>
+                                            <td data-name="<?=$group['name']?>" <?=isset($columns) && !in_array($group['name'], $columns) ? 'style="display: none"' : ''?>></td>
+                                            <?php endforeach; ?>
+                                            <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>></td>
+                                        </tr>
+                                        <?php foreach($transaction['transactions'] as $tran) : ?>
+                                        <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
+                                            <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
+                                            <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
+                                            <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>
+                                            <td data-name="Posting" <?=isset($columns) && !in_array('Posting', $columns) ? 'style="display: none"' : ''?>><?=$tran['posting']?></td>
+                                            <td data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['create_date']?></td>
+                                            <td data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>><?=$tran['created_by']?></td>
+                                            <td data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified']?></td>
+                                            <td data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>><?=$tran['last_modified_by']?></td>
+                                            <td data-name="Customer" <?=isset($columns) && !in_array('Customer', $columns) ? 'style="display: none"' : ''?>><?=$tran['customer']?></td>
+                                            <td data-name="Employee" <?=isset($columns) && !in_array('Employee', $columns) ? 'style="display: none"' : ''?>><?=$tran['employee']?></td>
+                                            <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>><?=$tran['memo_description']?></td>
+                                            <td data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>><?=$tran['account']?></td>
+                                            <td data-name="Split" <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>><?=$tran['split']?></td>
+                                            <td data-name="Ref No." <?=isset($columns) && !in_array('Ref No.', $columns) ? 'style="display: none"' : ''?>><?=$tran['ref_no']?></td>
+                                            <td data-name="Sales Rep" <?=isset($columns) && !in_array('Sales Rep', $columns) ? 'style="display: none"' : ''?>><?=$tran['sales_rep']?></td>
+                                            <td data-name="P.O. Number" <?=isset($columns) && !in_array('P.O. Number', $columns) ? 'style="display: none"' : ''?>><?=$tran['po_number']?></td>
+                                            <td data-name="Billing Address" <?=isset($columns) && !in_array('Billing Address', $columns) ? 'style="display: none"' : ''?>><?=$tran['billing_address']?></td>
+                                            <td data-name="Shipping Address" <?=isset($columns) && !in_array('Shipping Address', $columns) ? 'style="display: none"' : ''?>><?=$tran['shipping_address']?></td>
+                                            <td data-name="Ship Via" <?=isset($columns) && !in_array('Ship Via', $columns) ? 'style="display: none"' : ''?>><?=$tran['ship_via']?></td>
+                                            <td data-name="Payment Method" <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>><?=$tran['payment_method']?></td>
+                                            <td data-name="Terms" <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>><?=$tran['terms']?></td>
+                                            <td data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['due_date']?></td>
+                                            <td data-name="Customer/Vendor Message" <?=isset($columns) && !in_array('Customer/Vendor Message', $columns) ? 'style="display: none"' : ''?>><?=$tran['customer_vendor_message']?></td>
+                                            <td data-name="Invoice Date" <?=isset($columns) && !in_array('Invoice Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['invoice_date']?></td>
+                                            <td data-name="A/R Paid" <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>><?=$tran['ar_paid']?></td>
+                                            <td data-name="Clr" <?=isset($columns) && !in_array('Clr', $columns) ? 'style="display: none"' : ''?>><?=$tran['clr']?></td>
+                                            <td data-name="Sales Printed" <?=isset($columns) && !in_array('Sales Printed', $columns) ? 'style="display: none"' : ''?>><?=$tran['sales_printed']?></td>
+                                            <td data-name="Check Printed" <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>><?=$tran['check_printed']?></td>
+                                            <td data-name="Sent" <?=isset($columns) && !in_array('Sent', $columns) ? 'style="display: none"' : ''?>><?=$tran['sent']?></td>
+                                            <td data-name="Delivery Address" <?=isset($columns) && !in_array('Delivery Address', $columns) ? 'style="display: none"' : ''?>><?=$tran['delivery_address']?></td>
+                                            <td data-name="Paid by MAS" <?=isset($columns) && !in_array('Paid by MAS', $columns) ? 'style="display: none"' : ''?>><?=$tran['paid_by_mas']?></td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['amount']?></td>
+                                            <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><?=$tran['open_balance']?></td>
+                                            <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>><?=$tran['online_banking']?></td>
+                                            <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['tax_amount']?></td>
+                                            <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><?=$tran['taxable_amount']?></td>
+                                            <?php foreach($tag_groups as $group) : ?>
+                                            <td data-name="<?=$group['name']?>" <?=isset($columns) && !in_array($group['name'], $columns) ? 'style="display: none"' : ''?>><?=$tran[str_replace(' ', '_', strtolower($group['name']))]?></td>
+                                            <?php endforeach; ?>
+                                            <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>><?=$tran['ungrouped_tags']?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
+                                            <td colspan="<?=isset($columns) ? $total_index : '31'?>"><b>Total for <?=$transaction['name']?></b></td>
+                                            <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
+                                            <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Online Banking" <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Tax Amount" <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td data-name="Taxable Amount" <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <?php foreach($tag_groups as $group) : ?>
+                                            <td data-name="<?=$group['name']?>" <?=isset($columns) && !in_array($group['name'], $columns) ? 'style="display: none"' : ''?>></td>
+                                            <?php endforeach; ?>
+                                            <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>></td>
+                                        </tr>
+                                        <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <?php else : ?>
+                                        <tr>
+                                            <td colspan="<?=37 + count($tag_groups)?>">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
 

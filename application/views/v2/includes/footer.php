@@ -1,9 +1,10 @@
           
             </div>
+            <br><br>
             <div class="nsm-footer">
                 <div class="row">
-                    <div class="col-12 d-flex mt-4">
-                        <span class="content-subtitle">Copyright © 2020 nSmarTrac. All rights reserved.</span>
+                    <div class="col-md-12">
+                        <span class="content-subtitle"><center>Copyright © 2023 nSmarTrac. All rights reserved.</center></span>
                     </div>
                 </div>
             </div>
