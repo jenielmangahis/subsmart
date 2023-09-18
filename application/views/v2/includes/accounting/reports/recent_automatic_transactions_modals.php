@@ -188,7 +188,7 @@
                         <tr>
                             <td colspan="34">
                                 <p class="m-0"><b>Note</b></p>
-                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -398,7 +398,7 @@
                         <tr>
                             <td colspan="34">
                                 <p class="m-0"><b>Note</b></p>
-                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>

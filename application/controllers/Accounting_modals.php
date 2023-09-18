@@ -1768,19 +1768,43 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('hourly_rate', 'Hourly Rate', 'required');
         }
 
+        $flag = false;
         if ($data['start_end_time'] === 1 || $data['start_end_time'] === "1") {
             $this->form_validation->set_rules('start_time', 'Start Time', 'required');
             $this->form_validation->set_rules('end_time', 'End Time', 'required');
-        } else {
-            $this->form_validation->set_rules('time', 'Time', 'required');
+
+            $break = explode(':', $data['break']);
+            $duration = explode(':', $data['time']);
+
+            for($i = 0; intval($break[0]) > 0; $i++)
+            {
+                $break[1] = intval($break[1]) + 60;
+                $break[0] = intval($break[0]) - 1;
+            }
+
+            for($i = 0; intval($duration[0]) > 0; $i++)
+            {
+                $duration[1] = intval($duration[1]) + 60;
+                $duration[0] = intval($duration[0]) - 1;
+            }
+
+            $flag = intval($break[1]) > intval($duration[1]);
         }
+
+        $this->form_validation->set_rules('time', 'Time', 'required');
 
         $return = [];
 
-        if ($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false || $flag) {
+            $message = validation_errors();
+
+            if($flag) {
+                $message .= "\n<p>The break time cannot exceed the total time worked.</p>";
+            }
+
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = $message;
         } else {
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['person_tracking']);
@@ -1788,11 +1812,11 @@ class Accounting_modals extends MY_Controller
             if(isset($data['start_end_time'])) {
                 $startTime = strtotime($data['start_time']);
                 $endTime = strtotime($data['end_time']);
-                $break = strtotime($data['time'] === '' ? "00:00" : $data['time']);
-                $duration = date("H:i:s", (($endTime - $startTime) - $break));
-            } else {
-                $duration = date("H:i:s", strtotime($data['time']));
+                $break = strtotime($data['break'] === '' ? "00:00" : $data['break']);
             }
+
+            $duration = date("H:i:s", strtotime($data['time']));
+
             $hms = explode(":", $duration);
             $totalTime = $hms[0].":".$hms[1].":".$hms[2];
 
@@ -13647,8 +13671,22 @@ class Accounting_modals extends MY_Controller
             $duration = date("H:i:s", strtotime($timeActivity->time));
         }
         $hms = explode(":", $duration);
-        $totalTime = $hms[0].' hours';
-        $totalTime .= $hms[1] !== '00' ? ' '.$hms[1].' minute' : '';
+        $totalTime = $hms[0] !== '00' ? $hms[0].' hours' : '';
+        $totalTime .= $hms[1] !== '00' ? ' '.$hms[1].' minutes' : '';
+
+        if($timeActivity->billable === '1') {
+            $rate = number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2);
+
+            $price = floatval(str_replace(',', '', $timeActivity->hourly_rate));
+
+            $hours = substr($timeActivity->time, 0, -3);
+            $time = explode(':', $hours);
+            $hr = $time[0] + ($time[1] / 60);
+
+            $total = number_format($hr * $price, 2);
+
+            $totalTime .= ' at '.str_replace('$-', '-$', '$'.$rate).' per hour = '.str_replace('$-', '-$', '$'.$total);
+        }
 
         $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
         $timeActivity->customer = $customer->first_name . ' ' . $customer->last_name;
@@ -13673,7 +13711,7 @@ class Accounting_modals extends MY_Controller
             ];
         }
 
-        $this->page_data['totalTime'] = $totalTime;
+        $this->page_data['totalTime'] = trim($totalTime);
         $this->page_data['dropdown']['times'] = $times;
         $this->page_data['timeActivity'] = $timeActivity;
         $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
@@ -17564,11 +17602,11 @@ class Accounting_modals extends MY_Controller
         if(isset($data['start_end_time'])) {
             $startTime = strtotime($data['start_time']);
             $endTime = strtotime($data['end_time']);
-            $break = strtotime($data['time'] === '' ? "00:00" : $data['time']);
-            $duration = date("H:i:s", (($endTime - $startTime) - $break));
-        } else {
-            $duration = date("H:i:s", strtotime($data['time']));
+            $break = strtotime($data['break'] === '' ? "00:00" : $data['break']);
         }
+
+        $duration = date("H:i:s", strtotime($data['time']));
+
         $hms = explode(":", $duration);
         $totalTime = $hms[0].":".$hms[1].":".$hms[2];
 

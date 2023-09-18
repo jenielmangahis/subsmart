@@ -138,39 +138,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col-3">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label for="row-columns">Rows/columns</label>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <div class="form-row">
-                                                                <div class="col-4 d-flex align-items-center">
-                                                                    <label>Group by</label>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <select id="row-columns" class="form-control">
-                                                                        <option value="none">None</option>
-                                                                        <option value="account">Account</option>
-                                                                        <option value="transaction-type">Transaction Type</option>
-                                                                        <option value="customer">Customer</option>
-                                                                        <option value="customer-type" selected>Customer Type</option>
-                                                                        <option value="product-service">Product/Service</option>
-                                                                        <option value="payment-method">Payment Method</option>
-                                                                        <option value="day">Day</option>
-                                                                        <option value="week">Week</option>
-                                                                        <option value="month">Month</option>
-                                                                        <option value="quarter">Quarter</option>
-                                                                        <option value="year">Year</option>
-                                                                        <option value="sales-rep">Sales Rep</option>
-                                                                        <option value="po-number">P.O. Number</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
                                                 </div>
                                                 <div class="col-2">
                                                     <label for="" class="w-100">Accounting method</label>
@@ -188,6 +159,103 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row footerInfo">
+                                <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+<!-- START: MODALS -->
+<!-- Modal for Report Settings -->
+<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" method="POST">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- FOR LATER UPDATES -->
+                            <!-- <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">User</label>
+                                        <select class="form-select">
+                                            <option value="all" selected>All</option>
+                                            <?php 
+                                                foreach ($customerByCompanyID as $customerByCompanyIDs) {
+                                                    echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Date Changed</label>
+                                        <select class="form-select">
+                                            <option value="Today">Today</option>
+                                            <option value="Yesterday">Yesterday</option>
+                                            <option value="This Week">This Week</option>
+                                            <option value="This Month">This Month</option>
+                                            <option value="This Quarter">This Quarter</option>
+                                            <option value="This Year">This Year</option>
+                                            <option value="Last Week">Last Week</option>
+                                            <option value="Last Month">Last Month</option>
+                                            <option value="Last Quarter">Last Quarter</option>
+                                            <option value="Last Year">Last Year</option>
+                                            <option value="Last Seven Years">Last Seven Years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Event <small class="text-muted">(Module)</small></label>
+                                        <select class="form-select">
+                                            <option value="All">All</option>
+                                            <option value="Workorder">Workorder</option>
+                                            <option value="Invoice">Invoice</option>
+                                            <option value="Taskhub">Taskhub</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Estimate">Estimate</option>
+                                            <option value="Event">Event</option>
+                                            <option value="Appointment">Appointment</option>
+                                            <option value="Jobs">Jobs</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
                                     </div>
                                 </div>
 

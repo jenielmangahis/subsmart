@@ -293,7 +293,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="float-start">
+                                                <div class="float-start noteCharMax">
                                                     4000 characters max
                                                 </div>
                                                 <div class="float-end">

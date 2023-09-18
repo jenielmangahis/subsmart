@@ -33,6 +33,7 @@ class AccountingMailer extends MY_Controller{
         }
 
         $sendStatus = $emailer->Send();
+        
         if ($sendStatus) {
             echo "true";
         } else {
@@ -42,6 +43,7 @@ class AccountingMailer extends MY_Controller{
     }
 
     public function emailReport($reportType) {
+
         // List of valid reports to request
         $accountingValidReports = array(
             "sales_tax_liability",
@@ -60,9 +62,13 @@ class AccountingMailer extends MY_Controller{
             "sales_by_customer_type_detail",
             "sales_by_product_service_detail",
             "vendor_balance_summary",
+            "vendor_balance_detail",
+            "purchases_by_vendor_detail",
         );
+
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {
+
             // Sending Report to email process
             $emailTo = $this->input->post("emailTo");
             $emailCC = $this->input->post("emailCC");
@@ -71,14 +77,14 @@ class AccountingMailer extends MY_Controller{
             $reportFilePath = $this->input->post("reportFilePath");
             $attachmentConfig = $this->input->post("attachmentConfig");
             $this->sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig);
+
         } else {
+
             // If $reportType was not in the $accountingValidReports then return die() method
             die("unable to send email report.");
+
         }
 
     }
 
-    // public function testPdf() {
-    //     $this->load->helper('pdf_custom_helper');
-    // }
 }

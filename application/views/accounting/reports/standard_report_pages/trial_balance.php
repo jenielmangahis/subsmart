@@ -161,6 +161,7 @@
                                                 </div>
                                                 <div class="col-4 d-flex align-items-end">
                                                     <button type="submit" class="nsm-button success">Add</button>
+                                                    <button class="nsm-button" id="cancel-new-custom-report-group">Cancel</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -314,8 +315,9 @@
                                         <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
                                     </div>
                                     <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
-                                        <?php if(!is_null($reportNote)) : ?>
-                                        <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                                        <p class="m-0"><b>Note</b></p>
+                                        <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

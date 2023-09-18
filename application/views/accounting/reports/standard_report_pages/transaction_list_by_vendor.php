@@ -127,6 +127,7 @@
                                                 </div>
                                                 <div class="col-4 d-flex align-items-end">
                                                     <button type="submit" class="nsm-button success">Add</button>
+                                                    <button class="nsm-button" id="cancel-new-custom-report-group">Cancel</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -177,7 +178,7 @@
                                                     <option value="last-modified-by" <?=$sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
                                                     <option value="memo-description" <?=$sort_by === 'memo-description' ? 'selected' : ''?>>Memo/Description</option>
                                                     <option value="num" <?=$sort_by === 'num' ? 'selected' : ''?>>Num</option>
-                                                    <option value="online-banking" <?=$sort_by === 'online-banking' ? 'selected' : ''?>>Num</option>
+                                                    <option value="online-banking" <?=$sort_by === 'online-banking' ? 'selected' : ''?>>Online Banking</option>
                                                     <option value="po-status" <?=$sort_by === 'po-status' ? 'selected' : ''?>>PO Status</option>
                                                     <option value="posting" <?=$sort_by === 'posting' ? 'selected' : ''?>>Posting</option>
                                                     <option value="sent" <?=$sort_by === 'sent' ? 'selected' : ''?>>Sent</option>
@@ -381,8 +382,8 @@
                                                     </div>
                                                     <div class="col-12 col-md-4">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="col_chk" id="col-open-balance" class="form-check-input" <?=isset($columns) && in_array('Amount', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label for="col-open-balance" class="form-check-label">Amount</label>
+                                                            <input type="checkbox" name="col_chk" id="col-open-balance" class="form-check-input" <?=isset($columns) && in_array('Open Balance', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label for="col-open-balance" class="form-check-label">Open Balance</label>
                                                         </div>
                                                     </div>
 
@@ -556,8 +557,9 @@
                                         <button class="nsm-button float-end" id="cancel-note-update">Cancel</button>
                                     </div>
                                     <div class="col-12 <?=is_null($reportNote) ? 'd-none' : ''?>" id="report-note-cont">
-                                        <?php if(!is_null($reportNote)) : ?>
-                                        <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                        <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
+                                        <p class="m-0"><b>Note</b></p>
+                                        <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

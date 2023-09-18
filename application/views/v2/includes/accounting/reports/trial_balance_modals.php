@@ -84,7 +84,7 @@
                         <tr>
                             <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
                                 <p class="m-0"><b>Note</b></p>
-                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>
@@ -190,7 +190,7 @@
                         <tr>
                             <td colspan="<?=$display_columns_by === 'months' ? (count($columns) * 2) + 1 : '3'?>">
                                 <p class="m-0"><b>Note</b></p>
-                                <?=str_replace("\n", "<br />", $reportNote->notes)?>
+                                <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>

@@ -115,7 +115,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-4">
-                                                <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field text-end" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : '0.00'?>" onchange="convertToDecimal(this)">
+                                                <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field text-end" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2) : '0.00'?>" onchange="convertToDecimal(this)">
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-check" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?>>
@@ -147,9 +147,13 @@
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <div class="grid-mb">
+                                                <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'd-none' : ''?>">
                                                     <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
                                                     <input type="text" name="time" id="time" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
+                                                </div>
+                                                <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
+                                                    <label for="break">Break</label>
+                                                    <input type="text" name="break" id="break" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
                                                 </div>
                                                 <div class="grid-mb">
                                                     <label for="description">Description</label>

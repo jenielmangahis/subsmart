@@ -268,6 +268,37 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Vendor Balance Detail data in Database
+        if ($reportType == "vendor_balance_detail") {
+            $this->db->select('accounting_vendors.id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.bill_date AS date, "Invoice" AS transaction_type, accounting_bill.id AS num, accounting_bill.due_date AS due_date, accounting_bill.total_amount AS amount, accounting_bill.remaining_balance AS open_balance,accounting_bill.remaining_balance AS balance');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where('accounting_vendors.f_name !=', '');
+            $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Purchases by Vendor Detail data in Database
+        if ($reportType == "purchases_by_vendor_detail") {
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, items.type AS item_type, items.title AS description, accounting_vendor_transaction.quantity AS quantity, items.retail AS rate, (accounting_vendor_transaction.quantity * items.retail) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->from('accounting_vendor_transaction');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
+            $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
+            $this->db->where('accounting_vendors.f_name !=', '');
+            $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 
 }
