@@ -11,6 +11,7 @@ class Items_model extends MY_Model
     public $table_offer_code = 'offer_code';
     public $table_custom_fields = 'inventory_custom_fields';
     public $table_custom_fields_value = 'inventory_custom_fields_value';
+    public $table_storage_location = 'storage_loc';
 
     public function __construct()
     {
@@ -111,6 +112,14 @@ class Items_model extends MY_Model
         $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where('item_categories_id', $id);
         $delete = $this->db->delete($this->table_categories);
+        return $delete ? true : false;
+    }
+
+    public function deleteCompanyStorageLocationById($company_id, $id)
+    {
+        $this->db->where('company_id', $company_id);
+        $this->db->where('loc_id', $id);
+        $delete = $this->db->delete($this->table_storage_location);
         return $delete ? true : false;
     }
 
@@ -592,8 +601,7 @@ class Items_model extends MY_Model
             $delete = $this->db->delete($this->table_has_location);
         }
         return $delete ? true : false;
-    }
-    
+    }    
     public function updateLocationQty($locationId, $itemId, $newQty)
     {
         $this->db->where('item_id', $itemId);
@@ -691,6 +699,21 @@ class Items_model extends MY_Model
         $this->db->where('company_id', $companyId);
         $query = $this->db->get($this->table_custom_fields);
         return $query->result();
+    }
+
+    public function get_custom_field_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->get($this->table_custom_fields);        
+        return $query->row();
+    }
+
+    public function delete_custom_field_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete($this->table_custom_fields);
+
+        return $delete ? true : false;
     }
 
     public function add_custom_field($data)

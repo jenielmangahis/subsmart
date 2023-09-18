@@ -15,6 +15,9 @@
          border-bottom: 0px solid #111; 
          margin-bottom: 10px;
     }
+    .nsm-table tr:not(.nsm-row-collapse) td:not(:last-child) {    
+        max-width: initial !important;
+    }
 </style>
 
 
@@ -45,9 +48,12 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         
-                        <div class="nsm-page-buttons page-button-container">
+                        <div class="nsm-page-buttons page-button-container">                            
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
                                 <i class='bx bx-fw bx-list-plus'></i> New Location
+                            </button>
+                            <button type="button" class="nsm-button btn-danger" id="delete_selected">
+                            <i class='bx bx-select-multiple text-white'></i> Delete Selected
                             </button>
                             <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
@@ -58,47 +64,62 @@
                         </div>
                     </div>
                 </div>
-                <table id="INV_LOCATION_TBL" class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <td data-name="Name">Location</td>
-                            <td data-name="Default">Default</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($location as $locations) :?>
+                <input type="hidden" id="selected_ids" name="selected_ids" value="" />
+                <form id="storage-location-list">
+                    <table id="INV_LOCATION_TBL" class="nsm-table">
+                        <thead>
+                            <tr>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                </td>
+                                <td class="table-icon"></td>
+                                <td data-name="Name">Location</td>
+                                <td data-name="Default">Is Default</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($location as $locations) :?>
 
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
-                                </div>
-                            </td>
-                            <td><?php echo $locations->location_name ?></td>
-                            <td><?php echo ($locations->default == "true") ? "<i style='font-size: 31px;' class='bx bx-check text-success'></i>" : ""?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations->loc_id?>">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select" type="checkbox" name="storageLocations[]" value="<?= $locations->loc_id; ?>">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-row-icon">
+                                        <i class='bx bx-cube'></i>
+                                    </div>
+                                </td>
+                                <td><b><?php echo $locations->location_name ?></b></td>
+                                <td>
+                                    <?php if( $locations->default == "true" ){ ?>
+                                        <span class="nsm-badge nsm-badge-primary" style="width:100%;display:block;text-align:center;"><i class='bx bx-check text-white' style="font-size:20px;"></i></span>
+                                    <?php }else { ?>
+                                        <span class="nsm-badge nsm-badge-danger" style="width:100%;display:block;text-align:center;"><i class='bx bx-x text-white' style="font-size:20px;"></i></span>
+                                    <?php } ?>                                
+                                </td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations->loc_id?>">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>    
+                </form>
             </div>
         </div>
     </div>
@@ -110,13 +131,18 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-
-
     var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
         },
+        "columns": [
+            { "width": "1%" },
+            { "width": "1%" },
+            { "width": "85%" },
+            { "width": "6%" },
+            null        
+        ]
     });
 
     $("#search_field_custom").keyup(function() {
@@ -153,7 +179,7 @@ $(document).ready(function() {
         _shareableLink.remove();
 
         Swal.fire({
-            title: 'Success',
+            //title: 'Success',
             text: "Shareable link has been copied to clipboard.",
             icon: 'success',
             showCancelButton: false,
@@ -177,7 +203,7 @@ $(document).ready(function() {
             selectedIds = $.grep(selectedIds, function(value) {
                 return value != id
             });
-            $("#selected_ids").val(selectedIds);
+            //$("#selected_ids").val(selectedIds);
         } else {
             selectedIds.push(id);
             $("#selected_ids").val(selectedIds);
@@ -208,10 +234,6 @@ $(document).ready(function() {
     });
 
     $("#delete_selected").on("click", function() {
-        let params = {
-            ids: $("#selected_ids").val(),
-        }
-
         Swal.fire({
             title: 'Delete Selected Items',
             text: "Are you sure you want to delete the selected items?",
@@ -223,20 +245,30 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo base_url('inventory/deleteMultiple') ?>",
-                    data: params,
-                });
-                Swal.fire({
-                    title: 'Delete Success',
-                    text: "Selected data has been deleted successfully!",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
-                    }
-                });
+                    url: "<?php echo base_url('inventory/_delete_selected_storage_location') ?>",
+                    data: $('#storage-location-list').serialize(),
+                    dataType:'json',
+                    success: function(result) {                        
+                        if (result.is_success == 1) {
+                            Swal.fire({
+                                text: "Selected data has been deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#51bcda',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                    },
+                });                
             }
         });
     });
@@ -245,7 +277,7 @@ $(document).ready(function() {
         let id = $(this).attr('data-id');
 
         Swal.fire({
-            title: 'Delete Inventory Item',
+            title: 'Delete Storage Location',
             text: "Are you sure you want to delete this item?",
             icon: 'question',
             confirmButtonText: 'Proceed',

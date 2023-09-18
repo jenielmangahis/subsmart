@@ -87,6 +87,10 @@ if ($this->session->userdata('usertimezone') == null) {
             line-height: 42px;
             margin-left: 7px;
         }
+        .swal2-styled.swal2-confirm {        
+            background-color: #7367f0 !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 

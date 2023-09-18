@@ -146,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input class="form-control" type="date" name="date_of_birth" id="date_of_birt" value="<?php if(isset($leads_data)){ echo $leads_data->date_of_birth; } ?>">
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <span>Cell Phone</span>
+                                        <span>Mobile Number</span>
                                         <input class="form-control phone_number" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required>
                                     </div>
                                     <div class="col-md-3 mb-3">
@@ -154,7 +154,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input class="form-control" type="email" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>">
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <span>Home/Panel Phone</span>
+                                        <span>Home Phone Number</span>
                                         <input class="form-control phone_number" type="text" name="phone_home" id="phone_home" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?php if(isset($leads_data)){ echo $leads_data->phone_home; } ?>">
                                     </div>
 
@@ -196,12 +196,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'Converted'){echo "selected";} } ?> value="Converted">Converted</option>
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'Closed'){echo "selected";} } ?> value="Closed">Closed</option>
                                         </select>
+                                    </div>                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">                                        
+                                        <div class="form-group float-end">
+                                        <button type="button" name="convert_customer" class="nsm-button primary btn-convert-customer"><span class="fa fa-exchange"></span>Convert to Customer</button>
+                                            <button type="submit" class="nsm-button primary"><i class='bx bxs-paper-plane'></i> Save</button>
+                                            <a href="<?php echo base_url('customer/leads'); ?>"><button type="button" class="nsm-button primary"><i class='bx bx-window-close'></i> Cancel</button></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 mb-3">
+                    <!-- <div class="col-lg-5 mb-3">
                         <div class="nsm-card primary" style="height: auto;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
@@ -228,8 +237,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 mb-3">
+                    </div> -->
+                    <!-- <div class="col-lg-12 mb-3">
                         <div class="nsm-card primary" style="height: auto;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
@@ -253,17 +262,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input value="<?=  $leads_data->leads_id; ?>" type="hidden" class="form-control" name="leads_id" />
                                         <?php
                                             }
-                                        ?>
-                                        <button type="button" name="convert_customer" class="nsm-button primary btn-convert-customer"><span class="fa fa-exchange"></span>Convert to Customer</button>
-                                            <div class="form-group float-end">
-                                                <button type="submit" class="nsm-button primary"><i class='bx bxs-paper-plane'></i> Save</button>
-                                                <a href="<?php echo base_url('customer/leads'); ?>"><button type="button" class="nsm-button primary"><i class='bx bx-window-close'></i> Cancel</button></a>
-                                            </div>
+                                        ?>                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </form>
 

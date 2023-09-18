@@ -125,7 +125,7 @@ $("#EVENT_TYPE_ADD_FORM").submit(function (event) {
             text: 'Event Type was added successfully!',
         }).then((result) => {
             // if (result.isConfirmed) {
-            window.location.href = "/events/event_types";
+            window.location.href = "<?php echo base_url();?>/events/event_types";
             // }
         });
         $.ajax({

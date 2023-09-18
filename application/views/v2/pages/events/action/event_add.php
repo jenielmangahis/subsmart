@@ -108,6 +108,10 @@
     .clear{
       clear: both;
     }
+    .swal2-styled.swal2-confirm {        
+        background-color: #7367f0 !important;
+        color: #fff !important;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
@@ -225,16 +229,40 @@
                                 <div class="col-lg-12">
                                     <div class="color-box-custom">
                                         <h6>Event Color on Calendar</h6>
+                                        <?php 
+                                            $is_default_color_exists = 0;
+                                            $default_color = '#2e9e39'; 
+                                        ?>
                                         <ul id="EVENT_COLOR_LIST">
                                             <?php if(isset($color_settings)): ?>
                                             <?php foreach ($color_settings as $color): ?>
-                                            <li>
-                                                <a data-color="<?php echo $color->color_code; ?>" style="background-color: <?php echo $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?php echo $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?php echo $color->color_name; ?>">
-                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; } ?>
-                                                </a>
-                                            </li>
-                                            <?php endforeach; ?>
+                                                <?php 
+                                                    if( strtolower($color->color_code) == $default_color){
+                                                        $is_default_color_exists = 1;
+                                                    }
+                                                ?>
+                                                <li>
+                                                    <a data-color="<?php echo $color->color_code; ?>" style="background-color: <?php echo $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?php echo $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?php echo $color->color_name; ?>">
+                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; } ?>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach; ?>                                            
                                             <?php endif; ?>
+                                            <?php if( $is_default_color_exists == 0 ){ ?>
+                                                <li>
+                                                    <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
+                                                    <?php 
+                                                        if(isset($jobs_data) && $jobs_data->event_color == $default_color){
+                                                            echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                        }
+
+                                                        if( empty($jobs_data) ){
+                                                            echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                        }
+                                                    ?>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
                                         </ul>
                                         <input value="<?php echo (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         <input id="EVENT_COLOR" type="hidden" value="#2e9e39">
@@ -370,7 +398,7 @@
                             <hr> -->
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="float-end">
+                                    <div class="float-end">                                        
                                         <button class="nsm-button primary" type="submit"><i class='bx bx-calendar-event'></i>&nbsp;Schedule</button>
                                     </div>
                                 </div>
@@ -510,7 +538,9 @@ $('#ADD_EVENT_FORM').submit(function (event) {
         Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Event was addedd successfully!',
+            text: 'Event was addedd successfully!',            
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
         }).then((result) => {
             window.location.href = base_url + "/events";
         });

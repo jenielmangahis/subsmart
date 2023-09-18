@@ -30,7 +30,7 @@ class Events extends MY_Controller
         return $this->wizardlib->getStreetView($addr);
     }
 
-    public function index() {
+    public function index() {        
         $get = $this->input->get();
         $filter_status = '';
 
@@ -58,7 +58,7 @@ class Events extends MY_Controller
                 'order_by' => 'id',
                 'ordering' => 'DESC',
             ),
-        );
+        );        
         $this->page_data['page']->title = 'Event Types';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Event Types';
@@ -184,6 +184,12 @@ class Events extends MY_Controller
 
         // get all job tags
         $get_job_tags = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            // 'or_where' => array(
+            //     'is_marker_icon_default_list' => 1
+            // ),
             'table' => 'event_tags',
             'select' => 'id,name,marker_icon',
         );

@@ -137,7 +137,7 @@ add_css(array(
                                                     <table class="table table-hover table-bordered" id="custom_table">
                                                         <thead>
                                                         <tr>
-                                                            <th>Field Name</th>
+                                                            <th>Field Name1</th>
                                                             <th>Field Value</th>
                                                             <th></th>
                                                         </tr>

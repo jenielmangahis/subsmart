@@ -61,6 +61,55 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="new_customer_status_modal" tabindex="-1" aria-labelledby="new_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="new_customer_status_form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Customer Status</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">                    
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="text" placeholder="Status Name" name="name" id="cs_name" class="nsm-field form-control mb-2" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="edit_customer_status_modal" tabindex="-1" aria-labelledby="edit_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="edit_customer_status_form">
+        <input type="hidden" class="form-control" name="cs_id" id="edit_cs_id" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit Customer Status</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">                    
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="text" placeholder="Status Name" name="name" id="edit_cs_name" class="nsm-field form-control mb-2" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="edit_sales_area_modal" tabindex="-1" aria-labelledby="edit_sales_area_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <form method="POST" id="edit_sales_area_form">

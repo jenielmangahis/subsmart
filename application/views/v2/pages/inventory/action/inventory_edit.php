@@ -71,7 +71,7 @@
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
                                             <select class="form-control" name="vendor_id" id="vendor_id" required>
-                                                <option value="0">Select</option>
+                                                <option value="">Select</option>
                                                 <?php 
                                                     foreach ($vendors as $vendor) { 
                                                         if ($item->vendor_id == $vendor->vendor_id) {
@@ -121,8 +121,8 @@
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>
-                                            <select class="form-control" name="item_categories_id" id="item_categories_id">
-                                                <option value="0">Select</option>
+                                            <select class="form-control" name="item_categories_id" id="item_categories_id" required>
+                                                <option value="">Select</option>
                                                 <?php 
                                                     foreach ($item_categories as $cat) { 
                                                         if ($item->item_categories_id == $cat->item_categories_id) {
@@ -162,7 +162,7 @@
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <input type="hidden" name="id" value="<?php echo $item->id; ?>">
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
+                                                <button class="nsm-button" id="CANCEL_BUTTON_INVENTORY" type="button">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -185,7 +185,11 @@ $(document).ready(function() {
         $("#locations").select2({
             placeholder: "Choose Location..."
         });
-    });
+
+        $('#CANCEL_BUTTON_INVENTORY').on('click', function(){
+            location.href = base_url + 'inventory'
+        });
+});
 
 function readURL(input) {
     if (input.files && input.files[0]) {

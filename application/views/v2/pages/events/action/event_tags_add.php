@@ -124,11 +124,11 @@ $("#EVENT_TAG_ADD_FORM").submit(function (event) {
             text: 'Event tag was added successfully!',
         }).then((result) => {
             // if (result.isConfirmed) {
-            window.location.href = "/events/event_tags";
+            window.location.href = base_url + "/events/event_tags";
             // }
         });
         $.ajax({
-            url: '<?php echo base_url();?>/events/save_event_tag',
+            url: base_url + '/events/save_event_tag',
             type: "post",
             data: new FormData(this),
             processData: false,

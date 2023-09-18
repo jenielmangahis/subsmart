@@ -29,6 +29,9 @@ table.dataTable.no-footer {
      color: black !important;
      cursor: pointer; 
 }
+.nsm-table tr:not(.nsm-row-collapse) td:not(:last-child) {    
+    max-width: initial !important;
+}
 </style>
 
 
@@ -74,7 +77,7 @@ table.dataTable.no-footer {
                 <table id="EVENT_TAG_TABLE" class="nsm-table">
                     <thead>
                         <tr>
-                            <td class="table-icon"></td>
+                            <td data-name="Event Icon"></td>
                             <td data-name="Event Tag Name">Event Tag Name</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -131,6 +134,11 @@ var EVENT_TAG_TABLE = $("#EVENT_TAG_TABLE").DataTable({
     language: {
         processing: '<span>Fetching data...</span>'
     },
+    "columns": [
+        { "width": "5%"},
+        null,
+        { "width": "5%"},
+    ]
 });
 
 $("#CUSTOM_TAG_SEARCHBAR").keyup(function() {
@@ -158,11 +166,11 @@ EVENT_TAG_TABLE_SETTINGS = EVENT_TAG_TABLE.settings();
                     title: 'Success',
                     text: 'Event Tag was deleted successfully!',
                 }).then((result) => {
-                    window.location.href = "/events/event_tags";
+                    window.location.href = base_url + "/events/event_tags";
                 });
                     $.ajax({
                         type: "POST",
-                        url: "<?php echo base_url(); ?>/events/delete_tag",
+                        url: base_url + "/events/delete_tag",
                         data: {tag_id : ID}, // serializes the form's elements.
                         success: function(data) {}
                     });
