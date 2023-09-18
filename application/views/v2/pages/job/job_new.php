@@ -439,6 +439,9 @@
         border-color: lightgray;
         border-width: 0;
     }
+    .MAP_LOADER_CONTAINER{
+        min-height: 350px;
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
@@ -619,17 +622,47 @@
                                                 <?php endif; ?>
                                             </select><br>
                                         <div class="color-box-custom">
-                                            <h6>Event Color on Calendar</h6>
+                                            <h6>Job Color on Calendar</h6>
+                                            <?php 
+                                                $is_default_color_exists = 0;
+                                                $default_color = '#2e9e39'; 
+                                            ?>
                                             <ul>
                                                 <?php if(isset($color_settings)): ?>
                                                     <?php foreach ($color_settings as $color): ?>
+                                                        <?php 
+                                                            if( strtolower($color->color_code) == $default_color){
+                                                                $is_default_color_exists = 1;
+                                                            }
+                                                        ?>
                                                         <li>
-                                                            <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
-                                                            </a>
+                                                            <?php if( empty($jobs_data) && strtolower($color->color_code) == $default_color ){ ?>
+                                                                <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                                <i class="bx bx-check calendar_button" aria-hidden="true"></i>
+                                                                </a>
+                                                            <?php }else{ ?>
+                                                                <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                                </a>
+                                                            <?php } ?>                                                            
                                                         </li>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
+                                                <?php if( $is_default_color_exists == 0 ){ ?>
+                                                    <li>
+                                                        <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
+                                                        <?php 
+                                                            if(isset($jobs_data) && $jobs_data->event_color == $default_color){
+                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                            }
+
+                                                            if( empty($jobs_data) ){
+                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                            }
+                                                        ?>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>
                                             </ul>
                                             <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
@@ -655,7 +688,12 @@
                                         <div class="mb-3">
                                             <h6>Time Zone</h6>
                                             <select id="inputState" name="timezone" class="form-control ">
-                                                <option value="utc5">Central Time (UTC -5)</option>
+                                                <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                                    <option value="<?php echo $key ?>" <?= $jobs_data && $jobs_data->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                                        <?php echo $zone ?>
+                                                    </option>
+                                                <?php } ?>
+                                                <!-- <option value="utc5">Central Time (UTC -5)</option> -->
                                             </select>
                                         </div>
                                         <div>
@@ -811,15 +849,11 @@
                                                 </table>
                                             </div>
                                             <div class="col-md-7">
-                                                <div class="col-md-12">
+                                                <div class="col-md-12 MAP_LOADER_CONTAINER">
                                                     <!-- <div id="streetViewBody" class="col-md-6 float-left no-padding"></div> -->
-                                                    <!-- <div id="map" class="col-md-6 float-left"></div> -->
-                                                    <iframe id="TEMPORARY_MAP_VIEW" height="300" width="100%" style="display: none;"></iframe>
+                                                    <!-- <div id="map" class="col-md-6 float-left"></div> -->                                                    
                                                     <div class="text-center MAP_LOADER">
-                                                        <div class="loader">
-                                                            <div class="spinner-border" role="status"></div>
-                                                            <span style="">Loading Map...</span>
-                                                        </div>
+                                                        <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>
                                                     </div>
                                                 </div>
                                             </div>

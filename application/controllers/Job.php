@@ -137,6 +137,7 @@ class Job extends MY_Controller
     public function new_job1($id = null)
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('CalendarSettings_model');
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -264,6 +265,10 @@ class Job extends MY_Controller
         //     'table' => 'items',
         //     'select' => 'items.id,title,price,type',
         // );
+        // $items = $this->items_model->getAllItemWithLocation();
+        // echo "<pre>";
+        // print_r($items);
+        // exit;
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
       
@@ -306,7 +311,14 @@ class Job extends MY_Controller
         $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
 
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
-        $this->page_data['settings'] = unserialize($settings);
+        $calendarSettings = $this->CalendarSettings_model->getByCompanyId($comp_id);      
+        $time_interval = 1;
+        if( $calendarSettings && $calendarSettings->time_interval != ''){
+            $settingsTime  = explode(" ", $calendarSettings->time_interval);
+            $time_interval = $settingsTime[0];
+        }   
+        $this->page_data['settings'] = unserialize($settings);        
+        $this->page_data['time_interval'] = $time_interval;
 
         $estimate_dp_amount = 0;        
         if (!$id == null) {

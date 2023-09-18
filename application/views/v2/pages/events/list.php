@@ -63,7 +63,7 @@ table.dataTable.no-footer {
                         </div>
                     </div>
                     <div class="col-6 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
+                        <!-- <div class="dropdown d-inline-block">
                             <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
                                 <option selected value="">All</option>
                                 <option value="Draft">Draft</option>
@@ -71,7 +71,7 @@ table.dataTable.no-footer {
                                 <option value="Started">Started</option>
                                 <option value="Finished">Finished</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_add') ?>'">
                             <i class='bx bx-fw bx-calendar-event'></i> New Event
@@ -84,12 +84,12 @@ table.dataTable.no-footer {
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Event Number">Event Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Employee">Employee</td>
-                            <td data-name="Amount">Amount</td>
+                            <td data-name="Date">Event Date</td>
+                            <td data-name="Event Color" style="width:5%;">Event Color</td>
+                            <td data-name="Employee">Employee</td>                            
                             <td data-name="Event Type">Event Type</td>
-                            <td data-name="Event Tag">Event Tag</td>
-                            <td data-name="Event Type">Status</td>
+                            <td data-name="Event Tag">Event Tag</td>                            
+                            <td data-name="Event Type" style="width:5%;">Created</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -105,12 +105,21 @@ table.dataTable.no-footer {
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary"><?php echo $event->event_number; ?></td>
-                            <td><?php echo date_format(date_create($event->date_created), "m/d/Y"); ?></td>
-                            <td><?php echo $event->FName . ' ' . $event->LName; ?></td>
-                            <td>$<?php echo number_format((float)$event->amount, 2, '.', ','); ?></td>
+                            <td><?= date("m/d/Y", strtotime($event->start_date)); ?> - <?= date("m/d/Y", strtotime($event->end_date)); ?></td>
+                            <td>
+                                <div class="nsm-profile me-3" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">                            
+                                    <?php $attendees = json_decode($event->employee_id); ?>
+                                    <?php foreach($attendees as $eid){ ?>
+                                        <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($eid); ?>'); width: 40px;"></div>
+                                    <?php } ?>            
+                                </div>
+                            </td>                            
                             <td><?php echo $event->event_type; ?></td>
-                            <td><?php echo $event->event_tag; ?></td>
-                            <td><?php echo ucfirst($event->status); ?></td>
+                            <td><?php echo $event->event_tag; ?></td>                            
+                            <td><?php echo date_format(date_create($event->date_created), "m/d/Y"); ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

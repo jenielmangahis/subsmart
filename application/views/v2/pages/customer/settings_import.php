@@ -95,7 +95,7 @@
                                                         <?php endif; ?>    
                                                     <?php endforeach; ?>
                                                 </div>
-
+                                                <?php if( $company_id == 24 || $company_id == 31 || $company_id == 58 ){ ?>
                                                 <div class="col-md-2">
                                                     <h5>Alarm Information</h5>
                                                     <?php foreach ($importFieldsList as $header): ?>
@@ -117,6 +117,7 @@
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 </div>
+                                                <?php } ?>
 
                                                 <div class="col-md-2">
                                                     <h5>Contact Information</h5>

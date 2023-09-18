@@ -695,7 +695,7 @@ $("#attachment-file").change(function() {
 
         $("#start_time").on( 'change', function () {
             var tag_id = this.value;
-            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
+            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $time_interval; ?>,'hour').format('h:mm a');
 
             if(end_time === 'Invalid date') {
                 $('#end_time').val("");
@@ -1059,9 +1059,9 @@ $("#attachment-file").change(function() {
                     // $("#billingLastPaymentDate").text(billingLastPaymentDate);
                     // $("#billingNextBillingDate").text(billingNextBillingDate);
                     // =====
-                    $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+customerAddress+'&output=embed');
-                    $('.MAP_LOADER').fadeIn();
-                    $('#TEMPORARY_MAP_VIEW').hide();
+                    //$("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+customerAddress+'&output=embed');
+                    //$('.MAP_LOADER').fadeIn();
+                    //$('#TEMPORARY_MAP_VIEW').hide();
                     // =====
                     $("#CUSTOMER_FUNDED_AMOUNT").val(funded_amount).change();
                     $("#CUSTOMER_PASS_THROUGH").val(pass_through_cost).change();
@@ -1350,6 +1350,7 @@ $("#attachment-file").change(function() {
         <?php } ?>
     function load_customer_data($id){
         if ($id) {
+            $('.MAP_LOADER').hide().html("<div class='loader'><div class='spinner-border' role='status'></div><span>Loading Map...</span></div>").fadeIn('slow');
             // $.ajax({
             //     type: "POST",
             //     url: "<?= base_url() ?>/job/get_customer_selected",
@@ -1380,8 +1381,7 @@ $("#attachment-file").change(function() {
                 method: 'POST',
                 body: postData
             }).then(response => response.json()).then(response => {
-                var {success, data} = response;
-
+                var {success, data} = response;                
                 if(success){
                     var phone_m = '(xxx) xxx-xxxx';
                     $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
@@ -1419,12 +1419,18 @@ $("#attachment-file").change(function() {
                     $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
                     $('#cust_number').text(phone_m);
                     $('#mail_to').attr("href","mailto:"+data.email);
-                    $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
-                    $('.MAP_LOADER').fadeIn();
-                    $('#TEMPORARY_MAP_VIEW').hide();
+
+                    var map_source = 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed';
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                    
+                    //$('#TEMPORARY_MAP_VIEW').hide();
                     // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
                     // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
                     // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                }else{                    
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
                 }
             });
         }
@@ -1445,8 +1451,8 @@ $("#attachment-file").change(function() {
 // });
 
 $('#TEMPORARY_MAP_VIEW').on("load", function() {
-   $('.MAP_LOADER').hide();
-   $('#TEMPORARY_MAP_VIEW').fadeIn();
+//    $('.MAP_LOADER').hide();
+//    $('#TEMPORARY_MAP_VIEW').fadeIn();
 });
 
 </script>

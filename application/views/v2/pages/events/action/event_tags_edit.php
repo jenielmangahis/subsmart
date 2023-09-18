@@ -144,11 +144,11 @@ $("#EVENT_TAG_EDIT_FORM").submit(function(event) {
             text: 'Event tag was updated successfully!',
         }).then((result) => {
             // if (result.isConfirmed) {
-            window.location.href = "/events/event_tags";
+            window.location.href = base_url + "/events/event_tags";
             // }
         });
         $.ajax({
-            url: '<?php echo base_url();?>/events/update_event_tag',
+            url: base_url + '/events/update_event_tag',
             type: "post",
             data: new FormData(this),
             processData: false,

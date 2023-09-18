@@ -978,6 +978,35 @@ class Inventory extends MY_Controller
         echo json_encode(true);
     }
 
+    public function ajax_delete_selected_storage_location() {
+        postAllowed();
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $ids        = $this->input->post('storageLocations');
+        $deleted    = 0;
+        foreach($ids as $id) {
+            $storageDelete = $this->items_model->deleteCompanyStorageLocationById($company_id, $id);        
+            if( $storageDelete ){
+                $deleted++;
+            }                
+        }
+
+        if( $deleted > 0 ){
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function deleteMultipleVendor() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
@@ -1353,14 +1382,13 @@ class Inventory extends MY_Controller
     public function settings()  
     {
         $this->page_data['page']->title = 'Inventory Settings';
-		$this->page_data['page']->parent = 'Tools';
-
-        $this->page_data['fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+		$this->page_data['page']->parent = 'Tools';        
+        $this->page_data['inventoryCustomFields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
         $this->load->view('v2/pages/inventory/settings', $this->page_data);
     }
 
     public function location() 
-    {
+    {        
         $this->page_data['page']->title = 'Location';
 		$this->page_data['page']->parent = 'Tools';
         $company_id = logged('company_id');
@@ -1478,6 +1506,86 @@ class Inventory extends MY_Controller
         $update = $this->items_model->update_custom_field_name($id, $data);
 
         redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    public function ajax_create_custom_field()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['custom_field_name'] != '' ){
+            $data = [
+                'name' => $post['custom_field_name'],
+                'company_id' => $company_id
+            ];
+    
+            $customFieldId = $this->items_model->add_custom_field($data);
+            
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;    
+    }
+
+    public function ajax_update_custom_field()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['custom_field_name'] != '' ){
+            $customField = $this->items_model->get_custom_field_by_id($post['cfid']);
+            if( $customField ){
+                $data = ['name' => $post['custom_field_name']];
+                $this->items_model->update_custom_field_name($post['cfid'], $data);
+                
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'Cannot find data';
+            }
+        }else{
+            $msg = 'Please specify custom field name';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;    
+    }
+
+    public function ajax_delete_custom_field()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['cfid'] != '' ){
+            $customField = $this->items_model->get_custom_field_by_id($post['cfid']);
+            if( $customField ){                
+                $this->items_model->delete_custom_field_by_id($post['cfid']);
+                
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'Cannot find data';
+            }
+        }else{
+            $msg = 'Please specify custom field name';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;    
     }
 
     // public function TEST_SERVERSIDE() {

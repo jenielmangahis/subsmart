@@ -68,7 +68,7 @@
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
                                             <select class="form-control" name="vendor_id" id="vendor_id" required>
-                                                <option value="0">Select</option>
+                                                <option value="">Select</option>
                                                 <?php foreach($vendors as $vendor) : ?>
                                                 <option value="<?= $vendor->id; ?>"><?= $vendor->vendor_name; ?></option>
                                                 <?php endforeach; ?>
@@ -112,7 +112,7 @@
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>
-                                            <select class="form-control" name="item_categories_id" id="item_categories_id">
+                                            <select class="form-control" name="item_categories_id" id="item_categories_id" required>
                                                 <option value="">Select</option>
                                                 <?php foreach($item_categories as $cat) : ?>
                                                 <option value="<?= $cat->item_categories_id; ?>"><?= $cat->name; ?></option>
@@ -158,7 +158,7 @@
                                         <?php endforeach; ?>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
-                                                <button class="nsm-button CANCEL_BUTTON_INVENTORY" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
+                                                <button class="nsm-button" id="CANCEL_BUTTON_INVENTORY" type="button">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -181,11 +181,15 @@
         $(this).val(null).trigger('change');
         $(this).val(e.params.data.id).change();
       }
-    });
+    });    
 
     $(document).ready(function() {
         $("#locations").select2({
             placeholder: "Choose Location..."
+        });
+
+        $('#CANCEL_BUTTON_INVENTORY').on('click', function(){
+            location.href = base_url + 'inventory'
         });
     });
     $(function(){

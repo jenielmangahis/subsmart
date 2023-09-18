@@ -61,7 +61,7 @@ add_css(array(
                                     </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
-                                                <button class="nsm-button CANCEL_BUTTON_INVENTORY" type="button" onclick="window.location.replace('/inventory')">Cancel</button>
+                                                <button class="nsm-button" id="btn-cancel" type="button">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -148,7 +148,7 @@ $("#location_form").submit(function(e) {
     Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: 'Item was updated successfully!',
+        text: 'Storage location was updated successfully!',
     }).then((result) => {
         // if (result.isConfirmed) {
             window.location.href = "<?= base_url()?>inventory/location";
@@ -157,6 +157,9 @@ $("#location_form").submit(function(e) {
 });
 
 $(document).ready(function() {
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'inventory/location';
+    });
     $(document).on("click", ".btn-edit-field", function() {
         let _this = $(this);
         let id = _this.attr("data-id");

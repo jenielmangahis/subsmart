@@ -2805,8 +2805,8 @@ class Customer extends MY_Controller
                 $this->page_data['company_id'] = $cid;
                 $this->page_data['plans'] = "";
                 $this->page_data['users'] = $this->users_model->getUsers();
-                $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
-                $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE, "", "ASC", "ac_salesarea", "sa_id");
+                $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($cid);
+                $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($cid);
 
                 $this->load->view('customer/add_lead', $this->page_data);
             }

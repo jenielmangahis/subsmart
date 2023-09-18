@@ -2154,3 +2154,12 @@ span.select2-selection {
 	/*display: inline-block;
     width: 50%;*/
 }
+.nsm-badge-primary {
+    color: #ffffff !important;
+    background-color: #007bff !important;
+}
+
+.nsm-badge-danger {
+    color: #ffffff !important;
+    background-color: #dc3545 !important;
+}

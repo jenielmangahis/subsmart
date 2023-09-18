@@ -29,6 +29,18 @@ table.dataTable.no-footer {
      color: black !important;
      cursor: pointer; 
 }
+.table-row-icon.img {
+    width: 50px;
+    height: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+.nsm-table tr:not(.nsm-row-collapse) td:not(:last-child) {    
+    max-width: initial !important;
+}
 </style>
 
 
@@ -73,7 +85,7 @@ table.dataTable.no-footer {
                 <table id="EVENT_TYPE_TABLE" class="nsm-table">
                     <thead>
                         <tr>
-                            <td class="table-icon"></td>
+                            <td data-name="Event Icon"></td>
                             <td data-name="Event Type Name">Event Type Name</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -123,6 +135,11 @@ var EVENT_TYPE_TABLE = $("#EVENT_TYPE_TABLE").DataTable({
     language: {
         processing: '<span>Fetching data...</span>'
     },
+    "columns": [
+        { "width": "5%"},
+        null,
+        { "width": "5%"},
+    ]
 });
 
 $("#CUSTOM_TYPE_SEARCHBAR").keyup(function () {
@@ -151,7 +168,7 @@ $(document).ready(function () {
                     title: 'Success',
                     text: 'Event Type was deleted successfully!',
                 }).then((result) => {
-                    window.location.href = "/events/event_types";
+                    window.location.href = base_url + "/events/event_types";
                 });
                 $.ajax({
                     type: "POST",
