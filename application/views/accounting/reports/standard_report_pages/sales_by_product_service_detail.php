@@ -46,7 +46,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "salesbyproductservice_detail"; 
+                                        $tableID = "salesbyproductservicedetail_table"; 
                                         $reportCategory = "sales_by_product_service_detail"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
@@ -56,6 +56,7 @@
                                                 <th>DATE</th>
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
+                                                <th>CUSTOMER</th>
                                                 <th>MEMO/DESCRIPTION</th>
                                                 <th>QTY</th>
                                                 <th>SALES PRICE</th>
@@ -65,7 +66,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="9">
+                                                <td colspan="10">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>

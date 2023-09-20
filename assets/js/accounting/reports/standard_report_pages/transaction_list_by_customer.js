@@ -344,7 +344,7 @@ $('#run-report-button').on('click', function() {
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     url += filterDate !== 'this-month-to-date' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'this-month-to-date' ? `from=${$('#report-period-date-from').val().replaceAll('/', '-')}&to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
+    url += filterDate !== 'this-month-to-date' && filterDate !== 'all-dates' ? `from=${$('#report-period-date-from').val().replaceAll('/', '-')}&to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
     url += sortBy !== 'default' ? `column=${sortBy}&` : '';
     url += sortIn !== 'asc' ? `order=${sortIn}&` : '';
 
@@ -846,7 +846,7 @@ $('input[name="col_chk"]').on('change', function() {
             $('#reports-table thead tr td:visible').each(function() {
                 var name = $(this).data().name;
     
-                if(name === 'Amount') {
+                if(name === 'Amount' || $(this).index() > 31) {
                     return false;
                 } else {
                     colspan++;

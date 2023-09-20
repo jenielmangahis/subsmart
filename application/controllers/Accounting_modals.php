@@ -8421,7 +8421,7 @@ class Accounting_modals extends MY_Controller
                         $packageItems = $this->items_model->get_package_items($explode[1]);
                     }
 
-                    $items[] = [
+                    $receiptItem = [
                         'transaction_type' => 'Refund Receipt',
                         'transaction_id' => $refundReceiptId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
@@ -8435,7 +8435,7 @@ class Accounting_modals extends MY_Controller
                         'total' => floatval(str_replace(',', '', $data['item_total'][$key]))
                     ];
 
-                    $itemId = $this->accounting_credit_memo_model->insert_transaction_item($item);;
+                    $itemId = $this->accounting_credit_memo_model->insert_transaction_item($receiptItem);
 
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {

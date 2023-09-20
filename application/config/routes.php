@@ -1397,6 +1397,10 @@ $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 $route['inventory/export_list'] = 'inventory/inventory_export';
 $route['inventory/add-custom-field']['post'] = 'inventory/add_custom_field';
 $route['inventory/update-custom-field/(:any)']['post'] = 'inventory/update_custom_field/$1';
+$route['inventory/_delete_selected_storage_location'] = 'inventory/ajax_delete_selected_storage_location';
+$route['inventory/_create_custom_field'] = 'inventory/ajax_create_custom_field';
+$route['inventory/_update_custom_field'] = 'inventory/ajax_update_custom_field';
+$route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
 
 //Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
