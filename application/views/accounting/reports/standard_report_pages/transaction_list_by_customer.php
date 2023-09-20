@@ -671,7 +671,7 @@
                                             <td data-name="Ungrouped Tags" <?=isset($columns) && !in_array('Ungrouped Tags', $columns) ? 'style="display: none"' : ''?>><?=$tran['ungrouped_tags']?></td>
                                         </tr>
                                         <?php endforeach; ?>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
+                                        <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
                                             <td colspan="<?=isset($columns) ? $total_index : '31'?>"><b>Total for <?=$transaction['name']?></b></td>
                                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>

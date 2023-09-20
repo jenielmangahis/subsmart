@@ -238,11 +238,13 @@ class Accounting_model extends MY_Model {
 
        // Get Sales by Product/Service Detail data in Database
         if ($reportType == "sales_by_product_service_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (invoices_items.qty * items.price) AS amount, invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (invoices_items.qty * items.price) AS amount, invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
@@ -297,6 +299,25 @@ class Accounting_model extends MY_Model {
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
+        }
+
+        // Get Purchases by Product/Service Detail data in Database
+        if ($reportType == "purchases_by_product_service_detail") {
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, items.type AS product_service, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, items.title AS memo_description, accounting_vendor_transaction.quantity AS qty, items.retail AS rate, (accounting_vendor_transaction.quantity * items.retail) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->from('accounting_vendor_transaction');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
+            $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
+            $this->db->where('accounting_vendors.f_name !=', '');
+            $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where('items.type !=', '');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->group_by('items.type');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
         }
 
     }
