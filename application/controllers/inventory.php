@@ -57,15 +57,15 @@ class Inventory extends MY_Controller
             }*/
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
+            $items = $this->items_model->filterBy(['category' => $get['category'], 'type' => 'product', 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
             /*if( $role_id == 1 || $role_id == 2 ){
                 $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
-            }*/
-
-            $arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type)); 
+            }*/            
+            //$arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active' => 1);
+            $arg   = array('company_id'=>$comp_id, 'type' => 'product', 'is_active' => 1); 
             $items = $this->items_model->getByWhere($arg);
         }
         $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
@@ -102,24 +102,13 @@ class Inventory extends MY_Controller
         $this->page_data['active_category'] = "Show All";
         $type    = $this->page_data['type']  = "service";
         $role_id = logged('role');
-        if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }
+        if (!empty($get['category'])) {            
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
-        } else {
-
-            if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type), 'is_active'=>1);
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }
-
-            $items = $this->items_model->getByWhere($arg);
+        } else {                        
+            $items = $this->items_model->getAllActiveServicesByCompanyId($comp_id);
         }
-
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
@@ -547,6 +536,48 @@ class Inventory extends MY_Controller
        // echo $UPDATE_ITEM_DATA;
     }
 
+    public function create_service_item() {
+        $input = $this->input->post();
+
+        $input['is_active'] = 1;
+        $input['company_id'] = logged('company_id');
+    
+        $ITEM_DATA = array(
+            'company_id' => $input['company_id'],
+            'title' => $input['title'],            
+            'price' => $input['price'],
+            'estimated_time' => $input['estimated_time'],
+            'frequency' => $input['frequency'],
+            'vendor_id' => 0,
+            'type' => 'Service',            
+            'description' => $input['description'],
+            'is_active' => $input['is_active'],
+        );
+        $ITEM_ID = $this->items_model->insert($ITEM_DATA);
+        echo "1";
+    }
+
+    public function create_fee_item() {
+        $input = $this->input->post();
+
+        $input['is_active'] = 1;
+        $input['company_id'] = logged('company_id');
+    
+        $ITEM_DATA = array(
+            'company_id' => $input['company_id'],
+            'title' => $input['title'],            
+            'price' => $input['price'],
+            'estimated_time' => 0,
+            'frequency' => $input['frequency'],
+            'vendor_id' => 0,
+            'type' => 'Fees',            
+            'description' => $input['description'],
+            'is_active' => $input['is_active'],
+        );
+        $ITEM_ID = $this->items_model->insert($ITEM_DATA);
+        echo "1";
+    }
+
     // public function testMethod() {
     //     echo "<pre>";
     //     print_r ($this->items_model->recordItemTransaction(1, 4, 3, "deduct"));
@@ -604,6 +635,7 @@ class Inventory extends MY_Controller
             $attempt++;
         } while(!is_null($checkName));
 
+        $name = $item->title;
         $data = [
             'id' => $id,
             'name' => $name,
@@ -1112,7 +1144,8 @@ class Inventory extends MY_Controller
     public function inventory_export()
     {
         $cid   = logged('company_id');
-        $items = $this->items_model->getByCompanyId($cid);    
+        $filters[] = ['field' => 'is_active', 'value' => 1]; 
+        $items = $this->items_model->getByCompanyId($cid, $filters);    
 
         $delimiter = ",";
         $time      = time();
@@ -1130,9 +1163,9 @@ class Inventory extends MY_Controller
                     $i->type,
                     $i->model,
                     $i->brand,
-                    number_format($i->price,2),
-                    number_format($i->retail,2),
-                    number_format($i->rebate, 2),
+                    number_format((float)$i->price,2),
+                    number_format((float)$i->retail,2),
+                    number_format((float)$i->rebate, 2),
                     $i->units,
                     $i->qty_order
                 );

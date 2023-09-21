@@ -42,7 +42,7 @@
                                         </div>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/item_groups')">Cancel</button>
+                                                <button class="nsm-button" id="btn-cancel" type="button">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -60,27 +60,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#item_category_form").submit(function(e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    var form = $(this);
-    // console.log(form);
-    //var url = form.attr('action');
-    $.ajax({
-        type: "POST",
-        url: "<?= base_url() ?>/inventory/_update_item_category",
-        data: form.serialize(), // serializes the form's elements.
-        // success: function(data) {
-        //     console.log(data);
-        // }
+$(function(){
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'inventory/item_groups';
     });
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Category was added successfully!',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "/inventory/item_groups";
-        }
+
+    $("#item_category_form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        // console.log(form);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/inventory/_update_item_category",
+            data: form.serialize(), // serializes the form's elements.
+            // success: function(data) {
+            //     console.log(data);
+            // }
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Category was added successfully!',
+        }).then((result) => {
+            //if (result.isConfirmed) {
+                window.location.href = base_url + "/inventory/item_groups";
+            //}
+        });
     });
 });
 </script>
