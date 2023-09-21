@@ -64,6 +64,7 @@ class AccountingMailer extends MY_Controller{
             "vendor_balance_summary",
             "vendor_balance_detail",
             "purchases_by_vendor_detail",
+            "purchases_by_product_service_detail",
         );
 
         // Conditional Statements on the array

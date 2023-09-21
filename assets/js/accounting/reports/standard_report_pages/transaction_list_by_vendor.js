@@ -330,7 +330,7 @@ $('#run-report-button').on('click', function() {
     url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
     url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
     url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
-    url += $('#custom-group-by').val() !== 'account' ? `group-by=${$('#custom-group-by').val()}&` : '';
+    url += $('#custom-group-by').val() !== 'vendor' ? `group-by=${$('#custom-group-by').val()}&` : '';
 
     var columns = [];
     if($('input[name="select_columns"]:checked').length < $('input[name="select_columns"]').length) {
@@ -343,7 +343,7 @@ $('#run-report-button').on('click', function() {
 
     url += $('#allow-filter-transaction-type').prop('checked') && $('#filter-transaction-type').val() !== 'all' ? `transaction-type=${$('#filter-transaction-type').val()}&` : '';
     url += $('#allow-filter-account').prop('checked') && $('#filter-account').val() !== 'all' ? `account=${$('#filter-account').val()}&` : '';
-    url += $('#allow-filter-vendor').prop('checked') && $('#filter-vendor').val() !== 'all' ? `vendor=${$('#filter-vendor').val()}&` : '';
+    url += $('#allow-filter-vendor').prop('checked') && $('#filter-vendor').val() !== 'specified' ? `vendor=${$('#filter-vendor').val()}&` : '';
     url += $('#allow-filter-terms').prop('checked') && $('#filter-terms').val() !== 'all' ? `terms=${$('#filter-terms').val()}&` : '';
     url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date=${$('#filter-due-date').val()}&` : '';
     url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-from=${$('#filter-due-date-from').val().replaceAll('/', '-')}&` : '';
