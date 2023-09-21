@@ -147,7 +147,7 @@ table.dataTable.no-footer {
                             </td>
                             <td data-name="Item">Item</td>
                             <td data-name="Cost">Cost</td>
-                            <td data-name="Estimated Time">Estimated Time</td>
+                            <td data-name="Estimated Time">Estimated Time / Duration</td>
                             <td data-name="Billing Type">Billing Type</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -155,17 +155,17 @@ table.dataTable.no-footer {
                     <tbody>
                         <?php foreach ($items as $item) : ?>
                                     <tr>
-                                        <td>
+                                        <td style="width:1%;">
                                             <div class="table-row-icon table-checkbox">
                                                 <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
                                             </div>
                                         </td>
-                                        <td class="nsm-text-primary">
+                                        <td class="nsm-text-primary" style="width:60%;">
                                             <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
                                             <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
                                         </td>
                                         <td><?php echo $item[4]; ?></td>
-                                        <td><?php echo $item[6]; ?></td>
+                                        <td><?php echo $item[6]; ?> HRS</td>
                                         <td><?php echo $item[5]; ?></td>
                                         <td>
                                             <div class="dropdown table-management">
@@ -195,13 +195,12 @@ table.dataTable.no-footer {
 <script type="text/javascript">
 $(document).ready(function() {
     let selectedIds = [];
-
-
     var SERVICES_TABLE = $("#SERVICES_TABLE").DataTable({
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
         },
+        "order": []
     });
 
     $("#search_field_custom").keyup(function() {

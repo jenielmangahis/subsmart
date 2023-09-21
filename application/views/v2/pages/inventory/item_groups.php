@@ -19,6 +19,9 @@ table.dataTable.no-footer {
      border-bottom: 0px solid #111; 
      margin-bottom: 10px;
 }
+.row-item-description{
+    font-size:12px;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('inventory/item_groups/add') ?>'">
@@ -133,9 +136,8 @@ table.dataTable.no-footer {
                             <td class="table-icon text-center">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <!-- <td class="table-icon"></td> -->
-                            <td data-name="Name">Name</td>
-                            <td data-name="Description">Description</td>
+                            <td class="table-icon"></td>
+                            <td data-name="Name">Name1</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -149,15 +151,15 @@ table.dataTable.no-footer {
                                                 <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item->item_categories_id; ?>">
                                             </div>
                                         </td>
-                                       <!--  <td>
-                                            <div class="nsm-profile">
-                                                <span><?= ucwords($item->name[0]) ?></span>
+                                        <td>
+                                            <div class="table-row-icon">
+                                                <i class='bx bx-cube'></i>
                                             </div>
-                                        </td> -->
-                                        <td class="nsm-text-primary">
-                                            <label class="d-block fw-bold"><?= $item->name; ?></label>
                                         </td>
-                                        <td><?= $item->description; ?></td>
+                                        <td class="nsm-text-primary" style="width:60%;">
+                                            <label class="d-block fw-bold"><?= $item->name; ?></label>
+                                            <span class="text-mute row-item-description"><?= $item->description; ?></span>
+                                        </td>
                                         <td>
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -199,7 +201,7 @@ $(document).ready(function() {
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
-        },
+        }        
     });
 
     $("#search_field_custom").keyup(function() {

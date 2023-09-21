@@ -49,9 +49,13 @@
 											</select>
                                         </div>
                                         <div class="col-lg-3 mb-2">
-                                            <strong>Time Estimate</strong>
-                                            <input type="time" class="form-control TIME_ESTIMATE" id="TIME_ESTIMATE" required/>
-                                            <input class="d-none" type="text" class="form-control" name="estimated_time" id="estimated_time" readonly/>
+                                            <strong>Estimated Time / Duration</strong>
+                                            <div class="input-group">            
+                                                <input type="number" step="any" class="form-control" name="estimated_time" id="" required/>                                                                                    
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">HRS</div>
+                                                </div>
+                                            </div>                                                                                        
                                         </div>
                                         <div class="col-lg-12 mb-2">
                                             <strong>Description</strong>
@@ -60,7 +64,7 @@
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                             	<input type="hidden" name="type" value="service"/>
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/services')">Cancel</button>
+                                                <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -78,32 +82,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#service_form").submit(function(e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    var form = $(this);
-    // console.log(form);
-    //var url = form.attr('action');
-    $.ajax({
-        type: "POST",
-        url: "<?= base_url() ?>/inventory/save_new_item",
-        data: form.serialize(), // serializes the form's elements.
-        // success: function(data) {
-        //     console.log(data);
-        // }
+$(function(){
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'inventory/services';
     });
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Service was added successfully!',
-    }).then((result) => {
-        // if (result.isConfirmed) {
-            window.location.href = "/inventory/services";
-        // }
-    });
-});
 
-$('#TIME_ESTIMATE').change(function(event) {
-    $('#estimated_time').val(moment($('#TIME_ESTIMATE').val(), 'hh:mm').format('hh:mm A'));
+    $("#service_form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/inventory/create_service_item",
+            data: form.serialize(), // serializes the form's elements.
+            // success: function(data) {
+            //     console.log(data);
+            // }
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Service was added successfully!',
+        }).then((result) => {
+            // if (result.isConfirmed) {
+                window.location.href = base_url + "inventory/services";
+            // }
+        });
+    });
+
+    $('#TIME_ESTIMATE').change(function(event) {
+        $('#estimated_time').val(moment($('#TIME_ESTIMATE').val(), 'hh:mm').format('hh:mm A'));
+    });
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

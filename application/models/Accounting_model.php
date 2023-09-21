@@ -184,7 +184,7 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Sales by Customer Summary data in Database
-        if ($reportType == "sales_by_customer_summary") {
+        if ($reportType == "sales_customer_summary") {
             $this->db->select('invoices.id AS invoice_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, SUM(invoices_items.total) AS total');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');

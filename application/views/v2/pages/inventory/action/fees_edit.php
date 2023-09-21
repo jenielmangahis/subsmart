@@ -56,7 +56,7 @@
                                             <div class="float-end">
                                             	<input type="hidden" name="type" value="fees"/>
                                                 <input type="hidden" name="fid" value="<?php echo $item->id; ?>">
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/fees')">Cancel</button>
+                                                <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -70,31 +70,33 @@
         </div>
     </div>
 </form>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-$("#fees_form").submit(function(e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    var form = $(this);
-    // console.log(form);
-    //var url = form.attr('action');
-    $.ajax({
-        type: "POST",
-        url: "<?= base_url() ?>/inventory/update_fees",
-        data: form.serialize(), // serializes the form's elements.
-        success: function(data) {
-            // console.log(data);
-        }
+$(function(){
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'inventory/fees';
     });
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Inventory Fee was updated successfully!',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "/inventory/fees";
-        }
+    $("#fees_form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        // console.log(form);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/inventory/update_fees",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data) {
+                // console.log(data);
+            }
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Inventory Fee was updated successfully!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = base_url + "inventory/fees";
+            }
+        });
     });
 });
 </script>

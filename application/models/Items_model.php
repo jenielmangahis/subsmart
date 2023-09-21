@@ -153,7 +153,7 @@ class Items_model extends MY_Model
         if( $filters ){
             $count = 1;
             foreach( $filters as $value ){
-                if( $count == 1 ){
+                if( $count == 1 ){                    
                     $this->db->where($value['field'], $value['value']);
                 }else{
                     $this->db->or_where($value['field'], $value['value']);
@@ -162,6 +162,30 @@ class Items_model extends MY_Model
             }
         }
 
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllActiveServicesByCompanyId($company_id, $filters = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('type', 'Service');
+        $this->db->where('is_active', 1);
+        if( $filters ){
+            $count = 1;
+            foreach( $filters as $value ){
+                if( $count == 1 ){                    
+                    $this->db->where($value['field'], $value['value']);
+                }else{
+                    $this->db->or_where($value['field'], $value['value']);
+                }
+                $count++;
+            }
+        }
+        
+        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

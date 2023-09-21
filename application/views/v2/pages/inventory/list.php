@@ -184,7 +184,7 @@
 <!-- MODAL SECTION -->
 <div class="modal" id="inventory_location_modal" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="width:640px;">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Item Locations</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
@@ -215,8 +215,8 @@
                                                     for ($i=0; $i < count($items_locations); $i++) { 
                                                         $TR .= "<tr>
                                                             <td class='d-none'>".$items_locations[$i]['item_id']."</td>
-                                                            <td>".getLocationName($items_locations[$i]['loc_id'])->location_name."</td>
-                                                            <td>".$items_locations[$i]['qty']."</td>
+                                                            <td style='width:70%;'>".getLocationName($items_locations[$i]['loc_id'])->location_name."</td>
+                                                            <td style='text-align:right;'>".$items_locations[$i]['qty']."</td>
                                                             <td>
                                                                 <div class='dropdown table-management'>
                                                                     <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -611,6 +611,11 @@ $(document).ready(function() {
         language: {
             processing: '<span>Fetching data...</span>'
         },
+        "columnDefs": [
+            { "width": "5%"},
+            { "width": "80%"},
+            { "width": "5%"}
+        ],
     });
 
     $('.SEE_LOCATION').delay(1000).removeAttr('disabled');
