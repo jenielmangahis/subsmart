@@ -88,4 +88,16 @@ class Accounting_journal_entries_model extends MY_Model {
 		$this->db->where('id', $id);
 		return $this->db->delete($this->table);
 	}
+
+	public function get_entries_named_to_customer($filters = [])
+	{
+		$this->db->select('accounting_journal_entries.*');
+		$this->db->from('accounting_journal_entries');
+		$this->db->where('accounting_journal_entries.company_id', $filters['company_id']);
+		$this->db->where('accounting_journal_entry_items.name_key', 'customer');
+		$this->db->group_by('accounting_journal_entries.id');
+		$this->db->join('accounting_journal_entry_items', 'accounting_journal_entry_items.journal_entry_id = accounting_journal_entries.id');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
