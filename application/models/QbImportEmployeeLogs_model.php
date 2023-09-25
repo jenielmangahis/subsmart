@@ -29,23 +29,6 @@ class QbImportEmployeeLogs_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllNotSync($limit = 0)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);        
-        $this->db->where('is_sync', 0);
-        $this->db->where('is_with_error', 0);
-        
-        if( $limit > 0 ){
-            $this->db->limit($limit);
-        }
-
-        $this->db->order_by('id', 'ASC');
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function getById($id)
     {
         $this->db->select('*');
@@ -82,6 +65,23 @@ class QbImportEmployeeLogs_model extends MY_Model
         }
 
         $this->db->order_by('qb_import_employee_logs.id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllNotSync($limit = 0)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('is_sync', 0);
+        $this->db->where('is_with_error', 0);
+        
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();

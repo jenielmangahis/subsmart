@@ -537,8 +537,8 @@ $('#run-report-button').on('click', function() {
         columns.push($(this).next().text().trim());
     });
 
-    if(columns.length < $('#reports-table thead tr td:visible').length) {
-        url += `columns=${columns}`;
+    if(columns.length < $('#reports-table thead tr td').length) {
+        url += `columns=${columns}&`;
     }
 
     url += $('#allow-filter-distribution-account').prop('checked') && $('#filter-distribution-account').val() !== 'all' ? `distribution-account=${$('#filter-distribution-account').val()}&` : '';

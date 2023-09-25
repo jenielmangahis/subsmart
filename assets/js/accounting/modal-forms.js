@@ -8,7 +8,7 @@ var modalName = '';
 var tagsListModal = '';
 var timesheetInputs = 'input.day-input';
 var payrollForm = '';
-var payrollFormData = [];
+var payrollFormData = new FormData();
 const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
 var recurrInterval = '';
 var recurringDays = '';
@@ -161,10 +161,10 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#payrollModal table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], #payrollModal table#payroll-table tbody tr td:nth-child(5) input:not([name="memo[]"])', function() {
-        payrollRowTotal($(this));
-        payrollTotal();
-    });
+    // $(document).on('change', '#payrollModal table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], #payrollModal table#payroll-table tbody tr td:nth-child(5) input:not([name="memo[]"])', function() {
+    //     payrollRowTotal($(this));
+    //     payrollTotal();
+    // });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function() {
         payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
@@ -241,22 +241,29 @@ $(function() {
         var payDate = selected[0].dataset.pay_date;
 
         $('div#payrollModal input#payDate').val(payDate);
+        $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
+            $(this).trigger('change');
+        });
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
         payrollForm = $('div#payrollModal div.modal-body').html();
-        payrollFormData = new FormData();
+        // payrollFormData = new FormData();
         // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
 
+        for (const pair of payrollFormData.entries()) {
+            payrollFormData.delete(pair[0]);
+        }
+
         payrollFormData.set('pay_from_account', $('#bank-account').val());
-        payrollFormData.set('pay_period', $('#payPeriod').val());
-        payrollFormData.set('pay_date', $('#payDate').val());
+        payrollFormData.set('pay_period', $('#payrollModal #payPeriod').val());
+        payrollFormData.set('pay_date', $('#payrollModal #payDate').val());
 
         $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
             var row = $(this).closest('tr');
             payrollFormData.append('employees[]', $(this).val());
-            payrollFormData.append('reg_pay_hours[]', row.find('.regular-pay-hours').val());
-            payrollFormData.append('commission[]', row.find('.employee-commission').val());
+            payrollFormData.append('reg_pay_hours[]', row.find('td:nth-child(4)').html());
+            payrollFormData.append('commission[]', row.find('td:nth-child(5)').html());
             payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
         });
 
@@ -335,8 +342,8 @@ $(function() {
             }
         });
 
-        $('div#payrollModal div.modal-body table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"]').each(function(index, value) {
-            $(this).val(payrollFormData.getAll('reg_pay_hours[]')[index]);
+        $('div#payrollModal div.modal-body table tbody tr td:nth-child(4)').each(function(index, value) {
+            $(this).html(payrollFormData.getAll('reg_pay_hours[]')[index]);
         });
 
         $('div#payrollModal div.modal-body table tbody tr td:nth-child(5) input[name="commission[]"]').each(function(index, value) {
@@ -353,33 +360,17 @@ $(function() {
         $('div#payrollModal div.modal-footer button[type="submit"]').prop('type', 'button');
     });
 
-    $(document).on('change', 'div#payrollModal table thead th input[name="select_all"]', function() {
+    $(document).on('change', 'div#payrollModal #payroll-table input.select-all', function() {
         var table = $(this).closest('table');
         var rows = table.children('tbody').children('tr');
 
         if ($(this).prop('checked')) {
             rows.each(function() {
-                $(this).find('input[type="checkbox"]').prop('checked', true);
-
-                $(this).children('td').each(function(index, value) {
-                    if (index === 2) {
-                        $(this).html('<a href="#" class="text-decoration-none">Paper check</a>');
-                    } else if (index === 3) {
-                        $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-end text-end regular-pay-hours">');
-                    } else if (index === 4) {
-                        $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-end text-end employee-commission">');
-                    } else if (index === 5) {
-                        $(this).html('<input type="text" name="memo[]" class="form-control">');
-                    } else if (index === 6) {
-                        $(this).html('<p class="text-end m-0">0.00</p>');
-                    } else if (index === 7) {
-                        $(this).html('<p class="text-end m-0">$<span class="total-pay">0.00</span></p>');
-                    }
-                });
+                $(this).find('input.select-one').prop('checked', true).trigger('change');
             });
         } else {
             rows.each(function() {
-                $(this).find('input[type="checkbox"]').prop('checked', false);
+                $(this).find('input.select-one').prop('checked', false);
 
                 $(this).children('td').each(function(index, value) {
                     if (index > 1) {
@@ -387,14 +378,18 @@ $(function() {
                     }
                 });
             });
+
+            payrollTotal();
         }
     });
 
     $(document).on('change', 'div#payrollModal table tbody tr td:first-child() input', function() {
         var table = $(this).parent().parent().parent().parent().parent();
-        var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
+        var checkbox = table.find('input.select-all');
         var rows = table.children('tbody').children('tr');
         var flag = true;
+        var empID = $(this).val();
+        var row = $(this).closest('tr');
 
         if ($(this).prop('checked') === false) {
             $(this).parent().parent().parent().children('td').each(function(index, value) {
@@ -402,20 +397,47 @@ $(function() {
                     $(this).html('');
                 }
             });
+
+            payrollTotal();
         } else {
-            $(this).parent().parent().parent().children('td').each(function(index, value) {
-                if (index === 2) {
-                    $(this).html('<a href="#" class="text-info">Paper check</a>');
-                } else if (index === 3) {
-                    $(this).html('<input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">');
-                } else if (index === 4) {
-                    $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
-                } else if (index === 5) {
-                    $(this).html('<input type="text" name="memo[]" class="form-control">');
-                } else if (index === 6) {
-                    $(this).html('<p class="text-right m-0">0.00</p>');
-                } else if (index === 7) {
-                    $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+            var data = new FormData();
+            data.set('employee_id', empID);
+            data.set('pay_period', $('#payrollModal #payPeriod').val());
+
+            $.ajax({
+                url: '/accounting/get-employee-pay-details',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    var res = JSON.parse(result);
+                    row.children('td').each(function(index, value)  {
+                        switch(index) {
+                            case 2 :
+                                $(this).html(res.pay_details.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check');
+                            break;
+                            case 3 :
+                                if(res.pay_details.pay_method !== 'commission') {
+                                    $(this).html(parseFloat(res.total_hrs).toFixed(2));
+                                }
+                            break;
+                            case 4 :
+                                $(this).html(res.commission !== null ? formatter.format(parseFloat(res.commission)) : formatter.format(parseFloat(0.00)));
+                            break;
+                            case 5 :
+                                $(this).html(`<input type="text" name="memo[]" class="form-control nsm-field">`);
+                            break;
+                            case 6 :
+                                $(this).html(`<p class="m-0 text-end">${parseFloat(res.total_hrs).toFixed(2)}</p>`);
+                            break;
+                            case 7 :
+                                $(this).html(`<p class="m-0 text-end"><span class="total-pay">${formatter.format(parseFloat(res.total_pay))}</span></p>`);
+                            break;
+                        }
+                    });
+
+                    payrollTotal();
                 }
             });
         }
@@ -6056,7 +6078,7 @@ $(function() {
         var data = new FormData(this);
         var hasPayeeType = data.has('payee_type');
         if (!data.has('payee_type')) {
-            var type = dropdownEl.attr('id');
+            var type = dropdownEl.attr('id') === 'person_tracking' ? 'vendor' : dropdownEl.attr('id');
 
             if (type === undefined) {
                 type = dropdownEl.attr('name').includes('customer') ? 'customer' : type;
@@ -9225,20 +9247,15 @@ const payrollRowTotal = (el) => {
     var row = $(el).closest('tr');
     var payRate = row.find('span.pay-rate').html().replace('$', '');
     var regPayHours = "0.00";
-    var commission = "0.00";
+    var commission = el.closest('tr').find('td:nth-child(5)').html();
 
+    regPayHours = parseFloat(row.find('td:nth-child(4)').html()).toFixed(2);
 
-    if (el.hasClass('employee-commission')) {
-        commission = parseFloat(el.val());
+    row.children('td:nth-child(7)').children().html(regPayHours);
 
-        totalPay = parseFloat(commission).toFixed(2);
-    } else {
-        regPayHours = parseFloat(el.val()).toFixed(2);
+    totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate))).toFixed(2);
 
-        row.children('td:nth-child(7)').children().html(regPayHours);
-
-        totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate))).toFixed(2);
-    }
+    totalPay = parseFloat(parseFloat(totalPay) + parseFloat(commission)).toFixed(2);
 
     row.children('td:last-child()').children('p').children('span.total-pay').html(formatter.format(parseFloat(totalPay)));
 }
@@ -9249,37 +9266,39 @@ const payrollTotal = () => {
     var commission = 0.00;
 
     $('div#payrollModal table#payroll-table tbody tr').each(function() {
-        var empTotalHours = $(this).find('input[name="reg_pay_hours[]"]').val();
-        if (empTotalHours !== "" && empTotalHours !== undefined) {
-            empTotalHours = parseFloat(empTotalHours);
-        } else {
-            empTotalHours = 0.00;
+        if($(this).find('.select-one').prop('checked')) {
+            var empTotalHours = $(this).find('td:nth-child(4)').html();
+            if (empTotalHours !== "" && empTotalHours !== undefined) {
+                empTotalHours = parseFloat(empTotalHours);
+            } else {
+                empTotalHours = 0.00;
+            }
+
+            hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);
+    
+            var empCommission = $(this).children('td:nth-child(5)').html().replace('$', '');
+            if (empCommission !== "" && empCommission !== undefined) {
+                empCommission = parseFloat(empCommission);
+            } else {
+                empCommission = 0.00;
+            }
+    
+            commission = parseFloat(parseFloat(commission) + empCommission);
+
+            var empTotalPay = $(this).find('.total-pay').html().replace('$', '');
+    
+            if (empTotalPay !== "" && empTotalPay !== undefined) {
+                empTotalPay = parseFloat(empTotalPay);
+            } else {
+                empTotalPay = 0.00;
+            }
+    
+            totalPay = parseFloat(parseFloat(totalPay) + parseFloat(empTotalPay));
         }
-
-        hours = parseFloat(parseFloat(hours) + empTotalHours).toFixed(2);
-
-        var empCommission = $(this).children('td:nth-child(5)').children('input').val();
-        if (empCommission !== "" && empCommission !== undefined) {
-            empCommission = parseFloat(empCommission);
-        } else {
-            empCommission = 0.00;
-        }
-
-        commission = parseFloat(parseFloat(commission) + empCommission);
-
-        var empTotalPay = $(this).children('td:last-child()').children('p').children('span').html().replace('$', '');
-
-        if (empTotalPay !== "" && empTotalPay !== undefined) {
-            empTotalPay = parseFloat(empTotalPay);
-        } else {
-            empTotalPay = 0.00;
-        }
-
-        totalPay = parseFloat(parseFloat(totalPay) + parseFloat(empTotalPay));
     });
 
-    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(4)').html(hours);
-    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(7)').html(hours);
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(4)').html(parseFloat(hours).toFixed(2));
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(7)').html(parseFloat(hours).toFixed(2));
 
     $('table#payroll-table tfoot tr:first-child td:nth-child(5)').html(formatter.format(parseFloat(commission)));
 
@@ -10226,7 +10245,8 @@ const submitModalForm = (event, el) => {
 
             if(res.success === true) {
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
-                    $(el).children().modal('hide');
+                    // $(el).children().modal('hide');
+                    location.reload();
                 }
 
                 if(submitType !== 'save-and-close' && submitType !== 'save-and-new' && modalId !== '#payBillsModal') {
@@ -10354,7 +10374,7 @@ const submitModalForm = (event, el) => {
                         case 'singleTimeModal' :
                             var type = 'time-activity';
 
-                            $('#singleTimeModal .modal-footer div.row.w-100 div:nth-child(2)').html(`<a href="#" class="text-dark text-decoration-none m-auto" id="delete-time-activity">Delete</a>`);
+                            $('#singleTimeModal .modal-footer div.row.w-100').children('div:nth-child(2)').html(`<a href="#" class="text-dark text-decoration-none m-auto" id="delete-time-activity">Delete</a>`);
                         break;
                         case 'journalEntryModal' :
                             var type = 'journal';

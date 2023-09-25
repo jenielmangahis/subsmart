@@ -320,6 +320,24 @@ class Accounting_model extends MY_Model {
             return $data->result();            
         }
 
+        // Get Inventory Valuation Detail data in Database
+        if ($reportType == "inventory_valuation_detail") {
+            $this->db->select('invoices_items.invoice_id AS invoice_id, items.type AS product_service, DATE(invoices_items.date_created) AS date, "Purchase" AS transaction_type, invoices_items.id AS num, items.title AS name, invoices_items.qty AS qty, items.retail AS rate, invoices_items.cost AS fifo_cost, items_has_storage_loc.qty AS qty_on_hand, (invoices_items.qty * items.retail) AS asset_value');
+            $this->db->from('invoices_items');
+            $this->db->join('invoices', 'invoices.id = invoices_items.invoice_id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
+            $this->db->where('items.type !=', '');
+            $this->db->where('items.retail !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('items.type');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
+        
     }
 
 }
