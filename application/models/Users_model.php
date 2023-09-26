@@ -780,6 +780,16 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
+    public function getPayScheduleEmployees($paySchedId)
+    {
+        $this->db->select('users.*');
+        $this->db->from('users');
+        $this->db->where('employee_pay_details.pay_schedule_id', $paySchedId);
+        $this->db->join('employee_pay_details', 'employee_pay_details.user_id = users.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getPayDetailsByPaySched($paySchedId)
     {
         $this->db->where('company_id', logged('company_id'));
@@ -964,6 +974,24 @@ class Users_model extends MY_Model
         $this->db->from("jobs");
         $query = $this->db->get();
         return $query->result()[0];
+    }
+
+    public function get_commission_by_date_range($employeeId, $startDate, $endDate)
+    {
+        $this->db->select('SUM(commission) as commission');
+        $this->db->where('employee_id', $employeeId);
+        $this->db->where('date_issued >=', $startDate);
+        $this->db->where('date_issued <=', $endDate);
+        $this->db->from('jobs');
+        $query = $this->db->get();
+        return $query->result()[0];
+    }
+
+    public function get_payscale_by_id($payscaleId)
+    {
+        $this->db->where('id', $payscaleId);
+        $query = $this->db->get('payscale');
+        return $query->row();
     }
 
     public function getTOtalJobTypeBaseAmount($employee_id){

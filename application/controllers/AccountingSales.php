@@ -245,11 +245,17 @@ class AccountingSales extends MY_Controller
         $query = <<<SQL
         SELECT `i`.*, `a`.`agency_id` FROM `invoices` AS `i`
         LEFT JOIN `accounting_invoice_tax_agencies` AS `a` ON `a`.`invoice_id` = `i`.`id`
-        WHERE `a`.`agency_id` IS NOT NULL AND `i`.`user_id` = ? AND STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') >= ? AND
+        WHERE `a`.`agency_id` IS NOT NULL AND `i`.`company_id` = ? AND STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') >= ? AND
         STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') <= ? ORDER BY STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') DESC
 SQL;
+// $query = <<<SQL
+//         SELECT `i`.*, `a`.`agency_id` FROM `invoices` AS `i`
+//         LEFT JOIN `accounting_invoice_tax_agencies` AS `a` ON `a`.`invoice_id` = `i`.`id`
+//         WHERE `a`.`agency_id` IS NOT NULL AND `i`.`due_date` >= ? AND
+//         `i`.`due_date` <= ? ORDER BY `i`.`due_date` DESC
+// SQL;
 
-        $params = [logged('id'), $dueStart, $dueEnd];
+        $params = [logged('company_id'), $dueStart, $dueEnd];
         $results = $this->db->query($query, $params)->result();
 
         $companyIdMap = [];
@@ -321,7 +327,7 @@ SQL;
 
     public function apiGetTaxedInvoicesDueDates()
     {
-        $this->db->where('user_id', logged('id'));
+        $this->db->where('company_id', logged('company_id'));
         $this->db->select("STR_TO_DATE(due_date, '%Y-%m-%d') due_date");
         $this->db->order_by('due_date', 'ASC');
         $results = $this->db->get('invoices')->result();

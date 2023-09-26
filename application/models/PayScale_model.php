@@ -27,12 +27,13 @@ class PayScale_model extends MY_Model
     public function getAllByCompanyId($company_id)
     {
         $id = logged('id');
-        $default_ids = $this->defaultPayScaleIds();
+        //$default_ids = $this->defaultPayScaleIds();
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->or_where_in('id', $default_ids);
-        $this->db->order_by('payscale_name', 'ASC');
+        $this->db->or_where('company_id', 0);
+        //$this->db->or_where_in('id', $default_ids);
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();

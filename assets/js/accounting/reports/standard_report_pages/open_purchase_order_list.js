@@ -1,11 +1,91 @@
+const currUrl = window.location.href;
+const urlSplit = currUrl.includes('?') ? currUrl.split('?')[0].split('/') : currUrl.split('/');
+const reportId = urlSplit[urlSplit.length - 1].replace('#', '');
+
 $('.date').each(function() {
     $(this).datepicker({
-        uiLibrary: 'bootstrap'
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
     });
 });
 
-$('select').select2({
-    minimumResultsForSearch: -1
+$('select').each(function() {
+    if($(this).closest('.modal').length > 0) {
+        $(this).select2({
+            minimumResultsForSearch: -1,
+            dropdownParent: $(this).closest('.modal')
+        });
+    } else {
+        $(this).select2({
+            minimumResultsForSearch: -1
+        });
+    }
+
+    if($(this).attr('id') === 'custom-report-group') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'custom-report-group'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect
+        });
+    }
+
+    if($(this).attr('id') === 'filter-account') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-account'
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
+
+    if($(this).attr('id') === 'filter-vendor') {
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'filter-report-vendor'
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $(this).closest('.modal')
+        });
+    }
 });
 
 $('.dropdown-menu').on('click', function(e) {
@@ -568,13 +648,533 @@ $('#export-to-excel').on('click', function(e) {
 $('#export-to-pdf').on('click', function(e) {
     e.preventDefault();
 
-    if($(this).text().trim().replace('Show ', '') === 'More') {
-        $(this).html('<i class="fa fa-caret-up text-info"></i> Show Less');
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
 
-        $(this).parent().prev().show();
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('input[name="col_chk"]').on('change', function() {
+    var chk = $(this);
+    var dataName = chk.next().text().replace('#', 'No.');
+
+    if(chk.prop('checked')) {
+        $(`#reports-table thead tr td[data-name="${dataName}"]`).show();
+        $(`#print_report_modal thead tr:last-child td[data-name="${dataName}"]`).show();
+        $(`#print_preview_report_modal thead tr:last-child td[data-name="${dataName}"]`).show();
     } else {
-        $(this).html('<i class="fa fa-caret-down text-info"></i> Show More');
+        $(`#reports-table thead tr td[data-name="${dataName}"]`).hide();
+        $(`#print_report_modal thead tr:last-child td[data-name="${dataName}"]`).hide();
+        $(`#print_preview_report_modal thead tr:last-child td[data-name="${dataName}"]`).hide();
+    }
 
-        $(this).parent().prev().hide();
+    $('#reports-table thead tr td:visible').each(function() {
+        var name = $(this).data().name;
+
+        $(`#reports-table tbody tr td[data-name="${name}"]`).show();
+        $(`#print_report_modal tbody tr td[data-name="${name}"]`).show();
+        $(`#print_preview_report_modal tbody tr td[data-name="${name}"]`).show();
+    });
+
+    $('#reports-table thead tr td:hidden').each(function() {
+        var name = $(this).data().name;
+
+        $(`#reports-table tbody tr td[data-name="${name}"]`).hide();
+        $(`#print_report_modal tbody tr td[data-name="${name}"]`).hide();
+        $(`#print_preview_report_modal tbody tr td[data-name="${name}"]`).hide();
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    var groupBy = 'customer';
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+
+            if(selectedVal[0] === 'group-by') {
+                groupBy = selectedVal[1];
+            }
+        });
+    }
+
+    if(groupBy !== 'none') {
+        var totalColumns = [
+            'Amount',
+            'Open Balance'
+        ];
+    
+        if(totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name)) {
+            $('#reports-table thead tr').prepend('<td data-name=""></td>');
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse').prepend(`<td data-name=""></td>`);
+            
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+    
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_preview_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+            
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+    
+        if($($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name === 'Online Banking') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td[data-name="Online Banking"], #reports-table tbody tr.group-total td[data-name="Online Banking"]').hide();
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_report_modal tbody tr.group-header td[data-name="Online Banking"], #print_report_modal tbody tr.group-total td[data-name="Online Banking"]').hide();
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+            
+    
+            $('#print_preview_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_preview_report_modal tbody tr.group-header td[data-name="Online Banking"], #print_preview_report_modal tbody tr.group-total td[data-name="Online Banking"]').hide();
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+
+        if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Amount' && $($('#reports-table thead tr td:visible')[1]).data().name !== 'Open Balance' ||
+        $($('#reports-table thead tr td:visible')[0]).data().name !== '') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+
+            $('#print_report_modal thead tr td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+
+            $('#print_preview_report_modal thead tr td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+
+            var colspan = 0;
+            $('#reports-table thead tr td:visible').each(function() {
+                var name = $(this).data().name;
+    
+                if(name === 'Amount' || name === 'Open Balance') {
+                    return false;
+                } else {
+                    colspan++;
+                }
+            });
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+        }
     }
 });
+
+function save_custom_report(customReport = {})
+{
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('report_id', reportId);
+    data.set('custom_report_group_id', $('#custom-report-group').val());
+    data.set('share_with', $('#share-with').val());
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(selectedVal[0] !== 'date') {
+                data.append(`settings[${selectedVal[0]}]`, selectedVal[1]);
+            } else {
+                data.set('date_range', selectedVal[1]);
+            }
+        });
+    }
+
+    if(data.has('date_range') === false) {
+        data.set('date_range', $('#report-period-date').find('option:selected').text().trim());
+    }
+
+    if(Object.keys(customReport).length > 0) {
+        data.append('custom_report_id', customReport.id);
+    }
+
+    $.ajax({
+        url: `/accounting/reports/save-custom-report`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+}
+
+function get_start_and_end_dates(val, el)
+{
+    switch(val) {
+        case 'custom' :
+            if($(`#${el.attr('id')}-from`).length > 0) {
+                startDate = $(`#${el.attr('id')}-from`).val();
+                endDate = $(`#${el.attr('id')}-to`).val();
+            } else {
+                startDate = '';
+                endDate = '';
+            }
+        break;
+        case 'today' :
+            var date = new Date();
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+            var to = from + 6;
+
+            var from_date = new Date(date.setDate(from));
+            var to_date = new Date(date.setDate(to));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-week-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from = date.getDate() - date.getDay();
+            var from_date = new Date(date.setDate(from));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'this-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'this-month-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    startDate = '01/01/' + date.getFullYear();
+                    endDate = '03/31/'+ date.getFullYear();
+                break;
+                case 2 :
+                    startDate = '04/01/' + date.getFullYear();
+                    endDate = '06/30/'+ date.getFullYear();
+                break;
+                case 3 :
+                    startDate = '07/01/' + date.getFullYear();
+                    endDate = '09/30/'+ date.getFullYear();
+                break;
+                case 4 :
+                    startDate = '10/01/' + date.getFullYear();
+                    endDate = '12/31/'+ date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-quarter-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            switch(currQuarter) {
+                case 1 :
+                    startDate = '01/01/' + date.getFullYear();
+                break;
+                case 2 :
+                    startDate = '04/01/' + date.getFullYear();
+                break;
+                case 3 :
+                    startDate = '07/01/' + date.getFullYear();
+                break;
+                case 4 :
+                    startDate = '10/01/' + date.getFullYear();
+                break;
+            }
+        break;
+        case 'this-year' :
+            var date = new Date();
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-year-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'this-year-to-last-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'yesterday' :
+            var date = new Date();
+            date.setDate(date.getDate() - 1);
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'recent' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 4));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from - 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-week-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from = date.getDate() - date.getDay();
+            var from_date = new Date(date.setDate(from - 7));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+            startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-month-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            to_date.setMonth(to_date.getMonth() - 3);
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'last-quarter-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+            switch(currQuarter) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                break;
+            }
+
+            from_date.setMonth(from_date.getMonth() - 3);
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'last-year' :
+            var date = new Date();
+            date.setFullYear(date.getFullYear() - 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'last-year-to-date' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            date.setFullYear(date.getFullYear() - 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+        case 'since-30-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 30));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-60-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 60));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-90-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+
+            var from_date = new Date(date.setDate(date.getDate() - 90));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'since-365-days-ago' :
+            var date = new Date();
+            endDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            
+            var from_date = new Date(date.setDate(date.getDate() - 365));
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+        break;
+        case 'next-week' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from + 7));
+            var to_date = new Date(date.setDate(date.getDate() + 6));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-4-weeks' :
+            var date = new Date();
+            var from = date.getDate() - date.getDay();
+
+            var from_date = new Date(date.setDate(from + 7));
+            var to_date = new Date(date.setDate(date.getDate() + 27));
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-month' :
+            var date = new Date();
+            var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-quarter' :
+            var date = new Date();
+            var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+
+            switch(currQuarter + 1) {
+                case 1 :
+                    var from_date = new Date('01/01/' + date.getFullYear());
+                    var to_date = new Date('03/31/'+ date.getFullYear());
+                break;
+                case 2 :
+                    var from_date = new Date('04/01/' + date.getFullYear());
+                    var to_date = new Date('06/30/'+ date.getFullYear());
+                break;
+                case 3 :
+                    var from_date = new Date('07/01/' + date.getFullYear());
+                    var to_date = new Date('09/30/'+ date.getFullYear());
+                break;
+                case 4 :
+                    var from_date = new Date('10/01/' + date.getFullYear());
+                    var to_date = new Date('12/31/'+ date.getFullYear());
+                break;
+            }
+
+            if(to_date.getDate() === 1) {
+                to_date.setDate(to_date.getDate() - 1);
+            }
+
+            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+        break;
+        case 'next-year' :
+            var date = new Date();
+            date.setFullYear(date.getFullYear() + 1);
+
+            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+        break;
+    }
+
+    return {
+        start_date : startDate,
+        end_date : endDate
+    };
+}
