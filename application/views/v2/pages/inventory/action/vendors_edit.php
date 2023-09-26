@@ -31,52 +31,68 @@
                                 <hr>
                                 <div class="nsm-card-body">
                                     <div class="row">
-                                        <input type="hidden" name="vid" value="<?php echo $vendor->vendor_id; ?>">
-                                        <div class="col-lg-4 mb-2">
-                                            <strong>Name</strong>
-                                            <input value="<?php echo $vendor->vendor_name; ?>" type="text" class="form-control" name="vendor_name" id="vendor-name" required/>
+                                    <input type="hidden" name="vid" value="<?= $vendor->vendor_id; ?>">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <label for="vendor-name"><b>Name</b></label>
+                                                        <input type="text" class="form-control" value="<?= $vendor->vendor_name; ?>" name="vendor_name" id="vendor-name" required/>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="vendor-email"><b>Email</b></label>
+                                                        <input type="email" class="form-control" value="<?= $vendor->email; ?>" name="vendor_email" id="vendor-email" required/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <label for="vendor-mobile"><b>Mobile Number</b></label>
+                                                        <input type="text" class="form-control" value="<?= $vendor->mobile; ?>" name="vendor_mobile" id="vendor-mobile" required/>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="vendor-phone"><b>Phone Number</b></label>
+                                                        <input type="text" class="form-control" value="<?= $vendor->phone; ?>" name="vendor_phone" id="vendor-phone" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <label for="vendor-website"><b>Website</b></label>
+                                                        <input type="text" class="form-control" value="<?= $vendor->business_URL; ?>" name="vendor_website" id="vendor-website" />
+                                                    </div>
+                                                </div>
+                                            </div>                                            
                                         </div>
-                                        <div class="col-lg-8 mb-2">
-                                            <strong>Website</strong>
-                                            <input value="<?php echo $vendor->business_URL; ?>" type="text" class="form-control" name="vendor_website" id="vendor-website" required/>
+                                        <div class="col-6">
+                                            <div class="form-group row">
+                                                <div class="col-sm-5">
+                                                    <label for="vendor-city"><b>City</b></label>
+                                                    <input type="text" class="form-control" value="<?= $vendor->city; ?>" name="vendor_city" id="vendor-city" required/>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label for="vendor-state"><b>State</b></label>
+                                                    <input type="text" class="form-control" value="<?= $vendor->state; ?>" name="vendor_state" id="vendor-state" required/>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label for="vendor-postal-code"><b>Postal Code</b></label>
+                                                    <input type="text" class="form-control" value="<?= $vendor->postal_code; ?>" name="vendor_postal_code" id="vendor-postal-code" required/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mt-4">
+                                                <div class="col-sm-12">
+                                                    <label for="vendor-suite-unit"><b>Suite / Unit</b></label>
+                                                    <textarea name="vendor_suite_unit" id="vendor-suite-unit" class="form-control"><?= $vendor->suite_unit; ?></textarea>
+                                                </div>
+                                                <div class="col-sm-12 mt-4">
+                                                    <label for="vendor-address"><b>Address</b></label>
+                                                    <textarea name="vendor_address" id="vendor-address" class="form-control"><?= $vendor->street_address; ?></textarea>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-6 mb-2">
-                                            <strong>Email</strong>
-                                            <input value="<?php echo $vendor->email; ?>" type="email" class="form-control" name="vendor_email" id="vendor-email" required/>
-                                        </div>
-                                        
-                                        <div class="col-lg-3 mb-2">
-                                            <strong>Mobile</strong>
-                                            <input value="<?php echo $vendor->mobile; ?>" type="text" class="form-control" name="vendor_mobile" id="vendor-mobile" required/>
-                                        </div>
-                                        <div class="col-lg-3 mb-2">
-                                            <strong>Phone</strong>
-                                            <input value="<?php echo $vendor->phone; ?>" type="text" class="form-control" name="vendor_phone" id="vendor-phone" required/>
-                                        </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <strong>City</strong>
-                                            <input value="<?php echo $vendor->city; ?>" type="text" class="form-control" name="vendor_city" id="vendor-city" required/>
-                                        </div>
-                                        <div class="col-lg-5 mb-2">
-                                            <strong>State</strong>
-                                            <input value="<?php echo $vendor->state; ?>" type="text" class="form-control" name="vendor_state" id="vendor-state" required/>
-                                        </div>
-                                        <div class="col-lg-2 mb-2">
-                                            <strong>Postal Code</strong>
-                                            <input value="<?php echo $vendor->postal_code; ?>" type="text" class="form-control" name="vendor_postal_code" id="vendor-postal-code" required/>
-                                        </div>
-                                        <div class="col-lg-6 mb-2">
-                                            <strong>Suite / Unit</strong>
-                                            <textarea name="vendor_suite_unit" id="vendor-suite-unit" class="form-control"><?php echo $vendor->suite_unit; ?></textarea>
-                                        </div>
-                                        <div class="col-lg-6 mb-2">
-                                            <strong>Address</strong>
-                                            <textarea name="vendor_address" id="vendor-address" class="form-control"><?php echo $vendor->street_address; ?></textarea>
-                                        </div>
-                                        <div class="col-lg-12 mt-2">
-                                            <div class="float-end">
-                                            	<input type="hidden" name="type" value="fees"/>    
-                                                <button class="nsm-button" type="button" onclick="window.location.replace('/inventory/vendors')">Cancel</button>
+                                        <div class="col-12 mt-4">
+                                            <div class="float-end">                                            	
+                                                <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
                                                 <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
                                             </div>
                                         </div>
@@ -90,31 +106,34 @@
         </div>
     </div>
 </form>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    $("#vendor_form").submit(function(e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    var form = $(this);
-    // console.log(form);
-    //var url = form.attr('action');
-    $.ajax({
-        type: "POST",
-        url: "<?= base_url() ?>/inventory/_update_vendor",
-        data: form.serialize(), // serializes the form's elements.
-        // success: function(data) {
-        //     console.log(data);
-        // }
+$(function(){
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'inventory/vendors';
     });
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Vendor was updated successfully!',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "/inventory/vendors";
-        }
+
+    $("#vendor_form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        // console.log(form);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "/inventory/_update_vendor",
+            data: form.serialize(), // serializes the form's elements.
+            // success: function(data) {
+            //     console.log(data);
+            // }
+        });
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Vendor was updated successfully!',
+        }).then((result) => {
+            //if (result.isConfirmed) {
+                window.location.href = base_url + "/inventory/vendors";
+            //}
+        });
     });
 });
 </script>

@@ -1412,6 +1412,8 @@ $route['inventory/_create_vendor'] = 'inventory/ajax_create_vendor';
 $route['inventory/vendor/edit/(:num)'] = 'inventory/edit_vendor/$1';
 $route['inventory/_update_vendor'] = 'inventory/ajax_update_vendor';
 $route['inventory/vendor/delete'] = 'inventory/ajax_delete_vendor';
+$route['inventory/vendor/_send_email'] = 'inventory/ajax_vendor_send_email';
+$route['inventory/vendor/export'] = 'inventory/vendor_export';
 
 //Item Category
 $route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';

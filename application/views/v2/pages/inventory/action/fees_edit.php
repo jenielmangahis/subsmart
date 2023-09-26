@@ -93,9 +93,9 @@ $(function(){
             title: 'Success',
             text: 'Inventory Fee was updated successfully!',
         }).then((result) => {
-            if (result.isConfirmed) {
+            //if (result.isConfirmed) {
                 window.location.href = base_url + "inventory/fees";
-            }
+            //}
         });
     });
 });

@@ -60,6 +60,9 @@ table.dataTable.no-footer {
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" onclick="location.href='<?= url('inventory/vendor/export') ?>'">
+                                <i class='bx bx-fw bx-chart'></i> Export
+                            </button>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('inventory/vendor/add') ?>'">
                                 <i class='bx bx-fw bx-list-plus'></i> Add New Vendor
                             </button>
@@ -137,9 +140,9 @@ table.dataTable.no-footer {
                             <td class="table-icon text-center">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <!-- <td class="table-icon"></td> -->
+                            <td class="table-icon"></td>
                             <td data-name="Vendor Name">Vendor Name</td>
-                            <td data-name="Email">Email</td>
+                            <td data-name="Phone Number">Mobile Number</td>
                             <td data-name="Phone Number">Phone Number</td>
                             <td data-name="Address">Address</td>
                             <td data-name="Manage"></td>
@@ -147,43 +150,79 @@ table.dataTable.no-footer {
                     </thead>
                     <tbody>
                         <?php foreach ($vendors as $row) : ?>
-                                    <tr>
-                                        <td>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $row->vendor_id; ?>">
-                                            </div>
-                                        </td>
-                                        <!-- <td>
-                                            <div class="nsm-profile">
-                                                <span><?= ucwords($row->vendor_name[0]) ?></span>
-                                            </div>
-                                        </td> -->
-                                        <td class="nsm-text-primary">
-                                            <label class="d-block fw-bold"><?= $row->vendor_name ?></label>
-                                        </td>
-                                        <td><?= $row->email ?></td>
-                                        <td><?= $row->phone ?></td>
-                                        <td><?= $row->street_address.' '.$row->city. ' '.$row->state ?></td>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo url('inventory/vendor/edit/'.$row->vendor_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $row->vendor_id; ?>">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            <?php endforeach; ?>
+                            <tr>
+                                <td style="width:1%;">
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $row->vendor_id; ?>">
+                                    </div>
+                                </td>
+                                <td style="width:1%;">
+                                    <div class="nsm-profile">
+                                        <span><?= ucwords($row->vendor_name[0]) ?></span>
+                                    </div>
+                                </td>
+                                <td class="nsm-text-primary" style="width:40%;">
+                                    <label class="d-block fw-bold"><?= $row->vendor_name; ?></label>
+                                    <label class="nsm-link default content-subtitle">
+                                        <i class='bx bxs-envelope' style="position:relative;top:2px;"></i> <?= $row->email; ?>
+                                    </label>
+                                </td>
+                                <td><?= formatPhoneNumber($row->mobile); ?></td>
+                                <td><?= formatPhoneNumber($row->phone); ?></td>
+                                <td><?= $row->street_address.' '.$row->city. ' '.$row->state; ?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="<?php echo url('inventory/vendor/edit/'.$row->vendor_id); ?>">Edit</a></li>
+                                            <li><a class="dropdown-item vendor-send-email" href="javascript:void(0);" data-id="<?= $row->vendor_id; ?>" data-email="<?= $row->email; ?>">Email</a></li>
+                                            <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $row->vendor_id; ?>">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
                 </div>
+
+                <div class="modal fade nsm-modal fade" id="send_email_modal" tabindex="-1" aria-labelledby="send_email_modal_label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" id="frm-send-email">
+                            <input type="hidden" name="cid" id="vendor-send-email-eid" />
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Send Email</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <input type="text" placeholder="Customer Email" name="vendor_email" id="vendor-email" class="nsm-field form-control mb-2" required />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <input type="text" placeholder="Subject" name="vendor_email_subject" id="email-subject" class="nsm-field form-control mb-2" required />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <textarea class="nsm-field form-control mb-2" style="height:250px;" name="vendor_email_message" id="email-message" placeholder="Message" required></textarea>                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary" id="btn_send_email">Send</button>
+                            </div>
+                            </form>                
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -210,6 +249,58 @@ $(document).ready(function() {
     // $("#search_field").on("input", debounce(function() {
     //     tableSearch($(this));
     // }, 1000));
+
+    $(document).on('click', '.vendor-send-email', function(){
+        var vendor_email = $(this).attr('data-email');
+        var vendor_eid   = $(this).attr('data-id');
+        
+        $('#send_email_modal').modal('show');
+        $('#vendor-email').val(vendor_email);
+        $('#vendor-send-email-eid').val(vendor_eid);
+        $('#email-message').val('');
+        $('#email-subject').val('');
+    });
+
+    $(document).on('submit', '#frm-send-email', function(e){
+        e.preventDefault();
+        
+        var url = base_url + 'inventory/vendor/_send_email';        
+        $.ajax({
+            type: "POST",
+            url: url,   
+            dataType: "json",          
+            data: $('#frm-send-email').serialize(),
+            beforeSend: function(data) {
+                $("#btn_send_email").html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            success: function(o)
+            {          
+                $("#btn_send_email").html('Send');
+                if(o.is_success  == 1){
+                    Swal.fire({
+                        html: 'Email sent',                        
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        $("#send_email_modal").modal('hide');                    
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: o.msg
+                    });
+                }                
+            },
+            complete : function(){
+                            
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    });
 
     $(document).on("change", ".table-select", function() {
         let id = $(this).attr("data-id");
