@@ -66,7 +66,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="9">
+                                                <td colspan="10">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>

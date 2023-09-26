@@ -59,29 +59,17 @@
                                     </td>
                                     <td class="nsm-text-primary"><?= $p->payscale_name; ?></td>
                                     <td>
-                                        <div class="dropdown table-management">
-                                            <?php 
-                                                if ($p->payscale_name !== "Base (Hourly Rate)" && 
-                                                    $p->payscale_name !== "Base (Monthly Rate)" && 
-                                                    $p->payscale_name !== "Base (Weekly Rate)" && 
-                                                    $p->payscale_name !== "Base (Weekly Rate)" &&
-                                                    $p->payscale_name !== "Compensation (Base Amount)" && 
-                                                    $p->payscale_name !== "Compensation (Hourly Rate)" && 
-                                                    $p->payscale_name !== "Job Type Base (Install/Service)") : 
-                                            ?>
+                                        <?php if( $p->company_id > 0 ){ ?>
+                                        <div class="dropdown table-management">                                            
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <?php endif; ?>
+                                            </a>                                            
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a>
-                                                </li>
+                                                <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>">Edit</a></li>
+                                                <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a></li>
                                             </ul>
                                         </div>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php

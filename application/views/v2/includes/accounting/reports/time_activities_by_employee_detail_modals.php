@@ -638,9 +638,7 @@
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_customer" id="filter-customer" class="nsm-field form-control">
                                                     <?php if(isset($filter_customer)) : ?>
-                                                    <?php if(!in_array($filter_customer->id, ['all', 'not-specified', 'specified'])) : ?>
                                                     <option value="<?=$filter_customer->id?>" selected><?=$filter_customer->name?></option>
-                                                    <?php endif; ?>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>
@@ -657,9 +655,7 @@
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_product_service" id="filter-product-service" class="nsm-field form-control">
                                                     <?php if(isset($product_service)) : ?>
-                                                    <?php if(is_object($product_service) && !in_array($product_service->id, ['all', 'not-specified', 'specified'])) : ?>
                                                     <option value="<?=$product_service->id?>" selected><?=$product_service->name?></option>
-                                                    <?php endif; ?>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>
@@ -676,9 +672,7 @@
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_employee" id="filter-employee" class="nsm-field form-control">
                                                     <?php if(isset($employee)) : ?>
-                                                    <?php if(is_object($employee) && !in_array($employee->id, ['all', 'not-specified', 'specified'])) : ?>
                                                     <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
-                                                    <?php endif; ?>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>

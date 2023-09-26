@@ -304,9 +304,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     } else if (result == 3) {
                         Swal.fire({
@@ -316,9 +316,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Purchase License'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 window.location.href = base_url + 'mycrm/membership';
-                            }
+                            //}
                         });
                     } else if (result == 4) {
                         Swal.fire({

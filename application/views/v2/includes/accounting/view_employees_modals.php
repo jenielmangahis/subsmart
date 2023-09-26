@@ -327,27 +327,51 @@
                     </div>
                     <div class="col-12 col-md-4 d-flex align-items-end">
                         <select name="pay_type" id="pay-type" class="form-select nsm-field">
-                            <option value="hourly">Hourly</option>
-                            <option value="salary">Salary</option>
-                            <option value="commission">Commission only</option>
+                            <option value="hourly" <?=!empty($pay_details) && $pay_details->pay_type === 'hourly' ? 'selected' : ''?>>Hourly</option>
+                            <option value="salary" <?=!empty($pay_details) && $pay_details->pay_type === 'salary' ? 'selected' : ''?>>Salary</option>
+                            <option value="commission" <?=!empty($pay_details) && $pay_details->pay_type === 'commission' ? 'selected' : ''?>>Commission only</option>
                         </select>
                     </div>
                     <div class="col-12 col-md-8">
+                        <?php if(empty($pay_details) || !empty($pay_details) && $pay_details->pay_type === 'hourly') : ?>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="text" name="pay_rate" id="pay-rate" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
+                            <input type="text" name="pay_rate" id="pay-rate" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=!empty($pay_details) ? number_format(floatval(str_replace(',', '', $pay_details->pay_rate)), 2) : ''?>">
                             <span class="input-group-text">/hour</span>
                         </div>
+                        <?php else : ?>
+                        <?php if($pay_details->pay_type === 'salary') : ?>
+                        <div class="row">
+                            <div class="col">
+                                <label for="pay-frequency">Pay frequency</label>
+                                <select id="pay-frequency" class="form-select nsm-field" name="pay_frequency">
+                                    <option value="per-year">per year</option>
+                                    <option value="per-month">per month</option>
+                                    <option value="per-week" selected>per week</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="pay-rate">Salary</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="text" name="pay_rate" id="pay-rate" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=number_format(floatval(str_replace(',', '', $pay_details->pay_rate)), 2)?>">
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        <?php endif; ?>
                     </div>
+                    <?php if(empty($pay_details) || !empty($pay_details) && $pay_details->pay_type !== 'commission') : ?>
                     <div class="col-12">
                         <div class="input-group">
                             <span class="input-group-text">Default hours:</span>
-                            <input type="text" name="default_hours" id="default-hours" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
+                            <input type="text" name="default_hours" id="default-hours" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=!empty($pay_details) ? number_format(floatval(str_replace(',', '', $pay_details->hours_per_day)), 2) : ''?>">
                             <span class="input-group-text">hours per day and</span>
-                            <input type="text" name="days_per_week" id="days-per-week" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
+                            <input type="text" name="days_per_week" id="days-per-week" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=!empty($pay_details) ? number_format(floatval(str_replace(',', '', $pay_details->days_per_week)), 2) : ''?>">
                             <span class="input-group-text">days per week.</span>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="modal-footer">

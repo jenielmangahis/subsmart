@@ -710,7 +710,7 @@ table input.form-control {
 										</div>
 						</div>
 						<div class="col-md-8">
-								<div class="order-right text-right">
+								<div class="order-right text-right" style="float:right;">
 									<div class="user-menu">
 										<a class="btn sand-btn margin-right-sec" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>"><span class="fa fa-money fa-margin-right"></span> Create Job</a>
 									</div> 
@@ -751,15 +751,14 @@ table input.form-control {
 										<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
 									<?php } ?>
 
-										  <div class="user-menu">
-									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
+									<!-- <div class="user-menu">
+										<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
 											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
 												<span class="btn-label">More</span><span class="caret-holder"><span class="caret"></span></span>
 											</button>
 											<ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
 												<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
 												<li class="divider"></li>
-												<!-- <li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li> -->
 												<li role="presentation"><a role="menuitem"
                                                                                tabindex="-1"
                                                                                href="#"
@@ -774,13 +773,12 @@ table input.form-control {
 												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
 												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
 												<li class="divider"></li>
-												<!-- <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li> -->
 												<li role="presentation">
                                                         <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete Work Order </a></li>
 												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
 											</ul>
 										</div>
-									</div>
+									</div> -->
 								</div>
 						</div>
 					</div>
@@ -1853,17 +1851,19 @@ table input.form-control {
 		         							   			</div>
 
 
-									</div>
-
-
-								
-
-
+									<!-- </div>
 
 								</div>
 							</div>
 					</div>
 				</div>
+			</div>
+			
+		</div>
+		
+	</div>
+	
+</div> -->
 				<!-- <div class="col-md-4">
 					<div class="user-order-box">
 						<div class="several-box">

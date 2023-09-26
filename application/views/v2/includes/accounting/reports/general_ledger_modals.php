@@ -795,9 +795,7 @@
                                             <div class="col-12 col-md-6">
                                                 <select name="filter_account" id="filter-account" class="nsm-field form-control">
                                                     <?php if(isset($filter_account)) : ?>
-                                                    <?php if(!in_array($filter_account->id, ['all', 'not-specified', 'specified'])) : ?>
                                                     <option value="<?=$filter_account->id?>" selected><?=$filter_account->name?></option>
-                                                    <?php endif; ?>
                                                     <?php else : ?>
                                                     <option value="all" selected>All</option>
                                                     <?php endif; ?>
@@ -856,6 +854,15 @@
                                             <div class="col-12 col-md-6">
                                                 <input type="text" name="report_title" id="report-title" class="nsm-field form-control" value="<?=$report_title?>">
                                             </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" <?=!isset($show_report_period) ? 'checked' : ''?> type="checkbox" name="show_report_period" value="1" id="show-report-period">
+                                                    <label class="form-check-label" for="show-report-period">
+                                                        Report period
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6"></div>
                                             <div class="col-12">
                                                 <label for="footer"><b>Footer</b></label>
                                             </div>

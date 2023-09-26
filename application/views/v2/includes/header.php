@@ -40,6 +40,11 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <?php if( isset($enable_tracklocation) ){ ?>
     <link rel="stylesheet" href="<?= base_url("assets/css/timesheet/tracklocation.css") ?>">
@@ -56,6 +61,21 @@ if ($this->session->userdata('usertimezone') == null) {
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
+
+    
+    <!-- taxes page -->
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/responsive.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/slick.min.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/slick-theme.min.css"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- taxes page -->
+
     <script>
         var base_url = '<?= base_url() ?>';
         var surveyBaseUrl = '<?= base_url() ?>';
