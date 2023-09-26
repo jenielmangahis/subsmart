@@ -629,6 +629,9 @@
                                         </tr>
                                         <?php foreach($transaction['transactions'] as $tran) : ?>
                                         <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
+                                            <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
+                                            <td data-name=""></td>
+                                            <?php endif; ?>
                                             <td data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>><?=$tran['date']?></td>
                                             <td data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>><?=$tran['transaction_type']?></td>
                                             <td data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>><?=$tran['num']?></td>

@@ -102,7 +102,7 @@
                                 <div class="row g-3">
                                     <div class="col-12">
                                         <label for="custom-report-name">Custom report name</label>
-                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="Account List">
+                                        <input type="text" name="custom_report_name" id="custom-report-name" class="nsm-field form-control" value="General Ledger">
                                     </div>
                                     <div class="col-12">
                                         <label for="custom-report-group">Add this report to a group</label>
@@ -501,24 +501,24 @@
                                         <?php if(count($accounts) > 0) : ?>
                                         <?php foreach($accounts as $index => $account) : ?>
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
-                                            <td colspan="23"><i class="bx bx-fw bx-caret-right"></i> <b><?=$account['name']?></b></td>
-                                            <td><b><?=$account['debit_total']?></b></td>
-                                            <td><b><?=$account['credit_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$account['amount_total']?></b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b><?=$account['tax_amount_total']?></b></td>
-                                            <td><b><?=$account['taxable_amount_total']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$account['name']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$account['debit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$account['credit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Name', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['tax_amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['taxable_amount_total']?></b></td>
                                         </tr>
                                         <tr class="clickable collapse-row collapse starting-balance-row" id="accordion-<?=$index?>">
-                                            <td colspan="27"><b>Beginning Balance</b></td>
-                                            <td><b><?=$account['beginning_balance']?></b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="<?=isset($columns) ? $balance_index : '27'?>"><b>Beginning Balance</b></td>
+                                            <td <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$account['beginning_balance']?></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Name', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>></td>
                                         </tr>
                                         <?php foreach($account['transactions'] as $transaction) : ?>
                                         <tr class="clickable collapse-row collapse" id="accordion-<?=$index?>">
@@ -557,16 +557,16 @@
                                         </tr>
                                         <?php endforeach; ?>
                                         <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
-                                            <td colspan="23">Total for <?=$account['name']?></td>
-                                            <td><b><?=$account['debit_total']?></b></td>
-                                            <td><b><?=$account['credit_total']?></b></td>
-                                            <td></td>
-                                            <td><b><?=$account['amount_total']?></b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b><?=$account['tax_amount_total']?></b></td>
-                                            <td><b><?=$account['taxable_amount_total']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '23'?>">Total for <?=$account['name']?></td>
+                                            <td <?=isset($columns) && !in_array('Debit', $columns) ? 'style="display: none"' : ''?>><b><?=$account['debit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Credit', $columns) ? 'style="display: none"' : ''?>><b><?=$account['credit_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Balance', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Online Banking', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Name', $columns) ? 'style="display: none"' : ''?>></td>
+                                            <td <?=isset($columns) && !in_array('Tax Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['tax_amount_total']?></b></td>
+                                            <td <?=isset($columns) && !in_array('Taxable Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$account['taxable_amount_total']?></b></td>
                                         </tr>
                                         <?php endforeach; ?>
                                         <?php else : ?>

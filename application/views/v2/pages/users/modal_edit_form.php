@@ -100,7 +100,7 @@
             </div>
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Payscale</label>
-                <select class="nsm-field form-select" name="empPayscale" required>
+                <select class="nsm-field form-select edit-emp-payscale" name="empPayscale" required>
                     <option value="" disabled>Select payscale</option>
                     <?php foreach ($payscale as $p) { ?>
                         <option value="<?= $p->id; ?>" <?= $user->payscale_id == $p->id ? 'selected="selected"' : ''; ?>><?= $p->payscale_name; ?></option>
@@ -135,58 +135,60 @@
                 <label class="content-subtitle fw-bold d-block mb-2">Amount</label>
                 <input class="form-control" name="empJobTypeBaseInstall" type="number" step="any" min="0" value="<?php echo ($user->jobtypebase_amount) ? $user->jobtypebase_amount : "0"; ?>">
             </div>
-            <div class="col-9">
-                <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
-                <select class="nsm-field form-select" name="empCommission" id="empCommission" required>
-                    <option value="" disabled>Select Type</option>
-                    <option value="2" <?php echo $user->commission_id == 2 ? 'selected="selected"' : ''; ?>>None</option>
-                    <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option>
-                    <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option>
-                </select>
-            </div>
-            <div class="col-3">
-                <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
-                <select class="nsm-field form-select" name="empCommissionPercentage" id="empCommissionPercentage" required>
-                    <option <?php echo $user->commission_percentage == 0 ? 'selected="selected"' : ''; ?> value="0">0%</option>
-                    <option <?php echo $user->commission_percentage == 0.01 ? 'selected="selected"' : ''; ?> value="0.01">1%</option>
-                    <option <?php echo $user->commission_percentage == 0.02 ? 'selected="selected"' : ''; ?> value="0.02">2%</option>
-                    <option <?php echo $user->commission_percentage == 0.03 ? 'selected="selected"' : ''; ?> value="0.03">3%</option>
-                    <option <?php echo $user->commission_percentage == 0.04 ? 'selected="selected"' : ''; ?> value="0.04">4%</option>
-                    <option <?php echo $user->commission_percentage == 0.05 ? 'selected="selected"' : ''; ?> value="0.05">5%</option>
-                    <option <?php echo $user->commission_percentage == 0.06 ? 'selected="selected"' : ''; ?> value="0.06">6%</option>
-                    <option <?php echo $user->commission_percentage == 0.07 ? 'selected="selected"' : ''; ?> value="0.07">7%</option>
-                    <option <?php echo $user->commission_percentage == 0.08 ? 'selected="selected"' : ''; ?> value="0.08">8%</option>
-                    <option <?php echo $user->commission_percentage == 0.09 ? 'selected="selected"' : ''; ?> value="0.09">9%</option>
-                    <option <?php echo $user->commission_percentage == 0.1 ? 'selected="selected"' : ''; ?> value="0.1">10%</option>
-                    <option <?php echo $user->commission_percentage == 0.11 ? 'selected="selected"' : ''; ?> value="0.11">11%</option>
-                    <option <?php echo $user->commission_percentage == 0.12 ? 'selected="selected"' : ''; ?> value="0.12">12%</option>
-                    <option <?php echo $user->commission_percentage == 0.13 ? 'selected="selected"' : ''; ?> value="0.13">13%</option>
-                    <option <?php echo $user->commission_percentage == 0.14 ? 'selected="selected"' : ''; ?> value="0.14">14%</option>
-                    <option <?php echo $user->commission_percentage == 0.15 ? 'selected="selected"' : ''; ?> value="0.15">15%</option>
-                    <option <?php echo $user->commission_percentage == 0.16 ? 'selected="selected"' : ''; ?> value="0.16">16%</option>
-                    <option <?php echo $user->commission_percentage == 0.17 ? 'selected="selected"' : ''; ?> value="0.17">17%</option>
-                    <option <?php echo $user->commission_percentage == 0.18 ? 'selected="selected"' : ''; ?> value="0.18">18%</option>
-                    <option <?php echo $user->commission_percentage == 0.19 ? 'selected="selected"' : ''; ?> value="0.19">19%</option>
-                    <option <?php echo $user->commission_percentage == 0.2 ? 'selected="selected"' : ''; ?> value="0.2">20%</option>
-                    <option <?php echo $user->commission_percentage == 0.25 ? 'selected="selected"' : ''; ?> value="0.25">25%</option>
-                    <option <?php echo $user->commission_percentage == 0.3 ? 'selected="selected"' : ''; ?> value="0.3">30%</option>
-                    <option <?php echo $user->commission_percentage == 0.35 ? 'selected="selected"' : ''; ?> value="0.35">35%</option>
-                    <option <?php echo $user->commission_percentage == 0.4 ? 'selected="selected"' : ''; ?> value="0.4">40%</option>
-                    <option <?php echo $user->commission_percentage == 0.5 ? 'selected="selected"' : ''; ?> value="0.5">50%</option>
-                    <option <?php echo $user->commission_percentage == 0.51 ? 'selected="selected"' : ''; ?> value="0.51">51%</option>
-                    <!-- <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option> -->
-                    <!-- <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option> -->
-                </select>
+            <div class="edit-commission-percentage-grp row">
+                <div class="col">
+                    <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
+                    <select class="nsm-field form-select" name="empCommission" id="empCommission" required>
+                        <option value="" disabled>Select Type</option>
+                        <option value="2" <?php echo $user->commission_id == 2 ? 'selected="selected"' : ''; ?>>None</option>
+                        <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option>
+                        <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                    <select class="nsm-field form-select" name="empCommissionPercentage" id="empCommissionPercentage" required>
+                        <option <?php echo $user->commission_percentage == 0 ? 'selected="selected"' : ''; ?> value="0">0%</option>
+                        <option <?php echo $user->commission_percentage == 0.01 ? 'selected="selected"' : ''; ?> value="0.01">1%</option>
+                        <option <?php echo $user->commission_percentage == 0.02 ? 'selected="selected"' : ''; ?> value="0.02">2%</option>
+                        <option <?php echo $user->commission_percentage == 0.03 ? 'selected="selected"' : ''; ?> value="0.03">3%</option>
+                        <option <?php echo $user->commission_percentage == 0.04 ? 'selected="selected"' : ''; ?> value="0.04">4%</option>
+                        <option <?php echo $user->commission_percentage == 0.05 ? 'selected="selected"' : ''; ?> value="0.05">5%</option>
+                        <option <?php echo $user->commission_percentage == 0.06 ? 'selected="selected"' : ''; ?> value="0.06">6%</option>
+                        <option <?php echo $user->commission_percentage == 0.07 ? 'selected="selected"' : ''; ?> value="0.07">7%</option>
+                        <option <?php echo $user->commission_percentage == 0.08 ? 'selected="selected"' : ''; ?> value="0.08">8%</option>
+                        <option <?php echo $user->commission_percentage == 0.09 ? 'selected="selected"' : ''; ?> value="0.09">9%</option>
+                        <option <?php echo $user->commission_percentage == 0.1 ? 'selected="selected"' : ''; ?> value="0.1">10%</option>
+                        <option <?php echo $user->commission_percentage == 0.11 ? 'selected="selected"' : ''; ?> value="0.11">11%</option>
+                        <option <?php echo $user->commission_percentage == 0.12 ? 'selected="selected"' : ''; ?> value="0.12">12%</option>
+                        <option <?php echo $user->commission_percentage == 0.13 ? 'selected="selected"' : ''; ?> value="0.13">13%</option>
+                        <option <?php echo $user->commission_percentage == 0.14 ? 'selected="selected"' : ''; ?> value="0.14">14%</option>
+                        <option <?php echo $user->commission_percentage == 0.15 ? 'selected="selected"' : ''; ?> value="0.15">15%</option>
+                        <option <?php echo $user->commission_percentage == 0.16 ? 'selected="selected"' : ''; ?> value="0.16">16%</option>
+                        <option <?php echo $user->commission_percentage == 0.17 ? 'selected="selected"' : ''; ?> value="0.17">17%</option>
+                        <option <?php echo $user->commission_percentage == 0.18 ? 'selected="selected"' : ''; ?> value="0.18">18%</option>
+                        <option <?php echo $user->commission_percentage == 0.19 ? 'selected="selected"' : ''; ?> value="0.19">19%</option>
+                        <option <?php echo $user->commission_percentage == 0.2 ? 'selected="selected"' : ''; ?> value="0.2">20%</option>
+                        <option <?php echo $user->commission_percentage == 0.25 ? 'selected="selected"' : ''; ?> value="0.25">25%</option>
+                        <option <?php echo $user->commission_percentage == 0.3 ? 'selected="selected"' : ''; ?> value="0.3">30%</option>
+                        <option <?php echo $user->commission_percentage == 0.35 ? 'selected="selected"' : ''; ?> value="0.35">35%</option>
+                        <option <?php echo $user->commission_percentage == 0.4 ? 'selected="selected"' : ''; ?> value="0.4">40%</option>
+                        <option <?php echo $user->commission_percentage == 0.5 ? 'selected="selected"' : ''; ?> value="0.5">50%</option>
+                        <option <?php echo $user->commission_percentage == 0.51 ? 'selected="selected"' : ''; ?> value="0.51">51%</option>
+                        <!-- <option value="0" <?php echo $user->commission_id == 0 ? 'selected="selected"' : ''; ?>>Percentage (Gross, Net)</option> -->
+                        <!-- <option value="1" <?php echo $user->commission_id == 1 ? 'selected="selected"' : ''; ?>>Net + Percentage</option> -->
+                    </select>
+                </div>
             </div>
             <hr class="mb-0">
-            <div class="col-6">
+            <!-- <div class="col-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Salary</label>
                 <span><?php echo ($totalSalary) ? "$" . number_format($totalSalary, 2) : "$0"; ?></span>
             </div>
             <div class="col-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Total Commission</label>
                 <span><?php echo ($commission->totalCommission) ? "$" . number_format($commission->totalCommission, 2) : "$0"; ?></span>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="col-12 col-md-6">
@@ -284,65 +286,124 @@
         }
     }
 
-    function compensationHideShow() {
-        let selectedOption = $('select[name="empPayscale"]').find('option:selected').text();
+    function editCompensationHideShow() {
+        let selectedOption = $('.edit-emp-payscale').find('option:selected').text();
+        let selectedValue = $('.edit-emp-payscale').val();
 
-        if (selectedOption.includes("Base (Hourly Rate)")) {
+        if ( selectedValue == 3 ) { //Base Hourly rate
             $('.base_hourlyrate').fadeIn('fast');
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Base (Weekly Rate)")) {
+            $('.edit-commission-percentage-grp').show();
+        } else if ( selectedValue == 4 ) { //Base (Weekly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').fadeIn('fast');
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Base (Monthly Rate)")) {
+            $('.edit-commission-percentage-grp').show();
+        } else if ( selectedValue == 5 ) { //Base (Monthly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').fadeIn('fast');
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Compensation (Base Amount)")) {
+            $('.edit-commission-percentage-grp').show();
+        } else if ( selectedValue == 6 ) { //Compensation (Base Amount)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').fadeIn('fast');
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Compensation (Hourly Rate)")) {
+            $('.edit-commission-percentage-grp').show();
+        } else if ( selectedValue == 7 ) { //Compensation (Hourly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').fadeIn('fast');
             $('.jobtypebase_install').hide();
-        } else if (selectedOption.includes("Job Type Base (Install/Service)")) {
+            $('.edit-commission-percentage-grp').show();
+        } else if ( selectedValue == 8 ) { //Job Type Base(Install/Service)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').fadeIn('fast');
+            $('.commission-percentage-grp').show();
         } else {
-            $('.base_hourlyrate').hide();
+            $('.base_hourlyrate').fadeIn('fast');
             $('.base_weeklyrate').hide();
             $('.base_monthlyrate').hide();
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
+            $('.edit-commission-percentage-grp').hide();
         }
-    }
-    compensationHideShow();
 
-    $('select[name="empPayscale"]').change(function() {
-        compensationHideShow();
-        setDefaultEmpCommissionValue();
+        // if (selectedOption.includes("Base (Hourly Rate)")) {
+        //     $('.base_hourlyrate').fadeIn('fast');
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').hide();
+        // } else if (selectedOption.includes("Base (Weekly Rate)")) {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').fadeIn('fast');
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').hide();
+        // } else if (selectedOption.includes("Base (Monthly Rate)")) {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').fadeIn('fast');
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').hide();
+        // } else if (selectedOption.includes("Compensation (Base Amount)")) {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').fadeIn('fast');
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').hide();
+        // } else if (selectedOption.includes("Compensation (Hourly Rate)")) {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').fadeIn('fast');
+        //     $('.jobtypebase_install').hide();
+        // } else if (selectedOption.includes("Job Type Base (Install/Service)")) {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').fadeIn('fast');
+        // } else {
+        //     $('.base_hourlyrate').hide();
+        //     $('.base_weeklyrate').hide();
+        //     $('.base_monthlyrate').hide();
+        //     $('.compensation_baseamount').hide();
+        //     $('.compensation_hourlyrate').hide();
+        //     $('.jobtypebase_install').hide();
+        // }
+    }
+    editCompensationHideShow();
+
+    $('.edit-emp-payscale').change(function() {
+        editCompensationHideShow();
+        //setDefaultEmpCommissionValue();
     });
 
 </script>

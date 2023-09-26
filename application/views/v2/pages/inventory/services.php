@@ -68,76 +68,7 @@ table.dataTable.no-footer {
                             </button>
                         </div>
                     </div>
-                </div>
-                <!-- <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <td data-name="Item">Item</td>
-                            <td data-name="Cost">Cost</td>
-                            <td data-name="Estimated Time">Estimated Time</td>
-                            <td data-name="Billing Type">Billing Type</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($items)) :
-                        ?>
-                            <?php
-                            foreach ($items as $item) :
-                                if ($item[1] != "header") :
-                            ?>
-                                    <tr>
-                                        <td>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
-                                            </div>
-                                        </td>
-                                        <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
-                                            <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
-                                        </td>
-                                        <td><?php echo $item[4]; ?></td>
-                                        <td><?php echo $item[6]; ?></td>
-                                        <td><?php echo $item[5]; ?></td>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('inventory/edit_services/' . $item[10]); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[3]; ?>">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            <?php
-                                endif;
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="8">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table> -->
+                </div>                
                 <div class="row">
                     <table class="nsm-table" id="SERVICES_TABLE">
                     <thead>
@@ -145,6 +76,7 @@ table.dataTable.no-footer {
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
+                            <td class="table-icon"></td>
                             <td data-name="Item">Item</td>
                             <td data-name="Cost">Cost</td>
                             <td data-name="Estimated Time">Estimated Time / Duration</td>
@@ -158,6 +90,11 @@ table.dataTable.no-footer {
                                         <td style="width:1%;">
                                             <div class="table-row-icon table-checkbox">
                                                 <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
+                                            </div>
+                                        </td>
+                                        <td style="width:1%;">
+                                            <div class="table-row-icon">
+                                                <i class='bx bx-notepad'></i>
                                             </div>
                                         </td>
                                         <td class="nsm-text-primary" style="width:60%;">

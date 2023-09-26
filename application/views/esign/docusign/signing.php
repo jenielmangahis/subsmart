@@ -247,6 +247,17 @@
 
     <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
     <script>
+        var is_with_action = 0;
+        $(window).bind('beforeunload', function(){
+          if( is_with_action == 0 ){
+            return 'Are you sure you want to leave?';
+          }      
+        });
+
+        $(document).on('click', '.btn', function(){
+            is_with_action = 1;
+        });
+
         window.addEventListener("DOMContentLoaded", () => {
             $("#signatureModal").on("shown.bs.modal", () => {                
                 $(".canvas-placeholder").fitText();

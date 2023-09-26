@@ -122,6 +122,7 @@
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
+                            <td class="table-icon"></td>
                             <td data-name="Item">Item</td>
                             <td data-name="Model">Model</td>
                             <td data-name="Brand">Brand</td>
@@ -135,9 +136,14 @@
                     <tbody>
                         <?php foreach ($items as $item) { ?>
                         <tr>
-                            <td>
+                            <td style="width:1%;">
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
+                                </div>
+                            </td>
+                            <td style="width:1%;">
+                                <div class="table-row-icon">
+                                    <i class='bx bx-package' ></i>
                                 </div>
                             </td>
                             <td class="nsm-text-primary">
@@ -182,7 +188,7 @@
 
 
 <!-- MODAL SECTION -->
-<div class="modal" id="inventory_location_modal" role="dialog">
+<div class="modal fade" id="inventory_location_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" style="width:640px;">
             <div class="modal-header">

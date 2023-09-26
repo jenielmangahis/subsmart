@@ -146,21 +146,12 @@ class Inventory extends MY_Controller
         $this->page_data['active_category'] = "Show All";
         $type    = $this->page_data['type']  = "fees";
         $role_id = logged('role');
-        if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }
+        if (!empty($get['category'])) {            
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
-
-            if( $role_id == 1 || $role_id == 2 ){
-                //$arg = array('type'=>ucfirst($type), 'is_active'=>1);
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }
+            $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
             $items = $this->items_model->getByWhere($arg);
         }
 
@@ -231,11 +222,7 @@ class Inventory extends MY_Controller
             'select' => '*',
         );
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
-        if($page == null){
-            $this->load->view('v2/pages/inventory/vendors', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/plans_add', $this->page_data);
-        }
+        $this->load->view('v2/pages/inventory/vendors', $this->page_data);
     }
 
     public function import() {
@@ -1619,6 +1606,94 @@ class Inventory extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
         exit;    
+    }
+
+    public function ajax_vendor_send_email(){
+        $is_success = 1;
+        $msg = 'Cannot send email';
+
+        $post = $this->input->post();
+        if( $post['vendor_email_subject'] == '' ){
+            $msg = 'Please enter email subject';
+            $is_success = 0;
+        }
+
+        if( $post['vendor_email'] == '' ){
+            $msg = 'Please enter vendor email';
+            $is_success = 0;
+        }
+
+        if( $post['vendor_email_message'] == '' ){
+            $msg = 'Please enter email message';
+            $is_success = 0;
+        }       
+        
+        if( $is_success == 1 ){
+            //Send Email
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($post['vendor_email'], $post['vendor_email']);
+            $mail->isHTML(true);
+            $mail->Subject = $post['vendor_email_subject'];
+            $mail->Body    = $post['vendor_email_message'];
+            $sendEmail = $mail->Send();
+            
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function vendor_export()
+    {
+        $cid   = logged('company_id');
+
+        $get_vendors = array(
+            'where' => array('company_id' => $cid),
+            'table' => 'vendor',
+            'select' => '*',
+        );
+        $vendors = $this->general->get_data_with_param($get_vendors);
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "vendor_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Vendor Name', 'Email', 'Website', 'Mobile Number', 'Phone Number', 'City', 'State', 'Postal Code', 'Address', 'Suite / Unit');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($vendors)) {
+            foreach ($vendors as $v) {
+                $csvData = array(
+                    $v->vendor_name,
+                    $v->email,
+                    $v->business_URL,
+                    formatPhoneNumber($v->mobile),
+                    formatPhoneNumber($v->phone),
+                    $v->city,
+                    $v->state,
+                    $v->postal_code,
+                    $v->street_address,
+                    $v->suite_unit
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
     }
 
     // public function TEST_SERVERSIDE() {

@@ -292,7 +292,7 @@ include viewPath('includes/header');
                                 <li>Print the tax form from your state's website and fill it out.</li>
                                 <li>Write a check to your agency or print one.</li>
                                 <li>Mail the form and check to your agency.</li>
-                                <li>When you're done, come back to record the payment in QuickBooks.</li>
+                                <li>When you're done, come back to record the payment in nSmarTrac.</li>
                             </ol>
                         </div>
                         <div class="taxModal__payments">
