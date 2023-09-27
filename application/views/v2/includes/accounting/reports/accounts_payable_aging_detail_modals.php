@@ -59,7 +59,7 @@
                         <?php if(count($transactions) > 0) : ?>
                         <?php foreach($transactions as $index => $transaction) : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b><?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -194,7 +194,7 @@
                     <?php if(count($transactions) > 0) : ?>
                         <?php foreach($transactions as $index => $transaction) : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '17'?>"><b><?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -321,14 +321,10 @@
                                                 </select>
                                             </div>
                                             <?php if($filter_date !== 'all-dates') : ?>
-                                            <div class="col-12 col-md-4">
-                                                <label for="from">From</label>
-                                                <div class="nsm-field-group calendar">
-                                                    <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="report-period-date-from">
-                                                </div>
+                                            <div class="col-12 col-md-auto d-flex justify-content-center align-items-end">
+                                                <span>as of</span>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label for="to">To</label>
+                                            <div class="col-12 col-md-4 d-flex justify-content-center align-items-end">
                                                 <div class="nsm-field-group calendar">
                                                     <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="report-period-date-to">
                                                 </div>
@@ -596,16 +592,16 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label for="filter-days-per-aging-period">Days per aging period</label>
-                                                <input type="text" class="nsm-field form-control" value="30" id="filter-days-per-aging-period">
+                                                <label for="custom-days-per-aging-period">Days per aging period</label>
+                                                <input type="text" class="nsm-field form-control" value="30" id="custom-days-per-aging-period">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label for="filter-number-of-periods">Number of periods</label>
-                                                <input type="text" class="nsm-field form-control" value="4" id="filter-number-of-periods">
+                                                <label for="custom-number-of-periods">Number of periods</label>
+                                                <input type="text" class="nsm-field form-control" value="4" id="custom-number-of-periods">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label for="filter-min-days-past-due">Min. days past due</label>
-                                                <input type="text" class="nsm-field form-control" value="" id="filter-min-days-past-due">
+                                                <label for="custom-min-days-past-due">Min. days past due</label>
+                                                <input type="text" class="nsm-field form-control" value="" id="custom-min-days-past-due">
                                             </div>
                                         </div>
                                     </div>

@@ -689,7 +689,17 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Taxes</td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-4" style="text-align:left;">Taxes</div>
+                                                                <div class="col-8">
+                                                                    <select class="form-control" name="tax_rates" id="tax_rates">
+                                                                        <?php foreach($ac_tax_rates as $rates){ ?>
+                                                                        <option value="<?php echo $rates->id; ?>"><?php echo $rates->name. ' -  <span style="float:right;">'.$rates->rate.'%</span><i>('.$rates->type.')</i>'; ?></option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                </div>
+                                                        </td>
                                                         <td>
                                                             <span class="transaction-taxes">
                                                             <?php if(isset($invoice)) : ?>
