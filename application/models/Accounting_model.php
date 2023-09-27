@@ -184,7 +184,7 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Sales by Customer Summary data in Database
-        if ($reportType == "sales_customer_summary") {
+        if ($reportType == "sales_by_customer_summary") {
             $this->db->select('invoices.id AS invoice_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, SUM(invoices_items.total) AS total');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
@@ -338,6 +338,29 @@ class Accounting_model extends MY_Model {
             return $data->result();            
         }
         
+        // Get Estimates by Customer data in Database
+        if ($reportType == "estimates_by_customer") {
+            $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.estimate_date AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.retail * estimates_items.qty) + estimates_items.tax) AS amount');
+            $this->db->from('estimates');
+            $this->db->join('estimates_items', 'estimates_items.estimates_id = estimates.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
+            $this->db->join('items', 'items.id = estimates_items.items_id', 'left');
+            $this->db->where('estimates.id !=', '');
+            $this->db->where('acs_profile.prof_id !=', '');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('estimates.estimate_date !=', '');
+            $this->db->where('estimates.estimate_number !=', '');
+            $this->db->where('estimates.status !=', '');
+            $this->db->where('estimates.accepted_date !=', '');
+            $this->db->where('estimates.expiry_date !=', '');
+            $this->db->where('estimates.company_id', $companyID);
+            $this->db->group_by('acs_profile.prof_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        } 
+
     }
 
 }

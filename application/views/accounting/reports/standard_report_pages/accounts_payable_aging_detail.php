@@ -18,7 +18,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row grid-mb">
-                                    <div class="col-12">
+                                    <div class="col-12 col-md-6">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates" <?=$filter_date === 'all-dates' ? 'selected' : ''?>>All Dates</option>
@@ -54,46 +54,44 @@
                                             <option value="next-year" <?=$filter_date === 'next-year' ? 'selected' : ''?>>Next Year</option>
                                         </select>
                                     </div>
-                                </div>
-                                <?php if($filter_date !== 'all-dates') : ?>
-                                <div class="row grid-mb">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-report-period-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=$start_date?>" id="filter-report-period-from">
-                                        </div>
+                                    <?php if($filter_date !== 'all-dates') : ?>
+                                    <div class="col-12 col-md-auto d-flex justify-content-center align-items-end">
+                                        <span>as of</span>
                                     </div>
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-report-period-to">To</label>
+                                    <div class="col-12 col-md-4 d-flex justify-content-center align-items-end">
                                         <div class="nsm-field-group calendar">
                                             <input type="text" class="nsm-field form-control date" value="<?=$end_date?>" id="filter-report-period-to">
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
-                                <?php endif; ?>
                                 <div class="row grid-mb">
-                                    <div class="col-12">
-                                        <label for="aging-method">Aging method</label>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="filter_aging_method" id="aging-method-current" value="current">
-                                            <label class="form-check-label" for="aging-method-current">Current</label>
+                                    <div class="col-12 col-md-3">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="aging-method">Aging method</label>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="filter_aging_method" id="aging-method-current" value="current">
+                                                    <label class="form-check-label" for="aging-method-current">Current</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="filter_aging_method" id="aging-method-report-date" value="report-date" checked>
+                                                    <label class="form-check-label" for="aging-method-report-date">Report date</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="filter_aging_method" id="aging-method-report-date" value="report-date" checked>
-                                            <label class="form-check-label" for="aging-method-report-date">Report date</label>
-                                        </div>
                                     </div>
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-3">
                                         <label for="filter-days-per-aging-period">Days per aging period</label>
                                         <input type="text" class="nsm-field form-control" value="30" id="filter-days-per-aging-period">
                                     </div>
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-3">
                                         <label for="filter-number-of-periods">Number of periods</label>
                                         <input type="text" class="nsm-field form-control" value="4" id="filter-number-of-periods">
                                     </div>
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-3">
                                         <label for="filter-min-days-past-due">Min. days past due</label>
                                         <input type="text" class="nsm-field form-control" value="" id="filter-min-days-past-due">
                                     </div>

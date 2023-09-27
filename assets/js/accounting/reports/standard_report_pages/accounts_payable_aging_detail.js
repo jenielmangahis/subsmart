@@ -96,33 +96,27 @@ $('#filter-report-period').on('change', function() {
     if($(this).val() !== 'all-dates') {
         var dates = get_start_and_end_dates($(this).val(), $(this));
 
-        if($('#filter-report-period-from').length > 0) {
-            $('#filter-report-period-from').val(dates.start_date);
+        if($('#filter-report-period-to').length > 0) {
             $('#filter-report-period-to').val(dates.end_date);
         } else {
-            $(`<div class="row grid-mb">
-                <div class="col-12 col-md-6">
-                    <label for="filter-report-period-from">From</label>
-                    <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${dates.start_date}" id="filter-report-period-from">
-                    </div>
+            $(`<div class="col-12 col-md-auto d-flex justify-content-center align-items-end">
+                <span>as of</span>
+            </div>
+            <div class="col-12 col-md-4 d-flex justify-content-center align-items-end">
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="filter-report-period-to">
                 </div>
-                <div class="col-12 col-md-6">
-                    <label for="filter-report-period-to">To</label>
-                    <div class="nsm-field-group calendar">
-                        <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="filter-report-period-to">
-                    </div>
-                </div>
-            </div>`).insertAfter($(this).closest('.row'));
+            </div>`).insertAfter($(this).closest('.col-12'));
 
-            $('#filter-report-period-from, #filter-report-period-to').datepicker({
+            $('#filter-report-period-to').datepicker({
                 format: 'mm/dd/yyyy',
                 orientation: 'bottom',
                 autoclose: true
             });
         }
     } else {
-        $('#filter-report-period-from').closest('.row').remove();
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
     }
 });
 
@@ -137,11 +131,11 @@ $('#run-report').on('click', function(e) {
 
     var url = `${base_url}accounting/reports/view-report/${reportId}?`;
     url += filterDate !== 'today' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'today' && filterDate !== 'all-dates' ? `from=${$('#filter-report-period-from').val().replaceAll('/', '-')}&to=${$('#filter-report-period-to').val().replaceAll('/', '-')}&` : '';
+    url += filterDate !== 'today' && filterDate !== 'all-dates' ? `to=${$('#filter-report-period-to').val().replaceAll('/', '-')}&` : '';
     url += agingMethod !== 'report-date' ? `aging-method=${agingMethod}` : '';
-    url += daysPerAgingPeriod !== '30' ? `days-per-aging-period=${agingMethod}` : '';
-    url += numberOfPeriods !== '4' ? `number-of-period=${agingMethod}` : '';
-    url += minDaysPastDue !== '' ? `min-days-past-due=${agingMethod}` : '';
+    url += daysPerAgingPeriod !== '30' ? `days-per-aging-period=${daysPerAgingPeriod}` : '';
+    url += numberOfPeriods !== '4' ? `number-of-period=${numberOfPeriods}` : '';
+    url += minDaysPastDue !== '' ? `min-days-past-due=${minDaysPastDue}` : '';
 
     var currentUrl = currUrl.replace('#', '');
     var urlSplit = currentUrl.split('?');
@@ -152,7 +146,6 @@ $('#run-report').on('click', function(e) {
 
         var notIncluded = [
             'date',
-            'from',
             'to',
             'aging-method',
             'days-per-aging-period',
@@ -174,11 +167,616 @@ $('#run-report').on('click', function(e) {
     location.href = url;
 });
 
+$('#report-period-date').on('change', function() {
+    if($(this).val() === 'all-dates') {
+        $(this).parent().next().next().remove();
+        $(this).parent().next().remove();
+    } else {
+        var dates = get_start_and_end_dates($(this).val(), $(this));
+
+        if($(`#report-period-date-to`).length > 0) {
+            $(`#report-period-date-to`).val(dates.end_date);
+        } else {
+            $(`<div class="col-12 col-md-auto d-flex justify-content-center align-items-end">
+                <span>as of</span>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="nsm-field-group calendar">
+                    <input type="text" class="nsm-field form-control date" value="${dates.end_date}" id="report-period-date-to">
+                </div>
+            </div>`).insertAfter($(this).parent());
+
+            $(`#report-period-date-to`).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
+    }
+});
+
+$('#reset-columns-to-default').on('click', function(e) {
+    e.preventDefault();
+
+    $('input[name="select_columns"]').prop('checked', true);
+});
+
+$(document).on('click', '#change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().removeClass('d-none');
+    $(this).html('Hide change columns');
+    $(this).attr('id', 'hide-change-columns');
+});
+
+$(document).on('click', '#hide-change-columns', function(e) {
+    e.preventDefault();
+
+    $(this).parent().prev().addClass('d-none');
+    $(this).html('Change columns');
+    $(this).attr('id', 'change-columns');
+});
+
+$('#filter-vendor').on('change', function() {
+    if($(this).val() !== 'specified') {
+        $(`#allow-filter-vendor`).prop('checked', true);
+    } else {
+        $(`#allow-filter-vendor`).prop('checked', false);
+    }
+});
+
+$('#filter-terms').on('change', function() {
+    if($(this).val() !== 'all') {
+        $(`#allow-filter-terms`).prop('checked', true);
+    } else {
+        $(`#allow-filter-terms`).prop('checked', false);
+    }
+});
+
+$('#filter-due-date').on('change', function() {
+    if($(this).val() !== 'all-dates') {
+        $(`#allow-filter-due-date`).prop('checked', true);
+    } else {
+        $(`#allow-filter-due-date`).prop('checked', false);
+    }
+});
+
+$('#run-report-button').on('click', function() {
+    $('#filter-report-period-date').val($('#report-period-date').val()).trigger('change');
+    if($('#report-period-date').val() !== 'today') {
+        $('#filter-report-period-date-from').val($('#report-period-date-from').val());
+        $('#filter-report-period-date-to').val($('#report-period-date-to').val());
+    }
+
+    var filterDate = $('#report-period-date').val();
+    var agingMethod = $('input[name="custom_aging_method"]:checked').val();
+    var daysPerAgingPeriod = $('#custom-days-per-aging-period').val();
+    var numberOfPeriods = $('#custom-number-of-periods').val();
+    var minDaysPastDue = $('#custom-min-days-past-due').val();
+
+    var url = `${base_url}accounting/reports/view-report/${reportId}?`;
+    url += filterDate !== 'today' ? `date=${filterDate}&` : '';
+    url += filterDate !== 'today' && filterDate !== 'all-dates' ? `to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
+    url += agingMethod !== 'report-date' ? `aging-method=${agingMethod}` : '';
+    url += daysPerAgingPeriod !== '30' ? `days-per-aging-period=${daysPerAgingPeriod}` : '';
+    url += numberOfPeriods !== '4' ? `number-of-period=${numberOfPeriods}` : '';
+    url += minDaysPastDue !== '' ? `min-days-past-due=${minDaysPastDue}` : '';
+
+    url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
+    url += $('#without-cents').prop('checked') ? `without-cents=1&` : '';
+    url += $('#negative-numbers').val() !== '-100' ? `negative-numbers=${$('#negative-numbers').val()}&` : '';
+    url += $('#show-in-red').prop('checked') ? `show-in-red=1&` : '';
+
+    var columns = [];
+    if($('input[name="select_columns"]:checked').length < $('input[name="select_columns"]').length) {
+        $('input[name="select_columns"]:checked').each(function() {
+            columns.push($(this).next().text().trim().replace('#', 'No.'));
+        });
+
+        url += `columns=${columns}&`;
+    }
+
+    url += $('#allow-filter-vendor').prop('checked') && $('#filter-vendor').val() !== 'specified' ? `vendor=${$('#filter-vendor').val()}&` : '';
+    url += $('#allow-filter-terms').prop('checked') && $('#filter-terms').val() !== 'all' ? `terms=${$('#filter-terms').val()}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date=${$('#filter-due-date').val()}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-from=${$('#filter-due-date-from').val().replaceAll('/', '-')}&` : '';
+    url += $('#allow-filter-due-date').prop('checked') && $('#filter-due-date').val() !== 'all-dates' ? `due-date-to=${$('#filter-due-date-to').val().replaceAll('/', '-')}&` : '';
+
+    url += $('#show-logo').prop('checked') ? `show-logo=yes&` : '';
+    url += $('#show-company-name').prop('checked') ? `` : 'show-company-name=no&';
+    url += $('#show-company-name').prop('checked') && $('#company-name').val() !== companyName ? `company-name=${$('#company-name').val()}&` : '';
+    url += $('#show-report-title').prop('checked') ? `` : 'show-report-title=no&';
+    url += $('#show-report-title').prop('checked') && $('#report-title').val() !== 'Accounts payable aging detail' ? `report-title=${$('#report-title').val()}&` : '';
+    url += $('#show-report-period').prop('checked') === false ? `show-report-period=0&` : '';
+    url += $('#show-date-prepared').prop('checked') ? `` : 'show-date-prepared=no&';
+    url += $('#show-time-prepared').prop('checked') ? `` : 'show-time-prepared=no&';
+    url += $('#header-alignment').val() !== 'center' ? `header-alignment=${$('#header-alignment').val()}&` : '';
+    url += $('#footer-alignment').val() !== 'center' ? `footer-alignment=${$('#footer-alignment').val()}&` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+
+    location.href = url;
+});
+
+$('#add-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $(this).parent().next().removeClass('d-none');
+    $(this).addClass('d-none');
+});
+
+$('#cancel-new-custom-report-group').on('click', function(e) {
+    e.preventDefault();
+
+    $('#custom-group-name').val('');
+    $('#add-new-custom-report-group').removeClass('d-none');
+    $('#new-custom-report-group').parent().addClass('d-none');
+});
+
+$('#new-custom-report-group').on('submit', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var data = new FormData();
+    data.set('name', $('#custom-group-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/add-custom-report-group`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            $('#custom-report-group').append(`<option value="${res.data}" selected>${res.name}</option>`);
+            $('#custom-group-name').val('');
+            $('#add-new-custom-report-group').removeClass('d-none');
+            form.parent().addClass('d-none');
+        }
+    });
+});
+
+$('#save-custom-report').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+
+    $.ajax({
+        url: `/accounting/reports/check-custom-report-name`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.exists) {
+                Swal.fire({
+                    // title: 'Delete Invoice',
+                    text: 'A custom report with this name already exists. Enter a new name, or click Replace to replace the existing report.',
+                    icon: 'warning',
+                    confirmButtonText: 'Replace',
+                    showCancelButton: true,
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        save_custom_report(res.data);
+                    }
+                });
+            } else {
+                save_custom_report();
+            }
+        }
+    });
+});
+
+$('#add-notes').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').removeClass('d-none');
+});
+
+$('#edit-notes').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').removeClass('d-none');
+    $('#report-note-cont').addClass('d-none');
+});
+
+$('#cancel-note-update').on('click', function(e) {
+    e.preventDefault();
+
+    $('#report-note-form').addClass('d-none');
+    $('#report-note-cont').removeClass('d-none');
+
+    $('#report-note').val($('#report-note-cont').html().trim().replaceAll('<br>', ''));
+});
+
+$('#save-note').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('note', $('#report-note').val());
+   
+    $.ajax({
+        url: `/accounting/reports/${reportId}/update-note`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+
+            if($('#report-note').val().trim() === '') {
+                $('#add-notes, #edit-notes').text('Add notes');
+                $('#add-notes, #edit-notes').attr('id', 'add-notes');
+
+                if($('#print_report_modal table tfoot tr:first-child p').length > 0) {
+                    $('#print_report_modal table tfoot tr:first-child').remove();
+                }
+
+                if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
+                    $('#print_preview_report_modal #report_table_print tfoot tr:first-child').remove();
+                }
+
+                $('#report-note-cont').html('');
+            } else {
+                $('#add-notes, #edit-notes').text('Edit notes');
+                $('#add-notes, #edit-notes').attr('id', 'edit-notes');
+
+                if($('#print_preview_report_modal #report_table_print tfoot tr:first-child p').length > 0) {
+                    $('#print_report_modal table tfoot tr:first-child td span, #print_preview_report_modal #report_table_print tfoot tr:first-child td span').html(`${$('#report-note').val().trim().replaceAll("\n", "<br />")}`);
+                } else {
+                    $('#print_report_modal table tfoot, #print_preview_report_modal #report_table_print tfoot').prepend(`<tr>
+                        <td colspan="27">
+                            <p class="m-0"><b>Note</b></p>
+                            <span>${$('#report-note').val().trim().replaceAll("\n", "<br />")}</span>
+                        </td>
+                    </tr>`);
+                }
+
+                if($('#report-note-cont p, #report-note-cont span').length > 0) {
+                    $('#report-note-cont span').html($('#report-note').val().trim().replaceAll('\n', '<br>'));
+                } else {
+                    $('#report-note-cont').append(`<p class="m-0"><b>Note</b></p>`);
+                    $('#report-note-cont').append(`<span>${$('#report-note').val().trim().replaceAll('\n', '<br>')}</span>`);
+                }
+            }
+
+            $('#report-note-form').addClass('d-none');
+            $('#report-note-cont').removeClass('d-none');
+        }
+    });
+});
+
+$("#btn_send_report").on("click", function() {
+    $('#send-email-form').submit();
+});
+
+$('#send-email-form').validate({
+    rules: {
+        email_to: {
+            required: true,
+            email: true
+        },
+        email_subject: 'required',
+        email_body: 'required',
+        email_file_name: 'required'
+    }
+});
+
+$('#send-email-form').on('submit', function(e) {
+    e.preventDefault();
+    var data = new FormData(this);
+
+    if($(this).find('.nsm-field.form-control.error').length < 1) {
+        var currentUrl = currUrl.replace('#', '');
+        var urlSplit = currentUrl.split('?');
+        var query = urlSplit[1];
+
+        var fields = $('#reports-table thead tr td:visible:not(.table-icon)');
+        fields.each(function() {
+            data.append('fields[]', $(this).attr('data-name'));
+        });
+
+        if(query !== undefined) {
+            var querySplit = query.split('&');
+
+            $.each(querySplit, function(key, value) {
+                var selectedVal = value.split('=');
+
+                data.append(selectedVal[0], selectedVal[1]);
+            });
+        }
+
+        $.ajax({
+            url: `/accounting/reports/${reportId}/email`,
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                Swal.fire({
+                    text: res.message,
+                    icon: res.success ? 'success' : 'error',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+
+                $('#email_report_modal').modal('hide');
+            }
+        });
+    }
+});
+
+$("#btn_print_report").on("click", function() {
+    $("#report_table_print").printThis();
+});
+
+$('#export-to-excel').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('#export-to-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    if($('#export-form').length < 1) {
+        $('body').append(`<form action="/accounting/reports/${reportId}/export" method="post" id="export-form"></form>`);
+    }
+
+    $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
+
+    var fields = $('#reports-table thead tr td:visible');
+    fields.each(function() {
+        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('data-name')}">`);
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
+        });
+    }
+
+    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
+
+    $('#export-form').submit();
+    $('#export-form').remove();
+});
+
+$('input[name="col_chk"]').on('change', function() {
+    var chk = $(this);
+    var dataName = chk.next().text().replace('#', 'No.');
+
+    if(chk.prop('checked')) {
+        $(`#reports-table thead tr td[data-name="${dataName}"]`).show();
+        $(`#print_report_modal thead tr:last-child td[data-name="${dataName}"]`).show();
+        $(`#print_preview_report_modal thead tr:last-child td[data-name="${dataName}"]`).show();
+    } else {
+        $(`#reports-table thead tr td[data-name="${dataName}"]`).hide();
+        $(`#print_report_modal thead tr:last-child td[data-name="${dataName}"]`).hide();
+        $(`#print_preview_report_modal thead tr:last-child td[data-name="${dataName}"]`).hide();
+    }
+
+    $('#reports-table thead tr td:visible').each(function() {
+        var name = $(this).data().name;
+
+        $(`#reports-table tbody tr td[data-name="${name}"]`).show();
+        $(`#print_report_modal tbody tr td[data-name="${name}"]`).show();
+        $(`#print_preview_report_modal tbody tr td[data-name="${name}"]`).show();
+    });
+
+    $('#reports-table thead tr td:hidden').each(function() {
+        var name = $(this).data().name;
+
+        $(`#reports-table tbody tr td[data-name="${name}"]`).hide();
+        $(`#print_report_modal tbody tr td[data-name="${name}"]`).hide();
+        $(`#print_preview_report_modal tbody tr td[data-name="${name}"]`).hide();
+    });
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    var groupBy = 'customer';
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+
+            if(selectedVal[0] === 'group-by') {
+                groupBy = selectedVal[1];
+            }
+        });
+    }
+
+    if(groupBy !== 'none') {
+        var totalColumns = [
+            'Amount',
+            'Open Balance'
+        ];
+    
+        if(totalColumns.includes($($('#reports-table thead tr td:visible')[0]).data().name)) {
+            $('#reports-table thead tr').prepend('<td data-name=""></td>');
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse').prepend(`<td data-name=""></td>`);
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+    
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+            $('#print_preview_report_modal thead tr:last-child').prepend('<td data-name=""></td>');
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total)').prepend(`<td data-name=""></td>`);
+            
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+
+        if($($('#reports-table thead tr td:visible:not([data-name=""])')[0]).index() > $('#reports-table thead tr td[data-name="Open Balance"]').index()) {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+
+            $(`#reports-table tbody tr[data-bs-toggle="collapse"] td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"], #reports-table tbody tr.group-total td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"]`).hide();
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', 0);
+    
+    
+            $('#print_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $(`#print_report_modal tbody tr.group-header td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"], #print_report_modal tbody tr.group-total td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"]`).hide();
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+            
+    
+            $('#print_preview_report_modal thead tr:last-child td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $(`#print_preview_report_modal tbody tr.group-header td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"], #print_preview_report_modal tbody tr.group-total td[data-name="${$($('#reports-table thead tr td:visible:not([data-name=""])')[0]).data().name}"]`).hide();
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', 0);
+        }
+    
+        if($($('#reports-table thead tr td:visible')[0]).data().name === '' && $($('#reports-table thead tr td:visible')[1]).index() < $('#reports-table thead tr td[data-name="Amount"]').index() ||
+        $($('#reports-table thead tr td:visible')[0]).data().name !== '') {
+            $('#reports-table thead tr td[data-name=""]').remove();
+            $('#reports-table tbody tr:not([data-bs-toggle="collapse"], .group-total).collapse td[data-name=""]').remove();
+    
+            $('#print_report_modal thead tr td[data-name=""]').remove();
+            $('#print_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+    
+            $('#print_preview_report_modal thead tr td[data-name=""]').remove();
+            $('#print_preview_report_modal tbody tr:not(.group-header, .group-total) td[data-name=""]').remove();
+
+            var colspan = 0;
+            $('#reports-table thead tr td:visible').each(function() {
+                var name = $(this).data().name;
+    
+                if(name === 'Amount' || name === 'Open Balance') {
+                    return false;
+                } else {
+                    colspan++;
+                }
+            });
+    
+            $('#reports-table tbody tr[data-bs-toggle="collapse"] td:first-child, #reports-table tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_report_modal tbody tr.group-header td:first-child, #print_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+            $('#print_preview_report_modal tbody tr.group-header td:first-child, #print_preview_report_modal tbody tr.group-total td:first-child').attr('colspan', colspan);
+        }
+    }
+});
+
+function save_custom_report(customReport = {})
+{
+    var data = new FormData();
+    data.set('name', $('#custom-report-name').val());
+    data.set('report_id', reportId);
+    data.set('custom_report_group_id', $('#custom-report-group').val());
+    data.set('share_with', $('#share-with').val());
+
+    var currentUrl = currUrl.replace('#', '');
+    var urlSplit = currentUrl.split('?');
+    var query = urlSplit[1];
+
+    if(query !== undefined) {
+        var querySplit = query.split('&');
+
+        $.each(querySplit, function(key, value) {
+            var selectedVal = value.split('=');
+            if(selectedVal[0] !== 'date') {
+                data.append(`settings[${selectedVal[0]}]`, selectedVal[1]);
+            } else {
+                data.set('date_range', selectedVal[1]);
+            }
+        });
+    }
+
+    if(data.has('date_range') === false) {
+        data.set('date_range', $('#report-period-date').find('option:selected').text().trim());
+    }
+
+    if(Object.keys(customReport).length > 0) {
+        data.append('custom_report_id', customReport.id);
+    }
+
+    $.ajax({
+        url: `/accounting/reports/save-custom-report`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                text: res.message,
+                icon: res.success ? 'success' : 'error',
+                showConfirmButton: false,
+                showCloseButton: true,
+                timer: 1500
+            })
+        }
+    });
+}
+
 function get_start_and_end_dates(val, el)
 {
     switch(val) {
         case 'custom' :
-            if($(`#${el.attr('id')}-from`).length > 0) {
+            if($(`#${el.attr('id')}-to`).length > 0) {
                 startDate = $(`#${el.attr('id')}-from`).val();
                 endDate = $(`#${el.attr('id')}-to`).val();
             } else {
