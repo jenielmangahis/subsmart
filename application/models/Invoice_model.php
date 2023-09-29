@@ -797,6 +797,14 @@ class Invoice_model extends MY_Model
 //        echo $this->db->last_query(); die;
         return $query->result();
     }
+
+    public function ac_tax_rates()
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_tax_rates');
+        $query = $this->db->get();
+        return $query->result();
+    }
     
     public function add_invoice_items($data)
     {

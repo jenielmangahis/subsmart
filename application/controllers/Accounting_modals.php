@@ -445,6 +445,7 @@ class Accounting_modals extends MY_Controller
 
                     $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
                     $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
+                    $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
                 case 'print_checks_setup_modal' :
                     $settings = $this->accounting_print_checks_settings_model->get_by_company_id(logged('company_id'));
@@ -470,6 +471,7 @@ class Accounting_modals extends MY_Controller
                     $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
 
                     $this->page_data['est_number'] = $estNum;
+                    $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
                 case 'options_estimate_modal' :
                     $number = $this->estimate_model->getlastInsert();
@@ -484,6 +486,7 @@ class Accounting_modals extends MY_Controller
                     $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
 
                     $this->page_data['est_number'] = $estNum;
+                    $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
                 case 'bundle_estimate_modal' :
                     $number = $this->estimate_model->getlastInsert();
@@ -498,6 +501,7 @@ class Accounting_modals extends MY_Controller
                     $estNum .= str_pad($val, 9, "0", STR_PAD_LEFT);
 
                     $this->page_data['est_number'] = $estNum;
+                    $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
             }
 
@@ -14001,6 +14005,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
+        $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
 

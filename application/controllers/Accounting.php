@@ -142,6 +142,7 @@ class Accounting extends MY_Controller
         $this->page_data['payment_methods'] = $this->accounting_receive_payment_model->get_payment_methods(logged('company_id'));
         $this->page_data['deposits_to'] = $this->accounting_receive_payment_model->get_deposits_to(logged('company_id'));
         $this->page_data['billsNi'] = $this->accounting_receive_payment_model->accounting_bills(logged('company_id'));
+        $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
 
         $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));
     }
