@@ -333,6 +333,12 @@ class Employees extends MY_Controller {
             $address .= !in_array($empWorksite->zip_code, ['', null]) ? $empWorksite->zip_code : '';
         }
 
+        $usedPaySched = $this->users_model->getPayScheduleUsed();
+        $nextPayDate = $this->get_next_pay_date($usedPaySched);
+
+        $this->page_data['nextPayDate'] = $nextPayDate;
+        $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
+        $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['empWorksite'] = $address;
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }

@@ -2300,6 +2300,116 @@ class Debug extends MY_Controller {
             echo "false";
         }
     }
+
+    public function activeCampaignContactList()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+
+        $contacts = $activeCampaign->getContacts($account_url, $account_token);
+        echo "<pre>";
+        print_r($contacts);
+    }
+
+    public function getActiveCampaignList()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+
+        $lists = $activeCampaign->getLists($account_url, $account_token);
+        echo "<pre>";
+        print_r($lists);
+    }
+
+    public function getActiveCampaignAutomation()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+
+        $automations = $activeCampaign->getAutomations($account_url, $account_token);
+        echo "<pre>";
+        print_r($automations);
+    }
+
+    public function activeCampaignCreateContact()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+        $contact       = [
+            'contact' => [
+                'email' => 'bdr04@gmail.com',
+                'firstName' => 'Bryann JR',
+                'lastName' => 'Revina',
+                'phone' => '1231231241'
+            ]            
+        ];
+
+        $contact = $activeCampaign->createContact($account_url, $account_token, $contact);
+        echo "<pre>";
+        print_r($contact);
+    }
+
+    public function activeCampaignListContact()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+        $contact       = [
+            'contactList' => [
+                'list' => 'bdr04@gmail.com',
+                'contact' => 'Bryann JR',
+                'status' => 1                
+            ]            
+        ];
+
+        $contact = $activeCampaign->addContactToList($account_url, $account_token, $contact);
+        echo "<pre>";
+        print_r($contact);
+    }
+
+    public function activeCampaignGetContact()
+    {
+        $this->load->library('ActiveCampaignApi');
+
+        $activeCampaign = new ActiveCampaignApi;
+        $query = [
+            'email' => 'bryann.revina03@gmail.com'
+        ];
+        $account_url   = 'https://bryannrevina0399863.api-us1.com';
+        $account_token = '986448e19af205c0c30df683f1a815f18b6a4b730df4c3e2cc0cfcca7c7db59f423fc239';
+
+        $contacts = $activeCampaign->getContact($query, $account_url, $account_token);
+        echo "<pre>";
+        print_r($contacts);
+    }
+
+    public function createCommission()
+    {
+        $this->load->helper('user_helper');
+        
+        $obj_id   = 829;
+        $obj_type = 'job';
+        createEmployeeCommission($obj_id, $obj_type);
+    }
 }
 /* End of file Debug.php */
 

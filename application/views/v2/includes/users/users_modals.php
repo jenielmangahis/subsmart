@@ -146,7 +146,7 @@
                                     <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                         <option value="" selected="selected" disabled>Select payscale</option>
                                         <?php foreach ($payscale as $p) : ?>
-                                            <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
+                                            <option <?= $p->id == 3 ? 'selected="selected"' : ''; ?> value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -178,7 +178,7 @@
                                     <label class="content-subtitle fw-bold d-block mb-2">Amount</label>
                                     <input class="form-control" name="empJobTypeBaseInstall" type="number" step="any" min="0" value="<?php echo ($user->jobtypebase_amount) ? $user->jobtypebase_amount : "0"; ?>">
                                 </div>
-                                <div class="commission-percentage-grp row">
+                                <div class="commission-percentage-grp row" style="display:none;">
                                     <div class="col">
                                         <label class="content-subtitle fw-bold d-block mb-2">Commission</label>
                                         <select class="nsm-field form-select" name="empCommission" id="empCommission" required>
@@ -306,6 +306,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row gy-3">
+                        <div class="col-12 col-md-12 mt-5">
+                            <label class="content-title" style="display:inline-block;">Commission Settings</label>
+                            <a class="nsm-button primary small btn-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <table class="table" id="commission-settings">
+                                <thead>
+                                <tr>
+                                    <td style="width: 50%;">Name</td>
+                                    <td style="width:30%;">Type</td>
+                                    <td>Value</td>
+                                    <td style="width:5%;"></td>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
@@ -449,7 +470,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else if ( selectedValue == 4 ) { //Base (Weekly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').fadeIn('fast');
@@ -457,7 +478,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else if ( selectedValue == 5 ) { //Base (Monthly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
@@ -465,7 +486,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else if ( selectedValue == 6 ) { //Compensation (Base Amount)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
@@ -473,7 +494,7 @@
             $('.compensation_baseamount').fadeIn('fast');
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').hide();
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else if ( selectedValue == 7 ) { //Compensation (Hourly Rate)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
@@ -481,7 +502,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').fadeIn('fast');
             $('.jobtypebase_install').hide();
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else if ( selectedValue == 8 ) { //Job Type Base(Install/Service)
             $('.base_hourlyrate').hide();
             $('.base_weeklyrate').hide();
@@ -489,7 +510,7 @@
             $('.compensation_baseamount').hide();
             $('.compensation_hourlyrate').hide();
             $('.jobtypebase_install').fadeIn('fast');
-            $('.commission-percentage-grp').show();
+            $('.commission-percentage-grp').hide();
         } else {
             $('.base_hourlyrate').fadeIn('fast');
             $('.base_weeklyrate').hide();
