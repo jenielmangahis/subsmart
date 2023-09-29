@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" name="btn_link" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
+                            <button type="button" name="btn_link" class="nsm-button add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-user-plus'></i> Add Employee
                             </button>
                             <button type="button" name="btn_link" class="nsm-button btn-export-list">
@@ -209,6 +209,10 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $('#add_employee_modal').modal({backdrop: 'static', keyboard: false});
+        $('#edit_employee_modal').modal({backdrop: 'static', keyboard: false});
+
         populateEmployeeRoles();
         $(".nsm-table").nsmPagination();
 
@@ -377,6 +381,15 @@
             });
         });
 
+        $(document).on("click", ".btn-delete-commission-setting-row", function(e){  
+            var tableRow = $(this).closest('tr'); 
+            tableRow.find('td').fadeOut('fast', 
+                function(){ 
+                    tableRow.remove();                    
+                }
+            );
+        });
+
         $(document).on('submit', '#edit_employee_form', function(e){
             e.preventDefault();
 
@@ -526,6 +539,10 @@
             });
         });
 
+        $(document).on("click", ".add-employee", function(){
+            $('#commission-settings tbody').html('');
+        });
+
         $(document).on("click", ".update-profile-item", function(){
             let id = $(this).attr("data-id");
             let img = $(this).attr("data-img");
@@ -618,6 +635,28 @@
                 _container.html(result);
                // _form.find("button[type=submit]").prop("disabled", false);                
             }
+        });
+    });
+
+    $(document).on('click', '.btn-add-new-commision', function(e){
+        let url = base_url + "user/_add_commission_form";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function(o) {
+                $("#commission-settings tbody").append(o).children(':last').hide().fadeIn(400);                
+            },
+        });
+    });
+
+    $(document).on('click', '.btn-edit-add-new-commision', function(e){
+        let url = base_url + "user/_add_commission_form";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function(o) {
+                $("#edit-commission-settings tbody").append(o).children(':last').hide().fadeIn(400);                
+            },
         });
     });
 

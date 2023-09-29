@@ -963,7 +963,8 @@ class Users extends MY_Controller
     	$this->load->model('IndustryType_model');
     	$this->load->model('Clients_model');
     	$this->load->model('UserPortalAccount_model');
-    	$this->load->model('AdtPortal_model');
+		$this->load->model('EmployeeCommissionSetting_model');
+    	//$this->load->model('AdtPortal_model');
 
 		// Upload profile picture
 		$config = array(
@@ -1085,6 +1086,22 @@ class Users extends MY_Controller
 		        );
 		        $last_id = $this->users_model->addNewEmployee($add);
 				$this->updatePayScaleData($last_id, $post);
+
+				//Employee Commission Settings
+				if( isset($post['commission_setting_id']) ){
+					foreach( $post['commission_setting_id'] as $key => $csid ){
+						$employee_commission_setting = [
+							'user_id' => $last_id,
+							'company_id' => $cid,
+							'commission_setting_id' => $csid,
+							'commission_type' => $post['commission_setting_type'][$key],
+							'commission_value' => $post['commission_setting_value'][$key]
+						];
+
+						$this->EmployeeCommissionSetting_model->create($employee_commission_setting);
+					}
+				}
+				
 
 		        if( $create_portal_access ){
 		        	//Create portal access 
@@ -1221,6 +1238,9 @@ class Users extends MY_Controller
 
 	public function ajax_edit_employee()
 	{
+		$this->load->model('CommissionSetting_model');
+		$this->load->model('EmployeeCommissionSetting_model');
+
 		$user_id = $this->input->post('user_id');
 		$get_user = $this->Users_model->getUser($user_id);
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));		
@@ -1228,12 +1248,11 @@ class Users extends MY_Controller
 		$cid   = logged('company_id');
 		$roles = $this->users_model->getRoles($cid);
 
-		if ($role_id == 1 || $role_id == 2) {
-			$this->page_data['payscale'] = $this->PayScale_model->getAll();
-		} else {
-			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}
+		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 
+		$this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId($cid);
+		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
+		$this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($user_id);
 		$this->page_data['totalSalary'] = $this->Users_model->getTOtalJobTypeBaseAmount($user_id);
 		$this->page_data['commission'] = $this->Users_model->getTotalCommission($user_id);
         $this->page_data['roles'] = $roles;
@@ -1241,17 +1260,7 @@ class Users extends MY_Controller
 	    $this->page_data['role'] = $get_role;	    
 	    // $this->load->view('users/modal_edit_form', $this->page_data);
 	    $this->load->view('v2/pages/users/modal_edit_form', $this->page_data);
-
-		//echo $data;
 	}
-
-	// public function testController() {
-	// 	$test = $this->Users_model->getTOtalJobTypeBaseAmount(5);
-	// 	echo "<pre>";
-	// 	print_r ($test);
-	// 	echo "</pre>";
-	// }
-
 
 	private $user_path = './uploads/users/user-profile/';
 	public function profilePhoto()
@@ -1795,6 +1804,8 @@ class Users extends MY_Controller
 
 	public function ajaxUpdateEmployee()
 	{
+		$this->load->model('EmployeeCommissionSetting_model');
+
 		$is_success = 1;
 		$msg = '';
 
@@ -1890,6 +1901,23 @@ class Users extends MY_Controller
 
 				$this->Users_model->update($user->id,$data);
 				$this->updatePayScaleData($user->id, $post);
+
+				//Employee Commission Settings
+				$this->EmployeeCommissionSetting_model->deleteAllByUserId($user->id);
+				if( isset($post['commission_setting_id']) ){
+					foreach( $post['commission_setting_id'] as $key => $csid ){
+						$employee_commission_setting = [
+							'user_id' => $user->id,
+							'company_id' => $user->company_id,
+							'commission_setting_id' => $csid,
+							'commission_type' => $post['commission_setting_type'][$key],
+							'commission_value' => $post['commission_setting_value'][$key]
+						];
+
+						$this->EmployeeCommissionSetting_model->create($employee_commission_setting);
+					}
+				}
+
 				$msg  = '';
 			}
 		}else{
@@ -2620,10 +2648,17 @@ class Users extends MY_Controller
 		$getInfo = $this->Users_model->getUser($employee_id);
 		echo json_encode($getInfo);
 	}
+
+	public function ajax_add_commission_form(){
+		$this->load->model('CommissionSetting_model');
+
+		$comp_id = logged('company_id');
+		$commissionSettings = $this->CommissionSetting_model->getAllByCompanyId($comp_id);
+
+		$this->page_data['commissionSettings'] = $commissionSettings; 
+		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
+	    $this->load->view('v2/pages/users/ajax_add_commission_form', $this->page_data);
+	}
 }
-
-
-
 /* End of file Users.php */
-
 /* Location: ./application/controllers/Users.php */

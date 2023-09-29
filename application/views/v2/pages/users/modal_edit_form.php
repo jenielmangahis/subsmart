@@ -262,6 +262,47 @@
             </div>
         </div>
     </div>
+
+    <div class="row gy-3">
+            <div class="col-12 col-md-12 mt-5">
+                <label class="content-title" style="display:inline-block;">Commission Settings</label>
+                <a class="nsm-button primary small btn-edit-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+            </div>
+            <div class="col-12 col-md-12">
+                <table class="table" id="edit-commission-settings">
+                    <thead>
+                    <tr>
+                        <td style="width: 50%;">Name</td>
+                        <td style="width:30%;">Type</td>
+                        <td>Value</td>
+                        <td style="width:5%;"></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($employeeCommissionSettings as $ecs){ ?>
+                            <tr>
+                                <td>
+                                    <select class="nsm-field form-select" name="commission_setting_id[]">
+                                        <?php foreach( $commissionSettings as $cs ){ ?>
+                                            <option value="<?= $cs->id; ?>" <?= $ecs->commission_setting_id == $cs->id ? 'selected="selected"' : ''; ?>><?= $cs->name; ?></option>
+                                        <?php } ?>
+                                    </select>   
+                                </td>
+                                <td>
+                                    <select class="nsm-field form-select" name="commission_setting_type[]">
+                                        <?php foreach($optionCommissionTypes as $key => $value){ ?>
+                                            <option value="<?= $key; ?>" <?= $ecs->commission_type == $key ? 'selected="selected"' : ''; ?>><?= $value; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="any" name="commission_setting_value[]" class="nsm-field form-control" id="" value="<?= $ecs->commission_value; ?>" required /></td>
+                                <td><a class="nsm-button small btn-delete-commission-setting-row" style="display:block;" href="javascript:void(0);"><i class='bx bx-trash'></i></a></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 </div>
 <script type="text/javascript">
     function setCommissionPercentage() {
