@@ -67,6 +67,7 @@ class AccountingMailer extends MY_Controller{
             "purchases_by_product_service_detail",
             "inventory_valuation_detail",
             "estimates_by_customer",
+            "invoice_list_by_date",
         );
 
         // Conditional Statements on the array

@@ -21,6 +21,7 @@ class Employees extends MY_Controller {
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_worksites_model');
+        $this->load->model('accounting_payroll_model');
         $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
 
         $this->page_data['page']->title = 'Employees';
@@ -196,20 +197,48 @@ class Employees extends MY_Controller {
                 $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
                 if($empPayDetails) {
                     $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
-
-                    if($empPayDetails->pay_type === 'hourly') {
-                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
-                    } else if($empPayDetails->pay_type === 'salary') {
-                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.str_replace('per-', '', $empPayDetails->salary_frequency);
-                    } else {
-                        $payRate = 'Commission only';
-                    }
                 } else {
                     $payMethod = 'Missing';
-                    $payRate = 'Missing';
                 }
 
-                $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d"), date("Y-m-d"))->commission;
+                if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
+    
+                    $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
+                }
+    
+                if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
+    
+                    $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                    $hoursPerWeek = 40.00;
+                    $perHourPay = $weeklyPay / $hoursPerWeek;
+    
+                    $totalPay = $perHourPay * $totalHrs;
+                }
+    
+                if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
+    
+                    $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                    $hoursPerWeek = 40.00;
+                    $hoursPerMonth = $hoursPerWeek * 4;
+                    $perHourPay = $monthlyPay / $hoursPerMonth;
+    
+                    $totalPay = $perHourPay * $totalHrs;
+                }
+    
+                if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                    $payRate = 'Commission only';
+                }
+
+                // $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d"), date("Y-m-d"))->commission;
+                $commission = 0.00;
+                $commissions = $this->accounting_payroll_model->get_employee_commissions($employee->id, date("Y-m-d"), date("Y-m-d"));
+                foreach($commissions as $comm)
+                {
+                    $commission += floatval(str_replace(',', '', $comm->commission_amount));
+                }
 
                 if(isset($filters['search']) && $filters['search'] !== "") {
                     if(stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false) {
