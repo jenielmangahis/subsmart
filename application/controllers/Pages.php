@@ -493,6 +493,8 @@ class Pages extends MYF_Controller {
     	$this->load->model('Jobs_model');
     	$this->load->model('General_model', 'general');
 
+		$this->load->helper('user_helper');
+
     	$post = $this->input->post();    	
     	//$job_id = hashids_decrypt($post['jobid'], '', 15);
     	$job = $this->Jobs_model->get_specific_job($post['job_id']);
@@ -519,6 +521,9 @@ class Pages extends MYF_Controller {
         }else{
             $this->general->add_($payment_data, 'jobs_pay_details');
         }
+
+		//Create Commission
+		createEmployeeCommission($post['job_id'], 'job');
 
         //Update invoice
         $invoiceCheck = array(

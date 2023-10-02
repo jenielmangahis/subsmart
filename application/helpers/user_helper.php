@@ -48,7 +48,7 @@ function createEmployeeCommission($object_id, $object_type)
                             }
     
                             //Check if exists. Delete if exists
-                            $isCommissionExists = $CI->EmployeeCommission_model->getByUserIdAndObjectIdAndObjectType($uid,$job->id, $CI->CommissionSetting_model->isJob());
+                            $isCommissionExists = $CI->EmployeeCommission_model->getByUserIdAndCommissionSettingIdAndObjectIdAndObjectType($uid, $ecs->id,$job->id, $CI->CommissionSetting_model->isJob());
                             if( $isCommissionExists ){
                                 $CI->EmployeeCommission_model->delete($isCommissionExists->id);
                             }
