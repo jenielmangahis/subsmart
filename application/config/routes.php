@@ -1077,6 +1077,8 @@ $route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_p
 $route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 $route['user/_update_business_details'] = 'Users/ajax_update_business_details';
 $route['user/_add_commission_form'] = 'Users/ajax_add_commission_form';
+$route['user/_commission_list'] = 'Users/ajax_commission_list';
+$route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commission_status';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
@@ -1547,6 +1549,7 @@ $route['api/estimate_send_customer_email'] = 'Api/emailCustomerEstimate';
 $route['api/converge_send_sale'] = 'Api/convergeSendSale';
 $route['api/send_email'] = 'Api/sendEmail';
 $route['api/send_customer_estimate_email'] = 'Api/emailCustomerEstimate';
+$route['api/create_job_employee_commission'] = 'Api/createEmployeeJobCommission';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';

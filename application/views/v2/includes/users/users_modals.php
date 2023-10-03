@@ -414,6 +414,20 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="employee_commissions_list_modal" tabindex="-1" aria-labelledby="employee_commissions_list_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" id="change-adt-portal-login">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Commissions List</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="employee-commissions-list-container"></div>                
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="change_profile_modal" tabindex="-1" aria-labelledby="change_profile_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <form method="POST" id="change_profile_form">

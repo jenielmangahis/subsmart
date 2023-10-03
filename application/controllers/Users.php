@@ -2659,6 +2659,38 @@ class Users extends MY_Controller
 		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
 	    $this->load->view('v2/pages/users/ajax_add_commission_form', $this->page_data);
 	}
+
+	public function ajax_commission_list(){
+
+		$this->load->model('EmployeeCommission_model');
+		$this->load->model('Jobs_model');
+
+		$post = $this->input->post();
+		$employeeCommissions = $this->EmployeeCommission_model->getAllByUserId($post['eid']);
+
+		$employee_commissions = array();
+		foreach($employeeCommissions as $ec){
+			if( $ec->object_type == 'job' ){
+				$job_number = '---';				
+				$job = $this->Jobs_model->get_specific_job($ec->object_id);
+				if( $job ){
+					$job_number = $job->job_number;
+				}
+
+				$employee_commissions['jobs'][] = [
+					'commission_id' => $ec->id,
+					'job_number' => $job_number,
+					'job_id' => $ec->object_id,
+					'commission_amount' => $ec->commission_amount,
+					'commission_date' => $ec->commission_date,
+					'is_paid' => $ec->is_paid
+				];
+ 			}
+		}
+
+		$this->page_data['employee_commissions'] = $employee_commissions; 
+	    $this->load->view('v2/pages/users/ajax_commission_list', $this->page_data);
+	}
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */

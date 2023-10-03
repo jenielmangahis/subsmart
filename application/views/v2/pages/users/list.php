@@ -165,6 +165,9 @@
                                                     <a class="dropdown-item edit-item" name="btn_edit" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
                                                 </li>
                                                 <li>
+                                                    <a class="dropdown-item commissions-list" name="" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Commissions</a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item update-profile-item" name="btn_update_profile_image" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
                                                 </li>
                                                 <?php if(isSolarCompany() == 1){ ?>
@@ -388,6 +391,110 @@
                     tableRow.remove();                    
                 }
             );
+        });
+
+        function modalShowLoader(_elem) {
+            let loader = '<div class="row">' +
+                '<div class="col-12">' +
+                '<div class="nsm-loader">' +
+                '<i class="bx bx-loader-alt bx-spin"></i>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+            _elem.html(loader);
+        }
+
+        $(document).on('click', '.view-job-row', function(){
+            var appointment_id = $(this).attr('data-id');
+            var url = base_url + "job/_quick_view_details";  
+
+            $('#modal-quick-view-job').modal('show');
+            modalShowLoader($(".view-schedule-container")); 
+
+            setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {appointment_id:appointment_id},
+                success: function(o)
+                {          
+                    $(".view-schedule-container").html(o);
+                }
+            });
+            }, 500);
+        });
+
+        $(document).on('click', '.delete-employee-commission-item', function(){
+            let id = $(this).attr('data-id');
+            let url = base_url + "user/_get_employee_commission_status";  
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {appointment_id:appointment_id},
+                success: function(o)
+                {          
+                    $(".view-schedule-container").html(o);
+                }
+            });
+
+            Swal.fire({
+                title: 'Delete Employee Commission',
+                text: "Are you sure you want to delete the selected employee commission?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>users/_delete_user",
+                        data: {
+                            eid: id
+                        },
+                        dataType: "json",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: "User was successfully deleted.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Failed',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.commissions-list', function(){
+            var eid = $(this).attr('data-id');
+            var url = base_url + 'user/_commission_list';
+
+            $('#employee_commissions_list_modal').modal('show'); 
+
+            $.ajax({
+              url: url,
+                type: "POST",
+                data: {eid:eid},
+                success: function(o) {
+                    $('#employee-commissions-list-container').html(o);
+                }
+            });
         });
 
         $(document).on('submit', '#edit_employee_form', function(e){
