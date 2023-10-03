@@ -65,6 +65,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_paychecks_model');
+        $this->load->model('timesheet_model');
         $this->load->library('form_validation');
     }
 
@@ -780,7 +781,7 @@ class Accounting_modals extends MY_Controller
     {
         $paySchedule = $this->users_model->getPaySchedule($paySchedId);
         $this->page_data['paySchedule'] = $paySchedule;
-        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule->id);
+        // $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule->id);
         $accounts = $this->chart_of_accounts_model->select();
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
@@ -1184,11 +1185,219 @@ class Accounting_modals extends MY_Controller
             ];
         }
 
+        $selectedPayperiod = array_filter($payPeriod, function($v, $k) {
+            return $v['selected'];
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $selectedPayperiod = $selectedPayperiod[array_key_first($selectedPayperiod)];
+
+        $employees = $this->users_model->getPayScheduleEmployees($paySchedule->id);
+        foreach($employees as $index => $employee)
+        {
+            $employees[$index]->pay_scale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+            $employees[$index]->pay_details = $this->users_model->getEmployeePayDetails($employee->id);
+            // $employees[$index]->commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])))->commission;
+            $commission = 0.00;
+            $commissions = $this->accounting_payroll_model->get_employee_commissions($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])));
+            foreach($commissions as $comm)
+            {
+                $commission += floatval(str_replace(',', '', $comm->commission_amount));
+            }
+            $employees[$index]->commission = $commission;
+
+            $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])));
+
+            $totalHrs = 0.00;
+            foreach($timeLogs as $timeLog)
+            {
+                $timeLogPaid = $this->accounting_payroll_model->check_if_time_log_paid(date("m/d/Y", strtotime($timeLog->date_created)), $timeLog->user_id);
+
+                if(count($timeLogPaid) < 1) {
+                    $totalHrs += floatval($timeLog->shift_duration);
+    
+                    if($timeLog->overtime_status === '2') {
+                        $totalHrs += floatval($timeLog->overtime);
+                    }
+                }
+            }
+
+            $employees[$index]->total_hrs = $totalHrs;
+
+            if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';
+
+                $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
+            }
+
+            if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'</span>/week';
+
+                $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                $hoursPerWeek = 40.00;
+                $perHourPay = $weeklyPay / $hoursPerWeek;
+
+                $totalPay = $perHourPay * $totalHrs;
+            }
+
+            if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/month';
+
+                $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $perHourPay = $monthlyPay / $hoursPerMonth;
+
+                $totalPay = $perHourPay * $totalHrs;
+            }
+
+            if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                $employees[$index]->pay_rate = 'Commission only';
+            }
+
+            // switch($employees[$index]->pay_details->pay_type) {
+            //     case 'hourly' :
+            //         $totalPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate)) * $totalHrs;
+            //     break;
+            //     case 'salary' :
+            //         switch($employees[$index]->pay_details->salary_frequency) {
+            //             case 'per-week' :
+            //                 $weeklyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
+            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
+            //                 $perHourPay = $weeklyPay / $hoursPerWeek;
+
+            //                 $totalPay = $perHourPay * $totalHrs;
+            //             break;
+            //             case 'per-month' :
+            //                 $monthlyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
+            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
+            //                 $hoursPerMonth = $hoursPerWeek * 4;
+            //                 $perHourPay = $monthlyPay / $hoursPerMonth;
+
+            //                 $totalPay = $perHourPay * $totalHrs;
+            //             break;
+            //             case 'per-year' :
+            //                 $yearlyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
+            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
+            //                 $hoursPerMonth = $hoursPerWeek * 4;
+            //                 $hoursPerYear = $hoursPerMonth * 12;
+            //                 $perHourPay = $monthlyPay / $hoursPerYear;
+
+            //                 $totalPay = $perHourPay * $totalHrs;
+            //             break;
+            //         }
+            //     break;
+            // }
+
+            $totalPay += floatval(str_replace(',', '', $employees[$index]->commission));
+
+            $employees[$index]->total_pay = $totalPay;
+        }
+        $this->page_data['employees'] = $employees;
+
         $this->page_data['payPeriods'] = $payPeriod;
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDate'] = $payDate;
 
         $this->load->view('v2/includes/accounting/modal_forms/payroll_form', $this->page_data);
+    }
+
+    public function get_employee_pay_details()
+    {
+        $post = $this->input->post();
+        $selectedPayperiod = explode('-', $post['pay_period']);
+
+        $employee = $this->users_model->getUserByID($post['employee_id']);
+        $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+        $payDetails = $this->users_model->getEmployeePayDetails($employee->id);
+        // $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod[0])), date("Y-m-d", strtotime($selectedPayperiod[1])))->commission;
+
+        $commission = 0.00;
+        $commissions = $this->accounting_payroll_model->get_employee_commissions($employee->id, date("Y-m-d", strtotime($selectedPayperiod[0])), date("Y-m-d", strtotime($selectedPayperiod[1])));
+        foreach($commissions as $comm)
+        {
+            $commission += floatval(str_replace(',', '', $comm->commission_amount));
+        }
+
+        $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod[0])), date("Y-m-d", strtotime($selectedPayperiod[1])));
+
+        $totalHrs = 0.00;
+        foreach($timeLogs as $timeLog)
+        {
+            $timeLogPaid = $this->accounting_payroll_model->check_if_time_log_paid(date("Y-m-d", strtotime($timeLog->date_created)), $timeLog->user_id);
+
+            if(count($timeLogPaid) < 1) {
+                $totalHrs += floatval($timeLog->shift_duration);
+
+                if($timeLog->overtime_status === '2') {
+                    $totalHrs += floatval($timeLog->overtime);
+                }
+            }
+        }
+
+        if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+            $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
+        }
+
+        if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+            $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+            $hoursPerWeek = 40.00;
+            $perHourPay = $weeklyPay / $hoursPerWeek;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+            $monthlyPay = floatval(str_replace(',', '', $employee->base_weekly));
+            $hoursPerWeek = 40.00;
+            $hoursPerMonth = $hoursPerWeek * 4;
+            $perHourPay = $monthlyPay / $hoursPerMonth;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        // switch($payDetails->pay_type) {
+        //     case 'hourly' :
+        //         $totalPay = floatval(str_replace(',', '', $payDetails->pay_rate)) * $totalHrs;
+        //     break;
+        //     case 'salary' :
+        //         switch($payDetails->salary_frequency) {
+        //             case 'per-week' :
+        //                 $weeklyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
+        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
+        //                 $perHourPay = $weeklyPay / $hoursPerWeek;
+
+        //                 $totalPay = $perHourPay * $totalHrs;
+        //             break;
+        //             case 'per-month' :
+        //                 $monthlyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
+        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
+        //                 $hoursPerMonth = $hoursPerWeek * 4;
+        //                 $perHourPay = $monthlyPay / $hoursPerMonth;
+
+        //                 $totalPay = $perHourPay * $totalHrs;
+        //             break;
+        //             case 'per-year' :
+        //                 $yearlyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
+        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
+        //                 $hoursPerMonth = $hoursPerWeek * 4;
+        //                 $hoursPerYear = $hoursPerMonth * 12;
+        //                 $perHourPay = $monthlyPay / $hoursPerYear;
+
+        //                 $totalPay = $perHourPay * $totalHrs;
+        //             break;
+        //         }
+        //     break;
+        // }
+
+        $totalPay += floatval(str_replace(',', '', $commission));
+
+        echo json_encode([
+            'pay_scale' => $payscale,
+            'pay_details' => $payDetails,
+            'commission' => $commission,
+            'total_hrs' => $totalHrs,
+            'total_pay' => $totalPay
+        ]);
     }
 
     public function generate_payroll()
@@ -2778,6 +2987,15 @@ class Accounting_modals extends MY_Controller
                             'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
                             'status' => 1
                         ];
+
+                        if($payType === 'all' || $payType === 'commission-only') {
+                            $commissions = $this->accounting_payroll_model->get_employee_commissions($value, date('Y-m-d', strtotime($payPeriod[0])), date('Y-m-d', strtotime($payPeriod[1])));
+
+                            foreach($commissions as $commission)
+                            {
+                                $this->accounting_payroll_model->mark_commission_paid($commission->id);
+                            }
+                        }
                     }
 
                     // $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);

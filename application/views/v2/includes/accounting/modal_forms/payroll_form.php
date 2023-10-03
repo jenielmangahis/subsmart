@@ -38,8 +38,8 @@
                     </td>
                     <td data-name="Employee">EMPLOYEE</td>
                     <td data-name="Pay Method">PAY METHOD</td>
-                    <td data-name="Regular Pay Hrs">REGULAR PAY HRS</td>
-                    <td data-name="Commission">COMMISSION</td>
+                    <td data-name="Regular Pay Hrs" class="text-end">REGULAR PAY HRS</td>
+                    <td data-name="Commission" class="text-end">COMMISSION</td>
                     <td data-name="Memo">MEMO</td>
                     <td data-name="Total Hours">TOTAL HOURS</td>
                     <td data-name="Total Pay">TOTAL PAY</td>
@@ -57,16 +57,7 @@
                     </td>
                     <td>
                         <a href="#" class="text-decoration-none"><?=$employee->LName.', '.$employee->FName?></a>
-                        <?php 
-                            if($employee->pay_details->pay_type === 'hourly') {
-                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($employee->pay_details->pay_rate), 2, '.', ',')).'</span>/hour';
-                            } else if($employee->pay_details->pay_type === 'salary') {
-                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($employee->pay_details->pay_rate), 2, '.', ',')).'</span>/'.str_replace('per-', '', $employee->pay_details->salary_frequency);
-                            } else {
-                                $payRate = 'Commission only';
-                            }
-                        ?>
-                        <p class="m-0"><?=$payRate?></p>
+                        <p class="m-0"><?=$employee->pay_rate?></p>
                     </td>
                     <td><?=$employee->pay_details->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
                     <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></td>

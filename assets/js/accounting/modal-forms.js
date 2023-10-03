@@ -324,9 +324,9 @@ $(function() {
             }
         });
 
-        $(this).parent().prepend('<button type="submit" class="btn btn-success">Submit Payroll</button>');
+        $(this).parent().prepend('<button type="submit" class="nsm-button success">Submit Payroll</button>');
         $(this).remove();
-        $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-payroll-form">Back</button>');
+        $('div#payrollModal div.modal-footer button#back-paysched-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#back-payroll-form', function() {
@@ -335,12 +335,6 @@ $(function() {
         $('div#payrollModal div.modal-body select#payFrom').val(payrollFormData.get('pay_from'));
         $('div#payrollModal div.modal-body select#payPeriod').val(payrollFormData.get('pay_period'));
         $('div#payrollModal div.modal-body input#payDate').val(payrollFormData.get('pay_date'));
-
-        $('div#payrollModal div.modal-body table tbody tr').each(function() {
-            if ($(this).children('td:nth-child(4)').children('input').length === 0) {
-                $(this).children('td:first-child()').children('div').children('input').prop('checked', false)
-            }
-        });
 
         $('div#payrollModal div.modal-body table tbody tr td:nth-child(4)').each(function(index, value) {
             $(this).html(payrollFormData.getAll('reg_pay_hours[]')[index]);
@@ -354,7 +348,7 @@ $(function() {
             $(this).val(payrollFormData.getAll('memo[]')[index]);
         });
 
-        $(this).parent().html('<button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>');
+        $(this).parent().html('<button type="button" class="nsm-button primary" data-dismiss="modal" id="back-paysched-select">Back</button>');
         $('div#payrollModal div.modal-footer button[type="submit"]').html('Preview Payroll');
         $('div#payrollModal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
         $('div#payrollModal div.modal-footer button[type="submit"]').prop('type', 'button');

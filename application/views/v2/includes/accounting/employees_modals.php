@@ -552,7 +552,7 @@
                         </div>
                         <div class="col text-end">
                             <h6>TOTAL PAY</h6>
-                            <h2 class="total-pay">$0.00</h2>
+                            <h2 class="total-pay"><?=str_replace('$-', '-$', '$'.number_format(array_sum(array_column($employees, 'commission')), 2))?></h2>
                         </div>
                     </div>
                     <div class="row">
@@ -587,34 +587,15 @@
                                         <td><p class="m-0 text-end"><span class="total-pay"><?=str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee['commission'])), 2))?></span></p></td>
                                     </tr>
                                     <?php endforeach; ?>
-                                    <!-- <?php foreach($payDetails as $payDetail) : ?>
-                                        <?php $employee = $this->users_model->getUser($payDetail->user_id);?>
-                                        <tr data-method="<?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?>">
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$employee->id?>" checked>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" class="text-decoration-none"><?php echo $employee->LName . ', ' . $employee->FName?></a></td>
-                                            <td><?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
-                                            <td>
-                                                <input type="number" name="commission[]" step="0.01" class="form-control nsm-field text-end">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="memo[]" class="form-control nsm-field">
-                                            </td>
-                                            <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
-                                        </tr>
-                                    <?php endforeach;?> -->
                                 </tbody>
                                 <tfoot>
                                     <tr class="text-end">
                                         <td></td>
                                         <td></td>
                                         <td>TOTAL</td>
-                                        <td>$0.00</td>
+                                        <td><?=str_replace('$-', '-$', '$'.number_format(array_sum(array_column($employees, 'commission')), 2))?></td>
                                         <td></td>
-                                        <td>$0.00</td>
+                                        <td><?=str_replace('$-', '-$', '$'.number_format(array_sum(array_column($employees, 'commission')), 2))?></td>
                                     </tr>
                                     <tr>
                                         <td colspan="6">

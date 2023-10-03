@@ -361,6 +361,21 @@ class Accounting_model extends MY_Model {
             return $data->result();            
         } 
 
+        // Get Invoice List by Date data in Database
+        if ($reportType == "invoice_list_by_date") {
+            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, "" AS memo_description, invoices.due_date AS due_date, IFNULL(SUM((items.retail * invoices_items.qty) + invoices_items.tax), 0) AS amount');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('invoices.customer_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
     }
-
 }
