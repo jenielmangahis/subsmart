@@ -581,11 +581,11 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="custom_aging_method" id="custom-aging-method-current" value="current">
+                                                            <input class="form-check-input" type="radio" name="custom_aging_method" id="custom-aging-method-current" value="current" <?=$aging_method === 'current' ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="custom-aging-method-current">Current</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="custom_aging_method" id="custom-aging-method-report-date" value="report-date" checked>
+                                                            <input class="form-check-input" type="radio" name="custom_aging_method" id="custom-aging-method-report-date" value="report-date" <?=empty($aging_method) || $aging_method === 'report-date' ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="custom-aging-method-report-date">Report date</label>
                                                         </div>
                                                     </div>
@@ -593,15 +593,15 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="custom-days-per-aging-period">Days per aging period</label>
-                                                <input type="text" class="nsm-field form-control" value="30" id="custom-days-per-aging-period">
+                                                <input type="text" class="nsm-field form-control" value="<?=!empty($days_per_aging_period) ? $days_per_aging_period : 30 ?>" id="custom-days-per-aging-period">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="custom-number-of-periods">Number of periods</label>
-                                                <input type="text" class="nsm-field form-control" value="4" id="custom-number-of-periods">
+                                                <input type="text" class="nsm-field form-control" value="<?=!empty($number_of_periods) ? $number_of_periods : 4 ?>" id="custom-number-of-periods">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label for="custom-min-days-past-due">Min. days past due</label>
-                                                <input type="text" class="nsm-field form-control" value="" id="custom-min-days-past-due">
+                                                <input type="text" class="nsm-field form-control" value="<?=!empty($min_days_past_due) ? $min_days_past_due : '' ?>" id="custom-min-days-past-due">
                                             </div>
                                         </div>
                                     </div>

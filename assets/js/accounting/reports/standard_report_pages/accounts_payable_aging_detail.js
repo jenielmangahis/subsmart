@@ -134,7 +134,7 @@ $('#run-report').on('click', function(e) {
     url += filterDate !== 'today' && filterDate !== 'all-dates' ? `to=${$('#filter-report-period-to').val().replaceAll('/', '-')}&` : '';
     url += agingMethod !== 'report-date' ? `aging-method=${agingMethod}` : '';
     url += daysPerAgingPeriod !== '30' ? `days-per-aging-period=${daysPerAgingPeriod}` : '';
-    url += numberOfPeriods !== '4' ? `number-of-period=${numberOfPeriods}` : '';
+    url += numberOfPeriods !== '4' ? `number-of-periods=${numberOfPeriods}` : '';
     url += minDaysPastDue !== '' ? `min-days-past-due=${minDaysPastDue}` : '';
 
     var currentUrl = currUrl.replace('#', '');
@@ -149,7 +149,7 @@ $('#run-report').on('click', function(e) {
             'to',
             'aging-method',
             'days-per-aging-period',
-            'number-of-period',
+            'number-of-periods',
             'min-days-past-due'
         ];
         $.each(querySplit, function(key, value) {
@@ -259,7 +259,7 @@ $('#run-report-button').on('click', function() {
     url += filterDate !== 'today' && filterDate !== 'all-dates' ? `to=${$('#report-period-date-to').val().replaceAll('/', '-')}&` : '';
     url += agingMethod !== 'report-date' ? `aging-method=${agingMethod}` : '';
     url += daysPerAgingPeriod !== '30' ? `days-per-aging-period=${daysPerAgingPeriod}` : '';
-    url += numberOfPeriods !== '4' ? `number-of-period=${numberOfPeriods}` : '';
+    url += numberOfPeriods !== '4' ? `number-of-periods=${numberOfPeriods}` : '';
     url += minDaysPastDue !== '' ? `min-days-past-due=${minDaysPastDue}` : '';
 
     url += $('#divide-by-100').prop('checked') ? `divide-by-100=1&` : '';
