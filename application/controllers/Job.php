@@ -1145,6 +1145,8 @@ class Job extends MY_Controller
 
     public function update_payment_details()
     {
+        $this->load->helper('user_helper');
+
         $input   = $this->input->post();
         $updated = 0;
 
@@ -1306,6 +1308,9 @@ class Job extends MY_Controller
             $jobs_data = array();
             $jobs_data['status'] = 'Completed';
             $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs', 'id');
+
+            //Create Commission
+		    createEmployeeCommission($input['jobs_id'], 'job');
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];

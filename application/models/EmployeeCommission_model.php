@@ -35,11 +35,10 @@ class EmployeeCommission_model extends MY_Model
 
     public function getAllByUserId($user_id)
     {
-        $this->db->select('employee_commission_settings.*, commission_settings.name');
-        $this->db->from($this->table);
-        $this->db->join('commission_settings', 'employee_commission_settings.commission_setting_id  = commission_settings.id', 'left');
-        $this->db->where('employee_commission_settings.user_id', $user_id);
-        $this->db->order_by('employee_commission_settings.id', 'DESC');
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('user_id', $user_id);
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();

@@ -822,4 +822,24 @@ class Api extends MYF_Controller
         $return = ['is_sent' => $is_sent, 'err_msg' => $err_msg];
         echo json_encode($return);
     }
+
+    public function createEmployeeJobCommission()
+    {
+        $this->load->helper('user_helper');
+        
+        $is_success  = 1;
+        $err_msg  = '';
+
+        $post = $this->input->post();
+        if( isset($post['job_id']) ){            
+            //Create Commission
+		    createEmployeeCommission($post['job_id'], 'job');
+        }else{
+            $is_sent = 0;
+            $err_msg = 'Cannot find job data';
+        }
+
+        $return = ['is_success' => $is_success, 'err_msg' => $err_msg];
+        echo json_encode($return);
+    }
 }
