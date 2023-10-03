@@ -834,9 +834,10 @@ class Api extends MYF_Controller
         if( isset($post['job_id']) ){            
             //Create Commission
 		    createEmployeeCommission($post['job_id'], 'job');
+            $err_msg = '';
         }else{
-            $is_sent = 0;
-            $err_msg = 'Cannot find job data';
+            $is_success = 0;
+            $err_msg    = 'Cannot find job data';
         }
 
         $return = ['is_success' => $is_success, 'err_msg' => $err_msg];
