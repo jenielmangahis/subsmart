@@ -41,11 +41,8 @@ class PayScale_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
@@ -61,6 +58,19 @@ class PayScale_model extends MY_Model
         $default_ids = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
         return $default_ids;
+    }
+
+    public function optionPayType(){
+        $options = [
+            'Hourly' => 'Hourly',
+            'Daily' => 'Daily',
+            'Weekly' => 'Weekly',
+            'Monthly' => 'Monthly',
+            'Yearly' => 'Yearly',
+            'Commission Only' => 'Commission Only'
+        ];
+
+        return $options;
     }
 }
 

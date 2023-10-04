@@ -146,37 +146,13 @@
                                     <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                         <option value="" selected="selected" disabled>Select payscale</option>
                                         <?php foreach ($payscale as $p) : ?>
-                                            <option <?= $p->id == 3 ? 'selected="selected"' : ''; ?> value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
+                                            <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="col-4 d-none">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Base Salary</label>
-                                    <input class="form-control" name="empBaseSalary" type="number" step="any" min="0" value="<?php echo ($user->base_salary) ? $user->base_salary : "0"; ?>">
-                                </div>
-                                <div class="col-12 base_hourlyrate" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Hourly Rate</label>
-                                    <input class="form-control" name="empBaseHourlyRate" type="number" step="any" min="0" value="<?php echo ($user->base_hourly) ? $user->base_hourly : "0"; ?>">
-                                </div>
-                                <div class="col-12 base_weeklyrate" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Weekly Rate</label>
-                                    <input class="form-control" name="empBaseWeeklyRate" type="number" step="any" min="0" value="<?php echo ($user->base_weekly) ? $user->base_weekly : "0"; ?>">
-                                </div>
-                                <div class="col-12 base_monthlyrate" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Monthly Rate</label>
-                                    <input class="form-control" name="empBaseMonthlyRate" type="number" step="any" min="0" value="<?php echo ($user->base_monthly) ? $user->base_monthly : "0"; ?>">
-                                </div>
-                                <div class="col-12 compensation_baseamount" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Base Amount</label>
-                                    <input class="form-control" name="empCompensationBase" type="number" step="any" min="0" value="<?php echo ($user->compensation_base) ? $user->compensation_base : "0"; ?>">
-                                </div>
-                                <div class="col-12 compensation_hourlyrate" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Hourly Rate</label>
-                                    <input class="form-control" name="empCompensationHourlyRate" type="number" step="any" min="0" value="<?php echo ($user->compensation_rate) ? $user->compensation_rate : "0"; ?>">
-                                </div>
-                                <div class="col-12 jobtypebase_install" style="display: none;">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Amount</label>
-                                    <input class="form-control" name="empJobTypeBaseInstall" type="number" step="any" min="0" value="<?php echo ($user->jobtypebase_amount) ? $user->jobtypebase_amount : "0"; ?>">
+                                <div class="col-12 add-pay-type-container" style="display:none;">
+                                    <label class="content-subtitle fw-bold d-block mb-2 add-payscale-pay-type"></label>
+                                    <input class="form-control" name="salary_rate" type="number" step="any" min="0" value="0.00">
                                 </div>
                                 <div class="commission-percentage-grp row" style="display:none;">
                                     <div class="col">
@@ -415,16 +391,14 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="employee_commissions_list_modal" tabindex="-1" aria-labelledby="employee_commissions_list_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="POST" id="change-adt-portal-login">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Commissions List</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="employee-commissions-list-container"></div>                
+    <div class="modal-dialog modal-lg">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Commissions List</span>
+                <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="employee-commissions-list-container"></div>                
+        </div>
     </div>
 </div>
 
@@ -589,7 +563,24 @@
     compensationHideShow();
 
     $('.add-emp-payscale').change(function() {
-        compensationHideShow();
+        var psid = $(this).val();
+        var url  = base_url + 'payscale/_get_details'
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {psid:psid},
+            dataType: "json",
+            success: function(result) {
+                if( result.pay_type == 'Commission Only' ){
+                    $('.add-pay-type-container').hide();
+                }else{
+                    var rate_label = result.pay_type + ' Rate';
+                    $('.add-pay-type-container').show();
+                    $('.add-payscale-pay-type').html(rate_label);
+                }                
+            },
+        });
+        //compensationHideShow();
         //setDefaultEmpCommissionValue();
     });
 </script>

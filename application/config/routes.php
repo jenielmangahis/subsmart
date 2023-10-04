@@ -1079,6 +1079,10 @@ $route['user/_update_business_details'] = 'Users/ajax_update_business_details';
 $route['user/_add_commission_form'] = 'Users/ajax_add_commission_form';
 $route['user/_commission_list'] = 'Users/ajax_commission_list';
 $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commission_status';
+$route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
+
+//Payscale
+$route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
