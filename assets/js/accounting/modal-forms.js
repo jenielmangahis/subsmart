@@ -167,14 +167,14 @@ $(function() {
     // });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function() {
-        payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
-        payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
-        var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.pay_sched_name').html();
-        if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
-            $.get('/accounting/get-payroll-form/' + payroll.paySchedule, function(res) {
+        payroll.payscale = $('#payrollModal [name="payscale"]:checked').val();
+        payroll.payscaleForm = $('div#payrollModal div.modal-body').html();
+        var payscaleName = $('#payrollModal [name="payscale"]:checked').next().find('.payscale_name').html();
+        if (payroll.payscale !== "" && payroll.payscale !== undefined) {
+            $.get('/accounting/get-payroll-form/' + payroll.payscale, function(res) {
                 $('div#payrollModal .modal-body').html(res);
 
-                $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + paySchedName);
+                $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + payscaleName);
                 $('div#payrollModal .modal-body select:not(#bank-account)').select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $('#payrollModal')
@@ -222,13 +222,13 @@ $(function() {
                 </div>
             </div>`);
             $(this).remove();
-            $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="nsm-button primary" id="back-paysched-select">Back</button>');
+            $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="nsm-button primary" id="back-payscale-select">Back</button>');
         }
     });
 
-    $(document).on('click', 'div#payrollModal div.modal-footer button#back-paysched-select', function() {
-        $('div#payrollModal div.modal-body').html(payroll.paySchedForm);
-        $(`div#payrollModal div.modal-body input[name="pay_schedule"][value="${payroll.paySchedule}"]`).prop('checked', true);
+    $(document).on('click', 'div#payrollModal div.modal-footer button#back-payscale-select', function() {
+        $('div#payrollModal div.modal-body').html(payroll.payscaleForm);
+        $(`div#payrollModal div.modal-body input[name="payscale"][value="${payroll.payscale}"]`).prop('checked', true);
         $(this).parent().html(`<button type="button" class="nsm-button primary" data-bs-dismiss="modal" id="close-payroll-modal">Cancel</button>`);
         $('div#payrollModal div.modal-footer div.col-md-4:last-child').html(`
         <button class="nsm-button success float-end" type="button" id="continue-payroll">

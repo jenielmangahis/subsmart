@@ -118,10 +118,6 @@
                                                                 <h5><?=date("m/d/Y", strtotime($employee->date_hired))?></h5>
                                                             </div>
                                                             <div class="col-12 col-md-4">
-                                                                <h6>Pay schedule</h6>
-                                                                <h5><?=$employee->pay_schedule->name?></h5>
-                                                            </div>
-                                                            <div class="col-12 col-md-4">
                                                                 <h6>Work location</h6>
                                                                 <h5><?=!is_null($empWorksite) ? $empWorksite : '-'?></h5>
                                                             </div>

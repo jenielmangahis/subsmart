@@ -203,29 +203,14 @@ class Employees extends MY_Controller {
 
                 if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
-    
-                    $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
                 }
     
                 if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
-    
-                    $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
-                    $hoursPerWeek = 40.00;
-                    $perHourPay = $weeklyPay / $hoursPerWeek;
-    
-                    $totalPay = $perHourPay * $totalHrs;
                 }
     
                 if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
-    
-                    $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
-                    $hoursPerWeek = 40.00;
-                    $hoursPerMonth = $hoursPerWeek * 4;
-                    $perHourPay = $monthlyPay / $hoursPerMonth;
-    
-                    $totalPay = $perHourPay * $totalHrs;
                 }
     
                 if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
@@ -299,17 +284,24 @@ class Employees extends MY_Controller {
         $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
         if($empPayDetails) {
             $employee->payment_method = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
-
-            if($empPayDetails->pay_type === 'hourly') {
-                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
-            } else if($empPayDetails->pay_type === 'salary') {
-                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.str_replace('per-', '', $empPayDetails->salary_frequency);
-            } else {
-                $employee->pay_rate = 'Commission only';
-            }
         } else {
             $employee->payment_method = 'Missing';
-            $employee->pay_rate = 'Missing';
+        }
+
+        if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
+        }
+
+        if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
+        }
+
+        if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
+        }
+
+        if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+            $employee->pay_rate = 'Commission only';
         }
         
         $paySchedule = $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id);
@@ -520,14 +512,14 @@ class Employees extends MY_Controller {
                     ];
                 break;
                 case 'employment-details' :
-                    $payDetails = [
-                        'pay_schedule_id' => $this->input->post('pay_schedule')
-                    ];
+                    // $payDetails = [
+                    //     'pay_schedule_id' => $this->input->post('pay_schedule')
+                    // ];
 
                     $data = [
                         'employee_number' => $this->input->post('employee_number'),
                         'date_hired' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'payscale_id' => $this->input->post('empPayscale'),
+                        // 'payscale_id' => $this->input->post('empPayscale'),
                         'user_type' => $this->input->post('user_type'),
                     ];
 
@@ -539,16 +531,27 @@ class Employees extends MY_Controller {
                 break;
                 case 'pay-types' :
                     $data = [
-                        'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : 0.00
+                        'payscale_id' => $this->input->post('empPayscale'),
+                        'base_salary' => $this->input->post('empBaseSalary'),
+                        'base_hourly' => $this->input->post('empBaseHourlyRate'),
+                        'base_weekly' => $this->input->post('empBaseWeeklyRate'),
+                        'base_monthly' => $this->input->post('empBaseMonthlyRate'),
+                        'compensation_base' => $this->input->post('empCompensationBase'),
+                        'compensation_rate' => $this->input->post('empCompensationHourlyRate'),
+                        'commission_id' => $this->input->post('empCommission'),
+                        'commission_percentage' => $this->input->post('empCommissionPercentage')
                     ];
+                    // $data = [
+                    //     'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : 0.00
+                    // ];
 
-                    $payDetails = [
-                        'pay_type' => $this->input->post('pay_type'),
-                        'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-                        'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-                        'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                        'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('pay_frequency') : null,
-                    ];
+                    // $payDetails = [
+                    //     'pay_type' => $this->input->post('pay_type'),
+                    //     'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+                    //     'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+                    //     'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+                    //     'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('pay_frequency') : null,
+                    // ];
                 break;
                 case 'notes' :
                     $payDetails = [
