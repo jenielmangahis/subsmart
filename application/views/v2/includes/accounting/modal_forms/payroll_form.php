@@ -9,13 +9,25 @@
         <h6>Balance <?=str_replace('$-', '-$', '$'.number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ','))?></h6>
     </div>
     <div class="col-12 col-md-2">
+        <label for="pay-period-start">Pay period start</label>
+        <div class="nsm-field-group calendar">
+            <input type="text" class="form-control nsm-field date" name="pay_period_start" id="pay-period-start" value="<?=$payPeriodStart?>"/>
+        </div>
+    </div>
+    <div class="col-12 col-md-2">
+        <label for="pay-period-end">Pay period end</label>
+        <div class="nsm-field-group calendar">
+            <input type="text" class="form-control nsm-field date" name="pay_period_end" id="pay-period-end" value="<?=$payPeriodEnd?>"/>
+        </div>
+    </div>
+    <!-- <div class="col-12 col-md-2">
         <label for="payPeriod">Pay period</label>
         <select name="pay_period" id="payPeriod" class="form-control nsm-field">
             <?php foreach($payPeriods as $period) : ?>
                 <option value="<?=$period['first_day'] . '-' . $period['last_day']?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?=$period['first_day'] . ' to ' . $period['last_day']?></option>
             <?php endforeach; ?>
         </select>
-    </div>
+    </div> -->
     <div class="col-12 col-md-2">
         <label for="payDate">Pay date</label>
         <div class="nsm-field-group calendar">

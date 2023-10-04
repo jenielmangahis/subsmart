@@ -62,6 +62,14 @@ class PayScale_model extends MY_Model
 
         return $default_ids;
     }
+
+    public function get_company_employees_using_payscale($payscaleId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('payscale_id', $payscaleId);
+        $query = $this->db->get('users');
+        return $query->result();
+    }
 }
 
 /* End of file PayScale_model.php */

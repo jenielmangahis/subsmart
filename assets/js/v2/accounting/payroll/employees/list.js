@@ -724,6 +724,11 @@ $(document).on('change', '#add_employee_modal #pay-type', function() {
                     <span class="input-group-text">days per week.</span>
                 </div>`);
             }
+
+            $('#add_employee_modal #pay-frequency').select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#add_employee_modal')
+            });
         break;
         case 'commission' :
             $(this).parent().next().html('');

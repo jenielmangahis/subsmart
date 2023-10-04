@@ -12,18 +12,18 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12 grid-mb">
-                            <h4>Select a pay schedule for this payroll</h4>
+                            <h4>Select a payscale for this payroll</h4>
                         </div>
                         <div class="col-12 col-md-6 offset-md-1">
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <?php $i = 0; ?>
-                                    <?php foreach($pay_schedules as $pay_sched) : ?>
-                                        <?php $payDetails = $this->users_model->getPayDetailsByPaySched($pay_sched->id); ?>
-                                        <?php if($payDetails !== null && count($payDetails) > 0) : ?>
-                                        <div class="form-check">
-                                            <input type="radio" name="pay_schedule" id="<?="pay_sched_$pay_sched->id"?>" class="form-check-input" value="<?=$pay_sched->id?>" <?=$i === 0 ? 'checked' : ''?>>
-                                            <label for="<?="pay_sched_$pay_sched->id"?>" class="form-check-label"><span class="pay_sched_name"><?=$pay_sched->name?></span> (<?=count($payDetails)?> <?=count($payDetails) > 1 ? 'employees' : 'employee' ?>) </label>
+                                    <?php foreach($payscales as $payscale) : ?>
+                                        <?php $payscaleEmps = $this->PayScale_model->get_company_employees_using_payscale($payscale->id); ?>
+                                        <?php if($payscaleEmps !== null && count($payscaleEmps) > 0) : ?>
+                                        <div class="form-check mb-3">
+                                            <input type="radio" name="payscale" id="<?="payscale_$payscale->id"?>" class="form-check-input" value="<?=$payscale->id?>" <?=$i === 0 ? 'checked' : ''?>>
+                                            <label for="<?="payscale_$payscale->id"?>" class="form-check-label"><span class="payscale_name"><?=$payscale->payscale_name?></span> (<?=count($payscaleEmps)?> <?=count($payscaleEmps) > 1 ? 'employees' : 'employee' ?>) </label>
                                         </div>
                                         <?php $i++; endif; ?>
                                     <?php endforeach; ?>
