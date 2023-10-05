@@ -425,68 +425,87 @@
         });
 
         $(document).on('click', '.delete-employee-commission-item', function(){
-            let id = $(this).attr('data-id');
+            let cid = $(this).attr('data-id');
             let url = base_url + "user/_get_employee_commission_status";  
             $.ajax({
                 type: "POST",
                 url: url,
-                data: {appointment_id:appointment_id},
-                success: function(o)
+                data: {cid:cid},
+                dataType:'json',
+                success: function(result)
                 {          
-                    $(".view-schedule-container").html(o);
-                }
-            });
-
-            Swal.fire({
-                title: 'Delete Employee Commission',
-                text: "Are you sure you want to delete the selected employee commission?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo base_url(); ?>users/_delete_user",
-                        data: {
-                            eid: id
-                        },
-                        dataType: "json",
-                        success: function(result) {
-                            if (result.is_success) {
-                                Swal.fire({
-                                    title: 'Success',
-                                    text: "User was successfully deleted.",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Failed',
-                                    text: result.msg,
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                });
-                            }
-                        },
-                    });
+                    if( result.msg != '' ){
+                        Swal.fire({
+                            title: 'Failed',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }else{
+                        if( result.is_paid == 1 ){
+                            Swal.fire({
+                                title: 'Failed',
+                                text: 'Cannot delete already processed commission',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }else{
+                            Swal.fire({
+                                title: 'Delete Employee Commission',
+                                text: "Are you sure you want to delete the selected employee commission?",
+                                icon: 'question',
+                                confirmButtonText: 'Proceed',
+                                showCancelButton: true,
+                                cancelButtonText: "Cancel"
+                            }).then((result) => {
+                                if (result.value) {
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: base_url + "user/_delete_employee_commission",
+                                        data: {
+                                            cid: cid
+                                        },
+                                        dataType: "json",
+                                        success: function(aresult) {
+                                            if (aresult.is_success) {
+                                                Swal.fire({
+                                                    title: 'Success',
+                                                    text: "Data was successfully deleted.",
+                                                    icon: 'success',
+                                                    showCancelButton: false,
+                                                    confirmButtonText: 'Okay'
+                                                }).then((result) => {
+                                                    load_employee_commissions_list(aresult.employee_id);
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    title: 'Failed',
+                                                    text: aresult.msg,
+                                                    icon: 'error',
+                                                    showCancelButton: false,
+                                                    confirmButtonText: 'Okay'
+                                                });
+                                            }
+                                        },
+                                    });
+                                }
+                            });    
+                        }    
+                    }
                 }
             });
         });
 
         $(document).on('click', '.commissions-list', function(){
             var eid = $(this).attr('data-id');
-            var url = base_url + 'user/_commission_list';
-
             $('#employee_commissions_list_modal').modal('show'); 
+            load_employee_commissions_list(eid);            
+        });
 
+        function load_employee_commissions_list(eid){
+            var url = base_url + 'user/_commission_list';
             $.ajax({
               url: url,
                 type: "POST",
@@ -495,6 +514,12 @@
                     $('#employee-commissions-list-container').html(o);
                 }
             });
+        }
+
+        $(document).on('click', '.edit-employee-commission-item', function(){
+            var rowcid = $(this).attr('data-id');
+            $('.row-commission-amount-'+rowcid).hide();
+            $('.row-commission-form-group-'+rowcid).show();
         });
 
         $(document).on('submit', '#edit_employee_form', function(e){

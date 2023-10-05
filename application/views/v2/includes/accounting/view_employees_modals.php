@@ -405,10 +405,10 @@
                     </div>
                     <div class="col-12 col-md-12 mt-5">
                         <label class="content-title" style="display:inline-block;">Commission Settings</label>
-                        <a class="nsm-button primary small btn-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+                        <a class="nsm-button primary small btn-edit-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
                     </div>
                     <div class="col-12 col-md-12">
-                        <table class="table" id="commission-settings">
+                        <table class="table" id="edit-commission-settings">
                             <thead>
                             <tr>
                                 <td style="width: 50%;">Name</td>

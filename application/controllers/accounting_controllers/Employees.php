@@ -201,19 +201,30 @@ class Employees extends MY_Controller {
                     $payMethod = 'Missing';
                 }
 
-                if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                $payRate = 'Missing';
+                $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+
+                if($payscale->pay_type === 'Hourly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
                 }
-    
-                if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+
+                if($payscale->pay_type === 'Daily') {
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'/day';
+                }
+
+                if($payscale->pay_type === 'Weekly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
                 }
-    
-                if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+
+                if($payscale->pay_type === 'Monthly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
                 }
+
+                if($payscale->pay_type === 'Yearly') {
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/year';
+                }
     
-                if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+                if($payscale->pay_type === 'Commission Only') {
                     $payRate = 'Commission only';
                 }
 
@@ -288,19 +299,30 @@ class Employees extends MY_Controller {
             $employee->payment_method = 'Missing';
         }
 
-        if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+        $employee->pay_rate = 'Missing';
+        $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+
+        if($payscale->pay_type === 'Hourly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
         }
 
-        if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+        if($payscale->pay_type === 'Daily') {
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'/day';
+        }
+
+        if($payscale->pay_type === 'Weekly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
         }
 
-        if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+        if($payscale->pay_type === 'Monthly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
         }
 
-        if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+        if($payscale->pay_type === 'Yearly') {
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/year';
+        }
+
+        if($payscale->pay_type === 'Commission Only') {
             $employee->pay_rate = 'Commission only';
         }
         

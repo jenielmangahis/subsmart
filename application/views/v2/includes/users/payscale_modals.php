@@ -12,6 +12,14 @@
                             <label class="content-subtitle fw-bold d-block mb-2">Pay Scale Name</label>
                             <input type="text" class="nsm-field form-control" name="payscale_name">
                         </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Pay Type</label>
+                            <select name="pay_type" class="nsm-field form-control">
+                                <?php foreach($optionPayType as $key => $value){ ?>
+                                    <option value="<?= $key; ?>"><?= $value; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -37,6 +45,14 @@
                             <label class="content-subtitle fw-bold d-block mb-2">Pay Scale Name</label>
                             <input type="text" class="nsm-field form-control" name="payscale_name" required>
                             <input type="hidden" name="pid">
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Pay Type</label>
+                            <select name="pay_type" class="nsm-field form-control pay-type">
+                                <?php foreach($optionPayType as $key => $value){ ?>
+                                    <option value="<?= $key; ?>"><?= $value; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                 </div>

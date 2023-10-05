@@ -40,7 +40,8 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Pay Scale">Pay Scale</td>
+                            <td data-name="Pay Scale" style="width:70%;">Pay Scale</td>
+                            <td data-name="Pay Type" style="width:30%;">Pay Type</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -58,6 +59,7 @@
                                         </div>
                                     </td>
                                     <td class="nsm-text-primary"><?= $p->payscale_name; ?></td>
+                                    <td class="nsm-text-primary"><?= $p->pay_type; ?></td>
                                     <td>
                                         <?php if( $p->company_id > 0 ){ ?>
                                         <div class="dropdown table-management">                                            
@@ -65,7 +67,7 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>                                            
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>">Edit</a></li>
+                                                <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>" data-type="<?= $p->pay_type; ?>">Edit</a></li>
                                                 <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a></li>
                                             </ul>
                                         </div>
@@ -152,11 +154,13 @@
             let _this = $(this);
             let _modal = $("#edit_payscale_modal");
             let name = _this.attr("data-name");
+            let type = _this.attr('data-type');
             let id = _this.attr("data-id");
             console.log(name);
 
             _modal.find("input[name=payscale_name]").val(name);
             _modal.find("input[name=pid]").val(id);
+            _modal.find(".pay-type").val(type);
             _modal.modal("show");
         });
 

@@ -805,6 +805,7 @@ class Users extends MY_Controller
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}*/
+		
 		$this->page_data['show_pass'] = 1;
 		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
@@ -1156,11 +1157,14 @@ class Users extends MY_Controller
         
     }   
 
-	public function updatePayScaleData($user_id, $input){		
+	public function updatePayScaleData($user_id, $input){	
+		$this->load->model('PayScale_model');
+
 		$base_hourly  = 0;
 		$base_weekly  = 0;
 		$base_monthly = 0;
 		$base_salary  = 0;
+		$base_yearly  = 0;
 		$compensation_base = 0;
 		$compensation_rate = 0;
 		$commission_id = 0;
@@ -1168,39 +1172,17 @@ class Users extends MY_Controller
 		$jobtypebase_amount = 0;
 
 		$user = $this->Users_model->getUserByID($user_id);
-
-		if( $user->payscale_id == 3 ){ //Base Hourly rate
-			$base_hourly = $input['empBaseHourlyRate'];
-			$compensation_rate = $input['empBaseHourlyRate'];
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];
-		}elseif( $user->payscale_id == 4 ){ //Base (Weekly Rate)
-			$base_weekly = $input['empBaseWeeklyRate'];
-			$compensation_rate = $base_weekly;
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];
-		}elseif( $user->payscale_id == 5 ){ //Base (Monthly Rate)
-			$base_monthly = $input['empBaseMonthlyRate'];
-			$compensation_rate = $base_weekly;
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];		
-		}elseif( $user->payscale_id == 6 ){ //Compensation (Base Amount)
-			$compensation_base = $input['empCompensationBase'];
-			$compensation_rate = $compensation_base;
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];		
-		}elseif( $user->payscale_id == 7 ){ //Compensation (Hourly Rate)
-			$base_hourly = $input['empCompensationHourlyRate'];
-			$compensation_rate = $base_hourly;
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];		
-		}elseif( $user->payscale_id == 8 ){ //Job Type Base(Install/Service)
-			$jobtypebase_amount = $input['empJobTypeBaseInstall'];
-			$compensation_rate = $jobtypebase_amount;
-			$commission_id = $input['empCommission'];
-			$commission_percentage = $input['empCommissionPercentage'];	
-		}else{
-			$base_hourly = $input['empBaseHourlyRate'];			
+		$payscale = $this->PayScale_model->getById($user->payscale_id);
+		if( $payscale->pay_type == 'Hourly' ){
+			$base_hourly = $input['salary_rate'];
+		}elseif( $payscale->pay_type == 'Daily' ){
+			$base_salary = $input['salary_rate'];
+		}elseif( $payscale->pay_type == 'Weekly' ){
+			$base_weekly = $input['salary_rate'];
+		}elseif( $payscale->pay_type == 'Monthly' ){
+			$base_monthly = $input['salary_rate'];
+		}elseif( $payscale->pay_type == 'Yearly' ){
+			$base_yearly = $input['salary_rate'];
 		}
 
 		$emp_payscale_data = [
@@ -1208,6 +1190,7 @@ class Users extends MY_Controller
 			'base_weekly' => $base_weekly,
 			'base_monthly' => $base_monthly,
 			'base_salary' => $base_salary,
+			'base_yearly' => $base_yearly,
 			'compensation_base' => $compensation_base,
 			'compensation_rate' => $compensation_rate,
 			'commission_id' => $commission_id,
@@ -1248,8 +1231,32 @@ class Users extends MY_Controller
 		$cid   = logged('company_id');
 		$roles = $this->users_model->getRoles($cid);
 
-		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		$payscale = $this->PayScale_model->getById($get_user->payscale_id);
+		$salary_rate = 0;
+		$salary_type_label = '';
+		if( $payscale->pay_type == 'Hourly' ){
+			$salary_rate = $get_user->base_hourly;
+			$salary_type_label = 'Hourly Rate';
+		}elseif( $payscale->pay_type == 'Daily' ){
+			$salary_rate = $get_user->base_salary;
+			$salary_type_label = 'Daily Rate';
+		}elseif( $payscale->pay_type == 'Weekly' ){
+			$salary_rate = $get_user->base_weekly;
+			$salary_type_label = 'Weekly Rate';
+		}elseif( $payscale->pay_type == 'Monthly' ){
+			$salary_rate = $get_user->base_monthly;
+			$salary_type_label = 'Monthly Rate';
+		}elseif( $payscale->pay_type == 'Yearly' ){
+			$salary_rate = $get_user->base_yearly;
+			$salary_type_label = 'Yearly Rate';
+		}elseif( $payscale->pay_type == 'Commission Only' ){
+			$salary_rate = 0;
+			$salary_type_label = 'Commission Only';
+		}
 
+		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		$this->page_data['salary_rate'] = $salary_rate;
+		$this->page_data['salary_type_label'] = $salary_type_label;
 		$this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId($cid);
 		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
 		$this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($user_id);
@@ -1886,15 +1893,15 @@ class Users extends MY_Controller
 					'has_app_access' => $has_app_access,
 					'postal_code' => $post['postal_code'],
 					'payscale_id' => $post['empPayscale'],
-					'base_salary' => $post['empBaseSalary'],
-					'base_hourly' => $post['empBaseHourlyRate'],
-					'base_weekly' => $post['empBaseWeeklyRate'],
-					'base_monthly' => $post['empBaseMonthlyRate'],
-					'compensation_base' => $post['empCompensationBase'],
-					'compensation_rate' => $post['empCompensationHourlyRate'],
-					'jobtypebase_amount' => $post['empJobTypeBaseInstall'],
-					'commission_id' => $post['empCommission'],
-					'commission_percentage' => $post['empCommissionPercentage'],
+					//'base_salary' => $post['empBaseSalary'],
+					//'base_hourly' => $post['empBaseHourlyRate'],
+					//'base_weekly' => $post['empBaseWeeklyRate'],
+					//'base_monthly' => $post['empBaseMonthlyRate'],
+					//'compensation_base' => $post['empCompensationBase'],
+					//'compensation_rate' => $post['empCompensationHourlyRate'],
+					//'jobtypebase_amount' => $post['empJobTypeBaseInstall'],
+					//'commission_id' => $post['empCommission'],
+					//'commission_percentage' => $post['empCommissionPercentage'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number']
 				);
@@ -2073,6 +2080,7 @@ class Users extends MY_Controller
 		$company_id = logged('company_id');
 		$role_id    = logged('role');
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
+		$this->page_data['optionPayType'] = $this->PayScale_model->optionPayType();
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($company_id);
 		// $this->load->view('users/payscale/list', $this->page_data);
 		$this->load->view('v2/pages/users/payscale/list', $this->page_data);
@@ -2081,9 +2089,11 @@ class Users extends MY_Controller
 	public function ajax_add_payscale()
 	{
 		$payscale_name = $this->input->post('payscale_name');
+		$pay_type      = $this->input->post('pay_type');
 		$company_id    = logged('company_id');
 		$data = array(
 			'payscale_name' => $payscale_name,
+			'pay_type' => $pay_type,
 			'company_id' => $company_id,
 			'date_created' => date("Y-m-d H:i:s"),
 			'date_updated' => date("Y-m-d H:i:s")
@@ -2111,12 +2121,14 @@ class Users extends MY_Controller
 
 		$company_id    = logged('company_id');
 		$payscale_name = $this->input->post('payscale_name');
+		$pay_type      = $this->input->post('pay_type');
 		$pid = $this->input->post('pid');
 
 		$payscale = $this->PayScale_model->getById($pid);
 		if( $payscale->company_id > 0 && $payscale->company_id == $company_id ){
 			$data = array(
 				'payscale_name' => $payscale_name,
+				'pay_type' => $pay_type,
 				'date_updated' => date("Y-m-d H:i:s")
 			);	
 			$payscale = $this->PayScale_model->update($pid, $data);	
@@ -2131,6 +2143,17 @@ class Users extends MY_Controller
 		];
 
 		echo json_encode($json_data);
+	}
+
+	public function ajax_payscale_get_details(){
+		$this->load->model('PayScale_model');
+
+		$post = $this->input->post();
+		$payscale = $this->PayScale_model->getById($post['psid']);
+		$details = ['name' => $payscale->payscale_name, 'pay_type' => $payscale->pay_type];
+
+		echo json_encode($details);
+		
 	}
 
 	public function ajax_delete_payscale()
@@ -2690,6 +2713,53 @@ class Users extends MY_Controller
 
 		$this->page_data['employee_commissions'] = $employee_commissions; 
 	    $this->load->view('v2/pages/users/ajax_commission_list', $this->page_data);
+	}
+
+	public function ajax_get_employee_commission_status(){
+		$this->load->model('EmployeeCommission_model');
+
+		$is_paid  = 0;
+		$msg = 'Cannot find data';
+
+		$post = $this->input->post();
+		$commission = $this->EmployeeCommission_model->getById($post['cid']);
+		if( $commission ){
+			$is_paid = $commission->is_paid;
+			$msg = '';
+		}
+
+		$json_data = [
+            'is_paid' => $is_paid,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+	}
+
+	public function ajax_delete_employee_commission(){
+		$this->load->model('EmployeeCommission_model');
+
+		$is_success  = 0;
+		$employee_id = 0;
+		$msg = 'Cannot find data';
+
+		$post = $this->input->post();
+		$commission = $this->EmployeeCommission_model->getById($post['cid']);
+		if( $commission && $commission->is_paid == 0 ){
+			$employee_id = $commission->user_id;
+			$is_success  = 1;
+			$this->EmployeeCommission_model->delete($post['cid']);
+		}else{
+			$msg = 'Cannot delete already processed commission';
+		}
+
+		$json_data = [
+			'employee_id' => $employee_id,
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
 	}
 }
 /* End of file Users.php */
