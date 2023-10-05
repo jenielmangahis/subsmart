@@ -788,6 +788,124 @@ class Accounting_modals extends MY_Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         $currentDay = date('m/d/Y');
+        $payDate = date('m/d/Y');
+
+        switch($payscale->pay_type) {
+            case 'Hourly' :
+
+            break;
+            case 'Daily' :
+
+            break;
+            case 'Weekly' :
+
+            break;
+            case 'Monthly' :
+
+            break;
+            case 'Yearly' :
+
+            break;
+            case 'Commission Only' ;
+
+            break;
+        }
+
+        // switch ($paySchedule->pay_frequency) {
+        //     case 'every-week':
+        //         $endDay = strtotime($paySchedule->next_pay_period_end);
+        //         $payDate = strtotime($paySchedule->next_payday);
+
+        //         if ($payDate < strtotime(date('m/d/Y'))) {
+        //             do {
+        //                 $payDate = strtotime(date('m/d/Y', $payDate).' +7 days');
+        //                 $endDay = strtotime(date('m/d/Y', $endDay).' +7 days');
+        //             } while ($payDate < strtotime(date('m/d/Y')));
+        //         }
+        //         $endDay = date('m/d/Y', $endDay);
+        //         $payDate = date('m/d/Y', $payDate);
+        //         $firstPayDate = date('m/d/Y', strtotime($payDate.' +5 weeks'));
+        //         $lastDateString = date('m/d/Y', strtotime($endDay.' +5 weeks'));
+        //         $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
+        //         $dropdownLimit = 30;
+        //     break;
+        //     case 'every-other-week':
+        //         $endDay = strtotime($paySchedule->next_pay_period_end);
+        //         $payDate = strtotime($paySchedule->next_payday);
+
+        //         if ($payDate < strtotime(date('m/d/Y'))) {
+        //             do {
+        //                 $payDate = strtotime(date('m/d/Y', $payDate).' +2 weeks');
+        //                 $endDay = strtotime(date('m/d/Y', $endDay).' +2 weeks');
+        //             } while ($payDate <= strtotime(date('m/d/Y')));
+        //         }
+        //         $endDay = date('m/d/Y', $endDay);
+        //         $payDate = date('m/d/Y', $payDate);
+        //         $firstPayDate = date('m/d/Y', strtotime($payDate.' +8 weeks'));
+        //         $lastDateString = date('m/d/Y', strtotime($endDay.' +8 weeks'));
+        //         $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
+        //         $dropdownLimit = 18;
+        //     break;
+        //     case 'twice-month':
+        //         $currentMonth = intval(date("m"));
+        //         $currentYear = intval(date("Y"));
+        //         $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->first_payday/Y"));
+        //         $secondPayDay = $paySchedule->second_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->second_payday/Y"));
+        //         $currentDate = strtotime(date("m/d/Y"));
+
+        //         if ($currentDate <= $firstPayDay) {
+        //             $payDate = $firstPayDay;
+        //             $payDateMonth = intval(date('m', $payDate));
+        //             $payDateYear = intval(date('Y', $payDate));
+
+        //             if ($paySchedule->end_of_first_pay_period === 'end-date') {
+        //                 switch ($paySchedule->first_pay_month) {
+        //                     case 'same':
+        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
+        //                     break;
+        //                     case 'previous':
+        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
+        //                     break;
+        //                     case 'next':
+        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
+        //                     break;
+        //                 }
+        //             } else {
+        //                 $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->first_pay_days_before days");
+        //             }
+
+        //             $payDate = date('m/d/Y', $payDate);
+        //             $payDateMonth = intval(date('m', strtotime($payDate)));
+        //             $payDateYear = date('Y', strtotime($payDate));
+        //             $payDateDay = date('d', strtotime($payDate));
+        //             $firstPayDate = $paySchedule->first_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
+        //         } else {
+        //             $payDate = $secondPayDay;
+        //             $payDateMonth = intval(date('m', $payDate));
+        //             $payDateYear = intval(date('Y', $payDate));
+
+        //             if ($paySchedule->end_of_second_pay_period === 'end-date') {
+        //                 switch ($paySchedule->second_pay_month) {
+        //                     case 'same':
+        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear")));
+        //                     break;
+        //                     case 'previous':
+        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month")));
+        //                     break;
+        //                     case 'next':
+        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month")));
+        //                     break;
+        //                 }
+        //             } else {
+        //                 $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->second_pay_days_before days");
+        //             }
+
+        //             $payDate = date('m/d/Y', $payDate);
+        //             $payDateMonth = intval(date('m', strtotime($payDate)));
+        //             $payDateYear = date('Y', strtotime($payDate));
+        //             $payDateDay = date('d', strtotime($payDate));
+        //             $firstPayDate = $paySchedule->second_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
+        //         }
 
         switch ($paySchedule->pay_frequency) {
             case 'every-week':
@@ -1223,13 +1341,23 @@ class Accounting_modals extends MY_Controller
 
             $employees[$index]->total_hrs = $totalHrs;
 
-            if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+            if($employees[$index]->pay_scale->pay_type === 'Hourly') {
                 $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';
 
                 $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
             }
 
-            if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+            if($employees[$index]->pay_scale->pay_type === 'Daily') {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'</span>/day';
+
+                $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+                $hoursPerDay = 8.00;
+                $perHourPay = $dailyPay / $hoursPerDay;
+
+                $totalPay = $perHourPay * $totalHrs;
+            }
+
+            if($employees[$index]->pay_scale->pay_type === 'Weekly') {
                 $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'</span>/week';
 
                 $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
@@ -1239,7 +1367,7 @@ class Accounting_modals extends MY_Controller
                 $totalPay = $perHourPay * $totalHrs;
             }
 
-            if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
+            if($employees[$index]->pay_scale->pay_type === 'Monthly') {
                 $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/month';
 
                 $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
@@ -1250,43 +1378,21 @@ class Accounting_modals extends MY_Controller
                 $totalPay = $perHourPay * $totalHrs;
             }
 
-            if(empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
-                $employees[$index]->pay_rate = 'Commission only';
+            if($employees[$index]->pay_scale->pay_type === 'Yearly') {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/year';
+
+                $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $hoursPerYear = $hoursPerMonth * 12;
+                $perHourPay = $yearlyPay / $hoursPerYear;
+
+                $totalPay = $perHourPay * $totalHrs;
             }
 
-            // switch($employees[$index]->pay_details->pay_type) {
-            //     case 'hourly' :
-            //         $totalPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate)) * $totalHrs;
-            //     break;
-            //     case 'salary' :
-            //         switch($employees[$index]->pay_details->salary_frequency) {
-            //             case 'per-week' :
-            //                 $weeklyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
-            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
-            //                 $perHourPay = $weeklyPay / $hoursPerWeek;
-
-            //                 $totalPay = $perHourPay * $totalHrs;
-            //             break;
-            //             case 'per-month' :
-            //                 $monthlyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
-            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
-            //                 $hoursPerMonth = $hoursPerWeek * 4;
-            //                 $perHourPay = $monthlyPay / $hoursPerMonth;
-
-            //                 $totalPay = $perHourPay * $totalHrs;
-            //             break;
-            //             case 'per-year' :
-            //                 $yearlyPay = floatval(str_replace(',', '', $employees[$index]->pay_details->pay_rate));
-            //                 $hoursPerWeek = floatval($employees[$index]->pay_details->hours_per_day) * floatval($employees[$index]->pay_details->days_per_week);
-            //                 $hoursPerMonth = $hoursPerWeek * 4;
-            //                 $hoursPerYear = $hoursPerMonth * 12;
-            //                 $perHourPay = $monthlyPay / $hoursPerYear;
-
-            //                 $totalPay = $perHourPay * $totalHrs;
-            //             break;
-            //         }
-            //     break;
-            // }
+            if($employees[$index]->pay_scale->pay_type === 'Commission Only') {
+                $employees[$index]->pay_rate = 'Commission only';
+            }
 
             $totalPay += floatval(str_replace(',', '', $employees[$index]->commission));
 
@@ -1334,11 +1440,21 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if(!empty($employee->base_hourly) && empty($employee->base_weekly) && empty($employee->base_monthly)) {
+        if($payscale->pay_type === 'Hourly') {
             $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
         }
 
-        if(!empty($employee->base_weekly) && empty($employee->base_hourly) && empty($employee->base_monthly)) {
+        if($payscale->pay_type === 'Daily') {
+            $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'</span>/day';
+
+            $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+            $hoursPerDay = 8.00;
+            $perHourPay = $dailyPay / $hoursPerDay;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Weekly') {
             $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
             $hoursPerWeek = 40.00;
             $perHourPay = $weeklyPay / $hoursPerWeek;
@@ -1346,11 +1462,21 @@ class Accounting_modals extends MY_Controller
             $totalPay = $perHourPay * $totalHrs;
         }
 
-        if(!empty($employee->base_monthly) && empty($employee->base_hourly) && empty($employee->base_weekly)) {
-            $monthlyPay = floatval(str_replace(',', '', $employee->base_weekly));
+        if($payscale->pay_type === 'Monthly') {
+            $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
             $hoursPerWeek = 40.00;
             $hoursPerMonth = $hoursPerWeek * 4;
             $perHourPay = $monthlyPay / $hoursPerMonth;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Yearly') {
+            $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+            $hoursPerWeek = 40.00;
+            $hoursPerMonth = $hoursPerWeek * 4;
+            $hoursPerYear = $hoursPerMonth * 12;
+            $perHourPay = $yearlyPay / $hoursPerYear;
 
             $totalPay = $perHourPay * $totalHrs;
         }
@@ -2942,7 +3068,8 @@ class Accounting_modals extends MY_Controller
                 'pay_period_end' => $data['pay_period'] !== null ? date('Y-m-d', strtotime($payPeriod[1])) : date('Y-m-d', strtotime($data['pay_date'])),
                 'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                 'company_id' => $company_id,
-                'pay_schedule_id' => $data['pay_schedule'],
+                'payscale_id' => $data['payscale'],
+                // 'pay_schedule_id' => $data['pay_schedule'],
                 'payroll_type' => $payType,
                 'created_by' => logged('id'),
                 'status' => 1

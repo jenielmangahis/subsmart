@@ -368,15 +368,22 @@
                         <?php endif; ?>
                         <?php endif; ?>
                     </div>
-                    <?php if(empty($pay_details) || !empty($pay_details) && $pay_details->pay_type !== 'commission') : ?>
-                    <div class="col-12">
-                        <div class="input-group">
-                            <span class="input-group-text">Default hours:</span>
-                            <input type="text" name="default_hours" id="default-hours" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=!empty($pay_details) ? number_format(floatval(str_replace(',', '', $pay_details->hours_per_day)), 2) : ''?>">
-                            <span class="input-group-text">hours per day and</span>
-                            <input type="text" name="days_per_week" id="days-per-week" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)" value="<?=!empty($pay_details) ? number_format(floatval(str_replace(',', '', $pay_details->days_per_week)), 2) : ''?>">
-                            <span class="input-group-text">days per week.</span>
-                        </div>
+                    <div class="col-12 col-md-12 mt-5">
+                        <label class="content-title" style="display:inline-block;">Commission Settings</label>
+                        <a class="nsm-button primary small btn-edit-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <table class="table" id="edit-commission-settings">
+                            <thead>
+                            <tr>
+                                <td style="width: 50%;">Name</td>
+                                <td style="width:30%;">Type</td>
+                                <td>Value</td>
+                                <td style="width:5%;"></td>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                     <?php endif; ?>
                 </div>
