@@ -208,7 +208,7 @@
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
             });
-        });
+        });        
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');

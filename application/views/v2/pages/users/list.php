@@ -518,15 +518,70 @@
 
         $(document).on('click', '.edit-employee-commission-item', function(){
             var rowcid = $(this).attr('data-id');
+            var amount = $('.row-commission-amount-'+rowcid).text();
+            
+            $('#row-employee-commission-'+rowcid).val(amount);
             $('.row-commission-amount-'+rowcid).hide();
             $('.row-commission-form-group-'+rowcid).show();
+        });
+
+        $(document).on('click', '.row-employee-commission-cancel', function(){
+            var rowid = $(this).attr('data-id');
+            $('.row-commission-amount-'+rowid).show();            
+            $('.row-commission-form-group-'+rowid).hide();
+        });
+
+        $(document).on('click', '.row-employee-commission-update', function(){
+            var rowid = $(this).attr('data-id');
+            var com_amount = $('#row-employee-commission-'+rowid).val();
+            if( com_amount > 0 ){                
+                $.ajax({
+                    url: base_url + 'user/_update_employee_commission',
+                    type: "POST",
+                    dataType: "json",
+                    data: {cid:rowid, amount:com_amount},
+                    success: function(data) {
+                        if (data.is_success == 1) {                  
+                            Swal.fire({
+                                title: 'Success',
+                                text: "Employee commission was successfully updated.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                $('.row-commission-amount-'+rowid).show();
+                                $('.row-commission-amount-'+rowid).text(data.commission_amount);
+                                $('.row-commission-form-group-'+rowid).hide();
+                                $('#row-employee-commission-'+rowid).val(data.commission_amount);
+                                $('.row-commission-total').text(data.total_commission);
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                text: data.msg,
+                                icon: 'warning'
+                            });
+                        }
+                    }
+                });
+            }else{
+                Swal.fire({
+                    showConfirmButton: false,
+                    title: 'Failed',
+                    text: 'Please enter commission amount',
+                    icon: 'warning'
+                });
+            }
         });
 
         $(document).on('submit', '#edit_employee_form', function(e){
             e.preventDefault();
 
             var _this = $(this);
-            var url = base_url + 'users/_update_employee';
             var formData = new FormData(this);
             $.ajax({
               url: base_url + 'users/_update_employee',

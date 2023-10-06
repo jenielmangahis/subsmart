@@ -47,26 +47,37 @@ function createEmployeeCommission($object_id, $object_type)
                                 $com_amount = ($ecs->commission_value / 100) * $job_amount;
                             }
     
-                            //Check if exists. Delete if exists
+                            
                             $isCommissionExists = $CI->EmployeeCommission_model->getByUserIdAndCommissionSettingIdAndObjectIdAndObjectType($uid, $ecs->id,$job->id, $CI->CommissionSetting_model->isJob());
-                            if( $isCommissionExists ){
-                                $CI->EmployeeCommission_model->delete($isCommissionExists->id);
+
+                            //Check if commission already processed - if processed do not create
+                            $is_processed = 0;
+                            foreach( $isCommissionExists as $c ){
+                                if($c->is_paid == 1){
+                                    $is_processed = 1;
+                                    break;
+                                }    
                             }
                             
-                            $commission_data = [
-                                'company_id' => $job->company_id,
-                                'user_id' => $uid,
-                                'employee_commission_setting_id' => $ecs->id,
-                                'object_id' => $job->id,
-                                'object_type' => $CI->CommissionSetting_model->isJob(),
-                                'commission_amount' => $com_amount,
-                                'commission_date' => date("Y-m-d H:i:s"),
-                                'is_paid' => 0
-    
-                            ];
-                            
-                            $CI->EmployeeCommission_model->create($commission_data);
-    
+                            // if( $isCommissionExists ){
+                            //     //Check if exists. Delete if exists
+                            //     $CI->EmployeeCommission_model->delete($isCommissionExists->id);
+                            // }
+                            if( $is_processed == 0 ){
+                                $commission_data = [
+                                    'company_id' => $job->company_id,
+                                    'user_id' => $uid,
+                                    'employee_commission_setting_id' => $ecs->id,
+                                    'object_id' => $job->id,
+                                    'object_type' => $CI->CommissionSetting_model->isJob(),
+                                    'commission_amount' => $com_amount,
+                                    'commission_date' => date("Y-m-d H:i:s"),
+                                    'is_paid' => 0
+        
+                                ];
+                                
+                                $CI->EmployeeCommission_model->create($commission_data);
+                            }
                         }
                     }
                 }

@@ -44,6 +44,16 @@ class EmployeeCommission_model extends MY_Model
         return $query->result();
     }
 
+    public function getTotalEmployeeCommissionByUserId($user_id)
+    {
+        $this->db->select('SUM(commission_amount)AS total_commission');
+        $this->db->from($this->table);
+        $this->db->where('user_id', $user_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByUserIdAndCommissionSettingIdAndObjectIdAndObjectType($user_id, $employee_commission_setting_id, $object_id, $object_type)
     {
         $this->db->select('*');
@@ -70,6 +80,13 @@ class EmployeeCommission_model extends MY_Model
     public function deleteAllByUserId($user_id)
     {        
         $this->db->where('user_id', $user_id);
+        $this->db->delete($this->table);;
+    }
+
+    public function deleteAllNotPaidByUserId($user_id)
+    {        
+        $this->db->where('user_id', $user_id);
+        $this->db->where('is_paid', 0);
         $this->db->delete($this->table);;
     }
 }

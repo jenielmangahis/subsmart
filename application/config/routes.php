@@ -1080,6 +1080,7 @@ $route['user/_add_commission_form'] = 'Users/ajax_add_commission_form';
 $route['user/_commission_list'] = 'Users/ajax_commission_list';
 $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commission_status';
 $route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
+$route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
 
 //Payscale
 $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
@@ -1228,6 +1229,7 @@ $route['tools/_verify_connect_active_campaign'] = 'Tools/ajax_verify_connect_act
 $route['tools/_create_active_campaign_export_list'] = 'Tools/ajax_create_active_campaign_export_list';
 $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_active_campaign_export_automation';
 $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
+$route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

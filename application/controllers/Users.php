@@ -1937,6 +1937,37 @@ class Users extends MY_Controller
 
 	}
 
+	public function ajax_update_employee_commission(){
+		$this->load->model('EmployeeCommission_model');
+
+		$is_success = 0;
+		$msg = 'Cannot find data';
+		$total_commission  = 0;
+		$commission_amount = 0;
+
+		$post = $this->input->post();
+		$employeeCommission = $this->EmployeeCommission_model->getById($post['cid']);
+		if( $employeeCommission ){
+			$user_id = $employeeCommission->user_id;
+			if( $employeeCommission->is_paid == 1 ){
+				$msg = 'Cannot update already processed commission';
+			}else{
+				$commission_data = ['commission_amount' => $post['amount']];
+				$this->EmployeeCommission_model->update($employeeCommission->id, $commission_data);
+
+				$employeeCommissions = $this->EmployeeCommission_model->getTotalEmployeeCommissionByUserId($user_id);
+				$total_commission = number_format($employeeCommissions->total_commission,2,'.','');
+
+				$is_success = 1;
+				$msg = '';
+				$commission_amount = number_format($post['amount'], 2,'.','');
+			}
+		}
+
+		$json_data = ['is_success' => $is_success, 'total_commission' => $total_commission, 'commission_amount' => $commission_amount, 'msg' => $msg];
+        echo json_encode($json_data);
+	}
+
 	public function ajaxUpdateEmployeeV2(){
 		// Upload profile picture
 		$config = array(
