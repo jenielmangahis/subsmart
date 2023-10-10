@@ -2,7 +2,7 @@
     <span class="modal-title content-title">Product/Service information</span>
     <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
 </div>
-<form id="product-item-form" class="h-100" action="<?=url('accounting/products-and-services/product/create')?>" method="post" enctype="multipart/form-data">
+<form id="product-item-form" action="<?=url('accounting/products-and-services/product/create')?>" method="post" enctype="multipart/form-data">
 <div class="modal-body">
     <table class="table">
         <thead>
@@ -31,6 +31,10 @@
                             <div class="mb-2">
                                 <label for="sku">SKU</label>
                                 <input type="text" name="sku" id="sku" class="form-control nsm-field">
+                            </div>
+                            <div class="mb-2">
+                                <label for="upc">UPC</label>
+                                <input type="text" name="upc" id="upc" class="form-control nsm-field">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
