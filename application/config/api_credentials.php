@@ -46,3 +46,13 @@ $config['mailchimp_metadata_url']  = 'https://login.mailchimp.com/oauth2/metadat
 
 $config['zap_deploy_key']       = '2953c9edb8587c6eaed8025b818e3c85';
 
+//Square Payment
+//Sandbox
+$config['square_connect_url']   = 'https://connect.squareupsandbox.com';
+$config['square_client_id']     = 'sandbox-sq0idb-_QITXE8-SXhp_NdfL99Vdw';
+$config['square_client_secret'] = 'sandbox-sq0csb-2epY30G07Fj9xUbB4Ouv2JZGRj7wo-nVnPyad4fZiTE';
+$config['square_redirect_uri']  = 'http://127.0.0.1/ci/nsmart_v2/tools/square/oauth_redirect';
+//Production
+//$config['square_connect_url']     = 'https://connect.squareup.com'; 
+
+

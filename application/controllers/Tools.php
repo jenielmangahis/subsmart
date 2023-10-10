@@ -14,6 +14,8 @@ class Tools extends MY_Controller {
     }
 
     public function api_connectors() {
+        $this->load->helper('square_helper');
+        
         $this->page_data['page']->title = 'API Connectors';
         $this->page_data['page']->parent = 'Tools';
 
@@ -50,6 +52,20 @@ class Tools extends MY_Controller {
             ];
         }
 
+        $is_with_connect_error = 0;
+        $connect_msg = '';
+        if( $this->input->get('err') != null ){            
+            if( $this->input->get('app') == 'square' && $this->input->get('err') == 1 ){
+                $connect_msg = 'Cannot connect to your Square account';                
+                $is_with_connect_error = 1;
+            }elseif( $this->input->get('app') == 'square' && $this->input->get('err') == 0 ){                
+                $connect_msg = 'Your Square account was connected successfully';
+            }
+        }
+
+        $this->page_data['square_connect_url']   = getConnectUrl();
+        $this->page_data['is_with_connect_error'] = $is_with_connect_error;
+        $this->page_data['connect_msg'] = $connect_msg;
         $this->page_data['enabledApiConnectors'] = $enabledApiConnectors;
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['setting'] = $setting;
@@ -2101,5 +2117,102 @@ class Tools extends MY_Controller {
         $this->page_data['page']->parent = 'Tools';
         $this->page_data['activeCampaignExportCustomerLogs'] = $activeCampaignExportCustomerLogs;
         $this->load->view('v2/pages/tools/active_campaign_customer_logs', $this->page_data);
+    }
+
+    public function square()
+    {
+        $this->load->helper('square_helper');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $company_id = logged('company_id');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);     
+        
+        $this->page_data['square_connect_url']   = getConnectUrl();
+        $this->page_data['companyOnlinePaymentAccount'] = $companyOnlinePaymentAccount;
+        $this->page_data['page']->title = 'Square Payment';
+        $this->page_data['page']->parent = 'Tools';     
+        $this->load->view('v2/pages/tools/square', $this->page_data);
+    }
+
+    public function squareOauthRedirect()
+    {
+        $this->load->helper('square_helper');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $get = $this->input->get();
+        $token    = generateToken($get['code']);        
+        if( isset($token->access_token) ){
+            $merchant = getMerchantDetails($token->access_token);
+            if( $merchant['is_with_error'] == 0 ){
+                $company_id = logged('company_id');
+                $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+                if( $companyOnlinePaymentAccount ){
+                    $data = [
+                        'square_application_id' => 0,
+                        'square_access_token' => $token->access_token,
+                        'square_refresh_token' => $token->refresh_token,
+                        'square_location_id' => $merchant['merchant']->main_location_id,
+                        'square_business_name' => $merchant['merchant']->business_name,
+                        'square_owner_email' => $merchant['merchant']->owner_email,
+                        'square_merchant_id' => $merchant['merchant']->id,
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAccount->id, $data);
+                }else{
+                    $data = [
+                        'company_id' => $company_id,
+                        'square_application_id' => 0,
+                        'square_access_token' => $token->access_token,
+                        'square_refresh_token' => $token->refresh_token,
+                        'square_location_id' => $merchant['merchant']->main_location_id,
+                        'square_business_name' => $merchant['merchant']->business_name,
+                        'square_owner_email' => $merchant['merchant']->owner_email,
+                        'square_merchant_id' => $merchant['merchant']->id,
+                        'created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->CompanyOnlinePaymentAccount_model->create($data);
+                }
+
+                redirect('tools/square');    
+            }else{
+                redirect('tools/api_connectors?err=1&app=square');    
+            }
+        }else{
+            redirect('tools/api_connectors?err=1&app=square');
+        }
+    }
+
+    public function ajax_disconnect_square_account()
+    {
+        $this->load->helper('square_helper');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find Square Account.';
+
+        $company_id = logged('company_id');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+        if( $companyOnlinePaymentAccount ){
+            $result = revokeToken($companyOnlinePaymentAccount->square_access_token);
+            $data = [                
+                'square_access_token' => '',
+                'square_refresh_token' => '',
+                'square_location_id' => '',
+                'square_business_name' => '',
+                'square_owner_email' => '',
+                'square_merchant_id' => '',
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAccount->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }

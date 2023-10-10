@@ -6,6 +6,11 @@
                 <span>API Connectors</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Square Payment'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/square') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Square</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Google Contacts'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/google_contacts') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Google Contacts</span>

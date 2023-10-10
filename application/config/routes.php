@@ -1230,6 +1230,7 @@ $route['tools/_create_active_campaign_export_list'] = 'Tools/ajax_create_active_
 $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_active_campaign_export_automation';
 $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
 $route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
+$route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
