@@ -2,7 +2,7 @@
     <span class="modal-title content-title">Product/Service information</span>
     <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
 </div>
-<form id="bundle-item-form" class="h-100" action="<?=url('accounting/products-and-services/bundle/create')?>" method="post" enctype="multipart/form-data">
+<form id="bundle-item-form" action="<?=url('accounting/products-and-services/bundle/create')?>" method="post" enctype="multipart/form-data">
 <div class="modal-body">
     <table class="table">
         <thead>

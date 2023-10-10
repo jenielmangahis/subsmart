@@ -1873,7 +1873,7 @@ class Debug extends MY_Controller {
         $this->load->model('Jobs_model');
 
         $this->load->helper(array('url', 'hashids_helper'));
-        $id  = 333;
+        $id  = 829;
         $eid = hashids_encrypt($id, '', 15);
         echo $eid;
     }
@@ -2406,9 +2406,25 @@ class Debug extends MY_Controller {
     {
         $this->load->helper('user_helper');
         
-        $obj_id   = 829;
+        $obj_id   = 828;
         $obj_type = 'job';
         createEmployeeCommission($obj_id, $obj_type);
+    }
+
+    public function testSquareOauth()
+    {
+        $this->load->view('v2/pages/debug/square_oauth', $this->page_data);
+    }
+
+    public function squareTokenStatus()
+    {
+        $this->load->helper('square_helper');
+
+        $token = 'EAAAEOsPygSaRwy27WWC3NEg0cstB9LXLw11cA4uFNb38YCW4XBIxtOzug2s_lZf';
+        $status = accessTokenStatus($token);
+        echo "<pre>";
+        print_r($status);
+
     }
 }
 /* End of file Debug.php */

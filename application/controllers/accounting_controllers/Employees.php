@@ -22,6 +22,8 @@ class Employees extends MY_Controller {
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_worksites_model');
         $this->load->model('accounting_payroll_model');
+        $this->load->model('EmployeeCommissionSetting_model');
+        $this->load->model('CommissionSetting_model');
         $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
 
         $this->page_data['page']->title = 'Employees';
@@ -221,7 +223,7 @@ class Employees extends MY_Controller {
                 }
 
                 if($payscale->pay_type === 'Yearly') {
-                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/year';
+                    $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'/year';
                 }
     
                 if($payscale->pay_type === 'Commission Only') {
@@ -300,35 +302,57 @@ class Employees extends MY_Controller {
         }
 
         $employee->pay_rate = 'Missing';
+        $salary_rate = 0;
+		$salary_type_label = '';
         $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
 
         if($payscale->pay_type === 'Hourly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
+
+            $salary_rate = $employee->base_hourly;
+			$salary_type_label = 'Hourly Rate';
         }
 
         if($payscale->pay_type === 'Daily') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'/day';
+
+            $salary_rate = $employee->base_salary;
+			$salary_type_label = 'Daily Rate';
         }
 
         if($payscale->pay_type === 'Weekly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
+
+            $salary_rate = $employee->base_weekly;
+			$salary_type_label = 'Weekly Rate';
         }
 
         if($payscale->pay_type === 'Monthly') {
             $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
+
+            $salary_rate = $employee->base_monthly;
+			$salary_type_label = 'Monthly Rate';
         }
 
         if($payscale->pay_type === 'Yearly') {
-            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/year';
+            $employee->pay_rate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'/year';
+
+            $salary_rate = $employee->base_yearly;
+			$salary_type_label = 'Yearly Rate';
         }
 
         if($payscale->pay_type === 'Commission Only') {
             $employee->pay_rate = 'Commission only';
+
+            $salary_rate = 0;
+			$salary_type_label = 'Commission Only';
         }
-        
+
         $paySchedule = $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id);
         $employee->pay_schedule = $paySchedule;
 
+        $this->page_data['salary_rate'] = $salary_rate;
+		$this->page_data['salary_type_label'] = $salary_type_label;
         $this->page_data['employee'] = $employee;
         $this->page_data['pay_details'] = $empPayDetails;
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
@@ -379,6 +403,9 @@ class Employees extends MY_Controller {
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
+        $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
+		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();
+		$this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($id);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
@@ -435,6 +462,8 @@ class Employees extends MY_Controller {
 
     public function create()
     {
+        $payscale = $this->users_model->get_payscale_by_id($this->input->post('empPayscale'));
+
         $data = [
             'FName' => $this->input->post('first_name'),
             'LName' => $this->input->post('last_name'),
@@ -451,7 +480,12 @@ class Employees extends MY_Controller {
             'state' => $this->input->post('state'),
             'city' => $this->input->post('city'),
             'postal_code' => $this->input->post('zip_code'),
-            'payscale_id' => $this->input->post('payscale'),
+            'payscale_id' => $this->input->post('empPayscale'),
+            'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : null,
+            'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : null,
+            'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : null,
+            'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : null,
+            'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : null,
             'employee_number' => $this->input->post('employee_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
@@ -461,6 +495,20 @@ class Employees extends MY_Controller {
         $last_id = $this->users_model->addNewEmployee($data);
 
         if($last_id) {
+            if( !empty($this->input->post('commission_setting_id')) ){
+                foreach( $this->input->post('commission_setting_id') as $key => $csid ){
+                    $employee_commission_setting = [
+                        'user_id' => $last_id,
+                        'company_id' => logged('company_id'),
+                        'commission_setting_id' => $csid,
+                        'commission_type' => $this->input->post('commission_setting_type')[$key],
+                        'commission_value' => $this->input->post('commission_setting_value')[$key]
+                    ];
+
+                    $this->EmployeeCommissionSetting_model->create($employee_commission_setting);
+                }
+            }
+
             $payDetails = [
                 'user_id' => $last_id,
                 'company_id' => logged('company_id'),
@@ -552,28 +600,16 @@ class Employees extends MY_Controller {
                     ];
                 break;
                 case 'pay-types' :
+                    $payscale = $this->users_model->get_payscale_by_id($this->input->post('empPayscale'));
+
                     $data = [
                         'payscale_id' => $this->input->post('empPayscale'),
-                        'base_salary' => $this->input->post('empBaseSalary'),
-                        'base_hourly' => $this->input->post('empBaseHourlyRate'),
-                        'base_weekly' => $this->input->post('empBaseWeeklyRate'),
-                        'base_monthly' => $this->input->post('empBaseMonthlyRate'),
-                        'compensation_base' => $this->input->post('empCompensationBase'),
-                        'compensation_rate' => $this->input->post('empCompensationHourlyRate'),
-                        'commission_id' => $this->input->post('empCommission'),
-                        'commission_percentage' => $this->input->post('empCommissionPercentage')
+                        'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : null,
+                        'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : null,
+                        'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : null,
+                        'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : null,
+                        'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : null
                     ];
-                    // $data = [
-                    //     'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : 0.00
-                    // ];
-
-                    // $payDetails = [
-                    //     'pay_type' => $this->input->post('pay_type'),
-                    //     'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-                    //     'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-                    //     'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                    //     'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('pay_frequency') : null,
-                    // ];
                 break;
                 case 'notes' :
                     $payDetails = [
@@ -585,6 +621,21 @@ class Employees extends MY_Controller {
 
         if(isset($data)) {
             $update = $this->users_model->update($id,$data);
+
+            if( !empty($this->input->post('commission_setting_id')) ){
+                $this->EmployeeCommissionSetting_model->deleteAllByUserId($id);
+                foreach( $this->input->post('commission_setting_id') as $key => $csid ){
+                    $employee_commission_setting = [
+                        'user_id' => $id,
+                        'company_id' => logged('company_id'),
+                        'commission_setting_id' => $csid,
+                        'commission_type' => $this->input->post('commission_setting_type')[$key],
+                        'commission_value' => $this->input->post('commission_setting_value')[$key]
+                    ];
+
+                    $this->EmployeeCommissionSetting_model->create($employee_commission_setting);
+                }
+            }
         }
 
         if(isset($payDetails)) {

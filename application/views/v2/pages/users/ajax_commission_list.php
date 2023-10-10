@@ -32,8 +32,9 @@
                 <td style="text-align:right;">
                     <label class="row-commission-amount-<?= $ec['commission_id']; ?>"><?= number_format($ec['commission_amount'],2); ?></label>
                     <div class="row-commission-form-group-<?= $ec['commission_id']; ?>" style="display:none;">
-                        <input type="number" value="<?= number_format($ec['commission_amount'],2); ?>" class="nsm-field form-control" step="any" id="row-employee-commission-<?= $ec['commission_id']; ?>" style="display:inline-block;width:74%;" />
-                        <a class="nsm-button primary small" href="javascript:void(0);" style="display: inline-block;padding: 6px;margin: 0px;"><i class='bx bxs-save' style="position:relative;top:3px;"></i></a>
+                        <input type="number" value="<?= number_format($ec['commission_amount'],2); ?>" class="nsm-field form-control" step="any" id="row-employee-commission-<?= $ec['commission_id']; ?>" style="display:inline-block;width:50%;" />
+                        <a class="nsm-button primary small row-employee-commission-update" data-id="<?= $ec['commission_id']; ?>" href="javascript:void(0);" style="display: inline-block;padding: 6px;margin: 0px;"><i class='bx bxs-save' style="position:relative;top:3px;font-size:15px;"></i></a>
+                        <a class="nsm-button primary small row-employee-commission-cancel" data-id="<?= $ec['commission_id']; ?>" href="javascript:void(0);" style="display: inline-block;padding: 6px;margin: 0px;"><i class='bx bx-x' style="position:relative;top:3px;font-size:15px;"></i></a>
                     </div>
                 </td>
                 <td>
@@ -55,8 +56,9 @@
             <?php } ?>
         <?php } ?>        
         <tr>
-            <td colspan="4"><b>Total</b></td>
-            <td style="text-align:right;"><b><?= number_format($total_commission,2); ?></b></td>
+            <td colspan="4" style="background-color:#b3b3b3;"><b>Total</b></td>
+            <td style="text-align:right;background-color:#b3b3b3;"><b><span class="row-commission-total"><?= number_format($total_commission,2); ?></span></b></td>
+            <td style="background-color:#b3b3b3;"></td>
         </tr>
     </tbody>
 </table>

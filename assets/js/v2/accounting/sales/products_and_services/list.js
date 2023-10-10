@@ -751,6 +751,7 @@ function occupyFields(id, type, action = 'edit') {
         var name = action === 'duplicate' ? item.name+' - copy' : item.name;
 	    $(`#item-modal #name`).val(name);
         $(`#item-modal #sku`).val(item.sku);
+        $(`#item-modal #upc`).val(item.upc);
 
         if(item.category !== null && item.category !== "") {
             $(`#item-modal #category`).append(`<option value="${item.category_id}" selected>${item.category}</option>`);

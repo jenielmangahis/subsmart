@@ -68,6 +68,8 @@ class AccountingMailer extends MY_Controller{
             "inventory_valuation_detail",
             "estimates_by_customer",
             "invoice_list_by_date",
+            "payment_method_list",
+            "open_invoices",
         );
 
         // Conditional Statements on the array

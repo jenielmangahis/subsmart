@@ -199,7 +199,7 @@ $(function() {
                     templateSelection: optionSelect,
                     dropdownParent: $('#payrollModal')
                 });
-                $('div#payrollModal .modal-body #payDate').datepicker({
+                $('div#payrollModal .modal-body #payDate, #payrollModal #pay-period-start, #payrollModal #pay-period-end').datepicker({
                     format: 'mm/dd/yyyy',
                     orientation: 'bottom',
                     autoclose: true
@@ -246,17 +246,34 @@ $(function() {
         });
     });
 
+    $(document).on('change', '#payrollModal #pay-period-start, #payrollModal #pay-period-end', function(e) {
+        $('#payrollModal #payroll-table tbody .select-one:checked').each(function() {
+            $(this).trigger('change');
+        });
+    });
+
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
         payrollForm = $('div#payrollModal div.modal-body').html();
         // payrollFormData = new FormData();
         // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
 
-        for (const pair of payrollFormData.entries()) {
-            payrollFormData.delete(pair[0]);
+        payrollFormData.delete('payscale');
+        payrollFormData.delete('pay_from_account');
+        payrollFormData.delete('pay_period');
+        payrollFormData.delete('pay_date');
+        payrollFormData.delete('employees[]');
+        payrollFormData.delete('reg_pay_hours[]');
+        payrollFormData.delete('commission[]');
+        payrollFormData.delete('memo[]');
+
+        if($('#payrollModal #payPeriod').length > 0) {
+            var payPeriod = $('#payrollModal #payPeriod').val();
+        } else {
+            var payPeriod = $('#payrollModal #pay-period-start').val()+'-'+$('#payrollModal #pay-period-end').val()
         }
 
         payrollFormData.set('pay_from_account', $('#bank-account').val());
-        payrollFormData.set('pay_period', $('#payrollModal #payPeriod').val());
+        payrollFormData.set('pay_period', payPeriod);
         payrollFormData.set('pay_date', $('#payrollModal #payDate').val());
 
         $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
@@ -326,29 +343,37 @@ $(function() {
 
         $(this).parent().prepend('<button type="submit" class="nsm-button success">Submit Payroll</button>');
         $(this).remove();
-        $('div#payrollModal div.modal-footer button#back-paysched-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
+        $('div#payrollModal div.modal-footer button#back-payscale-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#back-payroll-form', function() {
         $('div#payrollModal div.modal-body').html(payrollForm);
 
         $('div#payrollModal div.modal-body select#payFrom').val(payrollFormData.get('pay_from'));
-        $('div#payrollModal div.modal-body select#payPeriod').val(payrollFormData.get('pay_period'));
+        if($('#payrollModal #payPeriod').length > 0) {
+            $('div#payrollModal div.modal-body select#payPeriod').val(payrollFormData.get('pay_period'));
+        } else {
+            var payPeriod = payrollFormData.get('pay_period').split('-');
+            var start = payPeriod[0];
+            var end = payPeriod[1];
+            $('#payrollModal #pay-period-start').val(start);
+            $('#payrollModal #pay-period-end').val(end);
+        }
         $('div#payrollModal div.modal-body input#payDate').val(payrollFormData.get('pay_date'));
 
         $('div#payrollModal div.modal-body table tbody tr td:nth-child(4)').each(function(index, value) {
             $(this).html(payrollFormData.getAll('reg_pay_hours[]')[index]);
         });
 
-        $('div#payrollModal div.modal-body table tbody tr td:nth-child(5) input[name="commission[]"]').each(function(index, value) {
-            $(this).val(payrollFormData.getAll('commission[]')[index]);
+        $('div#payrollModal div.modal-body table tbody tr td:nth-child(5)').each(function(index, value) {
+            $(this).html(payrollFormData.getAll('commission[]')[index]);
         });
 
         $('div#payrollModal div.modal-body table tbody tr td:nth-child(6) input[name="memo[]"]').each(function(index, value) {
             $(this).val(payrollFormData.getAll('memo[]')[index]);
         });
 
-        $(this).parent().html('<button type="button" class="nsm-button primary" data-dismiss="modal" id="back-paysched-select">Back</button>');
+        $(this).parent().html('<button type="button" class="nsm-button primary" data-dismiss="modal" id="back-payscale-select">Back</button>');
         $('div#payrollModal div.modal-footer button[type="submit"]').html('Preview Payroll');
         $('div#payrollModal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
         $('div#payrollModal div.modal-footer button[type="submit"]').prop('type', 'button');
@@ -395,8 +420,14 @@ $(function() {
             payrollTotal();
         } else {
             var data = new FormData();
+
+            if($('#payrollModal #payPeriod').length > 0) {
+                var payPeriod = $('#payrollModal #payPeriod').val();
+            } else {
+                var payPeriod = $('#payrollModal #pay-period-start').val()+'-'+$('#payrollModal #pay-period-end').val()
+            }
             data.set('employee_id', empID);
-            data.set('pay_period', $('#payrollModal #payPeriod').val());
+            data.set('pay_period', payPeriod);
 
             $.ajax({
                 url: '/accounting/get-employee-pay-details',
@@ -5424,6 +5455,10 @@ $(function() {
                     var modalTitle = '';
                     form = 'payee';
                 break;
+                case 'location_id' :
+                    form = 'item_location';
+                    var query = '';
+                break;
                 default :
                     var query = '';
                 break;
@@ -5444,7 +5479,7 @@ $(function() {
                         $('#modal-container #item-category-modal').modal('show');
                     break;
                     default :
-                        if(form !== 'item' && form !== 'payee') {
+                        if(form !== 'item' && form !== 'payee' && form !== 'item_location') {
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
@@ -5619,6 +5654,11 @@ $(function() {
         itemTypeSelection = $('#modal-container #item-modal .modal-content').html();
         $.get('/accounting/item-form/'+type, function(result) {
             $('#item-modal .modal-content').html(result);
+
+            if(type === 'product' || type === 'bundle') {
+                var footerHeight = $('#item-modal .modal-footer').outerHeight();
+                $('#item-modal .modal-body').css('margin-bottom', footerHeight);
+            }
     
             if(dropdownEl !== null) {
                 $('#item-modal form').removeAttr('action');
@@ -5711,6 +5751,9 @@ $(function() {
     $(document).on('click', '#modal-container #item-modal #select-item-type', function(e) {
         e.preventDefault();
 
+        var formId = $('#item-modal form').attr('id');
+        var form = document.getElementById(formId);
+        itemFormData = new FormData(form);
         $('#modal-container #item-modal .modal-content').html(itemTypeSelection);
     });
 
@@ -5741,9 +5784,30 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function() {
-        if($(this).parent().find('input[name="location_name[]"]').length < 1) {
-            $(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control nsm-field">');
+        if($(this).parent().find('select[name="location_id[]"]').length < 1) {
+            $(this).parent().children('td:first-child').append('<select name="location_id[]" class="form-control nsm-field"></select>');
             $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control nsm-field">');
+
+            $(this).parent().find('select').select2({
+                ajax: {
+                    url: '/accounting/get-dropdown-choices',
+                    dataType: 'json',
+                    data: function(params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            field: 'item-locations',
+                            modal: 'item-modal'
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                        return query;
+                    }
+                },
+                templateResult: formatResult,
+                templateSelection: optionSelect,
+                dropdownParent: $('#modal-container #item-modal')
+            });
         }
     });
 
@@ -6111,6 +6175,31 @@ $(function() {
                 }
 
                 $('#modal-container #payee-modal').modal('hide');
+            }
+        });
+    });
+
+    $(document).on('submit', '#modal-container #item-location-modal #new-location-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/add-new-location',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                var name = data.get('location_name');
+
+                if (dropdownEl !== null) {
+                    dropdownEl.append(`<option value="${res.id}" selected>${name}</option>`).trigger('change');
+                }
+
+                $('#modal-container #item-location-modal').modal('hide');
             }
         });
     });
@@ -6502,6 +6591,10 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #payee-modal .cancel-add-payee', function(e) {
+        dropdownEl.html('').trigger('change');
+    });
+
+    $(document).on('click', '#modal-container #location-modal .cancel-add-location', function(e) {
         dropdownEl.html('').trigger('change');
     });
 
@@ -9970,6 +10063,7 @@ const submitModalForm = (event, el) => {
             });
         break;
         case '#payrollModal' :
+            payrollFormData.set('payscale', payroll.payscale);
             data = payrollFormData;
         break;
         case '#commission-payroll-modal' :

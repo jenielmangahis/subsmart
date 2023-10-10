@@ -140,12 +140,16 @@
                                 </div>
                                 <div class="col-12">
                                     <label class="content-subtitle fw-bold d-block mb-2">Payscale</label>
-                                    <select class="nsm-field form-select" name="empPayscale" required>
+                                    <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                         <option value="" selected="selected" disabled>Select payscale</option>
                                         <?php foreach ($payscale as $p) : ?>
                                             <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
+                                </div>
+                                <div class="col-12 add-pay-type-container" style="display:none;">
+                                    <label class="content-subtitle fw-bold d-block mb-2 add-payscale-pay-type"></label>
+                                    <input class="form-control" name="salary_rate" type="number" step="any" min="0" value="0.00">
                                 </div>
                             </div>
                         </div>
@@ -222,6 +226,25 @@
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
+                        <div class="col-12 col-md-12 mt-5">
+                            <label class="content-title" style="display:inline-block;">Commission Settings</label>
+                            <a class="nsm-button primary small btn-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <table class="table" id="commission-settings">
+                                <thead>
+                                <tr>
+                                    <td style="width: 50%;">Name</td>
+                                    <td style="width:30%;">Type</td>
+                                    <td>Value</td>
+                                    <td style="width:5%;"></td>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">What are this employee's employment details?</label>
                             <label class="content-subtitle">Add employee's hire date and where they work.</label>
@@ -241,57 +264,6 @@
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">How often do you pay this employee?</label>
-                            <label class="content-subtitle">Enter a few details and we'll work out your company's payroll calendar.</label>
-                        </div>
-                        <div class="col-9">
-                            <div class="row">
-                                <div class="col-12 col-md-8">
-                                    <select name="pay_schedule" id="pay-schedule" class="form-select nsm-field">
-                                        <option disabled selected>&nbsp;</option>
-                                        <option value="add">&plus; Add new</option>
-                                        <?php foreach($pay_schedules as $pay_schedule) : ?>
-                                            <option value="<?=$pay_schedule->id?>" <?=$pay_schedule->use_for_new_employees === "1" ? 'selected' : ''?>><?=$pay_schedule->name?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-12 col-md-4 d-flex align-items-center">
-                                    <label for="pay-schedule" class="<?=count($pay_schedules) > 0 || count(array_filter($pay_schedules, function($v) { return $v->use_for_new_employees === "1"; })) > 0 ? '' : 'd-none'?>">starting <span><?=$nextPayDate?></span> <a href="#" class="text-decoration-none text-muted" id="edit-pay-schedule"><i class="bx bx-fw bx-pencil"></i></a></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row gy-3 mb-4">
-                        <div class="col-12">
-                            <label class="content-title">How much do you pay this employee?</label>
-                            <label class="content-subtitle">If your company offers additional pay types, add them here. These pay types show up when you run payroll.</label>
-                        </div>
-                        <div class="col-12 col-md-4 d-flex align-items-end">
-                            <select name="pay_type" id="pay-type" class="form-select nsm-field">
-                                <option value="hourly">Hourly</option>
-                                <option value="salary">Salary</option>
-                                <option value="commission">Commission only</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-8">
-                            <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input type="text" name="pay_rate" id="pay-rate" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
-                                <span class="input-group-text">/hour</span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="input-group">
-                                <span class="input-group-text">Default hours:</span>
-                                <input type="text" name="default_hours" id="default-hours" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
-                                <span class="input-group-text">hours per day and</span>
-                                <input type="text" name="days_per_week" id="days-per-week" class="form-control nsm-field" step=".01" onchange="convertToDecimal(this)">
-                                <span class="input-group-text">days per week.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row gy-3 mb-4">
-                        <div class="col-12">
                             <label class="content-title">How do you want to pay this employee?</label>
                         </div>
                         <div class="col-12 col-md-4">
@@ -304,144 +276,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="modal fade nsm-modal fade" id="pay-schedule-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <form method="post" id="add-pay-schedule-form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Add a pay schedule</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" style="overflow-x: auto;max-height: 800px;">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">Select when you pay your employees</label>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-2">
-                                        <label for="pay-frequency">Pay frequency</label>
-                                        <select name="pay_frequency" id="pay-frequency" class="form-select nsm-field">
-                                            <option value="every-week">Every week</option>
-                                            <option value="every-other-week">Every other week</option>
-                                            <option value="twice-month">Twice a month</option>
-                                            <option value="every-month">Every month</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <label for="next-payday">Next payday</label>
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="next_payday" id="next-payday" class="form-control nsm-field date" value="<?=$nextPayday?>">
-                                    </div>
-                                    <p class="m-0">Friday</p>
-                                </div>
-                                <div class="col-12">
-                                    <label for="next-pay-period-end">End of next pay period</label>
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control nsm-field date" value="<?=$nextPayPeriodEnd?>">
-                                    </div>
-                                    <p class="m-0">Wednesday</p>
-                                </div>
-                            </div>
-                            <div class="row gy-3">
-                                <div class="col-12">
-                                    <label for="name">Pay schedule name</label>
-                                    <input type="text" name="name" id="name" class="form-control nsm-field" value="Every Friday">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="use_for_new_employees" id="use-for-new-emps" class="form-check-input" value="1" checked>
-                                        <label for="use-for-new-emps" class="form-check-label">Use this pay schedule for employees you add after this one</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="row gy-3 mb-4">
-                                <div class="col-12">
-                                    <label class="content-title">Upcoming pay periods</label>
-                                </div>
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-12 grid-mb">
-                                            <div class="card shadow">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-8">
-                                                            <label class="content-subtitle">Pay period</label>
-                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
-                                                        </div>
-                                                        <div class="col-12 col-md-4">
-                                                            <label class="content-subtitle">Pay date</label>
-                                                            <p class="m-0 pay-date"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 grid-mb">
-                                            <div class="card shadow">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-8">
-                                                            <label class="content-subtitle">Pay period</label>
-                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
-                                                        </div>
-                                                        <div class="col-12 col-md-4">
-                                                            <label class="content-subtitle">Pay date</label>
-                                                            <p class="m-0 pay-date"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 grid-mb">
-                                            <div class="card shadow">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-8">
-                                                            <label class="content-subtitle">Pay period</label>
-                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
-                                                        </div>
-                                                        <div class="col-12 col-md-4">
-                                                            <label class="content-subtitle">Pay date</label>
-                                                            <p class="m-0 pay-date"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 grid-mb">
-                                            <div class="card shadow">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-8">
-                                                            <label class="content-subtitle">Pay period</label>
-                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
-                                                        </div>
-                                                        <div class="col-12 col-md-4">
-                                                            <label class="content-subtitle">Pay date</label>
-                                                            <p class="m-0 pay-date"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
