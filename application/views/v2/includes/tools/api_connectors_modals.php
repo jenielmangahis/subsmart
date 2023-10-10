@@ -24,7 +24,7 @@
                 <div class="row gy-3">
                     <div class="col-12 mb-3 text-center">
                         <img class="w-50" src="<?php echo $url->assets ?>img/square-payment.png">
-                        <a type="button" class="nsm-button primary mt-3 d-block m-auto w-50" href="http://nsmartrac.com/settings/square_payment/connect?do=auth">Connect To Square</a>
+                        <a type="button" class="nsm-button primary mt-3 d-block m-auto w-50" href="<?= $square_connect_url; ?>">Connect To Square</a>
                     </div>
                     <div class="col-12">
                         <label class="content-title d-block mb-2">Transaction Charges</label>
