@@ -787,527 +787,100 @@ class Accounting_modals extends MY_Controller
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
 
-        $currentDay = date('m/d/Y');
-        $payDate = date('m/d/Y');
+        if(in_array($payscale->pay_type, ['Weekly', 'Monthly', 'Yearly'])) {
+            switch($payscale->pay_type) {
+                case 'Weekly' :
+                    $dropdownLimit = 30;
 
-        switch($payscale->pay_type) {
-            case 'Hourly' :
+                    $day = date('w');
+                    $week_start = date('m/d/Y', strtotime('-'.$day.' days'));
+                    $week_end = date('m/d/Y', strtotime('+'.(6-$day).' days'));
 
-            break;
-            case 'Daily' :
+                    $firstDateString = date('m/d/Y', strtotime($week_start.' +5 weeks'));
+                    $lastDateString = date('m/d/Y', strtotime($week_end.' +5 weeks'));
 
-            break;
-            case 'Weekly' :
-
-            break;
-            case 'Monthly' :
-
-            break;
-            case 'Yearly' :
-
-            break;
-            case 'Commission Only' ;
-
-            break;
-        }
-
-        // switch ($paySchedule->pay_frequency) {
-        //     case 'every-week':
-        //         $endDay = strtotime($paySchedule->next_pay_period_end);
-        //         $payDate = strtotime($paySchedule->next_payday);
-
-        //         if ($payDate < strtotime(date('m/d/Y'))) {
-        //             do {
-        //                 $payDate = strtotime(date('m/d/Y', $payDate).' +7 days');
-        //                 $endDay = strtotime(date('m/d/Y', $endDay).' +7 days');
-        //             } while ($payDate < strtotime(date('m/d/Y')));
-        //         }
-        //         $endDay = date('m/d/Y', $endDay);
-        //         $payDate = date('m/d/Y', $payDate);
-        //         $firstPayDate = date('m/d/Y', strtotime($payDate.' +5 weeks'));
-        //         $lastDateString = date('m/d/Y', strtotime($endDay.' +5 weeks'));
-        //         $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
-        //         $dropdownLimit = 30;
-        //     break;
-        //     case 'every-other-week':
-        //         $endDay = strtotime($paySchedule->next_pay_period_end);
-        //         $payDate = strtotime($paySchedule->next_payday);
-
-        //         if ($payDate < strtotime(date('m/d/Y'))) {
-        //             do {
-        //                 $payDate = strtotime(date('m/d/Y', $payDate).' +2 weeks');
-        //                 $endDay = strtotime(date('m/d/Y', $endDay).' +2 weeks');
-        //             } while ($payDate <= strtotime(date('m/d/Y')));
-        //         }
-        //         $endDay = date('m/d/Y', $endDay);
-        //         $payDate = date('m/d/Y', $payDate);
-        //         $firstPayDate = date('m/d/Y', strtotime($payDate.' +8 weeks'));
-        //         $lastDateString = date('m/d/Y', strtotime($endDay.' +8 weeks'));
-        //         $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
-        //         $dropdownLimit = 18;
-        //     break;
-        //     case 'twice-month':
-        //         $currentMonth = intval(date("m"));
-        //         $currentYear = intval(date("Y"));
-        //         $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->first_payday/Y"));
-        //         $secondPayDay = $paySchedule->second_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->second_payday/Y"));
-        //         $currentDate = strtotime(date("m/d/Y"));
-
-        //         if ($currentDate <= $firstPayDay) {
-        //             $payDate = $firstPayDay;
-        //             $payDateMonth = intval(date('m', $payDate));
-        //             $payDateYear = intval(date('Y', $payDate));
-
-        //             if ($paySchedule->end_of_first_pay_period === 'end-date') {
-        //                 switch ($paySchedule->first_pay_month) {
-        //                     case 'same':
-        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
-        //                     break;
-        //                     case 'previous':
-        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
-        //                     break;
-        //                     case 'next':
-        //                         $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
-        //                     break;
-        //                 }
-        //             } else {
-        //                 $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->first_pay_days_before days");
-        //             }
-
-        //             $payDate = date('m/d/Y', $payDate);
-        //             $payDateMonth = intval(date('m', strtotime($payDate)));
-        //             $payDateYear = date('Y', strtotime($payDate));
-        //             $payDateDay = date('d', strtotime($payDate));
-        //             $firstPayDate = $paySchedule->first_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
-        //         } else {
-        //             $payDate = $secondPayDay;
-        //             $payDateMonth = intval(date('m', $payDate));
-        //             $payDateYear = intval(date('Y', $payDate));
-
-        //             if ($paySchedule->end_of_second_pay_period === 'end-date') {
-        //                 switch ($paySchedule->second_pay_month) {
-        //                     case 'same':
-        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear")));
-        //                     break;
-        //                     case 'previous':
-        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month")));
-        //                     break;
-        //                     case 'next':
-        //                         $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month")));
-        //                     break;
-        //                 }
-        //             } else {
-        //                 $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->second_pay_days_before days");
-        //             }
-
-        //             $payDate = date('m/d/Y', $payDate);
-        //             $payDateMonth = intval(date('m', strtotime($payDate)));
-        //             $payDateYear = date('Y', strtotime($payDate));
-        //             $payDateDay = date('d', strtotime($payDate));
-        //             $firstPayDate = $paySchedule->second_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
-        //         }
-
-        switch ($paySchedule->pay_frequency) {
-            case 'every-week':
-                $endDay = strtotime($paySchedule->next_pay_period_end);
-                $payDate = strtotime($paySchedule->next_payday);
-
-                if ($payDate < strtotime(date('m/d/Y'))) {
-                    do {
-                        $payDate = strtotime(date('m/d/Y', $payDate).' +7 days');
-                        $endDay = strtotime(date('m/d/Y', $endDay).' +7 days');
-                    } while ($payDate < strtotime(date('m/d/Y')));
-                }
-                $endDay = date('m/d/Y', $endDay);
-                $payDate = date('m/d/Y', $payDate);
-                $firstPayDate = date('m/d/Y', strtotime($payDate.' +5 weeks'));
-                $lastDateString = date('m/d/Y', strtotime($endDay.' +5 weeks'));
-                $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
-                $dropdownLimit = 30;
-            break;
-            case 'every-other-week':
-                $endDay = strtotime($paySchedule->next_pay_period_end);
-                $payDate = strtotime($paySchedule->next_payday);
-
-                if ($payDate < strtotime(date('m/d/Y'))) {
-                    do {
-                        $payDate = strtotime(date('m/d/Y', $payDate).' +2 weeks');
-                        $endDay = strtotime(date('m/d/Y', $endDay).' +2 weeks');
-                    } while ($payDate <= strtotime(date('m/d/Y')));
-                }
-                $endDay = date('m/d/Y', $endDay);
-                $payDate = date('m/d/Y', $payDate);
-                $firstPayDate = date('m/d/Y', strtotime($payDate.' +8 weeks'));
-                $lastDateString = date('m/d/Y', strtotime($endDay.' +8 weeks'));
-                $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
-                $dropdownLimit = 18;
-            break;
-            case 'twice-month':
-                $currentMonth = intval(date("m"));
-                $currentYear = intval(date("Y"));
-                $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->first_payday/Y"));
-                $secondPayDay = $paySchedule->second_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->second_payday/Y"));
-                $currentDate = strtotime(date("m/d/Y"));
-
-                if ($currentDate <= $firstPayDay) {
-                    $payDate = $firstPayDay;
-                    $payDateMonth = intval(date('m', $payDate));
-                    $payDateYear = intval(date('Y', $payDate));
-
-                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch ($paySchedule->first_pay_month) {
-                            case 'same':
-                                $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
-                            break;
-                            case 'previous':
-                                $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
-                            break;
-                            case 'next':
-                                $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
-                            break;
-                        }
-                    } else {
-                        $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->first_pay_days_before days");
-                    }
-
-                    $payDate = date('m/d/Y', $payDate);
-                    $payDateMonth = intval(date('m', strtotime($payDate)));
-                    $payDateYear = date('Y', strtotime($payDate));
-                    $payDateDay = date('d', strtotime($payDate));
-                    $firstPayDate = $paySchedule->first_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
-                } else {
-                    $payDate = $secondPayDay;
-                    $payDateMonth = intval(date('m', $payDate));
-                    $payDateYear = intval(date('Y', $payDate));
-
-                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch ($paySchedule->second_pay_month) {
-                            case 'same':
-                                $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear")));
-                            break;
-                            case 'previous':
-                                $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month")));
-                            break;
-                            case 'next':
-                                $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month")));
-                            break;
-                        }
-                    } else {
-                        $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->second_pay_days_before days");
-                    }
-
-                    $payDate = date('m/d/Y', $payDate);
-                    $payDateMonth = intval(date('m', strtotime($payDate)));
-                    $payDateYear = date('Y', strtotime($payDate));
-                    $payDateDay = date('d', strtotime($payDate));
-                    $firstPayDate = $paySchedule->second_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +2 months")) : date('m/d/Y', strtotime("$payDate +2 months"));
-                }
-
-                $endDay = date('m/d/Y', $endDay);
-                $endDayMonth = intval(date('m', strtotime($endDay)));
-                $endDayYear = date('Y', strtotime($endDay));
-
-                $payDateMonth = date("m", strtotime($firstPayDate));
-                $payDateYear = date("Y", strtotime($firstPayDate));
-                $payDateDay = date("d", strtotime($firstPayDate));
-                $first = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
-                $second = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear"));
-
-                if ($firstPayDate === $first) {
-                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch ($paySchedule->first_pay_month) {
-                            case 'same':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
-                            break;
-                            case 'previous':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
-                            break;
-                            case 'next':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
-                            break;
-                        }
-                    } else {
-                        $lastDateString = date("m/d/Y", strtotime("$firstPayDate -$paySchedule->first_pay_days_before days"));
-                    }
-
-                    $prevPayDate = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear -1 month"));
-                    $prevPayMonth = date("m", strtotime($prevPayDate));
-                    $prevPayYear = date("Y", strtotime($prevPayDate));
-
-                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch ($paySchedule->second_pay_month) {
-                            case 'same':
-                                $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear"));
-                            break;
-                            case 'previous':
-                                $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear -1 month"));
-                            break;
-                            case 'next':
-                                $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear +1 month"));
-                            break;
-                        }
-                    } else {
-                        $firstDateString = date("m/d/Y", strtotime("$prevPayDate -$paySchedule->second_pay_days_before days"));
-                    }
-                } else {
-                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch ($paySchedule->second_pay_month) {
-                            case 'same':
-                                $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear"));
-                            break;
-                            case 'previous':
-                                $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month"));
-                            break;
-                            case 'next':
-                                $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month"));
-                            break;
-                        }
-                    } else {
-                        $lastDateString = date("m/d/Y", strtotime("$firstPayDate -$paySchedule->second_pay_days_before days"));
-                    }
-
-                    $prevPayDate = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
-                    $prevPayMonth = date("m", strtotime($prevPayDate));
-                    $prevPayYear = date("Y", strtotime($prevPayDate));
-
-                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch ($paySchedule->first_pay_month) {
-                            case 'same':
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear"));
-                            break;
-                            case 'previous':
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear -1 month"));
-                            break;
-                            case 'next':
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear +1 month"));
-                            break;
-                        }
-                    } else {
-                        $firstDateString = date("m/d/Y", strtotime("$prevPayDate -$paySchedule->first_pay_days_before days"));
-                    }
-                }
-                $firstDateString = date("m/d/Y", strtotime("$firstDateString +1 day"));
-                
-                $dropdownLimit = 17;
-            break;
-            case 'every-month':
-                $currentMonth = intval(date("m"));
-                $currentYear = intval(date("Y"));
-                $firstPayDate = $paySchedule->first_payday === "0" ? cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear) : intval($paySchedule->first_payday);
-                $firstPayDay = strtotime(date("m/$firstPayDate/Y"));
-                $currentDate = strtotime(date("m/d/Y"));
-
-                if ($currentDate <= $firstPayDay) {
-                    $payDate = $firstPayDay;
-                } else {
-                    $payDate = strtotime(date("m/d/Y").' +1 month');
-                    $payDateMonth = intval(date('m', $payDate));
-                    $payDateYear = intval(date('Y', $payDate));
-                    $payDate = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("$payDateMonth/$firstPayDate/$payDateYear"));
-                }
-                $payDateMonth = date('m', $payDate);
-                $payDateYear = date('Y', $payDate);
-
-                if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                    switch ($paySchedule->first_pay_month) {
-                        case 'same':
-                            $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
-                        break;
-                        case 'previous':
-                            $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
-                        break;
-                        case 'next':
-                            $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
-                        break;
-                    }
-                } else {
-                    $endDay = strtotime(date("m/d/Y", $payDate)." -$paySchedule->first_pay_days_before days");
-                }
-
-                $payDate = date('m/d/Y', $payDate);
-                $endDay = date('m/d/Y', $endDay);
-                $month = intval(date('m', strtotime($endDay)));
-                $year = intval(date('Y', strtotime($endDay)));
-                $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                $payDateMonth = intval(date('m', strtotime($payDate)));
-                $payDateYear = intval(date('Y', strtotime($payDate)));
-                $payDateTotalDays = cal_days_in_month(CAL_GREGORIAN, $payDateMonth, $payDateYear);
-
-                if ($paySchedule->first_payday === "0") {
-                    $firstPayDate = date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +4 months"));
-                } else {
-                    $firstPayDate = date('m/d/Y', strtotime($payDate.' +4 months'));
-                }
-                $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                $payDateYear = intval(date('Y', strtotime($firstPayDate)));
-
-                $prevPayDate = $paySchedule->first_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear -1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear -1 month"));
-                $prevPayDateMonth = intval(date('m', strtotime($prevPayDate)));
-                $prevPayDateYear = intval(date('Y', strtotime($prevPayDate)));
-
-                if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                    switch ($paySchedule->first_pay_month) {
-                        case 'same':
-                            $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
-                            $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear"));
-                        break;
-                        case 'previous':
-                            $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear -1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
-                            $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear -1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear -1 month"));
-                        break;
-                        case 'next':
-                            $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
-                            $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear +1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear +1 month"));
-                        break;
-                    }
-                } else {
-                    $lastDateString = date('m/d/Y', strtotime("$firstPayDate -$paySchedule->first_pay_days_before days"));
-                    $firstDateString = date('m/d/Y', strtotime("$prevPayDate -$paySchedule->first_pay_days_before days"));
-                }
-
-                $firstDateString = date("m/d/Y", strtotime("$firstDateString +1 day"));
-
-                $dropdownLimit = 11;
-            break;
-        }
-
-        $payPeriod = [
-            [
-                'first_day' => $firstDateString,
-                'last_day' => $lastDateString,
-                'selected' => (strtotime($payDate) === strtotime($firstPayDate)) ? true : false,
-                'pay_date' => $firstPayDate
-            ]
-        ];
-
-        for ($i = 0; count($payPeriod) < $dropdownLimit; $i++) {
-            $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
-            switch ($paySchedule->pay_frequency) {
-                case 'every-week':
-                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
-                    $firstPayDate = date('m/d/Y', strtotime($firstPayDate.' -7 days'));
+                    $text = $firstDateString.' to '.$lastDateString;
                 break;
-                case 'every-other-week':
-                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
-                    $firstPayDate = date('m/d/Y', strtotime($firstPayDate.' -2 weeks'));
+                case 'Monthly' :
+                    $dropdownLimit = 11;
+
+                    $firstDateString = date('m/d/Y', strtotime(date('m/01/Y').' +3 months'));
+                    $lastDateString = date('m/t/Y', strtotime($firstDateString));
+
+                    $text = date('F Y', strtotime($firstDateString));
                 break;
-                case 'twice-month':
-                    $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                    $payDateYear = intval(date('Y', strtotime($firstPayDate)));
-                    $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear");
-                    if (strtotime($firstPayDate) === $firstPayDay) {
-                        $firstPayDate = date('m/d/Y', strtotime("$payDateMonth/01/$payDateYear -1 month"));
-                        $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                        $payDateYear = intval(date('Y', strtotime($firstPayDate)));
-                        $firstPayDate = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear"));
-                    } else {
-                        $firstPayDate = date('m/d/Y', $firstPayDay);
-                    }
-
-                    $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                    $payDateYear = intval(date('Y', strtotime($firstPayDate)));
-                    $firstPayDay = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
-
-                    if (date('m/d/Y', strtotime($firstPayDate)) === $firstPayDay) {
-                        $prevPayDate = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear -1 month"));
-
-                        if ($paySchedule->end_of_second_pay_period === 'end-date') {
-                            $prevPayMonth = date("m", strtotime($prevPayDate));
-                            $prevPayYear = date("Y", strtotime($prevPayDate));
-
-                            switch ($paySchedule->second_pay_month) {
-                                case 'same':
-                                    $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear"));
-                                break;
-                                case 'previous':
-                                    $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear -1 month"));
-                                break;
-                                case 'next':
-                                    $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear +1 month"));
-                                break;
-                            }
-                        } else {
-                            $firstDateString = date('m/d/Y', strtotime("$prevPayDate -$paySchedule->second_pay_days_before days"));
-                        }
-                    } else {
-                        $prevPayDate = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
-
-                        if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                            $prevPayMonth = date("m", strtotime($prevPayDate));
-                            $prevPayYear = date("Y", strtotime($prevPayDate));
-
-                            switch ($paySchedule->first_pay_month) {
-                                case 'same':
-                                    $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear"));
-                                break;
-                                case 'previous':
-                                    $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear -1 month"));
-                                break;
-                                case 'next':
-                                    $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear +1 month"));
-                                break;
-                            }
-                        } else {
-                            $firstDateString = date('m/d/Y', strtotime("$prevPayDate -$paySchedule->first_pay_days_before days"));
-                        }
-                    }
-
-                    $firstDateString = date('m/d/Y', strtotime("$firstDateString +1 day"));
                 break;
-                case 'every-month':
-                    if ($paySchedule->first_payday === "0") {
-                        $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                        $payDateYear = intval(date('Y', strtotime($firstPayDate)));
+                case 'Yearly' :
+                    $dropdownLimit = 3;
 
-                        $firstPayDate = date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear -1 month"));
-                    } else {
-                        $firstPayDate = date('m/d/Y', strtotime($firstPayDate.' -1 month'));
-                    }
+                    $year = intval(date("Y")) + 1;
 
-                    $payDateMonth = intval(date('m', strtotime($firstPayDate)));
-                    $payDateYear = intval(date('Y', strtotime($firstPayDate)));
+                    $firstDateString = date('01/01/'.$year);
+                    $lastDateString = date('12/31/'.$year);
 
-                    $prevPayDate = $paySchedule->first_payday === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear -1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear -1 month"));
-                    $prevPayDateMonth = intval(date('m', strtotime($prevPayDate)));
-                    $prevPayDateYear = intval(date('Y', strtotime($prevPayDate)));
-
-                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch ($paySchedule->first_pay_month) {
-                            case 'same':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear"));
-                            break;
-                            case 'previous':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear -1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear -1 month"));
-                            break;
-                            case 'next':
-                                $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
-                                $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear +1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear +1 month"));
-                            break;
-                        }
-                    } else {
-                        $lastDateString = date('m/d/Y', strtotime("$firstPayDate -$paySchedule->first_pay_days_before days"));
-                        $firstDateString = date('m/d/Y', strtotime("$prevPayDate -$paySchedule->first_pay_days_before days"));
-                    }
-
-                    $firstDateString = date("m/d/Y", strtotime("$firstDateString +1 day"));
+                    $text = $year;
                 break;
             }
 
-            $payPeriod[] = [
-                'first_day' => $firstDateString,
-                'last_day' => $lastDateString,
-                'selected' => (strtotime($payDate) === strtotime($firstPayDate)) ? true : false,
-                'pay_date' => $firstPayDate
+            $payPeriod = [
+                [
+                    'first_day' => $firstDateString,
+                    'last_day' => $lastDateString,
+                    'selected' => (strtotime(date('m/d/Y')) >= strtotime($firstDateString) && strtotime(date('m/d/Y')) <= strtotime($lastDateString)) ? true : false,
+                    'pay_date' => $lastDateString,
+                    'text' => $text
+                ]
             ];
+
+            for ($i = 0; count($payPeriod) < $dropdownLimit; $i++) {
+                $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
+
+                switch($payscale->pay_type) {
+                    case 'Weekly' :
+                        $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
+
+                        $text = $firstDateString.' to '.$lastDateString;
+                    break;
+                    case 'Monthly' :
+                        $firstDateString = date('m/01/Y', strtotime($lastDateString));
+
+                        $text = date('F Y', strtotime($firstDateString));
+                    break;
+                    case 'Yearly' :
+                        $firstDateString = date('01/01/Y', strtotime($lastDateString));
+
+                        $text = date('Y', strtotime($firstDateString));
+                    break;
+                }
+
+                $payPeriod[] = [
+                    'first_day' => $firstDateString,
+                    'last_day' => $lastDateString,
+                    'selected' => (strtotime(date('m/d/Y')) >= strtotime($firstDateString) && strtotime(date('m/d/Y')) <= strtotime($lastDateString)) ? true : false,
+                    'pay_date' => $lastDateString,
+                    'text' => $text
+                ];
+            }
+
+            $selectedPayperiod = array_filter($payPeriod, function($v, $k) {
+                return $v['selected'];
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $selectedPayperiod = $selectedPayperiod[array_key_first($selectedPayperiod)];
+            $payDate = $selectedPayperiod['pay_date'];
+
+            $payPeriodStart = $selectedPayperiod['first_day'];
+            $payPeriodEnd = $selectedPayperiod['last_day'];
+        } else {
+            $payPeriodStart = date("m/d/Y");
+            $payPeriodEnd = date("m/d/Y");
+            $payDate = date("m/d/Y");
+
+            $this->page_data['payPeriodStart'] = $payPeriodStart;
+            $this->page_data['payPeriodEnd'] = $payPeriodEnd;
         }
 
-        $selectedPayperiod = array_filter($payPeriod, function($v, $k) {
-            return $v['selected'];
-        }, ARRAY_FILTER_USE_BOTH);
-
-        $selectedPayperiod = $selectedPayperiod[array_key_first($selectedPayperiod)];
+        $this->page_data['payDate'] = $payDate;
 
         $employees = $this->users_model->getPayScheduleEmployees($paySchedule->id);
         foreach($employees as $index => $employee)
@@ -1379,7 +952,7 @@ class Accounting_modals extends MY_Controller
             }
 
             if($employees[$index]->pay_scale->pay_type === 'Yearly') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/year';
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'</span>/year';
 
                 $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
                 $hoursPerWeek = 40.00;
@@ -1402,7 +975,6 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payPeriods'] = $payPeriod;
         $this->page_data['accounts'] = $accounts;
-        $this->page_data['payDate'] = $payDate;
 
         $this->load->view('v2/includes/accounting/modal_forms/payroll_form', $this->page_data);
     }
@@ -1677,6 +1249,12 @@ class Accounting_modals extends MY_Controller
     {
         $item = $this->items_model->getItemById($id)[0];
         $locations = $this->items_model->getLocationByItemId($id);
+
+        foreach($locations as $key => $location)
+        {
+            $location = $this->items_model->getLocationById($location['loc_id']);
+            $locations[$key]['name'] = $location->location_name;
+        }
 
         echo json_encode(['item' => $item, 'locations' => $locations]);
     }
@@ -11201,6 +10779,23 @@ class Accounting_modals extends MY_Controller
         echo json_encode(['payee' => $payee]);
     }
 
+    public function add_new_location()
+    {
+        $company_id = logged('company_id');
+        $location_name = $this->input->post('location_name');
+        $default = !empty($this->input->post()) ? "true" : "";
+
+        $location_data = array(
+            'company_id'=> $company_id,
+            'location_name' => $location_name,
+            'default' => $default,
+        );
+
+        $id = $this->items_model->add_new_location($location_data);
+
+        echo json_encode(['id' => $id]);
+    }
+
     public function get_dropdown_choices()
     {
         $search = $this->input->get('search');
@@ -11619,6 +11214,9 @@ class Accounting_modals extends MY_Controller
                     ]
                 ];
                 $return = $this->get_company_worksites($return, $search);
+            break;
+            case 'item-locations' :
+                $return = $this->get_item_location_choices($return, $search);
             break;
         }
 
@@ -12610,7 +12208,7 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    public function get_company_worksites($choices, $search = null)
+    private function get_company_worksites($choices, $search = null)
     {
         $this->load->model('accounting_worksites_model');
         $sites = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
@@ -12630,6 +12228,32 @@ class Accounting_modals extends MY_Controller
                 $choices['results'][] = [
                     'id' => $site->id,
                     'text' => $site->name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_item_location_choices($choices, $search = null)
+    {
+        $locations = $this->items_model->get_company_locations(logged('company_id'));
+        
+        foreach($locations as $location)
+        {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($location->location_name, $search);
+                if($stripos !== false) {
+                    $searched = substr($location->location_name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $location->loc_id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $location->location_name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $location->loc_id,
+                    'text' => $location->location_name
                 ];
             }
         }
@@ -12984,6 +12608,7 @@ class Accounting_modals extends MY_Controller
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($post['rebate_item']) ? $post['rebate_item'] : 0,
+                    'upc' => $post['upc'],
                     'item_categories_id' => $post['category'],
                     're_order_points' => $post['reorder_point'],
                     'description' => $post['description'],

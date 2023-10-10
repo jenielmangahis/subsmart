@@ -635,6 +635,7 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
+                    'upc' => $input['upc'],
                     'item_categories_id' => isset($input['category']) ? $input['category'] : 0,
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
@@ -705,13 +706,13 @@ class Products_and_services extends MY_Controller {
                     $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
     
                     $locations = [];
-                    foreach($input['location_name'] as $key => $locName) {
-                        if($locName !== "") {
+                    foreach($input['location_id'] as $key => $loc_id) {
+                        if($loc_id !== "") {
                             $locations[] = [
                                 'company_id' => logged('company_id'),
                                 'qty' => $input['quantity'][$key],
                                 'initial_qty' => $input['quantity'][$key],
-                                'name' => $locName,
+                                'loc_id' => $loc_id,
                                 'item_id' => $create,
                                 'insert_date' => date('Y-m-d H:i:s')
                             ];
@@ -819,6 +820,7 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
+                    'upc' => $input['upc'],
                     'item_categories_id' => $input['category'],
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
@@ -1319,6 +1321,7 @@ class Products_and_services extends MY_Controller {
                 'category_id' => $item->item_categories_id,
                 'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
                 'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                'upc' => $item->upc,
                 'type' => ucfirst($item->type),
                 'rebate' => $item->rebate,
                 'sales_desc' => $item->description,
@@ -1409,7 +1412,17 @@ class Products_and_services extends MY_Controller {
 
     public function get_item_locations($itemId)
     {
-        $locations = $this->items_model->getLocationByItemId($itemId);
+        $selectedLocs = $this->items_model->getLocationByItemId($itemId);
+
+        $locations = [];
+        foreach($selectedLocs as $loc)
+        {
+            $location = $this->items_model->getLocationById($loc['loc_id']);
+            $locations[] = [
+                'name' => $location->location_name,
+                'qty' => $loc['qty']
+            ];
+        }
 
         echo json_encode($locations);
     }

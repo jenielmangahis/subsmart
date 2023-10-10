@@ -889,6 +889,18 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company_locations($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get('storage_loc');
+        return $query->result();
+    }
+
+    public function add_new_location($data = [])
+    {
+        $insert = $this->db->insert('storage_loc', $data);
+        return $this->db->insert_id();
+    }
 }
 
 
