@@ -1424,4 +1424,94 @@ class Pages extends MYF_Controller {
 		$data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
 	}
+
+	public function ajax_square_process_payment()
+	{
+		$this->load->helper('square_helper');
+		$this->load->model('CompanyOnlinePaymentAccount_model');
+		$this->load->model('CompanySquarePaymentLogs_model');
+		$this->load->model('general_model');
+        $this->load->model('jobs_model');
+		$this->load->helper('user_helper');
+
+		$is_success = 0;
+		$msg  = 'Cannot find job data';
+
+		$post = json_decode(file_get_contents('php://input'), true);
+        $job  = $this->jobs_model->get_specific_job($post['jobid']);
+
+		if( $job ){
+			$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+			if( $post['token'] != '' ){
+				$job_items = $this->jobs_model->get_specific_job_items($job->id);
+	        	$total_amount = 0;
+	        	foreach($job_items as $item){
+	        		$total_amount += ($item->cost * $item->qty);
+	        	}	
+
+	        	$estimate_deposit_amount = 0;
+	        	if( $job->estimate_id > 0 ){
+	    			$estimate = $this->Estimate_model->getEstimate($job->estimate_id);
+	    			if( $estimate ){
+	    				$estimate_deposit_amount = $estimate->deposit_amount;
+	    			}
+	    		}
+
+	    		$total_amount = ($total_amount + $job->tax_rate) - $estimate_deposit_amount;
+
+				$idempotency_key = uniqid() . $job->id;
+				$squarePayment = createPayment($companyOnlinePaymentAccount->square_access_token, $post['token'], $idempotency_key, $companyOnlinePaymentAccount->square_location_id, $total_amount);
+				if( isset($squarePayment) && $squarePayment->payment ){
+					$payment_data = [
+						'company_id' => $job->company_id,
+						'access_token' => $companyOnlinePaymentAccount->square_access_token,
+						'object_id' => $job->id,
+						'object_type' => 'job',
+						'amount' => $total_amount,
+						'square_payment_id' => $squarePayment->payment->id,
+						'source_type' => $squarePayment->payment->source_type,
+						'status' => $squarePayment->payment->status,
+						'source_id' => $post['token'],
+						'location_id' => $companyOnlinePaymentAccount->square_location_id,
+						'receipt_url' => $squarePayment->payment->receipt_url,
+						'payment_date' => date('Y-m-d H:i:s')
+
+					];
+
+					$this->CompanySquarePaymentLogs_model->create($payment_data);
+
+					$this->jobs_model->update($job->id, ['status' => 'Completed']);
+
+					//Create Commission
+					createEmployeeCommission($job->id, 'job');
+
+					$payment_data = array();
+					$payment_data['method']  = 'CC';						
+					$payment_data['is_paid'] = 1;
+					$payment_data['paid_datetime'] =date("m-d-Y h:i:s");;
+					$check = array(
+						'where' => array(
+							'jobs_id' => $job->id
+						),
+						'table' => 'jobs_pay_details'
+					);
+					$exist = $this->general_model->get_data_with_param($check,FALSE);
+					if($exist){
+						$this->general_model->update_with_key_field($payment_data, $job->id, 'jobs_pay_details','jobs_id');
+					}else{
+						$this->general_model->add_($payment_data, 'jobs_pay_details');
+					}
+
+					$is_success = 1;
+					$msg  = '';
+
+				}
+			}else{
+				$msg = 'Cannot process payment.';
+			}
+		}
+
+		$data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+	}
 }

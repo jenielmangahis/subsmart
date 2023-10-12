@@ -392,11 +392,22 @@
                                                 </label>
                                             </div>
                                             <div class="col-12 text-center">
-                                                <div class="row align-items-center mb-3">
-                                                    <div class="col-12">
-                                                        <span class="nsm-badge warning">Not Set</span>
-                                                        <span class="nsm-badge warning">Not Active</span>
-                                                    </div>
+                                                <div class="row align-items-center mb-3">                                                    
+                                                    <?php if($onlinePaymentAccount){ ?>
+                                                        <?php if( $onlinePaymentAccount->square_refresh_token != '' ){ ?>
+                                                            <div class="col-12">
+                                                                <span class="nsm-badge success">Active</span>
+                                                            </div>                                                            
+                                                        <?php }else{ ?>
+                                                            <div class="col-12">
+                                                                <span class="nsm-badge warning">Not Set</span>
+                                                            </div>                                                            
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                        <div class="col-12">
+                                                            <span class="nsm-badge warning">Not Set</span>
+                                                        </div>                                                        
+                                                    <?php } ?>                                                    
                                                 </div>
                                                 <button type="button" class="nsm-button primary" id="btn_setup_square">Setup</button>
                                             </div>
@@ -765,6 +776,24 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        <?php if( $connect_msg != '' && $is_with_connect_error == 1 ){ ?>
+            Swal.fire({
+                title: 'API Connect',
+                text: '<?= $connect_msg; ?>',
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            });
+        <?php }elseif( $connect_msg != '' && $is_with_connect_error == 0 ){ ?>
+            Swal.fire({
+                title: 'API Connect',
+                text: '<?= $connect_msg; ?>',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            });
+        <?php } ?>
+        
         $("#btn_setup_paypal").on("click", function() {
             let api_module = 'paypal';
             generate_auth_key(api_module);
@@ -803,7 +832,15 @@
         }
 
         $("#btn_setup_square").on("click", function() {
-            $("#setup_square_modal").modal("show");
+            <?php if( $onlinePaymentAccount ){ ?>
+                <?php if( $onlinePaymentAccount->square_refresh_token ){ ?>
+                    location.href = base_url + 'tools/square';
+                <?php }else{ ?>
+                    $("#setup_square_modal").modal("show");
+                <?php } ?>
+            <?php }else{ ?>
+                $("#setup_square_modal").modal("show");
+            <?php } ?>            
         });
 
         $("#btn_setup_wepay").on("click", function() {

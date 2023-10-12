@@ -160,7 +160,7 @@
                         </div>
                         <div class="col-md-12">
                             <h6 class="title-border"></h6>
-                            <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>                                    
+                            <span style="font-weight: 700;font-size: 20px;color: darkred;" class="form-total-amount-label">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>                                    
                             <!-- <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>"> -->
                             <input type="hidden" id="total_amount" value="<?= $grand_total; ?>">
                             <br /><br />
@@ -180,6 +180,10 @@
                                       <?php } ?>
                                     <?php } ?>
 
+                                    <?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+                                        <a class="btn btn-primary btn-pay-square btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA SQUARE</a>
+                                    <?php } ?>
+
                                     <?php if($braintree_token != ''){ ?>
                                         <a class="btn btn-primary btn-pay-braintree btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA BRAINTREE</a>
                                     <?php } ?>
@@ -194,14 +198,6 @@
                                   <?php } ?>
 
                                 </div>
-                                <?php if($braintree_token != ''){ ?>
-                                <div class="braintree-form" style="display:none;">
-                                        <input id="nonce" name="payment_method_nonce" type="hidden" />
-                                        <div id="bt-dropin"></div>  
-                                        <a class="cancel-braintree btn btn-primary" href="javascript:void(0);">Back</a>       
-                                        <button type="submit" class="btn btn-primary" id="btn-billing-pay-now">Pay Now</button> 
-                                </div>
-                                <?php } ?>
                                 <?php echo form_close(); ?>
                             <?php } ?>
                         </div>

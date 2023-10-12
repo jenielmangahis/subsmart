@@ -406,5 +406,18 @@ class Accounting_model extends MY_Model {
             $query = $this->db->get();
             return $query->result();
         }
+
+        // Get Product/Service list data in Database
+        if ($reportType == "product_service_list") {
+            $this->db->select('items.id AS item_id, items.title AS product_service, items.type AS type, items.description AS description, items.retail AS price, items.price AS cost, items_has_storage_loc.qty AS qty_on_hand');
+            $this->db->from('items');
+            $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
+            $this->db->where('items.title !=', '');
+            $this->db->where('items.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
     }
 }

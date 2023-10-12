@@ -12,6 +12,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php if($braintree_token != ''){ ?>
 <script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
 <?php } ?>
+
+<?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+    <link rel="stylesheet" href="/reference/sdks/web/static/styles/code-preview.css" preload>
+    <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+<?php } ?>
+
 <?php include viewPath('job/css/job_new'); ?>
 <style>
     .card{
@@ -93,6 +99,92 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
     .paypal-buttons-context-iframe{
         top: 19px;
+    }    
+    .gpay-card-info-container.black, .gpay-card-info-animation-container.black {
+        height: 46px;
+    }
+    #google-pay-button{
+      position: relative;
+      top: 20px;
+    }
+    #apple-pay-button {
+      height: 48px;
+      width: 50%;
+      display: inline-block;
+      -webkit-appearance: -apple-pay-button;
+      -apple-pay-button-type: plain;
+      -apple-pay-button-style: black;
+      vertical-align:top;
+    }
+    #google-pay-button, #apple-pay-button{
+        display:inline-block;        
+    }
+    .api-button{
+        display:block !important;
+        width:90% !important;
+        margin: 15px;
+    }
+    .vertical-alignment-helper {
+        display:table;
+        height: 100%;
+        width: 100%;
+        pointer-events:none;
+    }
+    .vertical-align-center {
+        /* To center vertically */
+        display: table-cell;
+        vertical-align: middle;
+        pointer-events:none;
+    }
+    .modal-content {
+        /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+        width:inherit;
+        max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+        height:inherit;
+        /* To center horizontally */
+        margin: 0 auto;
+        pointer-events:all;
+    }
+    #square-cancel-button{
+      margin-left:23px;
+    }
+
+    .payment-status-container{
+      padding:10px 0px;
+    }
+
+    .modal-total-amount{
+      color: darkred;
+      font-size: 19px;
+      font-weight: bold;
+      margin-bottom: 19px;
+      display: block;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #square-payment-modal .modal-content {
+        width:100% !important; 
+      }
+      #braintree-payment-modal .modal-content {
+        width:100% !important; 
+      }
+      .square-pay-button{
+        width:100% !important;
+      }
+      .btn-braintree-pay-now, .cancel-braintree{
+        width:100% !important;
+      }
+      #google-pay-button{
+        width:100%;
+        top:3px !important;
+      }
+      #square-cancel-button{
+        width:100% !important;
+        margin-left:0px !important;
+      }
+      .gpay-card-info-container {
+        width:100% !important;
+      }
     }
 </style>
 <?php if($onlinePaymentAccount->converge_merchant_id != '' && $onlinePaymentAccount->converge_merchant_user_id != ''){ ?>
@@ -116,6 +208,56 @@ if( frontIsMobile() ){
     include_once('job_customer_invoice_view_content_desktop.php');
 }
 ?>
+<div class="modal fade fade" id="square-payment-modal" tabindex="-1" aria-labelledby="square_paynment_label" aria-hidden="true" style="margin-top:-1%;">
+  <div class="vertical-alignment-helper">
+    <div class="modal-dialog vertical-align-center modal-md">
+        <div class="modal-content" style="width:45%;">            
+            <div class="modal-header">                
+                <span class="modal-title content-title" id="new_feed_modal_label">Square Payment</span>    
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </div>
+            <div class="modal-body">
+              <div class="square-form">
+                    <div id="payment-form">
+                      <span class="modal-total-amount"></span>
+                      <div id="payment-status-container"></div>                        
+                      <div id="card-container"></div>                                              
+                      <button id="card-button" class="btn btn-primary square-pay-button" type="button">Pay Now</button>
+                      <div id="google-pay-button"></div>
+                      <?php if( isApple() ){ ?>
+                      <div id="apple-pay-button"></div>
+                      <?php } ?>
+                      <button id="square-cancel-button" class="btn btn-primary" type="button">Cancel</button>
+                      
+                  </div>
+              </div>                 
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade fade" id="braintree-payment-modal" tabindex="-1" aria-labelledby="square_paynment_label" aria-hidden="true" style="margin-top:-1%;">
+  <div class="vertical-alignment-helper">
+    <div class="modal-dialog vertical-align-center modal-md">
+        <div class="modal-content" style="width:45%;">            
+            <div class="modal-header">                
+                <span class="modal-title content-title" id="new_feed_modal_label">Braintree Payment</span>    
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </div>
+            <div class="modal-body">
+              <div class="braintree-form">
+                <span class="modal-total-amount"></span>
+                <input id="nonce" name="payment_method_nonce" type="hidden" />
+                <div id="bt-dropin"></div>                  
+                <button type="submit" class="btn btn-primary btn-braintree-pay-now" id="btn-billing-pay-now">Pay Now</button> 
+                <a class="cancel-braintree btn btn-primary" href="javascript:void(0);">Cancel</a>       
+              </div>               
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
 
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
@@ -147,13 +289,17 @@ $(function(){
   });
 
   $('.btn-pay-braintree').click(function(){
-    $('.braintree-form').show();
-    $('.payment-api-container').hide();
+    var text_total_amount = $('.form-total-amount-label').text();      
+    $('.modal-total-amount').text(text_total_amount);
+    $('#braintree-payment-modal').modal('show');
+    //$('.braintree-form').show();
+    //$('.payment-api-container').hide();
   });
 
   $('.cancel-braintree').click(function(){
-    $('.braintree-form').hide();
-    $('.payment-api-container').show();
+    $('#braintree-payment-modal').modal('hude');
+    //$('.braintree-form').hide();
+    //$('.payment-api-container').show();
   });
 
   $('.btn-confirm-order').click(function(){
@@ -184,6 +330,10 @@ $(function(){
 
                         <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                             $(".btn-pay-stripe").show();
+                        <?php } ?>
+
+                        <?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+                            $(".btn-pay-square").show();
                         <?php } ?>
 
                         <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
@@ -472,5 +622,209 @@ $(function(){
         
     <?php } ?>
     /*End paypal*/
+
+    //Square
+    $('.btn-pay-square').on('click',function(){
+      var text_total_amount = $('.form-total-amount-label').text();
+      $('#square-payment-modal').modal('show');
+      $('.modal-total-amount').text(text_total_amount);
+      //$('.payment-api-container').hide();
+      //$('.square-form').show();
+    });
+    $('#square-cancel-button').on('click', function(){
+        $('#square-payment-modal').modal('hide');
+        //$('.payment-api-container').show();
+        //$('.square-form').hide();
+    });
+    //End Square Payment
 });
 </script>
+<?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+<!-- Square Payment -->
+<script type="module">
+    const jobid = document.getElementById('jobid').value;
+    const payments = Square.payments('sandbox-sq0idb-_QITXE8-SXhp_NdfL99Vdw', '<?= $onlinePaymentAccount->square_location_id; ?>');
+    const card = await payments.card();
+    await card.attach('#card-container');
+
+    const square_total_amount = document.getElementById('total_amount').value;
+    const paymentRequest = payments.paymentRequest({
+      countryCode: 'US',
+      currencyCode: 'USD',
+      total: {
+        amount: square_total_amount,
+        label: 'Total',
+      },
+    });
+    
+    //Apple Pay
+    <?php if( isApple() ){ ?>
+      const applePayButton = document.getElementById('apple-pay-button');
+      try {
+          // There are a number of reason why Apple Pay may not be supported
+          // (e.g. Browser Support, Device Support, Account). Therefore, you should handle
+          // initialization failures while still loading other applicable payment methods.
+          const applePay = await payments.applePay(paymentRequest);
+          // Note: You do not need to `attach` applePay.
+      } catch (e) {
+        if(e.name === "PaymentMethodUnsupportedError" ) {
+          applePayButton.innerHTML = `Apple Pay is unsupported: ${e.message}`
+        }
+        console.error(e);
+      }
+
+      applePayButton.addEventListener('click', async () => {
+        const statusContainer = document.getElementById('payment-status-container');
+
+        try {
+          const tokenResult = await applePay.tokenize();
+          if (tokenResult.status === 'OK') {
+            const source_type = 'APPLE PAY';
+            //console.log(`Payment token is ${tokenResult.token}`);
+            const square_response = await fetch(base_url + `_square_process_payment`, {
+                  method: "POST",
+                  body: JSON.stringify({ token: tokenResult.token, jobid:jobid, source_type:source_type }),
+                  headers: {    
+                      accepts: "application/json",                
+                      "content-type": "application/json",
+                  },
+              });    
+              const data = await square_response.json();  
+              if( data.is_success == 1 ){
+                  $('.payment-api-container').hide();
+                  $('.square-form').hide();
+
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Payment Successful',
+                      text: 'Payment process completed.'
+                  });       
+              }else{
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Cannot Process Payment',
+                      text: data.msg
+                  });
+              }
+            //statusContainer.innerHTML = "Payment Successful";
+          } else {
+            let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
+            if (tokenResult.errors) {
+              errorMessage += ` and errors: ${JSON.stringify(
+                tokenResult.errors
+              )}`;
+            }
+
+            throw new Error(errorMessage);
+          }
+        } catch (e) {
+          console.error(e.message);
+          //statusContainer.innerHTML = "Payment Failed";
+        }
+      });
+    <?php } ?>
+
+    //Google Pay
+    const googlePay = await payments.googlePay(paymentRequest);
+    await googlePay.attach('#google-pay-button');
+    const googlePayButton = document.getElementById('google-pay-button');
+    googlePayButton.addEventListener('click', async () => {
+      const statusContainer = document.getElementById('payment-status-container');      
+      const source_type = 'GOOGLE PAY';
+      try {
+        const tokenResult = await googlePay.tokenize();
+        if (tokenResult.status === 'OK') {
+            //console.log(`Payment token is ${tokenResult.token}`);
+            const square_response = await fetch(base_url + `_square_process_payment`, {
+                method: "POST",
+                body: JSON.stringify({ token: tokenResult.token, jobid:jobid, source_type:source_type }),
+                headers: {    
+                    accepts: "application/json",                
+                    "content-type": "application/json",
+                },
+            });    
+            const data = await square_response.json();  
+            if( data.is_success == 1 ){
+                $('.payment-api-container').hide();
+                $('.square-form').hide();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Payment process completed.'
+                });       
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cannot Process Payment',
+                    text: data.msg
+                });
+            }   
+        } else {
+          let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
+          if (tokenResult.errors) {
+            errorMessage += ` and errors: ${JSON.stringify(
+              tokenResult.errors
+            )}`;
+          }
+
+          throw new Error(errorMessage);
+        }
+      } catch (e) {
+        console.error(e.message);
+        statusContainer.innerHTML = "Payment Failed";
+      }
+    });
+
+    //Credit Card
+    const cardButton = document.getElementById('card-button');
+    cardButton.addEventListener('click', async () => {
+      const statusContainer = document.getElementById('payment-status-container');      
+      const source_type = 'CARD';
+      try {
+        const result = await card.tokenize();
+        if (result.status === 'OK') {
+            //console.log(`Payment token is ${result.token}`);
+            const square_response = await fetch(base_url + `_square_process_payment`, {
+                method: "POST",
+                body: JSON.stringify({ token: result.token, jobid:jobid, source_type:source_type }),
+                headers: {    
+                    accepts: "application/json",                
+                    "content-type": "application/json",
+                },
+            });    
+            const data = await square_response.json();  
+            if( data.is_success == 1 ){
+                $('.payment-api-container').hide();
+                $('.square-form').hide();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Payment process completed.'
+                });       
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cannot Process Payment',
+                    text: data.msg
+                });
+            }   
+        } else {
+          let errorMessage = `Tokenization failed with status: ${result.status}`;
+          if (result.errors) {
+            errorMessage += ` and errors: ${JSON.stringify(
+              result.errors
+            )}`;
+          }
+
+          throw new Error(errorMessage);
+        }
+      } catch (e) {
+        console.error(e);
+        statusContainer.innerHTML = "Payment Failed";
+      }
+    });
+  </script>
+  <!-- End Square Payment -->
+  <?php } ?>

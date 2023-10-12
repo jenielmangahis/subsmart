@@ -50,16 +50,17 @@ class Accounting_payroll_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
-	public function check_if_time_log_paid($date, $empId)
+	public function check_if_attendance_paid($id)
 	{
-		$this->db->select('accounting_payroll.*');
-		$this->db->from('accounting_payroll');
-		$this->db->where('accounting_payroll.pay_period_start <=', $date);
-		$this->db->where('accounting_payroll.pay_period_end >=', $date);
-		$this->db->where('accounting_payroll_employees.employee_id', $empId);
-		$this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.payroll_id = accounting_payroll.id');
-		$query = $this->db->get();
+		$this->db->where('attendance_id', $id);
+		$query = $this->db->get('paid_attendance');
 		return $query->result();
+	}
+
+	public function insert_paid_attendance($data = [])
+	{
+		$insertId = $this->db->insert('paid_attendance', $data);
+		return $insertId;
 	}
 
 	public function get_employee_commissions($empId, $startDate, $endDate)

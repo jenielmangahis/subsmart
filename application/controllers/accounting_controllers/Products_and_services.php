@@ -788,10 +788,10 @@ class Products_and_services extends MY_Controller {
         do {
             if($type === 'bundle') {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
-                $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1);
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1, $id);
             } else {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
-                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
+                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1, $id);
             }
 
             $attempt++;

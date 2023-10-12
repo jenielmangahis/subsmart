@@ -693,20 +693,30 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function check_name($companyId, $itemName, $status)
+    public function check_name($companyId, $itemName, $status, $exceptId = null)
     {
         $this->db->where('company_id', $companyId);
         $this->db->where('title', $itemName);
         $this->db->where('is_active', $status);
+        
+        if(!is_null($exceptId)) {
+            $this->db->where('id !=', $exceptId);
+        }
+
         $query = $this->db->get($this->table);
         return $query->row();
     }
 
-    public function check_package_name($companyId, $packageName, $status)
+    public function check_package_name($companyId, $packageName, $status, $exceptId = null)
     {
         $this->db->where('company_id', $companyId);
         $this->db->where('name', $packageName);
         $this->db->where('status', $status);
+
+        if(!is_null($exceptId)) {
+            $this->db->where('id !=', $exceptId);
+        }
+
         $query = $this->db->get('package_details');
         return $query->row();
     }

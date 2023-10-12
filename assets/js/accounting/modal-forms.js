@@ -5783,6 +5783,46 @@ $(function() {
         }
     });
 
+    $(document).on('change', '#modal-container #item-modal #upc-image', function(e) {
+        var files = this.files;
+        const FR = new FileReader();
+        FR.addEventListener("load", function(evt) {
+            if(evt.target.result !== '') {
+                Quagga.decodeSingle({
+                    decoder: {
+                        readers: [
+                            "code_128_reader",
+                            "ean_reader",
+                            "ean_8_reader",
+                            "code_39_reader",
+                            "code_39_vin_reader",
+                            "codabar_reader",
+                            "upc_reader",
+                            "upc_e_reader",
+                            "i2of5_reader",
+                            "2of5_reader",
+                            "code_93_reader"
+                        ] // List of active readers
+                    },
+                    locate: true, // try to locate the barcode in the image
+                    src: evt.target.result,
+                }, function(result){
+                    if(typeof result !== 'undefined' && result.codeResult) {
+                        $('#item-modal #upc').val(result.codeResult.code);
+                        // console.log("result", result.codeResult.code);
+                    } else {
+                        $('#item-modal #upc').val('');
+                        var message = 'Please upload a valid UPC barcode image';
+                        sweetAlert('Sorry!', 'error', message);
+                        // console.log("not detected");
+                    }
+                });
+            }
+        });
+    
+        FR.readAsDataURL(files[0]);
+    });
+
     $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function() {
         if($(this).parent().find('select[name="location_id[]"]').length < 1) {
             $(this).parent().children('td:first-child').append('<select name="location_id[]" class="form-control nsm-field"></select>');
