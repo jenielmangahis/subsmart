@@ -32,10 +32,6 @@
                                 <label for="sku">SKU</label>
                                 <input type="text" name="sku" id="sku" class="form-control nsm-field">
                             </div>
-                            <div class="mb-2">
-                                <label for="upc">UPC</label>
-                                <input type="text" name="upc" id="upc" class="form-control nsm-field">
-                            </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <input type="file" name="icon" id="icon" class="d-none">
@@ -52,6 +48,18 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-2">
+                                <label for="upc">UPC</label>
+                                <input type="text" name="upc" id="upc" class="form-control nsm-field">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="mb-2">
+                                <label for="upc-image">Upload UPC</label>
+                                <input type="file" name="upc_image" id="upc-image" class="form-control" accept="image/*">
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mb-2">
                                 <label for="category">Category</label>

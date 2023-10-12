@@ -129,6 +129,9 @@
                                     $subtotal = $subtotal + $total;
                                 endforeach;
                                 ?>
+                                <?php 
+                                    $grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                ?>
                                 <tr>
                                     <td colspan="3" class="row-total">Sub Total</td>
                                     <td class="row-total">$<?= number_format((float)$subtotal,2,'.',','); ?></td>
@@ -177,13 +180,13 @@
                     </div>                    
                     <div class="row mt-3">
                         <div class="col-md-12" style="padding:2px;">
-                            <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>                                    
+                            <span style="font-weight: 700;font-size: 20px;color: darkred;" class="form-total-amount-label">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span>                                    
                             <!-- <input type="hidden" id="total_amount" value="<?= $jobs_data->total_amount; ?>"> -->
                             <input type="hidden" id="total_amount" value="<?= $grand_total; ?>">                            
                             <?php if($jobs_data->status != 'Completed'){ ?>
                                 <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
                                 <input type="hidden" id="jobid" name="jobid" value="<?= $jobs_data->job_unique_id; ?>">
-                                <div class="payment-msg"></div>
+                                <div class="payment-msg"></div>                                
                                 <div class="payment-api-container" <?= $jobs_data->total_amount <= 0 ? 'style="display:none;"' : ''; ?>>
                                   <?php if($onlinePaymentAccount){ ?>
                                     <a class="btn btn-mobile btn-primary btn-confirm-order btn-pay" href="javascript:void(0);">CONFIRM ORDER</a>
@@ -194,6 +197,9 @@
                                       <?php if( isApple() ){ ?>
                                         <div id="applepay-button" class="apple-pay-button" style="display:none;"></div>
                                       <?php } ?>
+                                    <?php } ?>
+                                    <?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+                                        <a class="btn btn-mobile btn-primary btn-pay-square btn-pay" href="javascript:void(0);" style="display:none;">PAY VIA SQUARE</a>
                                     <?php } ?>
 
                                     <?php if($braintree_token != ''){ ?>
@@ -208,16 +214,7 @@
                                       <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div>
                                     <?php } ?>
                                   <?php } ?>
-
                                 </div>
-                                <?php if($braintree_token != ''){ ?>
-                                <div class="braintree-form" style="display:none;">
-                                        <input id="nonce" name="payment_method_nonce" type="hidden" />
-                                        <div id="bt-dropin"></div>  
-                                        <a class="cancel-braintree btn btn-primary" href="javascript:void(0);">Back</a>       
-                                        <button type="submit" class="btn btn-primary" id="btn-billing-pay-now">Pay Now</button> 
-                                </div>
-                                <?php } ?>
                                 <?php echo form_close(); ?>
                             <?php } ?>
                         </div>

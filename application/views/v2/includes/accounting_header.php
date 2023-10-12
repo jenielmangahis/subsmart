@@ -73,6 +73,8 @@ if ($this->session->userdata('usertimezone') == null) {
         src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js">
     </script>
 
+    <script src="<?=$url->assets?>plugins/serratus-quaggaJS-862df88/dist/quagga.min.js"></script>
+
 <!-- <script src="<?php echo $url->assets ?>frontend/js/report/main2.js"></script> -->
 
     <!-- taxes page -->

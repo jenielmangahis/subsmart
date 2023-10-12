@@ -1,255 +1,305 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
-<div class="row page-content g-0">
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-                <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <!-- <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
-                        </div> -->
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
-                            <button type="button" class="nsm-button primary">
-                                <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
+<?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="nsm-callout primary"><button><i class="bx bx-x"></i></button><?php echo $page->description ?></div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="col-lg-12">
+                                <span class="float-start">
+                                    <button class="nsm-button addNotes">Add Notes</button>
+                                </span>
+                                <span class="float-end">
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                    <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
+                                    </ul>
+                                    <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="nsm-card-content">
+                            <div class="row mb-4">
+                                <div class="col-lg-12 headerInfo">
+                                    <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <div class="reportTitleInfo">
+                                        <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                        <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <?php 
+                                        $tableID = "productservicelist_table"; 
+                                        $reportCategory = "product_service_list"; 
+                                    ?>
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                        <thead>
+                                            <tr>
+                                                <th>PRODUCT/SERVICE</th>
+                                                <th>TYPE</th>
+                                                <th>DESCRIPTION</th>
+                                                <th>PRICE</th>
+                                                <th>COST</th>
+                                                <th>QTY ON HAND</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <center>
+                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row footerInfo">
+                                <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
-                        <div class="nsm-card primary">
-                            <div class="nsm-card-header d-block">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
-                                            <ul class="dropdown-menu p-3">
-                                                <p class="m-0">Sort by</p>
-                                                <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                    <option value="default" selected>Default</option>
-                                                    <option value="cost">Cost</option>
-                                                    <option value="create-date">Create Date</option>
-                                                    <option value="created-by">Created By</option>
-                                                    <option value="description">Description</option>
-                                                    <option value="expense-account">Expense Account</option>
-                                                    <option value="income-account">Income Account</option>
-                                                    <option value="last-modified">Last Modified</option>
-                                                    <option value="last-modified-by">Last Modified By</option>
-                                                    <option value="preferred-vendor">Preferred Vendor</option>
-                                                    <option value="price">Price</option>
-                                                    <option value="purchase-description">Purchase Description</option>
-                                                    <option value="qty-on-hand">Qty On Hand</option>
-                                                    <option value="qty-on-po">Qty On PO</option>
-                                                    <option value="reorder-point">Reorder Point</option>
-                                                    <option value="sku">SKU</option>
-                                                    <option value="taxable">Taxable</option>
-                                                    <option value="type">Type</option>
-                                                </select>
-                                                <p class="m-0">Sort in</p>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order" class="form-check-input" checked>
-                                                    <label for="sort-asc" class="form-check-label">Ascending order</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
-                                                    <label for="sort-desc" class="form-check-label">Descending order</label>
-                                                </div>
-                                            </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
-                                            </button>
-                                        </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+<!-- START: MODALS -->
+<!-- Modal for Report Settings -->
+<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" method="POST">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- FOR LATER UPDATES -->
+                            <!-- <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">User</label>
+                                        <select class="form-select">
+                                            <option value="all" selected>All</option>
+                                            <?php 
+                                                foreach ($customerByCompanyID as $customerByCompanyIDs) {
+                                                    echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
+                                                }
+                                            ?>
+                                        </select>
                                     </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
-                                                <i class='bx bx-fw bx-envelope'></i>
-                                            </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
-                                                <i class='bx bx-fw bx-printer'></i>
-                                            </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-export"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
-                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
-                                                <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
-                                            </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
-                                                <p class="m-0">Display density</p>
-                                                <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
-                                                    <label for="compact-display" class="form-check-label">Compact</label>
-                                                </div>
-                                                <p class="m-0">Change columns</p>
-                                                <div class="row">
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-product-service" class="form-check-input" checked>
-                                                            <label for="col-product-service" class="form-check-label">Product/Service</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-sku" class="form-check-input">
-                                                            <label for="col-sku" class="form-check-label">SKU</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-type" class="form-check-input" checked>
-                                                            <label for="col-type" class="form-check-label">Type</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-create-date" class="form-check-input">
-                                                            <label for="col-create-date" class="form-check-label">Create Date</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-created=by" class="form-check-input">
-                                                            <label for="col-created=by" class="form-check-label">Created By</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified" class="form-check-input">
-                                                            <label for="col-last-modified" class="form-check-label">Last Modified</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-last-modified-by" class="form-check-input">
-                                                            <label for="col-last-modified-by" class="form-check-label">Last Modified By</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-description" class="form-check-input" checked>
-                                                            <label for="col-description" class="form-check-label">Description</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-price" class="form-check-input" checked>
-                                                            <label for="col-price" class="form-check-label">Price</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-taxable" class="form-check-input">
-                                                            <label for="col-taxable" class="form-check-label">Taxable</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-income-account" class="form-check-input">
-                                                            <label for="col-income-account" class="form-check-label">Income Account</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-purchase-description" class="form-check-input">
-                                                            <label for="col-purchase-description" class="form-check-label">Purchase Description</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-cost" class="form-check-input" checked>
-                                                            <label for="col-cost" class="form-check-label">Cost</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-expense-account" class="form-check-input">
-                                                            <label for="col-expense-account" class="form-check-label">Expense Account</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-preferred-vendor" class="form-check-input">
-                                                            <label for="col-preferred-vendor" class="form-check-label">Preferred Vendor</label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-qty-on-hand" class="form-check-input" checked>
-                                                            <label for="col-qty-on-hand" class="form-check-label">Qty On Hand</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-reorder-point" class="form-check-input">
-                                                            <label for="col-reorder-point" class="form-check-label">Reorder Point</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" id="col-qty-on-po" class="form-check-input">
-                                                            <label for="col-qty-on-po" class="form-check-label">Qty On PO</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </ul>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Date Changed</label>
+                                        <select class="form-select">
+                                            <option value="Today">Today</option>
+                                            <option value="Yesterday">Yesterday</option>
+                                            <option value="This Week">This Week</option>
+                                            <option value="This Month">This Month</option>
+                                            <option value="This Quarter">This Quarter</option>
+                                            <option value="This Year">This Year</option>
+                                            <option value="Last Week">Last Week</option>
+                                            <option value="Last Month">Last Month</option>
+                                            <option value="Last Quarter">Last Quarter</option>
+                                            <option value="Last Year">Last Year</option>
+                                            <option value="Last Seven Years">Last Seven Years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Event <small class="text-muted">(Module)</small></label>
+                                        <select class="form-select">
+                                            <option value="All">All</option>
+                                            <option value="Workorder">Workorder</option>
+                                            <option value="Invoice">Invoice</option>
+                                            <option value="Taskhub">Taskhub</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Estimate">Estimate</option>
+                                            <option value="Event">Event</option>
+                                            <option value="Appointment">Appointment</option>
+                                            <option value="Jobs">Jobs</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Header Align</label>
+                                    <select name="header_align" id="header-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Footer Align</label>
+                                    <select name="footer_align" id="footer-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Page Size</label>
+                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                        <option value="9999" selected>All</option>
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="500">500</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Sort By</label>
+                                        <div class="input-group">
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="item_id">Default</option>
+                                                <option value="product_service" selected>Product/Service</option>
+                                                <option value="type">Type</option>
+                                                <option value="description">Description</option>
+                                                <option value="price">Price</option>
+                                                <option value="cost">Cost</option>
+                                                <option value="qty_on_hand">Qty on Hand</option>
+                                            </select>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                                <option value="ASC" selected>ASC</option>
+                                                <option value="DESC">DESC</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
+                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for Report Settings -->
 
-                                <div class="row">
-                                    <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
-                                    </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="fw-bold">Product/Service List</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
-                                    <thead>
-                                        <tr>
-                                            <td data-name="Product/Service">PRODUCT/SERVICE</td>
-                                            <td data-name="Type">TYPE</td>
-                                            <td data-name="Description">DESCRIPTION</td>
-                                            <td data-name="Price">PRICE</td>
-                                            <td data-name="Cost">COST</td>
-                                            <td data-name="Qty on Hand">QTY ON HAND</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Test Inventory</td>
-                                            <td>Inventory</td>
-                                            <td>Test Description</td>
-                                            <td>5.00</td>
-                                            <td>1.00</td>
-                                            <td>1.00</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="nsm-card-footer text-center">
-                                <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
-                            </div>
+<!-- START: PRINT/SAVE MODAL -->
+<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3 mt-1 mb-3">
+                        <h6>Report print settings</h6>
+                        <hr>
+                        <div class="form-group mb-2">
+                            <label>Orientation</label>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
+                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                         </div>
                     </div>
                 </div>
@@ -257,5 +307,77 @@
         </div>
     </div>
 </div>
-
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
+<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="sendEmailForm">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Attachment</h6>
+                                <div class="row">
+                                    <div class="input-group borderRadius0 pdfAttachment">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                    </div>
+                                    <div class="input-group borderRadius0">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary sendEmail"><span class="sendEmail_Loader"></span>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: EMAIL REPORT MODAL -->
+<!-- END: MODALS -->
+<?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

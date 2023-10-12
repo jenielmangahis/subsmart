@@ -133,10 +133,23 @@ function revokeToken($access_token)
     return $data;
 }
 
-function createPayment($access_token)
+function createPayment($access_token, $source_id, $idempotency_key, $location_id, $amount)
 {
+    $ci = get_instance();
+    $ci->config->load('api_credentials');
+
+    $post = [
+        'source_id' => $source_id,
+        'accept_partial_authorization' => true,
+        'amount_money' => ['amount' => (int)$amount, 'currency' => 'USD'],
+        'idempotency_key' => $idempotency_key,
+        'location_id' => $location_id
+    ];
+
+    $url = $ci->config->item('square_connect_url') .'/v2/payments';
+
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://connect.squareupsandbox.com/v2/payments');
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -144,9 +157,12 @@ function createPayment($access_token)
         'Authorization: Bearer '.$access_token,
         'Content-Type: application/json',
     ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n    \"source_id\": \"cnon:card-nonce-ok\",\n    \"accept_partial_authorization\": true,\n    \"amount_money\": {\n      \"amount\": 100,\n      \"currency\": \"USD\"\n    },\n    \"idempotency_key\": \"495f9d1d-f01f-41af-b62b-1b0560610fdb\"\n  }");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));        
 
     $response = curl_exec($ch);
+    $data     = json_decode($response);
 
     curl_close($ch);
+
+    return $data;
 }

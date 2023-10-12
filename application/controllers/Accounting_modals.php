@@ -901,7 +901,7 @@ class Accounting_modals extends MY_Controller
             $totalHrs = 0.00;
             foreach($timeLogs as $timeLog)
             {
-                $timeLogPaid = $this->accounting_payroll_model->check_if_time_log_paid(date("m/d/Y", strtotime($timeLog->date_created)), $timeLog->user_id);
+                $timeLogPaid = $this->accounting_payroll_model->check_if_attendance_paid($timeLog->id);
 
                 if(count($timeLogPaid) < 1) {
                     $totalHrs += floatval($timeLog->shift_duration);
@@ -1001,7 +1001,7 @@ class Accounting_modals extends MY_Controller
         $totalHrs = 0.00;
         foreach($timeLogs as $timeLog)
         {
-            $timeLogPaid = $this->accounting_payroll_model->check_if_time_log_paid(date("Y-m-d", strtotime($timeLog->date_created)), $timeLog->user_id);
+            $timeLogPaid = $this->accounting_payroll_model->check_if_attendance_paid($timeLog->id);
 
             if(count($timeLogPaid) < 1) {
                 $totalHrs += floatval($timeLog->shift_duration);
@@ -1017,8 +1017,6 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Daily') {
-            $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'</span>/day';
-
             $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
             $hoursPerDay = 8.00;
             $perHourPay = $dailyPay / $hoursPerDay;
@@ -1109,13 +1107,54 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
         $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
-
+//
         $employees = [];
         foreach ($postData['employees'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
+            $payscale = $this->users_model->get_payscale_by_id($emp->payscale_id);
             $payDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
-            $empTotalPay = ($payDetails->pay_rate * floatval(str_replace(',', '', $postData['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $postData['commission'][$key]));
+            $totalHrs = floatval(str_replace(',', '', $postData['reg_pay_hours'][$key]));
+            if($payscale->pay_type === 'Hourly') {
+                $totalPay = floatval(str_replace(',', '', $emp->base_hourly)) * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Daily') {
+                $dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                $hoursPerDay = 8.00;
+                $perHourPay = $dailyPay / $hoursPerDay;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Weekly') {
+                $weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                $hoursPerWeek = 40.00;
+                $perHourPay = $weeklyPay / $hoursPerWeek;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Monthly') {
+                $monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $perHourPay = $monthlyPay / $hoursPerMonth;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Yearly') {
+                $yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $hoursPerYear = $hoursPerMonth * 12;
+                $perHourPay = $yearlyPay / $hoursPerYear;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+
+            $empTotalPay = $totalPay + floatval(str_replace(',', '', $postData['commission'][$key]));
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;
             $empMedicare = ($empTotalPay / 100) * $medicare;
@@ -2699,6 +2738,25 @@ class Accounting_modals extends MY_Controller
                             foreach($commissions as $commission)
                             {
                                 $this->accounting_payroll_model->mark_commission_paid($commission->id);
+                            }
+                        }
+
+                        if($payType === 'all') {
+                            $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($value, date('Y-m-d', strtotime($payPeriod[0])), date('Y-m-d', strtotime($payPeriod[1])));
+
+                            foreach($timeLogs as $timeLog)
+                            {
+                                $timeLogPaid = $this->accounting_payroll_model->check_if_attendance_paid($timeLog->id);
+
+                                if(count($timeLogPaid) < 1) {
+                                    $paidAttendanceData = [
+                                        'attendance_id' => $timeLog->id,
+                                        'payroll_id' => $payrollId,
+                                        'pay_date' => date('Y-m-d', strtotime($data['pay_date']))
+                                    ];
+
+                                    $this->accounting_payroll_model->insert_paid_attendance($paidAttendanceData);
+                                }
                             }
                         }
                     }
