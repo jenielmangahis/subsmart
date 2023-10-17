@@ -71,6 +71,7 @@ class AccountingMailer extends MY_Controller{
             "payment_method_list",
             "open_invoices",
             "product_service_list",
+            "sales_by_product_service_summary",
         );
 
         // Conditional Statements on the array

@@ -1168,6 +1168,7 @@ class Accounting_modals extends MY_Controller
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => 'Paper check',
                 'employee_hours' => $postData['reg_pay_hours'][$key],
+                'employee_commission' => $postData['commission'][$key],
                 'total_pay' => number_format($empTotalPay, 2, '.', ','),
                 'employee_tax' => number_format($empTax, 2, '.', ','),
                 'net_pay' => number_format($netPay, 2, '.', ','),
@@ -1178,6 +1179,8 @@ class Accounting_modals extends MY_Controller
 
         $totalHours = array_sum(array_column($employees, 'employee_hours'));
         $totalHours =  number_format($totalHours, 2, '.', ',');
+        $totalCommission = array_sum(array_column($employees, 'employee_commission'));
+        $totalCommission =  number_format($totalCommission, 2, '.', ',');
         $totalPay = array_sum(array_column($employees, 'total_pay'));
         $totalPay = number_format($totalPay, 2, '.', ',');
         $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
@@ -1196,6 +1199,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['employees'] = $employees;
         $this->page_data['total'] = [
             'total_hours' => $totalHours,
+            'total_commission' => $totalCommission,
             'total_pay' => $totalPay,
             'total_taxes' => $totalTaxes,
             'total_net_pay' => $totalNetPay,

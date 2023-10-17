@@ -218,7 +218,7 @@
                                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                                 <i class="bx bx-fw bx-cog"></i>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
+                                            <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
                                                     <input type="checkbox" checked id="compact-display" class="form-check-input">

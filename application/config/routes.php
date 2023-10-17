@@ -413,6 +413,7 @@ $route['accounting/get-last-timesheet/(:any)/(:any)'] = 'accounting_modals/get_l
 $route['accounting/get-timesheet/(:any)'] = 'accounting_modals/get_timesheet/$1';
 $route['accounting/get-add-payee-modal/(:any)'] = 'accounting_modals/get_add_payee_modal/$1';
 $route['accounting/add-new-payee']['post'] = 'accounting_modals/add_new_payee';
+$route['accounting/add-new-location']['post'] = 'accounting_modals/add_new_location';
 $route['accounting/get-dropdown-choices'] = 'accounting_modals/get_dropdown_choices';
 $route['accounting/get-add-vendor-details-modal'] = 'accounting_modals/add_vendor_details_modal';
 $route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_customer_details_modal';
@@ -1247,6 +1248,7 @@ $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
 $route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
 $route['_braintree_process_payment'] = 'Pages/ajax_braintree_process_payment';
+$route['_square_process_payment'] = 'Pages/ajax_square_process_payment';
 
 //Refer Friend
 $route['refer_friend'] = 'Pages/front_refer_friend';
@@ -1382,6 +1384,7 @@ $route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet'
 $route['cron_api/export_customer_mailchimp_list'] = 'Cron_Api/exportCustomerMailChimpList';
 $route['cron_api/export_customer_active_campaign_contacts'] = 'Cron_Api/activeCampaignCustomerExport';
 $route['cron_api/export_customer_active_campaign_list_automation'] = 'Cron_Api/activeCampaignListAutomationExport';
+$route['cron_api/square_renew_token'] = 'Cron_Api/renewAllSquareToken';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
