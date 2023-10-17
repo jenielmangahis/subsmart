@@ -288,7 +288,7 @@ class Accounting_model extends MY_Model {
 
         // Get Purchases by Vendor Detail data in Database
         if ($reportType == "purchases_by_vendor_detail") {
-            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, items.type AS item_type, items.title AS description, accounting_vendor_transaction.quantity AS quantity, items.retail AS rate, (accounting_vendor_transaction.quantity * items.retail) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, items.type AS item_type, items.title AS description, accounting_vendor_transaction.quantity AS quantity, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
             $this->db->from('accounting_vendor_transaction');
             $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
             $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
@@ -303,7 +303,7 @@ class Accounting_model extends MY_Model {
 
         // Get Purchases by Product/Service Detail data in Database
         if ($reportType == "purchases_by_product_service_detail") {
-            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, items.type AS product_service, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, items.title AS memo_description, accounting_vendor_transaction.quantity AS qty, items.retail AS rate, (accounting_vendor_transaction.quantity * items.retail) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, items.type AS product_service, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, items.title AS memo_description, accounting_vendor_transaction.quantity AS qty, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
             $this->db->from('accounting_vendor_transaction');
             $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
             $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
@@ -322,13 +322,13 @@ class Accounting_model extends MY_Model {
 
         // Get Inventory Valuation Detail data in Database
         if ($reportType == "inventory_valuation_detail") {
-            $this->db->select('invoices_items.invoice_id AS invoice_id, items.type AS product_service, DATE(invoices_items.date_created) AS date, "Purchase" AS transaction_type, invoices_items.id AS num, items.title AS name, invoices_items.qty AS qty, items.retail AS rate, invoices_items.cost AS fifo_cost, items_has_storage_loc.qty AS qty_on_hand, (invoices_items.qty * items.retail) AS asset_value');
+            $this->db->select('invoices_items.invoice_id AS invoice_id, items.type AS product_service, DATE(invoices_items.date_created) AS date, "Purchase" AS transaction_type, invoices_items.id AS num, items.title AS name, invoices_items.qty AS qty, items.price AS rate, invoices_items.cost AS fifo_cost, items_has_storage_loc.qty AS qty_on_hand, (invoices_items.qty * items.price) AS asset_value');
             $this->db->from('invoices_items');
             $this->db->join('invoices', 'invoices.id = invoices_items.invoice_id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
             $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
             $this->db->where('items.type !=', '');
-            $this->db->where('items.retail !=', '');
+            $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.type');
@@ -340,7 +340,7 @@ class Accounting_model extends MY_Model {
         
         // Get Estimates by Customer data in Database
         if ($reportType == "estimates_by_customer") {
-            $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.estimate_date AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.retail * estimates_items.qty) + estimates_items.tax) AS amount');
+            $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.estimate_date AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.price * estimates_items.qty) + estimates_items.tax) AS amount');
             $this->db->from('estimates');
             $this->db->join('estimates_items', 'estimates_items.estimates_id = estimates.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
@@ -363,7 +363,7 @@ class Accounting_model extends MY_Model {
 
         // Get Invoice List by Date data in Database
         if ($reportType == "invoice_list_by_date") {
-            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, "" AS memo_description, invoices.due_date AS due_date, IFNULL(SUM((items.retail * invoices_items.qty) + invoices_items.tax), 0) AS amount');
+            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, "" AS memo_description, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS amount');
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
@@ -392,7 +392,7 @@ class Accounting_model extends MY_Model {
 
         // Get Open Invoices Date data in Database
         if ($reportType == "open_invoices") {
-            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.retail * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
+            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
@@ -409,7 +409,7 @@ class Accounting_model extends MY_Model {
 
         // Get Product/Service list data in Database
         if ($reportType == "product_service_list") {
-            $this->db->select('items.id AS item_id, items.title AS product_service, items.type AS type, items.description AS description, items.retail AS price, items.price AS cost, items_has_storage_loc.qty AS qty_on_hand');
+            $this->db->select('items.id AS item_id, items.title AS product_service, items.type AS type, items.description AS description, items.price AS price, items.cost AS cost, items_has_storage_loc.qty AS qty_on_hand');
             $this->db->from('items');
             $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
             $this->db->where('items.title !=', '');
@@ -418,6 +418,22 @@ class Accounting_model extends MY_Model {
             $this->db->limit($reportConfig['page_size']);
             $query = $this->db->get();
             return $query->result();
+        }
+
+        // Get Sales by Product/Service Summary data in Database
+        if ($reportType == "sales_by_product_service_summary") {
+            $this->db->select('invoices.id AS invoice_id, items.title AS product_service, invoices_items.qty AS quantity, SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) AS amount, ((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / (SELECT SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) FROM invoices LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id LEFT JOIN items ON items.id = invoices_items.items_id WHERE invoices.company_id = '.$companyID.')) * 100) AS sales_percentage, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / invoices_items.qty) AS average_price, SUM(items.COGS * invoices_items.qty) AS COGS, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) AS gross_margin, (((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) / SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax)) * 100) AS gross_margin_percentage');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('items.title !=', '');
+            $this->db->where('items.price !=', 0);
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('items.id, items.title');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();     
         }
     }
 }

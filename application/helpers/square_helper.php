@@ -166,3 +166,36 @@ function createPayment($access_token, $source_id, $idempotency_key, $location_id
 
     return $data;
 }
+
+function renewToken($refresh_token)
+{
+    $ci = get_instance();
+    $ci->config->load('api_credentials');
+
+    $post = [
+        'client_id' => $ci->config->item('square_client_id'),
+        'client_secret' => $ci->config->item('square_client_secret'),
+        'grant_type' => 'refresh_token',
+        'redirect_uri' => $ci->config->item('square_redirect_uri'),
+        'refresh_token' => $refresh_token
+    ];
+    
+    $url = $ci->config->item('square_connect_url') .'/oauth2/token';
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Square-Version: 2023-09-25',
+        'Content-Type: application/json',
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));    
+        
+    $response = curl_exec($ch);
+    $data     = json_decode($response);
+
+    curl_close($ch);
+
+    return $data;
+}

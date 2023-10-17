@@ -260,7 +260,7 @@
 								<div class="row p-4 rounded mx-0">
 									<div class="col">
 										<h1>It's time to run payroll</h1>
-                                        <button type="button" class="nsm-button primary">
+                                        <button type="button" class="nsm-button primary run-payroll">
                                             Let's go
                                         </button>
 									</div>

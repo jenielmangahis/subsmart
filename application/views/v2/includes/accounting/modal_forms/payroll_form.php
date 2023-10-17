@@ -56,8 +56,8 @@
                     <td data-name="Regular Pay Hrs" class="text-end">REGULAR PAY HRS</td>
                     <td data-name="Commission" class="text-end">COMMISSION</td>
                     <td data-name="Memo">MEMO</td>
-                    <td data-name="Total Hours">TOTAL HOURS</td>
-                    <td data-name="Total Pay">TOTAL PAY</td>
+                    <td data-name="Total Hours" class="text-end">TOTAL HOURS</td>
+                    <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
                 </tr>
             </thead>
             <tbody>

@@ -56,7 +56,7 @@
         <div class="row">
             <div class="col-12 pay-date-period mb-3">
                 <span class="float-end"><b>Pay date:</b> <?=$payDate?></span>
-                <span class="float-end mr-5"><b>Pay period:</b> <?=$payPeriod?></span>
+                <span class="float-end me-5"><b>Pay period:</b> <?=$payPeriod?></span>
             </div>
             <div class="col-12">
                 <table class="nsm-table" id="payroll-summary-table">
@@ -65,6 +65,7 @@
                             <td>EMPLOYEE</td>
                             <td>PAY METHOD</td>
                             <td>TOTAL HOURS</td>
+                            <td>COMMISSION</td>
                             <td>TOTAL PAY</td>
                             <td>EMPLOYEE TAXES</td>
                             <td>NET PAY</td>
@@ -76,6 +77,7 @@
                             <td><?=$employee['name']?></td>
                             <td><?=$employee['pay_method']?></td>
                             <td><?=$employee['employee_hours']?></td>
+                            <td><?=$employee['employee_commission']?></td>
                             <td><?=$employee['total_pay']?></td>
                             <td><?=$employee['employee_tax']?></td>
                             <td><?=$employee['net_pay']?></td>
@@ -87,6 +89,7 @@
                             <td>TOTAL</td>
                             <td></td>
                             <td><?=$total['total_hours']?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$total['total_commission'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_pay'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_taxes'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_net_pay'])?></td>

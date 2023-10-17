@@ -1279,5 +1279,29 @@ class Cron_Api extends MYF_Controller {
 
         echo 'Total Exported : ' . $total_exported;
     }
-        
+
+    public function renewAllSquareToken()
+    {
+        $this->load->helper('square_helper');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $squareAccounts = $this->CompanyOnlinePaymentAccount_model->getAllSquareAccounts();
+
+        $total_updated = 0;
+        foreach($squareAccounts as $square){
+            $refresh_token  = 'EQAAEFDeZngEdy2UWmjReuOsiw_7vjFZewm4mdHKCazPF3opFRy1cguuAqLL79E3';
+            $result = renewToken($refresh_token);
+            if( property_exists($result, 'access_token') ){
+                $data = [
+                    'square_access_token' => $result->access_token,
+                    'square_refresh_token' => $result->refresh_token
+                ];
+
+                $this->CompanyOnlinePaymentAccount_model->update($square->id, $data);
+                $total_updated++;
+            }
+        }
+
+        echo 'Total Updated : ' . $total_updated;
+    }        
 }

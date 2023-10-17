@@ -148,10 +148,12 @@
     }
 
     function HIDE_ALL() {
-        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER, .STRIPE, .BRAINTREE').hide();
+        $('#square-card-button').hide();
+        $('.CASH, .CREDIT_CARD, .ACH, .VENMO, .PAYPAL, .INVOICING_FIELD, .DOCUMENT_SIGNED, .CHECK_NUMBER, .STRIPE, .BRAINTREE, .SQUARE').hide();
     }
     function SHOW_ALL() {
         $('.PAYMENT_BUTTON').show();
+        $('#btn-billing-pay-now').show();
     }
     HIDE_ALL();
     $('.CREDIT_CARD').show();
@@ -177,10 +179,17 @@
             SHOW_ALL()
             $('.ACH').fadeIn('fast');
         }
-        if (SELECTED_PAYMENT == "VENMO" || SELECTED_PAYMENT == "SQUARE") {
+        if (SELECTED_PAYMENT == "VENMO") {
             HIDE_ALL();
             SHOW_ALL()
             $('.VENMO').fadeIn('fast');
+        }
+        if (SELECTED_PAYMENT == "SQUARE") {
+            HIDE_ALL();
+            SHOW_ALL()
+            $('.SQUARE').fadeIn('fast');
+            $('#square-card-button').show();
+            $('#btn-billing-pay-now').hide();
         }
         if (SELECTED_PAYMENT == "PAYPAL") {
             HIDE_ALL();

@@ -557,9 +557,6 @@ $('#export-to-excel').on('click', function(e) {
         });
     }
 
-    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
-    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
-
     $('#export-form').submit();
     $('#export-form').remove();
 });
@@ -590,9 +587,6 @@ $('#export-to-pdf').on('click', function(e) {
             $('#export-form').append(`<input type="hidden" name="${selectedVal[0]}" value="${selectedVal[1]}">`);
         });
     }
-
-    $('#export-form').append(`<input type="hidden" name="column" value="${$('#sort-by').val()}">`);
-    $('#export-form').append(`<input type="hidden" name="order" value="${$('input[name="sort_order"]:checked').val()}">`);
 
     $('#export-form').submit();
     $('#export-form').remove();

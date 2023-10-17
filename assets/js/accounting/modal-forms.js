@@ -253,97 +253,110 @@ $(function() {
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
-        payrollForm = $('div#payrollModal div.modal-body').html();
-        // payrollFormData = new FormData();
-        // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
+        Swal.fire({
+            title: 'Are you sure you want to proceed?',
+            icon: 'question',
+            showCloseButton: false,
+            confirmButtonColor: '#2ca01c',
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+            cancelButtonText: 'No',
+            cancelButtonColor: '#d33'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                payrollForm = $('div#payrollModal div.modal-body').html();
+                // payrollFormData = new FormData();
+                // payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));
 
-        payrollFormData.delete('payscale');
-        payrollFormData.delete('pay_from_account');
-        payrollFormData.delete('pay_period');
-        payrollFormData.delete('pay_date');
-        payrollFormData.delete('employees[]');
-        payrollFormData.delete('reg_pay_hours[]');
-        payrollFormData.delete('commission[]');
-        payrollFormData.delete('memo[]');
+                payrollFormData.delete('payscale');
+                payrollFormData.delete('pay_from_account');
+                payrollFormData.delete('pay_period');
+                payrollFormData.delete('pay_date');
+                payrollFormData.delete('employees[]');
+                payrollFormData.delete('reg_pay_hours[]');
+                payrollFormData.delete('commission[]');
+                payrollFormData.delete('memo[]');
 
-        if($('#payrollModal #payPeriod').length > 0) {
-            var payPeriod = $('#payrollModal #payPeriod').val();
-        } else {
-            var payPeriod = $('#payrollModal #pay-period-start').val()+'-'+$('#payrollModal #pay-period-end').val()
-        }
+                if($('#payrollModal #payPeriod').length > 0) {
+                    var payPeriod = $('#payrollModal #payPeriod').val();
+                } else {
+                    var payPeriod = $('#payrollModal #pay-period-start').val()+'-'+$('#payrollModal #pay-period-end').val()
+                }
 
-        payrollFormData.set('pay_from_account', $('#bank-account').val());
-        payrollFormData.set('pay_period', payPeriod);
-        payrollFormData.set('pay_date', $('#payrollModal #payDate').val());
+                payrollFormData.set('pay_from_account', $('#bank-account').val());
+                payrollFormData.set('pay_period', payPeriod);
+                payrollFormData.set('pay_date', $('#payrollModal #payDate').val());
 
-        $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
-            var row = $(this).closest('tr');
-            payrollFormData.append('employees[]', $(this).val());
-            payrollFormData.append('reg_pay_hours[]', row.find('td:nth-child(4)').html());
-            payrollFormData.append('commission[]', row.find('td:nth-child(5)').html());
-            payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
-        });
-
-        $.ajax({
-            url: '/accounting/generate-payroll',
-            data: payrollFormData,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(res) {
-                $('div#payrollModal div.modal-body').html(res);
-
-                var chartHeight = $('div#payrollModal div.modal-body #payrollChart').parent().prev().height();
-                var chartWidth = $('div#payrollModal div.modal-body #payrollChart').parent().width();
-
-                $('div#payrollModal #payrollChart').height(chartHeight);
-                $('div#payrollModal #payrollChart').width(chartWidth);
-
-                var payrollCost = $('div#payrollModal div.modal-body span#total-payroll-cost').html().replace('$', '');
-                var totalNetPay = $('div#payrollModal div.modal-body span#total-net-pay').html().replace('$', '');
-                var employeeTax = $('div#payrollModal div.modal-body span#total-employee-tax').html().replace('$', '');
-                var employerTax = $('div#payrollModal div.modal-body span#total-employer-tax').html().replace('$', '');
-
-                var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
-                var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
-                var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
-
-                new Chart('payrollChart', {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Net Pay', 'Employee', 'Employer'],
-                        datasets: [{
-                            label: 'Payroll',
-                            data: [netPayPercent, employeeTaxPercent, employerTaxPercent],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(54, 162, 235, 0.2)'
-                              ],
-                              borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(54, 162, 235, 1)',
-                              ],
-                              borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            position: 'bottom',
-                          },
-                        },
-                        aspectRatio: 1.5,
-                      }
+                $('#payrollModal #payroll-table tbody tr .select-one:checked').each(function() {
+                    var row = $(this).closest('tr');
+                    payrollFormData.append('employees[]', $(this).val());
+                    payrollFormData.append('reg_pay_hours[]', row.find('td:nth-child(4)').html());
+                    payrollFormData.append('commission[]', row.find('td:nth-child(5)').html().replace('$', ''));
+                    payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
                 });
+
+                $.ajax({
+                    url: '/accounting/generate-payroll',
+                    data: payrollFormData,
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        $('div#payrollModal div.modal-body').html(res);
+
+                        var chartHeight = $('div#payrollModal div.modal-body #payrollChart').parent().prev().height();
+                        var chartWidth = $('div#payrollModal div.modal-body #payrollChart').parent().width();
+
+                        $('div#payrollModal #payrollChart').height(chartHeight);
+                        $('div#payrollModal #payrollChart').width(chartWidth);
+
+                        var payrollCost = $('div#payrollModal div.modal-body span#total-payroll-cost').html().replace('$', '');
+                        var totalNetPay = $('div#payrollModal div.modal-body span#total-net-pay').html().replace('$', '');
+                        var employeeTax = $('div#payrollModal div.modal-body span#total-employee-tax').html().replace('$', '');
+                        var employerTax = $('div#payrollModal div.modal-body span#total-employer-tax').html().replace('$', '');
+
+                        var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
+                        var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+                        var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+
+                        new Chart('payrollChart', {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Net Pay', 'Employee', 'Employer'],
+                                datasets: [{
+                                    label: 'Payroll',
+                                    data: [netPayPercent, employeeTaxPercent, employerTaxPercent],
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                                },
+                                aspectRatio: 1.5,
+                            }
+                        });
+                    }
+                });
+
+                $(this).parent().prepend('<button type="submit" class="nsm-button success">Submit Payroll</button>');
+                $(this).remove();
+                $('div#payrollModal div.modal-footer button#back-payscale-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
             }
         });
-
-        $(this).parent().prepend('<button type="submit" class="nsm-button success">Submit Payroll</button>');
-        $(this).remove();
-        $('div#payrollModal div.modal-footer button#back-payscale-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#back-payroll-form', function() {

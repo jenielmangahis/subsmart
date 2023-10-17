@@ -245,6 +245,14 @@
                                             <label>Confirmation</label>
                                             <input type="number" class="form-control" name="confirmation" id="confirmation" value="" />
                                         </div>
+                                        <div class="col-sm-12 mb-3 SQUARE">
+                                            <div class="square-form">
+                                                <div id="payment-form">                                                    
+                                                    <div id="payment-status-container"></div>                        
+                                                    <div id="card-container"></div>                                                        
+                                                </div>
+                                            </div>    
+                                        </div>
                                         <div class="col-sm-12 mb-3 STRIPE">
                                             <?php if($companyOnlinePaymentAccount->stripe_publish_key != '' && $companyOnlinePaymentAccount->stripe_secret_key != ''){ ?>    
                                                 <a class="nsm-button primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>                                     
@@ -291,7 +299,8 @@
                                         <div class="col-sm-12 mt-1 PAYMENT_BUTTON">
                                             <div class="float-end">
                                                 <button class="nsm-button" onclick="window.location.replace('/job')">Cancel</button>
-                                                <button type="submit" class="nsm-button primary" id="btn-billing-pay-now">Pay Now</button>
+                                                <button id="square-card-button" class="nsm-button primary" type="button" style="display:none;">Pay Now</button>                                          
+                                                <button id="btn-billing-pay-now" class="nsm-button primary" type="submit">Pay Now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -332,6 +341,10 @@
 <?php if( $companyOnlinePaymentAccount->paypal_client_id != '' ){ ?>
     <script src="https://www.paypal.com/sdk/js?client-id=<?= $companyOnlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
     <!-- <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script> -->
+<?php } ?>
+<?php if($companyOnlinePaymentAccount->square_access_token != '' && $companyOnlinePaymentAccount->square_refresh_token != ''){ ?>
+    <link rel="stylesheet" href="/reference/sdks/web/static/styles/code-preview.css" preload>
+    <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 <?php } ?>
 <?php if($companyOnlinePaymentAccount->stripe_publish_key != '' && $companyOnlinePaymentAccount->stripe_secret_key != ''){ ?>
     <script src="https://js.stripe.com/v3/"></script>
@@ -544,4 +557,72 @@
         });
     }
 </script>
+<?php if($companyOnlinePaymentAccount->square_access_token != '' && $companyOnlinePaymentAccount->square_refresh_token != ''){ ?>
+<!-- Square Payment -->
+<script type="module">
+    const jobid = document.getElementById('job-id').value;
+    const payments = Square.payments('sandbox-sq0idb-_QITXE8-SXhp_NdfL99Vdw', '<?= $companyOnlinePaymentAccount->square_location_id; ?>');
+    const card = await payments.card();
+    await card.attach('#card-container');
+
+    //Credit Card
+    const cardButton = document.getElementById('square-card-button');
+    cardButton.addEventListener('click', async () => {
+      $('#square-card-button').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      const statusContainer = document.getElementById('payment-status-container');      
+      const source_type = 'CARD';
+      try {
+        const result = await card.tokenize();
+        if (result.status === 'OK') {
+            //console.log(`Payment token is ${result.token}`);
+            const square_response = await fetch(base_url + `_square_process_payment`, {
+                method: "POST",
+                body: JSON.stringify({ token: result.token, jobid:jobid, source_type:source_type }),
+                headers: {    
+                    accepts: "application/json",                
+                    "content-type": "application/json",
+                },
+            });    
+            const data = await square_response.json();  
+            if( data.is_success == 1 ){   
+                $('#square-card-button').html('Pay Now');             
+                $('.square-form').hide();
+                Swal.fire({
+                    title: 'Payment Successful',
+                    text: 'Payment process completed.',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    //if(result.value) {
+                        window.location.href = "<?= base_url() ?>job/new_job1/<?= $this->uri->segment(3) ?>";
+                    //}
+                });     
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cannot Process Payment',
+                    text: data.msg
+                });
+            }   
+        } else {
+          let errorMessage = `Tokenization failed with status: ${result.status}`;
+          if (result.errors) {
+            errorMessage += ` and errors: ${JSON.stringify(
+              result.errors
+            )}`;
+          }
+
+          throw new Error(errorMessage);
+        }
+      } catch (e) {
+        console.error(e);
+        statusContainer.innerHTML = "Payment Failed";
+      }
+    });
+  </script>
+  <!-- End Square Payment -->
+<?php } ?>
 <?php include viewPath('v2/includes/footer'); ?>

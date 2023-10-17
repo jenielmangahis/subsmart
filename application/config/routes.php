@@ -413,6 +413,7 @@ $route['accounting/get-last-timesheet/(:any)/(:any)'] = 'accounting_modals/get_l
 $route['accounting/get-timesheet/(:any)'] = 'accounting_modals/get_timesheet/$1';
 $route['accounting/get-add-payee-modal/(:any)'] = 'accounting_modals/get_add_payee_modal/$1';
 $route['accounting/add-new-payee']['post'] = 'accounting_modals/add_new_payee';
+$route['accounting/add-new-location']['post'] = 'accounting_modals/add_new_location';
 $route['accounting/get-dropdown-choices'] = 'accounting_modals/get_dropdown_choices';
 $route['accounting/get-add-vendor-details-modal'] = 'accounting_modals/add_vendor_details_modal';
 $route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_customer_details_modal';
@@ -1076,6 +1077,14 @@ $route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
 $route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_portal_login_details';
 $route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 $route['user/_update_business_details'] = 'Users/ajax_update_business_details';
+$route['user/_add_commission_form'] = 'Users/ajax_add_commission_form';
+$route['user/_commission_list'] = 'Users/ajax_commission_list';
+$route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commission_status';
+$route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
+$route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
+
+//Payscale
+$route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
@@ -1221,6 +1230,8 @@ $route['tools/_verify_connect_active_campaign'] = 'Tools/ajax_verify_connect_act
 $route['tools/_create_active_campaign_export_list'] = 'Tools/ajax_create_active_campaign_export_list';
 $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_active_campaign_export_automation';
 $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
+$route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
+$route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1237,6 +1248,7 @@ $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
 $route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
 $route['_braintree_process_payment'] = 'Pages/ajax_braintree_process_payment';
+$route['_square_process_payment'] = 'Pages/ajax_square_process_payment';
 
 //Refer Friend
 $route['refer_friend'] = 'Pages/front_refer_friend';
@@ -1372,6 +1384,7 @@ $route['cron_api/qb_payroll_timesheet_sync'] = 'Cron_Api/syncQbPayrollTimesheet'
 $route['cron_api/export_customer_mailchimp_list'] = 'Cron_Api/exportCustomerMailChimpList';
 $route['cron_api/export_customer_active_campaign_contacts'] = 'Cron_Api/activeCampaignCustomerExport';
 $route['cron_api/export_customer_active_campaign_list_automation'] = 'Cron_Api/activeCampaignListAutomationExport';
+$route['cron_api/square_renew_token'] = 'Cron_Api/renewAllSquareToken';
 
 //Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
@@ -1412,6 +1425,8 @@ $route['inventory/_create_vendor'] = 'inventory/ajax_create_vendor';
 $route['inventory/vendor/edit/(:num)'] = 'inventory/edit_vendor/$1';
 $route['inventory/_update_vendor'] = 'inventory/ajax_update_vendor';
 $route['inventory/vendor/delete'] = 'inventory/ajax_delete_vendor';
+$route['inventory/vendor/_send_email'] = 'inventory/ajax_vendor_send_email';
+$route['inventory/vendor/export'] = 'inventory/vendor_export';
 
 //Item Category
 $route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
@@ -1544,6 +1559,7 @@ $route['api/estimate_send_customer_email'] = 'Api/emailCustomerEstimate';
 $route['api/converge_send_sale'] = 'Api/convergeSendSale';
 $route['api/send_email'] = 'Api/sendEmail';
 $route['api/send_customer_estimate_email'] = 'Api/emailCustomerEstimate';
+$route['api/create_job_employee_commission'] = 'Api/createEmployeeJobCommission';
 
 //Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';
