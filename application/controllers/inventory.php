@@ -225,7 +225,7 @@ class Inventory extends MY_Controller
         $this->load->view('v2/pages/inventory/vendors', $this->page_data);
     }
 
-    public function import() {
+    public function import() {        
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
         $this->load->view('v2/pages/inventory/import', $this->page_data);
@@ -276,6 +276,7 @@ class Inventory extends MY_Controller
             for ($j = 0; $j < $csvColumnLength ; $j++) { 
                 $data[$csvHeaders[$j]] = $csvRows[$i][$j];
             }
+            $data['is_active'] = 1;
             $dataInsert = $this->general->add_return_id($data, 'items');
         }    
         echo 'true';

@@ -1232,6 +1232,7 @@ $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_a
 $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
 $route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
 $route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
+$route['tools/square_payment_logs'] = 'Tools/square_payment_logs';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1589,4 +1590,7 @@ $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+
+//Affiliate
+$route['affiliate/_create_affiliate'] = 'Affiliate/ajax_create_affiliate';
 

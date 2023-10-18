@@ -60,6 +60,11 @@
                         <span class="api-label f-green"><?= $companyOnlinePaymentAccount->square_business_name; ?></span>
                         <span class="api-label f-green"><?= $companyOnlinePaymentAccount->square_owner_email; ?></span>
                     </div>
+                    <div class="row mt-4">
+                        <div class="col-3">
+                            <a href="<?= base_url('tools/square_payment_logs') ?>" class="nsm-button default">View Payment Logs</a>
+                        </div>
+                    </div>
                 <?php }else{ ?>
                     <div class="row mt-5">
                         <div class="col-8">                                                    
