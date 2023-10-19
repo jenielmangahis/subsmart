@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/paycheck_list_modals'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -21,8 +22,12 @@
                                 <div class="row">
                                     <div class="col grid-mb">
                                         <label for="filter-employee">Employee</label>
-                                        <select class="nsm-field form-select" name="filter_employee" id="filter-employee" data-applied="all-employees">
-                                            <option value="all-employees" selected>All employees</option>
+                                        <select class="nsm-field form-select" name="filter_employee" id="filter-employee">
+                                            <?php if(isset($employee)) : ?>
+                                            <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
+                                            <?php else : ?>
+                                            <option value="all" selected>All</option>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -30,41 +35,41 @@
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-date-range">Date range</label>
                                         <select class="nsm-field form-select" name="filter_date_range" id="filter-date-range" data-applied="last-pay-date">
-                                            <option value="last-pay-date" selected>Last pay date</option>
-                                            <option value="this-month">This month</option>
-                                            <option value="this-quarter">This quarter</option>
-                                            <option value="this-year">This year</option>
-                                            <option value="last-month">Last month</option>
-                                            <option value="last-quarter">Last quarter</option>
-                                            <option value="last-year">Last year</option>
-                                            <option value="first-quarter">First quarter</option>
-                                            <option value="second-quarter">Second quarter</option>
-                                            <option value="third-quarter">Third quarter</option>
-                                            <option value="fourth-quarter">Fourth quarter</option>
-                                            <option value="custom">Custom</option>
+                                            <option value="last-pay-date" <?=empty($filter_date) || $filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
+                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                            <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                            <option value="first-quarter" <?=$filter_date === 'first-quarter' ? 'selected' : ''?>>First quarter</option>
+                                            <option value="second-quarter" <?=$filter_date === 'second-quarter' ? 'selected' : ''?>>Second quarter</option>
+                                            <option value="third-quarter" <?=$filter_date === 'third-quarter' ? 'selected' : ''?>>Third quarter</option>
+                                            <option value="fourth-quarter" <?=$filter_date === 'fourth-quarter' ? 'selected' : ''?>>Fourth quarter</option>
+                                            <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-from-date">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="">
+                                            <input type="text" class="nsm-field form-control date" id="date-range-start" value="<?=$start_date?>">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-to-date">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="">
+                                            <input type="text" class="nsm-field form-control date" id="date-range-end" value="<?=$end_date?>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button">
+                                        <button type="button" class="nsm-button" id="reset-filter">
                                             Reset
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-filter">
                                             Apply
                                         </button>
                                     </div>
@@ -77,7 +82,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="print-save-pdf">Print or save PDF</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="print-save-pdf" data-bs-toggle="modal" data-bs-target="#print-save-pdf-modal">Print or save PDF</a></li>
                             </ul>
                         </div>
                     </div>
@@ -99,9 +104,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count([]) > 0) : ?>
-						<?php foreach([] as $paycheck) : ?>
-
+                        <?php if(count($paychecks) > 0) : ?>
+						<?php foreach($paychecks as $paycheck) : ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon table-checkbox">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$paycheck['id']?>">
+                                </div>
+                            </td>
+                            <td><?=$paycheck['pay_date']?></td>
+                            <td><?=$paycheck['name']?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format($paycheck['total_pay'], 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format($paycheck['net_pay'], 2))?></td>
+                            <td><?=$paycheck['pay_method']?></td>
+                            <td><?=!empty($paycheck['check_number']) ? $paycheck['check_number'] : '<input type="text" name="check_number[]" class="form-control nsm-field">'?></td>
+                            <td><?=$paycheck['status']?></td>
+                            <td>
+                                <div class="dropdown float-end">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item void-paycheck" href="#">Void</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item edit-paycheck" href="#">Edit</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>

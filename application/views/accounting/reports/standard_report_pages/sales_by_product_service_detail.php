@@ -46,7 +46,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "salesbyproductservice_detail"; 
+                                        $tableID = "salesbyproductservicedetail_table"; 
                                         $reportCategory = "sales_by_product_service_detail"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">

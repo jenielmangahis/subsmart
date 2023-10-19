@@ -666,6 +666,8 @@ $route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_con
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 $route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees/paycheck_list';
+$route['accounting/employees/paycheck-list/export']['post'] = 'accounting_controllers/employees/export_paychecks';
+$route['accounting/employees/paycheck-list/change-orientation']['post'] = 'accounting_controllers/employees/change_paycheck_pdf_orientation';
 $route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';

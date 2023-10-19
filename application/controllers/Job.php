@@ -1057,6 +1057,7 @@ class Job extends MY_Controller
         include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->config->load('api_credentials');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -1129,7 +1130,9 @@ class Job extends MY_Controller
                 ),
                 'table' => 'business_profile',
                 'select' => 'business_phone,business_name,business_email,street,city,postal_code,state,business_image,id',
-            );
+            );            
+
+            $this->page_data['square_client_id'] = $this->config->item('square_client_id');
             $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
             $this->page_data['job_total_amount'] = $job_total_amount;
             $this->page_data['profile_info'] = $this->general->get_data_with_param($get_customer_info, false);

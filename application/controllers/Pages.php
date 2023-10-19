@@ -307,6 +307,7 @@ class Pages extends MYF_Controller {
         $this->load->model('jobs_model');
         $this->load->model('Estimate_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
+		$this->config->load('api_credentials');
 
         // load helpers
         $this->load->helper('functions');
@@ -357,6 +358,8 @@ class Pages extends MYF_Controller {
     	}else{
     	    redirect('home');
         }
+		
+		$this->page_data['square_client_id'] = $this->config->item('square_client_id');
     	$this->page_data['page']->title = 'nSmartTrac - Customer Job Invoice';	
     	$this->page_data['jobs_data'] = $job;
 		$this->page_data['eid'] = $eid;
