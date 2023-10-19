@@ -666,6 +666,8 @@ $route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_con
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 $route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees/paycheck_list';
+$route['accounting/employees/paycheck-list/export']['post'] = 'accounting_controllers/employees/export_paychecks';
+$route['accounting/employees/paycheck-list/change-orientation']['post'] = 'accounting_controllers/employees/change_paycheck_pdf_orientation';
 $route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
@@ -1232,6 +1234,7 @@ $route['tools/_create_active_campaign_export_automation'] = 'Tools/ajax_create_a
 $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_active_campaign_account';
 $route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
 $route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
+$route['tools/square_payment_logs'] = 'Tools/square_payment_logs';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
@@ -1589,4 +1592,7 @@ $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+
+//Affiliate
+$route['affiliate/_create_affiliate'] = 'Affiliate/ajax_create_affiliate';
 

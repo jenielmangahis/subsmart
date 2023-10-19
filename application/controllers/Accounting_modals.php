@@ -11283,6 +11283,9 @@ class Accounting_modals extends MY_Controller
             case 'item-locations' :
                 $return = $this->get_item_location_choices($return, $search);
             break;
+            case 'paycheck-employee' :
+                $return = $this->get_employee_choices($return, $search, 'report');
+            break;
         }
 
         if ($search !== null && $search !== '') {

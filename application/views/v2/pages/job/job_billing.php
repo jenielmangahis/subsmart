@@ -561,7 +561,7 @@
 <!-- Square Payment -->
 <script type="module">
     const jobid = document.getElementById('job-id').value;
-    const payments = Square.payments('sandbox-sq0idb-_QITXE8-SXhp_NdfL99Vdw', '<?= $companyOnlinePaymentAccount->square_location_id; ?>');
+    const payments = Square.payments('<?= $square_client_id; ?>', '<?= $companyOnlinePaymentAccount->square_location_id; ?>');
     const card = await payments.card();
     await card.attach('#card-container');
 

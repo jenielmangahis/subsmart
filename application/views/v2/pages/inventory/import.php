@@ -101,13 +101,15 @@
                                 <div class="col-lg-12 FILE_UPLOAD_SECTION mb-3">
                                         <label for="FILE_UPLOAD_INPUT" class="form-label">Upload a .csv file</label>
                                         <input id="FILE_UPLOAD_INPUT" class="form-control mb-3" type="file" accept=".csv" required>
+                                        <a class="nsm-button default" style="margin-left:0px;" href="<?= base_url('uploads/import_templates/import_inventory_template.csv'); ?>">Download Import Template</a>
                                         <button id="FILE_UPLOAD_BUTTON" class="btn btn-secondary d-none" type="button"><i class='bx bxs-chevrons-right'></i>&nbsp;Proceed to Header Mapping</button>
                                 </div>
                                 <div class="col-lg-12 HEADER_MAPPING_SECTION mb-3 d-none">
                                     <span>Specify headers in each columns.</span>
                                     <div class="table-responsive"></div>
                                     <hr>
-                                    <button id="SAVE_CSV_TO_DATABASE" class="btn btn-danger" type="button"><i class='bx bx-upload'></i>&nbsp;Save Data</button>
+                                    <button id="SAVE_CSV_TO_DATABASE" class="nsm-button primary" type="button"><i class='bx bx-upload'></i>&nbsp;Save Data</button>
+                                    <button id="import-cancel" class="nsm-button primary" type="button">&nbsp;Cancel</button>
                                     <button id="RETURN_TO_INVENTORY" class="btn btn-secondary d-none" type="button" onclick="window.location.replace('<?php echo base_url("inventory"); ?>')"><i class="bx bxs-chevrons-left"></i>&nbsp;Return to Inventory List</button>
                                 </div>
                             </div>
@@ -200,11 +202,10 @@ $("#FILE_UPLOAD_INPUT").change(function() {
             }
             table += "</thead>";
             table += "<tbody>";
-
-            for (i = 1; i < data.length; i++) {
+            for (i = 1; i < data.length - 1; i++) {
                 table += "<tr>";
-                var row = data[i];
-                var cells = row.join(",").split(",");
+                var row = data[i];                
+                var cells = row.join(",").split(",");                
                 var totalBodyColumn = cells.length;
                 for (j = 0; j < cells.length; j++) {
                     if (totalHeaderColumn == totalBodyColumn) {
@@ -261,6 +262,10 @@ $("#FILE_UPLOAD_BUTTON").on('click', function(event) {
     $("#INVENTORY_IMPORT_STEP2 > .POINTER_CURSOR").html("<div class='spinner-border spinner-border-sm' role='status'></div>&nbsp;&nbsp;Header Mapping");
     $(".FILE_UPLOAD_SECTION").addClass('d-none');
     $(".HEADER_MAPPING_SECTION").removeClass('d-none');
+});
+
+$('#import-cancel').on('click', function(){
+    location.href = base_url + 'inventory/import';
 });
 
 $("#SAVE_CSV_TO_DATABASE").on('click', function(event) {
