@@ -2215,4 +2215,32 @@ class Tools extends MY_Controller {
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+    
+    public function square_payment_logs()
+    {
+        $this->load->model('CompanySquarePaymentLogs_model');
+
+        $company_id = logged('company_id');
+        $filter     = 'all';
+        if( get('filter') ){
+            $filter = get('filter');
+            if( $filter == 'GooglePay' ){
+                $type = 'GOOGLE PAY';
+            }elseif( $filter == 'ApplePay' ){
+                $type = 'APPLE PAY';
+            }else{
+                $type = 'CARD';
+            }
+            
+            $squarePaymentLogs = $this->CompanySquarePaymentLogs_model->getAllByCompanyIdAndSourceType($company_id, $type);
+        }else{
+            $squarePaymentLogs = $this->CompanySquarePaymentLogs_model->getAllByCompanyId($company_id);
+        }        
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Square Payment';
+        $this->page_data['page']->parent = 'Tools';  
+        $this->page_data['squarePaymentLogs'] = $squarePaymentLogs;
+        $this->load->view('v2/pages/tools/square_payment_logs', $this->page_data);
+    }
 }

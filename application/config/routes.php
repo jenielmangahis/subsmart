@@ -1594,5 +1594,5 @@ $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 
 //Affiliate
-$route['affiliate/_create_affiliate'] = 'Affiliate/ajax_create_affiliate';
+$route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
 
