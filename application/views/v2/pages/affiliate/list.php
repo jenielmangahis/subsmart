@@ -18,12 +18,12 @@
             </div>
             <span class="nsm-fab-label">Add New Affiliate</span>
         </li>
-        <li class="btn-import-csv">
+        <!-- <li class="btn-import-csv">
             <div class="nsm-fab-icon">
                 <i class="bx bx-import"></i>
             </div>
             <span class="nsm-fab-label">Import CSV</span>
-        </li>
+        </li> -->
         <li class="btn-export-csv">
             <div class="nsm-fab-icon">
                 <i class="bx bx-export"></i>
@@ -68,9 +68,9 @@
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo url('affiliate/add') ?>'">
                                 <i class='bx bx-fw bx-group'></i> Add New Affiliate
                             </button>
-                            <button type="button" class="nsm-button btn-import-csv">
+                            <!-- <button type="button" class="nsm-button btn-import-csv">
                                 <i class='bx bx-fw bx-import'></i> Import CSV
-                            </button>
+                            </button> -->
                             <button type="button" class="nsm-button btn-export-csv">
                                 <i class='bx bx-fw bx-export'></i> Export CSV
                             </button>
@@ -221,18 +221,30 @@
                         data: {
                             aid: id
                         },
+                        dataType:'json',
                         success: function(result) {
-                            Swal.fire({
-                                title: 'Good job!',
-                                text: "Data Deleted Successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
+                            if( result.is_success == 1 ){
+                                Swal.fire({
+                                    //title: 'Good job!',
+                                    text: "Data Deleted Successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Failed',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                            
                         },
                     });
                 }

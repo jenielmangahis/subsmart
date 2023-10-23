@@ -25,7 +25,7 @@ class Affiliate extends MY_Controller {
 	}
 
 	public function index()
-	{
+	{        
         $this->page_data['page']->title = 'Affiliate Partners';
         $this->page_data['page']->parent = 'Tools';
 
@@ -77,7 +77,8 @@ class Affiliate extends MY_Controller {
 		// ifPermissions('activity_log_view');
 		// $this->page_data['activity'] = $this->activity_model->getById($id);
         $this->page_data['action'] = 'add';
-		$this->load->view('affiliate/add', $this->page_data);
+		//$this->load->view('affiliate/add', $this->page_data);
+        $this->load->view('v2/pages/affiliate/add', $this->page_data);
 
 	}
 
@@ -88,7 +89,8 @@ class Affiliate extends MY_Controller {
 
 		$this->page_data['affiliate'] = $this->affiliate_model->getById($get['id']);
         $this->page_data['action'] = 'edit';
-		$this->load->view('affiliate/add', $this->page_data);
+        $this->load->view('v2/pages/affiliate/edit', $this->page_data);
+		//$this->load->view('affiliate/add', $this->page_data);
 
 	}
 
@@ -175,16 +177,23 @@ class Affiliate extends MY_Controller {
 		}
 	}
 
-	public function delete() {
+	public function delete() {        
+        $is_success = 0;
+        $msg  = 'Cannot find data';
+
         $post = $this->input->post();
+        if( $post['aid'] > 0 ){
+            $affiliate = $this->affiliate_model->getById($post['aid']);
+            if( $affiliate && $affiliate->company_id == logged('company_id') ){
+                $this->affiliate_model->delete($post['aid']);
 
-		$this->affiliate_model->delete($post['aid']);
-
-        $message_2 = "Affiliate deleted Successfully";
-		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', $message_2);
-
-        redirect('affiliate');
+                $is_success = 1;
+                $msg = '';
+            }            
+        }		
+		
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
 	}
 
 	public function exportAffiliates()
@@ -333,6 +342,70 @@ class Affiliate extends MY_Controller {
         $is_allowed = $this->isAllowedModuleAccess(50);
 		$this->load->view('v2/pages/affiliate/stats_dashboard', $this->page_data);
 	}
+
+    public function ajax_save_affiliate()
+    {        
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+		$comp_id = logged('company_id');
+
+        if( $this->input->post('first_name') != '' && $this->input->post('last_name') != '' ){
+            $target_dir = "./uploads/affiliate/$comp_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $affiliate_image = $this->moveUploadedFile();
+
+            if ($this->input->post('affiliate_id') != '') {
+                $affiliate = $this->affiliate_model->getById($this->input->post('affiliate_id'));
+                if( $affiliate_image == '' ){
+                    $affiliate_image = $affiliate->photo;    
+                }            
+            }
+
+            $data = array(
+                'company_id' => $comp_id,
+                'first_name' => $this->input->post('first_name'),
+                'last_name' => ucfirst($this->input->post('last_name')),
+                'gender' => $this->input->post('gender'),
+                'company' => $this->input->post('company'),
+                'website_url' => $this->input->post('website_url'),
+                'email' => $this->input->post('email'),
+                'phone' => $this->input->post('phone'),
+                'phone_ext' => $this->input->post('phone_ext'),
+                'alternate_phone' => $this->input->post('alternate_phone'),
+                'fax' => $this->input->post('fax'),
+                'mailing_address' => $this->input->post('mailing_address'),
+                'country' => $this->input->post('country'),
+                'city' => $this->input->post('city'),
+                'state' => $this->input->post('state'),
+                'status' => $this->input->post('status'),
+                'notes' => $this->input->post('notes'),
+                'zipcode' => $this->input->post('zipcode'),
+                'photo' => $affiliate_image,
+                'assigned_to' => 0,
+                'add_master_contact_list' => $this->input->post('add_masterlist'),
+                'portal_access' => $this->input->post('portal_access'),
+            );
+
+            $message_1 = "New";
+            if ($this->input->post('affiliate_id') != '') {
+                $permission = $this->affiliate_model->update($data, array("id" => $this->input->post('affiliate_id')));
+            } else {
+                $permission = $this->affiliate_model->create($data);
+            }
+
+            $this->activity_model->add($message_1 . " affiliate #$permission Created by User: #" . logged('id'));
+
+            $is_success = 1;
+            $msg = '';
+        }		
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 
 }
 

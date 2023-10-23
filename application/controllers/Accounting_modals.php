@@ -920,6 +920,7 @@ class Accounting_modals extends MY_Controller
             if($employees[$index]->pay_scale->pay_type === 'Hourly') {
                 $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';
 
+                $perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
                 $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
             }
 
@@ -970,6 +971,9 @@ class Accounting_modals extends MY_Controller
                 $employees[$index]->pay_rate = 'Commission only';
             }
 
+            $employees[$index]->per_hour_pay = $perHourPay;
+            $employees[$index]->regular_hrs_pay_total = $totalPay;
+
             $totalPay += floatval(str_replace(',', '', $employees[$index]->commission));
 
             $employees[$index]->total_pay = $totalPay;
@@ -987,7 +991,11 @@ class Accounting_modals extends MY_Controller
         $post = $this->input->post();
         $selectedPayperiod = explode('-', $post['pay_period']);
 
-        $employee = $this->users_model->getUserByID($post['employee_id']);
+        if(!empty($post['employee_id'])) {
+            $employee = $this->users_model->getUserByID($post['employee_id']);
+        } else {
+            $employee = $this->users_model->getUserByEmail($post['employee_email']);
+        }
         $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
         $payDetails = $this->users_model->getEmployeePayDetails($employee->id);
         // $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod[0])), date("Y-m-d", strtotime($selectedPayperiod[1])))->commission;
@@ -1016,10 +1024,15 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Hourly') {
+            $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';
+
+            $perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
             $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
         }
 
         if($payscale->pay_type === 'Daily') {
+            $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'</span>/day';
+
             $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
             $hoursPerDay = 8.00;
             $perHourPay = $dailyPay / $hoursPerDay;
@@ -1028,6 +1041,8 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Weekly') {
+            $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'</span>/week';
+
             $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
             $hoursPerWeek = 40.00;
             $perHourPay = $weeklyPay / $hoursPerWeek;
@@ -1036,6 +1051,8 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Monthly') {
+            $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/month';
+
             $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
             $hoursPerWeek = 40.00;
             $hoursPerMonth = $hoursPerWeek * 4;
@@ -1045,6 +1062,8 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Yearly') {
+            $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'</span>/year';
+
             $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
             $hoursPerWeek = 40.00;
             $hoursPerMonth = $hoursPerWeek * 4;
@@ -1054,47 +1073,24 @@ class Accounting_modals extends MY_Controller
             $totalPay = $perHourPay * $totalHrs;
         }
 
-        // switch($payDetails->pay_type) {
-        //     case 'hourly' :
-        //         $totalPay = floatval(str_replace(',', '', $payDetails->pay_rate)) * $totalHrs;
-        //     break;
-        //     case 'salary' :
-        //         switch($payDetails->salary_frequency) {
-        //             case 'per-week' :
-        //                 $weeklyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
-        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
-        //                 $perHourPay = $weeklyPay / $hoursPerWeek;
+        if($payscale->pay_type === 'Commission Only') {
+            $payRate = 'Commission only';
+        }
 
-        //                 $totalPay = $perHourPay * $totalHrs;
-        //             break;
-        //             case 'per-month' :
-        //                 $monthlyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
-        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
-        //                 $hoursPerMonth = $hoursPerWeek * 4;
-        //                 $perHourPay = $monthlyPay / $hoursPerMonth;
-
-        //                 $totalPay = $perHourPay * $totalHrs;
-        //             break;
-        //             case 'per-year' :
-        //                 $yearlyPay = floatval(str_replace(',', '', $payDetails->pay_rate));
-        //                 $hoursPerWeek = floatval($payDetails->hours_per_day) * floatval($payDetails->days_per_week);
-        //                 $hoursPerMonth = $hoursPerWeek * 4;
-        //                 $hoursPerYear = $hoursPerMonth * 12;
-        //                 $perHourPay = $monthlyPay / $hoursPerYear;
-
-        //                 $totalPay = $perHourPay * $totalHrs;
-        //             break;
-        //         }
-        //     break;
-        // }
+        $regularHrsPayTotal = $totalPay;
 
         $totalPay += floatval(str_replace(',', '', $commission));
 
         echo json_encode([
+            'id' => $employee->id,
+            'name' => $employee->LName.', '.$employee->FName,
+            'pay_rate' => $payRate,
             'pay_scale' => $payscale,
             'pay_details' => $payDetails,
             'commission' => $commission,
             'total_hrs' => $totalHrs,
+            'per_hour_pay' => $perHourPay,
+            'regular_hrs_pay_total' => $regularHrsPayTotal,
             'total_pay' => $totalPay
         ]);
     }
@@ -1110,7 +1106,7 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
         $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
-//
+
         $employees = [];
         foreach ($postData['employees'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
@@ -1169,31 +1165,31 @@ class Accounting_modals extends MY_Controller
             $employees[] = [
                 'id' => $emp->id,
                 'name' => $emp->LName . ', ' . $emp->FName,
-                'pay_method' => 'Paper check',
-                'employee_hours' => $postData['reg_pay_hours'][$key],
-                'employee_commission' => $postData['commission'][$key],
-                'total_pay' => number_format($empTotalPay, 2, '.', ','),
-                'employee_tax' => number_format($empTax, 2, '.', ','),
-                'net_pay' => number_format($netPay, 2, '.', ','),
-                'employee_futa' => number_format(($empTotalPay / 100) * $futa, 2, '.', ','),
-                'employee_sui' => number_format($employeeSUI, 2, '.', ',')
+                'pay_method' => $payDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
+                'employee_hours' => str_replace(',', '', $postData['reg_pay_hours'][$key]),
+                'employee_commission' => str_replace(',', '', $postData['commission'][$key]),
+                'total_pay' => $empTotalPay,
+                'employee_tax' => $empTax,
+                'net_pay' => $netPay,
+                'employee_futa' => ($empTotalPay / 100) * $futa,
+                'employee_sui' => $employeeSUI
             ];
         }
 
         $totalHours = array_sum(array_column($employees, 'employee_hours'));
-        $totalHours =  number_format($totalHours, 2, '.', ',');
+        $totalHours =  $totalHours;
         $totalCommission = array_sum(array_column($employees, 'employee_commission'));
-        $totalCommission =  number_format($totalCommission, 2, '.', ',');
+        $totalCommission =  $totalCommission;
         $totalPay = array_sum(array_column($employees, 'total_pay'));
-        $totalPay = number_format($totalPay, 2, '.', ',');
+        $totalPay = $totalPay;
         $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
-        $totalTaxes = number_format($totalTaxes, 2, '.', ',');
+        $totalTaxes = $totalTaxes;
         $totalNetPay = array_sum(array_column($employees, 'net_pay'));
-        $totalNetPay = number_format($totalNetPay, 2, '.', ',');
+        $totalNetPay = $totalNetPay;
         $totalFuta = array_sum(array_column($employees, 'employee_futa'));
-        $totalFuta = number_format($totalFuta, 2, '.', ',');
+        $totalFuta = $totalFuta;
         $totalSUI = array_sum(array_column($employees, 'employee_sui'));
-        $totalSUI = number_format($totalSUI, 2, '.', ',');
+        $totalSUI = $totalSUI;
 
         $totalEmployerTax = $totalTaxes + $totalFuta + $totalSUI;
 
@@ -1201,11 +1197,11 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['employees'] = $employees;
         $this->page_data['total'] = [
-            'total_hours' => $totalHours,
-            'total_commission' => $totalCommission,
-            'total_pay' => $totalPay,
-            'total_taxes' => $totalTaxes,
-            'total_net_pay' => $totalNetPay,
+            'total_hours' => number_format($totalHours, 2),
+            'total_commission' => number_format($totalCommission, 2),
+            'total_pay' => number_format($totalPay, 2),
+            'total_taxes' => number_format($totalTaxes, 2),
+            'total_net_pay' => number_format($totalNetPay, 2),
             'total_employer_tax' => number_format($totalEmployerTax, 2, '.', ','),
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
@@ -24911,5 +24907,20 @@ $company->business_name";
             'success' => true,
             'message' => "$sent out of $count transactions sent."
         ]);
+    }
+
+    public function get_employee_modal()
+    {
+        $role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
+
+        $cid   = logged('company_id');
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;
+        $this->load->view('v2/includes/accounting/modal_forms/employee_modal', $this->page_data);
     }
 }

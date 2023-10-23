@@ -76,11 +76,11 @@
                         <tr>
                             <td><?=$employee['name']?></td>
                             <td><?=$employee['pay_method']?></td>
-                            <td><?=$employee['employee_hours']?></td>
-                            <td><?=$employee['employee_commission']?></td>
-                            <td><?=$employee['total_pay']?></td>
-                            <td><?=$employee['employee_tax']?></td>
-                            <td><?=$employee['net_pay']?></td>
+                            <td><?=number_format(floatval($employee['employee_hours']), 2)?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['employee_commission']), 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['total_pay']), 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['employee_tax']), 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['net_pay']), 2))?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

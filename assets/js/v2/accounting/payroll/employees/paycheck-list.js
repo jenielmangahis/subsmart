@@ -156,6 +156,16 @@ $('#print-save-pdf-modal input[name="pdf_orientation"]').on('change', function()
     });
 });
 
+$('#print-save-pdf-modal #print-pdf').on('click', function(e) {
+    e.preventDefault();
+
+    let pdfWindow = window.open("");
+    pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#print-save-pdf-modal iframe#paychecks-pdf').attr('src')}"></iframe>`);
+    $(pdfWindow.document).find('body').css('padding', '0');
+    $(pdfWindow.document).find('body').css('margin', '0');
+    $(pdfWindow.document).find('iframe').css('border', '0');
+});
+
 function get_start_and_end_dates(val)
 {
     switch(val) {
