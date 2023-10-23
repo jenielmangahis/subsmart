@@ -53,6 +53,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
+                            <!-- <button type="button" class="nsm-button" id="add-new-button"> -->
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>

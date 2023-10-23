@@ -47,8 +47,6 @@ class AccountingMailer extends MY_Controller{
         // List of valid reports to request
         $accountingValidReports = array(
             "sales_tax_liability",
-            "taxable_sales_detail",
-            "taxable_sales_summary",
             "customer_contact_list",
             "vendor_contact_list",
             "audit_log_list",
@@ -73,6 +71,7 @@ class AccountingMailer extends MY_Controller{
             "product_service_list",
             "sales_by_product_service_summary",
             "taxable_sales_detail",
+            "taxable_sales_summary",
         );
 
         // Conditional Statements on the array

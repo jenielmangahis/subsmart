@@ -730,3 +730,31 @@ $(document).on("click", ".btn-delete-commission-setting-row", function(e){
         }
     );
 });
+
+// $('#add-new-button').on('click', function(e) {
+//     e.preventDefault();
+
+//     $.get('/accounting/get-employee-modal', function(res) {
+//         if($('#employee-modal').length > 0) {
+//             $('#employee-modal').remove();
+//         }
+
+//         if ($('div#modal-container').next('.modal-backdrop').length > 0 ||
+//             $('div#modal-container').next().next('.modal-backdrop').length > 0
+//         ) {
+//             $('div#modal-container').next('.modal-backdrop').remove();
+//             $('div#modal-container').next().next('.modal-backdrop').remove();
+//         }
+
+//         $('div#modal-container').append(res);
+
+//         $('#employee-modal [name="empPayscale"]').val(payroll.payscale).trigger('change');
+
+//         $('#employee-modal select').select2({
+//             minimumResultsForSearch: -1,
+//             dropdownParent: $('#employee-modal')
+//         });
+
+//         $('#employee-modal').modal('show');
+//     });
+// });
