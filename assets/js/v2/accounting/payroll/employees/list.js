@@ -100,7 +100,7 @@ $("#add_employee_form").on("submit", function(e) {
     let _this = $(this);
     e.preventDefault();
 
-    var url = base_url+"users/addNewEmployeeV2";
+    var url = base_url+"accounting/employees/create";
     _this.find("button[type=submit]").html("Saving");
     _this.find("button[type=submit]").prop("disabled", true);
 
@@ -110,61 +110,62 @@ $("#add_employee_form").on("submit", function(e) {
         data: _this.serialize(),
         dataType: "json",
         success: function(result) {
-            if (result == 1) {
-                Swal.fire({
-                    title: 'Save Successful!',
-                    text: "New employee source has been added successfully.",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.value) {
-                        location.reload();
-                    }
-                });
-            } else if (result == 3) {
-                Swal.fire({
-                    title: 'Failed',
-                    text: "Insufficient license. Please purchase license to continue adding user.",
-                    icon: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Purchase License'
-                }).then((result) => {
-                    if (result.value) {
-                        window.location.href = base_url + 'mycrm/membership';
-                    }
-                });
-            } else if (result == 4) {
-                Swal.fire({
-                    title: 'Failed',
-                    text: "ADT Sales App password not same",
-                    icon: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                });
-            } else if (result == 5) {
-                Swal.fire({
-                    title: 'Failed',
-                    text: "ADT Sales App account already exists",
-                    icon: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                });
-            }
+            window.location = base_url+"accounting/employees";
+            // if (result == 1) {
+            //     Swal.fire({
+            //         title: 'Save Successful!',
+            //         text: "New employee source has been added successfully.",
+            //         icon: 'success',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Okay'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             location.reload();
+            //         }
+            //     });
+            // } else if (result == 3) {
+            //     Swal.fire({
+            //         title: 'Failed',
+            //         text: "Insufficient license. Please purchase license to continue adding user.",
+            //         icon: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Purchase License'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             window.location.href = base_url + 'mycrm/membership';
+            //         }
+            //     });
+            // } else if (result == 4) {
+            //     Swal.fire({
+            //         title: 'Failed',
+            //         text: "ADT Sales App password not same",
+            //         icon: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Okay'
+            //     });
+            // } else if (result == 5) {
+            //     Swal.fire({
+            //         title: 'Failed',
+            //         text: "ADT Sales App account already exists",
+            //         icon: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Okay'
+            //     });
+            // } else {
+            //     Swal.fire({
+            //         title: 'Failed',
+            //         text: "Something is wrong in the process",
+            //         icon: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Okay'
+            //     });
+            // }
 
-            $("#add_employee_modal").modal('hide');
-            _this.trigger("reset");
+            // $("#add_employee_modal").modal('hide');
+            // _this.trigger("reset");
 
-            _this.find("button[type=submit]").html("Save");
-            _this.find("button[type=submit]").prop("disabled", false);
+            // _this.find("button[type=submit]").html("Save");
+            // _this.find("button[type=submit]").prop("disabled", false);
         },
     });
 });

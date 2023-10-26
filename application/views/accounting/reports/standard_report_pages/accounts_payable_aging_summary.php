@@ -291,7 +291,7 @@
                                         </tr>
                                         <?php endforeach; ?>
                                         <tr>
-                                            <td></td>
+                                            <td><b>TOTAL</b></td>
                                             <?php foreach($columns as $column) : ?>
                                             <td><b><?=$column['amount']?></b></td>
                                             <?php endforeach; ?>

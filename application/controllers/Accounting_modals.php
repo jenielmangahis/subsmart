@@ -1062,7 +1062,7 @@ class Accounting_modals extends MY_Controller
         }
 
         if($payscale->pay_type === 'Yearly') {
-            $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'</span>/year';
+            $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'</span>/year';
 
             $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
             $hoursPerWeek = 40.00;
@@ -2696,6 +2696,7 @@ class Accounting_modals extends MY_Controller
             ];
 
             $payrollId = $this->accounting_payroll_model->create($insertData);
+            // $payrollId = 1;
 
             $employees = [];
 
@@ -2705,8 +2706,53 @@ class Accounting_modals extends MY_Controller
                     foreach ($data['employees'] as $key => $value) {
                         $emp = $this->users_model->getUser($value);
                         $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
-                        $empTotalPay = (floatval(str_replace(',', '', $empPayDetails->pay_rate)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]))) + floatval(str_replace(',', '', $data['commission'][$key])) + floatval(str_replace(',', '', $data['bonus'][$key]));
+                        $payscale = $this->users_model->get_payscale_by_id($emp->payscale_id);
+
+                        if($payscale->pay_type === 'Hourly') {
+                            $perHourPay = floatval(str_replace(',', '', $emp->base_hourly));
+                            $empTotalPay = floatval(str_replace(',', '', $emp->base_hourly)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                        }
+                
+                        if($payscale->pay_type === 'Daily') {
+                
+                            $dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                            $hoursPerDay = 8.00;
+                            $perHourPay = $dailyPay / $hoursPerDay;
+                
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                        }
+                
+                        if($payscale->pay_type === 'Weekly') {
+                            $weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                            $hoursPerWeek = 40.00;
+                            $perHourPay = $weeklyPay / $hoursPerWeek;
+                
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                        }
+                
+                        if($payscale->pay_type === 'Monthly') {
+                
+                            $monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                            $hoursPerWeek = 40.00;
+                            $hoursPerMonth = $hoursPerWeek * 4;
+                            $perHourPay = $monthlyPay / $hoursPerMonth;
+                
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                        }
+                
+                        if($payscale->pay_type === 'Yearly') {
+                            $yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                            $hoursPerWeek = 40.00;
+                            $hoursPerMonth = $hoursPerWeek * 4;
+                            $hoursPerYear = $hoursPerMonth * 12;
+                            $perHourPay = $yearlyPay / $hoursPerYear;
+                
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                        }
         
+                        $empTotalPay += floatval(str_replace(',', '', $data['commission'][$key]));
+                        $empTotalPay += floatval(str_replace(',', '', $data['bonus'][$key]));
+
                         $empSocial = ($empTotalPay / 100) * 6.2;
                         $empMedicare = ($empTotalPay / 100) * 1.45;
                         $empTax = $empSocial + $empMedicare;

@@ -56,7 +56,7 @@ class Estimate extends MY_Controller
         }else{
             $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
         } */
-        echo $tab;
+        $order_by = 'Newest first';
         if (!empty($tab)) {
             $query_tab = $tab;
             if ($tab == 'declined%20by%20customer') {
@@ -69,18 +69,38 @@ class Estimate extends MY_Controller
             if (!empty(get('search'))) {
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
-            } elseif (!empty(get('order'))) {                
+            } elseif (!empty(get('order'))) { 
+                switch (get('order')) {
+                    case 'added-desc':
+                        $order_by = 'Newest first';
+                        break;
+                    case 'added-asc':
+                        $order_by = 'Oldest first';
+                        break;
+                    case 'date-accepted-desc':
+                        $order_by = 'Accepted: newest';
+                        break;
+                    case 'date-accepted-asc':
+                        $order_by = 'Accepted: oldest';
+                        break;
+                    case 'amount-asc':
+                        $order_by = 'Amount: Lowest';
+                        break;
+                    case 'amount-desc':
+                        $order_by = 'Amount: Highest';
+                        break;
+                    default:                        
+                        break;
+                }             
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
             } else {
-                if ($role == 1 || $role == 2) {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
-                } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
-                }
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
             }
         }
-
+        
+        $this->page_data['order_by'] = $order_by;
+        $this->page_data['tab'] = $tab;
         $this->page_data['role'] = $role;
         $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
 
@@ -352,6 +372,7 @@ class Estimate extends MY_Controller
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
@@ -1662,8 +1683,8 @@ class Estimate extends MY_Controller
             $id, $wo_id, $urlLogo
         );
 
-        $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+        //$this->session->set_flashdata('alert-type', 'success');
+        //$this->session->set_flashdata('alert', 'Successfully sent to Customer.');
 
         echo json_encode($json_data);
         // return true;
@@ -2294,12 +2315,9 @@ class Estimate extends MY_Controller
             'ssn'                       => $this->input->post('social_security_number'),
             'status'                    => $this->input->post('status')
         );
-
-        // dd($new_data);
-
         $addQuery = $this->estimate_model->addNewCustomer($new_data);
 
         $success = 'success';
-        return json_encode($addQuery);
+        echo json_encode($addQuery);
     }
 }

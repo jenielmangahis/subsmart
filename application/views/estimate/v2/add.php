@@ -293,6 +293,23 @@ echo put_header_assets();
             border: 1px solid #dc3545;
             border-radius: 4px;
         } 
+        .dataTables_filter, .dataTables_length{
+            display: none;
+        }
+        table.dataTable thead th, table.dataTable thead td {
+        padding: 10px 18px;
+        border-bottom: 1px solid lightgray;
+        }
+        table.dataTable.no-footer {
+            border-bottom: 0px !important; 
+            margin-bottom: 10px !important;
+        }
+        tbody, td, tfoot, th, thead, tr {
+            border-color: inherit;
+            border-style: solid;
+            border-color: lightgray;
+            border-width: 0;
+        }
     </style>
 
     <!-- page wrapper start -->
@@ -358,7 +375,7 @@ echo put_header_assets();
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><span class="fa fa-plus fa-margin-right"></span> New Customer</a>
                                 </div>
                             </div>
 
@@ -523,7 +540,7 @@ echo put_header_assets();
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
                                     <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span> Add Items</a> &emsp;
                                     <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp;
-                                    <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span>
+                                    <!-- <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span> -->
                                     <hr>
                                 </div>
                             </div>
@@ -570,14 +587,15 @@ echo put_header_assets();
                                         <tr>
                                             <td>
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1">
-                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                
+                                                <span id="help-popover-adjustment" class="fa fa-question-circle"></span>
                                             </td>
                                             <td colspan="2" style="text-align: right;">
                                                 <div class="input-group mb-2" style="width: 40%;float: right;">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">$</div>
                                                     </div>
-                                                    <input type="text" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                    <input type="number" step="any" min=0 name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
                                                 </div>
                                                 <span id="adjustmentText" style="display: none;">0.00</span>
                                             </td>
@@ -593,14 +611,19 @@ echo put_header_assets();
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
-                                            <td>Markup $<span id="span_markup">0.00</span></td>
-                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
+                                            <td colspan="2">
+                                                Markup
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                $<span id="span_markup">0.00</span>
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                                <!-- <span id="span_markup_input_form">0.00</span></td> -->
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
+                                            <td style="text-align:right;"><b>$<span id="grand_total">0.00</span>
                                                     <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -803,7 +826,7 @@ echo put_header_assets();
 
             <!-- Modal Set Markup -->
             <div class="modal fade nsm-modal" id="modalSetMarkup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
@@ -812,14 +835,21 @@ echo put_header_assets();
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Set percent or fixed markup that will be applied to each item.</p>
+                            <!-- <p>Set percent or fixed markup that will be applied to each item.</p> -->
+                            <p>Set fixed markup that will be applied to each item.</p>
                             <p>The markup will not be visible to customer estimate.</p>
 
-                            <div class="btn-group margin-right-sec" role="group" aria-label="...">
+                            <!-- <div class="btn-group margin-right-sec" role="group" aria-label="...">
                                 <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
                                 <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                 <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
+                            </div> -->
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                                <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -830,44 +860,49 @@ echo put_header_assets();
             </div>
 
             <!-- Modal -->
-            <div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+            <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">            
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
+                            <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                            <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <table id="items_table" class="table table-hover" style="width: 100%;">
-                                        <thead>
+                                <div class="col-sm-12 mb-2">
+                                    <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
+                                </div>
+                                <div class="col-sm-12">
+                                    <table id="items_table" class="table table-hover table-sm w-100">                                    
+                                        <thead class="bg-light">
                                             <tr>
                                                 <td></td>
-                                                <td> Name</td>
-                                                <td> On Hand</td>
-                                                <td> Price</td>
+                                                <td><strong>Name</strong></td>
+                                                <td><strong>On Hand</strong></td>
+                                                <td><strong>Price</strong></td>
+                                                <td><strong>Type</strong></td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($items as $item) { ?>
-                                                <!-- <tr>
-                                                    <td><?php echo $item->title; ?></td>
-                                                    <td><?php echo $item->price; ?></td>
-                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                            <span class="fa fa-plus"></span>
-                                                        </button></td>
-                                                </tr> -->
                                                 <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                                     <td style="width: 0% !important;">
                                                         <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
                                                     <td><?php echo $item->title; ?></td>
-                                                    <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                                    <td>
+                                                        <?php 
+                                                            foreach($itemsLocation as $itemLoc){
+                                                                if($itemLoc->item_id == $item->id){
+                                                                    echo "<div class='data-block'>";
+                                                                    echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                    echo "</div>";
+                                                                } 
+                                                            }
+                                                        ?>
+                                                    </td>
                                                     <td><?php echo $item->price; ?></td>
-                                                </tr>
+                                                    <td><?php echo $item->type; ?></td>
 
                                             <?php } ?>
                                         </tbody>
@@ -875,35 +910,9 @@ echo put_header_assets();
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Modal New Customer -->
-            <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="top: 107px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="nsm-button primary saveCustomer">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
             <div class="modal fade nsm-modal" id="modalAddNewSource" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -932,11 +941,40 @@ echo put_header_assets();
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
+
+        <!-- Modal New Customer -->
+        <div class="modal fade nsm-modal" id="modalQuickAddCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <form id="frm-estimate-quick-add-customer" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="bx bx-fw bx-x m-0"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="nsm-button primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!-- page wrapper end -->
 </div>
 
 <?php echo $file_selection; ?>
+<?php
+// JS to add only Job module
+add_footer_js(array(
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js'
+));
+?>
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
@@ -1073,7 +1111,7 @@ echo put_header_assets();
 </script>
 
 <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
     function initialize() {
         var input = document.getElementById('job_location');
@@ -1086,11 +1124,18 @@ echo put_header_assets();
         });
     }
     google.maps.event.addDomListener(window, 'load', initialize);
-</script>
+</script> -->
 
 <script>
     $(document).ready(function() {
-
+        $('#help-popover-adjustment').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+            } 
+        }); 
 
         $('#sel-customer').change(function() {
             var id = $(this).val();
@@ -1113,6 +1158,8 @@ echo put_header_assets();
                 success: function(response) {
                     if (response.customer.email) {
                         $("#estimate-customer-email").val(response.customer.email);
+                    }else{
+                        $("#estimate-customer-email").val('');
                     }
 
                     if (response.customer.phone_m) {
@@ -1151,10 +1198,54 @@ echo put_header_assets();
             var markup_amount = $('#markup_input').val();
 
             $("#markup_input_form").val(markup_amount);
-            $("#span_markup_input_form").text(markup_amount);
+            //$("#span_markup_input_form").text(markup_amount);
             $("#span_markup").text(markup_amount);
 
             $('#modalSetMarkup').modal('toggle');
+        });
+
+        $('#modalQuickAddCustomer').modal({backdrop: 'static', keyboard: false});
+        
+        $('.btn-quick-add-customer').on('click', function(){
+            $('#modalQuickAddCustomer').modal('show');            
+            $.ajax({
+                url: base_url + 'invoice/new_customer_form',
+                type: "GET",
+                success: function (response) {
+                    $('#modalQuickAddCustomer .modal-body').html(response);
+                },
+                beforeSend: function(data) {
+                    $('#modalQuickAddCustomer .modal-body').html('<span class="bx bx-loader bx-spin"></span>')
+                },
+            });
+        });
+
+        $('#frm-estimate-quick-add-customer').on('submit', function(e){
+            e.preventDefault(); 
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+                data: $('#frm-estimate-quick-add-customer').serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    $('#modalQuickAddCustomer').modal('hide');           
+                    Swal.fire({                            
+                        text: 'Customer data was created successfully',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                    
+                },
+                error: function(response) {
+                    console.log(response);
+
+                }
+            });
         });
     });
 </script>
@@ -1185,6 +1276,14 @@ echo put_header_assets();
 </script>
 <script>
     $(function() {
+        var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
+        });
+
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
+        });
+
         $("#datepicker_dateissued").datepicker({
             format: 'M dd, yyyy'
         });
@@ -1617,65 +1716,6 @@ echo put_header_assets();
     });
 </script>
 <script>
-$(document).on('click', '.saveCustomer', function() {
-
-    var first_name = $('[name="first_name"]').val();
-    var middle_name = $('[name="middle_name"]').val();
-    var last_name = $('[name="last_name"]').val();
-    var contact_email = $('[name="contact_email"]').val();
-    var contact_mobile = $('[name="contact_mobile"]').val();
-    var contact_phone = $('[name="contact_phone"]').val();
-    var customer_type = $('[name="customer_type"]').val();
-    var street_address = $('[name="street_address"]').val();
-    var suite_unit = $('[name="suite_unit"]').val();
-    var city = $('[name="city"]').val();
-    var postcode = $('[name="postcode"]').val();
-    var state = $('[name="state"]').val();
-
-    //new added
-    var suffix_name = $('[name="suffix_name"]').val();
-    var date_of_birth = $('[name="date_of_birth"]').val();
-    var social_security_number = $('[name="social_security_number"]').val();
-    var status = $('[name="status"]').val();
-
-    // alert(first_name);
-
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
-                    data: {
-                        first_name: first_name,
-                        middle_name: middle_name,
-                        last_name: last_name,
-                        contact_email: contact_email,
-                        contact_mobile: contact_mobile,
-                        contact_phone: contact_phone,
-                        customer_type: customer_type,
-                        street_address: street_address,
-                        suite_unit: suite_unit,
-                        city: city,
-                        postcode: postcode,
-                        state: state,
-                        suffix_name: suffix_name,
-                        date_of_birth: date_of_birth,
-                        social_security_number: social_security_number,
-                        status: status
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        // alert('success');
-                        location.reload();
-                    },
-                    error: function(response) {
-                        location.reload();
-
-                    }
-                });
-
-});
-</script>
-
-<script>
     
     $(".select_item2a").click(function () {
         // taxRate();
@@ -1746,12 +1786,21 @@ $(document).on('click', '.saveCustomer', function() {
             //     "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
             //     "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
             //     "</tr>";
+            if( item_type == 'Product' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option value="service">Service</option><option value="fee">Fee</option></select>';
+            }else if( item_type == 'Fees' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option value="service">Service</option><option selected="selected" value="fee">Fee</option></select>';
+            }else if( item_type == 'Service' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option  selected="selected" value="service">Service</option><option value="fee">Fee</option></select>';
+            }else{
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
+            }
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
-                "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                "<td width=\"20%\"><div class=\"dropdown-wrapper\">"+item_type_dropdown+"</div></td>\n" +
                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
@@ -1761,7 +1810,7 @@ $(document).on('click', '.saveCustomer', function() {
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
                 "<td>\n" +
-                "<a href=\"#\" class=\"remove nsm-button danger\" id='"+idd+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+                "<a href=\"#\" class=\"remove nsm-button danger\" id='"+count+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
                 "</td>\n" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");

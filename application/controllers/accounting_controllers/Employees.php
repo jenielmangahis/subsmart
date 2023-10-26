@@ -466,8 +466,9 @@ class Employees extends MY_Controller {
         $payscale = $this->users_model->get_payscale_by_id($this->input->post('empPayscale'));
 
         $data = [
-            'FName' => $this->input->post('first_name'),
-            'LName' => $this->input->post('last_name'),
+            'employee_number' => $this->input->post('emp_number'),
+            'FName' => $this->input->post('firstname'),
+            'LName' => $this->input->post('lastname'),
             'username' => $this->input->post('email'),
             'email' => $this->input->post('email'),
             'password' => hash("sha256",$this->input->post('password')),
@@ -480,7 +481,7 @@ class Employees extends MY_Controller {
             'address' => $this->input->post('address'),
             'state' => $this->input->post('state'),
             'city' => $this->input->post('city'),
-            'postal_code' => $this->input->post('zip_code'),
+            'postal_code' => $this->input->post('postal_code'),
             'payscale_id' => $this->input->post('empPayscale'),
             'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : null,
             'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : null,
@@ -513,13 +514,13 @@ class Employees extends MY_Controller {
             $payDetails = [
                 'user_id' => $last_id,
                 'company_id' => logged('company_id'),
-                'pay_schedule_id' => $this->input->post('pay_schedule'),
-                'pay_type' => $this->input->post('pay_type'),
-                'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-                'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-                'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
-                'pay_method' => $this->input->post('payment_method'),
+                // 'pay_schedule_id' => $this->input->post('pay_schedule'),
+                // 'pay_type' => $this->input->post('pay_type'),
+                // 'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+                // 'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+                // 'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+                // 'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+                'pay_method' => $this->input->post('pay_method'),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -549,12 +550,18 @@ class Employees extends MY_Controller {
             ];
             $this->Trac360_model->add('trac360_people', $data);
 
-            $this->session->set_flashdata('success', "New Employee Added!");
+            // $this->session->set_flashdata('success', "New Employee Added!");
         } else {
-            $this->session->set_flashdata('error', "Please try again!");
+            // $this->session->set_flashdata('error', "Please try again!");
         }
 
-        redirect('/accounting/employees');
+        // redirect('/accounting/employees');
+
+        echo json_encode([
+            'success' => $last_id ? true : false,
+            'title' => $last_id ? "Save Successful!" : "Failed",
+            'message' => $last_id ? "New employee source has been added successfully." : "Something is wrong in the process."
+        ]);
     }
 
     public function update($type, $id)
