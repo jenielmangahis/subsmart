@@ -41,7 +41,7 @@
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                             <div class="nsm-field-group icon-right">
-                                <input type="email" class="nsm-field form-control" id="employee_username" name="username" required>
+                                <input type="email" class="nsm-field form-control" id="employee_email" name="email" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
@@ -90,11 +90,15 @@
                             <label class="content-subtitle fw-bold d-block mb-2">Address</label>
                             <input type="text" class="nsm-field form-control" name="address" required>
                         </div>
-                        <div class="col-12 col-md-8">
+                        <div class="col-12 col-md-5">
+                            <label class="content-subtitle fw-bold d-block mb-2">City</label>
+                            <input type="text" class="nsm-field form-control" name="city" required>
+                        </div>
+                        <div class="col-12 col-md-5">
                             <label class="content-subtitle fw-bold d-block mb-2">State</label>
                             <input type="text" class="nsm-field form-control" name="state" required>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-2">
                             <label class="content-subtitle fw-bold d-block mb-2">Zip Code</label>
                             <input type="text" class="nsm-field form-control" name="postal_code" required>
                         </div>

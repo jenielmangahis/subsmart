@@ -448,12 +448,10 @@ $(function() {
                     row.children('td').each(function(index, value)  {
                         switch(index) {
                             case 2 :
-                                $(this).html(res.pay_details.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check');
+                                $(this).html(res.pay_details !== null && res.pay_details.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check');
                             break;
                             case 3 :
-                                if(res.pay_details.pay_method !== 'commission') {
-                                    $(this).html(parseFloat(res.total_hrs).toFixed(2));
-                                }
+                                $(this).html(parseFloat(res.total_hrs).toFixed(2));
                             break;
                             case 4 :
                                 $(this).html(res.commission !== null ? formatter.format(parseFloat(res.commission)) : formatter.format(parseFloat(0.00)));
@@ -776,7 +774,7 @@ $(function() {
         let _this = $(this);
         e.preventDefault();
 
-        var url = base_url+"users/addNewEmployeeV2";
+        var url = base_url+"accounting/employees/create";
         _this.find("button[type=submit]").html("Saving");
         _this.find("button[type=submit]").prop("disabled", true);
 
@@ -785,63 +783,30 @@ $(function() {
             url: url,
             data: _this.serialize(),
             dataType: "json",
-            success: function(result) {
-                if (result == 1) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "New employee source has been added successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            addEmployeeToPayroll($('#modal-container #employee-modal #employee_username').val());
-                            // location.reload();
-                        }
-                    });
-                } else if (result == 3) {
-                    Swal.fire({
-                        title: 'Failed',
-                        text: "Insufficient license. Please purchase license to continue adding user.",
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Purchase License'
-                    }).then((result) => {
-                        if (result.value) {
-                            window.location.href = base_url + 'mycrm/membership';
-                        }
-                    });
-                } else if (result == 4) {
-                    Swal.fire({
-                        title: 'Failed',
-                        text: "ADT Sales App password not same",
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                } else if (result == 5) {
-                    Swal.fire({
-                        title: 'Failed',
-                        text: "ADT Sales App account already exists",
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Failed',
-                        text: "Something is wrong in the process",
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                }
+            success: function(res) {
+                // var res = JSON.parse(result);
 
-                $("#modal-container #employee-modal").modal('hide');
-                // _this.trigger("reset");
+                Swal.fire({
+                    title: res.title,
+                    text: res.message,
+                    icon: res.success ? 'success' : 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    if(result.value) {
+                        if(res.success) {
+                            if(payroll.payscale === $('#employee-modal #add_employee_form select[name="empPayscale"]').val()) {
+                                addEmployeeToPayroll($('#modal-container #employee-modal #employee_email').val());
+                            }
 
-                _this.find("button[type=submit]").html("Save");
-                _this.find("button[type=submit]").prop("disabled", false);
+                            $("#modal-container #employee-modal").modal('hide');
+                            // _this.trigger("reset");
+                        }
+
+                        _this.find("button[type=submit]").html("Save");
+                        _this.find("button[type=submit]").prop("disabled", false);
+                    }
+                });
             },
         });
     });
