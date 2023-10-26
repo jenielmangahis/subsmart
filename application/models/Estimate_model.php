@@ -452,7 +452,7 @@ class Estimate_model extends MY_Model
     public function filterBy($filters = array(), $company_id = 0, $role_id = 0)
     {
 
-        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status');
+        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id,estimates.estimate_type, estimates.company_id, estimates.status');
         $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
 
 //        $this->db->select("*");

@@ -61,22 +61,27 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Sort by Newest First</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Sort by <?= $order_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-asc">Newest first</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-desc">Oldest first</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-desc">Newest first</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest first</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted: newest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted: oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-asc">Number: Asc</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-desc">Number: Desc</a></li>
+                                <!-- <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-asc">Number: Asc</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-desc">Number: Desc</a></li> -->
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-asc">Amount: Lowest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount: Highest</a></li>
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <?php if( $tab == '' ){ ?>
+                                    <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <?php }else{ ?>
+                                    <span>Filter by <?= ucwords($tab); ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <?php } ?>
+                                
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <?php
@@ -103,7 +108,7 @@
                                 <i class='bx bx-fw bx-chart'></i> New Estimate
                             </button>
                             <?php if (isset($estimates) && count($estimates) > 0) : ?>
-                                <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('estimate/print') ?>'">
+                                <button type="button" class="nsm-button primary" onclick="window.open('<?php echo base_url('estimate/print') ?>','_blank')">
                                     <i class='bx bx-fw bx-printer'></i>
                                 </button>
                             <?php endif; ?>
