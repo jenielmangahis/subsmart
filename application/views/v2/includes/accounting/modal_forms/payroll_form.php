@@ -57,11 +57,12 @@
                     <td data-name="Commission" class="text-end">COMMISSION</td>
                     <td data-name="Memo">MEMO</td>
                     <td data-name="Total Hours" class="text-end">TOTAL HOURS</td>
+                    <td data-name="Per Hour Pay" class="text-end">PER HOUR PAY</td>
+                    <td data-name="Total Hours Pay" class="text-end">TOTAL HOURS PAY</td>
                     <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
                 </tr>
             </thead>
             <tbody>
-                <?php $commissionTotal = 0.00; ?>
                 <?php if(count($employees)) : ?>
                 <?php foreach($employees as $employee) : $commissionTotal += floatval(str_replace(',', '', $employee->commission));?>
                 <tr>
@@ -76,56 +77,17 @@
                     </td>
                     <td><?=$employee->pay_details->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
                     <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></td>
-                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->commission)), 2)?></td>
+                    <td class="text-end">$<?=number_format(floatval(str_replace(',', '', $employee->commission)), 2)?></td>
                     <td>
                         <input type="text" name="memo[]" class="form-control nsm-field">
                     </td>
                     <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></p></td>
+                    <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->per_hour_pay)), 2)?></p></td>
+                    <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->regular_hrs_pay_total)), 2)?></p></td>
                     <td><p class="m-0 text-end"><span class="total-pay">$<?=number_format(floatval(str_replace(',', '', $employee->total_pay)), 2)?></span></p></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php endif; ?>
-                <!-- <?php if(count($payDetails) > 0) : ?>
-                <?php foreach($payDetails as $payDetail) : ?>
-                <?php $employee = $this->users_model->getUserByID($payDetail->user_id); ?>
-                <tr>
-                    <td>
-                        <div class="table-row-icon table-checkbox">
-                            <input class="form-check-input select-one table-select" type="checkbox" value="<?=$employee->id?>" checked>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#" class="text-decoration-none"><?=$employee->LName.', '.$employee->FName?></a>
-                        <?php 
-                            if($payDetail->pay_type === 'hourly') {
-                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($payDetail->pay_rate), 2, '.', ',')).'</span>/hour';
-                            } else if($payDetail->pay_type === 'salary') {
-                                $payRate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval($payDetail->pay_rate), 2, '.', ',')).'</span>/'.$payDetail->salary_frequency;
-                            } else {
-                                $payRate = 'Commission only';
-                            }
-                        ?>
-                        <p class="m-0"><?=$payRate?></p>
-                    </td>
-                    <td><?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
-                    <td>
-                        <?php if($payDetail->pay_type !== 'commission') : ?>
-                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control nsm-field text-end regular-pay-hours">
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if($payDetail->pay_type === 'commission') : ?>
-                        <input type="number" name="commission[]" step="0.01" class="form-control nsm-field text-end employee-commission">
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <input type="text" name="memo[]" class="form-control nsm-field">
-                    </td>
-                    <td><p class="m-0">0.00</p></td>
-                    <td><p class="m-0"><span class="total-pay">$0.00</span></p></td>
-                </tr>
-                <?php endforeach;?>
-                <?php endif; ?> -->
             </tbody>
             <tfoot>
                 <tr class="text-end">
@@ -133,15 +95,17 @@
                     <td></td>
                     <td>TOTAL</td>
                     <td>0.00</td>
-                    <td>$<?=number_format($commissionTotal, 2)?></td>
+                    <td>$0.00</td>
                     <td></td>
                     <td>0.00</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
                     <td>$0.00</td>
                 </tr>
                 <tr>
                     <td colspan="8">
                         <div class="nsm-page-buttons page-buttons-container">
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="add-employee-button">
                                 Add an employee
                             </button>
                         </div>

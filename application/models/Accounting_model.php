@@ -455,5 +455,26 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();            
         }
+        
+        // Get Taxable Sales Summary data in Database
+        if ($reportType == "taxable_sales_summary") {
+            $this->db->select('items.type AS product_type, SUM((((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax)) AS total');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('items.type !=', '');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('items.type');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
+
     }
 }
