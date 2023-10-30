@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
                                         <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
-                                        <h5><small id="reportDate">January 1 - <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
                             </div>

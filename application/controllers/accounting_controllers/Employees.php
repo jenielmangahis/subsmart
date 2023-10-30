@@ -1268,15 +1268,24 @@ class Employees extends MY_Controller {
         {
             $employee = $this->users_model->getUser($paycheck->employee_id);
 
+            $checkNo = $paycheck->check_no;
+            if($paycheck->status === '4') {
+                $checkNo = 'Void';
+            }
+
+            if($paycheck->pay_method === 'Adjustment' && $paycheck->status !== '4') {
+                $checkNo = '-';
+            }
+
             $data[] = [
                 'id' => $paycheck->id,
                 'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
                 'employee_id' => $paycheck->employee_id,
                 'name' => "$employee->LName, $employee->FName",
-                'total_pay' => number_format(floatval($paycheck->total_pay), 2),
-                'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                'total_pay' => number_format(floatval(str_replace(',', '', $paycheck->total_pay)), 2),
+                'net_pay' => number_format(floatval(str_replace(',', '', $paycheck->net_pay)), 2),
                 'pay_method' => $paycheck->pay_method,
-                'check_number' => !empty($paycheck->check_no) ? $paycheck->check_no : null,
+                'check_number' => $checkNo,
                 'status' => '-'
             ];
         }
@@ -1677,5 +1686,564 @@ class Employees extends MY_Controller {
         $id = $this->accounting_worksites_model->create($post);
 
         echo json_encode(['id' => $id, 'name' => $post['name']]);
+    }
+
+    public function update_paycheck_num($paycheckId)
+    {
+        $update = $this->accounting_paychecks_model->update_check_no($paycheckId, $this->input->post('check_number'));
+
+        echo json_encode($update);
+    }
+
+    public function print_multiple_paychecks()
+    {
+        $this->load->helper('pdf_helper');
+
+        $title = "Paycheck";
+
+        tcpdf();
+        $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, 0, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('helvetica', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        ob_end_clean();
+
+        foreach($this->input->post('paycheck_id') as $id)
+        {
+            $paycheck = $this->accounting_paychecks_model->get_by_id($id);
+            $companyName = $this->invoice_model->getclientsData($paycheck->company_id)->business_name;
+            $businessProfile = $this->business_model->getById($paycheck->company_id);
+
+            $companyAddress = !empty($businessProfile->street) ? $businessProfile->street.'<br>' : '';
+            $companyAddress .= !empty($businessProfile->city) ? $businessProfile->city : '';
+            $companyAddress .= !empty($businessProfile->state) ? ', '.$businessProfile->state : '';
+            $companyAddress .= !empty($businessProfile->postal_code) ? ' '.$businessProfile->postal_code : '';
+
+            $netPay = number_format(floatval(str_replace(',', '', $paycheck->net_pay)), 2);
+            $netPay = str_replace('$-', '-$', '$'.$netPay);
+
+            $employee = $this->users_model->getUser($paycheck->employee_id);
+            $name = $employee->FName . ' ' . $employee->LName;
+
+            $address = '';
+            $address .= !empty($employee->address) ? $employee->address.'<br>' : '';
+            $address .= !empty($employee->city) ? $employee->city : '';
+            $address .= !empty($employee->state) ? ', '.$employee->state : '';
+            $address .= !empty($employee->postal_code) ? ' '.$employee->postal_code : '';
+
+            $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+            $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+            $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+
+            $totalHrs = floatval(str_replace(',', '', $payrollItem->employee_hours));
+
+            if($payscale->pay_type === 'Hourly') {
+                $perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
+                $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Daily') {
+                $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+                $hoursPerDay = 8.00;
+                $perHourPay = $dailyPay / $hoursPerDay;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Weekly') {
+                $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                $hoursPerWeek = 40.00;
+                $perHourPay = $weeklyPay / $hoursPerWeek;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Monthly') {
+                $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $perHourPay = $monthlyPay / $hoursPerMonth;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            if($payscale->pay_type === 'Yearly') {
+                $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+                $hoursPerWeek = 40.00;
+                $hoursPerMonth = $hoursPerWeek * 4;
+                $hoursPerYear = $hoursPerMonth * 12;
+                $perHourPay = $yearlyPay / $hoursPerYear;
+    
+                $totalPay = $perHourPay * $totalHrs;
+            }
+    
+            $ssTax = (floatval(str_replace(',', '', $payrollItem->employee_total_pay)) / 100) * 6.2;
+            $medicareTax = (floatval(str_replace(',', '', $payrollItem->employee_total_pay)) / 100) * 1.45;
+            // $empTax = $empSocial + $empMedicare;
+
+            $html = '<table>
+                <tr>
+                    <td>
+                        <p style="margin: 0">'.$companyName.'<br>'.$companyAddress.'</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right">
+                        <p style="margin: 0">Pay Stub Detail<br>PAY DATE: '.date('m/d/Y', strtotime($paycheck->pay_date)).'<br>NET PAY: '.$netPay.'</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="margin: 0">'.$name.'<br>'.$address.'</p>
+                    </td>
+                </tr>
+            </table>
+            <br /><br /><br />';
+
+            $html .= '<table>
+                <tr>
+                    <td>
+                        <p style="margin: 0"><b>EMPLOYER</b><br>'.$companyName.'<br>'.$companyAddress.'</p>
+                    </td>
+                    <td>
+                        <p style="margin: 0"><b>PAY PERIOD</b><br>Period Beginning: '.date('m/d/Y', strtotime($payroll->pay_period_start)).'<br>Period Ending: '.date('m/d/Y', strtotime($payroll->pay_period_end)).'<br>Pay Date: '.date('m/d/Y', strtotime($paycheck->pay_date)).'<br>Total Hours: 0.00</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="margin: 0"><b>EMPLOYEE</b><br>'.$name.'<br>'.$address.'</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b>NET PAY: </b><span style="float: right"><b>'.$netPay.'</b></span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><b>MEMO:</b><br>'.$payrollItem->employee_memo.'</p>
+                    </td>
+                </tr>
+            </table>
+            <br /><br /><br />';
+
+            $html .= '<table>
+                <tr>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="40%"><b>PAY</b></th>
+                                    <th width="15%" style="text-align: right"><b>Hours</b></th>
+                                    <th width="15%" style="text-align: right"><b>Rate</b></th>
+                                    <th width="15%" style="text-align: right"><b>Current</b></th>
+                                    <th width="15%" style="text-align: right"><b>YTD</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Regular Pay Hours</td>
+                                    <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_hours)), 2).'</td>
+                                    <td style="text-align: right">'.number_format($perHourPay, 2).'</td>
+                                    <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $totalPay)), 2).'</td>
+                                    <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $totalPay)), 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Commission</td>
+                                    <td style="text-align: right">-</td>
+                                    <td style="text-align: right">-</td>
+                                    <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_commission)), 2).'</td>
+                                    <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_commission)), 2).'</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="50%"><b>DEDUCTIONS</b></th>
+                                    <th width="25%" style="text-align: right"><b>Current</b></th>
+                                    <th width="25%" style="text-align: right"><b>YTD</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align: right"></td>
+                                    <td style="text-align: right"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            <table>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />';
+
+            $html .= '<table>
+                <tr>
+                    <td style="padding-top: 20px">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="70%"><b>TAXES</b></th>
+                                    <th width="15%" style="text-align: right"><b>Current</b></th>
+                                    <th width="15%" style="text-align: right"><b>YTD</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Federal Income Tax</td>
+                                    <td style="text-align: right">0.00</td>
+                                    <td style="text-align: right">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Social Security</td>
+                                    <td style="text-align: right">'.number_format($ssTax, 2).'</td>
+                                    <td style="text-align: right">'.number_format($ssTax, 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Medicare</td>
+                                    <td style="text-align: right">'.number_format($medicareTax, 2).'</td>
+                                    <td style="text-align: right">'.number_format($medicareTax, 2).'</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td style="padding-top: 20px">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th width="50%"><b>SUMMARY</b></th>
+                                    <th width="25%" style="text-align: right"><b>Current</b></th>
+                                    <th width="25%" style="text-align: right"><b>YTD</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Pay</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($paycheck->total_pay, 2)).'</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($paycheck->total_pay, 2)).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Taxes</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($payrollItem->employee_taxes, 2)).'</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($payrollItem->employee_taxes, 2)).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Deductions</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($deductionsTotal, 2)).'</td>
+                                    <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($deductionsTotal, 2)).'</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><b>NET PAY</b></td>
+                                    <td style="text-align: right"><b>'.$netPay.'</b></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            </table>';
+
+            $obj_pdf->AddPage();
+            $obj_pdf->writeHTML($html, true, false, true, false, '');
+        }
+
+        $obj_pdf->Output(getcwd()."/assets/pdf/$fileName", 'I');
+    }
+
+    public function print_paycheck()
+    {
+        $this->load->helper('pdf_helper');
+
+        $paycheck = $this->accounting_paychecks_model->get_by_id($this->input->post('paycheck_id'));
+        $companyName = $this->invoice_model->getclientsData($paycheck->company_id)->business_name;
+        $businessProfile = $this->business_model->getById($paycheck->company_id);
+
+        $companyAddress = !empty($businessProfile->street) ? $businessProfile->street.'<br>' : '';
+        $companyAddress .= !empty($businessProfile->city) ? $businessProfile->city : '';
+        $companyAddress .= !empty($businessProfile->state) ? ', '.$businessProfile->state : '';
+        $companyAddress .= !empty($businessProfile->postal_code) ? ' '.$businessProfile->postal_code : '';
+
+        $netPay = number_format(floatval(str_replace(',', '', $paycheck->net_pay)), 2);
+        $netPay = str_replace('$-', '-$', '$'.$netPay);
+
+        $employee = $this->users_model->getUser($paycheck->employee_id);
+        $name = $employee->FName . ' ' . $employee->LName;
+
+        $address = '';
+        $address .= !empty($employee->address) ? $employee->address.'<br>' : '';
+        $address .= !empty($employee->city) ? $employee->city : '';
+        $address .= !empty($employee->state) ? ', '.$employee->state : '';
+        $address .= !empty($employee->postal_code) ? ' '.$employee->postal_code : '';
+
+        $payroll = $this->accounting_payroll_model->get_by_id($paycheck->payroll_id);
+        $payrollItem = $this->accounting_payroll_model->get_payroll_item($paycheck->payroll_item_id);
+
+        $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
+
+        $totalHrs = floatval(str_replace(',', '', $payrollItem->employee_hours));
+
+        if($payscale->pay_type === 'Hourly') {
+            $perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
+            $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Daily') {
+            $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+            $hoursPerDay = 8.00;
+            $perHourPay = $dailyPay / $hoursPerDay;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Weekly') {
+            $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+            $hoursPerWeek = 40.00;
+            $perHourPay = $weeklyPay / $hoursPerWeek;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Monthly') {
+            $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+            $hoursPerWeek = 40.00;
+            $hoursPerMonth = $hoursPerWeek * 4;
+            $perHourPay = $monthlyPay / $hoursPerMonth;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        if($payscale->pay_type === 'Yearly') {
+            $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+            $hoursPerWeek = 40.00;
+            $hoursPerMonth = $hoursPerWeek * 4;
+            $hoursPerYear = $hoursPerMonth * 12;
+            $perHourPay = $yearlyPay / $hoursPerYear;
+
+            $totalPay = $perHourPay * $totalHrs;
+        }
+
+        $ssTax = (floatval(str_replace(',', '', $payrollItem->employee_total_pay)) / 100) * 6.2;
+        $medicareTax = (floatval(str_replace(',', '', $payrollItem->employee_total_pay)) / 100) * 1.45;
+        // $empTax = $empSocial + $empMedicare;
+
+        $html = '<table>
+            <tr>
+                <td>
+                    <p style="margin: 0">'.$companyName.'<br>'.$companyAddress.'</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">
+                    <p style="margin: 0">Pay Stub Detail<br>PAY DATE: '.date('m/d/Y', strtotime($paycheck->pay_date)).'<br>NET PAY: '.$netPay.'</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="margin: 0">'.$name.'<br>'.$address.'</p>
+                </td>
+            </tr>
+        </table>
+        <br /><br /><br />';
+
+        $html .= '<table>
+            <tr>
+                <td>
+                    <p style="margin: 0"><b>EMPLOYER</b><br>'.$companyName.'<br>'.$companyAddress.'</p>
+                </td>
+                <td>
+                    <p style="margin: 0"><b>PAY PERIOD</b><br>Period Beginning: '.date('m/d/Y', strtotime($payroll->pay_period_start)).'<br>Period Ending: '.date('m/d/Y', strtotime($payroll->pay_period_end)).'<br>Pay Date: '.date('m/d/Y', strtotime($paycheck->pay_date)).'<br>Total Hours: 0.00</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="margin: 0"><b>EMPLOYEE</b><br>'.$name.'<br>'.$address.'</p>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><b>NET PAY: </b><span style="float: right"><b>'.$netPay.'</b></span></td>
+            </tr>
+            <tr>
+                <td>
+                    <p><b>MEMO:</b><br>'.$payrollItem->employee_memo.'</p>
+                </td>
+            </tr>
+        </table>
+        <br /><br /><br />';
+
+        $html .= '<table>
+            <tr>
+                <td>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="40%"><b>PAY</b></th>
+                                <th width="15%" style="text-align: right"><b>Hours</b></th>
+                                <th width="15%" style="text-align: right"><b>Rate</b></th>
+                                <th width="15%" style="text-align: right"><b>Current</b></th>
+                                <th width="15%" style="text-align: right"><b>YTD</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Regular Pay Hours</td>
+                                <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_hours)), 2).'</td>
+                                <td style="text-align: right">'.number_format($perHourPay, 2).'</td>
+                                <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $totalPay)), 2).'</td>
+                                <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $totalPay)), 2).'</td>
+                            </tr>
+                            <tr>
+                                <td>Commission</td>
+                                <td style="text-align: right">-</td>
+                                <td style="text-align: right">-</td>
+                                <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_commission)), 2).'</td>
+                                <td style="text-align: right">'.number_format(floatval(str_replace(',', '', $payrollItem->employee_commission)), 2).'</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="50%"><b>DEDUCTIONS</b></th>
+                                <th width="25%" style="text-align: right"><b>Current</b></th>
+                                <th width="25%" style="text-align: right"><b>YTD</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td style="text-align: right"></td>
+                                <td style="text-align: right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        <table>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />';
+
+        $html .= '<table>
+            <tr>
+                <td style="padding-top: 20px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="70%"><b>TAXES</b></th>
+                                <th width="15%" style="text-align: right"><b>Current</b></th>
+                                <th width="15%" style="text-align: right"><b>YTD</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Federal Income Tax</td>
+                                <td style="text-align: right">0.00</td>
+                                <td style="text-align: right">0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Social Security</td>
+                                <td style="text-align: right">'.number_format($ssTax, 2).'</td>
+                                <td style="text-align: right">'.number_format($ssTax, 2).'</td>
+                            </tr>
+                            <tr>
+                                <td>Medicare</td>
+                                <td style="text-align: right">'.number_format($medicareTax, 2).'</td>
+                                <td style="text-align: right">'.number_format($medicareTax, 2).'</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="padding-top: 20px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="50%"><b>SUMMARY</b></th>
+                                <th width="25%" style="text-align: right"><b>Current</b></th>
+                                <th width="25%" style="text-align: right"><b>YTD</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Pay</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($paycheck->total_pay, 2)).'</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($paycheck->total_pay, 2)).'</td>
+                            </tr>
+                            <tr>
+                                <td>Taxes</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($payrollItem->employee_taxes, 2)).'</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($payrollItem->employee_taxes, 2)).'</td>
+                            </tr>
+                            <tr>
+                                <td>Deductions</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($deductionsTotal, 2)).'</td>
+                                <td style="text-align: right">'.str_replace('$-', '-$', '$'.number_format($deductionsTotal, 2)).'</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><b>NET PAY</b></td>
+                                <td style="text-align: right"><b>'.$netPay.'</b></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </table>';
+
+        $title = "Paycheck";
+
+        tcpdf();
+        $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, 0, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('helvetica', '', 10);
+        $obj_pdf->setFontSubsetting(false);
+        $obj_pdf->AddPage();
+        ob_end_clean();
+        $obj_pdf->writeHTML($html, true, false, true, false, '');
+        $obj_pdf->Output(getcwd()."/assets/pdf/$fileName", 'I');
+    }
+
+    public function delete_paycheck($paycheckId)
+    {
+        $delete = $this->accounting_paychecks_model->delete($paycheckId);
+
+        echo json_encode([
+            'success' => $delete
+        ]);
+    }
+
+    public function void_paycheck($paycheckId)
+    {
+        $void = $this->accounting_paychecks_model->void_paycheck($paycheckId);
+
+        echo json_encode([
+            'success' => $void
+        ]);
+    }
+
+    public function edit_paycheck($paycheckId)
+    {
+        
     }
 }

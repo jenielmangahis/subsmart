@@ -12,16 +12,6 @@ class Accounting_model extends MY_Model {
         
         }
 
-        // Get Taxable Sales Detail Report data in Database
-        if ($reportType == "taxable_sales_detail") {
-            
-        }
-
-        // Get Taxable Sales Summary Report data in Database
-        if ($reportType == "taxable_sales_summary") {
-            
-        }
-
         // Get Customer Contact List Report data in Database
         if ($reportType == "customer_contact_list") {
             $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, mail_add AS billingAddress, CONCAT(city, " ", state, " ", zip_code) AS shippingAddress');
@@ -49,6 +39,8 @@ class Accounting_model extends MY_Model {
             $this->db->select('CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS date');
             $this->db->from('accounting_vendors');
             $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -148,6 +140,8 @@ class Accounting_model extends MY_Model {
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->where('invoices.status', "Unpaid");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('acs_profile.prof_id, customer');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -170,11 +164,13 @@ class Accounting_model extends MY_Model {
 
         // Get Customer Balance Detail data in Database
         if ($reportType == "customer_balance_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, invoices.due_date AS due_date, invoices.grand_total AS amount, accounting_receive_payment_invoices.open_balance AS open_balance, invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, invoices.due_date AS due_date, invoices.grand_total AS amount, accounting_receive_payment_invoices.open_balance AS open_balance, invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
             $this->db->where('invoices.status', "Unpaid");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('invoices.customer_id, customer');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -191,6 +187,8 @@ class Accounting_model extends MY_Model {
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->having('SUM(invoices_items.total) >', 0);
             $this->db->group_by('acs_profile.prof_id, customer_id');
@@ -202,7 +200,7 @@ class Accounting_model extends MY_Model {
 
         // Get Sales by Customer Detail data in Database
         if ($reportType == "sales_by_customer_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax), invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax), invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -211,6 +209,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('acs_profile.last_name !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('invoices.customer_id, customer');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -221,13 +221,15 @@ class Accounting_model extends MY_Model {
 
         // Get Sales by Customer Type Detail data in Database
         if ($reportType == "sales_by_customer_type_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, acs_profile.customer_type AS customer_type, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax), invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, acs_profile.customer_type AS customer_type, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax), invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('acs_profile.customer_type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -238,7 +240,7 @@ class Accounting_model extends MY_Model {
 
        // Get Sales by Product/Service Detail data in Database
         if ($reportType == "sales_by_product_service_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax) AS amount, invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax) AS amount, invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -248,6 +250,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -264,6 +268,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('accounting_vendors.f_name !=', '');
             $this->db->where('accounting_vendors.l_name !=', '');
             $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -279,6 +285,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('accounting_vendors.f_name !=', '');
             $this->db->where('accounting_vendors.l_name !=', '');
             $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -294,6 +302,8 @@ class Accounting_model extends MY_Model {
             $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
             $this->db->where('accounting_vendors.f_name !=', '');
             $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_vendor_transaction.transaction_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_vendor_transaction.transaction_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -312,6 +322,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(accounting_vendor_transaction.transaction_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_vendor_transaction.transaction_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -322,7 +334,7 @@ class Accounting_model extends MY_Model {
 
         // Get Inventory Valuation Detail data in Database
         if ($reportType == "inventory_valuation_detail") {
-            $this->db->select('invoices_items.invoice_id AS invoice_id, items.type AS product_service, DATE(invoices_items.date_created) AS date, "Purchase" AS transaction_type, invoices_items.id AS num, items.title AS name, invoices_items.qty AS qty, items.price AS rate, invoices_items.cost AS fifo_cost, items_has_storage_loc.qty AS qty_on_hand, (invoices_items.qty * items.price) AS asset_value');
+            $this->db->select('invoices_items.invoice_id AS invoice_id, items.type AS product_service, DATE_FORMAT(invoices_items.date_created,"%Y-%m-%d") AS date, "Purchase" AS transaction_type, invoices_items.id AS num, items.title AS name, invoices_items.qty AS qty, items.price AS rate, invoices_items.cost AS fifo_cost, items_has_storage_loc.qty AS qty_on_hand, (invoices_items.qty * items.price) AS asset_value');
             $this->db->from('invoices_items');
             $this->db->join('invoices', 'invoices.id = invoices_items.invoice_id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
@@ -330,6 +342,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices_items.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices_items.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -340,7 +354,7 @@ class Accounting_model extends MY_Model {
         
         // Get Estimates by Customer data in Database
         if ($reportType == "estimates_by_customer") {
-            $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.estimate_date AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.price * estimates_items.qty) + estimates_items.tax) AS amount');
+            $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(estimates.created_at,"%Y-%m-%d") AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.price * estimates_items.qty) + estimates_items.tax) AS amount');
             $this->db->from('estimates');
             $this->db->join('estimates_items', 'estimates_items.estimates_id = estimates.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
@@ -353,6 +367,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('estimates.status !=', '');
             $this->db->where('estimates.accepted_date !=', '');
             $this->db->where('estimates.expiry_date !=', '');
+            $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('estimates.company_id', $companyID);
             $this->db->group_by('acs_profile.prof_id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -363,13 +379,15 @@ class Accounting_model extends MY_Model {
 
         // Get Invoice List by Date data in Database
         if ($reportType == "invoice_list_by_date") {
-            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, "" AS memo_description, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS amount');
+            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, "" AS memo_description, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS amount');
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('invoices.customer_id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -392,13 +410,15 @@ class Accounting_model extends MY_Model {
 
         // Get Open Invoices Date data in Database
         if ($reportType == "open_invoices") {
-            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, invoices.date_issued AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
+            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('invoices.customer_id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -428,6 +448,8 @@ class Accounting_model extends MY_Model {
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
             $this->db->where('items.title !=', '');
             $this->db->where('items.price !=', 0);
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.id, items.title');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -438,7 +460,7 @@ class Accounting_model extends MY_Model {
 
         // Get Taxable Sales Detail data in Database
         if ($reportType == "taxable_sales_detail") {
-            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, invoices.due_date AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax) AS amount, invoices.total_due AS balance');
+            $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax) AS amount, invoices.total_due AS balance');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -448,6 +470,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -468,6 +492,8 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type !=', '');
             $this->db->where('items.price !=', '');
             $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
