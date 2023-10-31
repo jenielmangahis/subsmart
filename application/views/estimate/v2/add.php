@@ -310,6 +310,15 @@ echo put_header_assets();
             border-color: lightgray;
             border-width: 0;
         }
+        .help-block{            
+            font-size: 13px;
+            display: inline-block;
+            margin-left: 3px;
+            font-style: italic;
+        }
+        label.bold{
+            font-weight:bold;
+        }
     </style>
 
     <!-- page wrapper start -->
@@ -426,29 +435,6 @@ echo put_header_assets();
                             </div>
                             <hr>
                             <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-3">
-                                    <label for="estimate_date" class="required"><b>Estimate#</b></label>
-                                    <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                            required placeholder="Enter Estimate#"  value="<?php echo "EST-" . date("YmdHis"); ?>" /> -->
-                                    <?php 
-                                    foreach ($number as $num) :
-                                        $next = $num->estimate_number;
-                                        $arr = explode("-", $next);
-                                        $date_start = $arr[0];
-                                        $nextNum = $arr[1];
-                                    //    echo $number;
-                                    endforeach;
-                                    if($nextNum){
-                                        $val = (int)$nextNum + 1;
-                                        $est_number = str_pad($val, 9, "0", STR_PAD_LEFT);
-                                    }else{
-                                        $val = 1;
-                                        $est_number = str_pad($val, 9, "0", STR_PAD_LEFT);
-                                    }
-                                        $est_number = 'EST-'. $est_number;
-                                    ?>
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date" required placeholder="Enter Estimate#" value="<?= $est_number; ?>" />
-                                </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
@@ -632,7 +618,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-12">
-                                    <h6>Request a Deposit</h6>
+                                    <label class="bold">Request a Deposit</label>
                                     <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                                 </div>
                                 <!-- <div class="col-md-3 form-group">
@@ -663,17 +649,15 @@ echo put_header_assets();
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Message to Customer</h6>
-                                        </label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
+                                        <label class="bold">Message to Customer</label>
+                                        <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
                                         <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Terms &amp; Conditions</h6>
-                                        </label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
+                                        <label class="bold">Terms &amp; Conditions</label>
+                                        <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <textarea name="terms_conditions" cols="40" rows="2" class="form-control" id="terms_conditions_est"></textarea>
                                     </div>
                                 </div>
@@ -683,9 +667,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-4">
-                                    <label for="billing_date">
-                                        <h6>Attachment</h6>
-                                    </label>
+                                    <label class="bold">Attachment</label>
                                     <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
                                     <input type="file" name="est_contract_upload" id="est_contract_upload" class="form-control" />
                                 </div>
@@ -694,9 +676,8 @@ echo put_header_assets();
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Instructions</h6>
-                                        </label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                        <label class="bold">Instructions</label>
+                                        <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2" class="form-control" id="instructions_est"></textarea>
                                     </div>
                                 </div>
