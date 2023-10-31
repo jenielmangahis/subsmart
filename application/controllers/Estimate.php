@@ -137,14 +137,34 @@ class Estimate extends MY_Controller
 
     public function savenewestimate()
     {
+        $this->load->model('EstimateSettings_model');
+
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+
+        //Generate Estimate Number
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        if( $setting ){
+            $next_num = $setting->estimate_num_next;
+            $prefix   = $setting->estimate_num_prefix;
+        }else{
+            $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+            if( $lastInsert ){
+                $next_num = $lastInsert->id + 1;
+            }else{
+                $next_num = 1;
+            }
+            $prefix = 'EST-';            
+        }
+
+        $estimate_number = str_pad($next_num, 9, "0", STR_PAD_LEFT);
+        $estimate_number = $prefix . $estimate_number;
 
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            'estimate_number' => $estimate_number,
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),
@@ -193,7 +213,12 @@ class Estimate extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
-        if ($addQuery > 0) {
+        if ($addQuery > 0) {            
+            //Update estimate setting
+            if( $setting ){
+                $estimate_setting = ['estimate_num_next' => $next_num + 1];
+                $this->EstimateSettings_model->update($setting->id, $estimate_setting);
+            }
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -2233,8 +2258,15 @@ class Estimate extends MY_Controller
 
         $company_id = logged('company_id');
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+        if( $lastInsert ){
+            $default_next_num = $lastInsert->id + 1;
+        }else{
+            $default_next_num = 1;
+        }
 
         $this->page_data['setting'] = $setting;
+        $this->page_data['default_next_num'] = $default_next_num;
         $this->load->view('v2/pages/estimate/settings', $this->page_data);
     }
 
@@ -2319,5 +2351,73 @@ class Estimate extends MY_Controller
 
         $success = 'success';
         echo json_encode($addQuery);
+    }
+
+    public function ajax_save_estimate_setttings()
+    {
+        $this->load->model('EstimateSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save settings';
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $is_valid   = 1;
+
+        if( $post['prefix'] == '' || $post['base'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please specify estimate number prefix and next number';
+        }
+
+        if( $is_valid == 1 ){
+            $is_residential_message_default = 0;
+        if( isset($post['is_residential_default']) ){
+            $is_residential_message_default = 1;
+        }        
+
+        $settings   = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        if( $settings ){
+            $data = [
+                    'estimate_num_prefix' => $post['prefix'],
+                    'estimate_num_next' => $post['base'],
+                    'residential_message' => $post['residential_message'],
+                    'residential_terms_and_conditions' => $post['residential_terms'],
+                    'commercial_message' => $post['message_commercial'],
+                    'commercial_terms_and_conditions' => $post['terms_commercial'],
+                    'is_residential_message_default' => $is_residential_message_default
+                ];
+
+                $this->EstimateSettings_model->update($settings->id, $data);
+            }else{
+                $data = [
+                    'company_id' => $company_id,
+                    'estimate_num_prefix' => $post['prefix'],
+                    'estimate_num_next' => $post['base'],
+                    'residential_message' => $post['residential_message'],
+                    'residential_terms_and_conditions' => $post['residential_terms'],
+                    'commercial_message' => $post['message_commercial'],
+                    'commercial_terms_and_conditions' => $post['terms_commercial'],
+                    'is_residential_message_default' => $is_residential_message_default,
+                    'default_expire_period' => 'weeks',
+                    'capture_customer_signature' => 1,
+                    'hide_item_price' => 1,
+                    'hide_item_qty' => 1,
+                    'hide_item_tax' => 1,
+                    'hide_item_discount' => 1,
+                    'hide_item_total' => 1,
+                    'hide_grand_total' => 1
+
+                ];
+                
+                $this->EstimateSettings_model->create($data);
+            }
+
+            $is_success = 1;
+            $msg = '';
+        }        
+
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
     }
 }
