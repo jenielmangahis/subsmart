@@ -32,6 +32,8 @@
     var page_size = $('select[name="page_size"]').val();
     var pageOrientation = $('select[name="pageOrientation"]').val();
     var pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
+    var date_from = $('input[name="date_from"]').val();
+    var date_to = $('input[name="date_to"]').val();
     // =========================
     var reportConfig = {
         businessLogoURL: businessLogoURL,
@@ -43,6 +45,8 @@
         page_size: page_size,
         pageOrientation: pageOrientation,
         pageHeaderRepeat: pageHeaderRepeat,
+        date_from: date_from,
+        date_to: date_to,
     };
 
     // Render Report Data Script
@@ -65,6 +69,8 @@
         page_size = $('select[name="page_size"]').val();
         pageOrientation = $('select[name="pageOrientation"]').val();
         pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
+        date_from = $('input[name="date_from"]').val();
+        date_to = $('input[name="date_to"]').val();
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
@@ -75,6 +81,8 @@
             page_size: page_size,
             pageOrientation: pageOrientation,
             pageHeaderRepeat: pageHeaderRepeat,
+            date_from: date_from,
+            date_to: date_to,
         };
         // =========================
         (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
@@ -275,4 +283,16 @@
         let textLength = $("#NOTES").val().length;
         $(".noteCharMax").text(textLength + " / 4000 characters max");
     });
+
+    $('input[name="date_from"]').on('input', function() {
+        let numericDate = $(this).val();
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        $('#date_from_text').text(wordDate);
+    }).trigger('input');
+      
+    $('input[name="date_to"]').on('input', function() {
+        let numericDate = $(this).val();
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        $('#date_to_text').text(wordDate);
+    }).trigger('input');
 </script>

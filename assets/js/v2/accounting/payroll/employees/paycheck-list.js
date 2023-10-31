@@ -166,6 +166,131 @@ $('#print-save-pdf-modal #print-pdf').on('click', function(e) {
     $(pdfWindow.document).find('iframe').css('border', '0');
 });
 
+$('#paycheck-table .select-all').on('change', function() {
+    $('#paycheck-table .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+$('#paycheck-table .select-one').on('change', function() {
+    $('#paycheck-table .select-all').prop('checked', $('#paycheck-table .select-one:checked').length === $('#paycheck-table .select-one').length);
+
+    if($('#paycheck-table .select-one:checked').length > 0) {
+        $('.print-paychecks-button').attr('id', 'print-paychecks');
+        $('.print-paychecks-button').prop('disabled', false);
+    } else {
+        $('.print-paychecks-button').removeAttr('id');
+        $('.print-paychecks-button').prop('disabled', true);
+    }
+});
+
+$(document).on('click', '#print-paychecks', function(e) {
+    e.preventDefault();
+
+    if($('#print-paycheck-form').length < 1) {
+        $('body').append(`<form action="/accounting/employees/paycheck-list/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
+    }
+
+    $('#paycheck-table .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var id = row.find('.select-one').val();
+
+        $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id[]" value="${id}">`);
+    });
+
+    $('#print-paycheck-form').submit();
+    $('#print-paycheck-form').remove();
+});
+
+$('#paycheck-table [name="check_number[]"]').on('change', function() {
+    var checkNum = $(this).val();
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    var data = new FormData();
+    data.set('check_number', checkNum);
+
+    $.ajax({
+        url: `/accounting/employees/paycheck-list/update-paycheck-num/${id}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            
+        }
+    });
+});
+
+$('#paycheck-table .print-paycheck').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    if($('#print-paycheck-form').length < 1) {
+        $('body').append(`<form action="/accounting/employees/paycheck-list/print" method="post" id="print-paycheck-form" target="_blank"></form>`);
+    }
+
+    $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id" value="${id}">`);
+
+    $('#print-paycheck-form').submit();
+    $('#print-paycheck-form').remove();
+});
+
+$('#paycheck-table .delete-paycheck').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    $.get(`/accounting/employees/paycheck-list/delete/${id}`, function(res) {
+        var result = JSON.parse(res);
+        Swal.fire({
+            title: result.success ? 'Delete Successful!' : 'Failed!',
+            text: result.success ? 'Paycheck has been successfully deleted.' : 'Something is wrong in the process.',
+            icon: result.success ? 'success' : 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        }).then((r) => {
+            if(r.value) {
+                if(result.success) {
+                    location.reload();
+                }
+            }
+        });
+    });
+});
+
+$('#paycheck-table .void-paycheck').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+
+    $.get(`/accounting/employees/paycheck-list/void/${id}`, function(res) {
+        var result = JSON.parse(res);
+        Swal.fire({
+            title: result.success ? 'Void Successful!' : 'Failed!',
+            text: result.success ? 'Paycheck has been successfully voided.' : 'Something is wrong in the process.',
+            icon: result.success ? 'success' : 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        }).then((r) => {
+            if(r.value) {
+                if(result.success) {
+                    location.reload();
+                }
+            }
+        });
+    });
+});
+
+$('#paycheck-table .edit-paycheck').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+});
+
 function get_start_and_end_dates(val)
 {
     switch(val) {

@@ -84,6 +84,9 @@
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="print-save-pdf" data-bs-toggle="modal" data-bs-target="#print-save-pdf-modal">Print or save PDF</a></li>
                             </ul>
+                            <button type="button" class="dropdown-toggle nsm-button print-paychecks-button" disabled>
+                                Print
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -114,10 +117,10 @@
                             </td>
                             <td><?=$paycheck['pay_date']?></td>
                             <td><?=$paycheck['name']?></td>
-                            <td><?=str_replace('$-', '-$', '$'.number_format($paycheck['total_pay'], 2))?></td>
-                            <td><?=str_replace('$-', '-$', '$'.number_format($paycheck['net_pay'], 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$paycheck['total_pay'])?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$paycheck['net_pay'])?></td>
                             <td><?=$paycheck['pay_method']?></td>
-                            <td><?=!empty($paycheck['check_number']) ? $paycheck['check_number'] : '<input type="text" name="check_number[]" class="form-control nsm-field">'?></td>
+                            <td><?=!in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?></td>
                             <td><?=$paycheck['status']?></td>
                             <td>
                                 <div class="dropdown float-end">

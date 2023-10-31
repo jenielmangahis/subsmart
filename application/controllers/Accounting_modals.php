@@ -2775,6 +2775,7 @@ class Accounting_modals extends MY_Controller
                             'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                             'total_pay' => floatval(str_replace(',', '', $empTotalPay)),
                             'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                            'pay_method' => 'Check',
                             'status' => 1
                         ];
 

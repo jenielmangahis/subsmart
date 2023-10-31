@@ -40,7 +40,7 @@
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-file'></i> Prepare 1099s
                             </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-contractor-modal">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#contractor-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add a contractor
                             </button>
                             <button type="button" class="nsm-button primary">
@@ -69,6 +69,12 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item edit-contractor" href="#">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-contractor" href="#">Delete</a>
+                                        </li>
                                         <li>
                                             <a class="dropdown-item write-check" href="#">Write check</a>
                                         </li>
