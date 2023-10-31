@@ -1106,6 +1106,7 @@ $route['estimate/view/(:any)'] = 'Estimate/view/$1';
 $route['estimate/view_pdf/(:num)'] = 'Estimate/pdf_estimate/$1';
 $route['estimate/print/(:num)'] = 'Estimate/print_estimate/$1';
 $route['estimate/settings'] = 'Estimate/estimate_settings';
+$route['estimate/_save_estimate_setttings'] = 'Estimate/ajax_save_estimate_setttings';
 
 //Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
