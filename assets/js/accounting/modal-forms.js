@@ -2004,7 +2004,7 @@ $(function() {
                     $('#tags-modal #tags_group').removeClass('d-none');
                 } else {
                     $('#tags-modal #back-to-tags-list').trigger('click');
-                    $('#tags-modal #search-tags').trigger('keyup');
+                    $('#tags-modal #search-tag').trigger('keyup');
                 }
             }
         });

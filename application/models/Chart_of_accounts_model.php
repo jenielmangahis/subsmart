@@ -655,4 +655,28 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function get_inventory_asset_account($companyId)
+	{
+		$this->db->select('accounting_chart_of_accounts.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $companyId);
+		$this->db->where('account.account_name', 'Other Current Assets');
+		$this->db->where('account_detail.acc_detail_name', 'Inventory');
+		$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+		$this->db->join('account_detail', 'account_detail.acc_detail_id = accounting_chart_of_accounts.acc_detail_id');
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
+
+	public function get_expense_account($companyId)
+	{
+		$this->db->select('accounting_chart_of_accounts.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $companyId);
+		$this->db->where('account.account_name', 'Cost of Goods Sold');
+		$this->db->where('account_detail.acc_detail_name', 'Supplies & Materials - COGS');
+		$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
+		$this->db->join('account_detail', 'account_detail.acc_detail_id = accounting_chart_of_accounts.acc_detail_id');
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

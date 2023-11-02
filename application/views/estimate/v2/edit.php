@@ -11,6 +11,11 @@ echo put_header_assets();
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <style>
+        .remove {
+            display: block;
+            width: 38px;
+            float: right;
+        }
         label>input {
             visibility: initial !important;
             position: initial !important;
@@ -99,6 +104,10 @@ echo put_header_assets();
             display: none;
         }
 
+        .dataTables_filter, .dataTables_length{
+            display: none;
+        }
+
         @media only screen and (max-device-width: 600px) {
             .label-element {
                 position: absolute;
@@ -178,7 +187,7 @@ echo put_header_assets();
 
             .table_mobile {
                 font-size: 14px;
-            }
+            }            
 
             div.dropdown-wrapper select {
                 width: 115%;
@@ -341,7 +350,7 @@ echo put_header_assets();
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a class="link-modal-open nsm-link" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
                                 </div>
                             </div>
 
@@ -638,7 +647,7 @@ echo put_header_assets();
                                                         <input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
                                                         <span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
                                                     </td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                    <td><a href="javascript:void(0);" class="remove nsm-button danger"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a></td>
                                                 </tr>
                                             <?php $count++;
                                             } ?>
@@ -648,7 +657,7 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
+                                    <a class="link-modal-open nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a> &emsp;
                                     <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> -->
                                     <hr>
                                 </div>
@@ -696,7 +705,7 @@ echo put_header_assets();
                                         <tr>
                                             <td>
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1" value="<?php echo $estimate->adjustment_name; ?>">
-                                                <span class="fa fa-question-circle" data-bs-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                <span id="help-popover-adjustment" class="fa fa-question-circle"></span>
                                             </td>
                                             <td colspan="2" style="text-align: right;">
                                                 <div class="input-group mb-2" style="width: 40%;float: right;">
@@ -725,9 +734,19 @@ echo put_header_assets();
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
-                                            <td>Markup $<span id="span_markup">0.00</span></td>
+                                            <td colspan="2">
+                                                Markup
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                $<span id="span_markup"><?php echo $estimate->markup_amount; ?></span>
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="<?php echo $estimate->markup_amount; ?>">                                                
+                                                <!-- <span id="span_markup_input_form">0.00</span> -->
+                                            </td>
+
+                                            <!-- <td>Markup $<span id="span_markup">0.00</span></td>
                                             <td><a href="#" data-bs-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="<?php echo $estimate->markup_amount; ?>"><span id="span_markup_input_form"><?php echo $estimate->markup_amount; ?></span></td>
+                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="<?php echo $estimate->markup_amount; ?>"><span id="span_markup_input_form"><?php echo $estimate->markup_amount; ?></span></td> -->
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
@@ -921,7 +940,7 @@ echo put_header_assets();
 
             <!-- Modal Set Markup -->
             <div class="modal nsm-modal fade" id="modalSetMarkup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
@@ -933,9 +952,13 @@ echo put_header_assets();
                             <p>Set percent or fixed markup that will be applied to each item.</p>
                             <p>The markup will not be visible to customer estimate.</p>
 
-                            <div class="btn-group margin-right-sec" role="group" aria-label="...">
+                            <!-- <div class="btn-group margin-right-sec" role="group" aria-label="...">
                                 <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
                                 <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
+                                <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
+                            </div> -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">$</span>
                                 <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
                             </div>
                         </div>
@@ -948,45 +971,54 @@ echo put_header_assets();
             </div>
 
             <!-- Modal -->
-            <div class="modal nsm-modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+            <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">            
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
+                            <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                            <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
-                                        <thead>
+                                <div class="col-sm-12 mb-2">
+                                    <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
+                                </div>
+                                <div class="col-sm-12">
+                                    <table id="items_table" class="table table-hover table-sm w-100">                                    
+                                        <thead class="bg-light">
                                             <tr>
-                                                <td> Name</td>
-                                                <td> Price</td>
                                                 <td></td>
+                                                <td><strong>Name</strong></td>
+                                                <td><strong>On Hand</strong></td>
+                                                <td><strong>Price</strong></td>
+                                                <td><strong>Type</strong></td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($items as $item) { ?>
-                                                <tr>
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td style="width: 0% !important;">
+                                                        <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    </td>
                                                     <td><?php echo $item->title; ?></td>
+                                                    <td>
+                                                        <?php 
+                                                            foreach($itemsLocation as $itemLoc){
+                                                                if($itemLoc->item_id == $item->id){
+                                                                    echo "<div class='data-block'>";
+                                                                    echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                    echo "</div>";
+                                                                } 
+                                                            }
+                                                        ?>
+                                                    </td>
                                                     <td><?php echo $item->price; ?></td>
-                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                            <span class="fa fa-plus"></span>
-                                                        </button></td>
-                                                </tr>
+                                                    <td><?php echo $item->type; ?></td>
 
                                             <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                             </div>
                         </div>
                     </div>
@@ -1012,6 +1044,26 @@ echo put_header_assets();
                 </div>
             </div>
 
+            <!-- Modal New Customer -->
+            <div class="modal fade nsm-modal" id="modalQuickAddCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <form id="frm-estimate-quick-add-customer" method="POST">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="bx bx-fw bx-x m-0"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <div class="modal nsm-modal fade" id="modalAddNewSource" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1072,7 +1124,15 @@ echo put_header_assets();
     //     })
     //   })
     $(document).ready(function() {
-
+        $('#help-popover-adjustment').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+            } 
+        }); 
+        
         $('#modal_items_list').DataTable({
             "autoWidth": false,
             "columnDefs": [{
@@ -1089,6 +1149,14 @@ echo put_header_assets();
                 }
             ],
             "ordering": false,
+        });
+
+        var ITEMS_TABLE = $('#items_table').DataTable({
+            "ordering": false,
+        });
+
+        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+            ITEMS_TABLE.search($(this).val()).draw()
         });
 
         //iterate through all the divs - get their ids, hide them, then call the on click
@@ -1152,6 +1220,98 @@ echo put_header_assets();
                 // });
             });
         });
+
+        $(".select_item2a").click(function () {
+        // taxRate();
+            var idd = this.id;
+            var title = $(this).data('itemname');
+            var price = parseInt($(this).attr('data-price'));
+            // var qty = parseInt($(this).attr('data-quantity'));
+            var location_name = $(this).data('location_name');
+            var location_id = $(this).data('location_id');
+            var item_type = $(this).data('item_type');
+            // var total_ = price * qty;
+            // var total_ = 0;
+            // var total_price = price + total_;
+            // var total = parseFloat(total_price).toFixed(2);
+            // var withCommas = Number(total).toLocaleString('en');
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 1;
+            }else{
+              // alert('0');
+              var qty = $(this).data('data-quantity');
+            }
+            var return_first = function () {
+                var tax_rate = null;
+                $.ajax({
+                    'async': false,
+                    type : 'POST',
+                    url: "<?php echo base_url(); ?>/workorder/getTaxRate",
+                    success: function(result){
+                    //   console.log('test '+result);
+                    // return result;
+                        // var json = $.parseJSON(result);
+                        // for (var i=0;i<json.length;++i)
+                        // {
+                        //     tax_rate = json[i].rate;
+                        // }
+                        tax_rate = result;
+                    }
+                });
+            return tax_rate;
+            }();
+
+            // alert(return_first);
+            var json = $.parseJSON(return_first);
+            var tax_rate_ = 0;
+            for (var i=0;i<json.length;++i)
+            {
+                tax_rate_ = json[i].rate;
+            }
+            // alert(tax_rate_);
+            var taxRate = tax_rate_;
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var tax_ =(parseFloat(total_).toFixed(2) * taxRate) / 100;
+            var taxes_t = parseFloat(tax_).toFixed(2);
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            $("#ITEMLIST_PRODUCT_"+idd).hide();
+            if( item_type == 'Product' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option value="service">Service</option><option value="fee">Fee</option></select>';
+            }else if( item_type == 'Fees' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option value="service">Service</option><option selected="selected" value="fee">Fee</option></select>';
+            }else if( item_type == 'Service' ){
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option  selected="selected" value="service">Service</option><option value="fee">Fee</option></select>';
+            }else{
+                var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
+            }
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
+                "<td width=\"20%\"><div class=\"dropdown-wrapper\">"+item_type_dropdown+"</div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
+                "<td>\n" +
+                "<a href=\"javascript:void(0);\" class=\"remove nsm-button danger\" id='"+count+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+                "</td>\n" +
+                "</tr>";
+            tableBody = $("#jobs_items_table_body");
+            tableBody.append(markup);
+            calculation(count);
+        });
     });
 </script>
 
@@ -1169,6 +1329,23 @@ echo put_header_assets();
 
 
     $(document).ready(function() {
+
+        $('#modalQuickAddCustomer').modal({backdrop: 'static', keyboard: false});
+
+        $('.btn-quick-add-customer').on('click', function(){
+            $('#modalQuickAddCustomer').modal('show');            
+            $.ajax({
+                url: base_url + 'invoice/new_customer_form',
+                type: "GET",
+                success: function (response) {
+                    $('#modalQuickAddCustomer .modal-body').html(response);
+                },
+                beforeSend: function(data) {
+                    $('#modalQuickAddCustomer .modal-body').html('<span class="bx bx-loader bx-spin"></span>')
+                },
+            });
+        });
+
         $('#sel-customer').select2();
         var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 

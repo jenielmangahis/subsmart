@@ -61,14 +61,20 @@ class Estimate extends MY_Controller
             $query_tab = $tab;
             if ($tab == 'declined%20by%20customer') {
                 $query_tab = 'Declined By Customer';
-            }
+            }            
+            $filter[] = ['field' => 'estimates.status', 'value' => $query_tab];
             $this->page_data['tab'] = $tab;
-            $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => lcfirst($query_tab)), $company_id, $role);
+            $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id,'', $filter);
+            //$this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => lcfirst($query_tab)), $company_id, $role);
         } else {
             // search
             if (!empty(get('search'))) {
+                $filter[] = ['field' => 'acs_profile.first_name', 'value' => get('search')];
+                $filter[] = ['field' => 'acs_profile.last_name', 'value' => get('search')];
+                $filter[] = ['field' => 'estimates.estimate_number', 'value' => get('search')];
                 $this->page_data['search'] = get('search');
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id,'', $filter);
+                //$this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
             } elseif (!empty(get('order'))) { 
                 switch (get('order')) {
                     case 'added-desc':
@@ -89,11 +95,18 @@ class Estimate extends MY_Controller
                     case 'amount-desc':
                         $order_by = 'Amount: Highest';
                         break;
+                    case 'number-desc':
+                        $order_by = 'Estimate Number: descending';
+                        break;
+                    case 'number-asc':
+                        $order_by = 'Estimate Number: ascending';
+                        break;
                     default:                        
                         break;
                 }             
                 $this->page_data['search'] = get('search');
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
+                //$this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id,get('order'));
             } else {
                 $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
             }
@@ -366,6 +379,7 @@ class Estimate extends MY_Controller
     public function add()
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateSettings_model');       
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -391,6 +405,19 @@ class Estimate extends MY_Controller
 
         $company_id = logged('company_id');
         $role = logged('role');
+
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        $default_terms_condition  = '';
+        $default_customer_message = 'I would be happy to have an opportunity to work with you.'; 
+        if( $setting ){
+            if( $setting->residential_message != '' ){
+               $default_customer_message = $setting->residential_message; 
+            }
+
+            if( $setting->residential_terms_and_conditions != '' ){
+                $default_terms_condition = $setting->residential_terms_and_conditions;
+            }
+        }
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);            
         
@@ -403,6 +430,8 @@ class Estimate extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
         $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        $this->page_data['default_terms_condition'] = $default_terms_condition;
+        $this->page_data['default_customer_message'] = $default_customer_message;
 
         add_css([
             'assets/plugins/font-awesome/css/font-awesome.min.css',
@@ -1101,6 +1130,7 @@ class Estimate extends MY_Controller
             return redirect('/estimate');
         }
 
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
