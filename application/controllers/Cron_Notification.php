@@ -23,7 +23,7 @@ class Cron_Notification extends MYF_Controller {
         $total_sent = 0;  
         $filter[] = ['field' => 'cron_auto_sms_notification.is_sent', 'value' => 0];
         $filter[] = ['field' => 'cron_auto_sms_notification.is_with_error', 'value' => 0];
-        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 15); 
+        $cronAutoSms  = $this->CronAutoSmsNotification_model->getAll($filter, 15);         
         foreach($cronAutoSms as $sms){            
             $is_with_valid_sms_account = false;
             $smsApi = '';
@@ -48,7 +48,7 @@ class Cron_Notification extends MYF_Controller {
                 
                 if( $is_with_valid_sms_account ){
                     $isObjectExists = $this->checkSmsObject($sms->module_name, $sms->obj_id);
-                    if( $isObjectExists['is_exists' == 1] ){
+                    if( $isObjectExists['is_exists'] == 1 ){
                         $sms_message = $this->smsReplaceSmartTags($sms->module_name, $sms->obj_id, $sms->sms_message, $sms->user_id);
 
                         /*if( $smsApi == 'twilio' ){
@@ -177,6 +177,15 @@ class Cron_Notification extends MYF_Controller {
                         $this->CronAutoSmsNotification_model->update($sms->id, $data);
                     }             
                 } 
+            }else{
+                $err_msg = $isSent['msg'];
+                $data = [
+                    'api_name' => '',
+                    'is_sent' => 0,
+                    'is_with_error' => 1,
+                    'err_msg' => 'No valid sms account'
+                ];
+                $this->CronAutoSmsNotification_model->update($sms->id, $data);
             }                               
         }
 
@@ -412,7 +421,8 @@ class Cron_Notification extends MYF_Controller {
         $this->load->model('Event_model');
         $this->load->model('Jobs_model');
         $this->load->model('Business_model');        
-        $this->load->model('Taskhub_model');        
+        $this->load->model('Taskhub_model');   
+        $this->load->model('CompanyAutoSmsSettings_model');     
 
         $is_exists = 0;
         $msg = 'Cannot find object';        
