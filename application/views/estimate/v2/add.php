@@ -13,6 +13,11 @@ echo put_header_assets();
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
     <style>
+        .remove {
+            display: block;
+            width: 38px;
+            float: right;
+        }
         label>input {
             visibility: initial !important;
             position: initial !important;
@@ -384,7 +389,7 @@ echo put_header_assets();
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><span class="fa fa-plus fa-margin-right"></span> New Customer</a>
+                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
                                 </div>
                             </div>
 
@@ -524,8 +529,8 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span> Add Items</a> &emsp;
-                                    <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp;
+                                    <a class="nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a> &emsp;
+                                    <!-- <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp; -->
                                     <!-- <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span> -->
                                     <hr>
                                 </div>
@@ -604,7 +609,8 @@ echo put_header_assets();
                                             <td style="text-align:right;">
                                                 $<span id="span_markup">0.00</span>
                                                 <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <!-- <span id="span_markup_input_form">0.00</span></td> -->
+                                                <!-- <span id="span_markup_input_form">0.00</span> -->
+                                            </td>
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
@@ -651,14 +657,18 @@ echo put_header_assets();
                                     <div class="form-group">
                                         <label class="bold">Message to Customer</label>
                                         <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control">
+                                            <?= $default_customer_message; ?>
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label class="bold">Terms &amp; Conditions</label>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
-                                        <textarea name="terms_conditions" cols="40" rows="2" class="form-control" id="terms_conditions_est"></textarea>
+                                        <textarea name="terms_conditions" cols="40" rows="2" class="form-control" id="terms_conditions_est">
+                                            <?= $default_terms_condition; ?>
+                                        </textarea>
                                     </div>
                                 </div>
 
@@ -868,7 +878,7 @@ echo put_header_assets();
                                             <?php foreach ($items as $item) { ?>
                                                 <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                                     <td style="width: 0% !important;">
-                                                        <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                        <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
                                                     <td><?php echo $item->title; ?></td>
                                                     <td>

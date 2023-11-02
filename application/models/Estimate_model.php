@@ -7,17 +7,62 @@ class Estimate_model extends MY_Model
     public $table = 'estimates';
     public $table_items = 'job_items';
 
-    public function getAllByCompany($company_id)
+    public function getAllByCompany($company_id, $sort = '', $filter = array())
     {
         $where = array(
             'view_flag'     => '0',
-            'company_id'    => $company_id
+            'estimates.company_id'    => $company_id
           );
 
-        $this->db->select('*');
+        $this->db->select('estimates.*');
         $this->db->from($this->table);
-        $this->db->where($where);
-        $this->db->order_by('id', 'DESC');
+        $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
+        $this->db->where($where);  
+        
+        if( !empty($filter) ){
+            $this->db->group_start();
+            foreach($filter as $f){                
+                $this->db->or_like($f['field'], trim($f['value']));
+            }
+            $this->db->group_end();
+        }        
+
+        switch ($sort) {
+            case 'added-desc':
+                $this->db->order_by('created_at', 'DESC');
+                break;
+
+            case 'added-asc':                    
+                $this->db->order_by('created_at', 'ASC');
+                break;
+
+            case 'date-accepted-desc':
+                $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 0 ELSE 1 END), accepted_date DESC");
+                break;
+
+            case 'date-accepted-asc':
+                $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), accepted_date ASC");
+                break;
+
+            case 'number-asc':
+                $this->db->order_by('estimate_number', 'ASC');
+                break;
+
+            case 'number-desc':
+                $this->db->order_by('estimate_number', 'DESC');
+                break;
+
+            case 'amount-asc':
+                $this->db->order_by('grand_total', 'ASC');
+                break;
+
+            case 'amount-desc':                
+                $this->db->order_by('grand_total', 'DESC');
+                break;
+            default:
+                $this->db->order_by('id', 'DESC');
+        }
+        
 
         $query = $this->db->get();
         return $query->result();

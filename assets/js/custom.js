@@ -676,8 +676,7 @@ cal_total_due();
 
 
 $(".select_item").click(function () {
-  //
-  // alert('testing');
+  //  
             var idd = this.id;
             //console.log(idd);
             //console.log($(this).data('itemname'));
