@@ -97,3 +97,58 @@ $('#contractors-table .create-bill').on('click', function(e) {
         $('#billModal').modal('show');
     });
 });
+
+$('#contractor-modal form').validate({
+    rules: {
+        email: {
+            required: true,
+            email: true
+        },
+        name: 'required',
+    }
+});
+
+$(".edit-contractor").on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+
+    $.get(`/accounting/get-vendor-details/${id}`, function(res) {
+        var vendor = JSON.parse(res);
+
+        $('#contractor-modal #name').val(vendor.display_name);
+        $('#contractor-modal #email').val(vendor.email);
+
+        $('#contractor-modal form').attr('action', `/accounting/contractors/${id}/update`);
+        $('#contractor-modal').modal('show');
+    });
+});
+
+$('#contractor-modal').on('hidden.bs.modal', function() {
+    $('#contractor-modal form').attr('action', `/accounting/contractors/add`);
+    $('#contractor-modal #name').val('');
+    $('#contractor-modal #email').val('');
+});
+
+$('.delete-contractor').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+
+    Swal.fire({
+        title: 'Are you sure you want to make this contractor inactive?',
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            location.href= base_url+`/accounting/contractors/set-status/${id}/inactive`;
+        }
+    });
+});

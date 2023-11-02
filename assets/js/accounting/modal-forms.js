@@ -207,20 +207,9 @@ $(function() {
 
                 payrollTotal();
             });
-            $(this).parent().prepend(`
-            <div class="btn-group float-end" role="group">
-                <button type="button" class="nsm-button success" id="preview-payroll">
-                    Preview payroll
-                </button>
-                <div class="btn-group" role="group">
-                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bx bx-fw bx-chevron-up text-white"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Save for later</a>
-                    </div>
-                </div>
-            </div>`);
+            $(this).parent().prepend(`<button class="nsm-button success float-end" type="button" id="preview-payroll">
+                Preview Payroll
+            </button>`);
             $(this).remove();
             $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="nsm-button primary" id="back-paysched-select">Back</button>');
         }
@@ -347,7 +336,7 @@ $(function() {
                     }
                 });
 
-                $(this).parent().prepend('<button type="submit" class="nsm-button success">Submit Payroll</button>');
+                $(this).parent().prepend('<button type="submit" class="nsm-button success float-end">Submit Payroll</button>');
                 $(this).remove();
                 $('div#payrollModal div.modal-footer button#back-payscale-select').parent().html('<button type="button" class="nsm-button primary" id="back-payroll-form">Back</button>');
             }
@@ -2486,18 +2475,18 @@ $(function() {
                         var vendor = JSON.parse(res);
 
                         var vendorName = '';
-                        vendorName += vendor.title !== "" ? vendor.title + " " : "";
-                        vendorName += vendor.f_name !== "" ? vendor.f_name + " " : "";
-                        vendorName += vendor.m_name !== "" ? vendor.m_name + " " : "";
-                        vendorName += vendor.l_name !== "" ? vendor.l_name + " " : "";
-                        vendorName += vendor.suffix !== "" ? vendor.suffix : "";
+                        vendorName += vendor.title !== "" && vendor.title !== null ? vendor.title + " " : "";
+                        vendorName += vendor.f_name !== "" && vendor.f_name !== null ? vendor.f_name + " " : "";
+                        vendorName += vendor.m_name !== "" && vendor.m_name !== null ? vendor.m_name + " " : "";
+                        vendorName += vendor.l_name !== "" && vendor.l_name !== null ? vendor.l_name + " " : "";
+                        vendorName += vendor.suffix !== "" && vendor.suffix !== null ? vendor.suffix : "";
                         $('#checkModal #mailing_address').html(vendorName.trim());
                         $('#checkModal #mailing_address').append('\n');
                         var address = '';
-                        address += vendor.street !== "" ? vendor.street : "";
-                        address += vendor.city !== "" ? '\n' + vendor.city : "";
-                        address += vendor.state !== "" ? ', ' + vendor.state : "";
-                        address += vendor.zip !== "" ? ' ' + vendor.zip : "";
+                        address += vendor.street !== "" && vendor.street !== null ? vendor.street : "";
+                        address += vendor.city !== "" && vendor.city !== null ? '\n' + vendor.city : "";
+                        address += vendor.state !== "" && vendor.state !== null ? ', ' + vendor.state : "";
+                        address += vendor.zip !== "" && vendor.zip !== null ? ' ' + vendor.zip : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2507,9 +2496,9 @@ $(function() {
                         var customer = JSON.parse(res);
 
                         var customerName = '';
-                        customerName += customer.first_name !== "" ? customer.first_name + " " : "";
-                        customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
-                        customerName += customer.last_name !== "" ? customer.last_name : "";
+                        customerName += customer.first_name !== "" && customer.first_name !== null ? customer.first_name + " " : "";
+                        customerName += customer.middle_name !== "" && customer.middle_name !== null ? customer.middle_name + " " : "";
+                        customerName += customer.last_name !== "" && customer.last_name !== null ? customer.last_name : "";
                         $('#checkModal #mailing_address').html(customerName.trim());
                         $('#checkModal #mailing_address').append('\n');
                         if (customer.business_name !== "" && customer.business_name !== null) {
@@ -2517,11 +2506,11 @@ $(function() {
                             $('#checkModal #mailing_address').append('\n');
                         }
                         var address = '';
-                        address += customer.mail_add !== "" ? customer.mail_add : "";
-                        address += customer.city !== "" ? '\n' + customer.city : "";
-                        address += customer.state !== "" ? ', ' + customer.state : "";
-                        address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-                        address += customer.country !== "" ? ' ' + customer.country : "";
+                        address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add : "";
+                        address += customer.city !== "" && customer.city !== null ? '\n' + customer.city : "";
+                        address += customer.state !== "" && customer.state !== null ? ', ' + customer.state : "";
+                        address += customer.zip_code !== "" && customer.zip_code !== null ? ' ' + customer.zip_code : "";
+                        address += customer.country !== "" && customer.country !== null ? ' ' + customer.country : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2531,15 +2520,15 @@ $(function() {
                         var employee = JSON.parse(res);
 
                         var employeeName = '';
-                        employeeName += employee.FName !== "" ? employee.FName + " " : "";
-                        employeeName += employee.LName !== "" ? employee.LName : "";
+                        employeeName += employee.FName !== "" && employee.FName !== null ? employee.FName + " " : "";
+                        employeeName += employee.LName !== "" && employee.LName !== null ? employee.LName : "";
                         $('#checkModal #mailing_address').html(employeeName.trim());
                         $('#checkModal #mailing_address').append('\n');
                         var address = '';
-                        address += employee.address !== "" ? employee.address : "";
-                        address += employee.city !== "" ? '\n' + employee.city : "";
-                        address += employee.state !== "" ? ', ' + employee.state : "";
-                        address += employee.postal_code !== "" ? ' ' + employee.postal_code : "";
+                        address += employee.address !== "" && employee.address !== null ? employee.address : "";
+                        address += employee.city !== ""  && employee.city !== null ? '\n' + employee.city : "";
+                        address += employee.state !== ""  && employee.state !== null ? ', ' + employee.state : "";
+                        address += employee.postal_code !== ""  && employee.postal_code !== null ? ' ' + employee.postal_code : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2556,18 +2545,18 @@ $(function() {
             $(`#${modalId} #email`).val(vendor.email);
 
             var vendorName = '';
-            vendorName += vendor.title !== "" ? vendor.title + " " : "";
-            vendorName += vendor.f_name !== "" ? vendor.f_name + " " : "";
-            vendorName += vendor.m_name !== "" ? vendor.m_name + " " : "";
-            vendorName += vendor.l_name !== "" ? vendor.l_name + " " : "";
-            vendorName += vendor.suffix !== "" ? vendor.suffix : "";
+            vendorName += vendor.title !== "" && vendor.title !== null ? vendor.title + " " : "";
+            vendorName += vendor.f_name !== "" && vendor.f_name !== null ? vendor.f_name + " " : "";
+            vendorName += vendor.m_name !== "" && vendor.m_name !== null ? vendor.m_name + " " : "";
+            vendorName += vendor.l_name !== "" && vendor.l_name !== null ? vendor.l_name + " " : "";
+            vendorName += vendor.suffix !== "" && vendor.suffix !== null ? vendor.suffix : "";
             $(`#${modalId} #mailing_address`).html(vendorName.trim());
             $(`#${modalId} #mailing_address`).append('\n');
             var address = '';
-            address += vendor.street !== "" ? vendor.street : "";
-            address += vendor.city !== "" ? '\n' + vendor.city : "";
-            address += vendor.state !== "" ? ', ' + vendor.state : "";
-            address += vendor.zip !== "" ? ' ' + vendor.zip : "";
+            address += vendor.street !== "" && vendor.street !== null ? vendor.street : "";
+            address += vendor.city !== "" && vendor.city !== null ? '\n' + vendor.city : "";
+            address += vendor.state !== "" && vendor.state !== null ? ', ' + vendor.state : "";
+            address += vendor.zip !== "" && vendor.zip !== null ? ' ' + vendor.zip : "";
 
             $(`#${modalId} #mailing_address`).append(address.trim());
         });
@@ -9502,12 +9491,6 @@ $(function() {
                 break;
             }
         });
-    });
-
-    $(document).on('click', '#modal-container #modal-form .modal button[data-bs-dismiss="modal"]', function(e) {
-        e.preventDefault();
-
-        location.reload();
     });
 });
 

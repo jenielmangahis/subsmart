@@ -19,6 +19,7 @@ class Accounting_paychecks_model extends MY_Model {
 	public function get_company_paychecks($companyId)
 	{
 		$this->db->where('company_id', $companyId);
+		$this->db->where('status', 1);
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
@@ -28,5 +29,19 @@ class Accounting_paychecks_model extends MY_Model {
 		$this->db->where('id', $id);
 		$query = $this->db->get($this->table);
 		return $query->row();
+	}
+
+	public function update_check_no($id, $checkNumber)
+	{
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, ['check_no' => $checkNumber]);
+		return $update ? true : false;
+	}
+
+	public function void_paycheck($paycheckId)
+	{
+		$this->db->where('id', $paycheckId);
+		$update = $this->db->update($this->table, ['status' => 4]);
+		return $update ? true : false;
 	}
 }

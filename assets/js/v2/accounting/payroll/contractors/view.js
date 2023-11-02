@@ -130,7 +130,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
         })
     } else {
         if($(this).val() === "1") {
-            $('#business_name, #emp_id_num').parent().remove();
+            $('#business_name, #display_name, #emp_id_num').parent().remove();
 
             $(`<div class="col-12 col-md-3">
                 <label for="title">Title</label>
@@ -161,7 +161,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
                 <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="">
             </div>`).insertAfter($(this).parent().parent());
         } else {
-            $('#title, #first_name, #middle_name, #last_name, #suffix, #social_sec_num').parent().remove();
+            $('#title, #first_name, #middle_name, #last_name, #suffix, #display_name, #social_sec_num').parent().remove();
 
             $(`<div class="col-12">
                 <label for="business_name">Business name <span class="text-danger">*</span></label>

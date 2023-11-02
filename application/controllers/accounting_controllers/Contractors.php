@@ -301,6 +301,24 @@ class Contractors extends MY_Controller {
         $this->load->view('v2/pages/accounting/payroll/contractors/view', $this->page_data);
     }
 
+    public function update($contractorId)
+    {
+        $details = [
+            'display_name' => $this->input->post('name'),
+            'email' => $this->input->post('email')
+        ];
+
+        $update = $this->vendors_model->update_contractor($contractorId, $details);
+
+        if($update) {
+            $this->session->set_flashdata('success', "Contractor details updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+
     public function update_details($contractorId)
     {
         $basicDetails = [
