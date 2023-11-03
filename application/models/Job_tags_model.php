@@ -50,7 +50,7 @@ class Job_tags_model extends MY_Model {
 	function update($id, $data)
 	{
 		$this->db->where('id', $id);
-		$tag = $this->db->update($this->table, ['name' => $data['name']]);
+		$tag = $this->db->update($this->table, $data);
 
 		if($tag){
 			return true;
