@@ -1320,7 +1320,7 @@ class Estimate extends MY_Controller
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            //'estimate_number' => $this->input->post('estimate_number'),
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),
