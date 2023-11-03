@@ -119,6 +119,8 @@ class Estimate_v1 extends MY_Controller
 
     public function savenewestimate()
     {
+        $this->load->model('EstimateSettings_model');
+
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
         $user_login = logged('FName') . ' ' . logged('LName');
@@ -136,11 +138,29 @@ class Estimate_v1 extends MY_Controller
             move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
         }
 
+        //Generate Estimate Number
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        if( $setting ){
+            $next_num = $setting->estimate_num_next;
+            $prefix   = $setting->estimate_num_prefix;
+        }else{
+            $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+            if( $lastInsert ){
+                $next_num = $lastInsert->id + 1;
+            }else{
+                $next_num = 1;
+            }
+            $prefix = 'EST-';            
+        }
+
+        $estimate_number = str_pad($next_num, 9, "0", STR_PAD_LEFT);
+        $estimate_number = $prefix . $estimate_number;
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            'estimate_number' => $estimate_number,
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),
@@ -186,6 +206,12 @@ class Estimate_v1 extends MY_Controller
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
         if ($addQuery > 0) {
+            //Update estimate setting
+            if( $setting ){
+                $estimate_setting = ['estimate_num_next' => $next_num + 1];
+                $this->EstimateSettings_model->update($setting->id, $estimate_setting);
+            }
+
             // Record Standard Estimate Save to Customer Activities Module in Customer Dashboard
             $action = "$user_login created a standard estimate with you. <a href='#' onclick='window.open(`".base_url('estimate/view/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('estimate_number')."</a>";
 
@@ -1212,7 +1238,7 @@ class Estimate_v1 extends MY_Controller
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            'estimate_number' => $estimate->estimate_number,
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),

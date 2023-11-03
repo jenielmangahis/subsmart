@@ -204,4 +204,7 @@
     </div>
 </div>
 
+<script>
+    const email = "<?=$contractor->email?>";
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

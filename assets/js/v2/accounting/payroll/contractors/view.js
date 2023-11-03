@@ -53,7 +53,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
 
         row.append(`<div class="col-12">
             <label for="email">Email</label>
-            <input type="text" name="email" id="email" class="form-control nsm-field" value="">
+            <input type="text" name="email" id="email" class="form-control nsm-field" value="${email}">
         </div>
         <div class="col-12">
             <label for="address">Address <span class="text-danger">*</span></label>
@@ -129,7 +129,11 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             dropdownParent: $('#edit-contractor-modal')
         })
     } else {
+        var formData = new FormData($('#edit-contractor-modal form')[0]);
+
         if($(this).val() === "1") {
+            var num = formData.get('emp_id_num');
+
             $('#business_name, #display_name, #emp_id_num').parent().remove();
 
             $(`<div class="col-12 col-md-3">
@@ -158,9 +162,11 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             </div>
             <div class="col-12">
                 <label for="social_sec_num">Social Security number <span class="text-danger">*</span></label>
-                <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="">
+                <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="${num}">
             </div>`).insertAfter($(this).parent().parent());
         } else {
+            var num = formData.get('social_sec_num');
+
             $('#title, #first_name, #middle_name, #last_name, #suffix, #display_name, #social_sec_num').parent().remove();
 
             $(`<div class="col-12">
@@ -173,7 +179,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             </div>
             <div class="col-12">
                 <label for="emp_id_num">Employer Identification Number <span class="text-danger">*</span></label>
-                <input type="text" name="emp_id_num" id="emp_id_num" class="form-control nsm-field" value="">
+                <input type="text" name="emp_id_num" id="emp_id_num" class="form-control nsm-field" value="${num}">
             </div>`).insertAfter($(this).parent().parent());
         }
     }

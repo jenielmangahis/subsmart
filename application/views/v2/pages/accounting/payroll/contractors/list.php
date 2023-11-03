@@ -53,6 +53,7 @@
                     <thead>
                         <tr>
                             <td data-name="Name">NAME</td>
+                            <td data-name="Status">STATUS</td>
                             <td data-name="Last payment"></td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -62,6 +63,7 @@
 						<?php foreach($contractors as $contractor) : ?>
                         <tr data-id="<?=$contractor->id?>" data-name="<?=$contractor->display_name?>">
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
+                            <td><?=$contractor->status === '0' ? 'Inactive' : 'Active'?></td>
                             <td></td>
                             <td>
                                 <div class="dropdown table-management">
