@@ -11655,6 +11655,27 @@ class Accounting_modals extends MY_Controller
             case 'paycheck-employee' :
                 $return = $this->get_employee_choices($return, $search, 'report');
             break;
+            case 'checking-savings-account' :
+                $accountTypes = [
+                    'Bank'
+                ];
+
+                $detailTypes = [
+                    'Checking',
+                    'Savings'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
+            break;
+            case 'account' :
+                $accTypes = $this->account_model->getAccounts();
+                $accountTypes = [];
+                foreach($accTypes as $accType) {
+                    $accountTypes[] = $accType->account_name;
+                }
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if ($search !== null && $search !== '') {

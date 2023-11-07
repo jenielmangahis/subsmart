@@ -524,5 +524,40 @@ class Accounting_model extends MY_Model {
             return $data->result();            
         }
 
+        // Get Estimates & Progress Invoicing Summary by Customer data in Database
+        if ($reportType == "estimate_progress_invoicing") {
+            $this->db->select('estimates.id AS estimate_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(estimates.created_at,"%Y-%m-%d") AS date, estimates.estimate_number AS num, estimates.status AS status, SUM(((items.price * estimates_items.qty) + estimates_items.tax) - estimates_items.discount) AS amount, 0 AS balance, 0 AS invoiced_amount, 0 AS percent_amount, SUM(((items.price * estimates_items.qty) + estimates_items.tax) - estimates_items.discount) AS remaining_amount');
+            $this->db->from('estimates');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
+            $this->db->join('estimates_items', 'estimates_items.estimates_id = estimates.id', 'left');
+            $this->db->join('items', 'items.id = estimates_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('items.type !=', '');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('estimates.company_id', $companyID);
+            $this->db->group_by('acs_profile.prof_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
+
+        // Get Terms Lists data in Database
+        if ($reportType == "terms_list") {
+            $this->db->select('accounting_terms.id AS term_id, accounting_terms.name AS term, accounting_terms.type AS type, accounting_terms.net_due_days AS net_due_days, accounting_terms.day_of_month_due AS day_of_month_due, accounting_terms.discount_percentage AS discount_percentage, accounting_terms.discount_days AS discount_days, accounting_terms.discount_on_day_of_month AS discount_on_day_of_month, accounting_terms.minimum_days_to_pay AS minimum_days_to_pay');
+            $this->db->from('accounting_terms');
+            $this->db->where('accounting_terms.name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_terms.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_terms.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_terms.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
     }
 }

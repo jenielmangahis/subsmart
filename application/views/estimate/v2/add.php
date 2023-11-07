@@ -379,11 +379,10 @@ echo put_header_assets();
                                             <option value="0">Select a customer</option>
                                             <?php foreach ($customers as $customer) : ?>
                                                 <?php if ($default_customer_id > 0) { ?>
-                                                    <option <?= $default_customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
+                                                    <option <?= $default_customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
                                                 <?php } else { ?>
-                                                    <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
+                                                    <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
                                                 <?php } ?>
-
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -593,8 +592,7 @@ echo put_header_assets();
                                         </tr>
                                         <!-- <tr>
                                                 <td>Markup $<span id="span_markup"></td> -->
-                                        <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->                                        
                                         <!-- </tr> -->
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
@@ -1184,12 +1182,10 @@ add_footer_js(array(
             ]
         });
 
-        $(document).on('click', '.setmarkup', function() {
-            // alert('yeah');
-            var markup_amount = $('#markup_input').val();
+        $(document).on('click', '.setmarkup', function() {            
+            var markup_amount = $('#markup_input').val(); 
 
             $("#markup_input_form").val(markup_amount);
-            //$("#span_markup_input_form").text(markup_amount);
             $("#span_markup").text(markup_amount);
 
             $('#modalSetMarkup').modal('toggle');

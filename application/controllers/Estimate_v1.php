@@ -124,20 +124,7 @@ class Estimate_v1 extends MY_Controller
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
         $user_login = logged('FName') . ' ' . logged('LName');
-
-        $attachment_name = '';
-        if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
-            $target_dir = "./uploads/estimates/$user_id/";            
-            if(!file_exists($target_dir)) {
-                mkdir($target_dir, 0777, true);
-            }
-
-            $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
-            $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
-            $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
-            move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
-        }
-
+        
         //Generate Estimate Number
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
         if( $setting ){
@@ -174,7 +161,7 @@ class Estimate_v1 extends MY_Controller
             // 'tracking_no' => $this->input->post('tracking_no'),
             // 'ship_to' => $this->input->post('ship_to'),
             // 'tags' => $this->input->post('tags'),
-            'attachments' => $attachment_name,
+            'attachments' => '',
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
@@ -206,6 +193,19 @@ class Estimate_v1 extends MY_Controller
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
         if ($addQuery > 0) {
+            //Upload attachment
+            if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
+                $target_dir = "./uploads/estimates/$addQuery/";            
+                if(!file_exists($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+
+                $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
+                $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
+                move_uploaded_file($tmp_name, "./uploads/estimates/$addQuery/$attachment_name");
+                $this->estimate_model->update($addQuery, ['attachments' => $attachment_name]);
+            }
             //Update estimate setting
             if( $setting ){
                 $estimate_setting = ['estimate_num_next' => $next_num + 1];
@@ -277,6 +277,7 @@ class Estimate_v1 extends MY_Controller
                 $price      = $this->input->post('price');
                 $tax        = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
+                $discount   = $this->input->post('discount');
 
                 $i = 0;
                 $a = is_array($a) ? $a : [];
@@ -290,6 +291,7 @@ class Estimate_v1 extends MY_Controller
                     $data['cost']  = $price[$i];
                     $data['tax']   =  $tax[$i];
                     $data['total'] = $gtotal[$i];
+                    $data['discount'] = $discount[$i];
                     $data['estimates_id '] = $addQuery;
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
                     $i++;
@@ -1222,7 +1224,7 @@ class Estimate_v1 extends MY_Controller
 
         $attachment_name = $estimate->attachments;
         if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
-            $target_dir = "./uploads/estimates/$user_id/";            
+            $target_dir = "./uploads/estimates/$estimate->id/";            
             if(!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
@@ -1230,7 +1232,7 @@ class Estimate_v1 extends MY_Controller
             $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
             $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
             $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
-            move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
+            move_uploaded_file($tmp_name, "./uploads/estimates/$estimate->id/$attachment_name");
         }
 
         $new_data = array(
@@ -1350,6 +1352,7 @@ class Estimate_v1 extends MY_Controller
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
+                $discount   = $this->input->post('discount');
 
                 $i = 0;
                 $a = is_array($a) ? $a : [];
@@ -1363,6 +1366,7 @@ class Estimate_v1 extends MY_Controller
                     $data['cost'] = $price[$i];
                     $data['tax'] = $h[$i];
                     $data['total'] = $gtotal[$i];
+                    $data['discount'] = $discount[$i];
                     $data['estimates_id '] = $id;
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
                     $i++;
