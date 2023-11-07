@@ -193,7 +193,7 @@ class Estimate extends MY_Controller
             // 'tracking_no' => $this->input->post('tracking_no'),
             // 'ship_to' => $this->input->post('ship_to'),
             // 'tags' => $this->input->post('tags'),
-            'attachments' => 'testing',
+            'attachments' => '',
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
@@ -226,7 +226,21 @@ class Estimate extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
-        if ($addQuery > 0) {            
+        if ($addQuery > 0) { 
+
+            if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
+                $target_dir = "./uploads/estimates/$addQuery/";            
+                if(!file_exists($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+                            
+                $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
+                $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
+                move_uploaded_file($tmp_name, "./uploads/estimates/$addQuery/$attachment_name");
+
+                $this->estimate_model->update($addQuery, ['attachments' => $attachment_name]);
+            }           
             //Update estimate setting
             if( $setting ){
                 $estimate_setting = ['estimate_num_next' => $next_num + 1];
@@ -335,6 +349,7 @@ class Estimate extends MY_Controller
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
+                $discount   = $this->input->post('discount');
 
                 $i = 0;
                 foreach($a as $row){
@@ -343,6 +358,7 @@ class Estimate extends MY_Controller
                     $data['cost'] = $price[$i];
                     $data['tax'] = $h[$i];
                     $data['total'] = $gtotal[$i];
+                    $data['discount'] = $discount[$i];
                     $data['estimates_id '] = $addQuery;
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
                     $i++;
@@ -1313,14 +1329,15 @@ class Estimate extends MY_Controller
     public function update($id)
     {
         $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
+        $user_id     = getLoggedUserID();
+        $estimate    = $this->estimate_model->getById($id);
 
         $new_data = array(
             'id'        => $id,
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            'estimate_number' => $estimate->estimate_number,
             // 'email' => $this->input->post('email'),
             // 'billing_address' => $this->input->post('billing_address'),
             'estimate_date' => $this->input->post('estimate_date'),
@@ -1416,6 +1433,7 @@ class Estimate extends MY_Controller
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
+                $discount   = $this->input->post('discount');
 
                 $i = 0;
                 foreach($a as $row){
@@ -1423,8 +1441,9 @@ class Estimate extends MY_Controller
                     $data['qty'] = $quantity[$i];
                     $data['cost'] = $price[$i];
                     $data['tax'] = $h[$i];
+                    $data['discount'] = $discount[$i];
                     $data['total'] = $gtotal[$i];
-                    $data['estimates_id '] = $id;
+                    $data['estimates_id '] = $id;                    
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
                     $i++;
                 }
