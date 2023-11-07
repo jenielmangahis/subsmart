@@ -1332,6 +1332,19 @@ class Estimate extends MY_Controller
         $user_id     = getLoggedUserID();
         $estimate    = $this->estimate_model->getById($id);
 
+        $attachment_name = $estimate->attachments;
+        if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
+            $target_dir = "./uploads/estimates/$estimate->id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+                        
+            $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
+            $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/estimates/$estimate->id/$attachment_name");
+        }
+
         $new_data = array(
             'id'        => $id,
             'customer_id' => $this->input->post('customer_id'),
@@ -1351,7 +1364,7 @@ class Estimate extends MY_Controller
             // 'tracking_no' => $this->input->post('tracking_no'),
             // 'ship_to' => $this->input->post('ship_to'),
             // 'tags' => $this->input->post('tags'),
-            'attachments' => 'testing',
+            'attachments' => $attachment_name,
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             // 'status' => $this->input->post('status'),

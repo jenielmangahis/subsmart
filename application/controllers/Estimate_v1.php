@@ -1224,7 +1224,7 @@ class Estimate_v1 extends MY_Controller
 
         $attachment_name = $estimate->attachments;
         if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
-            $target_dir = "./uploads/estimates/$user_id/";            
+            $target_dir = "./uploads/estimates/$estimate->id/";            
             if(!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
@@ -1232,7 +1232,7 @@ class Estimate_v1 extends MY_Controller
             $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
             $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
             $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
-            move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
+            move_uploaded_file($tmp_name, "./uploads/estimates/$estimate->id/$attachment_name");
         }
 
         $new_data = array(
