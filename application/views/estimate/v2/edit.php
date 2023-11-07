@@ -344,7 +344,7 @@ echo put_header_assets();
                                                             if ($estimate->customer_id == $customer->prof_id) {
                                                                 echo "selected";
                                                             }
-                                                        } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
+                                                        } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -718,7 +718,7 @@ echo put_header_assets();
                                                         $adjustment_value = $estimate->adjustment_value;
                                                     }
                                                     ?>
-                                                    <input type="text" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                    <input type="number" step="any" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
                                                 </div>
                                                 <span id="adjustmentText" style="display: none;"><?php echo $estimate->adjustment_value; ?></span>
                                             </td>

@@ -73,6 +73,8 @@ class AccountingMailer extends MY_Controller{
             "taxable_sales_detail",
             "taxable_sales_summary",
             "income_by_customer_summary",
+            "estimate_progress_invoicing",
+            "terms_list",
         );
 
         // Conditional Statements on the array

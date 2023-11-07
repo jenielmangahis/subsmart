@@ -43,7 +43,7 @@
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#contractor-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add a contractor
                             </button>
-                            <button type="button" class="nsm-button primary">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#pay-contractors-modal">
                                 <i class='bx bx-fw bx-dollar-circle'></i> Pay contractors
                             </button>
                         </div>

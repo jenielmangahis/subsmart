@@ -152,3 +152,216 @@ $('.delete-contractor').on('click', function(e) {
         }
     });
 });
+
+initializeFields();
+
+$('#pay-contractors-modal #contractors-list-table tbody a[data-bs-toggle="collapse"]').on('click', function(e) {
+    var row = $(this).closest('tr');
+    row.find('input.select-one').prop('checked', true).trigger('change');
+
+    if($(this).hasClass('collapsed')) {
+        $(this).html('<i class="bx bx-fw bx-chevron-right"></i>');
+    } else {
+        $(this).html('<i class="bx bx-fw bx-chevron-down"></i>');
+    }
+});
+
+$('#pay-contractors-modal #contractors-list-table tbody input.select-one').on('change', function() {
+    var row = $(this).closest('tr');
+    var fieldsRow = row.next();
+
+    if($(this).prop('checked')) {
+        var amount = parseFloat(fieldsRow.find('[name="amount[]"]').val() !== '' ? fieldsRow.find('[name="amount[]"]').val() : 0.00);
+
+        fieldsRow.collapse('show');
+        row.find('a[data-bs-toggle="collapse"]').html('<i class="bx bx-fw bx-chevron-down"></i>');
+    } else {
+        var amount = 0.00;
+
+        fieldsRow.collapse('hide');
+        row.find('a[data-bs-toggle="collapse"]').html('<i class="bx bx-fw bx-chevron-right"></i>');
+    }
+
+    row.find('td:nth-child(6), td:last-child').html(formatter.format(amount));
+    computePaymentTotal();
+});
+
+$('#pay-contractors-modal #contractors-list-table tbody [name="amount[]"]').on('change', function() {
+    var fieldsRow = $(this).closest('tr');
+    var row = fieldsRow.prev();
+    var checkbox = row.find('input.select-one')
+
+    if(checkbox.prop('checked')) {
+        var amount = parseFloat($(this).val() !== '' ? $(this).val() : 0.00);
+    } else {
+        var amount = 0.00;   
+    }
+
+    row.find('td:nth-child(6), td:last-child').html(formatter.format(amount));
+    computePaymentTotal();
+});
+
+var data = new FormData();
+var contractorPaymentForm = '';
+$(document).on('click', '#pay-contractors-modal #preview-contractor-payment', function(e) {
+    e.preventDefault();
+    contractorPaymentForm = $('#pay-contractors-modal .modal-body').html();
+    var button = $(this);
+
+    data.append('corresponding_account', $('#pay-contractors-modal #corresponding-account').val());
+    data.append('pay_date', $('#pay-contractors-modal #pay-date').val());
+    
+    $('#pay-contractors-modal #contractors-list-table .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var fieldsRow = row.next();
+        data.append('contractor[]', $(this).val());
+
+        data.append('check_number[]', fieldsRow.find('input[name="check_number[]"]').val());
+        data.append('account[]', fieldsRow.find('select[name="account[]"]').val());
+        data.append('description[]', fieldsRow.find('input[name="description[]"]').val());
+        data.append('customer[]', fieldsRow.find('select[name="customer[]"]').val());
+        data.append('amount[]', fieldsRow.find('input[name="amount[]"]').val());
+        data.append('total_fixed_pay[]', row.find('td:nth-child(6)').html().replace('$', ''));
+        data.append('total_pay[]', row.find('td:last-child').html().replace('$', ''));
+    });
+
+    data.append('total_amount', $('#pay-contractors-modal .transaction-total-amount').html().replace('$', ''));
+
+    $.ajax({
+        url: '/accounting/contractors/preview-contractor-payment',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            $('#pay-contractors-modal .modal-body').html(result);
+
+            button.parent().prev().html('<button type="button" class="nsm-button primary" id="back-to-contractor-payment-form">Back</button>');
+            button.parent().html('<button type="button" class="nsm-button success" id="submit-payment">Submit</button>');
+        }
+    });
+});
+
+$(document).on('click', '#pay-contractors-modal #back-to-contractor-payment-form', function(e) {
+    e.preventDefault();
+
+    var button = $(this);
+
+    $('#pay-contractors-modal .modal-body').html(contractorPaymentForm);
+
+    initializeFields();
+
+    button.parent().html('<button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>');
+    button.parent().next().html('<button type="button" class="nsm-button success" id="preview-contractor-payment">Preview</button>');
+});
+
+$(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: '/accounting/contractors/submit-contractor-payment',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                title: res.success ? 'Success' : 'Error',
+                html: res.message,
+                icon: res.success ? 'success' : 'error',
+                showCloseButton: false,
+                showCancelButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+function computePaymentTotal() {
+    var total = 0.00;
+    $('#pay-contractors-modal #contractors-list-table .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+
+        total += parseFloat(row.find('td:last-child').html().replace('$', ''));
+    });
+
+    $('#pay-contractors-modal .transaction-total-amount, #pay-contractors-modal #contractors-list-table tfoot tr td:last-child').html(formatter.format(total));
+}
+
+function initializeFields() {
+    $('#pay-contractors-modal #corresponding-account').select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'checking-savings-account',
+                    modal: 'pay-contractors-modal'
+                }
+    
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect,
+        dropdownParent: $('#pay-contractors-modal')
+    });
+    
+    $('#pay-contractors-modal [name="customer[]"]').select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'customer',
+                    modal: 'pay-contractors-modal'
+                }
+    
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect,
+        dropdownParent: $('#pay-contractors-modal')
+    });
+    
+    $('#pay-contractors-modal [name="account[]"]').select2({
+        ajax: {
+            url: '/accounting/get-dropdown-choices',
+            dataType: 'json',
+            data: function(params) {
+                var query = {
+                    search: params.term,
+                    type: 'public',
+                    field: 'account',
+                    modal: 'pay-contractors-modal'
+                }
+    
+                // Query parameters will be ?search=[term]&type=public&field=[type]
+                return query;
+            }
+        },
+        templateResult: formatResult,
+        templateSelection: optionSelect,
+        dropdownParent: $('#pay-contractors-modal')
+    });
+
+    $('#pay-contractors-modal #pay-date').datepicker({
+        format: 'mm/dd/yyyy',
+        orientation: 'bottom',
+        autoclose: true
+    });
+}
