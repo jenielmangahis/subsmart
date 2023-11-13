@@ -354,6 +354,7 @@ echo put_header_assets();
                                                             if ($estimate->customer_id == $customer->prof_id) {
                                                                 echo "selected";
                                                             }
+                                                        } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
                                                         } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
                                             <?php endforeach; ?>
                                         </select>
@@ -414,7 +415,14 @@ echo put_header_assets();
                                 </div>
                             </div>
                             <hr>
+                            <div class="row mb-3" style="background-color:white;">
                             <div class="row mb-3" style="background-color:white;">                                
+                                <div class="col-md-3">
+                                    <label for="estimate_date" class="required"><b>Estimate#</b></label>
+                                    <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
+                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-" . date("YmdHis"); ?>" /> -->
+                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date" value="<?php echo $estimate->estimate_number; ?>" readonly />
+                                </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
@@ -505,6 +513,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
+                                    <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
                                     <b>Items Summary</b>
                                 </div>
                                 <div class="col-md-6">
@@ -722,7 +731,7 @@ echo put_header_assets();
                                                         $adjustment_value = $estimate->adjustment_value;
                                                     }
                                                     ?>
-                                                    <input type="number" step="any" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2 ,".", ""); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                    <input type="number" step="any" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2,".",""); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">                                                    
                                                 </div>
                                                 <span id="adjustmentText" style="display: none;"><?php echo $estimate->adjustment_value; ?></span>
                                             </td>
@@ -730,6 +739,7 @@ echo put_header_assets();
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
                                         <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <!-- <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> -->
                                         <!-- </tr> -->
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
@@ -764,6 +774,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-12">
+                                    <h6>Request a Deposit</h6>
                                     <label class="bold">Request a Deposit</label>
                                     <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                                 </div>
@@ -795,6 +806,8 @@ echo put_header_assets();
                                 </div> -->
                                 <div class="col-md-3 form-group">
                                     <div class="input-group">
+                                        <!-- <div class="input-group-addon bold">$</div> -->
+                                        <input type="text" name="deposit_amount" value="<?php echo $estimate->deposit_amount; ?>" class="form-control" autocomplete="off">
                                         <!-- <div class="input-group-addon bold">$</div> -->                                        
                                         <!-- <input type="text" name="deposit_amount" value="<?php echo $estimate->deposit_amount; ?>" class="form-control" autocomplete="off"> -->
                                     </div>
@@ -807,6 +820,9 @@ echo put_header_assets();
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
+                                        <label>
+                                            <h6>Message to Customer</h6>
+                                        </label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
                                         <label class="bold">Message to Customer</label> 
                                         <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
                                         <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control"><?php echo $estimate->customer_message; ?></textarea>
@@ -814,6 +830,9 @@ echo put_header_assets();
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
+                                        <label>
+                                            <h6>Terms &amp; Conditions</h6>
+                                        </label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <label class="bold">Terms & Conditions</label>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <textarea name="terms_conditions" cols="40" rows="2" class="form-control" id="terms_conditions_est"><?php echo $estimate->terms_conditions; ?></textarea>
@@ -825,9 +844,13 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-4">
+                                    <label for="billing_date">
+                                        <h6>Attachment</h6>
+                                    </label>
                                     <label class="bold">Attachment</label>
                                     <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
                                     <?php if ($estimate->attachments != '') { ?>
+                                        <a class="btn btn-sm btn-primary" target="_new" style="margin-top:10px; margin-bottom: 10px;" href="<?= base_url('uploads/estimates/' . $estimate->user_id . '/' . $estimate->attachments); ?>"><?= $estimate->attachments; ?></a>
                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:10px; margin-bottom: 10px;" href="<?= base_url('uploads/estimates/' . $estimate->id . '/' . $estimate->attachments); ?>"><?= $estimate->attachments; ?></a>
                                     <?php } ?>
 
@@ -838,6 +861,9 @@ echo put_header_assets();
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label>
+                                            <h6>Instructions</h6>
+                                        </label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <label class="bold">Instructions</label>
                                         <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2" class="form-control" id="instructions_est"><?php echo $estimate->instructions; ?></textarea>
