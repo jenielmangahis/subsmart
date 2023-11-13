@@ -68,8 +68,8 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest first</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted: newest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted: oldest</a></li>
-                                <!-- <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-asc">Number: Asc</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-desc">Number: Desc</a></li> -->
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-desc">Estimate Number: descending</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-asc">Estimate Number: ascending</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-asc">Amount: Lowest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount: Highest</a></li>
                             </ul>
@@ -177,13 +177,14 @@
                                         $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
                                         $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
 
-                                        if ($estimate->estimate_type == 'Option') {
-                                            echo '$ ' . number_format(floatval($total1),2);
-                                        } elseif ($estimate->estimate_type == 'Bundle') {
-                                            echo '$ ' . number_format(floatval($total2),2);
-                                        } else {
-                                            echo '$ ' . number_format(floatval($estimate->grand_total),2);
-                                        }
+                                        // if ($estimate->estimate_type == 'Option') {
+                                        //     echo '$ ' . number_format(floatval($total1),2);
+                                        // } elseif ($estimate->estimate_type == 'Bundle') {
+                                        //     echo '$ ' . number_format(floatval($total2),2);
+                                        // } else {
+                                        //     echo '$ ' . number_format(floatval($estimate->grand_total),2);
+                                        // }
+                                        echo '$ ' . number_format(floatval($estimate->grand_total),2);
 
                                         ?>
                                     </td>

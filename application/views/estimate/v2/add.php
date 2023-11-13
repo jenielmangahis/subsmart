@@ -594,7 +594,7 @@ echo put_header_assets();
                                         <!-- <tr>
                                                 <td>Markup $<span id="span_markup"></td> -->
                                         <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> -->
                                         <!-- </tr> -->
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
@@ -695,7 +695,7 @@ echo put_header_assets();
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button" style="color: black;">Cancel</a>
+                                    <a href="<?php echo url('estimate') ?>" class="nsm-button" style="color: black;">Cancel</a>
 
                                     <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button>
 

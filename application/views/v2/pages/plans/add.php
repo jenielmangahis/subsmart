@@ -129,6 +129,14 @@ label>input {
 .show_mobile_view{
   display: none;
 }
+.dataTables_filter, .dataTables_length{
+    display: none;
+}
+.remove{
+    display:block;
+    width:38px;
+    float:right;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -168,7 +176,7 @@ label>input {
                                         <input type="text" class="form-control" name="plan_name" id="formClient-Name" required placeholder="Enter Name" autofocus />
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="discount_fixed">Status</label><br />
                                             <select name="status" class="groups-select form-control" >
@@ -178,30 +186,30 @@ label>input {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 10px;">
+                                <div class="row" style="margin-top: 20px;">
                                     <div class="col-sm-6">
                                         <h5>Assign Items</h5>
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <a href="#" class="nsm-button primary small" id="add_another_old" data-bs-toggle="modal" data-bs-target="#item_list"><i class="fa fa-plus"></i> Add Items</a>
-                                    </div>
+                                    </div>                                    
                                     <div class="col-sm-12">
-                                        <table class="nsm-table">
+                                        <table class="table table-hover">
                                             <input type="hidden" name="count" value="0" id="count">
-                                            <thead>
-                                                <tr>
-                                                    <th>DESCRIPTION</th>
-                                                    <th>Type</th>
-                                                    <th width="100px">Quantity</th>
-                                                    <!-- <th>LOCATION</th> -->
-                                                    <th width="100px">COST</th>
-                                                    <th width="100px">Discount</th>
-                                                    <th>Tax(7.5%)</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
+                                            <thead style="background-color:#E9E8EA;">
+                                              <tr>
+                                                  <th>Description</th>
+                                                  <th>Type</th>                                                  
+                                                  <th width="150px">Quantity</th>                                                  
+                                                  <th width="150px">Cost</th>
+                                                  <th class="hidden_mobile_view" width="150px">Discount</th>
+                                                  <th class="hidden_mobile_view" width="150px">Tax(7.5%)</th>
+                                                  <th class="hidden_mobile_view">Total</th>
+                                                  <th class="hidden_mobile_view"></th>
+                                              </tr>
+                                            </thead>                                            
                                             <tbody id="jobs_items_table_body"></tbody>
                                         </table>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="#" class="nsm-button primary small" id="add_another_old" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bxs-plus-square'></i> Add Items</a>
                                     </div>
                                 </div>
                                 
@@ -225,8 +233,17 @@ label>input {
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
 
 <script>
-   $(document).ready(function() {
-     $('.form-validate').validate();
+  $(document).ready(function() {
+      var ITEMS_TABLE = $('#items_table').DataTable({
+          "ordering": false,
+      });
+
+      $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+          ITEMS_TABLE.search($(this).val()).draw()
+      });
+
+     $('.select2').select2();
+     //$('.form-validate').validate();
      $('.check-select-all-p').on('change', function() {
        $('.check-select-p').attr('checked', $(this).is(':checked'));
      });
@@ -243,8 +260,84 @@ label>input {
       ],
        "ordering": false,
      });
-   });
-</script>
-<script>
-   $('.select2').select2();
+
+    $(document).on('click', '.select_item2a', function(){     
+      // taxRate();
+          var idd = this.id;
+          var title = $(this).data('itemname');
+          var price = parseInt($(this).attr('data-price'));
+          // var qty = parseInt($(this).attr('data-quantity'));
+          var location_name = $(this).data('location_name');
+          var location_id = $(this).data('location_id');
+          var item_type = $(this).data('item_type');
+          if(!$(this).data('quantity')){
+            var qty = 1;
+          }else{
+            var qty = $(this).data('data-quantity');
+          }
+          var return_first = function () {
+              var tax_rate = null;
+              $.ajax({
+                  'async': false,
+                  type : 'POST',
+                  url: "<?php echo base_url(); ?>/workorder/getTaxRate",
+                  success: function(result){
+                      tax_rate = result;
+                  }
+              });
+          return tax_rate;
+          }();
+
+          // alert(return_first);
+          var json = $.parseJSON(return_first);
+          var tax_rate_ = 0;
+          for (var i=0;i<json.length;++i)
+          {
+              tax_rate_ = json[i].rate;
+          }
+          // alert(tax_rate_);
+          var taxRate = tax_rate_;
+
+          var count = parseInt($("#count").val()) + 1;
+          $("#count").val(count);
+          var total_ = price * qty;
+          var tax_ =(parseFloat(total_).toFixed(2) * taxRate) / 100;
+          var taxes_t = parseFloat(tax_).toFixed(2);
+          var total = parseFloat(total_).toFixed(2);
+          var withCommas = Number(total).toLocaleString('en');
+          //total = '$' + withCommas + '.00';
+          total = withCommas + '.00';
+          $("#ITEMLIST_PRODUCT_"+idd).hide();
+          if( item_type == 'Product' ){
+              var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option value="service">Service</option><option value="fee">Fee</option></select>';
+          }else if( item_type == 'Fees' ){
+              var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option value="service">Service</option><option selected="selected" value="fee">Fee</option></select>';
+          }else if( item_type == 'Service' ){
+              var item_type_dropdown = '<select name="item_type[]" class="form-control"><option value="product">Product</option><option  selected="selected" value="service">Service</option><option value="fee">Fee</option></select>';
+          }else{
+              var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
+          }
+          markup = '<tr id="row'+ idd +'">' +
+              "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
+              "<td width=\"20%\"><div class=\"dropdown-wrapper\">"+item_type_dropdown+"</div></td>\n" +
+              "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
+              // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+              "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+              // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+              // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+              "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
+              // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+              "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
+              "<td style=\"text-align: right\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
+              // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+              "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
+              "<td>\n" +
+              "<a href=\"#\" class=\"remove nsm-button danger\" id='"+count+"'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+              "</td>\n" +
+              "</tr>"
+          ;
+        tableBody = $("#jobs_items_table_body");          
+        tableBody.append(markup);
+    });
+  });
 </script>

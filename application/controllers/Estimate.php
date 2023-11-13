@@ -200,7 +200,6 @@ class Estimate extends MY_Controller
             //'deposit_request' => $this->input->post('deposit_request'),
             'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
-
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
@@ -1330,7 +1329,7 @@ class Estimate extends MY_Controller
     {
         $company_id  = getLoggedCompanyID();
         $user_id     = getLoggedUserID();
-        $estimate    = $this->estimate_model->getById($id);
+        $estimate    = $this->estimate_model->getById($id);        
 
         $attachment_name = $estimate->attachments;
         if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
@@ -1908,16 +1907,15 @@ class Estimate extends MY_Controller
     }
 
     public function print($tab = '')
-    {
+    {        
         $role = logged('role');
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
 
-            if (!empty($tab)) {
+            if (!empty($tab)) {                
                 $this->page_data['tab'] = $tab;
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab), $company_id);
-            } else {
-
+            } else {                
                 // search
                 if (!empty(get('search'))) {
                     $this->page_data['search'] = get('search');
@@ -1925,7 +1923,7 @@ class Estimate extends MY_Controller
                 } elseif (!empty(get('order'))) {
                     $this->page_data['search'] = get('search');
                     $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
-                } else {
+                } else {                    
                     $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
             }
@@ -2148,6 +2146,8 @@ class Estimate extends MY_Controller
                 $total_amount += $item->iTotal;
             }
 
+            $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100);
+
             $html .= '
             <tr><br><br>
               <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
@@ -2163,7 +2163,15 @@ class Estimate extends MY_Controller
             </tr>
             <tr>
               <td colspan="6" style="text-align: right;"><b>Grand Total</b></td>
-              <td style="text-align: right;"><b>$'.number_format($total_amount, 2).'</b></td>
+              <td style="text-align: right;"><b>$'.number_format($estimate->grand_total, 2).'</b></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: right;"></td>
+              <td style="text-align: right;"></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: right;"><b>Deposit Amount Requested</b></td>
+              <td style="text-align: right;"><b>$'.number_format($deposit_amount, 2).'</b></td>
             </tr>
           </tbody>
           </table>
