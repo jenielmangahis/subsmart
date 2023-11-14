@@ -559,5 +559,19 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();            
         }
+
+        // Get Statement List data in Database
+        if ($reportType == "statement_list") {
+            $this->db->select('accounting_statements.id AS statement_id, accounting_statements.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, accounting_statements.statement_date AS statement_date');
+            $this->db->from('accounting_statements');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_statements.customer_id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_statements.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_statements.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_statements.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
     }
 }

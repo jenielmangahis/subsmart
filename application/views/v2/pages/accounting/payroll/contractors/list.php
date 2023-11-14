@@ -27,10 +27,10 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
 						<div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Active <i class='bx bx-fw bx-chevron-down'></i>
+                                <span><?=empty($status) || $status === 'active' ? 'Active' : ucfirst($status)?> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" id="status-filter" style="width: max-content">
-                                <li><a class="dropdown-item <?=empty($status) || $search === 'active' ? 'active' : ''?>" href="javascript:void(0);" id="active">Active</a></li>
+                                <li><a class="dropdown-item <?=empty($status) || $status === 'active' ? 'active' : ''?>" href="javascript:void(0);" id="active">Active</a></li>
                                 <li><a class="dropdown-item <?=!empty($status) && $status === 'inactive' ? 'active' : ''?>" href="javascript:void(0);" id="inactive">Inactive</a></li>
                                 <li><a class="dropdown-item <?=!empty($status) && $status === 'all' ? 'active' : ''?>" href="javascript:void(0);" id="all">All</a></li>
                             </ul>

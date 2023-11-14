@@ -1130,6 +1130,14 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
+    public function getCustomFieldsByCompanyId($company_id){
+        $this->db->select('*');
+		$this->db->from('custom_fields');
+		$this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getheaderByID()
     {
         $cid = getLoggedCompanyID();

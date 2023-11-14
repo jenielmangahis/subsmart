@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Name">Name</td>
+                            <td data-name="Name" style="width:80%;">Name</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -146,7 +146,7 @@
                         },
                         success: function(result) {
                             Swal.fire({
-                                title: 'Good job!',
+                                //title: 'Good job!',
                                 text: "Plan has been deleted successfully.",
                                 icon: 'success',
                                 showCancelButton: false,

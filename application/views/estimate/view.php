@@ -64,7 +64,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <li style="font-size:17px;">
                           <a class="dropdown-item" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"><i class='bx bxs-file-pdf'></i> PDF</a>
                         </li>
-                        <li>
+                        <li style="font-size:17px;">
                           <a class="dropdown-item print-estimate" href="javascript:void(0);"><i class='bx bxs-printer'></i> Print</a>
                         </li>
                         <li style="font-size:17px;">
@@ -326,28 +326,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
                               <td colspan="1" style="text-align: right;"><p>$<?= number_format((float)$estimate->sub_total,2); ?></p></td>
-                            </tr>
-                            <tr>
-                              <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Deposit Amount</p></td>
-                              <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->deposit_amount, 2); ?></p></td>
-                            </tr>
+                            </tr>                            
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
                               <td colspan="1" style="text-align: right;">
                                 <p>$<?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
-                            </tr>
+                            </tr>  
+                            <?php if( $estimate->adjustment_name != '' && $estimate->adjustment_value > 0 ){ ?>
+                            <tr>
+                              <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                              <td colspan="2" style="text-align: ;"><p><?= $estimate->adjustment_name; ?></p></td>
+                              <td colspan="1" style="text-align: right;">
+                                <p>$<?= number_format((float)$estimate->adjustment_value, 2); ?></p></td>
+                            </tr> 
+                            <?php } ?>                           
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
                               <?php 
-                                $grand_total = $estimate->deposit_amount;
-                                if( $estimate->deposit_amount > 0 ){
-                                  $grand_total = $estimate->grand_total - $estimate->deposit_amount;
-                                }
+                                $grand_total = $estimate->grand_total;
+                                // if( $deposit_amount > 0 ){
+                                //   $grand_total = $grand_total - $deposit_amount;
+                                // }
                               ?>
                               <td colspan="1" style="text-align: right;"><b>$<?= number_format((float)$grand_total, 2); ?></b></td>
+                            </tr>
+                            <tr><td colspan="7"></td></tr>                            
+                            <tr>
+                              <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                              <td colspan="2" style="text-align: ;"><p>Deposit Amount Requested</p></td>
+                              <td colspan="1" style="text-align: right;">
+                                <?php $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100); ?>
+                                <p>$<?= number_format((float)$deposit_amount, 2); ?></p></td>
                             </tr>
                           <?php } ?>
                         </tbody>

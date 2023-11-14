@@ -155,18 +155,20 @@ $('.delete-contractor').on('click', function(e) {
 
 initializeFields();
 
-$('#pay-contractors-modal #contractors-list-table tbody a[data-bs-toggle="collapse"]').on('click', function(e) {
+$(document).on('click', '#pay-contractors-modal #contractors-list-table tbody tr:not(.clickable) a[data-bs-toggle="collapse"]', function(e) {
     var row = $(this).closest('tr');
     row.find('input.select-one').prop('checked', true).trigger('change');
-
-    if($(this).hasClass('collapsed')) {
-        $(this).html('<i class="bx bx-fw bx-chevron-right"></i>');
-    } else {
-        $(this).html('<i class="bx bx-fw bx-chevron-down"></i>');
-    }
 });
 
-$('#pay-contractors-modal #contractors-list-table tbody input.select-one').on('change', function() {
+$(document).on('hide.bs.collapse', '#pay-contractors-modal #contractors-list-table tbody tr.collapse', function() {
+    $(this).prev().find('a[data-bs-toggle="collapse"]').html('<i class="bx bx-fw bx-chevron-right"></i>');
+});
+
+$(document).on('show.bs.collapse', '#pay-contractors-modal #contractors-list-table tbody tr.collapse', function() {
+    $(this).prev().find('a[data-bs-toggle="collapse"]').html('<i class="bx bx-fw bx-chevron-down"></i>');
+});
+
+$(document).on('change', '#pay-contractors-modal #contractors-list-table tbody input.select-one', function() {
     var row = $(this).closest('tr');
     var fieldsRow = row.next();
 
@@ -184,9 +186,18 @@ $('#pay-contractors-modal #contractors-list-table tbody input.select-one').on('c
 
     row.find('td:nth-child(6), td:last-child').html(formatter.format(amount));
     computePaymentTotal();
+
+    var checked = $('#pay-contractors-modal #contractors-list-table input.select-one:checked').length;
+    var checkboxes = $('#pay-contractors-modal #contractors-list-table input.select-one').length;
+
+    $('#pay-contractors-modal #contractors-list-table thead input.select-all').prop('checked', checked === checkboxes);
 });
 
-$('#pay-contractors-modal #contractors-list-table tbody [name="amount[]"]').on('change', function() {
+$(document).on('change', '#pay-contractors-modal #contractors-list-table thead input.select-all', function() {
+    $('#pay-contractors-modal #contractors-list-table input.select-one').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+$(document).on('change', '#pay-contractors-modal #contractors-list-table tbody [name="amount[]"]', function() {
     var fieldsRow = $(this).closest('tr');
     var row = fieldsRow.prev();
     var checkbox = row.find('input.select-one')
@@ -248,11 +259,24 @@ $(document).on('click', '#pay-contractors-modal #back-to-contractor-payment-form
     var button = $(this);
 
     $('#pay-contractors-modal .modal-body').html(contractorPaymentForm);
+    $('#pay-contractors-modal .modal-body select').next().remove();
+
+    var selectedContractors = data.getAll('contractor[]');
+    var checkNumber = data.getAll('check_number[]');
+    var description = data.getAll('description[]');
+    var amount = data.getAll('amount[]');
+    for(i = 0; i < selectedContractors.length; i++)
+    {
+        $(`#pay-contractors-modal #contractors-list-table .select-one[value="${selectedContractors[i]}"]`).prop('checked', true);
+        $(`#pay-contractors-modal #contractors-list-table .select-one[value="${selectedContractors[i]}"]`).closest('tr').next().find('[name="check_number[]"]').val(checkNumber[i]);
+        $(`#pay-contractors-modal #contractors-list-table .select-one[value="${selectedContractors[i]}"]`).closest('tr').next().find('[name="description[]"]').val(description[i]);
+        $(`#pay-contractors-modal #contractors-list-table .select-one[value="${selectedContractors[i]}"]`).closest('tr').next().find('[name="amount[]"]').val(amount[i]);
+    }
 
     initializeFields();
 
-    button.parent().html('<button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>');
     button.parent().next().html('<button type="button" class="nsm-button success" id="preview-contractor-payment">Preview</button>');
+    button.parent().html('<button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>');
 });
 
 $(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
@@ -282,6 +306,21 @@ $(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
             });
         }
     });
+});
+
+$(document).on('change', '#pay-contractors-modal #corresponding-account', function() {
+    dropdownEl = $(this);
+    if($(this).val() === 'add-new') {
+        $.get(`/accounting/get-dropdown-modal/account_modal?modal=pay-contractors&field=corresponding-account`, function(result) {
+            if($('#modal-container').length > 0) {
+                $('#modal-container').html(result);
+            } else {
+                $('body').append(`<div id="modal-container">${result}</div>`);
+            }
+
+            initAccountModal();
+        });
+    }
 });
 
 function computePaymentTotal() {

@@ -185,6 +185,8 @@ class Contractors extends MY_Controller {
             "assets/js/v2/accounting/payroll/contractors/view.js"
         ));
 
+        $hasFilter = false;
+
         $filter = [];
         if(!empty(get('date'))) {
             switch(get('date')) {
@@ -207,6 +209,7 @@ class Contractors extends MY_Controller {
             }
 
             $this->page_data['date'] = get('date');
+            $hasFilter = true;
         }
 
         if(!empty(get('type'))) {
@@ -223,6 +226,8 @@ class Contractors extends MY_Controller {
             }
 
             $this->page_data['type'] = get('type');
+
+            $hasFilter = true;
         } else {
             $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
             $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
@@ -289,11 +294,21 @@ class Contractors extends MY_Controller {
             }, ARRAY_FILTER_USE_BOTH);
 
             $this->page_data['method'] = get('method');
+            $hasFilter = true;
         }
 
         usort($data, function($a, $b) {
             return strtotime($a['date']) < strtotime($b['date']);
         });
+
+        $prevUrl = $_SERVER['HTTP_REFERER'];
+        $prevUrl = explode('?', $prevUrl);
+
+        if($hasFilter === false && count($prevUrl) > 1) {
+            $hasFilter = true;
+        }
+
+        $this->page_data['has_filter'] = $hasFilter;
 
         $this->page_data['payments'] = $data;
         $this->page_data['paymentsTotal'] = array_sum(array_column($data, 'amount'));
@@ -331,7 +346,7 @@ class Contractors extends MY_Controller {
             'm_name' => $this->input->post('contractor_type') === "1" ? $this->input->post('middle_name') : null,
             'l_name' => $this->input->post('contractor_type') === "1" ? $this->input->post('last_name') : null,
             'suffix' => $this->input->post('contractor_type') === "1" ? $this->input->post('suffix') : null,
-            'email' => $this->input->post('email'),
+            // 'email' => $this->input->post('email'),
             'company' => $this->input->post('contractor_type') === "2" ? $this->input->post('business_name') : null,
             'display_name' => $this->input->post('display_name'),
             'street' => $this->input->post('address'),

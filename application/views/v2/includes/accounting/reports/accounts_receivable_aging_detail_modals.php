@@ -10,21 +10,21 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
@@ -66,7 +66,7 @@
                         <?php if(count($transactions) > 0) : ?>
                         <?php foreach($transactions as $index => $transaction) : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -106,7 +106,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -114,7 +114,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="26">
+                            <td colspan="27">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -125,14 +125,14 @@
                     <tfoot>
                         <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
                         <tr>
-                            <td colspan="26">
+                            <td colspan="27">
                                 <p class="m-0"><b>Note</b></p>
                                 <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="27" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -159,21 +159,21 @@
                     <thead>
                         <?php if(!isset($show_company_name)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <h4 class="fw-bold"><span class="company-name"><?=$company_name?></span></h4>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_title)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0 fw-bold"><?=$report_title?></p>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <?php if(!isset($show_report_period)) : ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
+                            <td colspan="27" class="<?=!isset($header_alignment) ? 'text-center' : 'text-'.$header_alignment?>">
                                 <p class="m-0"><?=$report_period?></p>
                             </td>
                         </tr>
@@ -215,7 +215,7 @@
                         <?php if(count($transactions) > 0) : ?>
                         <?php foreach($transactions as $index => $transaction) : ?>
                         <tr class="group-header">
-                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -255,7 +255,7 @@
                         </tr>
                         <?php endforeach; ?>
                         <tr class="group-total">
-                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><b>Total for <?=$transaction['name']?></b></td>
+                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><b>Total for <?=$transaction['name']?></b></td>
                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -263,7 +263,7 @@
                         <?php endforeach; ?>
                         <?php else : ?>
                         <tr>
-                            <td colspan="26">
+                            <td colspan="27">
                                 <div class="nsm-empty">
                                     <span>No results found.</span>
                                 </div>
@@ -274,14 +274,14 @@
                     <tfoot>
                         <?php if(!is_null($reportNote) && !empty($reportNote->notes)) : ?>
                         <tr>
-                            <td colspan="26">
+                            <td colspan="27">
                                 <p class="m-0"><b>Note</b></p>
                                 <span><?=str_replace("\n", "<br />", $reportNote->notes)?></span>
                             </td>
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <td colspan="26" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
+                            <td colspan="27" class="<?=!isset($footer_alignment) ? 'text-center' : 'text-'.$footer_alignment?>">
                                 <?=date($prepared_timestamp)?>
                             </td>
                         </tr>
@@ -446,9 +446,9 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-create-date" <?=isset($columns) && in_array('Created Date', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-create-date" <?=isset($columns) && in_array('Create Date', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-create-date">
-                                                                Created Date
+                                                                Create Date
                                                             </label>
                                                         </div>
                                                     </div>
@@ -478,9 +478,9 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-vendor" <?=isset($columns) && in_array('Vendor', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-vendor">
-                                                                Vendor
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-customer" <?=isset($columns) && in_array('Customer', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-customer">
+                                                                Customer
                                                             </label>
                                                         </div>
                                                     </div>
@@ -518,9 +518,17 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-address" <?=isset($columns) && in_array('Address', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-address">
-                                                                Address
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-billing-address" <?=isset($columns) && in_array('Billing Address', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-billing-address">
+                                                                Billing Address
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-shipping-address" <?=isset($columns) && in_array('Shipping Address', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-shipping-address">
+                                                                Shipping Address
                                                             </label>
                                                         </div>
                                                     </div>
@@ -529,6 +537,46 @@
                                                             <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-company-name" <?=isset($columns) && in_array('Company Name', $columns) || !isset($columns) ? 'checked' : ''?>>
                                                             <label class="form-check-label" for="select-company-name">
                                                                 Company Name
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-sales-rep" <?=isset($columns) && in_array('Sales Rep', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-sales-rep">
+                                                                Sales Rep
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-po-number" <?=isset($columns) && in_array('P.O. Number', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-po-number">
+                                                                P.O. Number
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-ship-via" <?=isset($columns) && in_array('Ship Via', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-ship-via">
+                                                                Ship Via
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-terms" <?=isset($columns) && in_array('Terms', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-terms">
+                                                                Terms
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-client-vendor-message" <?=isset($columns) && in_array('Client/Vendor Message', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-client-vendor-message">
+                                                                Client/Vendor Message
                                                             </label>
                                                         </div>
                                                     </div>
@@ -550,9 +598,17 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-terms" <?=isset($columns) && in_array('Terms', $columns) || !isset($columns) ? 'checked' : ''?>>
-                                                            <label class="form-check-label" for="select-terms">
-                                                                Terms
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-sent" <?=isset($columns) && in_array('Sent', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-sent">
+                                                                Sent
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="select_columns" value="1" id="select-delivery-address" <?=isset($columns) && in_array('Delivery Address', $columns) || !isset($columns) ? 'checked' : ''?>>
+                                                            <label class="form-check-label" for="select-delivery-address">
+                                                                Delivery Address
                                                             </label>
                                                         </div>
                                                     </div>

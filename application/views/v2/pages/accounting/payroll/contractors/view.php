@@ -56,17 +56,17 @@
                                 <div class="nsm-tab">
                                     <nav>
                                         <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                                            <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="false">
+                                            <button class="nav-link <?=$has_filter === false ? 'active' : ''?>" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="<?=$has_filter === false ? 'true' : 'false'?>">
                                                 Details
                                             </button>
-                                            <button class="nav-link" id="nav-payments-tab" data-bs-toggle="tab" data-bs-target="#nav-payments" type="button" role="tab" aria-controls="nav-payments" aria-selected="true">
+                                            <button class="nav-link <?=$has_filter === true ? 'active' : ''?>" id="nav-payments-tab" data-bs-toggle="tab" data-bs-target="#nav-payments" type="button" role="tab" aria-controls="nav-payments" aria-selected="<?=$has_filter === true ? 'true' : 'false'?>">
                                                 Payments
                                             </button>
                                         </div>
                                     </nav>
 
                                     <div class="tab-content" id="nav-tabContent">
-                                        <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+                                        <div class="tab-pane fade <?=$has_filter === false ? 'show active' : ''?>" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
                                             <div class="nsm-card primary">
                                                 <div class="row">
                                                     <div class="col-12">
@@ -115,7 +115,7 @@
                                                 <?php endif; ?>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="nav-payments" role="tabpanel" aria-labelledby="nav-payments-tab">
+                                        <div class="tab-pane fade <?=$has_filter === true ? 'show active' : ''?>" id="nav-payments" role="tabpanel" aria-labelledby="nav-payments-tab">
                                             <div class="row g-2">
                                                 <div class="col-12 grid-mb text-end">
                                                     <div class="nsm-page-buttons page-button-container">
@@ -206,5 +206,18 @@
 
 <script>
     const email = "<?=$contractor->email?>";
+    var title = "<?=$contractor->title?>";
+    var firstName = "<?=$contractor->f_name?>";
+    var middleName = "<?=$contractor->m_name?>";
+    var lastName = "<?=$contractor->l_name?>";
+    var suffix = "<?=$contractor->suffix?>";
+    var business_name = "<?=$contractor->company?>";
+    var socialSecNum = "<?=$contractor->contractor_type_id === '1' ? $contractor->tax_id : ''?>";
+    var employerId = "<?=$contractor->contractor_type_id === '2' ? $contractor->tax_id : ''?>";
+    var street = "<?=$contractor->street?>";
+    var city = "<?=$contractor->city?>";
+    var state = "<?=$contractor->state?>";
+    var zip = "<?=$contractor->zip?>";
+    var country = "<?=$contractor->country?>";
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

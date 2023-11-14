@@ -33,18 +33,36 @@ $('#status-filter li a.dropdown-item').on('click', function(e) {
     var search = $('#search_field').val();
 
     var status = $(this).attr('id').replace('-employees', '');
+    var payMethod = $('#pay-method-filter li a.dropdown-item.active').attr('id').replace('-pay-method', '');
 
     var url = `${base_url}accounting/employees?`;
 
     url += search !== '' ? `search=${search}&` : '';
-    url += status !== 'active' ? `status=${status}` : '';
+    url += status !== 'active' ? `status=${status}&` : '';
+    url += payMethod !== 'all' ? `pay-method=${payMethod}` : '';
 
-    if(url.slice(-1) === '&') {
-        url = url.slice(0, -1);
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
     }
 
-    if(url.slice(-1) === '?') {
-        url = url.slice(0, -1);
+    location.href = url;
+});
+
+$('#pay-method-filter li a.dropdown-item').on('click', function(e) {
+    e.preventDefault();
+    var search = $('#search_field').val();
+
+    var status = $('#status-filter li a.dropdown-item.active').attr('id').replace('-employees', '');
+    var payMethod = $(this).attr('id').replace('-pay-method', '');
+
+    var url = `${base_url}accounting/employees?`;
+
+    url += search !== '' ? `search=${search}&` : '';
+    url += status !== 'active' ? `status=${status}&` : '';
+    url += payMethod !== 'all' ? `pay-method=${payMethod}` : '';
+
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
     }
 
     location.href = url;
@@ -110,7 +128,21 @@ $("#add_employee_form").on("submit", function(e) {
         data: _this.serialize(),
         dataType: "json",
         success: function(result) {
-            window.location = base_url+"accounting/employees";
+            Swal.fire({
+                title: result.title,
+                html: result.message,
+                icon: result.success ? 'success' : 'error',
+                showCloseButton: false,
+                showCancelButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'Okay'
+            }).then((res) => {
+                if(res.isConfirmed) {
+                    if(result.success) {
+                        window.location = base_url+"accounting/employees";
+                    }
+                }
+            });
         },
     });
 });

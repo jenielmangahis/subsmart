@@ -2481,12 +2481,14 @@ $(function() {
                         vendorName += vendor.l_name !== "" && vendor.l_name !== null ? vendor.l_name + " " : "";
                         vendorName += vendor.suffix !== "" && vendor.suffix !== null ? vendor.suffix : "";
                         $('#checkModal #mailing_address').html(vendorName.trim());
-                        $('#checkModal #mailing_address').append('\n');
+                        if(vendorName.trim() !== '') {
+                            $('#checkModal #mailing_address').append('\n');
+                        }
                         var address = '';
-                        address += vendor.street !== "" && vendor.street !== null ? vendor.street : "";
-                        address += vendor.city !== "" && vendor.city !== null ? '\n' + vendor.city : "";
-                        address += vendor.state !== "" && vendor.state !== null ? ', ' + vendor.state : "";
-                        address += vendor.zip !== "" && vendor.zip !== null ? ' ' + vendor.zip : "";
+                        address += vendor.street !== "" && vendor.street !== null ? vendor.street + '\n' : "";
+                        address += vendor.city !== "" && vendor.city !== null ? vendor.city + ', ' : "";
+                        address += vendor.state !== "" && vendor.state !== null ? vendor.state + ' ' : "";
+                        address += vendor.zip !== "" && vendor.zip !== null ? vendor.zip : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2500,17 +2502,19 @@ $(function() {
                         customerName += customer.middle_name !== "" && customer.middle_name !== null ? customer.middle_name + " " : "";
                         customerName += customer.last_name !== "" && customer.last_name !== null ? customer.last_name : "";
                         $('#checkModal #mailing_address').html(customerName.trim());
-                        $('#checkModal #mailing_address').append('\n');
+                        if(customerName.trim() !== '') {
+                            $('#checkModal #mailing_address').append('\n');
+                        }
                         if (customer.business_name !== "" && customer.business_name !== null) {
                             $('#checkModal #mailing_address').append(customer.business_name);
                             $('#checkModal #mailing_address').append('\n');
                         }
                         var address = '';
-                        address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add : "";
-                        address += customer.city !== "" && customer.city !== null ? '\n' + customer.city : "";
-                        address += customer.state !== "" && customer.state !== null ? ', ' + customer.state : "";
-                        address += customer.zip_code !== "" && customer.zip_code !== null ? ' ' + customer.zip_code : "";
-                        address += customer.country !== "" && customer.country !== null ? ' ' + customer.country : "";
+                        address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
+                        address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
+                        address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
+                        address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
+                        address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2523,12 +2527,14 @@ $(function() {
                         employeeName += employee.FName !== "" && employee.FName !== null ? employee.FName + " " : "";
                         employeeName += employee.LName !== "" && employee.LName !== null ? employee.LName : "";
                         $('#checkModal #mailing_address').html(employeeName.trim());
-                        $('#checkModal #mailing_address').append('\n');
+                        if(employeeName.trim() !== '') {
+                            $('#checkModal #mailing_address').append('\n');
+                        }
                         var address = '';
-                        address += employee.address !== "" && employee.address !== null ? employee.address : "";
-                        address += employee.city !== ""  && employee.city !== null ? '\n' + employee.city : "";
-                        address += employee.state !== ""  && employee.state !== null ? ', ' + employee.state : "";
-                        address += employee.postal_code !== ""  && employee.postal_code !== null ? ' ' + employee.postal_code : "";
+                        address += employee.address !== "" && employee.address !== null ? employee.address + '\n' : "";
+                        address += employee.city !== ""  && employee.city !== null ? employee.city + ', ' : "";
+                        address += employee.state !== ""  && employee.state !== null ? employee.state + ' ' : "";
+                        address += employee.postal_code !== ""  && employee.postal_code !== null ? employee.postal_code : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2551,12 +2557,14 @@ $(function() {
             vendorName += vendor.l_name !== "" && vendor.l_name !== null ? vendor.l_name + " " : "";
             vendorName += vendor.suffix !== "" && vendor.suffix !== null ? vendor.suffix : "";
             $(`#${modalId} #mailing_address`).html(vendorName.trim());
-            $(`#${modalId} #mailing_address`).append('\n');
+            if(vendorName.trim() !== '') {
+                $(`#${modalId} #mailing_address`).append('\n');
+            }
             var address = '';
-            address += vendor.street !== "" && vendor.street !== null ? vendor.street : "";
-            address += vendor.city !== "" && vendor.city !== null ? '\n' + vendor.city : "";
-            address += vendor.state !== "" && vendor.state !== null ? ', ' + vendor.state : "";
-            address += vendor.zip !== "" && vendor.zip !== null ? ' ' + vendor.zip : "";
+            address += vendor.street !== "" && vendor.street !== null ? vendor.street + '\n' : "";
+            address += vendor.city !== "" && vendor.city !== null ? vendor.city + ', ' : "";
+            address += vendor.state !== "" && vendor.state !== null ? vendor.state + ' ' : "";
+            address += vendor.zip !== "" && vendor.zip !== null ? vendor.zip : "";
 
             $(`#${modalId} #mailing_address`).append(address.trim());
         });
@@ -2571,12 +2579,22 @@ $(function() {
             customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
             customerName += customer.last_name !== "" ? customer.last_name : "";
             $('#purchaseOrderModal #shipping_address').html(customerName.trim());
-            $('#purchaseOrderModal #shipping_address').append('\n');
+            if(customerName.trim() !== '') {
+                $('#purchaseOrderModal #shipping_address').append('\n');
+            }
             if (customer.business_name !== "" && customer.business_name !== null) {
                 $('#purchaseOrderModal #shipping_address').append(customer.business_name);
                 $('#purchaseOrderModal #shipping_address').append('\n');
             }
-            $('#purchaseOrderModal #shipping_address').append(customer.mail_add + '\n' + customer.city + ', ' + customer.state + ' ' + customer.zip_code + ' ' + customer.country);
+
+            var address = '';
+            address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
+            address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
+            address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
+            address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
+            address += customer.country !== "" && customer.country !== null ? customer.country : "";
+
+            $('#purchaseOrderModal #shipping_address').append(address);
         });
     });
 
@@ -8022,21 +8040,23 @@ $(function() {
                     customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
                     customerName += customer.last_name !== "" ? customer.last_name : "";
                     $('#invoiceModal #billing-address').html(customerName.trim());
-                    $('#invoiceModal #billing-address').append('\n');
+                    if(customerName.trim() !== '') {
+                        $('#invoiceModal #billing-address').append('\n');
+                    }
                 }
                 var billingAdd = '';
-                billingAdd += customer.mail_add !== "" ? customer.mail_add : "";
-                billingAdd += customer.city !== "" ? '\n' + customer.city : "";
-                billingAdd += customer.state !== "" ? ', ' + customer.state : "";
-                billingAdd += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-                billingAdd += customer.country !== "" ? ' ' + customer.country : "";
+                billingAdd += customer.mail_add !== "" ? customer.mail_add + '\n' : "";
+                billingAdd += customer.city !== "" ? customer.city + ', ' : "";
+                billingAdd += customer.state !== "" ? customer.state + ' ' : "";
+                billingAdd += customer.zip_code !== "" ? customer.zip_code + ' ' : "";
+                billingAdd += customer.country !== "" ? customer.country : "";
     
                 $('#invoiceModal #billing-address').append(billingAdd.trim());
 
                 var jobLoc = '';
-                jobLoc += customer.mail_add !== "" ? customer.mail_add : "";
-                jobLoc += customer.city !== "" ? ' ' + customer.city : "";
-                jobLoc += customer.state !== "" ? ', ' + customer.state : "";
+                jobLoc += customer.mail_add !== "" ? customer.mail_add + ' ' : "";
+                jobLoc += customer.city !== "" ? customer.city + ', ' : "";
+                jobLoc += customer.state !== "" ? customer.state : "";
                 $('#invoiceModal #job-location').val(jobLoc.trim());
 
                 $('#invoiceModal #customer-email').val(customer.email);
@@ -8655,14 +8675,16 @@ $(function() {
                 customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
                 customerName += customer.last_name !== "" ? customer.last_name : "";
                 $('#creditMemoModal #billing-address').html(customerName.trim());
-                $('#creditMemoModal #billing-address').append('\n');
+                if(customerName.trim() !== '') {
+                    $('#creditMemoModal #billing-address').append('\n');
+                }
             }
             var address = '';
-            address += customer.mail_add !== "" ? customer.mail_add : "";
-            address += customer.city !== "" ? '\n' + customer.city : "";
-            address += customer.state !== "" ? ', ' + customer.state : "";
-            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-            address += customer.country !== "" ? ' ' + customer.country : "";
+            address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
+            address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
+            address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
+            address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
+            address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
             $('#creditMemoModal #billing-address').append(address.trim());
             $('#creditMemoModal #email').val(customer.email);
@@ -9234,14 +9256,16 @@ $(function() {
                 customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
                 customerName += customer.last_name !== "" ? customer.last_name : "";
                 $('#salesReceiptModal #billing-address').html(customerName.trim());
-                $('#salesReceiptModal #billing-address').append('\n');
+                if(customerName.trim() !== '') {
+                    $('#salesReceiptModal #billing-address').append('\n');
+                }
             }
             var address = '';
-            address += customer.mail_add !== "" ? customer.mail_add : "";
-            address += customer.city !== "" ? '\n' + customer.city : "";
-            address += customer.state !== "" ? ', ' + customer.state : "";
-            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-            address += customer.country !== "" ? ' ' + customer.country : "";
+            address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
+            address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
+            address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
+            address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
+            address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
             $('#salesReceiptModal #billing-address').append(address.trim());
             $('#salesReceiptModal #email').val(customer.email);
@@ -9289,14 +9313,16 @@ $(function() {
                 customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
                 customerName += customer.last_name !== "" ? customer.last_name : "";
                 $('#refundReceiptModal #billing-address').html(customerName.trim());
-                $('#refundReceiptModal #billing-address').append('\n');
+                if(customerName.trim() !== '') {
+                    $('#refundReceiptModal #billing-address').append('\n');
+                }
             }
             var address = '';
-            address += customer.mail_add !== "" ? customer.mail_add : "";
-            address += customer.city !== "" ? '\n' + customer.city : "";
-            address += customer.state !== "" ? ', ' + customer.state : "";
-            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-            address += customer.country !== "" ? ' ' + customer.country : "";
+            address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
+            address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
+            address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
+            address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
+            address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
             $('#refundReceiptModal #billing-address').append(address.trim());
             $('#refundReceiptModal #email').val(customer.email);
@@ -9308,9 +9334,9 @@ $(function() {
             var customer = JSON.parse(res);
 
             var jobLoc = '';
-            jobLoc += customer.mail_add !== "" ? customer.mail_add : "";
-            jobLoc += customer.city !== "" ? ' ' + customer.city : "";
-            jobLoc += customer.state !== "" ? ', ' + customer.state : "";
+            jobLoc += customer.mail_add !== "" ? customer.mail_add + ' ' : "";
+            jobLoc += customer.city !== "" ? customer.city + ', ' : "";
+            jobLoc += customer.state !== "" ? customer.state : "";
             $('#modal-form .modal #job-location').val(jobLoc.trim());
 
             $('#modal-form .modal #customer-email').val(customer.email);

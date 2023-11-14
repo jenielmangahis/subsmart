@@ -101,30 +101,27 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td>
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-5 offset-md-7">
-                                                            <label for="check-number-<?=$contractor->id?>">Check number</label>
-                                                            <input type="text" class="nsm-field form-control" name="check_number[]" id="check-number-<?=$contractor->id?>">
-                                                        </div>
-                                                    </div>
+                                                    <label for="check-number-<?=$contractor->id?>">Check number</label>
+                                                    <input type="text" class="nsm-field form-control" name="check_number[]" id="check-number-<?=$contractor->id?>">
                                                 </td>
                                                 <td>
                                                     <div class="row">
-                                                        <div class="col-12 col-md-6">
+                                                        <div class="col-12 col-md-4">
                                                             <label for="account-<?=$contractor->id?>">Account</label>
                                                             <select name="account[]" id="account-<?=$contractor->id?>" class="nsm-field form-control"></select>
                                                         </div>
-                                                        <div class="col-12 col-md-6">
+                                                        <div class="col-12 col-md-4">
                                                             <label for="description-<?=$contractor->id?>">Description (optional)</label>
                                                             <input type="text" class="nsm-field form-control" name="description[]" id="description-<?=$contractor->id?>">
                                                         </div>
-                                                        <div class="col-12 col-md-6">
+                                                        <div class="col-12 col-md-4">
                                                             <label for="customer-<?=$contractor->id?>">Customer</label>
                                                             <select name="customer[]" id="customer-<?=$contractor->id?>" class="nsm-field form-control"></select>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
+                                                    <label for="amount">&nbsp;</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="nsm-field form-control text-end" placeholder="0.00" name="amount[]" id="amount-<?=$contractor->id?>">
