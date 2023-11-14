@@ -160,6 +160,11 @@ class Employees extends MY_Controller {
             $filters['search'] = get('search');
         }
 
+        if(!empty(get('pay-method'))) {
+            $this->page_data['pay_method'] = get('pay-method');
+            $filters['pay-method'] = get('pay-method');
+        }
+
         $role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
 			$this->page_data['payscale'] = $this->PayScale_model->getAll();
@@ -246,7 +251,6 @@ class Employees extends MY_Controller {
                     $payRate = 'Commission only';
                 }
 
-                // $commission = $this->users_model->get_commission_by_date_range($employee->id, date("Y-m-d"), date("Y-m-d"))->commission;
                 $commission = 0.00;
                 $commissions = $this->accounting_payroll_model->get_employee_commissions($employee->id, date("Y-m-d"), date("Y-m-d"));
                 foreach($commissions as $comm)
@@ -255,7 +259,7 @@ class Employees extends MY_Controller {
                 }
 
                 if(isset($filters['search']) && $filters['search'] !== "") {
-                    if(stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false) {
+                    if(stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false || stripos($employee->email, $filters['search']) !== false) {
                         $data[] = [
                             'id' => $employee->id,
                             'name' => "$employee->LName, $employee->FName",
@@ -280,6 +284,12 @@ class Employees extends MY_Controller {
                     ];
                 }
             }
+        }
+
+        if(!empty($filters['pay-method'])) {
+            $data = array_filter($data, function($v, $k) use ($filters) {
+                return $v['pay_method'] === str_replace('-', ' ', ucfirst($filters['pay-method']));
+            }, ARRAY_FILTER_USE_BOTH);
         }
 
         usort($data, function($a, $b) {
@@ -506,11 +516,11 @@ class Employees extends MY_Controller {
             'city' => $this->input->post('city'),
             'postal_code' => $this->input->post('postal_code'),
             'payscale_id' => $this->input->post('empPayscale'),
-            'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : null,
-            'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : null,
-            'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : null,
-            'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : null,
-            'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : null,
+            'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : '',
+            'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : '',
+            'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
+            'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
+            'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : '',
             'employee_number' => $this->input->post('employee_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
@@ -537,12 +547,6 @@ class Employees extends MY_Controller {
             $payDetails = [
                 'user_id' => $last_id,
                 'company_id' => logged('company_id'),
-                // 'pay_schedule_id' => $this->input->post('pay_schedule'),
-                // 'pay_type' => $this->input->post('pay_type'),
-                // 'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
-                // 'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
-                // 'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
-                // 'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
                 'pay_method' => $this->input->post('pay_method'),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
@@ -572,13 +576,7 @@ class Employees extends MY_Controller {
                 'company_id' => $data['company_id']
             ];
             $this->Trac360_model->add('trac360_people', $data);
-
-            // $this->session->set_flashdata('success', "New Employee Added!");
-        } else {
-            // $this->session->set_flashdata('error', "Please try again!");
         }
-
-        // redirect('/accounting/employees');
 
         echo json_encode([
             'success' => $last_id ? true : false,
@@ -613,10 +611,6 @@ class Employees extends MY_Controller {
                     ];
                 break;
                 case 'employment-details' :
-                    $payDetails = [
-                        'pay_schedule_id' => $this->input->post('pay_schedule')
-                    ];
-
                     $data = [
                         'employee_number' => $this->input->post('employee_number'),
                         'date_hired' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
@@ -635,11 +629,11 @@ class Employees extends MY_Controller {
 
                     $data = [
                         'payscale_id' => $this->input->post('empPayscale'),
-                        'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : null,
-                        'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : null,
-                        'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : null,
-                        'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : null,
-                        'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : null
+                        'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : '',
+                        'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : '',
+                        'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
+                        'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
+                        'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : ''
                     ];
                 break;
                 case 'notes' :

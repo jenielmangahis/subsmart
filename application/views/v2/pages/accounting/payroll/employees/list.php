@@ -15,7 +15,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Here you will get a detailed summary of pay rate, payment method, pay schedule and the status of each of your employee. With this report, you will be able to forecast a better budget for future weeks.
+                            Here you will get a detailed summary of pay rate, payment method and the status of each of your employee. With this report, you will be able to forecast a better budget for future weeks.
                         </div>
                     </div>
                 </div>
@@ -43,17 +43,26 @@
 
 						<div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Active employees <i class='bx bx-fw bx-chevron-down'></i>
+                                <span><?=empty($status) || $status === 'active' ? 'Active' : ucfirst($status)?> employees <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu" id="status-filter">
                                 <li><a class="dropdown-item <?=empty($status) || $status === 'active' ? 'active' : '' ?>" href="javascript:void(0);" id="active-employees">Active employees</a></li>
                                 <li><a class="dropdown-item <?=$status === 'inactive' ? 'active' : '' ?>" href="javascript:void(0);" id="inactive-employees">Inactive employees</a></li>
                                 <li><a class="dropdown-item <?=$status === 'all' ? 'active' : '' ?>" href="javascript:void(0);" id="all-employees">All employees</a></li>
                             </ul>
+
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span><?=empty($pay_method) || $pay_method === 'all' ? 'All' : str_replace('-', ' ', ucfirst($pay_method))?> pay method <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu" id="pay-method-filter">
+                                <li><a class="dropdown-item <?=$pay_method === 'direct-deposit' ? 'active' : '' ?>" href="javascript:void(0);" id="direct-deposit-pay-method">Direct deposit pay method</a></li>
+                                <li><a class="dropdown-item <?=$pay_method === 'check' ? 'active' : '' ?>" href="javascript:void(0);" id="check-pay-method">Check pay method</a></li>
+                                <li><a class="dropdown-item <?=$pay_method === 'missing' ? 'active' : '' ?>" href="javascript:void(0);" id="missing-pay-method">Missing pay method</a></li>
+                                <li><a class="dropdown-item <?=empty($pay_method) || $pay_method === 'all' ? 'active' : '' ?>" href="javascript:void(0);" id="all-pay-method">All pay method</a></li>
+                            </ul>
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <!-- <button type="button" class="nsm-button" id="add-new-button"> -->
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>
@@ -69,10 +78,6 @@
                                 <div class="form-check">
                                     <input type="checkbox" checked id="chk-pay-method" name="col_chk" class="form-check-input">
                                     <label for="chk-pay-method" class="form-check-label">Pay method</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked id="chk-pay-schedule" name="col_chk" class="form-check-input">
-                                    <label for="chk-pay-schedule" class="form-check-label">Pay schedule</label>
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" checked id="chk-status" name="col_chk" class="form-check-input">
@@ -100,7 +105,6 @@
                             <td data-name="Name">NAME</td>
                             <td data-name="Pay rate">PAY RATE</td>
                             <td data-name="Pay method">PAY METHOD</td>
-                            <td data-name="Pay schedule">PAY SCHEDULE</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Email address">EMAIL ADDRESS</td>
                             <td data-name="Phone number">PHONE NUMBER</td>
@@ -113,7 +117,6 @@
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/employees/view/' . $employee['id']) ?>'"><?=$employee['name']?></td>
                             <td class="pay-rate" data-pay_rate="<?=$employee['pay_rate']?>"><?=$employee['pay_rate']?></td>
                             <td><?=$employee['pay_method']?></td>
-                            <td><?=$employee['pay_schedule']?></td>
                             <td><?=$employee['status']?></td>
                             <td><?=$employee['email_address']?></td>
                             <td><?=$employee['phone_number']?></td>

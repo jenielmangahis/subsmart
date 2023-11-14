@@ -11472,7 +11472,9 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if($field === 'product' && count($selected) > 0) {
+        if($field === 'product' && count($selected) > 0 ||
+        $field === 'account' && $this->input->get('modal') === 'pay-contractors-modal' ||
+        $field === 'customer' && $this->input->get('modal') === 'pay-contractors-modal') {
             array_shift($return['results']);
         }
 
@@ -12153,6 +12155,11 @@ class Accounting_modals extends MY_Controller
                         return $detailType->acc_detail_name === 'Supplies & Materials - COGS';
                     }, ARRAY_FILTER_USE_BOTH);
                 break;
+                case 'corresponding-account' :
+                    $accDetails = array_filter($accDetails, function($detailType, $key) {
+                        return $detailType->acc_detail_name === 'Checking' || $detailType->acc_detail_name === 'Savings';
+                    }, ARRAY_FILTER_USE_BOTH);
+                break;
             }
         }
 
@@ -12648,6 +12655,10 @@ class Accounting_modals extends MY_Controller
                     case 'item-expense-account' :
                         $accountType = $this->account_model->getAccTypeByName('Cost of Goods Sold');
                         $this->page_data['detailType'] = $this->account_detail_model->getByName('Supplies & Materials - COGS');
+                    break;
+                    case 'corresponding-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Bank');
+                        $this->page_data['detailType'] = $this->account_detail_model->getByName('Checking');
                     break;
                 }
 

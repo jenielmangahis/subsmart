@@ -1366,18 +1366,20 @@ function Signing(hash) {
         // for different recipients.
         const inputsWithFields = [];
 
-        const promises = [...$sameFields].map((input) => {
-          const $input = $(input);
-          const key = $input.attr("data-key");
-          const field = data.fields.find(({ unique_key }) => unique_key === key); // prettier-ignore
-          if (field) {
-            inputsWithFields.push($input);
-            return storeFieldValue({ value, id: field.id });
-          }
-        });
+        //Will autopopulate text input with input-group-text
+        // const promises = [...$sameFields].map((input) => {
+        //   const $input = $(input);
+        //   const key = $input.attr("data-key");
+        //   const field = data.fields.find(({ unique_key }) => unique_key === key); // prettier-ignore
+        //   if (field) {
+        //     inputsWithFields.push($input);
+        //     console.log('storing');
+        //     return storeFieldValue({ value, id: field.id });
+        //   }
+        // });
 
-        await Promise.all(promises);
-        inputsWithFields.forEach(($input) => $input.val(value));
+        // await Promise.all(promises);
+        // inputsWithFields.forEach(($input) => $input.val(value));
       };
 
       $element.find("input").keyup(function () {
@@ -1632,8 +1634,11 @@ function Signing(hash) {
     
     $groupInput.on('change', function(){
       let class_name  = $(this).attr('data-name');
-      let input_value = $(this).val();
-      $('.'+class_name).val(input_value);
+      if( class_name != 'input-group-text' ){
+        let input_value = $(this).val();
+        console.log('not same');
+        $('.'+class_name).val(input_value);
+      }      
     });
 
     $fontItems.on("click", (event) => {

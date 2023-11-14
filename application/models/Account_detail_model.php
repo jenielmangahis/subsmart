@@ -59,4 +59,10 @@ class Account_detail_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function getByNames($names = [])
+	{
+		$this->db->where_in('acc_detail_name', $names);
+		return $this->db->get($this->table)->result();
+	}
 }

@@ -435,7 +435,7 @@
                                         <?php if(count($transactions) > 0) : ?>
                                         <?php foreach($transactions as $index => $transaction) : ?>
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion-<?=$index?>" class="clickable collapse-row collapsed">
-                                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><i class="bx bx-fw bx-caret-right"></i> <b><?=$transaction['name']?></b></td>
                                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -475,7 +475,7 @@
                                         </tr>
                                         <?php endforeach; ?>
                                         <tr class="clickable collapse-row collapse group-total" id="accordion-<?=$index?>">
-                                            <td colspan="<?=isset($columns) ? $total_index : '23'?>"><b>Total for <?=$transaction['name']?></b></td>
+                                            <td colspan="<?=isset($columns) ? $total_index : '24'?>"><b>Total for <?=$transaction['name']?></b></td>
                                             <td data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['amount_total']?></b></td>
                                             <td data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>><b><?=$transaction['open_balance_total']?></b></td>
                                             <td data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>></td>
@@ -483,7 +483,7 @@
                                         <?php endforeach; ?>
                                         <?php else : ?>
                                         <tr>
-                                            <td colspan="26">
+                                            <td colspan="27">
                                                 <div class="nsm-empty">
                                                     <span>No results found.</span>
                                                 </div>
