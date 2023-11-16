@@ -669,6 +669,8 @@ $route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees
 $route['accounting/employees/paycheck-list/export']['post'] = 'accounting_controllers/employees/export_paychecks';
 $route['accounting/employees/paycheck-list/change-orientation']['post'] = 'accounting_controllers/employees/change_paycheck_pdf_orientation';
 $route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
+$route['accounting/employees/remove-profile-photo/(:any)']['DELETE'] = 'accounting_controllers/employees/remove_profile_photo/$1';
+$route['accounting/employees/update-profile-photo/(:any)']['post'] = 'accounting_controllers/employees/update_profile_photo/$1';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';

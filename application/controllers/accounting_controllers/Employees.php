@@ -498,7 +498,7 @@ class Employees extends MY_Controller {
             'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
             'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
             'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : '',
-            'employee_number' => $this->input->post('employee_number'),
+            'employee_number' => $this->input->post('emp_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
             'mobile' => $this->input->post('mobile')
@@ -564,7 +564,31 @@ class Employees extends MY_Controller {
 
     public function update($type, $id)
     {
+		$employee = $this->users_model->getUserByID($id);
+
         if($type === 'personal-info') {
+            if(isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0){
+                $config = array(
+                    'upload_path' => './uploads/users/user-profile/',
+                    'allowed_types' => '*',
+                    'overwrite' => TRUE,
+                    'max_size' => '20000',
+                    'max_height' => '0',
+                    'max_width' => '0',
+                    'encrypt_name' => true
+                );
+                $config = $this->uploadlib->initialize($config);
+                $this->load->library('upload',$config);					
+                if ($this->upload->do_upload("userfile")){
+                    $uploadData = $this->upload->data();
+                    $profile_image = $uploadData['file_name'];
+                }else{
+                    $profile_image = $employee->profile_img;
+                }
+            }else{
+                $profile_image = $employee->profile_img;
+            }
+
             $data = [
                 'FName' => $this->input->post('first_name'),
                 'LName' => $this->input->post('last_name'),
@@ -572,16 +596,22 @@ class Employees extends MY_Controller {
                 'email' => $this->input->post('email'),
                 'role' => $this->input->post('role'),
                 'status' => $this->input->post('status'),
-                'profile_img' => $this->input->post('profile_photo'),
+                'profile_img' => $profile_image,
                 'address' => $this->input->post('address'),
                 'state' => $this->input->post('state'),
                 'city' => $this->input->post('city'),
                 'postal_code' => $this->input->post('zip_code'),
                 'phone' => $this->input->post('phone'),
-                'mobile' => $this->input->post('mobile')
+                'mobile' => $this->input->post('mobile'),
+                'birthdate' => date('Y-m-d', $this->input->post('birth_date'))
             ];
         } else {
             switch($type) {
+                case 'status' :
+                    $data = [
+                        'status' => $this->input->post('status')
+                    ];
+                break;
                 case 'payment-method' :
                     $payDetails = [
                         'pay_method' => $this->input->post('payment_method')
@@ -2236,8 +2266,53 @@ class Employees extends MY_Controller {
         ]);
     }
 
-    public function edit_paycheck($paycheckId)
+    public function remove_profile_photo($employeeId)
     {
+        $data = [
+            'profile_img' => null,
+        ];
+
+        $update = $this->users_model->update($employeeId,$data);
         
+        echo json_encode([
+            'success' => $update ? true : false,
+            'message' => $update ? 'Successfully Removed!' : 'Failed to remove profile photo.'
+        ]);
+    }
+
+    public function update_profile_photo($employeeId)
+    {
+        if(isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0){
+            $config = array(
+                'upload_path' => './uploads/users/user-profile/',
+                'allowed_types' => '*',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);					
+            if ($this->upload->do_upload("userfile")){
+                $uploadData = $this->upload->data();
+                $profile_image = $uploadData['file_name'];
+            }else{
+                $profile_image = $employee->profile_img;
+            }
+        }else{
+            $profile_image = $employee->profile_img;
+        }
+
+        $data = [
+            'profile_img' => $profile_image,
+        ];
+
+        $update = $this->users_model->update($employeeId,$data);
+        
+        echo json_encode([
+            'success' => $update ? true : false,
+            'message' => $update ? 'Successfully uploaded!' : 'Failed to upload profile photo.'
+        ]);
     }
 }

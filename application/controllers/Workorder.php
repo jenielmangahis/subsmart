@@ -3027,7 +3027,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->menu = 'settings';
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
 
-        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['customFields']  = $this->workorder_model->getCustomFieldsByCompanyId($company_id);
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['terms'] = $this->workorder_model->getWOtermsByID();
 
@@ -3504,8 +3504,8 @@ class Workorder extends MY_Controller
         $this->load->helper(array('hashids_helper'));
         $this->load->model('Checklist_model');
 
-        $user_id = logged('id');
-        $checklists = $this->Checklist_model->getAllByUserId($user_id);
+        $company_id = logged('company_id');
+        $checklists = $this->Checklist_model->getAllByCompanyId($company_id);
 
         $this->page_data['checklists'] = $checklists;
         $this->load->view('v2/pages/workorder/checklist/list', $this->page_data);
@@ -3513,10 +3513,15 @@ class Workorder extends MY_Controller
 
     public function add_checklist(){
         $this->load->model('Checklist_model');
+
+        $this->page_data['page']->title = 'Workorder Checklist';
+		$this->page_data['page']->parent = 'Sales';
+
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
         $this->page_data['checklistAttachType'] = $checklistAttachType;
-        $this->load->view('workorder/checklist/add_checklist', $this->page_data);
+        //$this->load->view('workorder/checklist/add_checklist', $this->page_data);
+        $this->load->view('v2/pages/workorder/checklist/add_checklist', $this->page_data);
     }
 
     public function create_checklist(){
@@ -3562,7 +3567,7 @@ class Workorder extends MY_Controller
             $this->page_data['checkListItems'] = $checklistItems;
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
-            $this->load->view('workorder/checklist/edit_checklist', $this->page_data);
+            $this->load->view('v2/pages/workorder/checklist/edit_checklist', $this->page_data);
 
         }else{
             $this->session->set_flashdata('message', 'Cannot find data');
@@ -3705,17 +3710,12 @@ class Workorder extends MY_Controller
         // print_r($users);
         // echo $company_id;
 
-        $role = logged('role');
-        if( $role == 1 || $role == 2){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
@@ -3747,14 +3747,15 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
-        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        //$checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checklists = array();
         foreach( $checkListsHeader as $h ){
             $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
-            $checklists[] = ['header' => $h, 'items' => $checklistItems];
+            $checklists[$h->id]['header'] = ['name' => $h->checklist_name, 'id' => $h->id];
+            $checklists[$h->id]['items']  = $checklistItems;            
         }
-
         //Settings
         $this->load->model('WorkorderSettings_model');
         $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
@@ -4117,6 +4118,7 @@ class Workorder extends MY_Controller
         
 
         $this->page_data['page_title'] = "Work Order";
+        $this->page_data['checklists'] = [];
         // print_r($this->page_data['lead_source']);
 
         // $this->load->view('workorder/addWorkorderInstallation', $this->page_data);
@@ -11899,10 +11901,169 @@ class Workorder extends MY_Controller
 
         exit;
     }
+
+    public function ajax_save_custom_fields()
+    {
+        $this->load->model('CustomField_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Please enter custom field name';
+
+        if( $post['custom_field_name'] != '' ){
+            $data = [
+                'company_id' => $cid,
+                'name' => $post['custom_field_name'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CustomField_model->create($data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_update_custom_fields()
+    {
+        $this->load->model('CustomField_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Please enter custom field name';
+
+        $workorderCustomField = $this->CustomField_model->getById($post['cfeid']);
+        if( $workorderCustomField && $workorderCustomField->company_id == $cid ){
+            if( $post['custom_field_name'] != '' ){
+                $data = [
+                    'name' => $post['custom_field_name'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->CustomField_model->update($workorderCustomField->id, $data);
+    
+                $is_success = 1;
+                $msg = '';
+            }
+        }else{
+            $msg = 'Cannot find data';
+        }
+        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_delete_custom_fields()
+    {
+        $this->load->model('CustomField_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $workorderCustomField = $this->CustomField_model->getById($post['cfeid']);
+        if( $workorderCustomField && $workorderCustomField->company_id == $cid ){
+            $this->CustomField_model->delete($workorderCustomField->id);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_update_wo_terms_condition()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = '';
+        
+        $woTermsCondition = $this->workorder_model->getWorkOrderSettingTermsConditionByCompanyId($cid);        
+        if( !$woTermsCondition ){            
+            $data = [
+                'company_id' => $cid,
+                'content' => $post['update_terms_content'],                
+                'agreement' => 0,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+
+            ];
+
+            $result = $this->workorder_model->createWorkOrderTermsConditions($data);
+        }else{
+            $data = [                
+                'content' => $post['update_terms_content'],                                                
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+            $result = $this->workorder_model->updateWorkOrderTermsConditionByCompanyId($cid, $data);
+        }
+
+        $is_success = 1;
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
+
+    public function ajax_update_wo_header()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = '';
+        
+        $woHeader = $this->workorder_model->getWorkOrderSettingHeaderByCompanyId($cid);        
+        if( !$woHeader ){            
+            $data = [
+                'company_id' => $cid,
+                'content' => $post['update_header_content'],   
+                'solar' => 0,
+                'installation' => 0,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+
+            ];
+
+            $result = $this->workorder_model->createWorkOrderHeader($data);
+        }else{
+            $data = [                
+                'content' => $post['update_header_content'],                                                
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+            $result = $this->workorder_model->updateWorkOrderHeaderCompanyId($cid, $data);
+        }
+
+        $is_success = 1;
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
+    }
 }
-
-
-
 /* End of file Workorder.php */
 
 /* Location: ./application/controllers/Workorder.php */

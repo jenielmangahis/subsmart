@@ -1,6 +1,6 @@
 <div class="modal fade nsm-modal fade" id="edit_employee_modal" tabindex="-1" aria-labelledby="edit_employee_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit_employee_form" action="/accounting/employees/update/personal-info/<?=$employee->id?>">
+        <form method="POST" id="edit_employee_form" action="/accounting/employees/update/personal-info/<?=$employee->id?>" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee</span>
@@ -28,6 +28,14 @@
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
                             <input type="text" name="phone" class="nsm-field form-control" value="<?= $employee->phone; ?>" />
+                        </div>
+                    </div>
+                    <div class="row gy-3 mb-4">
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="form-control nsm-field date" id="birth-date" name="birth_date" value="<?=date("m/d/Y", strtotime($employee->birthdate))?>">
+                            </div>
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -116,6 +124,35 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="change_status_modal" tabindex="-1" aria-labelledby="change_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" id="edit-employee-status-form" action="/accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit Employee Status</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="edit_employee_container" style="overflow-x: auto;max-height: 800px;">
+                    <div class="row gy-3 mb-4">
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+                            <select class="nsm-field form-select" name="status" required>
+                                <option value="" disabled>Select Status</option>
+                                <option value="1" <?= $employee->status == 1 ? 'selected' : ''; ?>>Active</option>
+                                <option value="0" <?= $employee->status == 0 ? 'selected' : ''; ?>>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form method="POST" id="edit-employment-details-form" action="/accounting/employees/update/employment-details/<?=$employee->id?>">
@@ -156,7 +193,7 @@
                             <div class="col-12">
                                 <label class="content-subtitle fw-bold d-block mb-2">Work location</label>
                                 <select class="nsm-field form-select" id="work-location" name="work_location" required>
-                                    <option value="" disabled>Select work location</option>
+                                    <option value="" disabled selected>Select work location</option>
                                     <option value="add">&plus; Add new</option>
                                     <?php foreach($worksites as $worksite) : ?>
                                         <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option>

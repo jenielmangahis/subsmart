@@ -1,3 +1,12 @@
+<style>
+.row-chk-header{
+    background-color:#6a4a86 !important;
+    color:#ffffff !important;
+}
+.row-chk-item{
+    background-color:#b3b3b3 !important;
+}
+</style>
 <div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -123,26 +132,52 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="update_field_modal" tabindex="-1" aria-labelledby="update_field_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="update_custom_field_modal" tabindex="-1" aria-labelledby="update_custom_field_modal_label" aria-hidden="true">
     <div class="modal-dialog">
-        <?php echo form_open_multipart('workorder/updatecustomField', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-update-custom-field', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="update_field_modal_label">Update Field</span>
+                <span class="modal-title content-title" id="update_field_modal_label">Edit Custom Field</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <div class="row text-center gy-3">
                     <div class="col-12">
-                        <input type="hidden" class="nsm-field form-control" name="custom_id" id="custom_id"><br>
-                        <input type="text" placeholder="Name" name="custom_name" id="custom_name_update" class="nsm-field form-control" required />
+                        <input type="hidden" class="nsm-field form-control" name="cfeid" id="cfeid"><br>
+                        <input type="text" placeholder="Name" name="custom_field_name" id="custom_field_name_update" class="nsm-field form-control" required />
                     </div>
 
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Update</button>
+                <button type="submit" class="nsm-button primary btn-update-custom-field">Update</button>
+            </div>
+        </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="new_custom_field_modal" tabindex="-1" aria-labelledby="new_custom_field_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-save-custom-field', 'autocomplete' => 'off']); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="update_field_modal_label">Add New Custom Field</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row text-center gy-3">
+                    <div class="col-12">
+                        <input type="hidden" class="nsm-field form-control" name="custom_id" id="custom_id"><br>
+                        <input type="text" placeholder="Name" name="custom_field_name" id="" class="nsm-field form-control" required />
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary btn-save-custom-field">Save</button>
             </div>
         </div>
         <?php echo form_close(); ?>
@@ -500,37 +535,34 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="select_checklist_modal" tabindex="-1" aria-labelledby="select_checklist_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Select Checklist</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <?php foreach ($checklists as $key => $checklist) { ?>
-                        <?php if (!empty($checklist['items'])) { ?>
-                            <div class="col-12">
+                <?php if( isset($checklists) ){ ?>
+                <table class="table">
+                    <?php foreach($checklists as $key => $chklist){ ?>
+                        <tr>
+                            <td class="row-chk-header" style="width:1%;">
                                 <div class="form-check">
-                                    <input class="form-check-input checklist-box" type="checkbox" id="checkist_checkbox_<?= $checklist['header']->id; ?>" value="<?php echo $checklist['header']->id; ?>" item-id="<?php echo $checklist['header']->id; ?>">
-                                    <label class="form-check-label" for="checkist_checkbox_<?= $checklist['header']->id; ?>"> <?php echo $checklist['header']->checklist_name; ?> </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row g-3">
-                                    <?php foreach ($checklist['items'] as $item) { ?>
-                                        <div class="col-12 col-md-3">
-                                            <label class="content-subtitle">Test</label>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
+                                    <input class="form-check-input wo-select-checklist" data-name="<?= $chklist['header']['name']; ?>" data-id="<?= $chklist['header']['id']; ?>" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="chk<?= $key; ?>">
+                                    <?= $chklist['header']['name']; ?>
+                                    </label>
+                                </div>                                
+                            </td>                            
+                        </tr>
+                        <?php foreach( $chklist['items'] as $chkitem ){ ?>
+                            <tr><td class="row-chk-item"><?= $chkitem->item_name; ?></td></tr>
                         <?php } ?>
                     <?php } ?>
-                </div>
+                </table>                
+                <?php } ?>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer">                
                 <button type="button" class="nsm-button primary" id="btn_add_checklist">Add Selected</button>
             </div>
         </div>
