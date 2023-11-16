@@ -578,8 +578,7 @@ echo put_header_assets();
                                         <tr>
                                             <td>
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1">
-                                                
-                                                <span id="help-popover-adjustment" class="fa fa-question-circle"></span>
+                                                <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i>                                                
                                             </td>
                                             <td colspan="2" style="text-align: right;">
                                                 <div class="input-group mb-2" style="width: 40%;float: right;">
