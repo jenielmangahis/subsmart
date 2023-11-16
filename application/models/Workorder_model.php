@@ -1212,6 +1212,26 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function getWorkOrderSettingTermsConditionByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('work_order_terms_conditions');
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getWorkOrderSettingHeaderByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('work_order_headers');
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function update_header($data){
         $vendor = $this->db->update('work_order_headers', $data);
 	    $insert = $this->db->insert_id();
@@ -1233,6 +1253,15 @@ class Workorder_model extends MY_Model
         $this->db->select('checklists.*');
         $this->db->from('checklists');
         $this->db->where('checklists.user_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getchecklistHeaderByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('checklists');
+        $this->db->where('company_id', $company_id);
         $query = $this->db->get();
         return $query->result();
     }
@@ -1297,6 +1326,32 @@ class Workorder_model extends MY_Model
 	    $vendor = $this->db->insert('custom_fields_lists', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
+    }
+
+    public function createWorkOrderTermsConditions($data){
+	    $termsCondition = $this->db->insert('work_order_terms_conditions', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function createWorkOrderHeader($data){
+	    $termsCondition = $this->db->insert('work_order_headers', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function updateWorkOrderTermsConditionByCompanyId($company_id,$data)
+    {
+        $this->db->where('company_id', $company_id);
+        $result = $this->db->update('work_order_terms_conditions', $data);
+        return $result;
+    }
+
+    public function updateWorkOrderHeaderCompanyId($company_id,$data)
+    {
+        $this->db->where('company_id', $company_id);
+        $result = $this->db->update('work_order_headers', $data);
+        return $result;
     }
 
     public function getjob_types()

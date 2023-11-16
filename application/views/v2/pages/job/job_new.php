@@ -1755,7 +1755,7 @@
                                     ?>
                                     <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class='btn btn-sm btn-light border-1 select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
                                         <td><?php foreach($itemsLocation as $itemLoc){

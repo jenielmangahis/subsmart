@@ -46,6 +46,25 @@ class Checklist_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyId($company_id, $filters=array())
+    {        
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $user_id = logged('id');
