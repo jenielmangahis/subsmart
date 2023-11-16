@@ -1,3 +1,7 @@
+const currUrl = window.location.href;
+const urlSplit = currUrl.includes('?') ? currUrl.split('?')[0].split('/') : currUrl.split('/');
+const employeeId = urlSplit[urlSplit.length - 1].replace('#', '');
+
 $(function() {
     $('.date').each(function() {
         if($(this).attr('id') === 'next-payday' || $(this).attr('id') === 'next-pay-period-end') {
@@ -43,6 +47,11 @@ $('#edit-pay-types-modal select').select2({
 $('#edit_employee_modal select').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#edit_employee_modal')
+});
+
+$('#change_status_modal select').select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $('#change_status_modal')
 });
 
 $('#work-location').on('change', function() {
@@ -120,4 +129,72 @@ $(document).on("click", ".btn-delete-commission-setting-row", function(e){
             tableRow.remove();                    
         }
     );
+});
+
+$('#user-profile-photo').on('change', function() {
+    var data = new FormData();
+
+    data.append('userfile', $(this)[0].files[0]);
+
+    $.ajax({
+        url: `/accounting/employees/update-profile-photo/${employeeId}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            Swal.fire({
+                title: res.success ? 'Success' : 'Error',
+                html: res.message,
+                icon: res.success ? 'success' : 'error',
+                showCloseButton: false,
+                showCancelButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#remove-photo').on('click', function() {
+    Swal.fire({
+        title: 'Are you sure you want remove the profile photo?',
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/employees/remove-profile-photo/${employeeId}`,
+                type: 'DELETE',
+                success: function(res) {
+                    var result = JSON.parse(res);
+
+                    Swal.fire({
+                        title: result.success ? 'Success' : 'Error',
+                        html: result.message,
+                        icon: result.success ? 'success' : 'error',
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#2ca01c',
+                        confirmButtonText: 'Done'
+                    }).then((r) => {
+                        if(r.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
 });
