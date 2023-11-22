@@ -186,7 +186,7 @@ $(document).on('click', '#print-paychecks', function(e) {
     e.preventDefault();
 
     if($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/employees/paycheck-list/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
+        $('body').append(`<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
     $('#paycheck-table .select-one:checked').each(function() {
@@ -209,7 +209,7 @@ $('#paycheck-table [name="check_number[]"]').on('change', function() {
     data.set('check_number', checkNum);
 
     $.ajax({
-        url: `/accounting/employees/paycheck-list/update-paycheck-num/${id}`,
+        url: `/accounting/update-paycheck-num/${id}`,
         data: data,
         type: 'post',
         processData: false,
@@ -227,7 +227,7 @@ $('#paycheck-table .print-paycheck').on('click', function(e) {
     var id = row.find('.select-one').val();
 
     if($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/employees/paycheck-list/print" method="post" id="print-paycheck-form" target="_blank"></form>`);
+        $('body').append(`<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
     $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id" value="${id}">`);
@@ -242,7 +242,7 @@ $('#paycheck-table .delete-paycheck').on('click', function(e) {
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    $.get(`/accounting/employees/paycheck-list/delete/${id}`, function(res) {
+    $.get(`/accounting/delete-paycheck/${id}`, function(res) {
         var result = JSON.parse(res);
         Swal.fire({
             title: result.success ? 'Delete Successful!' : 'Failed!',
@@ -266,7 +266,7 @@ $('#paycheck-table .void-paycheck').on('click', function(e) {
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    $.get(`/accounting/employees/paycheck-list/void/${id}`, function(res) {
+    $.get(`/accounting/void-paycheck/${id}`, function(res) {
         var result = JSON.parse(res);
         Swal.fire({
             title: result.success ? 'Void Successful!' : 'Failed!',

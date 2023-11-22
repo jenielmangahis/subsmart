@@ -49,7 +49,7 @@ class Employees extends MY_Controller {
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/sweetalert2@9.js",
-            "assets/js/accounting/accounting.js",
+            // "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
             "assets/js/accounting/modal-forms1.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
@@ -362,6 +362,8 @@ class Employees extends MY_Controller {
         $paySchedule = $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id);
         $employee->pay_schedule = $paySchedule;
 
+        $employee->title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
+
         $this->page_data['salary_rate'] = $salary_rate;
 		$this->page_data['salary_type_label'] = $salary_type_label;
         $this->page_data['employee'] = $employee;
@@ -379,25 +381,6 @@ class Employees extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		// }
 
-        $current_month = date('m');
-        $current_year = date('Y');
-        if($current_month>=1 && $current_month<=3) {
-            $start_date = strtotime('1-January-'.$current_year);
-            $end_date = strtotime('1-April-'.$current_year);
-        } else if($current_month>=4 && $current_month<=6) {
-            $start_date = strtotime('1-April-'.$current_year);
-            $end_date = strtotime('1-July-'.$current_year); 
-        } else if($current_month>=7 && $current_month<=9) {
-            $start_date = strtotime('1-July-'.$current_year);
-            $end_date = strtotime('1-October-'.$current_year);
-        } else  if($current_month>=10 && $current_month<=12) {
-            $start_date = strtotime('1-October-'.$current_year);
-            $end_date = strtotime('31-December-'.$current_year);
-        }
-
-        $this->page_data['filter_from'] = date("m/d/Y", $start_date);
-        $this->page_data['filter_to'] = date("m/d/Y", $end_date);
-
         $employmentDetails = $this->employment_details_model->get_employment_details($id);
         $empWorksite = $this->accounting_worksites_model->get_by_id($employmentDetails->work_location_id);
         $this->page_data['employmentDetails'] = $employmentDetails;
@@ -414,6 +397,55 @@ class Employees extends MY_Controller {
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
+        $quarters = [
+            1 => [
+                'start' => date("01/01/Y"),
+                'end' => date("03/t/Y")
+            ],
+            2 => [
+                'start' => date("04/01/Y"),
+                'end' => date("06/t/Y")
+            ],
+            3 => [
+                'start' => date("07/01/Y"),
+                'end' => date("09/t/Y")
+            ],
+            4 => [
+                'start' => date("10/01/Y"),
+                'end' => date("12/t/Y")
+            ]
+        ];
+        $month = date('n');
+        $quarter = ceil($month / 3);
+
+        $this->page_data['filter_from'] = $quarters[$quarter]['start'];
+        $this->page_data['filter_to'] = $quarters[$quarter]['end'];
+
+        $hasFilter = false;
+
+        if(!empty(get('date'))) {
+            $this->page_data['filter_date'] = get('date');
+            $this->page_data['filter_from'] = str_replace('-', '/', get('from'));
+            $this->page_data['filter_to'] = str_replace('-', '/', get('to'));
+
+            $hasFilter = true;
+        }
+
+        $paychecksFilter = [
+            'start_date' => $this->page_data['filter_from'],
+            'end_date' => $this->page_data['filter_to'],
+            'employee_id' => $id
+        ];
+
+        $prevUrl = $_SERVER['HTTP_REFERER'];
+        $prevUrl = explode('?', $prevUrl);
+
+        if($hasFilter === false && count($prevUrl) > 1) {
+            $hasFilter = true;
+        }
+
+        $this->page_data['has_filter'] = $hasFilter;
+
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
 		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();
 		$this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($id);
@@ -421,7 +453,49 @@ class Employees extends MY_Controller {
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['empWorksite'] = $address;
+        $this->page_data['paychecks'] = $this->get_emp_paychecks($paychecksFilter);
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
+    }
+
+    private function get_emp_paychecks($filter = [])
+    {
+        $data = [];
+        $paychecks = $this->accounting_paychecks_model->get_by_employee_id($filter['employee_id']);
+
+        foreach($paychecks as $paycheck)
+        {
+            $emp = $this->users_model->getUser($paycheck->employee_id);
+
+            $checkNo = $paycheck->check_no;
+            if($paycheck->status === '4') {
+                $checkNo = 'Void';
+            }
+
+            if($paycheck->pay_method === 'Adjustment' && $paycheck->status !== '4') {
+                $checkNo = '-';
+            }
+
+            $data[] = [
+                'id' => $paycheck->id,
+                'pay_date' => date('m/d/Y', strtotime($paycheck->pay_date)),
+                'name' => "$emp->LName, $emp->FName",
+                'total_pay' => number_format(floatval($paycheck->total_pay), 2),
+                'net_pay' => number_format(floatval($paycheck->net_pay), 2),
+                'pay_method' => $paycheck->pay_method,
+                'check_number' => $checkNo,
+                'status' => '-'
+            ];
+        }
+
+        $data = array_filter($data, function($v, $k) use ($filter) {
+            return strtotime($v['pay_date']) > strtotime($filter['start_date']) && strtotime($v['pay_date']) < strtotime($filter['end_date']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        usort($data, function($a, $b) {
+            return strtotime($a['pay_date']) < strtotime($b['pay_date']);
+        });
+
+        return $data;
     }
 
     private function get_next_pay_date($paySched)
@@ -473,6 +547,30 @@ class Employees extends MY_Controller {
 
     public function create()
     {
+        if(isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0){
+            $config = array(
+                'upload_path' => './uploads/users/user-profile/',
+                'allowed_types' => '*',
+                'overwrite' => TRUE,
+                'max_size' => '20000',
+                'max_height' => '0',
+                'max_width' => '0',
+                'encrypt_name' => true
+            );
+            $config = $this->uploadlib->initialize($config);
+            $this->load->library('upload',$config);					
+            if ($this->upload->do_upload("userfile")){
+                $uploadData = $this->upload->data();
+                $profile_image = $uploadData['file_name'];
+
+                $data = array(
+                    'profile_image'=> $uploadData['file_name'],
+                    'date_created' => time()
+                );
+                $img_id = $this->users_model->addProfilePhoto($data);
+            }
+        }
+
         $payscale = $this->users_model->get_payscale_by_id($this->input->post('empPayscale'));
 
         $data = [
@@ -487,7 +585,7 @@ class Employees extends MY_Controller {
             'user_type' => $this->input->post('user_type'),
             'status' => $this->input->post('status'),
             'company_id' => logged('company_id'),
-            'profile_img' => $this->input->post('profile_photo'),
+            'profile_img' => $profile_image,
             'address' => $this->input->post('address'),
             'state' => $this->input->post('state'),
             'city' => $this->input->post('city'),
@@ -501,7 +599,8 @@ class Employees extends MY_Controller {
             'employee_number' => $this->input->post('emp_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
-            'mobile' => $this->input->post('mobile')
+            'mobile' => $this->input->post('mobile'),
+            'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date')))
         ];
 
         $last_id = $this->users_model->addNewEmployee($data);
@@ -603,7 +702,7 @@ class Employees extends MY_Controller {
                 'postal_code' => $this->input->post('zip_code'),
                 'phone' => $this->input->post('phone'),
                 'mobile' => $this->input->post('mobile'),
-                'birthdate' => date('Y-m-d', $this->input->post('birth_date'))
+                'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date')))
             ];
         } else {
             switch($type) {
@@ -621,13 +720,12 @@ class Employees extends MY_Controller {
                     $data = [
                         'employee_number' => $this->input->post('employee_number'),
                         'date_hired' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        // 'payscale_id' => $this->input->post('empPayscale'),
                         'user_type' => $this->input->post('user_type'),
+                        'role' => $this->input->post('role'),
                     ];
 
                     $employmentDetails = [
                         'work_location_id' => $this->input->post('work_location'),
-                        'job_title' => $this->input->post('job_title'),
                         'workers_comp_class' => $this->input->post('workers_comp_class')
                     ];
                 break;
@@ -684,7 +782,12 @@ class Employees extends MY_Controller {
         }
 
         if(isset($employmentDetails)) {
-            $this->employment_details_model->update_employment_details($id, $employmentDetails);
+            if($this->employment_details_model->get_employment_details($id)) {
+                $this->employment_details_model->update_employment_details($id, $employmentDetails);
+            } else {
+                $employmentDetails['user_id'] = $id;
+                $this->employment_details_model->create($employmentDetails);
+            }
         }
 
         redirect($_SERVER['HTTP_REFERER']);

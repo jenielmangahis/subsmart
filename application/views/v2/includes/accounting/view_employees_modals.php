@@ -72,15 +72,6 @@
                             <input type="text" class="nsm-field form-control" name="postal_code" value="<?= $employee->postal_code; ?>">
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                            <select class="nsm-field form-select" name="role" id="employee_role" required>
-                                <option value="" disabled>Select Title</option>
-                                <?php foreach ($roles as $r) : ?>
-                                    <option value="<?= $r->id; ?>" <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                             <select class="nsm-field form-select" name="status" required>
                                 <option value="" disabled>Select Status</option>
@@ -125,7 +116,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="change_status_modal" tabindex="-1" aria-labelledby="change_status_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
         <form method="POST" id="edit-employee-status-form" action="/accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,7 +125,7 @@
                 </div>
                 <div class="modal-body" id="edit_employee_container" style="overflow-x: auto;max-height: 800px;">
                     <div class="row gy-3 mb-4">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                             <select class="nsm-field form-select" name="status" required>
                                 <option value="" disabled>Select Status</option>
@@ -192,7 +183,7 @@
                             </div>
                             <div class="col-12">
                                 <label class="content-subtitle fw-bold d-block mb-2">Work location</label>
-                                <select class="nsm-field form-select" id="work-location" name="work_location" required>
+                                <select class="nsm-field form-select" id="work-location" name="work_location">
                                     <option value="" disabled selected>Select work location</option>
                                     <option value="add">&plus; Add new</option>
                                     <?php foreach($worksites as $worksite) : ?>
@@ -201,8 +192,13 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Job title</label>
-                                <input type="text" class="nsm-field form-control" id="job-title" name="job_title" value="<?=!empty($employmentDetails) ? $employmentDetails->job_title : ''?>">
+                                <label class="content-subtitle fw-bold d-block mb-2">Title</label>
+                                <select class="nsm-field form-select" name="role" id="employee_role" required>
+                                    <option value="" disabled>Select Title</option>
+                                    <?php foreach ($roles as $r) : ?>
+                                        <option value="<?= $r->id; ?>" <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="col-12">
                                 <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>

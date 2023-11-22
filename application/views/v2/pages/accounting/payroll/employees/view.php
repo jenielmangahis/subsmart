@@ -37,10 +37,10 @@
                                 <div class="nsm-tab">
                                     <nav>
                                         <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                                            <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="true">
+                                            <button class="nav-link <?=$has_filter === false ? 'active' : ''?>" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="<?=$has_filter === false ? 'true' : 'false'?>">
                                                 Profile
                                             </button>
-                                            <button class="nav-link" id="nav-paycheck-list-tab" data-bs-toggle="tab" data-bs-target="#nav-paycheck-list" type="button" role="tab" aria-controls="nav-paycheck-list" aria-selected="false">
+                                            <button class="nav-link <?=$has_filter === true ? 'active' : ''?>" id="nav-paycheck-list-tab" data-bs-toggle="tab" data-bs-target="#nav-paycheck-list" type="button" role="tab" aria-controls="nav-paycheck-list" aria-selected="<?=$has_filter === true ? 'true' : 'false'?>">
                                                 Paycheck list
                                             </button>
                                             <button class="nav-link" id="nav-notes-tab" data-bs-toggle="tab" data-bs-target="#nav-notes" type="button" role="tab" aria-controls="nav-notes" aria-selected="false">
@@ -50,7 +50,7 @@
                                     </nav>
 
                                     <div class="tab-content" id="nav-tabContent">
-                                        <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                        <div class="tab-pane fade <?=$has_filter === false ? 'show active' : ''?>" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
                                                     <div class="row g-3">
@@ -128,8 +128,8 @@
                                                                         <h5><?=!in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '-'?></h5>
                                                                     </div>
                                                                     <div class="col-12 col-md-4">
-                                                                        <h6>Job title</h6>
-                                                                        <h5><?=!empty($employmentDetails->job_title) ? $employmentDetails->job_title : '-'?></h5>
+                                                                        <h6>Title</h6>
+                                                                        <h5><?=$employee->title?></h5>
                                                                     </div>
                                                                     <div class="col-12 col-md-4">
                                                                         <h6>Workers' comp class</h6>
@@ -151,6 +151,16 @@
                                                                         <h6>Salary</h6>
                                                                         <h5><?=$employee->pay_rate?></h5>
                                                                     </div>
+                                                                    <?php foreach($employeeCommissionSettings as $ecs) : ?>
+                                                                    <div class="col-12 col-md-4">
+                                                                        <h6>Commission Settings</h6>
+                                                                        <?php foreach( $commissionSettings as $cs ){ ?>
+                                                                            <?php if($ecs->commission_setting_id === $cs->id) : ?>
+                                                                                <h5><?=$ecs->commission_type === 'amount' ? '$'.number_format(floatval($ecs->commission_value), 2) : number_format(floatval($ecs->commission_value), 2).'%'?> <?=$cs->name?></h5>
+                                                                            <?php endif; ?>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                    <?php endforeach; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -165,7 +175,7 @@
                                                         </div>
                                                         <div class="nsm-card-content">
                                                             <div class="d-flex flex-column align-items-center text-center">
-                                                                <img src="<?=!empty($employee->profile_img) ? userProfileImage($employee->id) : '/uploads/users/default.png' ?>" alt="Admin" class="rounded-circle">
+                                                                <img src="<?=!empty($employee->profile_img) ? userProfileImage($employee->id) : '/uploads/users/default.png' ?>" alt="Admin" class="rounded-circle w-75">
                                                                 <div class="mt-3 d-flex justify-content-center">
                                                                     <button class="nsm-button" id="change-profile-photo" onclick="document.getElementById('user-profile-photo').click()">Change Photo</button>
                                                                     <?php if(!empty($employee->profile_img)) : ?>
@@ -179,9 +189,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel" aria-labelledby="nav-paycheck-list-tab">
+                                        <div class="tab-pane fade <?=$has_filter === true ? 'show active' : ''?>" id="nav-paycheck-list" role="tabpanel" aria-labelledby="nav-paycheck-list-tab">
                                             <div class="row g-2">
-                                                <div class="col-12 grid-mb">
+                                                <div class="col-12 col-md-6 grid-mb">
                                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                         <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                                                     </button>
@@ -189,19 +199,19 @@
                                                         <div class="row">
                                                             <div class="col-12 col-md-4">
                                                                 <label for="filter-date-range">Date range</label>
-                                                                <select class="nsm-field form-select" name="filter_date" id="filter-date" data-applied="<?=empty($date) ? 'all' : $date?>">
-                                                                    <option value="last-pay-date">Last pay date</option>
-                                                                    <option value="this-month">This month</option>
-                                                                    <option value="this-quarter" selected>This quarter</option>
-                                                                    <option value="this-year">This year</option>
-                                                                    <option value="last-month">Last month</option>
-                                                                    <option value="last-quarter">Last quarter</option>
-                                                                    <option value="last-year">Last year</option>
-                                                                    <option value="first-quarter">First quarter</option>
-                                                                    <option value="second-quarter">Second quarter</option>
-                                                                    <option value="third-quarter">Third quarter</option>
-                                                                    <option value="fourth-quarter">Fourth quarter</option>
-                                                                    <option value="custom">Custom</option>
+                                                                <select class="nsm-field form-select" name="filter_date" id="filter-date-range">
+                                                                    <option value="last-pay-date" <?=$filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
+                                                                    <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                                                    <option value="this-quarter" <?=empty($filter_date) || $filter_date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                                                    <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                                                    <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                                                    <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                                                    <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                                                    <option value="first-quarter" <?=$filter_date === 'first-quarter' ? 'selected' : ''?>>First quarter</option>
+                                                                    <option value="second-quarter" <?=$filter_date === 'second-quarter' ? 'selected' : ''?>>Second quarter</option>
+                                                                    <option value="third-quarter" <?=$filter_date === 'third-quarter' ? 'selected' : ''?>>Third quarter</option>
+                                                                    <option value="fourth-quarter" <?=$filter_date === 'fourth-quarter' ? 'selected' : ''?>>Fourth quarter</option>
+                                                                    <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
                                                                 </select>
                                                             </div>
                                                             <div class="col-12 col-md-4">
@@ -231,6 +241,13 @@
                                                         </div>
                                                     </ul>
                                                 </div>
+                                                <div class="col-12 col-md-6 grid-mb text-end">
+                                                    <div class="nsm-page-buttons page-button-container">
+                                                        <button type="button" class="dropdown-toggle nsm-button print-paychecks-button" disabled>
+                                                            Print
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <table class="nsm-table" id="transactions-table">
                                                 <thead>
@@ -244,13 +261,60 @@
                                                         <td data-name="Net Pay">NET PAY</td>
                                                         <td data-name="Pay Method">PAY METHOD</td>
                                                         <td data-name="Check Number">CHECK NUMBER</td>
-                                                        <td data-name="Category">CATEGORY</td>
                                                         <td data-name="Status">STATUS</td>
                                                         <td data-name="Manage"></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    
+                                                    <?php if(count($paychecks) > 0) : ?>
+                                                    <?php foreach($paychecks as $paycheck) : ?>
+                                                    <tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="table-row-icon table-checkbox">
+                                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$paycheck['id']?>">
+                                                                </div>
+                                                            </td>
+                                                            <td><?=$paycheck['pay_date']?></td>
+                                                            <td><?=$paycheck['name']?></td>
+                                                            <td><?=str_replace('$-', '-$', '$'.$paycheck['total_pay'])?></td>
+                                                            <td><?=str_replace('$-', '-$', '$'.$paycheck['net_pay'])?></td>
+                                                            <td><?=$paycheck['pay_method']?></td>
+                                                            <td><?=!in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?></td>
+                                                            <td><?=$paycheck['status']?></td>
+                                                            <td>
+                                                                <div class="dropdown float-end">
+                                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                                        <li>
+                                                                            <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item void-paycheck" href="#">Void</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item edit-paycheck" href="#">Edit</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                    <?php else : ?>
+                                                    <tr>
+                                                        <td colspan="10">
+                                                            <div class="nsm-empty">
+                                                                <span>No results found.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>

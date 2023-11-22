@@ -668,10 +668,15 @@ $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounti
 $route['accounting/employees/paycheck-list'] = 'accounting_controllers/employees/paycheck_list';
 $route['accounting/employees/paycheck-list/export']['post'] = 'accounting_controllers/employees/export_paychecks';
 $route['accounting/employees/paycheck-list/change-orientation']['post'] = 'accounting_controllers/employees/change_paycheck_pdf_orientation';
+$route['accounting/employees/paycheck-list/print-multiple']['post'] = 'accounting/controllers/employees/print_multiple_paychecks';
+$route['accounting/print-paycheck']['post'] = 'accounting_controllers/employees/print_paycheck';
+$route['accounting/delete-paycheck/(:any)'] = 'accounting_controllers/employees/delete_paycheck/$1';
+$route['accounting/void-paycheck/(:any)'] = 'accounting_controllers/employees/void_paycheck/$1';
+$route['accounting/update-paycheck-num/(:any)']['post'] = 'accounting_controllers/employees/update_paycheck_num/$1';
+$route['accounting/print-multiple']['post'] = 'accounting_controllers/employees/print_multiple_paychecks';
 $route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
 $route['accounting/employees/remove-profile-photo/(:any)']['DELETE'] = 'accounting_controllers/employees/remove_profile_photo/$1';
 $route['accounting/employees/update-profile-photo/(:any)']['post'] = 'accounting_controllers/employees/update_profile_photo/$1';
-
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';
 $route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
@@ -1020,6 +1025,15 @@ $route['workorder/_update_workorder_priority'] = 'Workorder/ajax_update_workorde
 $route['workorder/_quick_view_details'] = 'Workorder/ajax_quick_view_details';
 $route['workorder/_edit/(:num)'] = 'Workorder/redirect_edit/$1';
 $route['workorder/_quick_delete_workorder'] = 'Workorder/ajax_quick_delete_workorder';
+
+$route['workorder/_update_wo_terms_condition'] = 'Workorder/ajax_update_wo_terms_condition';
+$route['workorder/_update_wo_header'] = 'Workorder/ajax_update_wo_header';
+$route['workorder/_save_custom_fields'] = 'Workorder/ajax_save_custom_fields';
+$route['workorder/_update_custom_fields'] = 'Workorder/ajax_update_custom_fields';
+$route['workorder/_delete_custom_fields'] = 'Workorder/ajax_delete_custom_fields';
+$route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
+
+$route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';

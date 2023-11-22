@@ -2926,6 +2926,7 @@ class Customer extends MY_Controller
         // customer_ad_model
         if($input){
             $input['company_id'] = logged('company_id'); ;
+            $input['status'] = 'New';
             if ($this->customer_ad_model->add($input, "acs_profile")) {
                 echo "Success";
             } else {
@@ -7089,6 +7090,17 @@ class Customer extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
         exit;
+    }
+
+    public function ajax_get_customer_data()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $customer_id = $this->input->post('customer_id');
+        $company_id  = logged('company_id');
+
+        $customer = $this->AcsProfile_model->getdataAjax($customer_id);        
+        echo json_encode($customer);
     }
     
 }

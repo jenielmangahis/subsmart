@@ -1861,7 +1861,7 @@ add_footer_js(array(
 
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
-            calculate_subtotal();
+            //calculate_subtotal();
             $(".location").select2({
                 placeholder: "Choose Location"
             });
