@@ -3225,16 +3225,24 @@ class Workorder extends MY_Controller
 
     public function save_update_tc(){
         $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
-        $id  =  $this->input->post('id');
-
-        $data = array(
-            'id' => $this->input->post('id'),
-            'content' => $this->input->post('content'),
-            'company_id' => $company_id,
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+        $termsCondition = $this->workorder_model->getWorkOrderSettingTermsConditionByCompanyId($company_id);
+        if( $termsCondition ){            
+            $id   =  $termsCondition->id;
+            $data = array(        
+                'id' => $id,        
+                'content' => $this->input->post('content'),
+                'company_id' => $company_id,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+        }else{            
+            $data = array(
+                'id' => '',
+                'content' => $this->input->post('content'),
+                'company_id' => $company_id,                
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+        }
 
         $dataQuery = $this->workorder_model->update_tc($data);
 
@@ -3243,16 +3251,26 @@ class Workorder extends MY_Controller
 
     public function save_update_header(){
         $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
-        $id  =  $this->input->post('id');
+        $settingHeader = $this->workorder_model->getWorkOrderSettingHeaderByCompanyId($company_id);
+        if( $settingHeader ){            
+            $id   =  $settingHeader->id;
+            $data = array(        
+                'id' => $id,        
+                'content' => $this->input->post('content'),
+                'company_id' => $company_id,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+        }else{            
+            $data = array(
+                'id' => '',
+                'content' => $this->input->post('content'),
+                'company_id' => $company_id,                
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+        }
 
-        $data = array(
-            'id' => $this->input->post('id'),
-            'content' => $this->input->post('content'),
-            'date_updated' => date("Y-m-d H:i:s")
-        );
-
-        $dataQuery = $this->workorder_model->update_header_f($data);
+        $dataQuery = $this->workorder_model->update_setting_header($data);
 
         echo json_encode($dataQuery);
     }
@@ -12062,6 +12080,23 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
 
         exit;
+    }
+
+    public function ajax_get_offer_code()
+    {
+        $is_valid = false;        
+        $cost = 0;
+
+        $offer_code = $this->input->post('offer_code');
+        $offerCode = $this->items_model->getoffercode($offer_code);
+        if( $offerCode ){
+            $is_valid = true;
+            $cost     = $offerCode->cost;
+        }
+
+        $json_data = ['is_valid' => $is_valid, 'cost' => $cost];
+
+        echo json_encode($json_data);
     }
 }
 /* End of file Workorder.php */

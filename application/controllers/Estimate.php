@@ -392,7 +392,7 @@ class Estimate extends MY_Controller
 
 
     public function add()
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateSettings_model');       
 

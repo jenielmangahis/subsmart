@@ -124,9 +124,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                 <table class="nsm-table" id="workorder-list">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
-                            </td>
+                            <td class="table-icon"></td>
                             <td data-name="Work Order Number">Work Order Number</td>
                             <td data-name="Date Issued">Date Created</td>
                             <td data-name="Customer">Customer</td>
@@ -189,9 +187,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                             ?>
                                 <tr>
                                     <td>
-                                        <div class="table-row-icon table-checkbox">
-                                            <input class="form-check-input select-one table-select" type="checkbox" name="id[<?php echo $workorder->id ?>]" value="<?php echo $workorder->id ?>" id="work_order_id_<?php echo $workorder->id ?>">
-                                        </div>
+                                        <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= workordermodule__formatWorkOrderNumber($workorder->work_order_number) ?></td>
                                     <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>

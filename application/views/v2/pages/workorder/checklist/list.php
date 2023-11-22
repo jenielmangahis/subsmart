@@ -34,6 +34,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-md-4">
+                        <form action="<?php echo base_url('workorder') ?>" method="GET">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="" placeholder="Search Checklist">
+                            </div>
+                        </form>
+                    </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
@@ -98,6 +105,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));
+        }, 1000));
     });
 
     $(document).on("click", ".delete-item", function(event) {
@@ -120,7 +131,7 @@
                     success: function(data) {
                         if (data.is_success === 1) {
                             Swal.fire({
-                                title: 'Great!',
+                                //title: 'Great!',
                                 text: "Checklist was successfully deleted!",
                                 icon: 'success',
                                 showCancelButton: false,

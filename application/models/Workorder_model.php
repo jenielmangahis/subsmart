@@ -1489,23 +1489,35 @@ class Workorder_model extends MY_Model
     {
         extract($data);
 
-        if($id == NULL){
-            $vendor = $this->db->insert('terms_and_conditions', $data);
+        if($id == ''){
+            $termsCondition = $this->db->insert('work_order_terms_conditions', $data);
             $insert_id = $this->db->insert_id();
             return  $insert_id;
         }else{
-        // $vendor = $this->db->update('custom_fields', $data);
-        //           $this->db->where('id', $data['id']);
-	    // $insert = $this->db->insert_id();
-		// return  $insert;
-        $this->db->where('id', $id);
-        $this->db->update('terms_and_conditions', array('content' => $content));
-        return $data;
+            $this->db->where('id', $id);
+            $this->db->update('work_order_terms_conditions', array('content' => $content));
+            return $data;
+        }
+    }
+
+    public function update_setting_header($data)
+    {
+        extract($data);
+
+        if($id == ''){
+            $header = $this->db->insert('work_order_headers', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+        }else{
+            $this->db->where('id', $id);
+            $this->db->update('work_order_headers', array('content' => $content));
+            return $data;
         }
     }
 
     public function update_header_f($data)
     {
+        
         extract($data);
         // $vendor = $this->db->update('custom_fields', $data);
         //           $this->db->where('id', $data['id']);
