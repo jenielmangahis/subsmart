@@ -2,6 +2,10 @@ $('.dropdown-menu.table-settings').on('click', function(e) {
     e.stopPropagation();
 });
 
+$("#employees-table").nsmPagination({
+    itemsPerPage: 10
+});
+
 $('#privacy').on('change', function() {
     if($(this).prop('checked')) {
         $('#employees-table tbody .pay-rate').html(`<i class="bx bx-fw bx-lock-alt"></i>`);
@@ -122,10 +126,13 @@ $("#add_employee_form").on("submit", function(e) {
     _this.find("button[type=submit]").html("Saving");
     _this.find("button[type=submit]").prop("disabled", true);
 
+    var data = new FormData(this);
     $.ajax({
         type: 'POST',
         url: url,
-        data: _this.serialize(),
+        data: data,
+        processData: false,
+        contentType: false,
         dataType: "json",
         success: function(result) {
             Swal.fire({

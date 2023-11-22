@@ -35,6 +35,14 @@
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="form-control nsm-field date" id="birth-date" name="birth_date" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">nSmart App Login Details</label>
                         </div>
