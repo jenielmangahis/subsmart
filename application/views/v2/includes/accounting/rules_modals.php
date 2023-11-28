@@ -4,286 +4,186 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" id="myModalLabel2">Create rule</span>
-                    <button type="button" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <form id="addRuleForm">
                 <div class="modal-body">
-
-                    <div class="formError">
-                        <div class="formError__inner">
-                            <i class="fa fa-info-circle"></i>
-                            <p>Something’s not quite right</p>
+                    <div class="row">
+                        <div class="col-12">
+                            <p>Rules only apply to unreviewed transactions.</p>
                         </div>
-                    </div>
-
-                    <div class="subheader">Rules only apply to unreviewed transactions.</div>
-                        <div class="form-group">
-                            <label>What do you want to call this rule? *</label>
-                            <input
-                                required
-                                type="text"
-                                name="rules_name"
-                                class="form-control"
-                                placeholder="Name this rule"
-                                data-type="rules_name"
-                            >
-                        </div>
-                        <div class="form-group">
-                            <div>
-                                <label>Apply this to transactions that are</label>
-                            </div>
-                            <div class="createRuleModalRight__transactions">
-                                <div class="tab-select">
-                                    <select
-                                        name="apply_type"
-                                        class="form-control"
-                                        data-type="apply_type"
-                                    >
-                                        <option selected>Money in</option>
-                                        <option>Money out</option>
-                                    </select>
-                                </div>
-                                <span style="margin-right: 5px;margin-left: 5px;">in</span>
-                                <div class="tab-select">
-                                    <select name="apply_type" class="form-control" data-type="apply_type" required="">
-                                        <option value="">Select Bank Account</option>
-                                        <option value="all-bank-account">All bank accounts</option>
-                                        <option value="checking">Checking</option>
-                                    </select>
-                                </div>
+                        <div class="col-12 grid-mb">
+                            <div class="form-group m-0">
+                                <label for="rule-name">What do you want to call this rule? *</label>
+                                <input required type="text" id="rule-name" name="rule_name" class="nsm-field form-control" placeholder="Name this rule">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label style="position: relative;display: inline-block;">and include the following:</label>
-                            <select
-                                name="include"
-                                class="form-control inline-select"
-                                data-type="include"
-                            >
-                                <option selected>All</option>
-                                <option>Any</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <div class="addCondition-container">
-                                <div id="addCondition" class="addCondition">
-                                    <div class="tab-select">
-                                        <input type="hidden" id="counterCondition" value="1">
-                                        <select
-                                            name="description[]"
-                                            class="form-control"
-                                            data-type="conditions.description"
-                                        >
-                                            <option selected>Description</option>
-                                            <option>Bank text</option>
-                                            <option>Amount</option>
+                        <div class="col-12 grid-mb">
+                            <div class="form-group m-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Apply this to transactions that are</label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select name="transaction_type" class="nsm-field form-control" id="transaction-type" required>
+                                            <option value="money-out" selected>Money out</option>
+                                            <option value="money-in">Money in</option>
                                         </select>
                                     </div>
-                                    <div class="tab-select">
-                                        <select
-                                            name="contain[]"
-                                            class="form-control"
-                                            style="max-width: 140px"
-                                            data-type="conditions.contain"
-                                        >
-                                            <option  selected>Contain</option>
-                                            <option>Doesn't contain</option>
-                                            <option>Is exactly</option>
-                                        </select>
-                                    </div>
-                                    <div class="tab-select" style="max-width: 140px">
-                                        <input
-                                            required
-                                            type="text"
-                                            name="comment[]"
-                                            class="form-control"
-                                            placeholder="Enter Text"
-                                            data-type="conditions.comment"
-                                        >
-                                    </div>
-                                    <div class="tab-select deleteCondition" id="deleteCondition" style="display: none;">
-                                        <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
+                                    <div class="col-12 col-md-2 d-flex align-items-center justify-content-center">in</div>
+                                    <div class="col-12 col-md-5">
+                                        <select name="accounts" class="nsm-field form-control" id="for-accounts" multiple="multiple" required></select>
                                     </div>
                                 </div>
                             </div>
-
-                            <div style="margin-top: 15px;">
-                                <a href="#" id="btnAddCondition" style="color: #0b62a4;"><i class="fa fa-plus"></i> Add a condition</a>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex align-items-center grid-mb">
+                            <div class="form-group m-0">
+                                <label>and include the following:</label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Then assign</label>
-                            <div class="action-section">
-                                <span class="action-label">Transaction type</span>
-                                <select
-                                    name="trans_type"
-                                    class="form-control"
-                                    data-type="assignments.transaction_type"
-                                >
-                                    <option selected>Expenses</option>
-                                    <option>Transfer</option>
-                                    <option>Check</option>
+                        <div class="col-12 col-md-6 grid-mb">
+                            <div class="form-group m-0">
+                                <select name="include" class="nsm-field form-control" id="include">
+                                    <option value="all" selected>All</option>
+                                    <option value="any">Any</option>
                                 </select>
                             </div>
-                            <div class="action-section" >
-                                <div id="categoryDefault">
-                                    <span class="action-label" style="margin-right: 70px">Category</span>
-                                    <div style="width: 220px;display: inline-block;">
-                                        <select
-                                            name="category[]"
-                                            id="mainCategory"
-                                            class="form-control select2-rules-category"
-                                            data-type="assignments.category"
-                                            data-main-category="true"
-                                            required
-                                        >
-                                            <!-- <option></option>
-                                            <option disabled>&plus; Add new</option>
-                                            <option>Advertising</option>
-                                            <option>Bad Debts</option>
-                                            <option>Bank Charges</option> -->
-                                        </select>
-                                    </div>
-                                    <span class="action-label d-none" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
-                                </div>
-                                <!--Add Split Div-->
-                                <div class="add-split-container">
-                                    <div class="add-split-section">
-                                        <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
-                                            Split detail #<span class="splitNum">1</span>
-                                            <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
-                                        </div>
-                                        <div class="split-content">
-                                            <span class="split-category-text" >Percentage</span>
-                                            <input
-                                                type="number"
-                                                name="percentage[]"
-                                                class="form-control"
-                                                style="width: 205px"
-                                                data-type="assignments.category_percent"
-                                                required
-                                            >
-                                        </div>
-                                        <div class="split-content">
-                                            <span class="split-category-text">Category</span>
-                                            <div style="width: 220px;display: inline-block;">
-                                                <select
-                                                    name="category[]"
-                                                    class="form-control select2-rules-category"
-                                                    data-type="assignments.category"
-                                                    required
-                                                >
-                                                    <option></option>
-                                                    <option>Advertising</option>
-                                                    <option>Bad Debts</option>
-                                                    <option>Bank Charges</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <hr id="border-category">
-                                    </div>
-                                    <div class="add-split-section">
-                                        <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
-                                            Split detail #<span class="splitNum">2</span>
-                                            <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
-                                        </div>
-                                        <div class="split-content">
-                                            <span class="split-category-text" >Percentage</span>
-                                            <input
-                                                type="number"
-                                                name="percentage[]"
-                                                class="form-control"
-                                                style="width: 205px"
-                                                data-type="assignments.category_percent"
-                                                required
-                                            >
-                                        </div>
-                                        <div class="split-content">
-                                            <span class="split-category-text">Category</span>
-                                            <div style="width: 220px;display: inline-block;">
-                                                <select
-                                                    name="category[]"
-                                                    class="form-control select2-rules-category"
-                                                    data-type="assignments.category"
-                                                    required
-                                                >
-                                                    <option></option>
-                                                    <option>Advertising</option>
-                                                    <option>Bad Debts</option>
-                                                    <option>Bank Charges</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <hr id="border-category">
-                                    </div>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <table class="nsm-table" id="conditions-table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select name="field[]" class="nsm-field form-control">
+                                                <option value="description" selected>Description</option>
+                                                <option value="bank-text">Bank text</option>
+                                                <option value="amount">Amount</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="condition[]" class="nsm-field form-control">
+                                                <option value="contain" selected>Contain</option>
+                                                <option value="doesnt-contain">Doesn't contain</option>
+                                                <option value="is-exactly">Is exactly</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input required type="text" name="text[]" class="nsm-field form-control" placeholder="Enter Text">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4">
+                                            <button class="nsm-button" id="add-condition"><i class="bx bx-fw bx-plus"></i> Add a condition</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <button class="nsm-button" id="test-rule">Test Rule</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="form-group m-0">
+                                <label>Then</label>
+                                <div class="dropdown d-inline-block">
+                                    <a href="#" class="dropdown-toggle text-decoration-none" role="button" data-bs-toggle="dropdown" aria-expanded="false">Assign <i class="bx bx-fw bx-chevron-down"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item active" href="javascript:void(0);" id="assign-rule">Assign</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exclude-rule">Exclude</a></li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div style="margin-left: 10px;margin-bottom: 10px;">
-                                <a href="#" id="btnAddLine"  style="color: #0b97c4;display: none;">Add a line</a>
-                            </div>
-                            <div class="action-section">
-                                <span class="action-label">Payee</span>
-                                <div style="width: 220px;display: inline-block;">
-                                    <select
-                                        name="payee"
-                                        class="form-control select2-rules-payee"
-                                        data-type="assignments.payee"
-                                    >
-                                        <!-- <option></option>
-                                        <option>Abacus Accounting</option>
-                                        <option>Absolute Power</option>
-                                        <option>ADSC</option> -->
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4 d-flex align-items-center">
+                                    Transaction type
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="assign_to_transac" class="nsm-field form-control" id="assign-to-transac">
+                                        <option value="expenses" selected>Expenses</option>
+                                        <option value="transfer">Transfer</option>
+                                        <option value="check">Check</option>
+                                        <option value="cc-payment">Credit card payment</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="action-section">
-                                <span class="action-label">Tags</span>
-                                <div style="width: 220px;display: inline-block;">
-                                    <select
-                                        id="accountingRulesTags"
-                                        name="tags"
-                                        class="form-control"
-                                        data-type="assignments.tags"
-                                        multiple="multiple"
-                                    >
-                                    </select>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4 d-flex align-items-center">
+                                    Category
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="assign_to_category" class="nsm-field form-control" id="assign-to-category" required></select>
                                 </div>
                             </div>
-                            <div class="action-section" id="assignMore" style="display: none;">
-                                <span class="action-label">Add memo</span>
-                                <textarea
-                                    name="memo"
-                                    cols="30"
-                                    rows="5"
-                                    placeholder="Enter Text"
-                                    style="resize: none;"
-                                    data-type="memo"
-                                ></textarea>
-                            </div>
-                            <div style="margin-top: 15px;">
-                                <a href="#" id="btnAssignMore" style="color: #0b62a4;"><i class="fa fa-plus"></i> Assign more</a>
-                            </div>
-                            <div style="margin-top: 15px;">
-                                <a href="#" style="display: none;color: #0b62a4;" id="btnClear"><i class="fa fa-trash"></i> Clear</a>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4"></div>
+                                <div class="col-12 col-md-8">
+                                    <button class="nsm-button primary" id="add-split">
+                                        <i class="bx bx-fw bx-plus"></i> Add a split
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="">Automatically confirm transactions this rule applies to</label>
-                            <div class="custom-control custom-switch">
-                                <input
-                                    type="checkbox"
-                                    name="auto"
-                                    class="custom-control-input"
-                                    id="autoAddswitch"
-                                    data-type="auto"
-                                >
-                                <label class="custom-control-label" for="autoAddswitch">Auto-add</label>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4 d-flex align-items-center">
+                                    Payee
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="assign_to_payee" class="nsm-field form-control" id="assign-to-payee"></select>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4 d-flex align-items-center">
+                                    Customer
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="assign_to_customer" class="nsm-field form-control" id="assign-to-customer"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="row">
+                                <div class="col-12 col-md-4 d-flex align-items-center">
+                                    Tags
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="assign_to_tags[]" class="nsm-field form-control" id="assign-to-tags" multiple="multiple"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <button class="nsm-button primary" id="assign-more">
+                                <i class="bx bx-fw bx-plus"></i> Assign more
+                            </button>
+                        </div>
+                        <div class="col-12 grid-mb">
+                            <div class="form-group">
+                                <label for="">Automatically confirm transactions this rule applies to</label>
+                                <div class="custom-control custom-switch">
+                                    <label class="custom-control-label" for="auto-add-switch">Auto-add</label>
+                                    <input type="checkbox" name="auto" class="custom-control-input" id="auto-add-switch" checked>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="nsm-button primary" data-action="save">Save</button>
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
                 </div>
                 </form>
             </div>

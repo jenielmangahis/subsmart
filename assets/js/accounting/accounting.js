@@ -15,14 +15,14 @@ $(document).ready(function() {
     $('.loader').hide();
     // Rules page
     //select2 initialisation
-    $('.select2-rules-category').select2({
-        placeholder: 'Select a category',
-        allowClear: true,
-    });
-    $('.select2-rules-payee').select2({
-        placeholder: '(Recommended)',
-        allowClear: true
-    });
+    // $('.select2-rules-category').select2({
+    //     placeholder: 'Select a category',
+    //     allowClear: true,
+    // });
+    // $('.select2-rules-payee').select2({
+    //     placeholder: '(Recommended)',
+    //     allowClear: true
+    // });
     // Add and remove condition div
     $(document).on("click", "#btnAddCondition", function() {
         $('.addCondition-container').children($('.deleteCondition').show());

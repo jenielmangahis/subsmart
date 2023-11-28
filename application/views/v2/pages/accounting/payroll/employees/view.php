@@ -151,16 +151,16 @@
                                                                         <h6>Salary</h6>
                                                                         <h5><?=$employee->pay_rate?></h5>
                                                                     </div>
-                                                                    <?php foreach($employeeCommissionSettings as $ecs) : ?>
                                                                     <div class="col-12 col-md-4">
                                                                         <h6>Commission Settings</h6>
-                                                                        <?php foreach( $commissionSettings as $cs ){ ?>
-                                                                            <?php if($ecs->commission_setting_id === $cs->id) : ?>
-                                                                                <h5><?=$ecs->commission_type === 'amount' ? '$'.number_format(floatval($ecs->commission_value), 2) : number_format(floatval($ecs->commission_value), 2).'%'?> <?=$cs->name?></h5>
-                                                                            <?php endif; ?>
-                                                                        <?php } ?>
+                                                                        <?php foreach($employeeCommissionSettings as $ecs) : ?>
+                                                                            <?php foreach( $commissionSettings as $cs ){ ?>
+                                                                                <?php if($ecs->commission_setting_id === $cs->id) : ?>
+                                                                                    <h5><?=$ecs->commission_type === 'amount' ? '$'.number_format(floatval($ecs->commission_value), 2) : number_format(floatval($ecs->commission_value), 2).'%'?> <?=$cs->name?></h5>
+                                                                                <?php endif; ?>
+                                                                            <?php } ?>
+                                                                        <?php endforeach; ?>
                                                                     </div>
-                                                                    <?php endforeach; ?>
                                                                 </div>
                                                             </div>
                                                         </div>

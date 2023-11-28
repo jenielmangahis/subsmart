@@ -1,6 +1,6 @@
 window.addEventListener("DOMContentLoaded", async () => {
   const { SelectWithCheckbox } = await import("./SelectWithCheckbox.js");
-  const { RulesTable } = await import("./RulesTable.js");
+  // const { RulesTable } = await import("./RulesTable.js");
   const api = await import("./api.js");
   const utils = await import("./utils.js");
 
@@ -21,6 +21,21 @@ window.addEventListener("DOMContentLoaded", async () => {
   $newRuleButton.addEventListener("click", () => {
     window.openRuleForm();
   });
+
+$("#rulesTable").nsmPagination({
+    itemsPerPage: 10
+});
+
+$("#search_field").on("input", debounce(function() {
+  let _form = $(this).closest("form");
+
+  _form.submit();
+}, 1500));
+
+$('#createRules select').select2({
+  minimumResultsForSearch: -1,
+  dropdownParent: $('#createRules')
+});
 
   // const $selectWithCheckbox = document.querySelector("#transactionsBankSelect");
   // const $checkboxes = $selectWithCheckbox.querySelectorAll("[type=checkbox]");
@@ -217,7 +232,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.resetRuleForm();
   });
 
-  new RulesTable($("#rulesTable"));
+  // new RulesTable($("#rulesTable"));
 });
 
 window.openRuleForm = async (data = null) => {
