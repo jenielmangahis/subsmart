@@ -2293,7 +2293,13 @@ function calculation(counter) {
   var adjustment = $("#adjustment_input").val();
   var grand_total = s_total - parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
+  var grand_total_w = grand_total + parseFloat(markup);  
+  if( $('#offer_cost_input').length ){    
+    var offer_code_cost = parseFloat($('#offer_cost_input').val());
+    if( offer_code_cost > 0 ){
+      grand_total_w = grand_total_w - offer_code_cost;
+    }    
+  }
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_input").val(subtotaltax.toFixed(2));

@@ -16,6 +16,22 @@
 {
     display: none;
 }
+.nsm-signature-button{
+    margin-left: 0px !important;
+    margin-top: 13px;
+    display: block;
+    width: 100%;    
+    text-align: center;
+    font-size: 15px;
+}
+.signature-container{
+    height:400px;
+    border:1px solid #d3d3d3;
+}
+.signature-container img{
+    max-width:95%;
+    margin:0 auto;
+}
 
 @media only screen and (max-device-width: 600px) {
     .label-element{
@@ -130,6 +146,23 @@
     position: relative;
     } 
 }
+.selected-checklists{
+    list-style:none;
+    margin:0px;
+    padding:0px;
+}
+.selected-checklists li{
+    width: 50%;
+    padding: 10px;
+    font-size: 17px;
+    background-color: #6a4a86;
+    color: #ffff;
+    margin: 10px 0px;
+}
+.delete-row-checklist i{
+    position: relative;
+    left:4px;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -161,15 +194,10 @@
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span class="d-block">Header</span>
-                                            <label class="nsm-subtitle">
-                                                <?php echo $headers->content; ?>
-                                            </label>
+                                            <span class="d-block">Header</span>                                            
                                         </div>
-                                        <div class="nsm-card-controls align-items-start">
-                                            <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_header_modal">
-                                                Update Header
-                                            </a>
+                                        <div class="nsm-card-controls align-items-start">                                            
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end" style="float: right;"><strong>Update Header</strong></button>                                            
                                         </div>
                                         <?php
                                         $dt = new DateTime();
@@ -182,34 +210,35 @@
                                         <input type="hidden" class="nsm-field form-control" id="content_input" name="header2" value="<?php echo $headers->content; ?>">
                                     </div>
                                     <div class="nsm-card-content">
+                                        <label class="nsm-subtitle mb-4" id="header_text"><?php echo $headers->content; ?></label>
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
-                                                <input type="text" name="workorder_number" id="workorder-number" class="nsm-field form-control" value="<?= $prefix . $next_num; ?>" readonly required />
-                                            </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="row g-3">
                                                     <div class="col-6">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Select Customer</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                                    </div>                                                            
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="col-8">
+                                                        <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;">
+                                                            <!-- <option value="0">- none -</option> -->
+                                                            <?php //foreach ($customers as $c) { ?>
+                                                                <!-- <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option> -->
+                                                            <?php //} ?>
+                                                        </select>
                                                     </div>
-                                                    <div class="col-6 text-end">
-                                                        <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link" data-bs-toggle="modal" data-bs-target="#new_customer_modal">Add New Customer</a>
+                                                    <div class="col-3">
+                                                        <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
                                                     </div>
                                                 </div>
-                                                <select class="nsm-field form-select select2" name="customer_id" id="sel-customer">
-                                                    <option value="0">- none -</option>
-                                                    <?php foreach ($customers as $c) { ?>
-                                                        <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
                                             </div>
                                             <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Security Number</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number</label>
                                                 <input type="text" name="security_number" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" required />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
-                                                <input type="date" name="birthdate" id="birthdate" class="nsm-field form-control datepicker" required />
+                                                <input type="date" name="birthdate" id="birthdate" class="nsm-field form-control datepicker" />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
@@ -231,26 +260,23 @@
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
                                                 <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
                                             </div>
-                                            <div class="col-12 col-md-3">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
-                                                <input type="text" name="job_location" id="job_location" class="nsm-field form-control" required />
+                                            <div class="col-12 col-md-4"></div>                                            
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Address</label>
+                                                <input type="text" name="cross_street" id="cross_street" class="nsm-field form-control" />
                                             </div>
                                             <div class="col-12 col-md-2">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City</label>
                                                 <input type="text" name="city" id="city" class="nsm-field form-control" required />
                                             </div>
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-2">
                                                 <label class="content-subtitle fw-bold d-block mb-2">State</label>
                                                 <input type="text" name="state" id="state" class="nsm-field form-control" required />
-                                            </div>
-                                            <div class="col-12 col-md-2">
+                                            </div>                                            
+                                            <div class="col-12 col-md-1">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
                                                 <input type="text" name="zip_code" id="zip" class="nsm-field form-control" required />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Cross Street</label>
-                                                <input type="text" name="cross_street" id="cross_street" class="nsm-field form-control" />
-                                            </div>
+                                            </div>                                                                                  
                                             <div class="col-12">
                                                 <input type="hidden" name="acs_fullname" id="acs_fullname">
                                                 <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name . ' ' . $companyDet->last_name; ?>">
@@ -267,9 +293,9 @@
                                                         <div class="col-6">
                                                             <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
                                                         </div>
-                                                        <div class="col-6 text-end">
+                                                        <!-- <div class="col-6 text-end">
                                                             <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?php echo $field->id; ?>" data-name="<?php echo $field->name; ?>">Edit</a>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                     <input type="text" name="custom_value[]" id="custom1_value" class="nsm-field form-control" />
                                                     <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
@@ -289,106 +315,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <input type="hidden" name="count" id="count" value="0">
-                                                <!-- <table class="nsm-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <td data-name="Name">Name</td>
-                                                            <td data-name="Group">Group</td>
-                                                            <td data-name="Quantity">Quantity</td>
-                                                            <td data-name="Price">Price</td>
-                                                            <td data-name="Discount">Discount</td>
-                                                            <td data-name="Tax (Change in %)">Tax (Change in %)</td>
-                                                            <td data-name="Total">Total</td>
-                                                            <td data-name="Manage"></td>
-                                                        </tr>
-                                                    </thead> -->
-                                                    <!-- <tbody id="item_list_table">
-                                                        <tr>
-                                                            <td style="width: 100%; max-width: 20%;">
-                                                                <select class="nsm-field form-select select2 item-selection" name="items[]">
-                                                                </select>
-                                                                <input type="hidden" name="itemid[]" class="itemid" value="0">
-                                                                <input type="hidden" name="packageID[]" value="0">
-                                                            </td>
-                                                            <td>
-                                                                <select class="nsm-field form-select" name="item_type[]" id="item_typeid">
-                                                                    <option value="product">Product</option>
-                                                                    <option value="material">Material</option>
-                                                                    <option value="service">Service</option>
-                                                                    <option value="fee">Fee</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="quantity[]" id="quantity_0" class="nsm-field form-control quantity-field" value="1" data-counter="0" />
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="price[]" id="price_0" class="nsm-field form-control price-field" value="0" data-counter="0" min="0" />
-                                                                <input type="hidden" class="priceqty" id="priceqty_0" value="0">
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="discount[]" id="discount_0" class="nsm-field form-control discount-field" value="0" data-counter="0" min="0" />
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="tax[]" id="tax1_0" class="nsm-field form-control tax-field" value="0" data-counter="0" min="0" readonly />
-                                                            </td>
-                                                            <td>
-                                                                <input type="hidden" class="nsm-field form-control total-field" name="total[]" data-counter="0" id="item_total_0" min="0" value="0">
-                                                                $<span id="span_total_0">0.00</span>
-                                                            </td>
-                                                            <td>
-                                                                <div class="dropdown table-management">
-                                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                                    </a>
-                                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                                        <li>
-                                                                            <a class="dropdown-item remove-item" href="javascript:void(0);" id="0">Delete</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody> -->
-                                                    <!-- <tbody id="jobs_items_table_body">
-                                                        <tr style="display:;">
-                                                            <td width="30%">
-                                                                <input type="text" class="form-control getItems"
-                                                                    onKeyup="getItems(this)" name="items[]">
-                                                                <ul class="suggestions"></ul>
-                                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                                <input type="hidden" name="item_id[]" id="itemid" class="item_id" value="0">
-                                                                <input type="hidden" name="packageID[]" value="0">
-                                                            </td>
-                                                            <td width="20%">
-                                                            <div class="dropdown-wrapper">
-                                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                                    <option value="product">Product</option>
-                                                                    <option value="material">Material</option>
-                                                                    <option value="service">Service</option>
-                                                                    <option value="fee">Fee</option>
-                                                                </select>
-                                                            </div>
-
-                                                                </td>
-                                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                                    data-counter="0" id="quantity_0" value="1"></td>
-                                                            <td width="10%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]"
-                                                                    data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                                    <div class="show_mobile_view">
-                                                                    </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                                    data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                                    data-counter="0" id="tax1_0" min="0" value="0" readonly="">
-                                                                    </td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                                    data-counter="0" id="item_total_0" min="0" value="0">
-                                                                    $<span id="span_total_0">0.00</span></td>
-                                                            <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table> -->
+                                                <input type="hidden" name="count" id="count" value="0">                                                
                                                 <table class="table table-hover">
                                                     <input type="hidden" name="count" value="0" id="count">
                                                     <thead style="background-color:#E9E8EA;">
@@ -405,44 +332,7 @@
                                                         <th class=""></th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody id="jobs_items_table_body">
-                                                    <tr style="display:;">
-                                                        <td width="30%">
-                                                            <input type="text" class="form-control getItems"
-                                                                onKeyup="getItems(this)" name="items[]">
-                                                            <ul class="suggestions"></ul>
-                                                            <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                            <input type="hidden" name="item_id[]" id="itemid" class="item_id" value="0">
-                                                            <input type="hidden" name="packageID[]" value="0">
-                                                        </td>
-                                                        <td width="20%">
-                                                        <div class="dropdown-wrapper">
-                                                            <select name="item_type[]" id="item_typeid" class="form-control">
-                                                                <option value="product">Product</option>
-                                                                <option value="material">Material</option>
-                                                                <option value="service">Service</option>
-                                                                <option value="fee">Fee</option>
-                                                            </select>
-                                                        </div>
-
-                                                            </td>
-                                                        <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                                data-counter="0" id="quantity_0" value="1"></td>
-                                                        <td width="10%"><input type="number" class="form-control price price hidden_mobile_view" name="price[]"
-                                                                data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                                <div class="show_mobile_view">
-                                                                </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                        <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                                data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                        <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                                data-counter="0" id="tax1_0" min="0" value="0" readonly="">
-                                                                </td>
-                                                        <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                                data-counter="0" id="item_total_0" min="0" value="0">
-                                                                $<span id="span_total_0">0.00</span></td>
-                                                        <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                                    </tr>
-                                                    </tbody>
+                                                    <tbody id="jobs_items_table_body"></tbody>
                                                 </table>
                                             </div>
                                             <div class="col-12 col-md-8">
@@ -476,13 +366,13 @@
                                                         <input type="hidden" name="taxes" id="total_tax_input" />
                                                     </div>
                                                     <div class="col-12 col-md-6 d-flex align-items-center">
-                                                        <input type="text" class="nsm-field form-control" placeholder="Adjustment Name" name="adjustment_name" id="adjustment_name" style="border: 1px dashed #d1d1d1;">
-                                                        <i class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></i>
+                                                        <input type="text" class="nsm-field form-control" placeholder="Adjustment Name" name="adjustment_name" id="adjustment_name" style="border: 1px dashed #d1d1d1;">                                                        
+                                                        <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i>
                                                     </div>
                                                     <div class="col-12 col-md-3 offset-md-3 text-end">
                                                         <div class="input-group">
                                                             <span class="input-group-text">$</span>
-                                                            <input type="number" name="adjustment_value" id="adjustment_input" class="nsm-field form-control text-end" value="0">
+                                                            <input type="number" step="any" min=0 name="adjustment_value" id="adjustment_input" class="nsm-field form-control text-end adjustment_input" value="0">
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
@@ -494,7 +384,8 @@
                                                     </div>
                                                     <div class="col-12 col-md-6 text-end saved-field d-none">
                                                         $ <span id="offer_cost">0.00</span>
-                                                        <input type="hidden" name="voucher_value" id="offer_cost_input">
+                                                        <a class="btn-remove-offer-code nsm-button small" href="javascript:void(0);"><i class='bx bx-trash'></i></a>
+                                                        <input type="hidden" name="voucher_value" id="offer_cost_input" value="0">
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <label class="content-title">Grand Total ($)</label>
@@ -519,9 +410,7 @@
                                     <label class="nsm-subtitle">You can set up a checklist for employees.</label>
                                 </div>
                                 <div class="nsm-card-controls">
-                                    <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#select_checklist_modal">
-                                        Select Checklist
-                                    </a>
+                                    <button type="button" id="" data-bs-toggle="modal" data-bs-target="#select_checklist_modal" class="nsm-button primary small text-end"><strong>Select Checklist</strong></button>                                                                                
                                 </div>
                             </div>
                             <div class="nsm-card-content">
@@ -544,17 +433,21 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-8">
+                                            <div class="col-12 col-md-12">
                                                 <div class="row g-3">
-                                                    <div class="col-12 col-md-4">
+                                                    <div class="col-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Name</label>
+                                                        <input type="text" name="job_name" class="nsm-field form-control" required />
+                                                    </div>
+                                                    <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Type</label>
                                                         <select name="job_type" id="job_type" class="nsm-field form-select">
                                                             <?php foreach ($job_types as $jt) { ?>
                                                                 <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
                                                             <?php } ?>
                                                         </select>
-                                                    </div>
-                                                    <div class="col-12 col-md-4">
+                                                    </div>  
+                                                    <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Tag</label>
                                                         <select name="job_tag" id="job_tag" class="nsm-field form-select">
                                                             <?php foreach ($job_tags as $tags) { ?>
@@ -562,46 +455,68 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>
+                                                    <div class="col-12 col-md-2">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+                                                        <select name="status" class="nsm-field form-select">
+                                                            <option value="New">New</option>
+                                                            <option value="Draft">Draft</option>
+                                                            <option value="Scheduled">Scheduled</option>
+                                                            <option value="Started">Started</option>
+                                                            <option value="Paused">Paused</option>
+                                                            <option value="Completed">Completed</option>
+                                                            <option value="Invoiced">Invoiced</option>
+                                                            <option value="Withdrawn">Withdrawn</option>
+                                                            <option value="Closed">Closed</option>
+                                                        </select>
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-12">
+                                                <div class="row g-3">
                                                     <div class="col-12 col-md-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
+                                                        <input type="text" name="job_location" id="job_location" class="nsm-field form-control" required />
+                                                    </div>  
+                                                    <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Schedule Date Given</label>
                                                         <input type="date" name="schedule_date_given" class="nsm-field form-control datepicker" required />
                                                     </div>
-                                                    <div class="col-12 col-md-4">
+                                                    <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-                                                        <select name="priority" class="nsm-field form-select">
+                                                        <select name="priority" class="nsm-field form-select" id="wo-priority">
                                                             <option value="Standard">Standard</option>
                                                             <option value="Emergency">Emergency</option>
                                                             <option value="Low">Low</option>
                                                             <option value="Urgent">Urgent</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-12 col-md-4">
+                                                    <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
-                                                        <select name="lead_source" class="nsm-field form-select">
+                                                        <select name="lead_source" class="nsm-field form-select" id="lead-source">
                                                             <option value="0">- none -</option>
                                                             <?php foreach ($lead_source as $lead) { ?>
                                                                 <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
                                                             <?php } ?>
                                                         </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="row g-3">
-                                                    <div class="col-12">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Name</label>
-                                                        <input type="text" name="job_name" class="nsm-field form-control" required />
-                                                    </div>
-                                                    <div class="col-12">
+                                                    </div>                                                     
+                                                    <div class="col-12 col-md-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Purchase Order # (optional)</label>
+                                                        <input type="text" name="purchase_order_number" class="nsm-field form-control" />
+                                                    </div> 
+                                                    <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Description</label>
                                                         <textarea name="job_description" class="nsm-field form-control" rows="2"></textarea>
-                                                    </div>
+                                                    </div>        
+                                                    <div class="col-12 col-md-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Instructions</label>
+                                                        <textarea name="instructions" class="nsm-field form-control" rows="2"></textarea>
+                                                    </div>                                                                                        
                                                 </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 mt-4">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
                                             <span class="d-block">Payment Detail</span>
@@ -629,9 +544,9 @@
                                                     <option value="Other Payment Type">Other Payment Type</option>
                                                 </select>
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Amount ( $ )</label>
-                                                <input type="number" step=".01" name="payment_amount" class="nsm-field form-control" required />
+                                                <input type="number" step=".01" name="payment_amount" id="payment_amount" class="nsm-field form-control" required />
                                             </div>
                                             <div class="col-12 col-md-4 d-none" id="cash_area">
                                                 <div class="d-flex align-items-center h-100">
@@ -858,9 +773,7 @@
                                             <span class="d-block">Terms and Conditions</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_termscon_modal">
-                                                Update Terms and Condition
-                                            </a>
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termscon_modal" class="nsm-button primary small text-end"><strong>Update Terms and Condition</strong></button>  
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -869,25 +782,7 @@
                                         <div class="row g-3">
                                             <div class="col-12" id="terms_and_condition_text">
                                                 <?php echo $terms_conditions->content; ?>
-                                            </div>
-                                            <div class="col-12 col-md-3">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Status</label>
-                                                <select name="status" class="nsm-field form-select">
-                                                    <option value="New">New</option>
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Scheduled">Scheduled</option>
-                                                    <option value="Started">Started</option>
-                                                    <option value="Paused">Paused</option>
-                                                    <option value="Completed">Completed</option>
-                                                    <option value="Invoiced">Invoiced</option>
-                                                    <option value="Withdrawn">Withdrawn</option>
-                                                    <option value="Closed">Closed</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-3">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Purchase Order # (optional)</label>
-                                                <input type="text" name="purchase_order_number" class="nsm-field form-control" />
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -900,9 +795,7 @@
                                             <span class="d-block">Terms of Use</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_termsuse_modal">
-                                                Update Terms of Use
-                                            </a>
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termsuse_modal" class="nsm-button primary small text-end"><strong>Update Terms of Use</strong></button>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -911,11 +804,7 @@
                                         <div class="row g-3">
                                             <div class="col-12" id="terms_of_use_text">
                                                 <?php echo $terms_uses->content; ?>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Instructions</label>
-                                                <textarea name="instructions" class="nsm-field form-control"></textarea>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -934,8 +823,11 @@
                                 
                                 <div class="row signature_web lawas">
                                     <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                        <div id="companyrep"></div>
+                                    <h6>Company Representative Approval</h6> 
+                                        <a class="nsm-button primary nsm-signature-button companySignature" href="javascript:void(0);">
+                                            <i class='bx bx-pen'></i> Add Signature
+                                        </a>
+                                        <div id="companyrep" class="signature-container"></div>
 
                                         <input type="hidden" id="saveCompanySignatureDB1a"
                                             name="company_representative_approval_signature1a">
@@ -958,8 +850,11 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        <h6>Primary Account Holder</h6><a class="btn btn-warning primarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                        <div id="primaryrep"></div>
+                                        <h6>Primary Account Holder</h6>
+                                        <a class="primarySignature nsm-button primary nsm-signature-button" href="javascript:void(0);">
+                                            <i class='bx bx-pen'></i> Add Signature
+                                        </a>
+                                        <div id="primaryrep" class="signature-container"></div>
                                         <input type="hidden" id="savePrimaryAccountSignatureDB2a"
                                             name="primary_account_holder_signature2a">
                                         <br>
@@ -979,8 +874,11 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        <h6>Secondary Account Holder</h6><a class="btn btn-danger secondarySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                        <div id="secondaryrep"></div>
+                                        <h6>Secondary Account Holder</h6>
+                                        <a class="nsm-button primary nsm-signature-button secondarySignature" href="javascript:void(0);">
+                                            <i class='bx bx-pen'></i> Add Signature
+                                        </a>
+                                        <div id="secondaryrep" class="signature-container"></div>
                                         <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
                                             name="secondary_account_holder_signature3a">
                                         <br>
@@ -1081,19 +979,35 @@
                                         <table id="modal_items_list" class="table-hover" style="width: 100%;">
                                             <thead>
                                             <tr>
-                                                <td> Name</td>
-                                                <td> Price</td>
-                                                <td> Action</td>
+                                                <td></td>
+                                                <td>Name</td>
+                                                <td>On Hand</td>                                                
+                                                <td>Price</td>  
+                                                <td>Type</td>                                              
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php foreach($items as $item){ // print_r($item); ?>
+                                            <?php foreach($items as $item){ ?>
                                                 <tr>
+                                                    <td style="width: 5% !important;">
+                                                        <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="nsm-button primary small select_item">
+                                                        <i class='bx bx-plus-medical'></i>
+                                                        </button>
+                                                    </td>
                                                     <td><?php echo $item->title; ?></td>                                                
-                                                    <td><?php echo $item->price; ?></td>
-                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">Add
-                                                    <span class="fa fa-plus"></span>
-                                                </button></td>
+                                                    <td>
+                                                    <?php 
+                                                        foreach($itemsLocation as $itemLoc){
+                                                            if($itemLoc->item_id == $item->id){
+                                                                echo "<div class='data-block'>";
+                                                                echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                echo "</div>";
+                                                            } 
+                                                        }
+                                                    ?>
+                                                    </td>                                                    
+                                                    <td><?php echo $item->price; ?></td>                                                    
+                                                    <td><?php echo $item->type; ?></td>
                                                 </tr>
                                                 
                                             <?php } ?>
@@ -1115,7 +1029,7 @@
         </div>
     </div>
 </div>
-
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php //include viewPath('includes/footer'); ?>
 
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
@@ -1171,7 +1085,7 @@
 // });
 // });
 // </script>
-// <script type="text/javascript">
+ <script type="text/javascript">
 //     $(document).ready(function() {
 //         initPopover();
 
@@ -2571,7 +2485,94 @@ $(document).on('click touchstart','.secondarySignature',function(){
     $("#secondary-account-holder-signature").modal("show");
 });
 
+var selected_checklists = [];
+$(document).on('click', '#btn_add_checklist', function(){
+    var dupe_checklist = [];
+    $('#select_checklist_modal').modal('hide');
+    $('.wo-select-checklist').each(function() {
+        
+        if( $(this).prop('checked') ){
+            var chk_id = $(this).attr('data-id');
+            var chk_name = $(this).attr('data-name');
+            if( selected_checklists.length > 0 && selected_checklists.includes(chk_id) ){
+                dupe_checklist.push(chk_name);
+            }else{
+                var input_hidden  = '<input type="hidden" name="checklists[]" value="'+chk_id+'" />';
+                var add_checklist = "<li>"+input_hidden+"<div class='row'><div class='col-11'>"+chk_name+"</div><div class='col-1'><a data-id='"+chk_id+"' class='nsm-button primary delete-row-checklist'><i class='bx bx-fw bx-trash'></i></a></div></div></li>";
+                $('.selected-checklists').append(add_checklist);
+                selected_checklists.push(chk_id);
+            }
+        }        
+    }); 
+    
+    if( dupe_checklist.length > 0 ){
+        var err_msg = 'Checklist ' + dupe_checklist.toString() + ' already selected.';
+        Swal.fire({            
+            text: err_msg,
+            icon: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        });
+    }
+});
 
+$(document).on('click', '.delete-row-checklist', function(){
+    var chk_id = $(this).attr('data-id');
+    while (selected_checklists.indexOf(chk_id) !== -1) {
+        selected_checklists.splice(selected_checklists.indexOf(chk_id), 1);
+    }
+    $(this).closest('li').fadeOut(300, function(){
+        $(this).remove();
+    });
+    console.log(selected_checklists);
+});
+
+$(document).on('submit', '#form_new_workorder', function(e){
+    let _this = $(this);
+    e.preventDefault();
+
+    var formData = new FormData(this);
+
+    var url = "<?php echo base_url('workorder/savenewWorkorder'); ?>";
+    _this.find("button[type=submit]").html("Submitting");
+    _this.find("button[type=submit]").prop("disabled", true);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        dataType: 'json',
+        success: function(result) {
+            if( result.is_success == 1 ){
+                Swal.fire({
+                    //title: 'Save Successful!',
+                    text: "Workorder has been saved successfully.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    //if (result.value) {
+                        location.href = base_url + 'workorder';
+                    //}
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: result.msg
+                });
+            }
+            
+            //_this.trigger("reset");
+
+            _this.find("button[type=submit]").html("Submit");
+            _this.find("button[type=submit]").prop("disabled", false);
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+});
 
 $(document).on('click touchstart','.edit_first_signature',function(){
     // alert('test');
@@ -2629,8 +2630,228 @@ $(document).on('click','.btn-edit-header',function(){
 
 <script>
   $( function() {
+    
+    $("#btn_validate_offer").on("click", function() {
+        let offerCode = $("#offer_code").val();
+        if( $('#offer_cost_input').val() == 0 ){
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('workorder/_get_offer_code'); ?>",
+                data: {
+                    offer_code: offerCode
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.is_valid) {
+                        var cost = response.cost;
+                        $("#offer_cost").text(response.cost);
+                        $("#offer_cost_input").val(response.cost);
+
+                        var grand = parseFloat($("#grand_total_input").val());   
+                        //var tax   = parseFloat($('#total_tax_input').val());
+
+                        var new_grand = grand - parseFloat(cost);
+                        if( new_grand < 0 ){
+                            new_grand = 0;
+                        }
+
+                        $("#grand_total").text(new_grand.toFixed(2));
+                        $("#grand_total_input").val(new_grand.toFixed(2));
+                        $("#payment_amount").val(new_grand.toFixed(2));
+                        $('.saved-field').removeClass("d-none");
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: "Invalid code."
+                        });
+                    }
+
+                },
+                error: function(response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: "Invalid code."
+                    });
+
+                    $("#offer_cost").text('0');
+                    $("#offer_cost_input").val('0');
+
+                    var total1 = $("#span_sub_total_invoice").text();
+                    var total2 = $("#adjustment_input").val();
+
+                    var total3 = parseFloat(total1) - parseFloat(total2);
+                    $("#grand_total").text(total3.toFixed(2));
+                    $("#grand_total_input").val(total3.toFixed(2));
+                    $("#payment_amount").val(total3.toFixed(2));
+                }
+            });
+        }        
+    });
+
+    $('.btn-remove-offer-code').on('click', function(){  
+        var tax    = parseFloat($('#total_tax_input').val()); 
+        var total1 = $("#span_sub_total_invoice").text();
+        var total2 = $("#adjustment_input").val();
+        var new_grand = parseFloat(total1) - parseFloat(total2); 
+        var new_grand = new_grand + tax;            
+
+        $("#grand_total").text(new_grand.toFixed(2));
+        $("#grand_total_input").val(new_grand.toFixed(2));
+        $("#payment_amount").val(new_grand.toFixed(2));
+        $("#offer_cost_input").val(0);
+
+        $('.saved-field').addClass("d-none");
+    });
+
+    //Header
+    $("#form_update_header").on("submit", function(e) {
+        let _this = $(this);
+        e.preventDefault();
+        var url = "<?php echo base_url('workorder/save_update_header'); ?>";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                id: $("#update_h_id").val(),
+                content: CKEDITOR.instances['editor3'].getData()
+            },
+            success: function(result) {
+                Swal.fire({
+                    //title: 'Save Successful!',
+                    text: "Header has been updated successfully.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });
+
+                $("#update_header_modal").modal('hide');
+                $("#header_text").html(CKEDITOR.instances['editor3'].getData());
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });
+
+    //Terms and condition
+    $("#form_update_termscon").on("submit", function(e) {
+        let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('workorder/save_update_tc'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                id: $("#update_tc_id").val(),
+                content: CKEDITOR.instances['editor1'].getData()
+            },
+            success: function(result) {
+                Swal.fire({
+                    //title: 'Save Successful!',
+                    text: "Terms and Condition has been updated successfully.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });
+
+                $("#update_termscon_modal").modal('hide');
+                $("#terms_and_condition_text").html(CKEDITOR.instances['editor1'].getData());
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });
+
+    //Terms of Use
+    $("#form_update_termsuse").on("submit", function(e) {
+        let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url('workorder/save_update_tu'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                id: $('#update_tu_id').val(),
+                content: CKEDITOR.instances['editor2'].getData()
+            },
+            success: function(result) {
+                Swal.fire({
+                    //title: 'Save Successful!',
+                    text: "Terms of Use has been updated successfully.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });
+
+                $("#update_termsuse_modal").modal('hide');
+                $("#terms_of_use_text").html(CKEDITOR.instances['editor2'].getData());
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });
+
+    $('#help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
     $( "#datepicker2" ).datepicker();
-  } );
+    $("#new_customer_form").submit(function(e) {    
+        e.preventDefault(); 
+        var form = $(this);        
+        $.ajax({
+            type: "POST",
+            url: base_url + "/customer/add_new_customer_from_jobs",
+            data: form.serialize(), 
+            success: function(data)
+            {
+                $('#new_customer').modal('hide');
+                if(data === "Success"){
+                    Swal.fire({                        
+                        text: "Customer added successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            
+                        //}
+                    });                     
+                }else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Cannot add data.',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            }
+        });
+    });
+});
 </script>
 
 <script>
@@ -3338,17 +3559,22 @@ $(".toggle").each(function () {
 <script>
     $(function() {
         $("nav:first").addClass("closed");
+        $("#job_type").select2();
+        $("#job_tag").select2();
+        $("#lead-source").select2();
+        $("#wo-priority").select2();
+        $("#payment_method").select2();
     });
 </script>
 
 <script>
 var wrapper = document.getElementById("signature-pad");
-var canvas = wrapper.querySelector("canvas");
+//var canvas = wrapper.querySelector("canvas");
 
-var sign = new SignaturePad(document.getElementById('sign'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
+// var sign = new SignaturePad(document.getElementById('sign'), {
+//   backgroundColor: 'rgba(255, 255, 255, 0)',
+//   penColor: 'rgb(0, 0, 0)'
+// });
 
 function resizeCanvas() {
      var ratio =  Math.max(window.devicePixelRatio || 1, 1);
@@ -3359,17 +3585,17 @@ function resizeCanvas() {
 }
 
 window.onresize = resizeCanvas;
-resizeCanvas();
+//resizeCanvas();
 </script>
 
 <script>
 var wrapper = document.getElementById("signature-pad2");
-var canvas = wrapper.querySelector("canvas");
+//var canvas = wrapper.querySelector("canvas");
 
-var sign = new SignaturePad(document.getElementById('sign2'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
+// var sign = new SignaturePad(document.getElementById('sign2'), {
+//   backgroundColor: 'rgba(255, 255, 255, 0)',
+//   penColor: 'rgb(0, 0, 0)'
+// });
 
 function resizeCanvas() {
      var ratio =  Math.max(window.devicePixelRatio || 1, 1);
@@ -3380,17 +3606,17 @@ function resizeCanvas() {
 }
 
 window.onresize = resizeCanvas;
-resizeCanvas();
+//resizeCanvas();
 </script>
 
 <script>
 var wrapper = document.getElementById("signature-pad3");
-var canvas = wrapper.querySelector("canvas");
+//var canvas = wrapper.querySelector("canvas");
 
-var sign = new SignaturePad(document.getElementById('sign3'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
+// var sign = new SignaturePad(document.getElementById('sign3'), {
+//   backgroundColor: 'rgba(255, 255, 255, 0)',
+//   penColor: 'rgb(0, 0, 0)'
+// });
 
 function resizeCanvas() {
      var ratio =  Math.max(window.devicePixelRatio || 1, 1);
@@ -3401,7 +3627,7 @@ function resizeCanvas() {
 }
 
 window.onresize = resizeCanvas;
-resizeCanvas();
+//resizeCanvas();
 </script>
 
 
@@ -3473,7 +3699,7 @@ resizeCanvas();
 
 
 <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
 function initialize() {
           var input = document.getElementById('job_location');
@@ -3486,7 +3712,7 @@ function initialize() {
             });
         }
         google.maps.event.addDomListener(window, 'load', initialize);
-</script>
+</script> -->
 
 <script type="text/javascript">
 // $(window).on('beforeunload', function(){
@@ -3516,14 +3742,14 @@ jQuery(document).ready(function () {
 
 <script>
 
-    document.getElementById('mobile_no_').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
-    document.getElementById('phone_no_').addEventListener('input', function (e) {
-        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
+    // document.getElementById('mobile_no_').addEventListener('input', function (e) {
+    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    // });
+    // document.getElementById('phone_no_').addEventListener('input', function (e) {
+    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    // });
 
     function validatecard() {
         var inputtxt = $('.card-number').val();
@@ -3834,7 +4060,58 @@ $(document).on('click','.save_terms_of_use',function(){
 
 
     $(document).ready(function () {
-        $('#sel-customer').select2();
+        //$('#sel-customer').select2();
+        $('#sel-customer').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  // parse the results into the format expected by Select2
+                  // since we are using custom formatting functions we do not need to
+                  // alter the remote JSON data, except to indicate that infinite
+                  // scrolling can be used
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              placeholder: 'Select Customer',
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            var $container = $(
+                '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            );
+            return $container;
+        }
+
         var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 
         /*$('#customers')
@@ -3852,50 +4129,39 @@ $(document).on('click','.save_terms_of_use',function(){
 $(document).ready(function(){
  
     $('#sel-customer').change(function(){
-    var id  = $(this).val();
-    // alert(id);
-
+    var customer_id  = $(this).val();
         $.ajax({
             type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/addLocationajax",
-            data: {id : id },
+            url: base_url + "/customer/_get_customer_data",
+            data: {customer_id : customer_id },
             dataType: 'json',
-            success: function(response){
-                // alert('success');
-                // console.log(response['customer']);
-            // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
-
-            // var phone = response['customer'].phone_h;
-            // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
-            var phone = response['customer'].phone_h;
-                // phone = normalize(phone);
-            
-            var mobile = response['customer'].phone_m;
+            success: function(response){               
+            var phone = response.phone_h;            
+            var mobile = response.phone_m;
                 // mobile = normalize(mobile);
 
             var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
             var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            
-            $("#job_location").val(response['customer'].mail_add);
-            $("#email").val(response['customer'].email);
-            $("#date_of_birth").val(response['customer'].date_of_birth);
+            $("#job_location").val(response.mail_add);
+            $("#email").val(response.email);
+            $("#birthdate").val(response.date_of_birth);
             $("#phone_no").val(test_p);
             $("#mobile_no").val(test_m);
-            $("#city").val(response['customer'].city);
-            $("#state").val(response['customer'].state);
-            $("#zip").val(response['customer'].zip_code);
-            $("#cross_street").val(response['customer'].cross_street);
-            $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
-            $("#business_name").val(response['customer'].business_name);
+            $('#security_number').val(response.ssn);
+            $("#city").val(response.city);
+            $("#state").val(response.state);
+            $("#zip").val(response.zip_code);
+            $("#cross_street").val(response.cross_street);
+            $("#acs_fullname").val(response.first_name +' '+ response.last_name);
+            $("#business_name").val(response.business_name);
 
-            $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+            $("#job_name").val(response.first_name + ' ' + response.last_name);
 
-            $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+            $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
         
             },
                 error: function(response){
-                //alert('Error'+response);
-       
+
                 }
         });
 
@@ -4183,99 +4449,6 @@ $(document).ready(function(){
                 }
         });
     });
-
-    function calculation(counter) {
-  var price = $("#price_" + counter).val();
-  var quantity = $("#quantity_" + counter).val();
-  var discount = $("#discount_" + counter).val()
-    ? $("#discount_" + counter).val()
-    : 0;
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  $("#span_total_" + counter).text(total);
-  $("#total_" + counter).val(total);
-  $("#span_tax_" + counter).text(tax1);
-  $("#tax1_" + counter).val(tax1);
-  // $("#tax1_" + counter).val(tax1);
-  // $("#tax_" + counter).val(tax1);
-  // alert(tax1);
-
-  if( $('#tax_'+ counter).length ){
-    $('#tax_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
-
-  var eqpt_cost = 0;
-  var subtotal = 0;
-  var adjustment_amount = 0;
-  var cnt = $("#count").val();
-
-  if (
-    $("#adjustment_input").val() &&
-    $("#adjustment_input").val().toString().length > 1
-  ) {
-    adjustment_amount = $("#adjustment_input").val().substr(1);
-  }
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    subtotal += parseFloat($("#span_total_" + p).text());
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-  }
-
-  $("#adjustment_amount").text(parseFloat(adjustment_amount));
-  $("#adjustment_amount_form_input").val(parseFloat(adjustment_amount));
-  $("#invoice_sub_total").text(subtotal.toFixed(2));
-  $("#sub_total_form_input").val(subtotal.toFixed(2));
-
-  $("#span_sub_total_0").text(subtotal.toFixed(2));
-
-  var grandTotal = eval(
-    $("#invoice_sub_total").text() + $("#adjustment_input").val()
-  );
-  $("#invoice_grand_total").text(parseFloat(grandTotal).toFixed(2));
-  $("#grand_total_form_input").val(parseFloat(grandTotal).toFixed(2));
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  $("#eqpt_cost").val(eqpt_cost);
-
-  // alert('dri');
-
-  if($("#grand_total").length && $("#grand_total").val().length)
-  {
-    // console.log('none');
-    // alert('none');
-  }else{
-    $("#grand_total").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
-    $("#payment_amount").val(grand_total_w.toFixed(2));
-
-    var bundle1_total = $("#grand_total").text();
-    var bundle2_total = $("#grand_total2").text();
-    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
-    $("#supergrandtotal").text(super_grand.toFixed(2));
-    $("#supergrandtotal_input").val(super_grand.toFixed(2));
-  }
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_tax").val(sls);
-  cal_total_due();
-}
-
-
 });
 
 </script>
