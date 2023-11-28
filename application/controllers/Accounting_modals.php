@@ -11474,8 +11474,13 @@ class Accounting_modals extends MY_Controller
 
         if($field === 'product' && count($selected) > 0 ||
         $field === 'account' && $this->input->get('modal') === 'pay-contractors-modal' ||
-        $field === 'customer' && $this->input->get('modal') === 'pay-contractors-modal') {
+        $field === 'customer' && $this->input->get('modal') === 'pay-contractors-modal' ||
+        $field === 'bank-account' && $this->input->get('modal') === 'create-rules') {
             array_shift($return['results']);
+        }
+
+        if($field === 'bank-account' && $this->input->get('modal') === 'create-rules') {
+            array_unshift($return['results'], ['id' => 'all-bank-accounts', 'text' => 'All bank accounts']);
         }
 
         if($field === 'category' && $this->input->get('field_id') === 'assign-category') {

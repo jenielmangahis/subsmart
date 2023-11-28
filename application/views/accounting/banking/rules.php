@@ -18,9 +18,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by name or conditions">
-                        </div>
+                        <form action="<?php echo base_url('accounting/rules') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Search by name or conditions" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <!-- <div class="dropdown d-inline-block">
@@ -41,7 +43,7 @@
                             <button type="button" class="nsm-button" id="importRulesLink">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button" id="newRuleButton">
+                            <button type="button" class="nsm-button" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
                                 <i class='bx bx-fw bx-list-plus'></i> New Rule
                             </button>
                             <button type="button" class="nsm-button" id="exportRules">
