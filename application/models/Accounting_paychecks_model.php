@@ -44,4 +44,11 @@ class Accounting_paychecks_model extends MY_Model {
 		$update = $this->db->update($this->table, ['status' => 4]);
 		return $update ? true : false;
 	}
+
+	public function get_by_employee_id($employeeId)
+	{
+		$this->db->where('employee_id', $employeeId);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }
