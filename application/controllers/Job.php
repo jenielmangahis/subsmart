@@ -2650,6 +2650,13 @@ class Job extends MY_Controller
                     $this->items_model->_updateLocationQty($update_location_qty);
                 }
             }
+            
+            $total_equipment_cost = 0;
+            foreach( $input['item_name'] as $key => $value ){
+                $total = floatval($input['item_cost'][$key]) * floatval($input['item_qty'][$key]);
+                $total_equipment_cost += $total;
+            }
+
             if (empty($isJob)) {
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
@@ -2666,6 +2673,8 @@ class Job extends MY_Controller
                         'program_setup' => $input['otps'],
                         'monthly_monitoring' => $input['monthly_monitoring'],
                         'installation_cost' => $input['installation_cost'],
+                        'equipment_cost' => $total_equipment_cost,
+                        'tax' => $input['tax'],
                         'deposit_collected' => 0,
                         'job_id' => $jobs_id,
                         'date_created' => date("Y-m-d h:i:s")
@@ -2678,6 +2687,8 @@ class Job extends MY_Controller
                         'program_setup' => $input['otps'],
                         'monthly_monitoring' => $input['monthly_monitoring'],
                         'installation_cost' => $input['installation_cost'],
+                        'equipment_cost' => $total_equipment_cost,
+                        'tax' => $input['tax'],
                         'job_id' => $jobs_id,
                     );
                     $this->general->add_($job_payment_query, 'job_payments');
@@ -2780,11 +2791,15 @@ class Job extends MY_Controller
                         'amount' =>  $input['total_amount'],
                         'program_setup' => $input['otps'],
                         'monthly_monitoring' => $input['monthly_monitoring'],
-                        'installation_cost' => $input['installation_cost']
+                        'installation_cost' => $input['installation_cost'],
+                        'equipment_cost' => $input['sub_total'],
+                        'tax' => $input['tax'],
                     ];
                 }else{
                     $job_payment_query = [
-                        'amount' =>  $input['total_amount']                        
+                        'amount' =>  $input['total_amount'],
+                        'equipment_cost' => $input['sub_total'],
+                        'tax' => $input['tax']            
                     ]; 
                 }
                 
@@ -2793,6 +2808,15 @@ class Job extends MY_Controller
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
             }
 
+            //Update customer otp equipment cost and monthly monitoring fields
+            if( in_array($comp_id, adi_company_ids()) ){
+                $data_acs_office = [
+                    'monthly_monitoring' => $input['monthly_monitoring'],
+                    'equipment_cost' => $total_equipment_cost                     
+                ];
+
+                $this->general->update_with_key_field($data_acs_office, $input['customer_id'], 'acs_office', 'fk_prof_id');
+            }
 
             if (isset($input['wo_id'])) {
                 $get_work_order_data = array(
