@@ -767,7 +767,7 @@ class Workorder extends MY_Controller
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
 
-        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checkLists = array();
         $workorrder_checklists = unserialize($workOrder->checklists);
@@ -3906,7 +3906,7 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
-        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checkLists = array();
         foreach( $checkListsHeader as $h ){
@@ -4063,7 +4063,7 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
-        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checkLists = array();
         foreach( $checkListsHeader as $h ){
@@ -11842,7 +11842,7 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
-        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checklists = array();
         foreach( $checkListsHeader as $h ){

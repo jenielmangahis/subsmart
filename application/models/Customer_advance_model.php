@@ -747,7 +747,7 @@ class Customer_advance_model extends MY_Model {
         if ($userResult_6->payscale == "Base (Montly Rate)") { $totalTechRepPaid += $userResult_6->base_monthly; }
         // =================
         $returnData = new stdClass();
-        $returnData->salesrep_paid = $totalSalesRepPaid + $jobResult->salesrep_commission;
+        $returnData->salesrep_paid = floatval($totalSalesRepPaid) + floatval($jobResult->salesrep_commission);
         $returnData->techrep_paid = $totalTechRepPaid + $jobResult->techrep_commission;
         return $returnData;    
     }
