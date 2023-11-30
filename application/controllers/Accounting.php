@@ -556,16 +556,17 @@ class Accounting extends MY_Controller
     public function rules()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['rules'] = $this->rules_model->getRules();
+        $rules = $this->rules_model->getRules();
         add_css([
-            'assets/css/accounting/banking/rules/rules.css',
+            // 'assets/css/accounting/banking/rules/rules.css',
             'https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css',
 
             // stepper
             'https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css',
         ]);
         add_footer_js([
-            'assets/js/accounting/banking/rules/rules.js',
+            // 'assets/js/accounting/banking/rules/rules.js',
+            'assets/js/accounting/banking/rules/rules-new.js',
 
             // for some reason the oldest version is the only one that
             // works while implementing this. not sure why though.
@@ -578,6 +579,16 @@ class Accounting extends MY_Controller
             'https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
         ]);
 
+        if(!empty(get('search'))) {
+            $this->page_data['search'] = get('search');
+
+            $search = get('search');
+            $rules = array_filter($rules, function($v, $k) use ($search) {
+                return stripos($v->rules_name, $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        $this->page_data['rules'] = $rules;
         $this->page_data['page']->title = 'Rules';
         $this->page_data['page']->parent = 'Banking';
         $this->load->view('accounting/banking/rules', $this->page_data);
