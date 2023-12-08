@@ -88,6 +88,8 @@ function Signing(hash) {
 
     const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type } = window.__esigndata.auto_populate_data.acs_alarm;    
 
+    const { jp_amount, jp_program_setup, jp_monthly_monitoring, jp_tax, jp_intallation_cost, jp_equipment_cost, jp_tax_equipment_cost } = window.__esigndata.auto_populate_data.job_payments;   
+
     const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
@@ -568,11 +570,13 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "equipment_cost" ) {
-        return equipment_cost;
+        return jp_tax_equipment_cost;
+        //return equipment_cost;
       }
 
       if( specs_field_name.name === "one_time_activation" ) {
-        return otps;
+        //return otps;
+        return jp_program_setup;
       }
 
       if( specs_field_name.name === "total_due" ) {
@@ -580,7 +584,8 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "first_month_monitoring" ) {
-        return monthly_monitoring;
+        //return monthly_monitoring;
+        return jp_monthly_monitoring
       }
 
       if( specs_field_name.name === "card_security_code" ) {
