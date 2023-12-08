@@ -1218,8 +1218,8 @@
                                                     </div>
                                                     <div class="col-md-4 mb-3">
                                                         <h6>Billing Method</h6>
-                                                        <select class="form-select" name="BILLING_METHOD">
-                                                            <option value hidden>Select Billing Method</option>
+                                                        <select class="form-select" name="BILLING_METHOD" required>
+                                                            <option value="">Select Billing Method</option>
                                                             <option value="CC">Credit Card</option>
                                                             <option value="DC">Debit Card</option>
                                                             <option value="CHECK">Check</option>

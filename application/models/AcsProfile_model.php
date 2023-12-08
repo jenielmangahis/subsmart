@@ -328,6 +328,14 @@ class AcsProfile_model extends MY_Model
         $this->db->update();
     }
 
+    public function updateCustomerByProfId($prof_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update();
+    }
+
     public function getAllByIsSync($is_sync = 0, $conditions = array(), $limit = 0)
     {
 

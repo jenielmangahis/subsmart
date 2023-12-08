@@ -384,6 +384,22 @@ class DocuSign extends MYF_Controller
         
         $autoPopulateData['cost_due'] = $_cost;
 
+        #job payments
+        $job_payments = $this->db->select('amount as jp_amount, program_setup as jp_program_setup, monthly_monitoring as jp_monthly_monitoring, tax as jp_tax, installation_cost as jp_intallation_cost, equipment_cost as jp_equipment_cost, (equipment_cost+tax)as jp_tax_equipment_cost')->from('job_payments')
+                        ->where('job_id', $jobId)
+                        ->get()->row();
+
+        $jobPaymentsKeys = [
+            'jp_amount', 'jp_program_setup', 'jp_monthly_monitoring', 'jp_tax', 'jp_intallation_cost', 'jp_equipment_cost', 'jp_tax_equipment_cost'
+        ];
+
+        $filteredJobPayments = array_filter( (array)$job_payments , function($v) use ($jobPaymentsKeys) {
+            return in_array($v, $jobPaymentsKeys);
+        }, ARRAY_FILTER_USE_KEY);
+        
+        
+        $autoPopulateData['job_payments'] = $filteredJobPayments;
+
         #docusign envelope id
         $this->db->select('docusign_envelope_id');
         $this->db->where('docfile_id', $documentId);        
@@ -2742,7 +2758,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(1094);
+        $pdf = $this->debugGeneratePDFMaker(1103);
         echo 'Finish';
     }
 
@@ -2752,13 +2768,13 @@ SQL;
         $this->db->where('id', $documentId);
         $document = $this->db->get('user_docfile')->row();
 
-        if (is_null($document)) {
-            return;
-        }
+        // if (is_null($document)) {
+        //     return;
+        // }
 
-        if ($document->status !== 'Completed') {
-            return;
-        }
+        // if ($document->status !== 'Completed') {
+        //     return;
+        // }
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
@@ -2882,8 +2898,10 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->name);
+                        // $pdf->SetFont('Courier', '', 10);
+                        // $pdf->Write(0, $value->name);
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->name, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Email') {
@@ -2899,8 +2917,10 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->email);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->email);
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->email, 0, 0, 'L');
                     }
 
                     if (in_array($field->field_name, ['Checkbox', 'Radio', '2 GIG Go Panel 2', '2 GIG Go Panel 3', 'Lynx3000', 'LynxTouch', 'Vista/SEM', 'DSC', 'Other'])) {
@@ -2980,11 +3000,14 @@ SQL;
 
                                     $pdf->setY($topAdjusted +  $signatureHeight);
                                     $pdf->setX($leftAdjusted);
-                                    $pdf->SetFont('Courier', '', 7);
+                                    //$pdf->SetFont('Courier', '', 7);
                                     // $pdf->SetTextColor(255, 255, 255);
                                     // $pdf->SetFillColor(0, 0, 0);
                                     // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
-                                    $pdf->Write(0, $formattedDate);
+                                    //$pdf->Write(0, $formattedDate);
+
+                                    $pdf->SetFont('Arial', '', 10);
+                                    $pdf->Cell(0, 0, $formattedDate, 0, 0, 'L');
                                 }
                             }
                         }
@@ -2994,7 +3017,7 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;                        
                          if( $left > 790 ){
-                             $left = 780;
+                             $left = 774;
                          }
 
                         $topAdjusted = (31.8 / 100) * $top;
@@ -3007,11 +3030,10 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
-                        $field_value = str_replace(" ","", $value->value);
-                        $field_value = intval($field_value);
-                        $pdf->Write(0, trim($field_value));
+                        $pdf->SetFont('Arial', '', 10);                        
+                        $field_value = trim($value->value);
+                        //$pdf->Write(0, $field_value);
+                        $pdf->Cell(0, 0, $field_value, 0, 0, 'L');
                     }
 
                     /*if ($field->field_name === 'Subscriber Name') {
@@ -3046,8 +3068,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $field->field_name);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $field->field_name);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $field->field_name, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Date Signed') {
@@ -3063,15 +3088,19 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->value);
+                        
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Formula') {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
-                        if( $left > 790 ){
-                             $left = 780;
+                        if( $left >= 780 ){
+                            $left = 774;
                         }
 
                         $topAdjusted = (31.8 / 100) * $top;
@@ -3083,8 +3112,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        $field_value = trim($value->value);
+                        $field_value = $field_value;
+                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->Write(0, $field_value);
+                        $pdf->Cell(0, 0, $field_value, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Dropdown') {
@@ -3229,8 +3261,8 @@ SQL;
                 if (!is_null($envelopId)) {
                     $pdf->setY(5);
                     $pdf->setX(5);
-                    $pdf->SetFont('Courier', '', 10);
-                    $pdf->SetFillColor(255, 255, 255);
+                    $pdf->SetFont('Arial', '', 10);
+                    //$pdf->SetFillColor(255, 255, 255);
                     $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
                 }
 
@@ -3264,8 +3296,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->name);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->name);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->name, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Email') {
@@ -3281,8 +3316,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->email);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->email);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->email, 0, 0, 'L');
                     }
 
                     if (in_array($field->field_name, ['Checkbox', 'Radio', '2 GIG Go Panel 2', '2 GIG Go Panel 3', 'Lynx3000', 'LynxTouch', 'Vista/SEM', 'DSC', 'Other'])) {
@@ -3315,8 +3353,11 @@ SQL;
                                     $pdf->setY($myTopAdjusted);
                                     $pdf->setX($myLeftAdjusted);
 
-                                    $pdf->SetFont('Courier', '', 10);
-                                    $pdf->Write(0, 'x');
+                                    //$pdf->SetFont('Courier', '', 10);
+                                    //$pdf->Write(0, 'x');
+
+                                    $pdf->SetFont('Arial', '', 10);
+                                    $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                                 }
                             }
                         }
@@ -3325,8 +3366,11 @@ SQL;
                             $pdf->setY($topAdjusted);
                             $pdf->setX($leftAdjusted);
 
-                            $pdf->SetFont('Courier', '', 10);
-                            $pdf->Write(0, 'x');
+                            //$pdf->SetFont('Courier', '', 10);
+                            //$pdf->Write(0, 'x');
+
+                            $pdf->SetFont('Arial', '', 10);
+                            $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                         }
                     }
 
@@ -3362,11 +3406,14 @@ SQL;
 
                                     $pdf->setY($topAdjusted +  $signatureHeight);
                                     $pdf->setX($leftAdjusted);
-                                    $pdf->SetFont('Courier', '', 7);
+                                    //$pdf->SetFont('Courier', '', 7);
                                     // $pdf->SetTextColor(255, 255, 255);
                                     // $pdf->SetFillColor(0, 0, 0);
                                     // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
-                                    $pdf->Write(0, $formattedDate);
+                                    //$pdf->Write(0, $formattedDate);
+
+                                    $pdf->SetFont('Arial', '', 10);
+                                    $pdf->Cell(0, 0, $formattedDate, 0, 0, 'L');
                                 }
                             }
                         }
@@ -3376,24 +3423,21 @@ SQL;
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;                        
                         if( $left > 790 ){
-                            $left = 780;
+                            $left = 774;
                         }
 
                         $topAdjusted = (31.8 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
                         $leftAdjusted = (30 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-                        
+                        $leftAdjusted = $left - $leftAdjusted;                        
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
-
-                        $pdf->SetFont('Courier', '', 10);
-                        //$value = $value->value . '/' . $topAdjusted . '/' . $leftAdjusted;
-                        $field_value = str_replace(" ","", $value->value);
-                        $field_value = intval($field_value);
-                        $pdf->Write(0, trim($field_value));
+                        
+                        $pdf->SetFont('Arial', '', 10);                        
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
+                        //$pdf->Write(0, $field_value);
                     }
 
                     /*if ($field->field_name === 'Subscriber Name') {
@@ -3428,8 +3472,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->value);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Date Signed') {
@@ -3445,15 +3492,18 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->value);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Formula') {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
-                        if( $left > 790 ){
-                             $left = 780;
+                        if( $left >= 790 ){
+                             $left = 774;
                         }
 
                         $topAdjusted = (31.8 / 100) * $top;
@@ -3464,9 +3514,12 @@ SQL;
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
+                        
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, trim($field_value));
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Dropdown') {
@@ -3482,8 +3535,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->value);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
                 }
             }
