@@ -33,6 +33,7 @@
     <div class="col-12">
         <div class="nsm-page">
             <form class="nsm-page-content" id="createinvoiceform">
+                <input type="hidden" name="inid" id="inid" value="<?= $jobInvoice->id; ?>" />
                 <div class="col-md-12 mb-4">
                     <h5>Customer Details</h5>
                     <div class="row form-group">
@@ -88,7 +89,7 @@
                         </div>
                     </div>
 
-                    <div class="row form-group">
+                    <!-- <div class="row form-group">
                         <div class="col-md-4">
                             <label>Job Tags</label>
                             <select id="job_tags" name="tags" class="form-control" required>
@@ -101,7 +102,7 @@
                                 <?php endif; ?>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="col-md-12 mb-4">
@@ -117,7 +118,7 @@
                                 <th scope="col">Discount</th>
                                 <th scope="col">Tax (%)</th>
                                 <th scope="col">Total</th>
-                                <th scope="col"></th>
+                                <!-- <th scope="col"></th> -->
                             </tr>
                         </thead>
 
@@ -127,38 +128,38 @@
                     </table>
                     <template id="createinvoiceforjobitemrow">
                         <tr class="row-item">
-                            <td>
-                                <input type="text" class="form-control itemname">
+                            <td style="width:40%;">
+                                <input type="text" class="form-control itemname" disabled="">
                             </td>
-                            <td>
-                                <select class="form-select itemtype">
+                            <td style="width:20%;">
+                                <select class="form-select itemtype" disalbed="">
                                     <option value="Product">Product</option>
                                     <option value="Service">Service</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.001" class="form-control itemquantity">
+                                <input type="number" min="0" step="0.001" class="form-control itemquantity" disabled="">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.001" class="form-control itemprice">
+                                <input type="number" min="0" step="0.001" class="form-control itemprice" disabled="">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.001" class="form-control itemdiscount">
+                                <input type="number" min="0" step="0.001" class="form-control itemdiscount" disabled="">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.001" class="form-control itemtax">
+                                <input type="number" min="0" step="0.001" class="form-control itemtax" disabled="">
                             </td>
                             <td>
-                                <input type="number" min="0" step="0.001" class="form-control itemtotal">
+                                <input type="number" min="0" step="0.001" class="form-control itemtotal" disabled="">
                             </td>
-                            <td>
+                            <!-- <td>
                                 <button class="nsm-button btn-danger" onclick="removeRow(this)" type="button">Remove</button>
-                            </td>
+                            </td> -->
                         </tr>
                     </template>
-                    <div>
+                    <!-- <div>
                         <a href="#" class="nsm-link" data-bs-target="#createinvoiceforjobitemsmodal" data-bs-toggle="modal">Add another item</a>
-                    </div>
+                    </div> -->
                     <div class="offset-md-8 col-md-4">
                         <table class="table table-borderless">
                             <tr>
@@ -178,7 +179,7 @@
                                     <input id="default_tax" type="hidden" value="<?= $job->tax_rate; ?>">
                                 </td>
                             </tr>
-                            <?php if (isset($workorder) && $workorder->installation_cost) : ?>
+                            <?php if (isset($workorder) && $workorder->installation_cost) { ?>
                                 <tr>
                                     <td>
                                         <span>Installation Cost</span>
@@ -188,9 +189,21 @@
                                         <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
                                     </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php }elseif( $jobPayments && $jobPayments->installation_cost > 0 ){ ?>
+                                <tr>
+                                    <td>
+                                        <span>Installation Cost</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $jobPayments->installation_cost, 2); ?></span>
+                                        <input id="adjustment_ic" type="hidden" value="<?= $jobPayments->installation_cost; ?>">
+                                    </td>
+                                </tr>
+                            <?php }else{ ?>
+                                <input id="adjustment_ic" type="hidden" value="0">
+                            <?php } ?>
 
-                            <?php if (isset($workorder) && $workorder->otp_setup) : ?>
+                            <?php if (isset($workorder) && $workorder->otp_setup) { ?>
                                 <tr>
                                     <td>
                                         <span>One time (Program and Setup)</span>
@@ -200,9 +213,21 @@
                                         <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
                                     </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php }elseif( $jobPayments && $jobPayments->program_setup > 0 ){ ?>
+                                <tr>
+                                    <td>
+                                        <span>One time (Program and Setup)</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $jobPayments->program_setup, 2); ?></span>
+                                        <input id="adjustment_otps" type="hidden" value="<?= $jobPayments->program_setup; ?>">
+                                    </td>
+                                </tr>
+                            <?php }else{ ?>
+                                <tr><td><input id="adjustment_otps" type="hidden" value="0"></td></tr>
+                            <?php } ?>
 
-                            <?php if (isset($workorder) && $workorder->monthly_monitoring) : ?>
+                            <?php if (isset($workorder) && $workorder->monthly_monitoring){ ?>
                                 <tr>
                                     <td>
                                         <span>Monthly Monitoring</span>
@@ -212,7 +237,19 @@
                                         <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
                                     </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php }elseif( $jobPayments && $jobPayments->monthly_monitoring > 0 ){ ?>
+                                <tr>
+                                    <td>
+                                        <span>Monthly Monitoring</span>
+                                    </td>
+                                    <td>
+                                        <span>$ <?= number_format((float) $jobPayments->monthly_monitoring, 2); ?></span>
+                                        <input id="adjustment_mm" type="hidden" value="<?= $jobPayments->monthly_monitoring; ?>">
+                                    </td>
+                                </tr>
+                            <?php }else{ ?>
+                                <tr><td><input id="adjustment_mm" type="hidden" value="0"></td></tr>
+                            <?php } ?>
 
                             <tr>
                                 <td>
@@ -232,17 +269,21 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 form-group">
+                        <div class="col-auto">
+                            <input type="hidden" id="deposit-amount-type" value="1" class="form-control" />                            
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">$</div>
+                                </div>
+                                <input type="number" min="0" step="any" id="deposit-amount-value" name="deposit_amount" class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4 form-group">
                             <select class="form-select" id="deposit-amount-type">
                                 <option value="$" selected="selected">Deposit amount $</option>
                                 <option value="%">Percentage %</option>
                             </select>
-                        </div>
-                        <div class="col-md-4 form-group">
-                            <div class="input-group">
-                                <input type="number" id="deposit-amount-value" name="deposit_amount" value="0" class="form-control" autocomplete="off">
-                            </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="mb-3">
@@ -253,7 +294,9 @@
                     <div>
                         <h5>Terms &amp; Conditions</h5>
                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                        <textarea name="terms_and_conditions" id="editor1_tc" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
+                        <textarea name="terms_and_conditions" id="editor1_tc" cols="40" rows="2" class="form-control ckeditor editor1_tc">
+                            <?= isset($workorder) ? $workorder->terms_and_conditions : ''; ?>
+                        </textarea>
                     </div>
                     <br>
                     <button class="nsm-button primary" type="submit">Save</button>
@@ -293,7 +336,7 @@
 <script>
     (async () => {
         const jobId = <?= $job->id; ?>;
-        const response = await fetch("/job/apiGetJobItems/" + jobId);
+        const response = await fetch(base_url + "/job/apiGetJobItems/" + jobId);
         const json = await response.json();
         json.data.forEach((item) => {
             addNewItem(item);
@@ -312,7 +355,7 @@
             row.querySelector(".itemname").value = item.title;
             row.querySelector(".itemquantity").value = item.qty;
             row.querySelector(".itemprice").value = parseFloat(item.cost) / parseFloat(item.qty);            
-            row.querySelector(".itemdiscount").value = item.discount;
+            row.querySelector(".itemdiscount").value = parseFloat(item.discount);
             row.querySelector(".itemtax").value = item.tax;
             row.querySelector(".itemtotal").value = item.cost;
             row.querySelector(".itemtype").value = capitalizeFirstLetter(item.type);
@@ -399,7 +442,7 @@
     }
 
     (async () => {
-        const response = await fetch('/job/apiGetItems');
+        const response = await fetch(base_url + '/job/apiGetItems');
         const data = await response.json();
 
         const columns = {
@@ -501,6 +544,7 @@
                 ckeditorData = CKEDITOR.instances.editor1_tc.getData();
             }
             const payload = {
+                inid: document.querySelector('#inid').value,
                 job_id: "<?= $job->id; ?>",
                 customer_id: "<?= $customer->prof_id; ?>",
                 customer_email: "<?= $customer->email; ?>",
@@ -509,7 +553,7 @@
                 invoice_type: document.querySelector('select[name="invoice_type"]').value,
                 date_issued: document.querySelector('#date-issued').value,
                 due_date: document.querySelector('#due-date').value,
-                job_tags: document.querySelector('#job_tags').value,
+                //job_tags: document.querySelector('#job_tags').value,
                 job_location: jobLocation,
                 jobs_location: jobLocation,
                 shipping_to_address: jobLocation,
@@ -532,8 +576,9 @@
                 work_order_number: '',
                 deposit_request_type: document.getElementById("deposit-amount-type").value,
                 deposit_request: document.getElementById("deposit-amount-value").value,
-                monthly_monitoring: 0,
-                program_setup: 0,
+                monthly_monitoring: document.getElementById("adjustment_mm").value,
+                program_setup: document.getElementById("adjustment_otps").value,
+                installation_cost: document.getElementById("adjustment_ic").value,
             };
 
 
@@ -600,7 +645,7 @@
             $button.textContent = "Saving...";
 
             try {
-                const response = await fetch("/Invoice/addNewInvoice?json=1", {
+                const response = await fetch(base_url + "/Invoice/addNewInvoice?json=1", {
                     method: "POST",
                     body: formData
                 });

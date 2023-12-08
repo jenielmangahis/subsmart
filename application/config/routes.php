@@ -1032,6 +1032,7 @@ $route['workorder/_save_custom_fields'] = 'Workorder/ajax_save_custom_fields';
 $route['workorder/_update_custom_fields'] = 'Workorder/ajax_update_custom_fields';
 $route['workorder/_delete_custom_fields'] = 'Workorder/ajax_delete_custom_fields';
 $route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
+$route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 

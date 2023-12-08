@@ -328,7 +328,6 @@ class Invoice extends MY_Controller
 
     public function add()
     {
-        
         $this->load->helper('functions');
 
         $query       = $this->input->get();        
@@ -381,6 +380,7 @@ class Invoice extends MY_Controller
         if( $this->input->get('cus_id') ){
             $default_cust_id = $this->input->get('cus_id');
         }
+        
 
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['default_cust_id'] = $default_cust_id;
@@ -500,121 +500,31 @@ class Invoice extends MY_Controller
         
         $comp_id = logged('company_id');
         $user_id = logged('id');
+        $post    = $this->input->post();
 
-        $new_data = array(
-            'customer_id'               => $this->input->post('customer_id'),//
-
-            'job_location'              => $this->input->post('jobs_location'),//
-            'job_name'                  => $this->input->post('job_name'),//
-            'job_id'                    => $this->input->post('job_id'),
-
-            'business_name'             => $this->input->post('business_name'),
-            'tags'                      => $this->input->post('tags'),//
-            'invoice_type'              => $this->input->post('invoice_type'),//
-            'work_order_number'         => $this->input->post('work_order_number'),//
-            'purchase_order'            => $this->input->post('purchase_order'),//
-            'invoice_number'            => $this->input->post('invoice_number'),//
-            'date_issued'               => $this->input->post('date_issued'),//
-
-            'customer_email'            => $this->input->post('customer_email'),//
-            'online_payments'           => $this->input->post('online_payments'),
-            'billing_address'           => $this->input->post('billing_address'),//
-            'shipping_to_address'       => $this->input->post('shipping_to_address'),//
-            'ship_via'                  => $this->input->post('ship_via'),//
-            'shipping_date'             => $this->input->post('shipping_date'),//
-            'tracking_number'           => $this->input->post('tracking_number'),//
-            'terms'                     => $this->input->post('terms'),//
-            // 'invoice_date'           => $this->input->post('invoice_date'),
-            'due_date'                  => $this->input->post('due_date'),//
-            'location_scale'            => $this->input->post('location_scale'),//
-            'message_to_customer'       => $this->input->post('message_to_customer'),//
-            'terms_and_conditions'      => $this->input->post('terms_and_conditions'),//
-            // 'attachments'            => $this->input->post('file_name'),
-            'attachments'               => 'test',
-            'status'                    => $this->input->post('status'),//
-            'company_id'                => $comp_id,
-
-            'deposit_request_type'      => $this->input->post('deposit_request_type'),//
-            'deposit_request'           => $this->input->post('deposit_amount'),//
-            // 'payment_schedule'       => $this->input->post('payment_schedule'),
-            'payment_methods'           => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
-
-            'sub_total'                 => $this->input->post('subtotal'),//
-            'taxes'                     => $this->input->post('taxes'),
-            'adjustment_name'           => $this->input->post('adjustment_name'),//
-            'adjustment_value'          => $this->input->post('adjustment_input'),//
-            'grand_total'               => $this->input->post('grand_total'),//
-
-
-            'user_id'                   => logged('id'),
-            'date_created'              => date("Y-m-d H:i:s"),
-            'date_updated'              => date("Y-m-d H:i:s")
+        $invoice_data = array(
+            'invoice_number' => $post['invoice_number'],
+            'invoice_type' => $post['invoice_type'],
+            'purchase_order' => $post['po_number'],
+            'date_issued' => date("Y-m-d",strtotime($post['date_issued'])),
+            'due_date' => date("Y-m-d",strtotime($post['due_date'])),
+            'deposit_request_type' => 1, // 1 = amount / 2 = percentage
+            'deposit_request' => $post['deposit_request'],
+            'message_to_customer' => $post['message_to_customer'],
+            'terms_and_conditions' => $post['terms_and_conditions'],
+            'date_updated'         => date("Y-m-d H:i:s")
         );
 
-        $addQuery = $this->invoice_model->createInvoice($new_data);
-
-        customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Invoice', 'Created invoice #'.$this->input->post('invoice_number'));
-
-        // if ($addQuery > 0) {
-        //     //echo json_encode($addQuery);
-        //     $new_data2 = array(
-        //         'item' => $this->input->post('item'),
-        //         'item_type' => $this->input->post('item_type'),
-        //         // 'description' => $this->input->post('desc'),
-        //         'qty' => $this->input->post('quantity'),
-        //         // 'rate' => $this->input->post('rate'),
-        //         'cost' => $this->input->post('price'),
-        //         'discount' => $this->input->post('discount'),
-        //         'tax' => $this->input->post('tax'),
-        //         'total' => $this->input->post('total'),
-        //         'type' => 'Invoice',
-        //         'type_id' => $addQuery,
-        //         'status' => '1',
-        //         'created_at' => date("Y-m-d H:i:s"),
-        //         'updated_at' => date("Y-m-d H:i:s")
-        //     );
-
-        //     $a = $this->input->post('item');
-        //     $b = $this->input->post('item_type');
-        //     $c = $this->input->post('quantity');
-        //     $d = $this->input->post('price');
-        //     $e = $this->input->post('discount');
-        //     $f = $this->input->post('tax');
-        //     $g = $this->input->post('total');
-
-        //     $i = 0;
-        //     foreach ($a as $row) {
-        //         $data['item'] = $a[$i];
-        //         $data['item_type'] = $b[$i];
-        //         $data['qty'] = $c[$i];
-        //         $data['cost'] = $d[$i];
-        //         $data['discount'] = $e[$i];
-        //         $data['tax'] = $f[$i];
-        //         $data['total'] = $g[$i];
-        //         $data['type'] = 'Invoice';
-        //         $data['type_id'] = $addQuery;
-        //         $data['status'] = '1';
-        //         $data['created_at'] = date("Y-m-d H:i:s");
-        //         $data['updated_at'] = date("Y-m-d H:i:s");
-        //         // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
-        //         $addQuery2 = $this->invoice_model->add_invoice_details($data);
-        //         $i++;
-        //     }
-
-        //     // redirect('accounting/banking');
-        //     redirect('invoice');
-        // } else {
-        //     echo json_encode(0);
-        // }
-
+        $invoice = $this->invoice_model->update($post['inid'], $invoice_data);        
+        customerAuditLog(logged('id'), $post['customer_id'], $post['inid'], 'Invoice', 'Created invoice #'.$post['invoice_number']);
         if($addQuery > 0){
-            $a          = $this->input->post('itemid');
+            $a          = $post['itemid'];
             // $packageID  = $this->input->post('packageID');
-            $quantity   = $this->input->post('quantity');
-            $price      = $this->input->post('price');
-            $h          = $this->input->post('tax');
-            $discount   = $this->input->post('discount');
-            $total      = $this->input->post('total');
+            $quantity   = $post['quantity'];
+            $price      = $post['price'];
+            $h          = $post['tax'];
+            $discount   = $post['discount'];
+            $total      = $post['total'];
 
             $i = 0;
             foreach($a as $row){
@@ -625,15 +535,13 @@ class Invoice extends MY_Controller
                 $data['tax']            = $h[$i];
                 $data['discount']       = $discount[$i];
                 $data['total']          = $total[$i];
-                $data['invoice_id'] = $addQuery;
+                $data['invoice_id']     = $post['inid'];
                 $addQuery2 = $this->invoice_model->add_invoice_details($data);
                 $i++;
             }
 
             $getname = $this->invoice_model->getname($user_id);
-
-            $notif = array(
-        
+            $notif = array(        
                 'user_id'               => $user_id,
                 'title'                 => 'New Invoice',
                 'content'               => $getname->FName. ' has created new Invoice.'. $this->input->post('invoice_number'),
@@ -641,7 +549,6 @@ class Invoice extends MY_Controller
                 'status'                => '1',
                 'company_id'            => getLoggedCompanyID()
             );
-
             $notification = $this->invoice_model->save_notification($notif);
 
 

@@ -2545,7 +2545,7 @@ class Job extends MY_Controller
                 'employee5_id' => $input['employee5_id'],
                 'employee6_id' => $input['employee6_id'],
                 'jobtypebase_amount' => json_encode($jobtypebase_amount),
-                'job_name' => $input['job_name'],
+                'job_name' => $job_number . ' - ' . $input['job_type'],
                 'job_location' => $job_location,
                 'job_description' => $input['job_description'],
                 'start_date' => $input['start_date'],
@@ -2653,7 +2653,7 @@ class Job extends MY_Controller
             
             $total_equipment_cost = 0;
             foreach( $input['item_name'] as $key => $value ){
-                $total = floatval($input['item_cost'][$key]) * floatval($input['item_qty'][$key]);
+                $total = floatval($input['item_price'][$key]) * floatval($input['item_qty'][$key]);
                 $total_equipment_cost += $total;
             }
 
@@ -2792,13 +2792,13 @@ class Job extends MY_Controller
                         'program_setup' => $input['otps'],
                         'monthly_monitoring' => $input['monthly_monitoring'],
                         'installation_cost' => $input['installation_cost'],
-                        'equipment_cost' => $input['sub_total'],
+                        'equipment_cost' => $total_equipment_cost,
                         'tax' => $input['tax'],
                     ];
                 }else{
                     $job_payment_query = [
                         'amount' =>  $input['total_amount'],
-                        'equipment_cost' => $input['sub_total'],
+                        'equipment_cost' => $total_equipment_cost,
                         'tax' => $input['tax']            
                     ]; 
                 }
@@ -4898,6 +4898,127 @@ class Job extends MY_Controller
         redirect('/invoice/genview/' . $jobInvoice->id . '?from=job');
     }
 
+    public function createInitialInvoice($job_id)
+    {
+        $this->load->model('Invoice_model', 'invoice_model');
+
+        $company_id = logged('company_id');
+        
+        $this->db->where('id', $job_id);
+        $job = $this->db->get('jobs')->row();
+
+        $this->db->where('prof_id', $job->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $workorder = array();
+        if( $job->work_order_id > 0 ){
+            $this->db->where('id', $job->work_order_id);
+            $workorder = $this->db->get('work_orders')->row();
+        }
+        
+        $this->db->where('job_id', $job->id);
+        $jobPayments = $this->db->get('job_payments')->row();
+
+        $lastinvoice =  $this->invoice_model->getlastInsert()[0];
+        if( $lastinvoice ){
+            $invoiceNumberParts = explode('-', $lastinvoice->invoice_number);
+            $nextInvoiceNumber = ((int) $invoiceNumberParts[1]) + 1;
+            $invoiceNumber = formatInvoiceNumber('INV-' . $nextInvoiceNumber);
+        }else{
+            $next_number = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $invoiceNumber = formatInvoiceNumber('INV-' . $next_number);
+        }
+
+        $monthly_monitoring = 0;
+        $program_setup = 0;
+        $installation_cost = 0;
+        $grand_total = 0;
+        $sub_total   = 0;
+        $tax = 0;
+
+        if( $job->work_order_id > 0 && !empty($workorder) ){
+            $monthly_monitoring = $workorder->monthly_monitoring;
+            $program_setup = $workorder->otp_setup;
+            $installation_cost = $workorder->installation_cost;
+
+            $grand_total = $workorder->grand_total;
+            $sub_total   = $workorder->subtotal;
+            $tax         = $workorder->taxes;
+        }elseif( !empty($jobPayments) ){
+            $monthly_monitoring = $jobPayments->monthly_monitoring;
+            $program_setup = $jobPayments->program_setup;
+            $installation_cost = $jobPayments->installation_cost;
+
+            $grand_total = $jobPayments->amount;
+            $sub_total   = $jobPayments->equipment_cost;
+            $tax         = $jobPayments->tax;
+        }
+
+        $new_data = array(
+            'customer_id'               => $job->customer_id,
+            'job_location'              => $job->job_location,
+            'job_name'                  => $job->job_name,
+            'job_id'                    => $job->id,
+            'job_number'                => $job->job_number,
+            'business_name'             => $customer->business_name,
+            'tags'                      => $job->tags,
+            'invoice_type'              => '',
+            'work_order_number'         => !empty($workorder) ? $workorder->work_order_number : '',
+            'purchase_order'            => '',
+            'invoice_number'            => $invoiceNumber,
+            'date_issued'               => '',
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $customer->mail_add,
+            'shipping_to_address'       => $customer->mail_add,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,            
+            'due_date'                  => '',
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => !empty($workorder) ? $workorder->terms_and_conditions : '',            
+            'attachments'               => $job->attachment,
+            'status'                    => 'Draft',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '',
+            'deposit_request'           => '',
+            'monthly_monitoring'        => $monthly_monitoring,
+            'program_setup'             => $program_setup,
+            'installation_cost'         => $installation_cost,
+            'payment_methods'           => $job->BILLING_METHOD,
+            'sub_total'                 => $sub_total,
+            'taxes'                     => $tax,
+            'adjustment_name'           => !empty($workorder) ? $workorder->adjustment_name : '',
+            'adjustment_value'          => !empty($workorder) ? $workorder->adjustment_value : '',
+            'grand_total'               => $grand_total,
+            'user_id'                   => logged('id'),
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->invoice_model->createInvoice($new_data);
+
+        //Job Items
+        $jobItems = $this->jobs_model->get_specific_job_items($job->id);
+        foreach( $jobItems as $item ){
+            $invoice_item_data = [
+                'invoice_id' => $invoice_id,
+                'items_id' => $item->fk_item_id,
+                'qty' => $item->qty,
+                'cost' => $item->cost,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'total' => $item->total
+            ];
+
+            $this->invoice_model->add_invoice_details($invoice_item_data);
+        }
+
+        return $invoice_id;
+    }
+
 
     public function createInvoice($id)
     {
@@ -4906,15 +5027,22 @@ class Job extends MY_Controller
 
         if (!$job) {
             return show_404();
-        }
+        }       
 
-        $this->db->select('id');
+        $this->db->select('*');
         $this->db->where('job_id', $job->id);
         $jobInvoice = $this->db->get('invoices')->row();
-
-        if (!is_null($jobInvoice)) {
-            return redirect('job/new_job1/' . $job->id);
+        
+        if( empty($jobInvoice) ){
+            $invoice_id = $this->createInitialInvoice($job->id);
+            $this->db->select('*');
+            $this->db->where('job_id', $job->id);
+            $jobInvoice = $this->db->get('invoices')->row();
         }
+ 
+        // if (!is_null($jobInvoice)) {
+        //     return redirect('job/new_job1/' . $job->id);
+        // }
 
         if ($job->work_order_id) {
             $this->db->select('installation_cost,otp_setup,monthly_monitoring');
@@ -4926,6 +5054,11 @@ class Job extends MY_Controller
             }
         }
 
+        $this->db->select('*');
+        $this->db->where('job_id', $job->id);
+        $jobPayments = $this->db->get('job_payments')->row();
+        $this->page_data['jobPayments'] = $jobPayments;
+        
         $this->db->where('prof_id', $job->customer_id);
         $customer = $this->db->get('acs_profile')->row();
 
@@ -4942,15 +5075,21 @@ class Job extends MY_Controller
 
         $this->load->model('Invoice_model', 'invoice_model');
         $lastinvoice =  $this->invoice_model->getlastInsert()[0];
-        $invoiceNumberParts = explode('-', $lastinvoice->invoice_number);
-        $nextInvoiceNumber = ((int) $invoiceNumberParts[1]) + 1;
-        $invoiceNumber = formatInvoiceNumber('INV-' . $nextInvoiceNumber);
+        if( $lastinvoice ){
+            $invoiceNumberParts = explode('-', $lastinvoice->invoice_number);
+            $nextInvoiceNumber = ((int) $invoiceNumberParts[1]) + 1;
+            $invoiceNumber = formatInvoiceNumber('INV-' . $nextInvoiceNumber);
+        }else{
+            $next_number = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $invoiceNumber = formatInvoiceNumber('INV-' . $next_number);
+        }        
 
         $this->page_data['job'] = $job;
         $this->page_data['customer'] = $customer;
+        $this->page_data['jobInvoice'] = $jobInvoice;
         $this->page_data['invoiceNumber'] = $invoiceNumber;
-
-        $this->page_data['page']->title = 'Create Invoice';
+        $this->page_data['invoice_id']    = $invoice_id;
+        $this->page_data['page']->title   = 'Create Invoice';
         $this->load->view('v2/pages/job/create_invoice', $this->page_data);
     }
 
