@@ -297,7 +297,7 @@
     </div>
 </div>
 
-<div id="receiptForwardingModal" class="modal fade modal-fluid receiptModal nsm-modal" role="dialog">
+<!-- <div id="receiptForwardingModal" class="modal fade modal-fluid receiptModal nsm-modal" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
@@ -336,4 +336,50 @@
         </div>
         </div>
     </div>
+</div> -->
+
+
+
+
+<div class="modal" id="receiptForwardingModal" role="dialog" data-bs-keyboard="true" aria-modal="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <span class="modal-title content-title" style="font-size: 17px;">Let's create your forwarding email</span>
+            <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+         </div>
+         <div class="modal-body" style="padding-top: 10px;">
+            <form id="reportSettingsForm" method="POST">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="row">
+                     <div class="col-md-12 mb-3">
+                            <span class="text-muted">Send receipts and bills to an email just for adi alarms.</span>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                           <label class="mb-1 fw-xnormal">Email Address</label>
+                              <input id="company_name" class="nsm-field form-control" type="text" name="company_name" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <span class="text-muted">Keep in mind that this email doesn't support auto-forwarding, so you'll need to send them directly. Be sure to forward receipts and bills from the email address you use to sign into nSmarTrac.</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <hr class="mt-0">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <div class="float-start">
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                     </div>
+                     <div class="float-end">
+                        <button type="submit" class="nsm-button primary settingsApplyButton">Next</button>
+                        <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
 </div>

@@ -611,5 +611,24 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();            
         }
+
+        // Get Invoices and Received Payments data in Database
+        if ($reportType == "invoices_and_payments") {
+            $this->db->select('invoices.id AS invoice_id, invoice_payments.id AS invoice_payment_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created, "%Y-%m-%d") AS date, "" AS transaction_type, "" AS memo_description, invoices.grand_total AS invoice_grand_total, invoices.id AS num, invoice_payments.amount AS payment_amount, DATE_FORMAT(invoices.date_created, "%Y-%m-%d") AS invoice_date, DATE_FORMAT(invoice_payments.date_created, "%Y-%m-%d") AS invoice_payment_date');
+            $this->db->from('invoices');
+            $this->db->join('invoice_payments', 'invoice_payments.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('invoice_payments.invoice_id !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('acs_profile.prof_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();            
+        }
     }
 }

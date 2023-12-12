@@ -288,4 +288,10 @@ select.docusignField__dropdown--isRequired {
     font-size: 14px !important;
     font-weight: bold;
 }
+.input-group-text {
+  background-color:transparent !important;
+  padding:0px;
+  border:0px;
+  /* text-align:left; */
+}
 /*# sourceMappingURL=docusign.css.map */
