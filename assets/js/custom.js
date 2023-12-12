@@ -3366,11 +3366,26 @@ $("#secondary_account_holder_signature3a").on("click touchstart", function () {
 
 //mobile
 
-$("#smoothed1am").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
+try {
+  $("#smoothed1am").signaturePad({
+    drawOnly: true,
+    drawBezierCurves: true,
+    lineTop: 200,
+  });
+
+  $("#smoothed2am").signaturePad({
+    drawOnly: true,
+    drawBezierCurves: true,
+    lineTop: 200,
+  });
+
+  $("#smoothed3am").signaturePad({
+    drawOnly: true,
+    drawBezierCurves: true,
+    lineTop: 200,
+  });
+} catch (e) {}
+
 $("#company_representative_approval_signature1aM").on("click touchstart",
   function () {
     // alert('yeah');
@@ -3383,22 +3398,12 @@ $("#company_representative_approval_signature1aM").on("click touchstart",
   }
 );
 
-$("#smoothed2am").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
 $("#primary_account_holder_signature2aM").on("click touchstart", function () {
   var canvas = document.getElementById("primary_account_holder_signature2aM");
   var dataURL = canvas.toDataURL("image/png");
   $("#savePrimaryAccountSignatureDB2aM").val(dataURL);
 });
 
-$("#smoothed3am").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
 $("#secondary_account_holder_signature3aM").on("click touchstart", function () {
   var canvas = document.getElementById("secondary_account_holder_signature3aM");
   var dataURL = canvas.toDataURL("image/png");

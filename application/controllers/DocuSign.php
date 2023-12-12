@@ -111,7 +111,8 @@ class DocuSign extends MYF_Controller
         $this->db->select('job_id');
         $this->db->where_in('user_docfile_recipient_id', $recipientIds);
         $jobId = $this->db->get('user_docfile_job_recipients')->row();
-        $jobId = is_null($jobId) ? null : $jobId->job_id;
+        //$jobId = is_null($jobId) ? null : $jobId->job_id;
+        $jobId = $document->job_id;
 
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
@@ -286,6 +287,54 @@ class DocuSign extends MYF_Controller
             return in_array($v, $acs_solar_info_accessKeys);
         }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_info_solar'] = $filteredAcs_solar;
+
+        #invoice details
+        if( $document->job_id > 0 ){
+            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost');
+            $this->db->where('job_id', $document->job_id);
+            $invoces = $this->db->get('invoices')->row();
+
+            $invoices_accessKeys = [
+                'inv_monthly_monitoring',
+                'inv_program_setup',
+                'inv_installation_cost',
+                'inv_subtotal',
+                'inv_equipment_cost',
+                'inv_taxes'
+            ];
+            
+            $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
+                return in_array($v, $invoices_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }elseif( $document->ticket_id > 0 ){
+            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost');
+            $this->db->where('ticket_id', $document->ticket_id);
+            $invoces = $this->db->get('invoices')->row();
+
+            $invoices_accessKeys = [
+                'inv_monthly_monitoring',                
+                'inv_program_setup',
+                'inv_installation_cost',
+                'inv_subtotal',
+                'inv_equipment_cost',
+                'taxes'
+            ];
+            
+            $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
+                return in_array($v, $invoices_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+           $filtered_invoice = [
+            'inv_monthly_monitoring' => 0,
+            'inv_program_setup' => 0,
+            'inv_installation_cost' => 0,
+            'inv_subtotal' => 0,
+            'inv_equipment_cost' => 0,
+            'inv_taxes' => 0
+           ];
+        }        
+        
+        $autoPopulateData['invoices'] = $filtered_invoice;
 
         #emergency primary contact
         $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone');
@@ -1691,11 +1740,17 @@ SQL;
         if( $payload['job_id'] > 0 ){
             $type = 'job';
             $object_id = $payload['job_id']; 
+        }else{
+            $type = 'job';
+            $object_id = $jobIdParam; 
         }
 
         if( $payload['ticket_id'] > 0 ){
             $type = 'ticket';
             $object_id = $payload['ticket_id']; 
+        }else{
+            $type = 'ticket';
+            $object_id = $ticketIdParam; 
         }
 
         if( $payload['workorder_id'] > 0 ){

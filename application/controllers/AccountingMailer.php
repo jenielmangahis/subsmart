@@ -78,6 +78,7 @@ class AccountingMailer extends MY_Controller{
             "statement_list",
             "bill_payment_list",
             "collections_report",
+            "invoices_and_payments",
         );
 
         // Conditional Statements on the array

@@ -232,6 +232,30 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="edit_update_header_modal" tabindex="-1" aria-labelledby="update_header_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Header</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="update_header_content" rows="5" id="edit-editor3" class="nsm-field form-control ckeditor">
+                            <?= isset($workorder) ? $workorder->header : ''; ?>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="workorder-edit-header" class="nsm-button primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="update_fields_modal" tabindex="-1" aria-labelledby="update_fields_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <form id="form_update_fields">
@@ -595,6 +619,30 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="edit_update_termscon_modal" tabindex="-1" aria-labelledby="edit_update_termscon_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Terms and Conditions</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="editor1" rows="5" id="editor1" class="nsm-field form-control ckeditor">
+                            <?= isset($workorder) ? $workorder->terms_and_conditions : ''; ?>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="workorder-edit-terms-conditions" class="nsm-button primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="update_termsuse_modal" tabindex="-1" aria-labelledby="update_termsuse_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form id="form_update_termsuse">
@@ -618,6 +666,30 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="edit_update_termsuse_modal" tabindex="-1" aria-labelledby="edit_update_termsuse_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Terms of Use</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="update_tu" rows="5" id="editor2" class="nsm-field form-control ckeditor">
+                            <?= isset($workorder) ? $workorder->terms_of_use : ''; ?>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="workorder-edit-terms-use" class="nsm-button primary">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 

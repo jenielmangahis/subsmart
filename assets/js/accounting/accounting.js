@@ -759,36 +759,36 @@ $(document).ready(function() {
     $(document).ready(function() {
         var fname = [];
         var selected = [];
-        var checkDropzone = new Dropzone('div#import_customer', {
-            url: siteURL + 'accounting/expensesTransactionAttachment',
-            // acceptedFiles: "image/*",
-            maxFilesize: 20,
-            addRemoveLinks: true,
+        // var checkDropzone = new Dropzone('div#import_customer', {
+        //     url: siteURL + 'accounting/expensesTransactionAttachment',
+        //     // acceptedFiles: "image/*",
+        //     maxFilesize: 20,
+        //     addRemoveLinks: true,
 
-            init: function() {
-                this.on("success", function(file, response) {
-                    fname.push(response.replace(/\"/g, ""));
-                    check_filename.push(response.replace(/\"/g, ""));
-                    selected.push(file);
-                    original_fname_check.push(file.name);
-                });
-            },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-                $.ajax({
-                    type: "POST",
-                    url: '/accounting/removeTransactionAttachment',
-                    data: { name: name, index: index },
-                    success: function(data) {}
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        //     init: function() {
+        //         this.on("success", function(file, response) {
+        //             fname.push(response.replace(/\"/g, ""));
+        //             check_filename.push(response.replace(/\"/g, ""));
+        //             selected.push(file);
+        //             original_fname_check.push(file.name);
+        //         });
+        //     },
+        //     removedfile: function(file) {
+        //         var name = fname;
+        //         var index = selected.map(function(d, index) {
+        //             if (d == file) return index;
+        //         }).filter(isFinite)[0];
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '/accounting/removeTransactionAttachment',
+        //             data: { name: name, index: index },
+        //             success: function(data) {}
+        //         });
+        //         //remove thumbnail
+        //         var previewElement;
+        //         return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        //     }
+        // });
     });
 
     //Bill Modal
@@ -1147,38 +1147,40 @@ $(document).ready(function() {
     $(document).ready(function() {
         var fname = [];
         var selected = [];
-        var billDropzone = new Dropzone('div#billAttachment', {
-            url: siteURL + 'accounting/expensesTransactionAttachment',
-            // acceptedFiles: "image/*",
-            maxFilesize: 20,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    fname.push(response.replace(/\"/g, ""));
-                    bill_filename.push(response.replace(/\"/g, ""));
-                    selected.push(file);
-                    original_fname_bill.push(file.name);
-                });
-            },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
 
-                $.ajax({
-                    type: "POST",
-                    url: '/accounting/removeTransactionAttachment',
-                    data: { name: name, index: index },
-                    success: function(data) {
+        // DISABLE TEMPORARY TO AVOID JS ERRORS
+        // var billDropzone = new Dropzone('div#billAttachment', {
+        //     url: siteURL + 'accounting/expensesTransactionAttachment',
+        //     // acceptedFiles: "image/*",
+        //     maxFilesize: 20,
+        //     addRemoveLinks: true,
+        //     init: function() {
+        //         this.on("success", function(file, response) {
+        //             fname.push(response.replace(/\"/g, ""));
+        //             bill_filename.push(response.replace(/\"/g, ""));
+        //             selected.push(file);
+        //             original_fname_bill.push(file.name);
+        //         });
+        //     },
+        //     removedfile: function(file) {
+        //         var name = fname;
+        //         var index = selected.map(function(d, index) {
+        //             if (d == file) return index;
+        //         }).filter(isFinite)[0];
 
-                    }
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '/accounting/removeTransactionAttachment',
+        //             data: { name: name, index: index },
+        //             success: function(data) {
+
+        //             }
+        //         });
+        //         //remove thumbnail
+        //         var previewElement;
+        //         return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        //     }
+        // });
     });
 
 
@@ -1534,37 +1536,39 @@ $(document).ready(function() {
     $(document).ready(function() {
         var fname = [];
         var selected = [];
-        var expenseDropzone = new Dropzone('div#expenseAttachment', {
-            url: siteURL + 'accounting/expensesTransactionAttachment',
-            // acceptedFiles: "image/*",
-            maxFilesize: 20,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    fname.push(response.replace(/\"/g, ""));
-                    expense_filename.push(response.replace(/\"/g, ""));
-                    selected.push(file);
-                    original_fname_expense.push(file.name);
-                });
-            },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-                $.ajax({
-                    type: "POST",
-                    url: '/accounting/removeTransactionAttachment',
-                    data: { name: name, index: index },
-                    success: function(data) {
 
-                    }
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        // DISABLE TEMPORARY TO AVOID JS ERRORS
+        // var expenseDropzone = new Dropzone('div#expenseAttachment', {
+        //     url: siteURL + 'accounting/expensesTransactionAttachment',
+        //     // acceptedFiles: "image/*",
+        //     maxFilesize: 20,
+        //     addRemoveLinks: true,
+        //     init: function() {
+        //         this.on("success", function(file, response) {
+        //             fname.push(response.replace(/\"/g, ""));
+        //             expense_filename.push(response.replace(/\"/g, ""));
+        //             selected.push(file);
+        //             original_fname_expense.push(file.name);
+        //         });
+        //     },
+        //     removedfile: function(file) {
+        //         var name = fname;
+        //         var index = selected.map(function(d, index) {
+        //             if (d == file) return index;
+        //         }).filter(isFinite)[0];
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '/accounting/removeTransactionAttachment',
+        //             data: { name: name, index: index },
+        //             success: function(data) {
+
+        //             }
+        //         });
+        //         //remove thumbnail
+        //         var previewElement;
+        //         return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        //     }
+        // });
     });
 
     // Vendor Credit
@@ -1908,35 +1912,37 @@ $(document).ready(function() {
     $(document).ready(function() {
         var fname = [];
         var selected = [];
-        var vcDropzone = new Dropzone('div#vcAttachment', {
-            url: siteURL + 'accounting/expensesTransactionAttachment',
-            // acceptedFiles: "image/*",
-            maxFilesize: 20,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    fname.push(response.replace(/\"/g, ""));
-                    vc_filename.push(response.replace(/\"/g, ""));
-                    selected.push(file);
-                    original_fname_vc.push(file.name);
-                });
-            },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-                $.ajax({
-                    type: "POST",
-                    url: '/accounting/removeTransactionAttachment',
-                    data: { name: name, index: index },
-                    success: function(data) {}
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+
+        // DISABLE TEMPORARY TO AVOID JS ERRORS
+        // var vcDropzone = new Dropzone('div#vcAttachment', {
+        //     url: siteURL + 'accounting/expensesTransactionAttachment',
+        //     // acceptedFiles: "image/*",
+        //     maxFilesize: 20,
+        //     addRemoveLinks: true,
+        //     init: function() {
+        //         this.on("success", function(file, response) {
+        //             fname.push(response.replace(/\"/g, ""));
+        //             vc_filename.push(response.replace(/\"/g, ""));
+        //             selected.push(file);
+        //             original_fname_vc.push(file.name);
+        //         });
+        //     },
+        //     removedfile: function(file) {
+        //         var name = fname;
+        //         var index = selected.map(function(d, index) {
+        //             if (d == file) return index;
+        //         }).filter(isFinite)[0];
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '/accounting/removeTransactionAttachment',
+        //             data: { name: name, index: index },
+        //             success: function(data) {}
+        //         });
+        //         //remove thumbnail
+        //         var previewElement;
+        //         return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        //     }
+        // });
     });
 
     $(document).on('click', '#removeAttachment', function() {

@@ -76,15 +76,19 @@ function workordermodule__formatWorkOrderNumber($number) {
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Sort by Date Issued: Newest</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Sort by <?= $sort_selected; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=amount-asc">Amount : Lowest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=amount-desc">Amount: Highest</a></li>
+
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-issued-desc">Date Issued: Newest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-issued-asc">Date Issued: Oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-desc">Scheduled Date: Newest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-asc">Scheduled Date: Oldest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-desc">Completed Date: Newest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-asc">Completed Date: Oldest</a></li>
+                                <!-- <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-desc">Scheduled Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=event-date-asc">Scheduled Date: Oldest</a></li> -->
+
+                                <!-- <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-desc">Completed Date: Newest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=date-completed-asc">Completed Date: Oldest</a></li> -->
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=number-asc">Work Order #: A to Z</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=number-desc">Work Order #: Z to A</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>?order=priority-asc">Priority: A to Z</a></li>
@@ -121,16 +125,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                         </div>
                     </div>
                 </div>
+                
                 <table class="nsm-table" id="workorder-list">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Work Order Number">Work Order Number</td>
-                            <td data-name="Date Issued">Date Created</td>
+                            <td data-name="Work Order Number">Work Order Number</td>                            
                             <td data-name="Customer">Customer</td>
                             <td data-name="Employees">Employees</td>
+                            <td data-name="Total">Amount</td>
                             <td data-name="Priority">Priority</td>
                             <td data-name="Status">Status</td>
+                            <td data-name="Date Created">Date Created</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -189,8 +195,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     <td>
                                         <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?= workordermodule__formatWorkOrderNumber($workorder->work_order_number) ?></td>
-                                    <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
+                                    <td class="fw-bold nsm-text-primary" style="width:10%;"><?= workordermodule__formatWorkOrderNumber($workorder->work_order_number) ?></td>
                                     <td>
                                         <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
                                         <?php 
@@ -217,8 +222,10 @@ function workordermodule__formatWorkOrderNumber($number) {
                                         </label>
                                     </td>
                                     <td><?php echo get_user_by_id($workorder->employee_id)->FName . ' ' . get_user_by_id($workorder->employee_id)->LName ?></td>
+                                    <td>$<?= number_format($workorder->grand_total, 2); ?></td>
                                     <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
                                     <td><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
+                                    <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
