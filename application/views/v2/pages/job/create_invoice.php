@@ -70,22 +70,26 @@
                         </div>
                         <div class="col-md-4">
                             <label>Invoice #</label>
-                            <input class="form-control" id="invoice_number_display" readonly value="<?php echo $invoiceNumber; ?>">
+                            <input class="form-control" id="invoice_number_display" readonly value="<?php echo $invoiceNumber; ?>" required="">
                         </div>
                     </div>
 
                     <div class="row form-group mb-3">
                         <div class="col-md-4">
                             <label>PO #</label>
-                            <input id="po_number" class="form-control">
+                            <input id="po_number" class="form-control" required="">
                         </div>
                         <div class="col-md-4">
                             <label>Date Issued</label>
-                            <input type="date" class="form-control" id="date-issued">
+                            <input type="date" class="form-control" id="date-issued" required="">
                         </div>
                         <div class="col-md-4">
                             <label>Due Date</label>
-                            <input type="date" class="form-control" id="due-date">
+                            <input type="date" class="form-control" id="due-date" required="">
+                        </div>
+                        <div class="col-md-4">
+                            <label>Send tip amount to assigned technician </label>
+                            <input id="tip" type="number" min=0 step="any" value="0" class="form-control">
                         </div>
                     </div>
 
@@ -161,6 +165,31 @@
                         <a href="#" class="nsm-link" data-bs-target="#createinvoiceforjobitemsmodal" data-bs-toggle="modal">Add another item</a>
                     </div> -->
                     <div class="offset-md-8 col-md-4">
+                        <?php 
+                            $installation_cost = 0;
+                            if (isset($workorder) && $workorder->installation_cost) {
+                                $installation_cost = $workorder->installation_cost;
+                            }elseif( $jobPayments && $jobPayments->installation_cost > 0 ){
+                                $installation_cost = $jobPayments->installation_cost;
+                            }
+
+                            $otp_setup = 0;
+                            if (isset($workorder) && $workorder->otp_setup) {
+                                $otp_setup = $workorder->otp_setup;
+                            }elseif( $jobPayments && $jobPayments->program_setup > 0 ){
+                                $otp_setup = $jobPayments->program_setup;
+                            }
+
+                            $monthly_monitoring = 0;
+                            if (isset($workorder) && $workorder->monthly_monitoring){
+                                $monthly_monitoring = $workorder->monthly_monitoring;
+                            }elseif( $jobPayments && $jobPayments->monthly_monitoring > 0 ){
+                                $monthly_monitoring = $jobPayments->monthly_monitoring;
+                            }
+                        ?> 
+                        <input id="adjustment_ic" type="hidden" value="<?= $installation_cost; ?>">
+                        <input id="adjustment_otps" type="hidden" value="<?= $otp_setup; ?>">
+                        <input id="adjustment_mm" type="hidden" value="<?= $monthly_monitoring; ?>">
                         <table class="table table-borderless">
                             <tr>
                                 <td>
@@ -179,78 +208,38 @@
                                     <input id="default_tax" type="hidden" value="<?= $job->tax_rate; ?>">
                                 </td>
                             </tr>
-                            <?php if (isset($workorder) && $workorder->installation_cost) { ?>
+                            <?php if ( $installation_cost > 0 ) { ?>
                                 <tr>
                                     <td>
                                         <span>Installation Cost</span>
                                     </td>
                                     <td>
-                                        <span>$ <?= number_format((float) $workorder->installation_cost, 2); ?></span>
-                                        <input id="adjustment_ic" type="hidden" value="<?= $workorder->installation_cost; ?>">
+                                        <span>$ <?= number_format((float) $installation_cost, 2); ?></span>                                        
                                     </td>
                                 </tr>
-                            <?php }elseif( $jobPayments && $jobPayments->installation_cost > 0 ){ ?>
-                                <tr>
-                                    <td>
-                                        <span>Installation Cost</span>
-                                    </td>
-                                    <td>
-                                        <span>$ <?= number_format((float) $jobPayments->installation_cost, 2); ?></span>
-                                        <input id="adjustment_ic" type="hidden" value="<?= $jobPayments->installation_cost; ?>">
-                                    </td>
-                                </tr>
-                            <?php }else{ ?>
-                                <input id="adjustment_ic" type="hidden" value="0">
                             <?php } ?>
 
-                            <?php if (isset($workorder) && $workorder->otp_setup) { ?>
+                            <?php if ( $otp_setup > 0 ) { ?>
                                 <tr>
                                     <td>
                                         <span>One time (Program and Setup)</span>
                                     </td>
                                     <td>
-                                        <span>$ <?= number_format((float) $workorder->otp_setup, 2); ?></span>
-                                        <input id="adjustment_otps" type="hidden" value="<?= $workorder->otp_setup; ?>">
+                                        <span>$ <?= number_format((float) $otp_setup, 2); ?></span>
                                     </td>
                                 </tr>
-                            <?php }elseif( $jobPayments && $jobPayments->program_setup > 0 ){ ?>
-                                <tr>
-                                    <td>
-                                        <span>One time (Program and Setup)</span>
-                                    </td>
-                                    <td>
-                                        <span>$ <?= number_format((float) $jobPayments->program_setup, 2); ?></span>
-                                        <input id="adjustment_otps" type="hidden" value="<?= $jobPayments->program_setup; ?>">
-                                    </td>
-                                </tr>
-                            <?php }else{ ?>
-                                <tr><td><input id="adjustment_otps" type="hidden" value="0"></td></tr>
                             <?php } ?>
 
-                            <?php if (isset($workorder) && $workorder->monthly_monitoring){ ?>
+                            <?php if ( $monthly_monitoring > 0 ){ ?>
                                 <tr>
                                     <td>
                                         <span>Monthly Monitoring</span>
                                     </td>
                                     <td>
-                                        <span>$ <?= number_format((float) $workorder->monthly_monitoring, 2); ?></span>
-                                        <input id="adjustment_mm" type="hidden" value="<?= $workorder->monthly_monitoring; ?>">
+                                        <span>$ <?= number_format((float) $monthly_monitoring, 2); ?></span>
                                     </td>
                                 </tr>
-                            <?php }elseif( $jobPayments && $jobPayments->monthly_monitoring > 0 ){ ?>
-                                <tr>
-                                    <td>
-                                        <span>Monthly Monitoring</span>
-                                    </td>
-                                    <td>
-                                        <span>$ <?= number_format((float) $jobPayments->monthly_monitoring, 2); ?></span>
-                                        <input id="adjustment_mm" type="hidden" value="<?= $jobPayments->monthly_monitoring; ?>">
-                                    </td>
-                                </tr>
-                            <?php }else{ ?>
-                                <tr><td><input id="adjustment_mm" type="hidden" value="0"></td></tr>
                             <?php } ?>
-
                             <tr>
                                 <td>
                                     <span style="color:blue;">Grand Total</span>
@@ -275,7 +264,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
                                 </div>
-                                <input type="number" min="0" step="any" id="deposit-amount-value" name="deposit_amount" class="form-control" autocomplete="off">
+                                <input type="number" min="0" value="0" step="any" id="deposit-amount-value" name="deposit_amount" class="form-control" autocomplete="off">
                             </div>
                         </div>
                         <!-- <div class="col-md-4 form-group">

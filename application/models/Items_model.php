@@ -566,6 +566,17 @@ class Items_model extends MY_Model
         return $query->row();
     }
 
+    public function getCompanyOffercode($offer_code, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_offer_code);
+        $this->db->where('offer_code', $offer_code);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function changeRebate($data)
     {
         extract($data);

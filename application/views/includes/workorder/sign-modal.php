@@ -18,12 +18,12 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <a class="link" href="#" data-action="clear">Clear</a>
+            <a class="link nsm-button default" href="#" data-action="clear">Clear</a>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button primary" data-action="save">Add signature</button>
+        <button type="button" class="nsm-button" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -49,12 +49,12 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <a class="link" href="#" data-action="clear">Clear</a>
+            <a class="link nsm-button default" href="#" data-action="clear">Clear</a>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button primary" data-action="save">Add signature</button>
+        <button type="button" class="nsm-button" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -80,12 +80,12 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <a class="link" href="#" data-action="clear">Clear</a>
+            <a class="link nsm-button default" href="#" data-action="clear">Clear</a>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-action="save">Add signature</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button primary" data-action="save">Add signature</button>
+        <button type="button" class="nsm-button" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

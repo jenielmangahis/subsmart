@@ -308,12 +308,12 @@
                                             <div class="col-12 col-md-6 d-flex align-items-center">
                                                 <label class="content-title">Item Summary</label>
                                             </div>
-                                            <div class="col-12 col-md-6 text-end">
+                                            <!-- <div class="col-12 col-md-6 text-end">
                                                 <label class="content-subtitle fw-bold me-2">Show as:</label>
                                                 <select class="nsm-field form-select w-auto d-inline-block">
                                                     <option>Quantity</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                             <div class="col-12">
                                                 <input type="hidden" name="count" id="count" value="0">                                                
                                                 <table class="table table-hover">
@@ -338,9 +338,9 @@
                                             <div class="col-12 col-md-8">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <button type="button" class="nsm-button ms-0" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-fw bx-plus-circle'></i> Add Items</button>
-                                                        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_by_group_modal"><i class='bx bx-fw bx-plus-circle'></i> Add By Group</button>
-                                                        <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#package_modal"><i class='bx bx-fw bx-plus-circle'></i> Add/Create Package</button>
+                                                        <button type="button" class="nsm-button ms-0 mb-4" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-fw bx-plus-circle'></i> Add Items</button>
+                                                        <!-- <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_by_group_modal"><i class='bx bx-fw bx-plus-circle'></i> Add By Group</button> -->
+                                                        <!-- <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#package_modal"><i class='bx bx-fw bx-plus-circle'></i> Add/Create Package</button> -->
                                                     </div>
                                                     <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Enter an offer code</label>
@@ -356,14 +356,14 @@
                                                     </div>
                                                     <div class="col-12 col-md-6 text-end">
                                                         $ <span id="span_sub_total_invoice">0.00</span>
-                                                        <input type="hidden" name="subtotal" id="item_total" />
+                                                        <input type="hidden" name="subtotal" id="item_total" value="0" />
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <label class="content-title">Taxes</label>
                                                     </div>
                                                     <div class="col-12 col-md-6 text-end">
                                                         $ <span id="total_tax_">0.00</span>
-                                                        <input type="hidden" name="taxes" id="total_tax_input" />
+                                                        <input type="hidden" name="taxes" id="total_tax_input" value="0" />
                                                     </div>
                                                     <div class="col-12 col-md-6 d-flex align-items-center">
                                                         <input type="text" class="nsm-field form-control" placeholder="Adjustment Name" name="adjustment_name" id="adjustment_name" style="border: 1px dashed #d1d1d1;">                                                        
@@ -861,7 +861,7 @@
 
                                         <label for="comp_rep_approval">Printed Name</label>
                                         <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                            id="primary_account_holder_name" placeholder=""/>
+                                            id="primary_account_holder_name" placeholder="" required="" />
                                         <!-- <select class="form-control mb-3" name="primary_account_holder_name">
                                                 <option value="0">Select Name</option>
                                                 <?php //foreach($users_lists as $ulist){ ?>
@@ -885,7 +885,7 @@
 
                                         <label for="comp_rep_approval">Printed Name</label>
                                         <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                            id="secondery_account_holder_name" placeholder=""/>
+                                            id="secondery_account_holder_name" placeholder="" required="" />
                                             <!-- <select class="form-control mb-3" name="secondery_account_holder_name">
                                                 <option value="0">Select Name</option>
                                                 <?php //foreach($users_lists as $ulist){ ?>
@@ -957,7 +957,7 @@
                     </div>
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
-                        <button type="button" class="nsm-button">Save Template</button>
+                        <!-- <button type="button" class="nsm-button">Save Template</button> -->
                         <button type="submit" class="nsm-button primary">Submit</button>
                     </div>
                 </div>

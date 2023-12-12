@@ -2593,7 +2593,13 @@ class Workorder_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
-    
+
+    public function cloneData($data){
+        unset($data->id);
+        $this->db->insert('work_orders',$data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
 }
 
 /* End of file Workorder_model.php */

@@ -118,34 +118,52 @@ class Workorder extends MY_Controller
 
         $order = $this->input->get();
         $sort  = ['field' => 'id', 'order' => 'desc'];
+        $sort_selected = 'Date Issued: Newest';
         if( isset($order['order']) ){
             switch ($order['order']) {
+                case 'amount-asc':
+                    $sort = ['field' => 'grand_total', 'order' => 'asc'];
+                    $sort_selected = 'Amount : Lowest';
+                    break;
+                case 'amount-desc':
+                    $sort = ['field' => 'grand_total', 'order' => 'desc'];
+                    $sort_selected = 'Amount: Highest';
+                    break;
                 case 'date-issued-asc':
                     $sort = ['field' => 'date_created', 'order' => 'asc'];
+                    $sort_selected = 'Date Issued: Oldest';
                     break;
                 case 'date-issued-desc':
                     $sort = ['field' => 'date_created', 'order' => 'desc'];
+                    $sort_selected = 'Date Issued: Newest';
                     break;
                 case 'number-asc':
                     $sort = ['field' => 'work_order_number', 'order' => 'asc'];
+                    $sort_selected = 'Work Order #: A to Z';
                     break;
                 case 'number-desc':
                     $sort = ['field' => 'work_order_number', 'order' => 'desc'];
+                    $sort_selected = 'Work Order #: Z to A';
                     break;
                 case 'event-date-asc':
                     $sort = ['field' => 'date_issued', 'order' => 'asc'];
+                    $sort_selected = 'Date Issued: Oldest';
                     break;
                 case 'event-date-desc':
                     $sort = ['field' => 'date_issued', 'order' => 'desc'];
+                    $sort_selected = 'Scheduled Date: Newest';
                     break;
                 case 'priority-asc':
                     $sort = ['field' => 'priority', 'order' => 'asc'];
+                    $sort_selected = 'Priority: A to Z';
                     break;
                 case 'priority-desc':
                     $sort = ['field' => 'priority', 'order' => 'desc'];
+                    $sort_selected = 'Priority: Z to A';
                     break;
                 default:
                     $sort = ['field' => 'id', 'order' => 'desc'];
+                    $sort_selected = 'Date Issued: Newest';
                     break;
             }
         }
@@ -204,6 +222,7 @@ class Workorder extends MY_Controller
 //        print_r($this->page_data['workorders']); die;
 
         $this->page_data['tab_status'] = $workorder_status;
+        $this->page_data['sort_selected'] = $sort_selected;
         $this->load->view('v2/pages/workorder/list', $this->page_data);
     }
 
@@ -618,7 +637,7 @@ class Workorder extends MY_Controller
 
 
     public function view($id)
-    {
+    {        
         // dd('test');
         $company_id = logged('company_id');
 
@@ -670,7 +689,8 @@ class Workorder extends MY_Controller
 
         // print_r($this->page_data['items']);
         add_footer_js('assets/js/esign/docusign/workorder.js');
-        $this->load->view('workorder/view_v1', $this->page_data);
+        //$this->load->view('workorder/view_v1', $this->page_data);
+        $this->load->view('v2/pages/workorder/view', $this->page_data);
     }
 
     public function printSolar($id)
@@ -756,32 +776,46 @@ class Workorder extends MY_Controller
 
     public function edit($id)
     {
-        $company_id = logged('company_id');
-        $user_id = logged('id');
-        $parent_id = $this->db->query("select id from users where id=$user_id")->row();
-        $workOrder = $this->workorder_model->getById($id);
+        $this->load->model('AcsProfile_model');
 
-        if ($parent_id->parent_id == 1) {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        } else {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        }
+        $company_id = logged('company_id');
+        $user_id    = logged('id');
+        $parent_id  = $this->db->query("select id from users where id=$user_id")->row();
+        $workOrder  = $this->workorder_model->getById($id);
+        // $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
+
+        // $checkLists = array();
+        // $workorrder_checklists = unserialize($workOrder->checklists);
+        // $selected_checklists    = array();
+        // if( !empty($workorrder_checklists) ){
+        //     foreach( $checkListsHeader as $h ){
+        //         if( in_array($h->id, $workorrder_checklists) ){
+        //             $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
+        //         }   
+        //         $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+        //         $checklists[] = ['header' => $h, 'items' => $checklistItems];
+        //     }
+        // }
 
         $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
-
-        $checkLists = array();
-        $workorrder_checklists = unserialize($workOrder->checklists);
-        $selected_checklists    = array();
-        if( !empty($workorrder_checklists) ){
-            foreach( $checkListsHeader as $h ){
-                if( in_array($h->id, $workorrder_checklists) ){
+        $workorder_checklists = unserialize($workOrder->checklists);
+        $selected_checklists  = array();
+        $checklists = array();
+        foreach( $checkListsHeader as $h ){
+            $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+            $checklists[$h->id]['header'] = ['name' => $h->checklist_name, 'id' => $h->id];
+            $checklists[$h->id]['items']  = $checklistItems;    
+            if( !empty($workorder_checklists) ){
+                if( in_array($h->id, $workorder_checklists) ){
                     $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
-                }   
-                $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
-                $checklists[] = ['header' => $h, 'items' => $checklistItems];
+                }  
+            
             }
         }
 
+        $customer = $this->AcsProfile_model->getByProfId($workOrder->customer_id);
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        $this->page_data['customer'] = $customer;
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['checklists'] = $checklists;
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
@@ -797,21 +831,18 @@ class Workorder extends MY_Controller
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
         $this->page_data['payment'] = $this->workorder_model->getpayment($id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
 
         $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
+        // foreach ($this->page_data['workorder'] as $key => $workorder) {
 
-        foreach ($this->page_data['workorder'] as $key => $workorder) {
+        //     if (is_serialized($workorder)) {
 
-            if (is_serialized($workorder)) {
-
-                $this->page_data['workorder']->$key = unserialize($workorder);
-            }
-        }
-
-//         echo '<pre>'; print_r($this->page_data['workorder']); die;
-
-        // print_r($this->page_data['customer']);
-        $this->load->view('workorder/edit', $this->page_data);
+        //         $this->page_data['workorder']->$key = unserialize($workorder);
+        //     }
+        // }
+        //$this->load->view('workorder/edit', $this->page_data);
+        $this->load->view('v2/pages/workorder/edit', $this->page_data);
     }
 
     public function invoice_workorder($id)
@@ -5312,7 +5343,8 @@ class Workorder extends MY_Controller
     }
 
     public function addNewPackageToList()
-    {
+    {        
+
         $dataQuery = $this->input->post('packId');
 
         $details = $this->workorder_model->getPackageDetails($dataQuery);
@@ -5327,101 +5359,48 @@ class Workorder extends MY_Controller
 
     public function duplicate_workorder()
     {
+        $this->load->model('WorkorderSettings_model');
+
         $company_id     = getLoggedCompanyID();
-        // $user_id        = getLoggedUserID();
         $user_id        = logged('id');
-        $wo_num = $this->input->post('wo_num');
+        $wo_num         = $this->input->post('wo_num');
 
-        $datas = $this->workorder_model->getDataByWO($wo_num);
+        $datas      = $this->workorder_model->getDataByWO($wo_num);        
+        $clone_id   = $this->workorder_model->cloneData($datas);
+        $clonedData = $this->workorder_model->getDataByWO($clone_id);
 
-        $number = $this->workorder_model->getlastInsert($company_id);
-        foreach ($number as $num){
-            $next = $num->work_order_number;
-            $arr = explode("-", $next);
-            $date_start = $arr[0];
-            $nextNum = $arr[1];
-            //echo $number;
+        //Generate Workorder Number
+        $setting = $this->WorkorderSettings_model->getByCompanyId($company_id);
+        if( $setting ){
+            $next_num = $setting->work_order_num_next;
+            $prefix   = $setting->work_order_num_prefix;
+        }else{
+            $lastInsert = $this->workorder_model->getLastInsertByCompanyId($company_id);
+            if( $lastInsert ){
+                $next_num = $lastInsert->id + 1;
+            }else{
+                $next_num = 1;
+            }
+            $prefix = 'WO-';            
         }
-        $val = $nextNum + 1;
-        $work_order_number = 'WO-'.str_pad($val,7,"0",STR_PAD_LEFT);
 
-        $new_data = array(
-            'work_order_number'                     => $work_order_number,
-            'customer_id'                           => $datas->customer_id,
-            'security_number'                       => $datas->security_number,
-            'birthdate'                             => $datas->birthdate,
-            'phone_number'                          => $datas->phone_number,
-            'mobile_number'                         => $datas->mobile_number,
-            'email'                                 => $datas->email,
-            'job_location'                          => $datas->job_location,
-            'city'                                  => $datas->city,
-            'state'                                 => $datas->state,
-            'zip_code'                              => $datas->zip_code,
-            'cross_street'                          => $datas->cross_street,
-            'password'                              => $datas->password,
-            'offer_code'                            => $datas->offer_code,//
-            'tags'                                  => $datas->tags,
-            'date_issued'                           => $datas->date_issued,
-            'job_type'                              => $datas->job_type,
-            'job_name'                              => $datas->job_name,
-            'job_description'                       => $datas->job_description,
-            'payment_method'                        => $datas->payment_method,
-            'payment_amount'                        => $datas->payment_amount,
-            'lead_source_id'                        => $datas->lead_source_id,
-            'terms_and_conditions'                  => $datas->terms_and_conditions,
-            'status'                                => $datas->status,
-            'priority'                              => $datas->priority,
-            'po_number'                             => $datas->po_number,
-            'terms_of_use'                          => $datas->terms_of_use,
-            'instructions'                          => $datas->instructions,
-            'header'                                => $datas->header,
+        $wo_id = str_pad($next_num, 7, "0", STR_PAD_LEFT);
+        $work_order_number  = $prefix . $wo_id;
+        $this->workorder_model->update($clonedData->id, ['work_order_number' => $work_order_number]);
 
-            //signature
-            'company_representative_signature'      => $datas->company_representative_signature,
-            'company_representative_name'           => $datas->company_representative_name,
-            'primary_account_holder_signature'      => $datas->primary_account_holder_signature,
-            'primary_account_holder_name'           => $datas->primary_account_holder_name,
-            'secondary_account_holder_signature'    => $datas->secondary_account_holder_signature,
-            'secondary_account_holder_name'         => $datas->secondary_account_holder_name,
+        customerAuditLog($user_id, $datas->customer_id, $wo_num, 'Workorder', 'Cloned workorder #'.$datas->work_order_number);
 
-            // 'company_representative_signature' => 'company_representative_signature',
-            // 'company_representative_name' => 'company_representative_name',
-            // 'primary_account_holder_signature' => 'primary_account_holder_signature',
-            // 'primary_account_holder_name' => 'primary_account_holder_name',
-            // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
-            // 'secondary_account_holder_name' => 'secondary_account_holder_name',
-            
-
-            //attachment
-            // 'attached_photo' => $this->input->post('attached_photo'),
-            // 'document_links' => $this->input->post('document_links'),
-            'attached_photo'                        => 'attached_photo',
-            'document_links'                        => 'document_links',
-
-            // 'subtotal'                              => $datas->password,
-            // 'taxes'                                 => $datas->password,
-            // 'adjustment_name'                       => $datas->password,
-            // 'adjustment_value'                      => $this->input->post('adjustment_value'),
-            // 'voucher_value'                         => $this->input->post('voucher_value'),
-            // 'grand_total'                           => $this->input->post('grand_total'),
-
-            'employee_id'                           => $user_id,
-            'is_template'                           => $datas->is_template,
-            'company_id'                            => $company_id,
-            'date_created'                          => date("Y-m-d H:i:s"),
-            'date_updated'                          => date("Y-m-d H:i:s"),
-            'work_order_type_id'                    => $datas->work_order_type_id,
-        );
-
-        $new_workorder_id = $this->workorder_model->save_workorder($new_data);
-
-        customerAuditLog(logged('id'), $datas->customer_id, $datas->id, 'Workorder', 'Cloned workorder #'.$datas->work_order_number);
+        //Update workorder setting
+        if( $setting ){
+            $workorder_setting = ['work_order_num_next' => $next_num + 1];
+            $this->WorkorderSettings_model->update($setting->id, $workorder_setting);
+        }
 
         //Get Workorder items
-        $workorderItems = $this->workorder_model->getworkorderItems($new_workorder_id);
+        $workorderItems = $this->workorder_model->getworkorderItems($datas->id);
         foreach( $workorderItems as $i ){
             $data_items = [
-                'work_order_id' => $new_workorder_id,
+                'work_order_id' => $clonedData->id,
                 'items_id' => $i->items_id,
                 'package_id' => $i->package_id,
                 'qty' => $i->qty,
@@ -5433,15 +5412,6 @@ class Workorder extends MY_Controller
             
             $this->workorder_model->add_work_order_details($data_items);
         }
-        // if($datas->is_template == 2)
-        // {
-        //     $payment_data = array(
-        //                 'payment_method' => $this->input->post('payment_method'),
-        //                 'amount' => $this->input->post('payment_amount'),
-        //             );
-        
-        //     $pay = $this->workorder_model->save_payment($payment_data);
-        // }
     }
 
     public function UpdateWorkorder(){
@@ -12194,6 +12164,47 @@ class Workorder extends MY_Controller
 
         $json_data = ['is_valid' => $is_valid, 'cost' => $cost];
 
+        echo json_encode($json_data);
+    }
+
+    public function ajax_shareable_email()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $post = $this->input->post();
+        $is_success = 1;
+        $msg = 'Cannot send email';
+
+        if( $post['email_content'] == '' ){
+            $msg = 'Please enter email content';
+            $is_success = 0;
+        }
+
+        $workorder = $this->workorder_model->getById($post['wid']);
+        $customer  = $this->AcsProfile_model->getByProfId($workorder->customer_id);
+        if( $is_success == 1 ){            
+            if( $customer && $customer->email != '' ){
+                $company = $this->Business_model->getById($workorder->company_id);
+                //Send Email
+                $subject = $company->business_name.': Workorder #'.$workorder->work_order_number;
+                $mail = email__getInstance();
+                $mail->FromName = 'nSmarTrac';
+                $mail->addAddress($customer->email, $customer->email);
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body    = $post['email_content'];
+                $sendEmail = $mail->Send();
+                
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find customer email';
+            }
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 }

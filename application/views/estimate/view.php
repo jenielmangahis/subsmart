@@ -160,18 +160,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <?php $ia++; } ?>                        
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Subtotal</p></td>
-                              <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->sub_total, 2); ?></p></td>
+                              <td colspan="2" style="text-align: ;">Subtotal</td>
+                              <td colspan="1" style="text-align: right;">$<?= number_format((float)$estimate->sub_total, 2); ?></td>
                             </tr>                            
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Deposit Amount</p></td>
-                              <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->deposit_amount, 2); ?></p></td>
+                              <td colspan="2" style="text-align: ;">Deposit Amount</td>
+                              <td colspan="1" style="text-align: right;">$<?= number_format((float)$estimate->deposit_amount, 2); ?></td>
                             </tr>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
-                              <td colspan="1" style="text-align: right;"><p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
+                              <td colspan="2" style="text-align: ;">Taxes</td>
+                              <td colspan="1" style="text-align: right;">$<?= number_format((float)$estimate->tax1_total, 2); ?></td>
                             </tr>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>

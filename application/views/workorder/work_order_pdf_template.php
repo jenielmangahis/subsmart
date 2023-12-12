@@ -24,49 +24,47 @@ table {
         </div>
 
         <div class="" style="float: right;">
-            <h3>WORK ORDER <br> # <?php echo $workorder; ?></h3>
-            <br>
+            <h3 style="margin:0px;"><?php echo $workorder; ?></h3>
             Job Tags: <?php echo $tags; ?> <br>
             Date Issued: <?php echo $wDate = $date_issued; ?> <br>
             Priority: <?php echo $priority; ?> <br>
             Password: <?php echo $password; ?> <br>
             Security Number: <?php echo $security_number; ?> <br>
-            <!-- Custom Field: <?php //echo $security_number; ?> <br> -->
-            Source: <?php echo $source_name; ?> <br>
             Agent: <?php echo $first->FName.' '.$first->LName; ?> <br>
             <!-- Contacts: <br> -->
 				
         </div>
 
 
-        <div style="padding: 2%;">
+        <div style="padding:20px 0px;">
         <!-- <img src="<?php echo base_url('uploads/users/business_profile/'.$company_id.'/'.$business_logo); ?>" style="width:110px;height:80px;"> -->
-         <img src="https://nsmartrac.com/uploads/users/business_profile/8/new_adi_logo.png?1674178408" style="width:110px;height:80px;">
+        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 300px;margin:0px;" />
         </div>
-
+        <div style="clear:both;"></div>
         <div style="margin-top:5%">
+            <table style="width:100%;">
+                <tr>
+                    <td style="vertical-align:top;">
+                        <b>FROM:</b><br>
+                        <!-- <hr style="width: 50% !important; align:left !important;"> -->
+                        <?php echo $company; ?><br>
+                        <?php echo $business_address; ?><br>
+                        <?php echo $bussiness_email; ?><br>
+                        Phone: <?php echo $phone_number; ?><br><br>
+                    </td>
+                    <td style="vertical-align:top;">
+                        <b>TO:</b><br>
+                        <!-- <hr style="width: 50% !important; align:left !important;"> -->
+                        <?php echo $acs_name; ?><br>
+                        <?php if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
+                        <?php if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
+                        Email: <?php echo $email; ?><br>
+                        Phone: <?php echo $phone; ?><br>
+                        Mobile: <?php echo $mobile; ?><br><br>
+                    </td>
 
-            <div>
-                <b>FROM:</b><br>
-                <!-- <hr style="width: 50% !important; align:left !important;"> -->
-                <?php echo $company; ?><br>
-                License: <?php echo $business_address; ?><br>
-                <?php echo $business_address; ?><br>
-                Phone: <?php echo $phone_number; ?><br><br>
-            </div>
-
-            <div>
-                <b>CUSTOMER:</b><br>
-                <!-- <hr style="width: 50% !important; align:left !important;"> -->
-                <?php echo $acs_name; ?><br>
-                <?php if(!empty($business_name)){ echo $business_name.'<br>'; } ?>
-                <?php if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
-                <?php if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
-                Email: <?php echo $email; ?><br>
-                Phone: <?php echo $phone; ?><br>
-                Mobile: <?php echo $mobile; ?><br><br>
-            </div>
-
+                </tr>
+            </table>   
             <div>
                 <b>ADDITIONAL:</b>
                 <hr><br>
@@ -89,23 +87,41 @@ table {
 				<?php if(!empty($third_verification_name)){ echo $third_verification_name.'<br>'; } ?>
                 <?php if(!empty($third_number)){ echo $third_number.'<br>'; } ?>
                 <?php if(!empty($third_relation)){ echo $third_relation.'<br><br>'; } ?>
-
-
                 <?php }
                 ?>
                 <br><br>
             </div>
-
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>TERMS & CONDITIONS:</b>
-                <hr>
-                <?php echo $terms_and_conditions; ?>
-            </div>
-
-
-            <div class=""><br>
+            <div class="">
                 <b>JOB DETAILS:</b>
-                <hr><center>
+                <hr>
+                <table class="table">
+                    <tr>
+                        <td style="width:100px;">Job Name :</td>
+                        <td><?php echo $job_name; ?></td>
+                        <td style="width:50px;">&nbsp;</td>
+                        <td style="width:100px;">Job Location :</td>
+                        <td><?php echo $job_location . ' ' . $job_location2; ?></td>                        
+                    </tr>
+                    <tr>
+                        <td style="width:150px;">Job Description :</td>
+                        <td><?php echo $job_description; ?></td>
+                        <td style="width:50px;">&nbsp;</td>
+                        <td style="width:150px;">Installation Date :</td>
+                        <td><?php echo date("m-d-Y", strtotime($installation_date)); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="width:150px;">Status :</td>
+                        <td><?php echo $status; ?></td>
+                        <td style="width:50px;">&nbsp;</td>
+                        <td style="width:150px;"></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <br><br>
+            <div class="" style="margin-">
+                <b>ITEMS:</b>
+                <hr>
                 <div align="center">
                 <table class="pure-table" style="border-collapse: collapse !important;align:center !important;width:100%;">
                     <tr style="background-color: #E9DDFF !important;">
@@ -202,7 +218,12 @@ table {
                     </tbody>
                 </table></div></center>
             </div>
-
+            <br><br>
+            <div style="text-align: justify; text-justify: inter-word;">
+                <b>TERMS & CONDITIONS:</b>
+                <hr>
+                <?php echo $terms_and_conditions; ?>
+            </div>
             <br><br>
             <div style="text-align: justify; text-justify: inter-word;">
                 <b>TERMS OF USE:</b>
@@ -348,21 +369,21 @@ table {
                     <tr>
                         <td align="center">
                             <?php if(empty($company_representative_signature)){ } else{ ?>
-                            <img src="<?php echo base_url($company_representative_signature); ?>" style="width:30%;height:80px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$company_representative_signature); ?>" style="background-color:red;width:30%;height:80px;"><br>
                             <?php echo $first->FName.' '.$first->LName; ?>
                             <?php } ?>
                         </td>
                         
                         <td align="center">
                             <?php if(empty($primary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo base_url($primary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$primary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
                             <?php echo $primary_account_holder_name; ?>
                             <?php } ?>
                         </td>
                         
                         <td align="center">
                             <?php if(empty($secondary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo base_url($secondary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$secondary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
                             <?php echo $secondary_account_holder_name; ?>
                             <?php } ?>
                         </td>

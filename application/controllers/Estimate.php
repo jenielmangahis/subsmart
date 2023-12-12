@@ -2030,7 +2030,7 @@ class Estimate extends MY_Controller
     }
 
     public function view($id)
-    {        
+    {   
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
@@ -2053,8 +2053,7 @@ class Estimate extends MY_Controller
             $this->page_data['items_dataOP2'] = $this->estimate_model->getItemlistByIDOption2($id);
 
             $this->page_data['items_dataBD1'] = $this->estimate_model->getItemlistByIDBundle1($id);
-            $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);
-
+            $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);            
             $this->load->view('estimate/view', $this->page_data);
         } else {
             $this->session->set_flashdata('message', 'Record not found.');
