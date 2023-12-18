@@ -411,6 +411,11 @@ export class ForReviewTable {
       },
     });
 
+    $('#receiptsReview_showentries').change(function (e) { 
+      e.preventDefault();
+        table.page.len($(this).val()).draw();
+    });
+
     table.on("mouseover", ".receiptsTable__img", (event) => {
       $(".receiptsTable__preview").remove();
 

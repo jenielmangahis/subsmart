@@ -60,7 +60,7 @@ export class ReceiptForwarding {
 
       this.$submit.removeClass("receiptsButton--isLoading");
       this.$submit.prop("disabled", false);
-      this.$modal.modal("hide");
+      // this.$modal.modal("hide");
     });
 
     this.$form.on("submit", (event) => {

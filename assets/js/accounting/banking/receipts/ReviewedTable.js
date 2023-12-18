@@ -117,6 +117,11 @@ export class ReviewedTable {
       $(".receiptsTable__preview").remove();
     });
 
+    $('#receiptsReviewed_showentries').change(function (e) { 
+      e.preventDefault();
+        table.page.len($(this).val()).draw();
+    });
+
     table.on("click", ".action", async (event) => {
       event.preventDefault();
 
