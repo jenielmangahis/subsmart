@@ -621,11 +621,12 @@ class Job extends MY_Controller
     public function work_order_job($id = null)
     {
         $this->load->helper('functions');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('CalendarSettings_model');
+        
         $comp_id = logged('company_id');
         $user_id = logged('id');
-
-        // get all employees
-        // get all job tags
+        
         $get_login_user = array(
             'where' => array(
                 'id' => $user_id
@@ -705,25 +706,29 @@ class Job extends MY_Controller
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
-        // get items
-        /*$get_items = array(
+        $get_sales_rep = array(
             'where' => array(
-                'items.company_id' => $comp_id,
-                //'is_active' => 1,
+                'users.company_id' => $comp_id
             ),
-            'table' => 'items',
-            'select' => 'items.id,title,price,type',
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
         );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);*/
-        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
-        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);
 
-        $get_settings = array(
-            'table' => 'job_tax_rates',
+        $get_job_tax = array(
+            'where' => array(
+                'company_id' => $comp_id                
+            ),            
+            'table' => 'tax_rates',
             'select' => '*',
         );
-        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
-
+        $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_job_tax);
 
         // lead source data
         $get_leadsource = array(
@@ -735,17 +740,24 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $calendarSettings = $this->CalendarSettings_model->getByCompanyId($comp_id);      
+        $time_interval = 1;
+        if( $calendarSettings && $calendarSettings->time_interval != ''){
+            $settingsTime  = explode(" ", $calendarSettings->time_interval);
+            $time_interval = $settingsTime[0];
+        }   
+        $this->page_data['settings'] = unserialize($settings);        
+        $this->page_data['time_interval'] = $time_interval;
+
         $this->load->model('workorder_model');
         if ($id != null) {
-            $this->page_data['jobs_data'] = $this->workorder_model->get_workorder_details($id);
-
-            $workorder = $this->page_data['jobs_data'];
+            $workorder = $this->workorder_model->get_workorder_details($id);
+            $this->page_data['workorder'] = $workorder;
             if ($workorder && $workorder->install_time && preg_match("/^([0-9]+)-([0-9]+)$/", trim($workorder->install_time))) {
-                /**
-                 * The workorder has [timestart]-[timend] format for install time,
-                 * we're trying our best below to parse that and convert to a compatible
-                 * time format with job. wth!
-                 */
                 $getMeridiem = function ($hour) {
                     $isAM = $hour == '8' || $hour == '10';
                     return $isAM ? 'am' : 'pm';
@@ -759,48 +771,30 @@ class Job extends MY_Controller
             }
 
             if ($workorder && !is_numeric($workorder->job_tags)) {
-                /**
-                 * Guess what workorder job_tags seems like an array because its plural, but NO!
-                 * It's actually an ID or String sometimes. wtfh! So if it's a String we're
-                 * doing our best to get the ID of that tag. And use tags property
-                 * because that what the job form is expecting.
-                 */
-
                 foreach ($this->page_data['tags'] as $tag) {
                     if ($tag->name == $workorder->job_tags) {
-                        $this->page_data['jobs_data']->tags = $tag->id;
+                        $this->page_data['workorder']->tags = $tag->id;
                         break;
                     }
                 }
             }
 
             if (is_numeric($workorder->taxes)) {
-                $this->page_data['jobs_data']->tax_rate = $workorder->taxes;
+                $this->page_data['workorder']->tax_rate = $workorder->taxes;
             }
+            
+            $items = $this->jobs_model->get_specific_workorder_items($id);
+            $this->page_data['workorder_items'] = $items;
 
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);
+            $customer = $this->AcsProfile_model->getByProfId($workorder->customer_id);
+            $this->page_data['customer'] = $customer;
+            if ($customer) {
+                $default_customer_id = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;                
+            }
+            $default_customer_id = $this->input->get('cus_id');
         }
-
-
-        add_css([
-            'assets/css/esign/fill-and-sign/fill-and-sign.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/esign/fill-and-sign/step1.js',
-            'assets/js/esign/fill-and-sign/step2.js',
-            'assets/js/esign/fill-and-sign/job/script.js',
-
-            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
-            'https://html2canvas.hertzen.com/dist/html2canvas.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step2.js',
-        ]);
-
+        
         $this->page_data['cid'] = $comp_id;
         $this->page_data['getAllLocation'] = $this->items_model->getAllLocation();
         $this->load->view('v2/pages/job/job_workorder', $this->page_data);
@@ -4974,7 +4968,8 @@ class Job extends MY_Controller
             'ship_via'                  => '',
             'shipping_date'             => '',
             'tracking_number'           => '',
-            'terms'                     => 0,            
+            'terms'                     => 0,     
+            'tip'                       => 0,       
             'due_date'                  => '',
             'location_scale'            => '',
             'message_to_customer'       => '',
@@ -5177,6 +5172,125 @@ class Job extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
+
+    public function ajax_quick_add_job_type()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $job_type_name = '';
+        $job_type_id   = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $uid  = get('user_id');       
+
+        if( $post['job_type_name'] != '' ){
+            $data = [
+                'user_id' =>  $uid,
+                'company_id' => $cid,
+                'title' => $post['job_type_name'],
+                'icon_marker' => 'wrench_64px.png',
+                'is_marker_icon_default_list' => 1,
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s")
+            ];
+
+            $job_type_id   = $this->JobType_model->createJobType($data);
+            $job_type_name = $post['job_type_name'];
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Please enter job type name';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg, 
+            'job_type' => ['name' => $job_type_name, 'id' => $job_type_id]
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_job_tag()
+    {
+        $this->load->model('JobTags_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $job_tag_name = '';
+        $job_tag_id   = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');       
+
+        if( $post['job_tag_name'] != '' ){
+            $data = [
+                'name' =>  $post['job_tag_name'],
+                'company_id' => $cid,
+                'group_tag_id' => 0,
+                'marker_icon' => 'administrative_tools_48px.png',
+                'is_marker_icon_default_list' => 1,
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $job_tag_id   = $this->JobTags_model->createJobTag($data);
+            $job_tag_name = $post['job_tag_name'];
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Please enter job tag name';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg, 
+            'job_tag' => ['name' => $job_tag_name, 'id' => $job_tag_id]
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_lead_source()
+    {
+        $this->load->model('LeadSource_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $lead_source_name = '';
+        $lead_source_id   = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');       
+
+        if( $post['lead_source_name'] != '' ){
+            $data = [
+                'fk_company_id' =>  $cid,
+                'ls_name' => $post['lead_source_name'],
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $lead_source_id   = $this->LeadSource_model->createLeadSource($data);
+            $lead_source_name = $post['lead_source_name'];
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Please enter lead source name';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg, 
+            'lead_source' => ['name' => $lead_source_name, 'id' => $lead_source_id]
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

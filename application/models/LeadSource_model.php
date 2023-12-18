@@ -1,14 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class JobTags_model extends MY_Model
+class LeadSource_model extends MY_Model
 {
-    public $table = 'job_tags';
+    public $table = 'ac_leadsource';
 
     public function getAll($filters=array())
     {
-        $id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -18,7 +16,7 @@ class JobTags_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->order_by('ls_id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -29,7 +27,7 @@ class JobTags_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->where('fk_company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -37,18 +35,15 @@ class JobTags_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('id', $id);
+        $this->db->where('ls_id', $id);
 
         $query = $this->db->get()->row();
         return $query;
     }
 
-    public function createJobTag($data)
+    public function createLeadSource($data)
     {
         $this->db->insert($this->table, $data);
         $last_id = $this->db->insert_id();
@@ -56,9 +51,10 @@ class JobTags_model extends MY_Model
     }
 
     public function deleteById($id){
-        $this->db->delete($this->table, array('id' => $id));
+        $this->db->delete($this->table, array('ls_id' => $id));
     } 
-}
 
-/* End of file JobTags_model.php */
-/* Location: ./application/models/JobTags_model.php */
+}
+/* End of file LeadSource_model.php */
+/* Location: ./application/models/LeadSource_model.php */
+

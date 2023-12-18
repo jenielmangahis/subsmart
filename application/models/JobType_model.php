@@ -58,6 +58,13 @@ class JobType_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update();
     }
+
+    public function createJobType($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+        return $last_id;
+    }
 }
 
 /* End of file JobType_model.php */

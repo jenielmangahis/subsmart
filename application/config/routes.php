@@ -1033,6 +1033,7 @@ $route['workorder/_update_custom_fields'] = 'Workorder/ajax_update_custom_fields
 $route['workorder/_delete_custom_fields'] = 'Workorder/ajax_delete_custom_fields';
 $route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
 $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
+$route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 
@@ -1615,4 +1616,9 @@ $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 
 //Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
+
+//Quick Add
+$route['job/_quick_add_job_type'] = 'Job/ajax_quick_add_job_type';
+$route['job/_quick_add_job_tag'] = 'Job/ajax_quick_add_job_tag';
+$route['job/_quick_add_lead_source'] = 'Job/ajax_quick_add_lead_source';
 
