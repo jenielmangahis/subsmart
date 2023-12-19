@@ -53,8 +53,8 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th></th>
-                                                <th></th>
+                                                <th>TYPE</th>
+                                                <th>ITEM</th>
                                                 <th>SKU</th>
                                                 <th>QTY</th>
                                                 <th>ASSET VALUE</th>
