@@ -597,6 +597,8 @@ class Accounting extends MY_Controller
 
     public function receipts()
     {
+        $company_id = logged('company_id');
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->page_data['receipts_two'] = $this->receipt_model->getReceipt_two();
@@ -611,6 +613,17 @@ class Accounting extends MY_Controller
 
         $this->page_data['page']->title = 'Receipts';
         $this->page_data['page']->parent = 'Banking';
+
+        // get Chart of account list
+        $chartOfAccountListData = array(
+            'select' => '*',
+            'table' => 'accounting_chart_of_accounts',
+            'where' => array(
+                'company_id' => $company_id,
+            ),
+        );
+        $this->page_data['chartOfAccount'] = $this->general_model->get_data_with_param($chartOfAccountListData, true);
+
         $this->load->view('accounting/banking/receipts', $this->page_data);
         // $this->load->view('accounting/receipts', $this->page_data);
     }

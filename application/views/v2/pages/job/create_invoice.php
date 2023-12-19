@@ -88,8 +88,8 @@
                             <input type="date" class="form-control" id="due-date" required="">
                         </div>
                         <div class="col-md-4">
-                            <label>Send tip amount to assigned technician </label>
-                            <input id="tip" type="number" min=0 step="any" value="0" class="form-control">
+                            <label>Send a tip amount to assigned technician </label>
+                            <input id="tip" name="tip" type="number" min=0 step="any" value="0" class="form-control">
                         </div>
                     </div>
 
@@ -555,6 +555,7 @@
                 job_name: document.querySelector('#job_name').value,
                 status: "Submitted",
                 total_due: 0.00,
+                tip: document.querySelector('#tip').value,
                 sub_total: document.querySelector('#subtotal').textContent.slice(2),
                 balance: document.querySelector('#grandtotal').textContent.slice(2),
                 taxes: document.querySelector('#taxes').textContent.slice(2),

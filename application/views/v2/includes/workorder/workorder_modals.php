@@ -461,7 +461,7 @@
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold mb-2">Package Name</label>
                                         <input type="text" name="package_name" class="nsm-field form-control" id="package_name" required>
-                                        <input type="hidden" name="count" value="0" id="count">
+                                        <input type="hidden" name="count" value="0" id="package-count">
                                     </div>
                                     <div class="col-12">
                                         <table class="nsm-table">

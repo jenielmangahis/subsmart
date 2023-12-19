@@ -1998,7 +1998,16 @@ class Workorder_model extends MY_Model
         $this->db->distinct();
         $this->db->select('*');
 		$this->db->from('ac_leadsource');
-		// $this->db->where('fk_company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function  getLeadSourceByCompanyId($company_id)
+    {
+        $this->db->distinct();
+        $this->db->select('*');
+		$this->db->from('ac_leadsource');
+		$this->db->where('fk_company_id', $company_id);
         $query = $this->db->get();
         return $query->result();
     }

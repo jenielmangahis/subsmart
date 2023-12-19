@@ -48,6 +48,13 @@ class JobTags_model extends MY_Model
         return $query;
     }
 
+    public function createJobTag($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+        return $last_id;
+    }
+
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
     } 

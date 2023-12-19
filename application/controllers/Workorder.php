@@ -778,6 +778,11 @@ class Workorder extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
+
         $company_id = logged('company_id');
         $user_id    = logged('id');
         $parent_id  = $this->db->query("select id from users where id=$user_id")->row();
@@ -825,10 +830,11 @@ class Workorder extends MY_Controller
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
         $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         // $this->page_data['items_data'] = $this->items_model->getItemData($id);
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
-        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        $this->page_data['lead_source'] = $this->workorder_model->getLeadSourceByCompanyId($company_id);
         $this->page_data['payment'] = $this->workorder_model->getpayment($id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
@@ -4712,7 +4718,7 @@ class Workorder extends MY_Controller
                     'date_of_birth' => $date_of_birth,
                     'email' => $email,
                     'business_name' => $business_name,
-                    'cross_street' => $cronss_stree,
+                    'cross_street' => $cross_street,
                     'city' => $city,
                     'state' => $state,
                     'zip_code' => $zip_code
@@ -5412,6 +5418,302 @@ class Workorder extends MY_Controller
             
             $this->workorder_model->add_work_order_details($data_items);
         }
+    }
+
+    public function ajax_update_workorder(){
+        $this->load->model('WorkorderSettings_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $company_id     = getLoggedCompanyID();        
+        $user_id        = logged('id');
+        $hasID          = bin2hex(random_bytes(18));
+
+        $workorder = $this->workorder_model->getById($this->input->post('wid'));
+        if( empty($workorder) ){
+            $msg = 'Cannot find workorder data.';
+            $json_data = ['is_success' => $is_success, 'msg' => $msg];
+            echo json_encode($json_data);
+            exit;
+        }
+
+        if( $this->input->post('grand_total') <= 0 ){
+            $msg = 'Please select / add an item.';
+            $json_data = ['is_success' => $is_success, 'msg' => $msg];
+            echo json_encode($json_data);
+            exit;
+        }        
+
+        $signatureFolderPath = "./uploads/workorders/signatures/".$company_id."/";        
+        if (!file_exists($signatureFolderPath)) {
+            mkdir($signatureFolderPath, 0777, true);
+        }
+
+        $file_save = $workorder->company_representative_signature;
+        if(!empty($this->input->post('company_representative_approval_signature1aM_web')))
+        {
+            $datasig            = $this->input->post('company_representative_approval_signature1aM_web');            
+            $image_parts        = explode(";base64,", $datasig);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $file_save          = $wo_id.'_company'.'.'.$image_type;
+            $file               = $signatureFolderPath . $file_save;            
+            file_put_contents($file, $image_base64);
+        }
+
+        $file2_save = $workorder->primary_account_holder_signature;
+        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        {
+            $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
+            $image_parts2       = explode(";base64,", $datasig2);
+            $image_type_aux2    = explode("image/", $image_parts2[0]);
+            $image_type2        = $image_type_aux2[1];
+            $image_base642      = base64_decode($image_parts2[1]);
+            $file2_save         = $wo_id.'_primary'.'.'.$image_type2;
+            $file2              = $signatureFolderPath . $file2_save;            
+            file_put_contents($file2, $image_base642);
+        }
+
+        $file3_save = $workorder->secondary_account_holder_signature;
+        if(!empty($this->input->post('secondary_representative_approval_signature1aM_web')))
+        {
+            $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
+            $image_parts3       = explode(";base64,", $datasig3);
+            $image_type_aux3    = explode("image/", $image_parts3[0]);
+            $image_type3        = $image_type_aux3[1];
+            $image_base643      = base64_decode($image_parts3[1]);
+            $file3_save         = $wo_id.'_secondary'.'.'.$image_type3;
+            $file3              = $signatureFolderPath . $file3_save;            
+            file_put_contents($file3, $image_base643);
+        }
+
+        $attachmentFolderPath = "./uploads/workorders/attachments/".$company_id."/";            
+        if(!file_exists($attachmentFolderPath)) {
+            mkdir($attachmentFolderPath, 0777, true);
+        }
+
+        $attachment_photo = $workorder->attachment_photo;
+        if(isset($_FILES['attachment_photo']) && $_FILES['attachment_photo']['tmp_name'] != '') {
+            $tmp_name  = $_FILES['attachment_photo']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_photo']['name'])));
+            $attachment_photo = $workorder->work_order_number."_photo_".basename($_FILES["attachment_photo"]["name"]);
+            move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment_photo);
+        }
+
+        $attachment_document = $workorder->attachment_document;
+        if(isset($_FILES['attachment_document']) && $_FILES['attachment_document']['tmp_name'] != '') {
+            $target_dir = "./uploads/workorders/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['attachment_document']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_document']['name'])));
+            $attachment_document = $workorder->work_order_number."_document_" . basename($_FILES["attachment_document"]["name"]);
+            move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment_document);
+        }
+
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+        $post_checklists = $this->input->post('checklists');
+        $selected_checklists = "";
+        if( $post_checklists ){
+            $selected_checklists = serialize($post_checklists);                
+        }
+
+        $workoder_data = array(
+            'customer_id'                           => $this->input->post('customer_id'),
+            'security_number'                       => $this->input->post('security_number'),
+            'birthdate'                             => $this->input->post('birthdate'),
+            'phone_number'                          => $this->input->post('phone_number'),
+            'mobile_number'                         => $this->input->post('mobile_number'),
+            'email'                                 => $this->input->post('email'),
+            'checklists'                            => $selected_checklists,            
+            'business_name'                         => $this->input->post('business_name'),
+            'job_location'                          => $this->input->post('job_location'),
+            'city'                                  => $this->input->post('city'),
+            'state'                                 => $this->input->post('state'),
+            'zip_code'                              => $this->input->post('zip_code'),
+            'cross_street'                          => $this->input->post('cross_street'),
+            'password'                              => $this->input->post('password'),
+            'offer_code'                            => $this->input->post('offer_code'),//
+            'tags'                                  => $this->input->post('job_tag'),
+            'date_issued'                           => $dateIssued,
+            'job_type'                              => $this->input->post('job_type'),
+            'job_name'                              => $this->input->post('job_name'),
+            'job_description'                       => $this->input->post('job_description'),
+            'payment_method'                        => $this->input->post('payment_method'),
+            'payment_amount'                        => $this->input->post('payment_amount'),
+            'lead_source_id'                        => $this->input->post('lead_source'),
+            'terms_and_conditions'                  => $this->input->post('terms_conditions'),
+            'status'                                => $this->input->post('status'),
+            'priority'                              => $this->input->post('priority'),
+            'po_number'                             => $this->input->post('purchase_order_number'),
+            'terms_of_use'                          => $this->input->post('terms_of_use'),
+            'instructions'                          => $this->input->post('instructions'),
+            'header'                                => $this->input->post('header'),
+            'company_representative_signature'      => $file_save,
+            'company_representative_name'           => $this->input->post('company_representative_printed_name'),
+            'primary_account_holder_signature'      => $file2_save,
+            'primary_account_holder_name'           => $this->input->post('primary_account_holder_name'),
+            'secondary_account_holder_signature'    => $file3_save,
+            'secondary_account_holder_name'         => $this->input->post('secondery_account_holder_name'),
+            'company_representative_sign_date'      => date("Y-m-d"),
+            'primary_account_holder_sign_date'      => date("Y-m-d"),
+            'secondary_account_holder_sign_date'    => date("Y-m-d"),
+            'attached_photo'                        => $attachment_photo,
+            'document_links'                        => $attachment_document,
+            'subtotal'                              => $this->input->post('subtotal'),
+            'taxes'                                 => $this->input->post('taxes'), 
+            'adjustment_name'                       => $this->input->post('adjustment_name'),
+            'adjustment_value'                      => $this->input->post('adjustment_value'),
+            'voucher_value'                         => $this->input->post('voucher_value'),
+            'grand_total'                           => $this->input->post('grand_total'),
+            'employee_id'                           => $user_id,
+            'date_updated'                          => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->workorder_model->update($workorder->id, $workoder_data);
+        
+        //SMS Notification        
+        createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);        
+
+        $cf_name = $this->input->post('custom_field');
+        $cf_value = $this->input->post('custom_value');
+        
+        $this->workorder_model->delete_custom_fields($workorder->id);
+        if( $cf_name ){
+            foreach($cf_name as $key => $value){
+                $custom_field_data = [
+                    'name' => $value,
+                    'value' => $cf_value[$key],
+                    'work_order_id' => $workorder->id,
+                    'company_id' => $company_id,
+                    'date_added' => date("Y-m-d H:i:s")
+                ];
+                $this->workorder_model->additem_details($custom_field_data);
+            }
+        }
+
+        //Auto update customer info
+        $this->load->model('AcsProfile_model');
+        $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+        if( $customer ){
+            $phone_h = $customer->phone_h;
+            if( $this->input->post('phone_number') != '' ){
+                $phone_h = $this->input->post('phone_number');
+            }
+
+            $phone_m = $customer->phone_m;
+            if( $this->input->post('phone_number') != '' ){
+                $phone_m = $this->input->post('mobile_number');
+            }
+
+            $ssn = $customer->ssn;
+            if( $this->input->post('security_number') != '' ){
+                $ssn = $this->input->post('security_number');
+            }
+
+            $date_of_birth = date("Y-m-d", strtotime($customer->date_of_birth));
+            if( $this->input->post('birthdate') != '' ){
+                $date_of_birth = $this->input->post('birthdate');
+            }
+
+            $email = $customer->email;
+            if( $this->input->post('email') != '' ){
+                $email = $this->input->post('email');
+            }
+
+            $business_name = $customer->business_name;
+            if( $this->input->post('business_name') != '' ){
+                $business_name = $this->input->post('business_name');
+            }
+
+            $cross_street = $customer->cross_street;
+            if( $this->input->post('cross_street') != '' ){
+                $cross_street = $this->input->post('cross_street');
+            }
+
+            $city = $customer->city;
+            if( $this->input->post('city') != '' ){
+                $city = $this->input->post('city');
+            }
+
+            $state = $customer->state;
+            if( $this->input->post('state') != '' ){
+                $state = $this->input->post('state');
+            }
+
+            $zip_code = $customer->zip_code;
+            if( $this->input->post('zip_code') != '' ){
+                $zip_code = $this->input->post('zip_code');
+            }
+
+            $customer_data = [
+                'phone_h' => $phone_h,
+                'phone_m' => $phone_m,
+                'ssn' => $ssn,
+                'date_of_birth' => $date_of_birth,
+                'email' => $email,
+                'business_name' => $business_name,
+                'cross_street' => $cross_street,
+                'city' => $city,
+                'state' => $state,
+                'zip_code' => $zip_code
+            ];
+
+            $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+
+        }
+
+        $items      = $this->input->post('itemid');
+        $packageID  = $this->input->post('packageID');
+        $quantity   = $this->input->post('quantity');
+        $price      = $this->input->post('price');
+        $tax        = $this->input->post('tax');
+        $discount   = $this->input->post('discount');
+        $total      = $this->input->post('total');
+
+        $this->workorder_model->delete_items($workorder->id);
+        foreach($items as $key => $value){
+            $package_id = 0;
+            if( isset($packageID[$key]) ){
+                $package_id = $packageID[$key];
+            }
+
+            $items = [
+                'items_id' => $value,      
+                'package_id' => $package_id,
+                'qty' => $quantity[$key],
+                'cost' => $price[$key],
+                'tax' => $tax[$key],
+                'discount' => $discount[$key],
+                'total' => $total[$key],
+                'work_order_id' => $workorder->id
+            ];   
+            $this->workorder_model->add_work_order_details($items);
+        }
+
+        $getname = $this->workorder_model->getname($user_id);
+
+        $notif = array(
+    
+            'user_id'               => $user_id,
+            'title'                 => 'Updated Work Order',
+            'content'               => $getname->FName. ' has updated Work Order.'. $workorder->work_order_number,
+            'date_created'          => date("Y-m-d H:i:s"),
+            'status'                => '1',
+            'company_id'            => $company_id
+        );
+
+        $notification = $this->workorder_model->save_notification($notif);
+
+        $is_success   = 1;
+        $msg = '';
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function UpdateWorkorder(){

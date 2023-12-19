@@ -462,46 +462,10 @@ class Invoice extends MY_Controller
 
     public function addNewInvoice()
     {
-        if ($this->input->post('custocredit_card_paymentsmer_id') == 1) {
-            $credit_card = 'Credit Card';
-        } else {
-            $credit_card = '0';
-        }
-
-        if ($this->input->post('bank_transfer') == 1) {
-            $bank_transfer = 'Bank Transfer';
-        } else {
-            $bank_transfer = '0';
-        }
-
-        if ($this->input->post('instapay') == 1) {
-            $instapay = 'Instapay';
-        } else {
-            $instapay = '0';
-        }
-
-        if ($this->input->post('check') == 1) {
-            $check = 'Check';
-        } else {
-            $check = '0';
-        }
-
-        if ($this->input->post('cash') == 1) {
-            $cash = 'Cash';
-        } else {
-            $cash = '0';
-        }
-
-        if ($this->input->post('deposit') == 1) {
-            $deposit = 'Deposit';
-        } else {
-            $deposit = '0';
-        }
-        
         $comp_id = logged('company_id');
         $user_id = logged('id');
         $post    = $this->input->post();
-
+        
         $invoice_data = array(
             'invoice_number' => $post['invoice_number'],
             'invoice_type' => $post['invoice_type'],
@@ -510,6 +474,7 @@ class Invoice extends MY_Controller
             'due_date' => date("Y-m-d",strtotime($post['due_date'])),
             'deposit_request_type' => 1, // 1 = amount / 2 = percentage
             'deposit_request' => $post['deposit_request'],
+            'tip' => $post['tip'],
             'message_to_customer' => $post['message_to_customer'],
             'terms_and_conditions' => $post['terms_and_conditions'],
             'date_updated'         => date("Y-m-d H:i:s")

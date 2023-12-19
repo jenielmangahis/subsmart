@@ -128,6 +128,7 @@ class Accounting_model extends MY_Model {
             $this->db->where('items.type', "Product");
             $this->db->where('(items_has_storage_loc.qty + items_has_storage_loc.initial_qty) >', 0);
             $this->db->where('items.company_id', $companyID);
+            $this->db->group_by('items.type');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
