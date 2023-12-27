@@ -297,7 +297,7 @@
     </div>
 </div>
 
-<!-- <div id="receiptForwardingModal" class="modal fade modal-fluid receiptModal nsm-modal" role="dialog">
+<!-- <div id="receiptForwardingModal-remove" class="modal fade modal-fluid receiptModal nsm-modal" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
@@ -319,7 +319,7 @@
                         <path d="m24 0-6 22-8.129-7.239 7.802-8.234-10.458 7.227L0 12 24 0zM9 16.668V24l3.258-4.431L9 16.668z" fill="#32243d"/>
                     </svg>
                     <span class="receiptModal__emailCopy"></span>
-                </div>
+                </div> 
 
                 <hr />
                 <p class="receiptModal__note">Keep in mind that this email doesn't support auto-forwarding, so you'll need to send them directly. Be sure to forward receipts and bills from the email address you use to sign into nSmarTrac.</p>
@@ -338,9 +338,6 @@
     </div>
 </div> -->
 
-
-
-
 <div class="modal" id="receiptForwardingModal" role="dialog" data-bs-keyboard="true" aria-modal="true">
    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -349,16 +346,16 @@
             <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
          </div>
          <div class="modal-body" style="padding-top: 10px;">
-            <form id="reportSettingsForm" method="POST">
+            <form>
                <div class="row">
                   <div class="col-lg-12">
                      <div class="row">
                      <div class="col-md-12 mb-3">
-                            <span class="text-muted">Send receipts and bills to an email just for adi alarms.</span>
+                            <span class="text-muted">Send receipts and bills to an email just for <span id="receiptCompany" class="font-weight-bold">[company name here]</span>.</span>
                         </div>
                         <div class="col-md-12 mb-3">
                            <label class="mb-1 fw-xnormal">Email Address</label>
-                              <input id="company_name" class="nsm-field form-control" type="text" name="company_name" placeholder="Enter your email address" required>
+                              <input id="receiptEmail" class="nsm-field form-control" type="text" name="company_name" placeholder="Enter your email address" required>
                         </div>
                         <div class="col-md-12 mb-3">
                             <span class="text-muted">Keep in mind that this email doesn't support auto-forwarding, so you'll need to send them directly. Be sure to forward receipts and bills from the email address you use to sign into nSmarTrac.</span>
@@ -373,8 +370,7 @@
                         <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                      </div>
                      <div class="float-end">
-                        <button type="submit" class="nsm-button primary settingsApplyButton">Next</button>
-                        <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                        <button type="submit" class="nsm-button primary receiptsButton">Save</button>
                      </div>
                   </div>
                </div>

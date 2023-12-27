@@ -93,7 +93,11 @@
                                     <div class="col-6">
                                         <label for="filter-account-category">Account/Category</label>
                                         <select class="nsm-field form-select" name="filter_account_category" id="filter-account-category">
-                                            
+                                        <?php 
+                                            foreach ($chartOfAccount as $chartOfAccounts) {
+                                                echo "<option id='$chartOfAccounts->id'>$chartOfAccounts->name</option>" ;
+                                            }
+                                        ?>
                                         </select>
                                     </div>
                                 </div>
