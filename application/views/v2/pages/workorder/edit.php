@@ -30,7 +30,8 @@
 }
 .signature-container img{
     max-width:95%;
-    margin:0 auto;
+    margin: 10% auto;
+    display:block;
 }
 
 @media only screen and (max-device-width: 600px) {
@@ -183,8 +184,9 @@
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart('workorder/savenewWorkorder', ['class' => 'form-validate', 'id' => 'form_new_workorder', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'form_update_workorder', 'autocomplete' => 'off']); ?>
                 <input type="hidden" id="siteurl" value="<?=base_url();?>">
+                <input type="hidden" name="wid" value="<?= $workorder->id; ?>" />
                 <div class="row gy-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
@@ -225,7 +227,7 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
-                                                <input type="date" name="birthdate" id="birthdate" value="<?= date("m/d/Y", strtotime($customer->date_of_birth)); ?>" class="nsm-field form-control datepicker" />
+                                                <input type="text" name="birthdate" id="birthdate" value="<?= date("m/d/Y", strtotime($customer->date_of_birth)); ?>" class="nsm-field form-control datepicker" />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
@@ -274,7 +276,7 @@
                                                         </div>
                                                     </div>
                                                     <input type="text" name="custom_value[<?= $field->id; ?>]" value="<?= $field->value; ?>" class="nsm-field form-control" />
-                                                    <input type="hidden" name="custom_name[<?= $field->id; ?>]" value="<?= $field->name; ?>" class="nsm-field form-control" />
+                                                    <input type="hidden" name="custom_field[<?= $field->id; ?>]" value="<?= $field->name; ?>" class="nsm-field form-control" />
                                                 </div>
                                             <?php } ?>
 
@@ -285,9 +287,8 @@
                                                 <label class="content-title">Item Summary</label>
                                             </div>
                                             <div class="col-12">
-                                                <input type="hidden" name="count" id="count" value="0">                                                
-                                                <table class="table table-hover">
-                                                    <input type="hidden" name="count" value="0" id="count">
+                                                <input type="hidden" name="count" id="count" value="<?= count($items_data); ?>">                                                
+                                                <table class="table table-hover">                                                    
                                                     <thead style="background-color:#E9E8EA;">
                                                     <tr>
                                                         <th>Name</th>
@@ -301,7 +302,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody id="jobs_items_table_body">                                                                          
-                                                        <?php $item_row = 0; foreach($items_data as $data){ ?>
+                                                        <?php $item_row = 1; foreach($items_data as $data){ ?>
                                                         <tr>
                                                             <td width="30%">
                                                                 <input type="text" class="form-control getItems"
@@ -339,8 +340,8 @@
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
                                                                     </td>
                                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                                    data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
-                                                                    $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
+                                                                    data-counter="0" id="sub_total_text<?= $item_row; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
+                                                                    $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2,".",""); ?></span></td>
                                                             <td>
                                                                 <a href="#" class="remove nsm-button danger" id=""><i class="bx bx-fw bx-trash"></i></a>
                                                             </td>
@@ -409,7 +410,7 @@
                                                     </div>
                                                     <div class="col-12 col-md-6 text-end fw-bold">
                                                         $ <span id="grand_total"><?= number_format($workorder->grand_total,2,'.',''); ?></span>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='0'>
+                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'>
                                                     </div>
                                                 </div>
                                             </div>
@@ -460,18 +461,28 @@
                                                 <div class="row g-3">
                                                     <div class="col-4">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Name</label>
-                                                        <input type="text" name="job_name" class="nsm-field form-control" required />
+                                                        <input type="text" name="job_name" class="nsm-field form-control" value="<?php echo $workorder->job_name; ?>" required />
                                                     </div>
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Type</label>
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>Job Type</h6>
+                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
+                                                                <span class="bx bx-plus"></span>Create Job Type
+                                                            </a>
+                                                        </div>
                                                         <select name="job_type" id="job_type" class="nsm-field form-select">
                                                             <?php foreach ($job_types as $jt) { ?>
-                                                                <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
+                                                                <option value="<?php echo $jt->title ?>" <?php echo $workorder->job_type == $jt->title ? 'selected="selected"' : ''; ?>><?php echo $jt->title ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>  
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Tag</label>
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>Job Tag</h6>
+                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                <span class="bx bx-plus"></span>Create Job Tag
+                                                            </a>
+                                                        </div>                                                        
                                                         <select name="job_tag" id="job_tag" class="nsm-field form-select">
                                                             <?php foreach ($job_tags as $tags) { ?>
                                                                 <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
@@ -498,41 +509,45 @@
                                                 <div class="row g-3">
                                                     <div class="col-12 col-md-4">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
-                                                        <input type="text" name="job_location" id="job_location" class="nsm-field form-control" required />
+                                                        <input type="text" name="job_location" id="job_location" value="<?php echo $workorder->job_location; ?>" class="nsm-field form-control" required />
                                                     </div>  
                                                     <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Schedule Date Given</label>
-                                                        <input type="date" name="schedule_date_given" class="nsm-field form-control datepicker" required />
+                                                        <input type="text" name="schedule_date_given" value="<?php echo date("m/d/Y", strtotime($workorder->date_issued)); ?>" class="nsm-field form-control" id="datepicker_dateissued" required />
                                                     </div>
                                                     <div class="col-12 col-md-2">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
                                                         <select name="priority" class="nsm-field form-select" id="wo-priority">
-                                                            <option value="Standard">Standard</option>
-                                                            <option value="Emergency">Emergency</option>
-                                                            <option value="Low">Low</option>
-                                                            <option value="Urgent">Urgent</option>
+                                                            <option value="Standard" <?php echo $workorder->priority == 'Standard' ? 'selected="selected"' : ''; ?>>Standard</option>
+                                                            <option value="Emergency" <?php echo $workorder->priority == 'Emergency' ? 'selected="selected"' : ''; ?>>Emergency</option>
+                                                            <option value="Low" <?php echo $workorder->priority == 'Low' ? 'selected="selected"' : ''; ?>>Low</option>
+                                                            <option value="Urgent" <?php echo $workorder->priority == 'Urgent' ? 'selected="selected"' : ''; ?>>Urgent</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
-                                                        <select name="lead_source" class="nsm-field form-select" id="lead-source">
-                                                            <option value="0">- none -</option>
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>Lead Source</h6>
+                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-lead-source" href="javascript:void(0);">
+                                                                <span class="bx bx-plus"></span>Create Lead Source
+                                                            </a>
+                                                        </div>                                                            
+                                                        <select name="lead_source" class="nsm-field form-select" id="lead_source">
                                                             <?php foreach ($lead_source as $lead) { ?>
-                                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                                                <option value="<?php echo $lead->ls_id; ?>" <?php echo $workorder->lead_source_id == $lead->ls_id ? 'selected="selected"' : ''; ?>><?php echo $lead->ls_name; ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>                                                     
                                                     <div class="col-12 col-md-4">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Purchase Order # (optional)</label>
-                                                        <input type="text" name="purchase_order_number" class="nsm-field form-control" />
+                                                        <input type="text" name="purchase_order_number" value="<?php echo $workorder->po_number; ?>" class="nsm-field form-control" />
                                                     </div> 
                                                     <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Job Description</label>
-                                                        <textarea name="job_description" class="nsm-field form-control" rows="2"></textarea>
+                                                        <textarea name="job_description" class="nsm-field form-control" rows="2"><?php echo $workorder->job_description; ?></textarea>
                                                     </div>        
                                                     <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Instructions</label>
-                                                        <textarea name="instructions" class="nsm-field form-control" rows="2"></textarea>
+                                                        <textarea name="instructions" class="nsm-field form-control" rows="2"><?php echo $workorder->instructions; ?></textarea>
                                                     </div>                                                                                        
                                                 </div>
                                             </div>                                            
@@ -551,25 +566,25 @@
                                                 <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
                                                 <select name="payment_method" id="payment_method" class="nsm-field form-select">
                                                     <option value="">Choose method</option>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Check">Check</option>
-                                                    <option value="Credit Card">Credit Card</option>
-                                                    <option value="Debit Card">Debit Card</option>
-                                                    <option value="ACH">ACH</option>
-                                                    <option value="Venmo">Venmo</option>
-                                                    <option value="Paypal">Paypal</option>
-                                                    <option value="Square">Square</option>
-                                                    <option value="Invoicing">Invoicing</option>
-                                                    <option value="Warranty Work">Warranty Work</option>
-                                                    <option value="Home Owner Financing">Home Owner Financing</option>
-                                                    <option value="e-Transfer">e-Transfer</option>
-                                                    <option value="Other Credit Card Professor">Other Credit Card Professor</option>
-                                                    <option value="Other Payment Type">Other Payment Type</option>
+                                                    <option value="Cash" <?php echo $workorder->payment_method == "Cash" ? 'selected="selected"' : ''; ?>>Cash</option>
+                                                    <option value="Check" <?php echo $workorder->payment_method == "Check" ? 'selected="selected"' : ''; ?>>Check</option>
+                                                    <option value="Credit Card" <?php echo $workorder->payment_method == "Credit Card" ? 'selected="selected"' : ''; ?>>Credit Card</option>
+                                                    <option value="Debit Card" <?php echo $workorder->payment_method == "Debit Card" ? 'selected="selected"' : ''; ?>>Debit Card</option>
+                                                    <option value="ACH" <?php echo $workorder->payment_method == "ACH" ? 'selected="selected"' : ''; ?>>ACH</option>
+                                                    <option value="Venmo" <?php echo $workorder->payment_method == "Venmo" ? 'selected="selected"' : ''; ?>>Venmo</option>
+                                                    <option value="Paypal" <?php echo $workorder->payment_method == "Paypal" ? 'selected="selected"' : ''; ?>>Paypal</option>
+                                                    <option value="Square" <?php echo $workorder->payment_method == "Square" ? 'selected="selected"' : ''; ?>>Square</option>
+                                                    <option value="Invoicing" <?php echo $workorder->payment_method == "Invoicing" ? 'selected="selected"' : ''; ?>>Invoicing</option>
+                                                    <option value="Warranty Work" <?php echo $workorder->payment_method == "Warranty Work" ? 'selected="selected"' : ''; ?>>Warranty Work</option>
+                                                    <option value="Home Owner Financing" <?php echo $workorder->payment_method == "Home Owner Financing" ? 'selected="selected"' : ''; ?>>Home Owner Financing</option>
+                                                    <option value="e-Transfer" <?php echo $workorder->payment_method == "e-Transfer" ? 'selected="selected"' : ''; ?>>e-Transfer</option>
+                                                    <option value="Other Credit Card Professor" <?php echo $workorder->payment_method == "Other Credit Card Professor" ? 'selected="selected"' : ''; ?>>Other Credit Card Professor</option>
+                                                    <option value="Other Payment Type" <?php echo $workorder->payment_method == "Other Payment Type" ? 'selected="selected"' : ''; ?>>Other Payment Type</option>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Amount ( $ )</label>
-                                                <input type="number" step=".01" name="payment_amount" id="payment_amount" class="nsm-field form-control" required />
+                                                <input type="number" step="any" value="<?php echo number_format($workorder->payment_amount,2,".",""); ?>" name="payment_amount" id="payment_amount" class="nsm-field form-control" required />
                                             </div>
                                             <div class="col-12 col-md-4 d-none" id="cash_area">
                                                 <div class="d-flex align-items-center h-100">
@@ -581,12 +596,6 @@
                                             </div>
                                             <div class="col-12 d-none" id="invoicing">
                                                 <div class="row g-3">
-                                                    <div class="col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" id="same_as">
-                                                            <label class="form-check-label" for="same_as">Same as above Address</label>
-                                                        </div>
-                                                    </div>
                                                     <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2">Mail Address</label>
                                                         <input type="text" name="mail-address" class="nsm-field form-control" placeholder="Monitored Location" />
@@ -849,75 +858,50 @@
                                         <a class="nsm-button primary nsm-signature-button companySignature" href="javascript:void(0);">
                                             <i class='bx bx-pen'></i> Add Signature
                                         </a>
-                                        <div id="companyrep" class="signature-container"></div>
+                                        <div id="companyrep" class="signature-container">
+                                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                                        </div>
 
-                                        <input type="hidden" id="saveCompanySignatureDB1a"
-                                            name="company_representative_approval_signature1a">
+                                        <input type="hidden" id="saveCompanySignatureDB1a" name="company_representative_approval_signature1a" value="<?php echo $workorder->company_representative_signature; ?>">
                                         <br>
 
                                         <label for="comp_rep_approval">Printed Name</label>
-                                        <!-- <input type="text6" class="form-control mb-3"
-                                            name="company_representative_printed_name"
-                                            id="company_representative_printed_name" placeholder=""/> -->
-                                            <select class="form-control mb-3" name="company_representative_printed_name">
-                                                <option value="0">Select Name</option>
-                                                <?php foreach($users_lists as $ulist){ ?>
-                                                    <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                                <?php } ?>
-                                            </select>
-                                            <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
-                                                <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                                <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> -->
-                                                <div id="company_representative_div"></div>
-
+                                        <select class="form-control mb-3" name="company_representative_printed_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if($ulist->id == $workorder->company_representative_name){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="company_representative_div"></div>
                                     </div>
                                     <div class="col-md-4">
                                         <h6>Primary Account Holder</h6>
                                         <a class="primarySignature nsm-button primary nsm-signature-button" href="javascript:void(0);">
                                             <i class='bx bx-pen'></i> Add Signature
                                         </a>
-                                        <div id="primaryrep" class="signature-container"></div>
-                                        <input type="hidden" id="savePrimaryAccountSignatureDB2a"
-                                            name="primary_account_holder_signature2a">
+                                        <div id="primaryrep" class="signature-container">
+                                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                                        </div>
+                                        <input type="hidden" id="savePrimaryAccountSignatureDB2a" name="primary_account_holder_signature2a" <?php echo $workorder->primary_account_holder_signature; ?>>
                                         <br>
 
                                         <label for="comp_rep_approval">Printed Name</label>
-                                        <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                            id="primary_account_holder_name" placeholder=""/>
-                                        <!-- <select class="form-control mb-3" name="primary_account_holder_name">
-                                                <option value="0">Select Name</option>
-                                                <?php //foreach($users_lists as $ulist){ ?>
-                                                    <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                                <?php //} ?>
-                                        </select> -->
-                                        
-                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
-                                            <div id="primary_representative_div"></div>
-
+                                        <input type="text6" class="form-control mb-3" name="primary_account_holder_name" id="primary_account_holder_name" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
+                                        <div id="primary_representative_div"></div>
                                     </div>
                                     <div class="col-md-4">
                                         <h6>Secondary Account Holder</h6>
                                         <a class="nsm-button primary nsm-signature-button secondarySignature" href="javascript:void(0);">
                                             <i class='bx bx-pen'></i> Add Signature
                                         </a>
-                                        <div id="secondaryrep" class="signature-container"></div>
-                                        <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
-                                            name="secondary_account_holder_signature3a">
+                                        <div id="secondaryrep" class="signature-container">
+                                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->secondary_account_holder_signature); ?>" />
+                                        </div>
+                                        <input type="hidden" id="saveSecondaryAccountSignatureDB3a" name="secondary_account_holder_signature3a" value="<?php echo $workorder->secondary_account_holder_signature; ?>">
                                         <br>
-
                                         <label for="comp_rep_approval">Printed Name</label>
-                                        <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                            id="secondery_account_holder_name" placeholder=""/>
-                                            <!-- <select class="form-control mb-3" name="secondery_account_holder_name">
-                                                <option value="0">Select Name</option>
-                                                <?php //foreach($users_lists as $ulist){ ?>
-                                                    <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                                <?php //} ?>
-                                            </select> -->
-
-                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web"> -->
-                                            <div id="secondary_representative_div"></div>
-
+                                        <input type="text6" class="form-control mb-3" value="<?php echo $workorder->secondary_account_holder_name; ?>" name="secondery_account_holder_name" id="secondery_account_holder_name" placeholder=""/>
+                                        <div id="secondary_representative_div"></div>
                                     </div>
                                 </div>
                                 <div class="row g-3">                                    
@@ -925,11 +909,14 @@
                                         <hr>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Attach Photo</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Attach Photo</label>                                        
                                         <div class="nsm-img-upload m-auto">
                                             <span class="nsm-upload-label disable-select">Drop or click to upload file</span>
                                             <input type="file" name="attachment_photo" class="nsm-upload">
                                         </div>
+                                        <?php if( $workorder->attached_photo != '' ){ ?>
+                                            <a class="nsm nsm-button primary" style="margin-top:18px;display:block;width:42%;margin-left:0px;" href="<?php echo base_url('uploads/workorders/attachments/'.$workorder->company_id.'/'.$workorder->attached_photo) ?>" target="_new">Photo Attached : <?php echo $workorder->attached_photo; ?></a>
+                                        <?php } ?>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Attach Document</label>
@@ -937,6 +924,9 @@
                                             <span class="nsm-upload-label disable-select">Drop or click to upload file</span>
                                             <input type="file" name="attachment_document" class="nsm-upload">
                                         </div>
+                                        <?php if( $workorder->attached_photo != '' ){ ?>
+                                            <a class="nsm nsm-button primary" style="margin-top:18px;display:block;width:42%;margin-left:0px;" href="<?php echo base_url('uploads/workorders/attachments/'.$workorder->company_id.'/'.$workorder->document_links) ?>" target="_new">Document Attached : <?php echo $workorder->document_links; ?></a>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -944,7 +934,6 @@
                     </div>
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
-                        <button type="button" class="nsm-button">Save Template</button>
                         <button type="submit" class="nsm-button primary">Submit</button>
                     </div>
                 </div>
@@ -1017,6 +1006,7 @@
     </div>
 </div>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('includes/footer'); ?>
 
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
@@ -1160,13 +1150,13 @@ $(document).on('click', '.delete-row-checklist', function(){
     console.log(selected_checklists);
 });
 
-$(document).on('submit', '#form_new_workorder', function(e){
+$(document).on('submit', '#form_update_workorder', function(e){
     let _this = $(this);
     e.preventDefault();
 
     var formData = new FormData(this);
 
-    var url = "<?php echo base_url('workorder/savenewWorkorder'); ?>";
+    var url = "<?php echo base_url('workorder/_update_workorder'); ?>";
     _this.find("button[type=submit]").html("Submitting");
     _this.find("button[type=submit]").prop("disabled", true);
 
@@ -1179,7 +1169,7 @@ $(document).on('submit', '#form_new_workorder', function(e){
             if( result.is_success == 1 ){
                 Swal.fire({
                     //title: 'Save Successful!',
-                    text: "Workorder has been saved successfully.",
+                    text: "Workorder has been updated successfully.",
                     icon: 'success',
                     showCancelButton: false,
                     confirmButtonText: 'Okay'
@@ -1367,7 +1357,7 @@ $(document).on('click','.btn-edit-header',function(){
             return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
         } 
     }); 
-    $( "#datepicker2" ).datepicker();
+    $( "#datepicker" ).datepicker();
     $("#new_customer_form").submit(function(e) {    
         e.preventDefault(); 
         var form = $(this);        
@@ -1400,6 +1390,17 @@ $(document).on('click','.btn-edit-header',function(){
                 }
             }
         });
+    });
+
+    //Quick Add
+    $('.btn-quick-add-job-type').on('click', function(){
+        $('#quick_add_job_type').modal('show');
+    });
+    $('.btn-quick-add-job-tag').on('click', function(){
+        $('#quick_add_job_tag').modal('show');
+    });
+    $('.btn-quick-add-lead-source').on('click', function(){
+        $('#quick_add_lead_source').modal('show');
     });
 });
 </script>
@@ -2043,7 +2044,7 @@ $(".toggle").each(function () {
         $("nav:first").addClass("closed");
         $("#job_type").select2();
         $("#job_tag").select2();
-        $("#lead-source").select2();
+        $("#lead_source").select2();
         $("#wo-priority").select2();
         $("#payment_method").select2();
     });
@@ -3292,6 +3293,10 @@ $('#clear3').click(function() {
 <script>
   $( function() {
     $( "#datepicker_dateissued" ).datepicker({
+        format: 'mm/dd/yyyy'
+    });
+
+    $( "#birthdate" ).datepicker({
         format: 'mm/dd/yyyy'
     });
   } );

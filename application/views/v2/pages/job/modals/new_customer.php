@@ -82,7 +82,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="nsm-button primary"><i class='bx bxs-save'></i> Save</button>
+                                <button type="submit" class="nsm-button primary">Save</button>
                                 <button type="button" id="NEW_CUSTOMER_MODAL_CLOSE" class="nsm-button" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>

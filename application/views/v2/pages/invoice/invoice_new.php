@@ -1,6 +1,10 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/invoice/invoice_modals'); ?>
-
+<style>
+.status-label{
+ font-size:13px;
+}    
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
         <i class="bx bx-receipt"></i>
@@ -86,15 +90,15 @@
                         </div> -->
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Sort by Newest First</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Sort by <?= $sort_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=date_created-desc') : base_url('invoice?order=date_created-desc') ?>">Newest First</a></li>
                                 <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=date_created-asc') : base_url('invoice?order=date_created-asc') ?>">Oldest First</a></li>
-                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-asc') : base_url('invoice?order=last-invoice_number-asc') ?>">Number: Asc</a></li>
-                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-desc') : base_url('invoice?order=last-invoice_number-desc') ?>">Number: Desc</a></li>
-                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-asc') : base_url('invoice?order=grand_total-desc') ?>">Amount: Lowest</a></li>
-                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-desc') : base_url('invoice?order=grand_total-asc') ?>">Amount: Highest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=invoice_number-asc') : base_url('invoice?order=invoice_number-asc') ?>">Invoice Number: Asc</a></li>
+                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=invoice_number-desc') : base_url('invoice?order=invoice_number-desc') ?>">Invoice Number: Desc</a></li>                                
+                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-desc') : base_url('invoice?order=grand_total-asc') ?>">Amount: Lowest</a></li>
+                                <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-asc') : base_url('invoice?order=grand_total-desc') ?>">Amount: Highest</a></li>
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
@@ -158,7 +162,7 @@
                         ?>
                             <?php
                             foreach ($invoices as $invoice) :
-                                switch ($invoice->INV_status):
+                                switch ($invoice->status):
                                     case "Partially Paid":
                                         $badge = "secondary";
                                         break;
@@ -187,7 +191,7 @@
                                         $badge = "error";
                                         break;
                                     default:
-                                        $badge = "";
+                                        $badge = "secondary";
                                         break;
                                 endswitch;
                             ?>
@@ -206,7 +210,17 @@
                                             <?php echo $invoice->job_name ?>
                                         </a>
                                     </td>
-                                    <td><span class="nsm-badge <?= $badge ?>"><?php echo $invoice->status ?></span></td>
+                                    <td>
+                                        <span class="status-label nsm-badge <?= $badge ?>">
+                                            <?php 
+                                                if( $invoice->status == '' ){
+                                                    echo 'Draft';
+                                                }else{
+                                                    echo $invoice->status;
+                                                }
+                                            ?>                                            
+                                        </span>
+                                    </td>
                                     <td>$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">

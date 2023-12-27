@@ -870,21 +870,6 @@
                                                 </div>
                                             </div> -->
                                             <div class="col-md-12">
-                                                <hr />
-                                                <table class="table table-hover d-none">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <small>Job Type</small>
-                                                                <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                                            </td>
-                                                            <td>
-                                                                <small>Job Tags</small>
-                                                                <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
                                                 <div class="col-md-12">
                                                         <h6>Job Account Number</h6>
                                                         <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
@@ -896,12 +881,12 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Select Job Type</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Job Types
+                                                                <h6>Job Type</h6>
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Create Job Type
                                                                 </a>
                                                             </div>
-                                                            <select id="job_type_option" name="jobtypes" class="form-control " >
+                                                            <select id="job_type" name="job_type" class="form-control " >
                                                                 <option value="">Select Type</option>
                                                                 <?php if(!empty($job_types)): ?>
                                                                     <?php foreach ($job_types as $type): ?>
@@ -914,12 +899,12 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Select Job Tag</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>" >
-                                                                    <span class="bx bx-plus"></span>Manage Job Tags
+                                                                <h6>Job Tag</h6>
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Create Job Tag
                                                                 </a>
-                                                            </div>
-                                                            <select id="job_tags" name="tags" class="form-control " >
+                                                            </div>  
+                                                            <select id="job_tag" name="job_tag" class="form-control">
                                                                 <option value="">Select Tags</option>
                                                                 <?php if(!empty($tags)): ?>
                                                                     <?php foreach ($tags as $tag): ?>
@@ -947,7 +932,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $item_price = $item->cost / $item->qty;
-                                                    $total = $item->cost;
+                                                    $total = $item->cost * $item->qty;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -962,7 +947,7 @@
                                                             <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
@@ -1041,8 +1026,8 @@
                                                         <div class="col-sm-6">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Tax Rate</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-tax-rate" ref="javscript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Tax Rate
                                                                 </a>
                                                             </div>
                                                             <select id="tax_rate" name="tax_percentage" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
@@ -1707,6 +1692,7 @@
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
 <?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
+<?php include viewPath('v2/includes/job/quick_add'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
@@ -2270,6 +2256,20 @@ $(document).ready(function() {
     ($("#adjustment_ic").val() == 0) ? $("#adjustment_ic").val(0).change() : $("#adjustment_ic").change();
     ($("#adjustment_otps").val() == 0) ? $("#adjustment_otps").val(0).change() : $("#adjustment_otps").change();
     ($("#adjustment_mm").val() == 0) ? $("#adjustment_mm").val(0).change() : $("#adjustment_mm").change();
+
+    //Quick Add
+    $('.btn-quick-add-job-type').on('click', function(){
+        $('#quick_add_job_type').modal('show');
+    });
+    $('.btn-quick-add-job-tag').on('click', function(){
+        $('#quick_add_job_tag').modal('show');
+    });
+    $('.btn-quick-add-lead-source').on('click', function(){
+        $('#quick_add_lead_source').modal('show');
+    });
+    $('.btn-quick-add-tax-rate').on('click', function(){
+        $('#quick_add_tax_rate').modal('show');
+    });
 });
 
 $('select[name="BILLING_METHOD"]').change(function(event) {
@@ -2609,4 +2609,4 @@ $(function() {
     });
 </script>
 
-<script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
+<script src="<?=base_url("assets/js/jobs/manage_v2.js")?>"></script>

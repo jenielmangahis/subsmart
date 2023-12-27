@@ -351,8 +351,10 @@ class Job extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $created_by = $this->general->get_data_with_param($query, false);            
+            $items = $this->jobs_model->get_specific_job_items($id);
+            
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+            $this->page_data['jobs_data_items'] = $items;
 
             $this->db->select('id');
             $this->db->where('job_id', $id);
@@ -5208,7 +5210,7 @@ class Job extends MY_Controller
         $json_data = [
             'is_success' => $is_success, 
             'msg' => $msg, 
-            'job_type' => ['name' => $job_type_name, 'id' => $job_type_id]
+            'job_type' => ['name' => $job_type_name, 'id' => $job_type_id, 'icon_marker' => 'wrench_64px.png']
         ];
 
         echo json_encode($json_data);
@@ -5250,7 +5252,7 @@ class Job extends MY_Controller
         $json_data = [
             'is_success' => $is_success, 
             'msg' => $msg, 
-            'job_tag' => ['name' => $job_tag_name, 'id' => $job_tag_id]
+            'job_tag' => ['name' => $job_tag_name, 'id' => $job_tag_id, 'marker_icon' => 'administrative_tools_48px.png']
         ];
 
         echo json_encode($json_data);
@@ -5288,6 +5290,44 @@ class Job extends MY_Controller
             'is_success' => $is_success, 
             'msg' => $msg, 
             'lead_source' => ['name' => $lead_source_name, 'id' => $lead_source_id]
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_tax_rate()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $tax_rate_name = '';
+        $tax_rate_id   = 0;
+        $tax_rate_percentage = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');       
+
+        if( $post['tax_name'] != '' ){
+            $data = array(
+                'name' =>  $post['tax_name'],
+                'rate' =>  $post['tax_rate'],
+                'is_default' =>  0,
+                'company_id' =>  $cid,
+            );
+
+            $tax_rate_id = $this->jobs_model->recordTaxRate("add", $data);
+            $tax_rate_name = $post['tax_name'];
+            $tax_rate_percentage = $post['tax_rate'];
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Please enter tax name';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg, 
+            'tax_rate' => ['name' => $tax_rate_name, 'rate' => $tax_rate_percentage, 'id' => $tax_rate_id]
         ];
 
         echo json_encode($json_data);
