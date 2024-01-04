@@ -748,6 +748,16 @@ class Jobs_model extends MY_Model
         return $result->result();
     }
 
+    public function getLastInsertByCompanyId($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getLastJobNumber() {
     	$this->db->select('job_number');
         $this->db->from($this->table);

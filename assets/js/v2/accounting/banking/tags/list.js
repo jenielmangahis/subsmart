@@ -300,6 +300,9 @@ $('#tags-table .edit-group, #tags-table .edit-tag').on('click', function(e) {
                 <div class="col-12 col-md-auto">
                     <button class="nsm-button primary">Save</button>
                 </div>
+                <div class="col-12 col-md-auto">
+                    <button class="nsm-button warning cancel-edit2">Cancel</button>
+                </div>
             </div>
         </form>
     </td>`);
@@ -308,14 +311,36 @@ $('#tags-table .edit-group, #tags-table .edit-tag').on('click', function(e) {
 $(document).on('click', '#tags-table .cancel-edit', function(e) {
     e.preventDefault();
 
-    if($(this).closest('tr').data().type === 'group') {
-        $(this).closest('tr').attr('data-bs-toggle', 'collapse');
+    // if($(this).closest('tr').data().type === 'group') {
+    //     $(this).closest('tr').attr('data-bs-toggle', 'collapse');
 
-        var index = $(this).closest('tr').index();
-        $(this).closest('tr').attr('data-bs-target', `.collapse-${index}`);
-    }
-    $(this).closest('tr').html(rowHtml);
+    //     var index = $(this).closest('tr').index();
+    //     $(this).closest('tr').attr('data-bs-target', `.collapse-${index}`);
+    // }
+    // $(this).closest('tr').html(rowHtml);
+    // location.reload();
+    // $(".nsm-page-content").load(window.location + ".nsm-page-content");
+    $(this).hide();
+    (".dropdown-menu-end").removeClass("show");
 });
+
+$(document).on('click', '#tags-table .cancel-edit2', function(e) {
+    // e.preventDefault();
+
+    // location.reload();
+    // $(".nsm-page-content").load(window.location + ".nsm-page-content");
+    $(this).hide();
+    (".dropdown-menu-end").removeClass("show");
+});
+
+function refreshTable(){
+    // $("#tags-table").load("<?php echo base_url('accounting/tags')?>", function(){
+    //     setTimeout(refreshTable, 5000);
+    // });
+    // $("#tags-table").load(window.location + " #tags-table");
+    $(".dropdown-menu-end").removeClass("show");
+    
+}
 
 $(document).on('submit', '#tags-table .edit-form', function(e) {
     e.preventDefault();

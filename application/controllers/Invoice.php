@@ -48,57 +48,7 @@ class Invoice extends MY_Controller
     }
 
     public function index($tab = '')
-    {
-		// $this->page_data['page']->title = 'Invoices & Payments';
-        // $this->page_data['page']->parent = 'Sales';
-        // $is_allowed = $this->isAllowedModuleAccess(35);
-        // if (!$is_allowed) {
-        //     $this->page_data['module'] = 'invoice';
-        //     echo $this->load->view('no_access_module', $this->page_data, true);
-        //     die();
-        // }
-
-        // $role = logged('role');
-        // $type = 0;
-        // if ($role == 2 || $role == 3 || $role == 6 || $role == 8) {
-        //     $comp_id = logged('company_id');
-
-        //     if (!empty($tab)) {
-        //         $this->page_data['tab'] = $tab;
-        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
-        //     } else {
-        //         // search
-        //         if (!empty(get('search'))) {
-        //             $this->page_data['search'] = get('search');
-        //             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
-        //         } elseif (!empty(get('order'))) {
-        //             $this->page_data['search'] = get('search');
-        //             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-        //         } else {
-        //             // $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
-        //             $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
-        //         }
-        //     }
-        // }
-
-        // if ($role == 4) {
-        //     if (!empty($tab)) {
-        //         $this->page_data['tab'] = $tab;
-        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
-        //     } elseif (!empty(get('order'))) {
-        //         $this->page_data['order'] = get('order');
-        //         $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
-        //     } else {
-        //         if (!empty(get('search'))) {
-        //             $this->page_data['search'] = get('search');
-        //             $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
-        //         } else {
-        //             $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
-        //         }
-        //     }
-        // }
-        // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
-
+    {   
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
@@ -198,44 +148,48 @@ class Invoice extends MY_Controller
 
         $role = logged('role');
         $type = 0;
-        // if ($role == 2 || $role == 3 || $role == 6 || $role == 7 || $role == 8) {
-            $comp_id = logged('company_id');
-
-            if (!empty($tab)) {
-                $this->page_data['tab'] = $tab;
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
-            } else {
-                // search
-                if (!empty(get('search'))) {
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
-                } elseif (!empty(get('order'))) {
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-                } else {
-                    // $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
-                    $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
+        $comp_id = logged('company_id');
+        $sort_by = 'Newest First';
+        if (!empty($tab)) {
+            $this->page_data['tab'] = $tab;
+            $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
+        } else {
+            // search
+            if (!empty(get('search'))) {
+                $this->page_data['search'] = get('search');
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+            } elseif (!empty(get('order'))) {  
+                $sort_by = get('order');    
+                switch (get('order')) {
+                    case 'date_created-desc':
+                        $sort_by = 'Newest First';
+                        break;
+                    case 'date_created-asc':
+                        $sort_by = 'Oldest First';
+                        break;
+                    case 'invoice_number-asc':
+                        $sort_by = 'Invoice Number: Asc';
+                        break;
+                    case 'invoice_number-desc':
+                        $sort_by = 'Invoice Number: Desc';
+                        break;
+                    case 'grand_total-asc':
+                        $sort_by = 'Amount: Lowest';
+                        break;
+                    case 'grand_total-desc':
+                        $sort_by = 'Amount: Highest';
+                        break;
+                    default:
+                        $sort_by = 'Newest First';
+                        break;
                 }
+                $this->page_data['search'] = get('search');
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+            } else {                
+                //$this->page_data['invoices'] = $this->invoice_model->getAllData();
+                $this->page_data['invoices'] = $this->invoice_model->getAllActiveByCompanyId($comp_id, $type);
             }
-        // }
-
-        // if ($role == 4) {
-        //     if (!empty($tab)) {
-        //         $this->page_data['tab'] = $tab;
-        //         $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
-        //     } elseif (!empty(get('order'))) {
-        //         $this->page_data['order'] = get('order');
-        //         $this->page_data['invoices'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
-        //     } else {
-        //         if (!empty(get('search'))) {
-        //             $this->page_data['search'] = get('search');
-        //             $this->page_data['invoices'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
-        //         } else {
-        //             $this->page_data['invoices'] = $this->invoice_model->getAllByUserId();
-        //         }
-        //     }
-        // }
-
+        }
 
         $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
         $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
@@ -253,12 +207,10 @@ class Invoice extends MY_Controller
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
-        $this->page_data['page_title'] = "Invoices";
-        // print_r($this->page_data);
-
-        $this->page_data['page']->title = 'Invoices';
+        $this->page_data['page_title'] = "Invoices & Payments";
+        $this->page_data['page']->title = 'Invoices & Payments';
         $this->page_data['page']->parent = 'Sales';
-        
+        $this->page_data['sort_by'] = $sort_by;
         $this->load->view('v2/pages/invoice/invoice_new', $this->page_data);
     }
 
@@ -567,21 +519,10 @@ class Invoice extends MY_Controller
             die();
         }
 
-
         $comp_id = logged('company_id');
         $this->page_data['setting'] = null;
-        $setting = $this->invoice_settings_model->getAllByCompany($comp_id);
-
-        if (!empty($setting)) {
-            foreach ($setting as $key => $value) {
-                if (is_serialized($value)) {
-                    $setting->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['setting'] = $setting;
-        }
-
-
+        $setting = $this->invoice_settings_model->getByCompanyId($comp_id);
+        $this->page_data['setting'] = $setting;
         $this->load->view('v2/pages/invoice/settings', $this->page_data);
     }
 
@@ -785,22 +726,21 @@ class Invoice extends MY_Controller
     public function save_setting($id = null)
     {
         postAllowed();
+
+        $comp_id = logged('company_id');
         $user = (object)$this->session->userdata('logged');
-        $config = array(
-            'upload_path' => "./uploads/",
-            'allowed_types' => "gif|jpg|png|jpeg",
-            'overwrite' => true,
-            'max_size' => "2048000",
-            'max_height' => "768",
-            'max_width' => "1024"
-        );
 
-        $this->load->library('upload', $config);
+        $invoiceSettingFolderPath = "./uploads/invoice/settings/".$comp_id."/";            
+        if(!file_exists($invoiceSettingFolderPath)) {
+            mkdir($invoiceSettingFolderPath, 0777, true);
+        }
 
-        if ($this->upload->do_upload()) {
-            $draftlogo = array('upload_data' => $this->upload->data());
-            $logo = $draftlogo['upload_data']['file_name'];
-        } else {
+        if(isset($_FILES['userfile']) && $_FILES['userfile']['tmp_name'] != '') {
+            $tmp_name   = $_FILES['userfile']['tmp_name'];
+            $extension  = strtolower(end(explode('.',$_FILES['userfile']['name'])));
+            $logo = "invoice_setting_".time().'.'.$extension;
+            move_uploaded_file($tmp_name, $invoiceSettingFolderPath.$logo);
+        }else{
             if ($id) {
                 $logo = post('img_setting');
             } else {
@@ -849,47 +789,55 @@ class Invoice extends MY_Controller
             'business_phone' => post('from_phone_show'),
             'office_phone' => post('from_office_phone_show'),
         );
-
-        $comp_id = logged('company_id');
+        
         if (!$id) {
             $this->invoice_settings_model->create([
-                'user_id' => $user->id,
                 'company_id' => $comp_id,
-                'invoice_number' => serialize($invoice_number),
-                'residential' => serialize($residential),
-                'commercial' => serialize($commercial),
                 'logo' => $logo,
-                'payable_to' => post('payment_to'),
+                'check_payable_to' => post('payment_to'),
                 'due_terms' => post('due_terms'),
-                'invoice_type' => post('invoice_type'),
-                'payment_fee' => serialize($payment_fee),
-                'invoice_template' => serialize($invoice_template),
-                'invoice_from' => serialize($invoice_from),
+                'payment_fee_amount' => serialize($payment_fee),
                 'recurring' => post('recurring_on_add_child'),
-                'payment_method' => serialize($payment_methods),
                 'mobile_payment' => post('payment_mobile_status'),
-                'invoice_tip' => post('tip_status'),
-                'autoconvert_work_order' => post('autoconvert_work_order')
+                'accept_tip' => post('tip_status') ? post('tip_status') : 0,
+                'auto_convert_completed_work_order' => post('autoconvert_work_order'),
+                'residential_message' => post('message') ? post('message') : '',
+                'residential_terms_and_conditions' => post('terms') ? post('terms') : '',
+                'commercial_message' => post('message_commercial') ? post('message_commercial') : '',
+                'commercial_terms_and_conditions' => post('terms_commercial') ? post('terms_commercial') : '',
+                'hide_item_price' => post('hide_item_price') ? post('hide_item_price') : 0,
+                'hide_item_qty' => post('hide_item_qty') ? post('hide_item_qty') : 0,
+                'hide_item_tax' => post('hide_item_tax') ? post('hide_item_tax') : 0,
+                'hide_item_discount' => post('hide_item_discount') ? post('hide_item_discount') : 0,
+                'hide_item_total' => post('hide_item_total') ? post('hide_item_total') : 0,
+                'hide_from_email' => post('hide_from_email') ? post('hide_from_email') : 0,
+                'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
+                'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
+                'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
             ]);
         } else {
             $this->invoice_settings_model->update($id, [
-                'user_id' => $user->id,
-                'company_id' => $comp_id,
-                'invoice_number' => serialize($invoice_number),
-                'residential' => serialize($residential),
-                'commercial' => serialize($commercial),
                 'logo' => $logo,
-                'payable_to' => post('payment_to'),
+                'check_payable_to' => post('payment_to'),
                 'due_terms' => post('due_terms'),
-                'invoice_type' => post('invoice_type'),
-                'payment_fee' => serialize($payment_fee),
-                'invoice_template' => serialize($invoice_template),
-                'invoice_from' => serialize($invoice_from),
+                'payment_fee_amount' => serialize($payment_fee),
                 'recurring' => post('recurring_on_add_child'),
-                'payment_method' => serialize($payment_methods),
                 'mobile_payment' => post('payment_mobile_status'),
-                'invoice_tip' => post('tip_status'),
-                'autoconvert_work_order' => post('autoconvert_work_order')
+                'accept_tip' => post('tip_status') ? post('tip_status') : 0,
+                'auto_convert_completed_work_order' => post('autoconvert_work_order'),
+                'residential_message' => post('message') ? post('message') : '',
+                'residential_terms_and_conditions' => post('terms') ? post('terms') : '',
+                'commercial_message' => post('message_commercial') ? post('message_commercial') : '',
+                'commercial_terms_and_conditions' => post('terms_commercial') ? post('terms_commercial') : '',
+                'hide_item_price' => post('hide_item_price') ? post('hide_item_price') : 0,
+                'hide_item_qty' => post('hide_item_qty') ? post('hide_item_qty') : 0,
+                'hide_item_tax' => post('hide_item_tax') ? post('hide_item_tax') : 0,
+                'hide_item_discount' => post('hide_item_discount') ? post('hide_item_discount') : 0,
+                'hide_item_total' => post('hide_item_total') ? post('hide_item_total') : 0,
+                'hide_from_email' => post('hide_from_email') ? post('hide_from_email') : 0,
+                'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
+                'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
+                'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
             ]);
         }
 

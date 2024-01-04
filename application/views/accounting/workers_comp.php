@@ -656,6 +656,7 @@ function validateForm() {
     if (y[i].value == "") {
       // add an "invalid" class to the field:
       y[i].className += " invalid";
+      $('.required_fields').show();
       // and set the current valid status to false
       valid = false;
     }

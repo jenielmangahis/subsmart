@@ -544,6 +544,16 @@
                 }
             });
     });
+        
+        $(document).on('click', '#closeModalTags', function(){
+            // var start_date = $('#action_select_date').val();
+            // var start_time = $('#action_select_time').val();
+            // alert('test');
+            // $("#modalTagsAddNew").modal("hide"); 
+            location.reload();
+        });
+
+    
 
 
 
@@ -623,6 +633,15 @@
 }();
 
 Accordion.init();
+</script>
+
+
+<script>
+  $( function() {
+    $( "#datepicker_date" ).datepicker({
+        format: 'mm/dd/yyyy'
+    });
+  } );
 </script>
   </body>
 
