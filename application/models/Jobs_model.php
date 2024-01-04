@@ -320,7 +320,7 @@ class Jobs_model extends MY_Model
         }
 
         $this->db->from('work_orders_items');
-        $this->db->select('items.id,items.title,items.price,items.type,work_orders_items.qty');
+        $this->db->select('items.id,items.title,items.price,items.type,work_orders_items.qty,work_orders_items.total, work_orders_items.cost, work_orders_items.tax');
         $this->db->join('items', 'items.id = work_orders_items.items_id');
         $this->db->where("work_orders_items.work_order_id", $id);
         $query = $this->db->get();
@@ -748,6 +748,16 @@ class Jobs_model extends MY_Model
         return $result->result();
     }
 
+    public function getLastInsertByCompanyId($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getLastJobNumber() {
     	$this->db->select('job_number');
         $this->db->from($this->table);
@@ -796,6 +806,13 @@ class Jobs_model extends MY_Model
         return $insert_id;
     }
     // END: INSERT DATA FROM jobs TABLE to invoices TABLE ON "SEND INVOICE" COMMAND.
+
+    public function createJob($data)
+    {
+        $INVOICE = $this->db->insert($this->table, $data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
 
     public function get_all_company_scheduled_jobs($company_id)
     {
@@ -867,8 +884,9 @@ class Jobs_model extends MY_Model
         	}
         // ===============
             $INSERT = $this->db->insert('tax_rates', $data);
+            $last_id = $this->db->insert_id();
         // ===============
-            return true;
+            return $last_id;
         // ===============
         }
 

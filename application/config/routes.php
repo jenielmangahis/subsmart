@@ -893,6 +893,9 @@ $route['settings/_create_sms_template'] = 'Settings/ajax_create_sms_template';
 $route['settings/edit_sms_template/(:any)'] = 'Settings/edit_sms_template/$1';
 $route['settings/_update_sms_template'] = 'Settings/ajax_update_sms_template';
 $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
+$route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
+$route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
+$route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
 
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
@@ -1033,6 +1036,7 @@ $route['workorder/_update_custom_fields'] = 'Workorder/ajax_update_custom_fields
 $route['workorder/_delete_custom_fields'] = 'Workorder/ajax_delete_custom_fields';
 $route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
 $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
+$route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 
@@ -1114,6 +1118,7 @@ $route['job/bird_eye_view'] = 'Workorder/map';
 $route['job/_load_job_payments'] = 'Job/ajax_load_job_payments';
 $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
+$route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
 //Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
@@ -1615,4 +1620,10 @@ $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 
 //Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
+
+//Quick Add
+$route['job/_quick_add_job_type'] = 'Job/ajax_quick_add_job_type';
+$route['job/_quick_add_job_tag'] = 'Job/ajax_quick_add_job_tag';
+$route['job/_quick_add_lead_source'] = 'Job/ajax_quick_add_lead_source';
+$route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 

@@ -113,17 +113,41 @@ class Invoice_model extends MY_Model
 
     public function getAllByCompany($comp_id, $type, $filter = array())
     {
-        $this->db->select('*');
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
         $this->db->from($this->table);
-        $this->db->order_by('id', 'DESC');
-        $this->db->where('company_id', $comp_id);
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
+        $this->db->where('invoices.company_id', $comp_id);
         $this->db->where('is_recurring', $type);
 
         if (!empty($filter)) {
             if (isset($filter['q'])) {
-                $this->db->like('contact_name', $filter['q'], 'both');
+                $this->db->like('acs_profile.first_name', $filter['q'], 'both');
+                $this->db->like('acs_profile.last_name', $filter['q'], 'both');
             }
         }
+
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllActiveByCompanyId($comp_id, $type, $filter = array())
+    {
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
+        $this->db->where('invoices.company_id', $comp_id);
+        $this->db->where('invoices.view_flag', 0);
+
+        if (!empty($filter)) {
+            if (isset($filter['q'])) {
+                $this->db->like('acs_profile.first_name', $filter['q'], 'both');
+                $this->db->like('acs_profile.last_name', $filter['q'], 'both');
+            }
+        }
+
+        $this->db->order_by('invoices.id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -395,6 +419,27 @@ class Invoice_model extends MY_Model
         // $this->db->from($this->table);
         $this->db->where('invoices.company_id', $company_id);
         $this->db->where('invoices.view_flag', 0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByCompanyIdAndDateRange($company_id, $date_range = array(), $filter = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('date_issued >=', $date_range['from']);
+        $this->db->where('date_issued <=', $date_range['to']);
+        $this->db->where('view_flag', 0);        
+        if( !empty($filter) ){
+            $this->db->group_start();
+                foreach( $filter as $f ){
+                    $this->db->or_like($f['field_name'], $f['field_value'], 'both');
+                }
+            $this->db->group_end();
+        }        
+        $this->db->order_by('id', 'DESC');
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -717,7 +762,6 @@ class Invoice_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('is_recurring', $type);
-        $this->db->order_by('id', 'DESC');
 
         if (!empty($filters)) {
             if (isset($filters['status'])) {
@@ -767,20 +811,29 @@ class Invoice_model extends MY_Model
         if (!empty($filters['order'])) {
             switch ($filters['order']) {
 
-                case 'created_at-asc':
-                    $this->db->order_by('created_at', 'asc');
+                case 'date_created-asc':
+                    $this->db->order_by('date_created', 'asc');
                     break;
 
-                case 'created_at-desc':
-                    $this->db->order_by('created_at', 'desc');
+                case 'date_created-desc':
+                    $this->db->order_by('date_created', 'desc');
                     break;
 
+                case 'invoice_number-asc':                    
+                    $this->db->order_by('invoice_number', 'asc');
+                    break;
+
+                case 'invoice_number-desc':
+                    $this->db->order_by('invoice_number', 'desc');
+                    break;
+
+                        
                 case 'last-created_at-asc':
-                    $this->db->order_by("(SUBSTR(created_at, INSTR(created_at, ' ')))", '');
+                    $this->db->order_by("(SUBSTR(date_created, INSTR(created_at, ' ')))", '');
                     break;
 
                 case 'last-created_at-desc':
-                    $this->db->order_by("(SUBSTR(created_at, INSTR(created_at, ' '))) DESC", '');
+                    $this->db->order_by("(SUBSTR(date_created, INSTR(created_at, ' '))) DESC", '');
                     break;
 
                 case 'email-asc':
@@ -790,7 +843,17 @@ class Invoice_model extends MY_Model
                 case 'email-desc':
                     $this->db->order_by('contact_email', 'desc');
                     break;
+
+                case 'grand_total-asc':
+                    $this->db->order_by('grand_total', 'asc');
+                    break;
+
+                case 'grand_total-desc':
+                    $this->db->order_by('grand_total', 'desc');
+                    break;
             }
+        }else{
+            $this->db->order_by('id', 'DESC');
         }
         
         $query = $this->db->get();
@@ -1085,6 +1148,16 @@ class Invoice_model extends MY_Model
         $this->db->where('view_flag', 0);
         $query = $this->db->get('invoices');
         return $query->result();
+    }
+
+    public function getLastInsertByCompanyId($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

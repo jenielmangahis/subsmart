@@ -2439,8 +2439,13 @@ function get_invoice_amount($type)
         case "pending":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
             return total_invoice_amount($result);
-
-        default:
+        case "paid":
+            $filter[] = ['field_name' => 'status', 'field_value' => 'Paid'];
+            $filter[] = ['field_name' => 'status', 'field_value' => 'Partially Paid'];
+            $date_range = ['from' => $start_date, 'to' => $end_date];
+            $result = $CI->invoice_model->getAllByCompanyIdAndDateRange($company_id, $date_range, $filter);  
+            return total_invoice_amount($result);
+        default:        
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
             return total_invoice_amount($result);
     }
@@ -5101,6 +5106,12 @@ if(!function_exists('formatInvoiceNumber')) {
         }
     
         return $number;
+    }
+}
+
+if(!function_exists('formatInvoiceNumberV2')) {
+    function formatInvoiceNumberV2($prefix, $number) {
+        return $prefix . str_pad($number, 7, '0', STR_PAD_LEFT);
     }
 }
 

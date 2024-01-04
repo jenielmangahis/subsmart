@@ -695,7 +695,7 @@
                                                                 <div class="col-8">
                                                                     <select class="form-control" name="tax_rates" id="tax_rates">
                                                                         <?php foreach($ac_tax_rates as $rates){ ?>
-                                                                        <option value="<?php echo $rates->id; ?>"><?php echo $rates->name. ' -  <span style="float:right;">'.$rates->rate.'%</span><i>('.$rates->type.')</i>'; ?></option>
+                                                                        <option value="<?php echo $rates->id; ?>"><?php echo $rates->name. ' -  <span style="float:right;">'.$rates->rate.'%</span> <i> ( '.$rates->type.' ) </i>'; ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>

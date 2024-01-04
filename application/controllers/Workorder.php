@@ -12509,6 +12509,288 @@ class Workorder extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
+
+    public function ajax_convert_to_job()
+    {        
+        $this->load->helper(array('hashids_helper', 'google_calendar_helper'));
+        $this->load->model('Jobs_model');
+        $this->load->model('JobTags_model');
+        $this->load->model('Items_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('General_model', 'general');
+        $this->load->model('Customer_model');
+
+        $is_success = 1;
+        $msg = 'Cannot send email';
+        $job_id = 0;
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $user_logged_name = logged('FName') . ' ' . logged('LName');
+        $post = $this->input->post();
+
+        if ($post['total_amount'] <= 0) {
+            $msg = 'Please select an item';
+            $is_success = 0;
+        }
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( empty($customer) ){            
+            $msg = 'Cannot find customer';
+            $is_success = 0;
+        }
+
+        if( $is_success == 1 ){
+            $job_settings = $this->Jobs_model->getJobSettingsByCompanyId($cid);
+            $job_workorder_id = $post['wid'];
+            if ($job_settings) {
+                $prefix   = $job_settings->job_num_prefix;
+                $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+            } else {
+                $prefix = 'JOB-';
+                $lastId = $this->Jobs_model->getlastInsert($cid);
+                if ($lastId) {
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                } else {
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }
+            }
+
+            $job_number = $prefix . $next_num;                
+
+            $jobTag = $this->JobTags_model->getById($post['job_tag']);
+            $job_location = $customer->mail_add;
+
+            $attachmentFolderPath = "./uploads/jobs/attachment/";            
+            if(!file_exists($attachmentFolderPath)) {
+                mkdir($attachmentFolderPath, 0777, true);
+            }
+            
+            if(isset($_FILES['filetoupload']) && $_FILES['filetoupload']['tmp_name'] != '') {
+                $tmp_name   = $_FILES['attachment_photo']['tmp_name'];
+                $extension  = strtolower(end(explode('.',$_FILES['filetoupload']['name'])));
+                $attachment = $job_number."_attachment_".time().'.'.$extension;
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment);
+            }
+
+            $jobs_data = array(
+                'job_number' => $job_number,
+                'estimate_id' => 0,
+                'customer_id' => $post['customer_id'],
+                'employee_id' => $post['employee_id'],
+                'employee2_id' => $post['emp2_id'] > 0 ? $post['emp2_id'] : 0,
+                'employee3_id' => $post['emp3_id'] > 0 ? $post['emp3_id'] : 0,
+                'employee4_id' => $post['emp4_id'] > 0 ? $post['emp4_id'] : 0,
+                'employee5_id' => $post['emp5_id'] > 0 ? $post['emp5_id'] : 0,
+                'employee6_id' => $post['emp6_id'] > 0 ? $post['emp6_id'] : 0,
+                'jobtypebase_amount' => 0,
+                'job_name' => $job_number . ' - ' . $post['job_type'],
+                'job_location' => $job_location,
+                'job_description' => $post['job_description'],
+                'start_date' => date("Y-m-d",strtotime($post['start_date'])),
+                'start_time' => $post['start_time'],
+                'end_date' => date("Y-m-d",strtotime($post['end_date'])),
+                'end_time' => $post['end_time'],
+                'event_color' => $post['event_color'],
+                'customer_reminder_notification' => $post['customer_reminder_notification'],
+                'priority' => $post['priority'],
+                'tags' => $jobTag->name,
+                'status' => 'Scheduled',
+                'message' => $post['message'],
+                'company_id' => $cid,
+                'date_created' => date('Y-m-d H:i:s'),
+                'created_by' => $uid,
+                'attachment' => $attachment,
+                'tax_percentage' => $post['tax_percentage'],
+                'tax_rate' => $post['tax'],
+                'job_type' => $post['job_type'],
+                'date_issued' => date("Y-m-d",strtotime($post['start_date'])),
+                'work_order_id' => $job_workorder_id,
+                'commission' => 0,
+                'tech_commission' => 0,
+                'tech_commission_total' => 0,
+                'fix_cost' => 0,
+                'margin' => 0,
+                'amount_collected' => 0,
+                'gross_profit' => 0,
+                'job_account_number' => '',
+                'BILLING_METHOD' => $post['BILLING_METHOD'],
+                'CC_CREDITCARDNUMBER' => '',
+                'CC_EXPIRATION' => '',
+                'CC_CVV' => '',
+                'DC_CREDITCARDNUMBER' => '',
+                'DC_EXPIRATION' => '',
+                'DC_CVV' => '',
+                'CHECK_CHECKNUMBER' => '',
+                'CHECK_ROUTINGNUMBER' => '',
+                'CHECK_ACCOUNTNUMBER' => '',
+                'ACH_ROUTINGNUMBER' => '',
+                'ACH_ACCOUNTNUMBER' => '',
+                'VENMO_ACCOUNTCREDENTIAL' => '',
+                'VENMO_ACCOUNTNOTE' => '',
+                'VENMO_CONFIRMATION' => '',
+                'PP_ACCOUNTCREDENTIAL' => '',
+                'PP_ACCOUNTNOTE' => '',
+                'PP_CONFIRMATION' => '',
+                'SQ_ACCOUNTCREDENTIAL' => '',
+                'SQ_ACCOUNTNOTE' => '',
+                'SQ_CONFIRMATION' => '',
+                'WW_ACCOUNTCREDENTIAL' => '',
+                'WW_ACCOUNTNOTE' => '',
+                'HOF_ACCOUNTCREDENTIAL' => '',
+                'HOF_ACCOUNTNOTE' => '',
+                'ET_ACCOUNTCREDENTIAL' => '',
+                'ET_ACCOUNTNOTE' => '',
+                'INV_TERM' => '',
+                'INV_INVOICEDATE' => '',
+                'INV_DUEDATE' => '',
+                'OCCP_CREDITCARDNUMBER' => '',
+                'OCCP_EXPIRATION' => '',
+                'OCCP_CVV' => '',
+                'OPT_ACCOUNTCREDENTIAL' => '',
+                'OPT_ACCOUNTNOTE' => ''
+            );
+
+            $job_id = $this->Jobs_model->createJob($jobs_data);
+            if( $job_id > 0 ){
+                //Create hash_id
+                $job_hash_id = hashids_encrypt($job_id, '', 15);
+                $this->Jobs_model->update($job_id, ['hash_id' => $job_hash_id]);
+
+                //Update job settings
+                $jobs_settings_data = array(
+                    'job_num_next' => $job_settings->job_num_next + 1
+                );
+                $this->general->update_with_key($jobs_settings_data, $job_settings->id, 'job_settings');
+                
+                //Google Calendar
+                createSyncToCalendar($job_id, 'job', $cid);
+
+                if (isset($post['item_id'])) {                    
+                    $devices    = count($post['item_id']);
+                    for ($xx = 0; $xx < $devices; $xx++) {
+                        $job_items_data = array();
+                        $job_items_data['job_id']     = $job_id;
+                        $job_items_data['items_id']   = $post['item_id'][$xx];
+                        $job_items_data['commission'] = $post['item_commission'][$xx];
+                        $job_items_data['margin']     = $post['item_margin'][$xx];
+                        $job_items_data['qty']        = $post['item_qty'][$xx];
+                        $job_items_data['cost']       = $post['item_price'][$xx];
+                        $job_items_data['tax']        = 0;
+                        $job_items_data['total']      = $post['item_price'][$xx] * $post['item_qty'][$xx];
+                        $job_items_data['location']   = 0;
+                        $job_items_data['item_name']  = $post['item_name'][$xx];
+                        $this->general->add_($job_items_data, 'job_items');
+                        $this->items_model->recordItemTransaction($post['item_id'][$xx], $post['item_qty'][$xx], $post['location'][$xx], "deduct", $user_logged_name, "USER");
+                        $this->items_model->recordItemTransaction($post['item_id'][$xx], $post['item_qty'][$xx], $post['location'][$xx], "deduct", $customer->first_name.' '.$customer->last_name, "CUSTOMER");
+                    }
+                }
+
+                $payment_data = [
+                    'amount' =>  $post['total_amount'],
+                    'program_setup' => $post['otps'],
+                    'monthly_monitoring' => $post['monthly_monitoring'],
+                    'installation_cost' => $post['installation_cost'],
+                    'equipment_cost' => $post['sub_total'],
+                    'tax' => $post['tax'],
+                    'deposit_collected' => 0,
+                    'job_id' => $job_id,
+                    'date_created' => date("Y-m-d h:i:s")
+                ];
+                $this->general->add_($payment_data, 'job_payments');
+
+                //Update customer otp equipment cost and monthly monitoring fields
+                if( in_array($cid, adi_company_ids()) ){
+                    $data_acs_office = [
+                        'monthly_monitoring' => $post['monthly_monitoring'],
+                        'equipment_cost' => $post['sub_total']                     
+                    ];
+
+                    $this->general->update_with_key_field($data_acs_office, $post['customer_id'], 'acs_office', 'fk_prof_id');
+
+                    $itemsOffice = array(
+                        'fk_prof_id'                => $post['customer_id'],
+                        'fk_sales_rep_office'       => $post['employee_id'],
+                        'technician'                => $post['emp2_id'],
+                    );
+            
+                    $solarItemsOffices = $this->workorder_model->update_office_job($itemsOffice);
+            
+                    $alarmInfoData = array(
+                        'fk_prof_id'                => $post['customer_id'],
+                        'monitor_id'                => $post['JOB_ACCOUNT_NUMBER'],
+                    );
+            
+                    $alarmInfoDatas = $this->workorder_model->update_alarm_adi_job($alarmInfoData);
+                }
+
+                $get_work_order_data = array(
+                    'where' => array(
+                        'id' => $post['wid']
+                    ),
+                    'table' => 'work_orders',
+                    'select' => '*',
+                );
+                $workorder_data = $this->general->get_data_with_param($get_work_order_data);
+
+                $check_exist = array(
+                    'where' => array('fk_prof_id' => $post['customer_id']),
+                    'table' => 'acs_alarm'
+                );
+                $is_exist = $this->general->get_data_with_param($check_exist);
+
+                $customer_data = array();
+                $customer_data['passcode'] = $workorder_data->password;
+                $customer_data['panel_type'] = $workorder_data->panel_type;
+                $customer_data['system_type'] = $workorder_data->plan_type;
+                if (empty($is_exist)) {
+                    $customer_data['fk_prof_id'] = $post['customer_id'];
+                    $this->general->add_($customer_data, 'acs_alarm');
+                } else {
+                    $this->general->update_with_key_field($customer_data, $post['customer_id'], 'acs_alarm', 'fk_prof_id');
+                }
+
+                //SMS Notification
+                createCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', $post['employee_id'], $post['employee_id'], 0);
+                if ($posAt['emp2_id'] > 0) {
+                    creaAteCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp2_id'], 0);
+                }
+                if ($posAt['emp3_id'] > 0) {
+                    creaAteCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp3_id'], 0);
+                }
+                if ($post['emp4_id'] > 0) {
+                    createCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp4_id'], 0);
+                }
+                if ($post['emp5_id'] > 0) {
+                    createCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp5_id'], 0);
+                }
+                if ($post['emp6_id'] > 0) {
+                    createCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp6_id'], 0);
+                }
+
+                // Record Job save and Update to Customer Activities Module in Customer Dashboard
+                $action = "$user_logged_name scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$job_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
+
+                $customerLogPayload = array(
+                    'date' => date('m/d/Y')."<br>".date('h:i A'),
+                    'customer_id' => $post['customer_id'],
+                    'user_id' => $uid,
+                    'logs' => "$action"
+                );
+                $customerLogsRecording = $this->Customer_model->recordActivityLogs($customerLogPayload);
+
+                customerAuditLog($uid, $post['customer_id'], $job_id, 'Jobs', 'Added New Job #' . $job_number);
+
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot convert data';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'job_id' => $job_id, 'is_update' => 0];
+        echo json_encode($json_data);
+    }
 }
 /* End of file Workorder.php */
 

@@ -718,6 +718,20 @@ $("#attachment-file").change(function() {
             });
         });
 
+        // $("#job_type").on( 'change', function () {
+        //     var type_id = this.value;
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>/job/get_type_selected",
+        //         data: {id : type_id}, // serializes the form's elements.
+        //         success: function(data)
+        //         {
+        //             var template_data = JSON.parse(data);
+        //             $('#job_type').val(template_data.title);
+        //         }
+        //     });
+        // });
+
         //$('#summernote').summernote('code', '');
         $('#summernote').summernote({
             placeholder: 'Type Here ... ',

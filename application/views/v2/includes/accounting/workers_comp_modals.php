@@ -1,13 +1,14 @@
-<div class="modal fade nsm-modal getQuote" id="getQuote" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+<div class="modal fade nsm-modal getQuote" id="getQuote" tabindex="" role="dialog" aria-labelledby="myModalLabel2" style="font-family:'Quicksand', sans-serif !important;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="print_preview_vendors_modal_label">
-                    <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
+                    <!-- <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" /> -->
                 </span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
+            <!-- <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>" method="POST"> -->
+            <?php echo form_open_multipart('accounting/addQuote', [ 'id' => 'regForm', 'autocomplete' => 'off' ]); ?> 
             <div class="modal-body">
                 <div class="stepper-wrapper" style="width:80%; margin-left: auto; margin-right: auto">
                     <div class="stepper-item completed">
@@ -28,83 +29,95 @@
                     <h4>Your business</h4>
                     <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
 
-                    <h6><br>General industry</h6>
+                    General industry
                     <select class="form-control nsm-field" name="general_industry">
-                        <option value="">Select General industry</option>
-                        <option value="1">Advertising, Graphic Design, Photography and Printing</option>
-                        <option value="2">Agriculture, Forestry, Fishing and Hunting</option>
-                        <option value="3">Arts, Entertainment and Recreation</option>
-                        <option value="4">Communications, Electric or Gas Service</option>
-                        <option value="5">Educational and Social Services</option>
-                        <option value="6">Health Care, Social Assistance and Public Administration</option>
-                        <option value="7">Legal, Finance, Insurance and Real Estate</option>
-                        <option value="8">Manufacturing</option>
-                        <option value="9">Membership, Religious and Fraternal Organizations</option>
-                        <option value="10">Personal and Business Services</option>
-                        <option value="11">Restaurants and Lodging</option>
-                        <option value="12">Retail Trade - Nonstore</option>
-                        <option value="13">Retail Trade - Storefront</option>
-                        <option value="14">Specialty Trade Contractors</option>
-                        <option value="15">Technology, Engineering and Consulting</option>
-                        <option value="16">Transportation & Warehousing</option>
-                        <option value="17">Wholesale Trade</option>
+                        <!-- <option value="">Select General industry</option> -->
+                        <option value="Advertising, Graphic Design, Photography and Printing">Advertising, Graphic Design, Photography and Printing</option>
+                        <option value="Agriculture, Forestry, Fishing and Hunting">Agriculture, Forestry, Fishing and Hunting</option>
+                        <option value="Arts, Entertainment and Recreation">Arts, Entertainment and Recreation</option>
+                        <option value="Communications, Electric or Gas Service">Communications, Electric or Gas Service</option>
+                        <option value="Educational and Social Services">Educational and Social Services</option>
+                        <option value="Health Care, Social Assistance and Public Administration">Health Care, Social Assistance and Public Administration</option>
+                        <option value="Legal, Finance, Insurance and Real Estate">Legal, Finance, Insurance and Real Estate</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Membership, Religious and Fraternal Organizations9">Membership, Religious and Fraternal Organizations</option>
+                        <option value="Personal and Business Services">Personal and Business Services</option>
+                        <option value="Restaurants and Lodging">Restaurants and Lodging</option>
+                        <option value="Retail Trade - Nonstore">Retail Trade - Nonstore</option>
+                        <option value="Retail Trade - Storefront">Retail Trade - Storefront</option>
+                        <option value="Specialty Trade Contractors">Specialty Trade Contractors</option>
+                        <option value="Technology, Engineering and Consulting">Technology, Engineering and Consulting</option>
+                        <option value="Transportation & Warehousing">Transportation & Warehousing</option>
+                        <option value="Wholesale Trade">Wholesale Trade</option>
                         <!-- <option></option> -->
                     </select>
-
-                    <h6><br>Type of business</h6>
-                    <select class="form-control nsm-field" name="type_of_business">
-                        <option value="">Select type of business</option>
-                        <option value="1">Apparel, Piece Goods and Notions</option>
-                        <option value="2">Beer, Wine and Distilled Alcoholic Beverages</option>
-                        <option value="3">Chemicals and Allied Products</option>
-                        <option value="4">Drugs, Drug Proprietaries and Druggists' Sundries</option>
-                        <option value="5">Electrical Goods</option>
-                        <option value="6">Furniture and Home furnishings</option>
-                        <option value="7">Groceries and Related Products</option>
-                    </select>
-
-                    <h6><br>Standard industry classification (SIC)</h6>
-                    <select class="form-control nsm-field" name="classification">
-                        <option value="">Select Standard industry classification</option>
-                        <option value="1">Confectionery</option>
-                        <option value="2">Dairy Products, Except Dried Or Canned</option>
-                        <option value="3">Fish and Seafoods</option>
-                        <option value="4">Fresh Fruits and Vegetables</option>
-                        <option value="5">Groceries and Related Products, Not Elsewhere Classified</option>
-                        <option value="6">Groceries, General Line</option>
-                        <option value="7">Meats and Meat Products</option>
-                        <option value="8">Meats and Meat Products (with butchering or slaughtering)</option>
-                        <option value="9">Packaged Frozen Foods</option>
-                        <option value="10">Poultry and Poultry Products</option>
-                        <!-- <option></option> -->
-                    </select>
-
-                    <h6><br>Business name</h6>
-                    <input type="text" class="form-control nsm-field" name="business_name">
-
-                    <h6><br>Principal business address</h6>
-                    <input type="text" class="form-control nsm-field"  name="business_address">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            Type of business
+                            <select class="form-control nsm-field" name="type_of_business">
+                                <!-- <option value="">Select type of business</option> -->
+                                <option value="Apparel, Piece Goods and Notions">Apparel, Piece Goods and Notions</option>
+                                <option value="Beer, Wine and Distilled Alcoholic Beverages">Beer, Wine and Distilled Alcoholic Beverages</option>
+                                <option value="Chemicals and Allied Products">Chemicals and Allied Products</option>
+                                <option value="Drugs, Drug Proprietaries and Druggists' Sundries">Drugs, Drug Proprietaries and Druggists' Sundries</option>
+                                <option value="Electrical Goods">Electrical Goods</option>
+                                <option value="Furniture and Home furnishings">Furniture and Home furnishings</option>
+                                <option value="Groceries and Related Products">Groceries and Related Products</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            Standard industry classification (SIC)
+                            <select class="form-control nsm-field" name="classification">
+                                <!-- <option value="">Select Standard industry classification</option> -->
+                                <option value="Confectionery">Confectionery</option>
+                                <option value="Dairy Products, Except Dried Or Canned">Dairy Products, Except Dried Or Canned</option>
+                                <option value="Fish and Seafoods">Fish and Seafoods</option>
+                                <option value="Fresh Fruits and Vegetables">Fresh Fruits and Vegetables</option>
+                                <option value="Groceries and Related Products, Not Elsewhere Classified">Groceries and Related Products, Not Elsewhere Classified</option>
+                                <option value="Groceries, General Line">Groceries, General Line</option>
+                                <option value="Meats and Meat Products">Meats and Meat Products</option>
+                                <option value="Meats and Meat Products (with butchering or slaughtering)">Meats and Meat Products (with butchering or slaughtering)</option>
+                                <option value="Packaged Frozen Foods">Packaged Frozen Foods</option>
+                                <option value="Poultry and Poultry Products">Poultry and Poultry Products</option>
+                                <!-- <option></option> -->
+                            </select>
+                        </div>
+                    </div>
                     
-                    <h6><br>Suite/Floor</h6>
-                    <input type="text" class="form-control nsm-field" style="width:30%;" name="suite">
+                    <br>Business name <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                    <input type="text" class="form-control nsm-field" name="business_name" style="font-family: 'Quicksand', sans-serif !important">
 
-                    <h6><br>Year business started</h6>
-                    <select class="form-control nsm-field" id="year" style="width:40%;" name="year_started">
-                        <option></option>
-                    </select>
+                    <br>Principal business address <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                    <input type="text" class="form-control nsm-field"  name="business_address" style="font-family: 'Quicksand', sans-serif !important">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            Suite/Floor <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                            <br><input type="text" class="form-control nsm-field" style="" name="suite" style="font-family: 'Quicksand', sans-serif !important">
+                        </div>
+                        <div class="col-md-4">
+                            Year business started <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                            <br>
+                            <select class="form-control nsm-field" id="year" style="" name="year_started">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            Legal entity type<br>
+                            <select class="form-control nsm-field" name="legal_entity_type">
+                                <option value="Corporation">Corporation</option>
+                                <option value="Limited Liability Company">Limited Liability Company</option>
+                                <option value="Non-Profit">Non-Profit</option>
+                                <option value="Partnership">Partnership</option>
+                                <option value="Sole Proprietor">Sole Proprietor</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>                    
 
-                    <h6><br>Legal entity type</h6>
-                    <select class="form-control nsm-field" name="legal_entity_type">
-                        <option>Corporation</option>
-                        <option>Limited Liability Company</option>
-                        <option>Non-Profit</option>
-                        <option>Partnership</option>
-                        <option>Sole Proprietor</option>
-                        <option>Other</option>
-                    </select>
-
-                    <h6><br>Federal Identification Number (optional)</h6>
-                    <input type="text" class="form-control nsm-field" style="width:40%;" name="federal_identification_number">
+                    <br>Federal Identification Number <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                    <input type="text" class="form-control nsm-field" style="width:40%;" name="federal_identification_number" style="font-family: 'Quicksand', sans-serif !important">
                 </div>
                 <div class="tab">
                     <h4>Your owners, officers, and employees</h4>
@@ -116,6 +129,7 @@
                             <th>CLASS CODE</th>
                             <th>ROLE</th>
                             <th>OWNERSHIP</th>
+                            <th>ACTION</th>
                         </thead>
                         <tbody id="employeesTable">
                         </tbody>
@@ -123,10 +137,10 @@
                     <br>
                     <a class="link-modal-open text-decoration-none" href="#" id="" data-bs-toggle="modal" data-bs-target="#employee_list">Add new employee or owner</a>
                     <br>
-                    <h6><br>Total estimated annual payroll</h6>
-                    <input type="text" class="form-control nsm-field" name="total_est_annual_payroll">
+                    <br>Total estimated annual payroll <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                    <input type="text" class="form-control nsm-field" name="total_est_annual_payroll" style="font-family: 'Quicksand', sans-serif !important">
 
-                    <h6><br>Payroll frequency</h6>
+                    <br>Payroll frequency
                     <select class="form-control nsm-field" name="payroll_frequency">
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -244,31 +258,33 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h6>First name</h6>
-                            <input type="text" class="form-control nsm-field" name="first_name">
+                            First name
+                            <input type="text" class="form-control nsm-field" name="first_name" style="font-family: 'Quicksand', sans-serif !important">
                         </div>
                         <div class="col-md-6">
-                            <h6>Last name</h6>
-                            <input type="text" class="form-control nsm-field" name="last_name">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Phone</h6>
-                            <input type="text" class="form-control nsm-field" name="phone">
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Email</h6>
-                            <input type="email" class="form-control nsm-field" name="email">
+                            Last name
+                            <input type="text" class="form-control nsm-field" name="last_name" style="font-family: 'Quicksand', sans-serif !important">
                         </div>
                     </div>
+                    <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h6>Requested policy start date</h6>
-                            <input type="text" class="form-control nsm-field" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date">
+                            Phone
+                            <input type="text" class="form-control nsm-field" name="phone" style="font-family: 'Quicksand', sans-serif !important">
+                        </div>
+                        <div class="col-md-6">
+                            Email
+                            <input type="email" class="form-control nsm-field" name="email" style="font-family: 'Quicksand', sans-serif !important">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            Requested policy start date
+                            <input type="text" class="form-control nsm-field" id="datepicker_date" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date"  style="font-family: 'Quicksand', sans-serif !important">
                         </div>
                         <!-- <div class="col-md-6">
-                            <h6>Email</h6>
+                            Email
                             <input type="email" class="form-control nsm-field">
                         </div> -->
                     </div>
@@ -297,11 +313,11 @@
                 <p>Adding employees and owners here will help you get the most accurate quote. Need to add this info in nSmarTrac? Go to <strong>Workers > Employees.</strong></p>
                 <div class="row">
                     <div class="col-md-6 col-12">
-                        <h6>Name</h6>
-                        <input type="text" class="form-control nsm-field" id="fullName">
+                        Name
+                        <input type="text" class="form-control nsm-field" id="fullName" style="font-family: 'Quicksand', sans-serif !important">
                     </div>
                     <div class="col-md-6 col-12">
-                        <h6>Role</h6>
+                        Role
                         <select class="form-control nsm-field" id="mRole">
                             <option value="Employee">Employee</option>
                             <option value="Excluded owner/office">Excluded owner/officer</option>
@@ -311,7 +327,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <h6>Class code</h6>
+                        Class code
                         <select class="form-control nsm-field" id="classCode">
                             <option value="2107 - Fruit Packing (Fresh, Not Citrus)">2107 - Fruit Packing (Fresh, Not Citrus)</option>
                             <option value="2108 - Fruit Packing (Citrus">2108 - Fruit Packing (Citrus)</option>
@@ -325,12 +341,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <h6>Individual estimated annual payroll</h6>
+                        Individual estimated annual payroll
                         <input type="number" class="form-control nsm-field" id="annualPayroll">
                     </div>
                     <div class="col-md-6">
-                        <h6>Ownership</h6>
-                        <input type="text" class="form-control nsm-field" id="mOwnership">
+                        Ownership
+                        <input type="text" class="form-control nsm-field" id="mOwnership" style="font-family: 'Quicksand', sans-serif !important">
                     </div>
                 </div>
             </div>
@@ -359,7 +375,7 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <h6>Current insurance carrier</h6>
+                                Current insurance carrier
                                 <select class="form-control nsm-field" id="mRole">
                                     <option value="AmTrust">AmTrust</option>
                                     <option value="The Hartford">The Hartford</option>
@@ -370,9 +386,9 @@
                                     <option value="Guard">Guard</option>
                                     <option value="Other (please specify)">Other (please specify)</option>
                                 </select> 
-                                <input type="text" class="form-control nsm-field" id="insuranceCarrier" style="margin-top:10px;">
+                                <input type="text" class="form-control nsm-field" id="insuranceCarrier" style="margin-top:10px;" style="font-family: 'Quicksand', sans-serif !important">
                                 <br>
-                                <h6>Policy renewal date</h6>
+                                Policy renewal date
                                 <table class="table">
                                     <tr>
                                     <td>

@@ -1295,6 +1295,8 @@ class Accounting extends MY_Controller
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
+
+        // dd($_POST);
         $new_data = array(
             'general_industry'              => $this->input->post('general_industry'),
             'type_of_business'              => $this->input->post('type_of_business'),
@@ -1330,18 +1332,20 @@ class Accounting extends MY_Controller
         $d = $this->input->post('annualPayroll');
         $e = $this->input->post('mOwnership');
 
-        $i = 0;
-        foreach ($a as $row) {
-            $data['name'] = $a[$i];
-            $data['role'] = $b[$i];
-            $data['class_code'] = $c[$i];
-            $data['annual_payroll'] = $d[$i];
-            $data['ownership'] = $e[$i];
-            $data['quote_management_id'] = $addQuery;
-            // $data['created_at'] = date("Y-m-d H:i:s");
-            // $data['updated_at'] = date("Y-m-d H:i:s");
-            $addQuery3 = $this->account_model->createQuoteEmployees($data);
-            $i++;
+        if($a){
+            $i = 0;
+            foreach ($a as $row) {
+                $data['name'] = $a[$i];
+                $data['role'] = $b[$i];
+                $data['class_code'] = $c[$i];
+                $data['annual_payroll'] = $d[$i];
+                $data['ownership'] = $e[$i];
+                $data['quote_management_id'] = $addQuery;
+                // $data['created_at'] = date("Y-m-d H:i:s");
+                // $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->account_model->createQuoteEmployees($data);
+                $i++;
+            }
         }
 
         $new_data = array(
@@ -1358,8 +1362,14 @@ class Accounting extends MY_Controller
 
         $addQuery3 = $this->account_model->createQuoteContacts($new_data);
 
-
-        $this->load->view('accounting/workers-comp');
+        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['page_title'] = "Workers Comp";
+        // $this->load->view('accounting/workers-comp', $this->page_data);
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Sales Overview";
+        $this->page_data['page']->parent = "Payroll";
+        $this->page_data['page']->title = "Workers' Comp";
+        $this->load->view('accounting/workers_comp', $this->page_data);
     }
 
     public function audit_log()

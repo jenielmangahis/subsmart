@@ -163,16 +163,6 @@ class Job extends MY_Controller
         );
         $event_settings = $this->general->get_data_with_param($get_job_settings);
 
-        // add default event settings if not set
-        if (empty($event_settings)) {
-            $event_settings_data = array(
-                'job_num_prefix' => 'JOB',
-                'job_num_next' => 1,
-                'company_id' => $comp_id,
-            );
-            $this->general->add_($event_settings_data, 'job_settings');
-        }
-
         $get_sales_rep = array(
             'where' => array(
                 'users.company_id' => $comp_id
@@ -351,8 +341,10 @@ class Job extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $created_by = $this->general->get_data_with_param($query, false);            
+            $items = $this->jobs_model->get_specific_job_items($id);
+            
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+            $this->page_data['jobs_data_items'] = $items;
 
             $this->db->select('id');
             $this->db->where('job_id', $id);
@@ -2184,6 +2176,7 @@ class Job extends MY_Controller
     {
         $this->load->helper(array('hashids_helper'));
         $this->load->model('JobTags_model');
+        $this->load->model('JobSettings_model');
         $user_login = logged('FName') . ' ' . logged('LName');
         $is_success = 1;
         $msg = '';
@@ -2204,14 +2197,6 @@ class Job extends MY_Controller
         $is_update = 0;
 
         if ($is_success == 1) {
-            $get_job_settings = array(
-                'where' => array(
-                    'company_id' => $comp_id
-                ),
-                'table' => 'job_settings',
-                'select' => '*',
-            );
-
             $check_job = array(
                 'where' => array(
                     'hash_id' => $input['job_hash']
@@ -2226,27 +2211,30 @@ class Job extends MY_Controller
                 $job_workorder_id = $isJob->work_order_id;
                 $is_update = 1;
             } else {
-                $job_settings = $this->general->get_data_with_param($get_job_settings);
+                $get_job_settings = array(
+                    'where' => array(
+                        'company_id' => $comp_id
+                    ),
+                    'table' => 'job_settings',
+                    'select' => '*',
+                );
+                $job_settings = $this->JobSettings_model->getJobSettingByCompanyId($comp_id);
                 if ($job_settings) {
-                    $prefix   = $job_settings[0]->job_num_prefix;
-                    $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
-                    //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+                    $prefix   = $job_settings->job_num_prefix;
+                    $next_num = $job_settings->job_num_next;
                 } else {
                     $prefix = 'JOB-';
-                    $lastId = $this->jobs_model->getlastInsert($comp_id);
+                    $lastId = $this->jobs_model->getLastInsertByCompanyId($comp_id);                    
                     if ($lastId) {
                         $next_num = $lastId->id + 1;
-                        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
                     } else {
-                        $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                        $next_num = 1;
                     }
                 }
-
-                $job_number = $prefix . $next_num;
-
+                
+                $job_number       = $prefix . str_pad($next_num, 5, '0', STR_PAD_LEFT);
                 $job_workorder_id = $input['work_order_id'] != NULL ? $input['work_order_id'] : 0;
             }
-
 
             $jobTag = $this->JobTags_model->getById($input['tags']);
             $estimate_id = 0;
@@ -2570,42 +2558,7 @@ class Job extends MY_Controller
                 'margin' => $input['input_totalEquipmentMargin'],
                 'amount_collected' => $input['input_totalAmountCollected'],
                 'gross_profit' => $input['input_totalJobGrossProfit'],
-                'job_account_number' => $input['JOB_ACCOUNT_NUMBER'],
-                'BILLING_METHOD' => $input['BILLING_METHOD'],
-                'CC_CREDITCARDNUMBER' => $input['CC_CREDITCARDNUMBER'],
-                'CC_EXPIRATION' => $input['CC_EXPIRATION'],
-                'CC_CVV' => $input['CC_CVV'],
-                'DC_CREDITCARDNUMBER' => $input['DC_CREDITCARDNUMBER'],
-                'DC_EXPIRATION' => $input['DC_EXPIRATION'],
-                'DC_CVV' => $input['DC_CVV'],
-                'CHECK_CHECKNUMBER' => $input['CHECK_CHECKNUMBER'],
-                'CHECK_ROUTINGNUMBER' => $input['CHECK_ROUTINGNUMBER'],
-                'CHECK_ACCOUNTNUMBER' => $input['CHECK_ACCOUNTNUMBER'],
-                'ACH_ROUTINGNUMBER' => $input['ACH_ROUTINGNUMBER'],
-                'ACH_ACCOUNTNUMBER' => $input['ACH_ACCOUNTNUMBER'],
-                'VENMO_ACCOUNTCREDENTIAL' => $input['VENMO_ACCOUNTCREDENTIAL'],
-                'VENMO_ACCOUNTNOTE' => $input['VENMO_ACCOUNTNOTE'],
-                'VENMO_CONFIRMATION' => $input['VENMO_CONFIRMATION'],
-                'PP_ACCOUNTCREDENTIAL' => $input['PP_ACCOUNTCREDENTIAL'],
-                'PP_ACCOUNTNOTE' => $input['PP_ACCOUNTNOTE'],
-                'PP_CONFIRMATION' => $input['PP_CONFIRMATION'],
-                'SQ_ACCOUNTCREDENTIAL' => $input['SQ_ACCOUNTCREDENTIAL'],
-                'SQ_ACCOUNTNOTE' => $input['SQ_ACCOUNTNOTE'],
-                'SQ_CONFIRMATION' => $input['SQ_CONFIRMATION'],
-                'WW_ACCOUNTCREDENTIAL' => $input['WW_ACCOUNTCREDENTIAL'],
-                'WW_ACCOUNTNOTE' => $input['WW_ACCOUNTNOTE'],
-                'HOF_ACCOUNTCREDENTIAL' => $input['HOF_ACCOUNTCREDENTIAL'],
-                'HOF_ACCOUNTNOTE' => $input['HOF_ACCOUNTNOTE'],
-                'ET_ACCOUNTCREDENTIAL' => $input['ET_ACCOUNTCREDENTIAL'],
-                'ET_ACCOUNTNOTE' => $input['ET_ACCOUNTNOTE'],
-                'INV_TERM' => $input['INV_TERM'],
-                'INV_INVOICEDATE' => $input['INV_INVOICEDATE'],
-                'INV_DUEDATE' => $input['INV_DUEDATE'],
-                'OCCP_CREDITCARDNUMBER' => $input['OCCP_CREDITCARDNUMBER'],
-                'OCCP_EXPIRATION' => $input['OCCP_EXPIRATION'],
-                'OCCP_CVV' => $input['OCCP_CVV'],
-                'OPT_ACCOUNTCREDENTIAL' => $input['OPT_ACCOUNTCREDENTIAL'],
-                'OPT_ACCOUNTNOTE' => $input['OPT_ACCOUNTNOTE']
+                'job_account_number' => $input['JOB_ACCOUNT_NUMBER']                
             );
 
             $commission_history_payload = [
@@ -2731,16 +2684,22 @@ class Job extends MY_Controller
                     'datetime_signed' => $input['datetime_signed'],
                     'jobs_id' => $jobs_id,
                 );
-                $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-                //subtrac location's qty
+                $this->general->add_($jobs_approval_data, 'jobs_approval');                
                 
 
-                // insert data to job settings table
-                $jobs_settings_data = array(
-                    'job_num_next' => $job_settings[0]->job_num_next + 1
-                );
-                $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+                // insert / update job settings 
+                if( $job_settings ){
+                    $jobs_settings_data = ['job_num_next' =>  $next_num + 1];
+                    $this->JobSettings_model->update($job_settings->id, $jobs_settings_data);                    
+                }else{
+                    $job_settings_data = [
+                        'job_num_prefix' => $prefix,
+                        'job_num_next' => $next_num + 1,
+                        'company_id' => $comp_id
+                    ];
+
+                    $this->JobSettings_model->create($job_settings_data);
+                }
             } else {
                 $jobs_id = $isJob->id;
                 $this->jobs_model->deleteJobItemsByJobId($jobs_id);
@@ -4894,7 +4853,8 @@ class Job extends MY_Controller
 
     public function createInitialInvoice($job_id)
     {
-        $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
 
         $company_id = logged('company_id');
         
@@ -4913,15 +4873,21 @@ class Job extends MY_Controller
         $this->db->where('job_id', $job->id);
         $jobPayments = $this->db->get('job_payments')->row();
 
-        $lastinvoice =  $this->invoice_model->getlastInsert()[0];
-        if( $lastinvoice ){
-            $invoiceNumberParts = explode('-', $lastinvoice->invoice_number);
-            $nextInvoiceNumber = ((int) $invoiceNumberParts[1]) + 1;
-            $invoiceNumber = formatInvoiceNumber('INV-' . $nextInvoiceNumber);
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
         }else{
-            $next_number = str_pad(1, 5, '0', STR_PAD_LEFT);
-            $invoiceNumber = formatInvoiceNumber('INV-' . $next_number);
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
         }
+
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);
 
         $monthly_monitoring = 0;
         $program_setup = 0;
@@ -4993,7 +4959,49 @@ class Job extends MY_Controller
             'date_updated'              => date("Y-m-d H:i:s")
         );
 
-        $invoice_id = $this->invoice_model->createInvoice($new_data);
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+
+        //Update invoice settings
+        if( $invoiceSettings ){
+            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+        }else{
+            $invoice_settings_data = [
+                'invoice_num_prefix' => $prefix,
+                'invoice_num_next' => $next_number,
+                'check_payable_to' => '',
+                'accept_credit_card' => 1,
+                'accept_check' => 0,
+                'accept_cash'  => 1,
+                'accept_direct_deposit' => 0,
+                'accept_credit' => 0,
+                'mobile_payment' => 1,
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 0,
+                'hide_item_qty' => 0,
+                'hide_item_tax' => 0,
+                'hide_item_discount' => 0,
+                'hide_item_total' => 0,
+                'hide_from_email' => 0,
+                'hide_item_subtotal' => 0,
+                'hide_business_phone' => 0,
+                'hide_office_phone' => 0,
+                'accept_tip' => 0,
+                'due_terms' => '',
+                'auto_convert_completed_work_order' => 0,
+                'message' => 'Thank you for your business.',
+                'terms_and_conditions' => 'Thank you for your business.',
+                'company_id' => $company_id,
+                'commercial_message' => 'Thank you for your business.',
+                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                'logo' => '',
+                'payment_fee_percent' => '',
+                'payment_fee_amount' => '',
+                'recurring' => ''
+            ];
+
+            $this->Invoice_settings_model->create($invoice_settings_data);
+        }
 
         //Job Items
         $jobItems = $this->jobs_model->get_specific_job_items($job->id);
@@ -5008,7 +5016,7 @@ class Job extends MY_Controller
                 'total' => $item->total
             ];
 
-            $this->invoice_model->add_invoice_details($invoice_item_data);
+            $this->Invoice_model->add_invoice_details($invoice_item_data);
         }
 
         return $invoice_id;
@@ -5208,7 +5216,7 @@ class Job extends MY_Controller
         $json_data = [
             'is_success' => $is_success, 
             'msg' => $msg, 
-            'job_type' => ['name' => $job_type_name, 'id' => $job_type_id]
+            'job_type' => ['name' => $job_type_name, 'id' => $job_type_id, 'icon_marker' => 'wrench_64px.png']
         ];
 
         echo json_encode($json_data);
@@ -5250,7 +5258,7 @@ class Job extends MY_Controller
         $json_data = [
             'is_success' => $is_success, 
             'msg' => $msg, 
-            'job_tag' => ['name' => $job_tag_name, 'id' => $job_tag_id]
+            'job_tag' => ['name' => $job_tag_name, 'id' => $job_tag_id, 'marker_icon' => 'administrative_tools_48px.png']
         ];
 
         echo json_encode($json_data);
@@ -5288,6 +5296,44 @@ class Job extends MY_Controller
             'is_success' => $is_success, 
             'msg' => $msg, 
             'lead_source' => ['name' => $lead_source_name, 'id' => $lead_source_id]
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_tax_rate()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $tax_rate_name = '';
+        $tax_rate_id   = 0;
+        $tax_rate_percentage = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');       
+
+        if( $post['tax_name'] != '' ){
+            $data = array(
+                'name' =>  $post['tax_name'],
+                'rate' =>  $post['tax_rate'],
+                'is_default' =>  0,
+                'company_id' =>  $cid,
+            );
+
+            $tax_rate_id = $this->jobs_model->recordTaxRate("add", $data);
+            $tax_rate_name = $post['tax_name'];
+            $tax_rate_percentage = $post['tax_rate'];
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Please enter tax name';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg, 
+            'tax_rate' => ['name' => $tax_rate_name, 'rate' => $tax_rate_percentage, 'id' => $tax_rate_id]
         ];
 
         echo json_encode($json_data);

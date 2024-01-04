@@ -2,11 +2,6 @@
     include viewPath('v2/includes/header'); 
     add_css(array(
         'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-        'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        //'assets/frontend/css/workorder/main.css',
-        // 'assets/css/beforeafter.css',
     ));
 ?>
 <!-- add css for this page -->
@@ -436,12 +431,15 @@
     .MAP_LOADER_CONTAINER{
         min-height: 350px;
     }
+    .align-right{
+        text-align:right;
+    }
+    .total-summary{
+        font-size:15px;
+        font-weight:bold;
+        margin-right:5px;
+    }
 </style>
-<?php if(isset($workorder)): ?>
-    <input type="hidden" value="<?= $workorder->id ?>" id="esignJobId" />
-    <input type="hidden" value="<?= $workorder->status ?>" id="esignJobStatus" />
-<?php endif; ?>
-
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
         <i class='bx bx-briefcase'></i>
@@ -468,10 +466,8 @@
                         </div>
                     </div>
                 </div>
-                <form method="post" name="myform" id="jobs_form">
-                <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
-                <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($workorder->job_number) ? $workorder->job_number : ''; ?>">
-                <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($workorder->hash_id) ? $workorder->hash_id : ''; ?>">
+                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'workorder_job_form', 'autocomplete' => 'off']); ?>
+                <input type="hidden" name="wid" id="wid" value="<?= $workorder->id; ?>" />
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -556,13 +552,12 @@
                                                             }
                                                         ?>
                                                         <li>
-                                                            <?php if( empty($workorder) && strtolower($color->color_code) == $default_color ){ ?>
+                                                            <?php if( strtolower($color->color_code) == $default_color ){ ?>
                                                                 <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                <i class="bx bx-check calendar_button" aria-hidden="true"></i>
+                                                                    <i class="bx bx-check calendar_button" aria-hidden="true"></i>
                                                                 </a>
                                                             <?php }else{ ?>
                                                                 <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                    <?php if(isset($workorder) && $workorder->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                                 </a>
                                                             <?php } ?>                                                            
                                                         </li>
@@ -570,46 +565,37 @@
                                                 <?php endif; ?>
                                                 <?php if( $is_default_color_exists == 0 ){ ?>
                                                     <li>
-                                                        <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
-                                                        <?php 
-                                                            if(isset($workorder) && $workorder->event_color == $default_color){
-                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
-                                                            }
-
-                                                            if( empty($workorder) ){
-                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
-                                                            }
-                                                        ?>
+                                                        <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="0" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color"><i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
-                                            <input value="<?= (isset($workorder) && isset($workorder->event_color)) ? $workorder->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                            <input value="0" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
                                         <div class="mb-3">
                                             <h6>Customer Reminder Notification</h6>
                                             <select id="customer_reminder" name="customer_reminder_notification" class="form-control ">
                                                 <option value="0">None</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
-                                                <option <?= (isset($workorder) && $workorder->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
+                                                <option value="PT5M">5 minutes before</option>
+                                                <option value="PT15M">15 minutes before</option>
+                                                <option value="PT30M">30 minutes before</option>
+                                                <option value="PT1H">1 hour before</option>
+                                                <option value="PT2H">2 hours before</option>
+                                                <option value="PT4H">4 hours before</option>
+                                                <option value="PT6H">6 hours before</option>
+                                                <option value="PT8H">8 hours before</option>
+                                                <option value="PT12H">12 hours before</option>
+                                                <option value="PT16H">16 hours before</option>
+                                                <option value="P1D" selected="selected">1 day before</option>
+                                                <option value="P2D">2 days before</option>
+                                                <option value="PT0M">On date of event</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <h6>Time Zone</h6>
                                             <select id="inputState" name="timezone" class="form-control ">
                                                 <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                                    <option value="<?php echo $key ?>" <?= $workorder && $workorder->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                                    <option value="<?php echo $key ?>">
                                                         <?php echo $zone ?>
                                                     </option>
                                                 <?php } ?>
@@ -816,7 +802,7 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Job Tag1</h6>
+                                                                <h6>Job Tag</h6>
                                                                 <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
                                                                     <span class="bx bx-plus"></span>Create Job Tag
                                                                 </a>
@@ -849,7 +835,8 @@
                                                     $subtotal = 0.00;
                                                     foreach ($workorder_items as $item):
                                                     $item_price = $item->price / $item->qty;
-                                                    $total = $item->price;
+                                                    //$total = $item->price;
+                                                    $total = $item->total - $item->tax;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -864,7 +851,7 @@
                                                             <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
@@ -877,7 +864,7 @@
                                                         <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td>
                                                             <small>Amount</small><br>
-                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
+                                                            <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.','');?></b>
                                                         </td>
                                                         <td>
                                                             <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2" onclick="$('#ITEMLIST_PRODUCT_<?php echo "$item->id"; ?>').show();"><i class="bx bx-trash" aria-hidden="true"></i></button>
@@ -934,17 +921,17 @@
                                                         <div class="col-sm-6">
                                                             <label>Subtotal</label>
                                                         </div>
-                                                        <div class="col-sm-6">
-                                                            <label id="invoice_sub_total">$<?= isset($workorder) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
+                                                        <div class="col-sm-6 align-right">
+                                                            <label class="total-summary" id="invoice_sub_total">$<?= isset($workorder) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='<?= $subtotal; ?>'>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
+                                                    <div class="row mt-2">
+                                                        <div class="col-sm-6 align-right">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Tax Rate</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-tax-rate" ref="javscript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Tax Rate
                                                                 </a>
                                                             </div>
                                                             <select id="tax_rate" name="tax_percentage" class="form-control" data-value="<?= $workorder->tax_rate; ?>">
@@ -954,8 +941,8 @@
                                                                 <?php } ?>
                                                             </select>
                                                             </div>                                                                                                                     
-                                                        <div class="col-sm-6">
-                                                            <label id="invoice_tax_total"><?= isset($workorder->tax_rate) ? number_format((float)$workorder->tax_rate, 2,'.',',') : '0.00'; ?></label>
+                                                        <div class="col-sm-6 align-right">
+                                                            <label class="total-summary" id="invoice_tax_total"><?= isset($workorder->tax_rate) ? number_format((float)$workorder->tax_rate, 2,'.',',') : '0.00'; ?></label>
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($workorder->tax_rate) ? number_format((float)$workorder->tax_rate, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
@@ -964,26 +951,45 @@
                                                             <div class="col-sm-6">
                                                                 <label>Installation Cost</label>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($job_latest_payment) ? $job_latest_payment->installation_cost : '0.00'; ?>" required="" />
+                                                            <div class="col-sm-6">
+                                                                <div class="input-group mb-2" style="width:50%;float:right;">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">$</div>
+                                                                    </div>
+                                                                    <input type="number" step="any" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= $workorder->installation_cost > 0 ? $workorder->installation_cost : 0; ?>" required="" style="text-align:right;"/>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
                                                             <div class="col-sm-6">
                                                                 <label>One time (Program and Setup)</label>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($job_latest_payment) ? $job_latest_payment->program_setup : '0.00'; ?>" required="" />
+                                                            <div class="col-sm-6">
+                                                                <div class="input-group mb-2" style="width:50%;float:right;">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">$</div>
+                                                                    </div>
+                                                                    <input type="number" step="any" class="form-control" id="adjustment_otps" name="otps" value="<?= $workorder->otp_setup > 0 ? $workorder->otp_setup : 0; ?>" required="" style="text-align:right;" />
+                                                                </div>                                                                
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2 mb-2">
                                                             <div class="col-sm-6">
                                                                 <label>Monthly Monitoring</label>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($job_latest_payment) ? $job_latest_payment->monthly_monitoring : '0.00'; ?>" required="" />
+                                                            <div class="col-sm-6">
+                                                                <div class="input-group mb-2" style="width:50%;float:right;">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">$</div>
+                                                                    </div>
+                                                                    <input type="number" step="any" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= $workorder->monthly_monitoring > 0 ? $workorder->monthly_monitoring : 0; ?>" required="" style="text-align:right;" />
+                                                                </div>  
                                                             </div>
                                                         </div>
+                                                    <?php }else{ ?>
+                                                        <input type="hidden" class="form-control" id="adjustment_ic" name="installation_cost" value="0" />
+                                                        <input type="hidden" class="form-control" id="adjustment_otps" name="otps" value="0" />
+                                                        <input type="hidden" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0" />
                                                     <?php } ?>
                                                     <div class="row">
                                                         <hr>
@@ -993,9 +999,8 @@
                                                             <div class="col-sm-6">
                                                                 <label>Total</label>
                                                             </div>
-                                                            <div class="col-sm-6">
-                                                                <label id="invoice_overall_total"></label>
-                                                                <!-- <input step="any" type="hidden" name="total_amount" id="total2" value="<?= isset($workorder) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                            <div class="col-sm-6 align-right">
+                                                                <label class="total-summary" id="invoice_overall_total"></label>                                                                
                                                                 <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
                                                         </div>
@@ -1020,9 +1025,8 @@
                                                             <div class="col-sm-6">
                                                                 <label><strong>Total</strong></label>
                                                             </div>
-                                                            <div class="col-sm-6">
-                                                                <label id="invoice_overall_total"></label>
-                                                                <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($workorder) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                            <div class="col-sm-6 align-right">
+                                                                <label class="total-summary" id="invoice_overall_total"></label>                                                                
                                                                 <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
                                                         </div>
@@ -1085,158 +1089,158 @@
                                                     </div>
                                                     <div class="col-md-4 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($workorder->CC_CREDITCARDNUMBER) ? $workorder->CC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="CC_CREDITCARDNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="CC_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($workorder->CC_EXPIRATION) ? $workorder->CC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="CC_EXPIRATION">
+                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="CC_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>CVV</h6>
-                                                        <input value="<?php echo ($workorder->CC_CVV) ? $workorder->CC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="CC_CVV">
+                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="CC_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($workorder->DC_CREDITCARDNUMBER) ? $workorder->DC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="DC_CREDITCARDNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="DC_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($workorder->DC_EXPIRATION) ? $workorder->DC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="DC_EXPIRATION">
+                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="DC_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>CVV</h6>
-                                                        <input value="<?php echo ($workorder->DC_CVV) ? $workorder->DC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="DC_CVV">
+                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="DC_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Check Number</h6>
-                                                        <input value="<?php echo ($workorder->CHECK_CHECKNUMBER) ? $workorder->CHECK_CHECKNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXX" name="CHECK_CHECKNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXXXX" name="CHECK_CHECKNUMBER">
                                                     </div>
                                                     <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($workorder->CHECK_ROUTINGNUMBER) ? $workorder->CHECK_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="CHECK_ROUTINGNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXX" name="CHECK_ROUTINGNUMBER">
                                                     </div>
                                                     <div class="col-md-12 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Number</h6>
-                                                        <input value="<?php echo ($workorder->CHECK_ACCOUNTNUMBER) ? $workorder->CHECK_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="CHECK_ACCOUNTNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="CHECK_ACCOUNTNUMBER">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($workorder->ACH_ROUTINGNUMBER) ? $workorder->ACH_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="ACH_ROUTINGNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXX" name="ACH_ROUTINGNUMBER">
                                                     </div>
                                                     <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Number</h6>
-                                                        <input value="<?php echo ($workorder->ACH_ACCOUNTNUMBER) ? $workorder->ACH_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="ACH_ACCOUNTNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="ACH_ACCOUNTNUMBER">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->VENMO_ACCOUNTCREDENTIAL) ? $workorder->VENMO_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="VENMO_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->VENMO_ACCOUNTNOTE) ? $workorder->VENMO_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="VENMO_ACCOUNTNOTE">
                                                     </div>
                                                     <div class="col-md-12 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($workorder->VENMO_CONFIRMATION) ? $workorder->VENMO_CONFIRMATION : ""; ?>" type="text" class="form-control" name="VENMO_CONFIRMATION">
+                                                        <input value="" type="text" class="form-control" name="VENMO_CONFIRMATION">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->PP_ACCOUNTCREDENTIAL) ? $workorder->PP_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="PP_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->PP_ACCOUNTNOTE) ? $workorder->PP_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="PP_ACCOUNTNOTE">
                                                     </div>
                                                     <div class="col-md-12 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($workorder->PP_CONFIRMATION) ? $workorder->PP_CONFIRMATION : ""; ?>" type="text" class="form-control" name="PP_CONFIRMATION">
+                                                        <input value="" type="text" class="form-control" name="PP_CONFIRMATION">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->SQ_ACCOUNTCREDENTIAL) ? $workorder->SQ_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="SQ_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->SQ_ACCOUNTNOTE) ? $workorder->SQ_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="SQ_ACCOUNTNOTE">
                                                     </div>
                                                     <div class="col-md-12 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($workorder->SQ_CONFIRMATION) ? $workorder->SQ_CONFIRMATION : ""; ?>" type="text" class="form-control" name="SQ_CONFIRMATION">
+                                                        <input value="" type="text" class="form-control" name="SQ_CONFIRMATION">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->WW_ACCOUNTCREDENTIAL) ? $workorder->WW_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="WW_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->WW_ACCOUNTNOTE) ? $workorder->WW_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="WW_ACCOUNTNOTE">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->HOF_ACCOUNTCREDENTIAL) ? $workorder->HOF_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="HOF_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->HOF_ACCOUNTNOTE) ? $workorder->HOF_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="HOF_ACCOUNTNOTE">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->ET_ACCOUNTCREDENTIAL) ? $workorder->ET_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="ET_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->ET_ACCOUNTNOTE) ? $workorder->ET_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="ET_ACCOUNTNOTE">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Term</h6>
                                                         <select class="form-select" name="INV_TERM">
-                                                            <option <?php echo ($workorder->INV_TERM == "Due On Receipt") ? "selected" : ""; ?> value="Due On Receipt">Due On Receipt</option>
-                                                            <option <?php echo ($workorder->INV_TERM == "Net 5") ? "selected" : ""; ?> value="Net 5">Net 5</option>
-                                                            <option <?php echo ($workorder->INV_TERM == "Net 10") ? "selected" : ""; ?> value="Net 10">Net 10</option>
-                                                            <option <?php echo ($workorder->INV_TERM == "Net 15") ? "selected" : ""; ?> value="Net 15">Net 15</option>
-                                                            <option <?php echo ($workorder->INV_TERM == "Net 30") ? "selected" : ""; ?> value="Net 30">Net 30</option>
-                                                            <option <?php echo ($workorder->INV_TERM == "Net 60") ? "selected" : ""; ?> value="Net 60">Net 60</option>
+                                                            <option value="Due On Receipt">Due On Receipt</option>
+                                                            <option value="Net 5">Net 5</option>
+                                                            <option value="Net 10">Net 10</option>
+                                                            <option value="Net 15">Net 15</option>
+                                                            <option value="Net 30">Net 30</option>
+                                                            <option value="Net 60">Net 60</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Invoice Date</h6>
-                                                        <input value="<?php echo ($workorder->INV_INVOICEDATE) ? $workorder->INV_INVOICEDATE : ""; ?>" type="date" class="form-control" name="INV_INVOICEDATE">
+                                                        <input value="" type="date" class="form-control" name="INV_INVOICEDATE">
                                                     </div>
                                                     <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Due Date</h6>
-                                                        <input value="<?php echo ($workorder->INV_DUEDATE) ? $workorder->INV_DUEDATE : ""; ?>" type="date" class="form-control" name="INV_DUEDATE">
+                                                        <input value="" type="date" class="form-control" name="INV_DUEDATE">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($workorder->OCCP_CREDITCARDNUMBER) ? $workorder->OCCP_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="OCCP_CREDITCARDNUMBER">
+                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="OCCP_CREDITCARDNUMBER">
                                                     </div>
                                                     <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Expiration</h6>
-                                                        <input value="<?php echo ($workorder->OCCP_EXPIRATION) ? $workorder->OCCP_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="OCCP_EXPIRATION">
+                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="OCCP_EXPIRATION">
                                                     </div>
                                                     <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>CVV</h6>
-                                                        <input value="<?php echo ($workorder->OCCP_CVV) ? $workorder->OCCP_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="OCCP_CVV">
+                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="OCCP_CVV">
                                                     </div>
                                                     <!-- ======= -->
                                                     <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($workorder->OPT_ACCOUNTCREDENTIAL) ? $workorder->OPT_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTCREDENTIAL">
+                                                        <input value="" type="text" class="form-control" name="OPT_ACCOUNTCREDENTIAL">
                                                     </div>
                                                     <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
                                                         <h6>Account Note</h6>
-                                                        <input value="<?php echo ($workorder->OPT_ACCOUNTNOTE) ? $workorder->OPT_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
+                                                        <input value="" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
                                                     </div>
                                                     <div class="col-md-12">
                                                         <hr>
@@ -1334,207 +1338,20 @@
                                                     </div>
                                                 </div>
                                                 <?php endif; ?>
-
-                                                    <style>
-                                                        .table-bordered td, .table-bordered th {
-                                                            border: 1px solid #dee2e6 !important;
-                                                        }
-                                                    </style>
-                                                <div class="col-sm-12">
-                                                    <div class="row">
-                                                        <div class="col-sm-12 mb-2">
-                                                            <h5>Devices Audit</h5>
-                                                            <label>Record all Items used on Jobs</label>
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <table id="device_audit" class="nsm-table table-sm table-bordered w-100 device_job_items_tbl">
-                                                                <thead class="bg-light">
-                                                                    <tr>
-                                                                        <!-- <td style="width: 0% !important;"></td> -->
-                                                                        <td><strong>Name</strong></td>
-                                                                        <td><strong>Type</strong></td>
-                                                                        <td><strong>Cost</strong></td>
-                                                                        <td><strong>Price</strong></td>
-                                                                        <td><strong>Qty</strong></td>
-                                                                        <td><strong>Margin</strong></td>
-                                                                        <td><strong>Location</strong></td>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="device_audit_append">
-                                                                    <?php 
-                                                                        if (isset($workorder_items)) { 
-                                                                            $subtotal = 0.00;
-                                                                            foreach ($workorder_items as $item) {
-                                                                            $total = $item->price * $item->qty;
-                                                                    ?>
-                                                                    <tr>
-                                                                        <!-- <td style="width: 0% !important;">
-                                                                            <center>
-                                                                                <div class="btn-group">
-                                                                                    <button type="button" class="btn btn-light edit_item_list" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>"><i class='bx bxs-edit' ></i></button>
-                                                                                    <button type="button" class="btn btn-light remove_audit_item_row"><i class='bx bxs-trash-alt' ></i></button>
-                                                                                </div>
-                                                                            </center>
-                                                                        </td> -->
-                                                                        <td><?php echo $item->title; ?></td>
-                                                                        <td><?php echo $item->type; ?></td>
-                                                                        <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
-                                                                        <td><?php echo number_format((float)$item->retail,2,'.',','); ?></td>
-                                                                        <td><?php echo $item->qty; ?></td>
-                                                                        <td><?php echo number_format((float)$item->margin,2,'.',','); ?></td>
-                                                                        <?php if($workorder->status == "Scheduled") {?>
-                                                                            <td>
-                                                                                <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
-                                                                                <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
-                                                                                <select id="location" name="location[]" class="form-select form-select-sm location" >
-                                                                                    <?php
-                                                                                        if ($item->location_name == "") {
-                                                                                            echo "<option value hidden disable>Select Location</option>";
-                                                                                            foreach ($getAllLocation as $getAllLocations) {
-                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                                                                                            }
-                                                                                        } else {
-                                                                                            echo "<option selected disabled hidden value='".getLocation($workorder->id, $item->location_id)->LOCATION_ID."'>".getLocation($workorder->id, $item->location_id)->LOCATION_NAME."</option>";
-                                                                                            foreach ($getAllLocation as $getAllLocations) {
-                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                                                                                            }
-                                                                                        }
-                                                                                    ?>
-                                                                                </select>
-                                                                            </td>
-                                                                        <?php } else { ?>
-                                                                            <td><?php echo getLocation($workorder->id, $item->location_id)->LOCATION_NAME; ?></td>
-                                                                        <?php }; ?>
-                                                                    </tr>
-                                                                    <?php } } ?>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mt-4">
-                                                        <div class="col-sm-4 mb-3">
-                                                            <strong>Rep:</strong>&nbsp;&nbsp;<span id="selectedRep">&mdash;</span>
-                                                        </div>
-                                                        <div class="col-sm-4 mb-2">
-                                                            <strong>Rep Commission:</strong>&nbsp;&nbsp;<span id="totalRepCommissionProfit">$0</span>
-                                                        </div>
-                                                        <div class="col-sm-4 mb-2">
-                                                            <strong>Fix Cost:</strong>&nbsp;&nbsp;<span id="totalFixCost"><input type="number" step="any" name="input_totalFixCost" value="<?php echo ($workorder) ? $workorder->fix_cost : "0.0"; ?>"></span>
-                                                        </div>
-                                                        <div class="col-sm-4 mb-2">
-                                                            <strong>Equipment Margin:</strong>&nbsp;&nbsp;<span id="totalEquipmentMargin">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalEquipmentMargin" value="<?php echo ($workorder) ? $workorder->margin : "0.0"; ?>">
-                                                        </div>
-                                                        <div class="col-sm-4 mb-2">
-                                                            <strong>Amount Collected:</strong>&nbsp;&nbsp;<span id="totalAmountCollected">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalAmountCollected" value="<?php echo ($workorder) ? $workorder->amount_collected : "0.0"; ?>">
-                                                        </div>
-                                                        <div class="col-sm-4 mb-2">
-                                                            <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalJobGrossProfit" value="<?php echo ($workorder) ? $workorder->gross_profit : "0.0"; ?>">
-                                                        </div>
-                                                        <div class="col-lg-12 d-none">
-                                                            Customer Funded Amount/Purchase Price: <input id="CUSTOMER_FUNDED_AMOUNT" type="number" type="any" value="0"><br>
-                                                            Customer Pass Through Cost: <input id="CUSTOMER_PASS_THROUGH" type="number" type="any" value="0"><br>
-                                                            Sales Rep BS: <input id="SRBS_1" type="number" type="any" value="0"><br>
-                                                            Tech Rep 1 BS: <input id="TRBS_1" type="number" type="any" value="0"><br>
-                                                            Tech Rep 2 BS: <input id="TRBS_2" type="number" type="any" value="0"><br>
-                                                            Tech Rep 3 BS: <input id="TRBS_3" type="number" type="any" value="0"><br>
-                                                            Tech Rep 4 BS: <input id="TRBS_4" type="number" type="any" value="0"><br>
-                                                            Tech Rep 5 BS: <input id="TRBS_5" type="number" type="any" value="0"><br>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
-                                                </div>
-                                                <!-- <?php if(isset($workorder) && $workorder->status != 'Scheduled'): ?>
-                                                <div class="col-sm-12">
-                                                    <div class="card box_right">
-                                                        <div class="row">
-                                                            <div class="col-md-12 ">
-                                                                <div class="card-header">
-                                                                    <h5 style="padding-left: 20px;" class="mb-0">Devices Audit</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New Item</a>
-                                                                    <br>
-                                                                    <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <td>Name</td>
-                                                                                <td>Points</td>
-                                                                                <td>Price</td>
-                                                                                <td>Qty</td>
-                                                                                <td>Subtotal</td>
-                                                                                <td>Location</td>
-                                                                                <td>Action</td>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody id="device_audit_datas">
-                                                                        <?php if(isset($workorder_items)): ?>
-                                                                            <?php
-                                                                                $subtotal = 0.00;
-                                                                                foreach ($workorder_items as $item):
-                                                                                $total = $item->price * $item->qty;
-                                                                            ?>
-                                                                                <tr>
-                                                                                    <td ><?= $item->title; ?></td>
-                                                                                    <td ><?= $item->points; ?></td>
-                                                                                    <td ><?= number_format((float)$item->price,2,'.',',');?></td>
-                                                                                    <td id="device_qty<?= $item->id; ?>"><?= $item->qty; ?></td>
-                                                                                    <td ><?= number_format((float)$total,2,'.',',');?></td>
-                                                                                    <td ><?= $item->location; ?></td>
-                                                                                    <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
-                                                                                            <span class="fa fa-edit"></span>
-                                                                                        </a>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            <?php $subtotal = $subtotal + $total; endforeach; ?>
-                                                                        <?php endif; ?>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    <br>
-                                                                    <style>
-                                                                        .table-bordered td, .table-bordered th {
-                                                                            border: 1px solid #dee2e6 !important;
-                                                                        }
-                                                                    </style>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <?php endif; ?> -->
                                             </div>
                                             <br>
                                         </div>
                                         <div class="row">
-                                            <!-- <input id="total_amount" type="hidden" name="total_amount"> -->
-                                            <input id="signature_link" type="hidden" name="signature_link">
-                                            <input id="name" type="hidden" name="authorize_name">
-                                            <input id="datetime_signed" type="hidden" name="datetime_signed">
-                                            <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
-                                            <input id="created_by" type="hidden" name="created_by" value="<?= isset($workorder) ? $workorder->created_by : ''; ?>">
-                                            <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($workorder) ? $workorder->employee2_id : ''; ?>">
-                                            <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($workorder) ? $workorder->employee3_id : ''; ?>">
-                                            <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($workorder) ? $workorder->employee4_id : ''; ?>">
-                                            <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($workorder) ? $workorder->employee5_id : ''; ?>">
-                                            <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($workorder) ? $workorder->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                <?php //if($workorder->status == 'Draft' || $workorder->status == '0' || $workorder->status == '') : ?>
-                                                    <div class="form-check float-start">
-                                                      <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
-                                                      <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
-                                                        Send an email after scheduling this job.
-                                                      </label>
-                                                    </div>
-                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i>
-                                                        <?= isset($workorder) ? 'Update' : 'Schedule'; ?>
-                                                    </button>
-                                                <?php //endif; ?>
-                                                <?php if(isset($workorder)): ?>
-                                                    <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
-                                                <?php endif; ?>
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
+                                                    <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
+                                                    Send email to customer after scheduling this job.
+                                                    </label>
+                                                </div>
+                                                <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i>
+                                                    Convert to Job
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1544,7 +1361,7 @@
                           
                     </div>
                 </div>
-                </form>
+                <?php echo form_close(); ?>
             </div>
         </div>
     </div>
@@ -1602,14 +1419,22 @@
                                             <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
                                         <td><?php echo $item->title; ?></td>
-                                        <td><?php foreach($itemsLocation as $itemLoc){
-                                            if($itemLoc->item_id == $item->id){
-                                                echo "<div class='data-block'>";
-                                                echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                echo "</div>";
-                                            } 
-                                        }
-                                        ?></td>
+                                        <td>
+                                            <?php 
+                                                $total_onhand = 0;
+                                                foreach($itemsLocation as $itemLoc){
+                                                    if($itemLoc->item_id == $item->id){
+                                                        //echo "<div class='data-block'>";
+                                                        //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                        //echo "</div>";
+                                                        if( $itemLoc->qty > 0 ){
+                                                            $total_onhand += $itemLoc->qty;
+                                                        }
+                                                    } 
+                                                }                                                
+                                            ?>
+                                            <div class='data-block'><?= $total_onhand; ?></div>
+                                        </td>
                                         <td>
                                             <?php 
                                                 if( $item->retail > 0 ){
@@ -1693,23 +1518,15 @@
 <?php
 // JS to add only Job module
 add_footer_js(array(
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',    
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',    
     'assets/textEditor/summernote-bs4.js',
 ));
 ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 <?php include viewPath('v2/pages/job/js/work_order_job_js'); ?>
-
 <script>    
 var employee_id = $("#employee_id").val();
 function getUserInfo(employee_id, type){
@@ -2017,6 +1834,9 @@ $(function() {
     });
     $('.btn-quick-add-lead-source').on('click', function(){
         $('#quick_add_lead_source').modal('show');
+    });
+    $('.btn-quick-add-tax-rate').on('click', function(){
+        $('#quick_add_tax_rate').modal('show');
     });
 
     // JUST A COUNTER VARIABLE

@@ -96,28 +96,25 @@ $("#attachment-file").change(function() {
 
     $(document).ready(function() {
         load_customer_data('<?= $customer_id  ?>');
-        $("#jobs_form").submit(function(e) {
+        $("#workorder_job_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
-            if($('#job_color_id').val()=== ""){
+            if($('#job_color_id').val() === ""){
                 error('Error','Event Color is required','error');
             }else if( $('#EMPLOYEE_SELECT_2').val() === "" ){
                 error('Error','Assigned To is required','error');
-            }else{
-
-                var form = $(this);
-                console.log(form);
-                const $overlay = document.getElementById('overlay');
- 
-                //var url = form.attr('action');
+            }else{                
+                var formData = new FormData(this);                
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>job/save_job",
-                    data: form.serialize(), // serializes the form's elements.
+                    url: "<?= base_url() ?>workorder/convert_to_job",
+                    data: formData, // serializes the form's elements.
                     dataType:'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     success: function(data) {
-                        if( data.is_success == 1 ){
-                            if ($overlay) $overlay.style.display = "none";
+                        if( data.is_success == 1 ){                            
                             sucess_add_job(data);
                             if ($('#SEND_EMAIL_ON_SCHEDULE').prop('checked') == true) {
                                 $.get("<?= base_url('job/sendCustomerJobScheduled/').$jobs_data->id; ?>"+data.job_id); 
@@ -127,7 +124,7 @@ $("#attachment-file").change(function() {
                         }
                         
                     }, beforeSend: function() {
-                        if ($overlay) $overlay.style.display = "flex";
+
                     }
                 });
             }
@@ -405,6 +402,7 @@ $("#attachment-file").change(function() {
             $('#pay_amount').val(withCommas);
             // $('#total_amount').val(total);
             $('#total2').val(total);
+            $('#sub_total_form_input').val(subtotal);
 
         }
         window.__calculate_subtotal = calculate_subtotal;

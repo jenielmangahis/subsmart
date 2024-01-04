@@ -1,10 +1,10 @@
-<div class="modal-right-side">
+<div class="modal-right-side" id="modalTagsAddNew">
     <div class="modal right fade nsm-modal" tabindex="-1" id="tag-group-modal" role="dialog">
         <div class="modal-dialog" role="document" style="width: 25%">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Create New Group</span>
-                    <button type="button" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                    <button type="button" id="closeModalTags"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
 
                 <div class="modal-body">
@@ -66,7 +66,7 @@
                 <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title">Create New Tag</span>
-                            <button type="button" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                            <button type="button" id="closeModalTags"><i class="bx bx-fw bx-x m-0"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="row g-3">

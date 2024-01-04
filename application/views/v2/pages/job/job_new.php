@@ -664,7 +664,7 @@
                                                     </li>
                                                 <?php } ?>
                                             </ul>
-                                            <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                            <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : 0; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
                                         <div class="mb-3">
                                             <h6>Customer Reminder Notification</h6>
@@ -870,21 +870,6 @@
                                                 </div>
                                             </div> -->
                                             <div class="col-md-12">
-                                                <hr />
-                                                <table class="table table-hover d-none">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <small>Job Type</small>
-                                                                <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                                            </td>
-                                                            <td>
-                                                                <small>Job Tags</small>
-                                                                <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
                                                 <div class="col-md-12">
                                                         <h6>Job Account Number</h6>
                                                         <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
@@ -896,12 +881,12 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Select Job Type</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Job Types
+                                                                <h6>Job Type</h6>
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Create Job Type
                                                                 </a>
                                                             </div>
-                                                            <select id="job_type_option" name="jobtypes" class="form-control " >
+                                                            <select id="job_type" name="job_type" class="form-control " >
                                                                 <option value="">Select Type</option>
                                                                 <?php if(!empty($job_types)): ?>
                                                                     <?php foreach ($job_types as $type): ?>
@@ -914,12 +899,12 @@
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Select Job Tag</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>" >
-                                                                    <span class="bx bx-plus"></span>Manage Job Tags
+                                                                <h6>Job Tag</h6>
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Create Job Tag
                                                                 </a>
-                                                            </div>
-                                                            <select id="job_tags" name="tags" class="form-control " >
+                                                            </div>  
+                                                            <select id="job_tag" name="job_tag" class="form-control">
                                                                 <option value="">Select Tags</option>
                                                                 <?php if(!empty($tags)): ?>
                                                                     <?php foreach ($tags as $tag): ?>
@@ -947,7 +932,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $item_price = $item->cost / $item->qty;
-                                                    $total = $item->cost;
+                                                    $total = $item->cost * $item->qty;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -962,7 +947,7 @@
                                                             <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->retail; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
@@ -1041,8 +1026,8 @@
                                                         <div class="col-sm-6">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Tax Rate</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
+                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-tax-rate" ref="javscript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Tax Rate
                                                                 </a>
                                                             </div>
                                                             <select id="tax_rate" name="tax_percentage" class="form-control" data-value="<?= $jobs_data->tax_rate; ?>">
@@ -1214,186 +1199,7 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <h6>Billing Method</h6>
-                                                        <select class="form-select" name="BILLING_METHOD" required>
-                                                            <option value="">Select Billing Method</option>
-                                                            <option value="CC">Credit Card</option>
-                                                            <option value="DC">Debit Card</option>
-                                                            <option value="CHECK">Check</option>
-                                                            <option value="CASH">Cash</option>
-                                                            <option value="ACH">ACH</option>
-                                                            <option value="VENMO">Venmo</option>
-                                                            <option value="PP">Paypal</option>
-                                                            <option value="SQ">Square</option>
-                                                            <option value="WW">Warranty Work</option>
-                                                            <option value="HOF">Home Owner Financing</option>
-                                                            <option value="ET">e-Transfer</option>
-                                                            <option value="INV">Invoicing</option>
-                                                            <option value="OCCP">Other Credit Card Processor</option>
-                                                            <option value="OPT">Other Payment Type</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_CREDITCARDNUMBER) ? $jobs_data->CC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="CC_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_EXPIRATION) ? $jobs_data->CC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="CC_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="<?php echo ($jobs_data->CC_CVV) ? $jobs_data->CC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="CC_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_CREDITCARDNUMBER) ? $jobs_data->DC_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="DC_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_EXPIRATION) ? $jobs_data->DC_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="DC_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="<?php echo ($jobs_data->DC_CVV) ? $jobs_data->DC_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="DC_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Check Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_CHECKNUMBER) ? $jobs_data->CHECK_CHECKNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXX" name="CHECK_CHECKNUMBER">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_ROUTINGNUMBER) ? $jobs_data->CHECK_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="CHECK_ROUTINGNUMBER">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Number</h6>
-                                                        <input value="<?php echo ($jobs_data->CHECK_ACCOUNTNUMBER) ? $jobs_data->CHECK_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="CHECK_ACCOUNTNUMBER">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Routing Number</h6>
-                                                        <input value="<?php echo ($jobs_data->ACH_ROUTINGNUMBER) ? $jobs_data->ACH_ROUTINGNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXX" name="ACH_ROUTINGNUMBER">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Number</h6>
-                                                        <input value="<?php echo ($jobs_data->ACH_ACCOUNTNUMBER) ? $jobs_data->ACH_ACCOUNTNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="ACH_ACCOUNTNUMBER">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->VENMO_ACCOUNTCREDENTIAL) ? $jobs_data->VENMO_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->VENMO_ACCOUNTNOTE) ? $jobs_data->VENMO_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="VENMO_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($jobs_data->VENMO_CONFIRMATION) ? $jobs_data->VENMO_CONFIRMATION : ""; ?>" type="text" class="form-control" name="VENMO_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->PP_ACCOUNTCREDENTIAL) ? $jobs_data->PP_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->PP_ACCOUNTNOTE) ? $jobs_data->PP_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="PP_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($jobs_data->PP_CONFIRMATION) ? $jobs_data->PP_CONFIRMATION : ""; ?>" type="text" class="form-control" name="PP_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->SQ_ACCOUNTCREDENTIAL) ? $jobs_data->SQ_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->SQ_ACCOUNTNOTE) ? $jobs_data->SQ_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="SQ_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="<?php echo ($jobs_data->SQ_CONFIRMATION) ? $jobs_data->SQ_CONFIRMATION : ""; ?>" type="text" class="form-control" name="SQ_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->WW_ACCOUNTCREDENTIAL) ? $jobs_data->WW_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->WW_ACCOUNTNOTE) ? $jobs_data->WW_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="WW_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->HOF_ACCOUNTCREDENTIAL) ? $jobs_data->HOF_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->HOF_ACCOUNTNOTE) ? $jobs_data->HOF_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="HOF_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->ET_ACCOUNTCREDENTIAL) ? $jobs_data->ET_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->ET_ACCOUNTNOTE) ? $jobs_data->ET_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="ET_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Term</h6>
-                                                        <select class="form-select" name="INV_TERM">
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Due On Receipt") ? "selected" : ""; ?> value="Due On Receipt">Due On Receipt</option>
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 5") ? "selected" : ""; ?> value="Net 5">Net 5</option>
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 10") ? "selected" : ""; ?> value="Net 10">Net 10</option>
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 15") ? "selected" : ""; ?> value="Net 15">Net 15</option>
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 30") ? "selected" : ""; ?> value="Net 30">Net 30</option>
-                                                            <option <?php echo ($jobs_data->INV_TERM == "Net 60") ? "selected" : ""; ?> value="Net 60">Net 60</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Invoice Date</h6>
-                                                        <input value="<?php echo ($jobs_data->INV_INVOICEDATE) ? $jobs_data->INV_INVOICEDATE : ""; ?>" type="date" class="form-control" name="INV_INVOICEDATE">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Due Date</h6>
-                                                        <input value="<?php echo ($jobs_data->INV_DUEDATE) ? $jobs_data->INV_DUEDATE : ""; ?>" type="date" class="form-control" name="INV_DUEDATE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_CREDITCARDNUMBER) ? $jobs_data->OCCP_CREDITCARDNUMBER : ""; ?>" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="OCCP_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_EXPIRATION) ? $jobs_data->OCCP_EXPIRATION : ""; ?>" type="text" class="form-control" placeholder="MM/YY" name="OCCP_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="<?php echo ($jobs_data->OCCP_CVV) ? $jobs_data->OCCP_CVV : ""; ?>" type="text" class="form-control" placeholder="XXX" name="OCCP_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="<?php echo ($jobs_data->OPT_ACCOUNTCREDENTIAL) ? $jobs_data->OPT_ACCOUNTCREDENTIAL : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="<?php echo ($jobs_data->OPT_ACCOUNTNOTE) ? $jobs_data->OPT_ACCOUNTNOTE : ""; ?>" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <hr>
-                                                    </div>
+                                                <div class="col-md-12"></div>                                                                                                    
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">
@@ -1707,6 +1513,7 @@
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
 <?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
+<?php include viewPath('v2/includes/job/quick_add'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
@@ -2270,6 +2077,20 @@ $(document).ready(function() {
     ($("#adjustment_ic").val() == 0) ? $("#adjustment_ic").val(0).change() : $("#adjustment_ic").change();
     ($("#adjustment_otps").val() == 0) ? $("#adjustment_otps").val(0).change() : $("#adjustment_otps").change();
     ($("#adjustment_mm").val() == 0) ? $("#adjustment_mm").val(0).change() : $("#adjustment_mm").change();
+
+    //Quick Add
+    $('.btn-quick-add-job-type').on('click', function(){
+        $('#quick_add_job_type').modal('show');
+    });
+    $('.btn-quick-add-job-tag').on('click', function(){
+        $('#quick_add_job_tag').modal('show');
+    });
+    $('.btn-quick-add-lead-source').on('click', function(){
+        $('#quick_add_lead_source').modal('show');
+    });
+    $('.btn-quick-add-tax-rate').on('click', function(){
+        $('#quick_add_tax_rate').modal('show');
+    });
 });
 
 $('select[name="BILLING_METHOD"]').change(function(event) {
@@ -2609,4 +2430,4 @@ $(function() {
     });
 </script>
 
-<script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
+<script src="<?=base_url("assets/js/jobs/manage_v2.js")?>"></script>
