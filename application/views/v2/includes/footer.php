@@ -123,13 +123,12 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> -->
 
-    <!-- Main Script -->
+    <!-- Main Script -->    
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
     <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
-    <script type="text/javascript">
-        var baseURL = '<?= base_url() ?>';
+    <script type="text/javascript">        
         var notification_badge_value = 0;
         var current_user_company_id = <?=logged('company_id')?> ;
         var all_notifications_html = '';
@@ -544,16 +543,6 @@
                 }
             });
     });
-        
-        $(document).on('click', '#closeModalTags', function(){
-            // var start_date = $('#action_select_date').val();
-            // var start_time = $('#action_select_time').val();
-            // alert('test');
-            // $("#modalTagsAddNew").modal("hide"); 
-            location.reload();
-        });
-
-    
 
 
 
@@ -633,15 +622,6 @@
 }();
 
 Accordion.init();
-</script>
-
-
-<script>
-  $( function() {
-    $( "#datepicker_date" ).datepicker({
-        format: 'mm/dd/yyyy'
-    });
-  } );
 </script>
   </body>
 

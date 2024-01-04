@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart('invoice/save_setting/' . (($setting) ? $setting->id : ''), ['class' => 'form-validate require-validation', 'id' => 'settings_form', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart(null, ['id' => 'frm-invoice-settings', 'class' => 'form-validate require-validation', 'autocomplete' => 'off']); ?>
                 <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-3">
                         <div class="row g-3">
@@ -34,7 +34,7 @@
                                         <input type="hidden" name="img_setting" value="<?php echo $setting->logo ?>">
                                         <div class="row g-2">
                                             <div class="col-12">
-                                                <div class="nsm-img-upload" style="background-image: url('<?php echo base_url() . 'uploads/' . $setting->logo ?>')">
+                                                <div class="nsm-img-upload" style="background-image: url('<?php echo base_url() . 'uploads/invoice/settings/'.$setting->company_id.'/'. $setting->logo ?>')">
                                                     <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                                     <input type="file" name="userfile" class="nsm-upload" accept="image/*">
                                                 </div>
@@ -57,11 +57,11 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-3">
-                                                <input type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 0 ?>" autocomplete="off" />
+                                                <input type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 'INV-' ?>" autocomplete="off" />
                                                 <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_prefix" data-formerrors-message="true"></span>
                                             </div>
                                             <div class="col-12 col-md-9">
-                                                <input type="text" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_next : ''  ?>" autocomplete="off" />
+                                                <input type="text" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_next : 1  ?>" autocomplete="off" />
                                                 <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_base" data-formerrors-message="true"></span>
                                             </div>
                                         </div>
@@ -80,21 +80,21 @@
                                         <div class="row g-2">
                                             <div class="col-12 col-md-6">
                                                 <div class="input-group mb-3">
-                                                    <input type="number" class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : '' ?>" aria-describedby="payment_fee_percent">
-                                                    <span class="input-group-text" id="payment_fee_percent">%</span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : '0.00' ?>">
+                                                    <span class="input-group-text" id="">%</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="input-group mb-3">
-                                                    <span class="input-group-text" id="payment_fee_amount">$</span>
-                                                    <input type="number" class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>" aria-describedby="payment_fee_amount" autocomplete="off">
+                                                    <span class="input-group-text" id="">$</span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" id="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-content text-center">
                                         <button onclick="location.href='<?php echo base_url('invoice') . '/settings/preferences/notifications' ?>'" class="nsm-button primary">
@@ -102,7 +102,7 @@
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-12 col-md-9">
@@ -125,7 +125,7 @@
                                                                 <span>Residential Invoice Default Message</span>
                                                             </div>
                                                             <label class="nsm-subtitle">Custom message that will be placed at the bottom section of the invoice.</label>
-                                                            <textarea name="message" id="message" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->message : '' ?></textarea>
+                                                            <textarea name="message" id="message" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_message : '' ?></textarea>
                                                             <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                         </div>
                                                         <div class="col-12 col-md-6">
@@ -133,7 +133,7 @@
                                                                 <span>Residential Invoice Default Terms & Conditions</span>
                                                             </div>
                                                             <label class="nsm-subtitle">Your T&C that will appear at the bottom section of the invoice.</label>
-                                                            <textarea name="terms" id="terms" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->terms_and_conditions : '' ?></textarea>
+                                                            <textarea name="terms" id="terms" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : '' ?></textarea>
                                                             <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                         </div>
                                                     </div>
@@ -220,19 +220,19 @@
                                                 <label class="nsm-subtitle mb-3">Select payment methods that will be listed on your invoice.</label>
                                                 <div class="d-block">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="payment_cc" value="cc" id="payment_method_cc" <?php echo ($setting && $setting->accept_credit_card) ? 'checked' : '' ?>>
+                                                        <input class="form-check-input" type="checkbox" name="payment_cc" value="1" id="payment_method_cc" <?php echo ($setting && $setting->accept_credit_card) ? 'checked' : '' ?>>
                                                         <label class="form-check-label" for="payment_method_cc">Credit Card</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="payment_check" value="check" id="payment_method_check" <?php echo ($setting && $setting->accept_check) ? 'checked' : '' ?>>
+                                                        <input class="form-check-input" type="checkbox" name="payment_check" value="1" id="payment_method_check" <?php echo ($setting && $setting->accept_check) ? 'checked' : '' ?>>
                                                         <label class="form-check-label" for="payment_method_check">Check</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="payment_cash" value="cash" id="payment_method_cash" <?php echo ($setting && $setting->accept_cash) ? 'checked' : '' ?>>
+                                                        <input class="form-check-input" type="checkbox" name="payment_cash" value="1" id="payment_method_cash" <?php echo ($setting && $setting->accept_cash) ? 'checked' : '' ?>>
                                                         <label class="form-check-label" for="payment_method_cash">Cash</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="payment_deposit" value="deposit" id="payment_method_deposit" <?php echo ($setting && $setting->accept_direct_deposit) ? 'checked' : '' ?>>
+                                                        <input class="form-check-input" type="checkbox" name="payment_deposit" value="1" id="payment_method_deposit" <?php echo ($setting && $setting->accept_direct_deposit) ? 'checked' : '' ?>>
                                                         <label class="form-check-label" for="payment_method_deposit">Direct Deposit</label>
                                                     </div>
                                                 </div>
@@ -384,6 +384,53 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {});
+    $(document).ready(function() {
+        $('#payment_fee_percent').on('change', function(){
+            $('#payment_fee_amount').val(0);
+        });
+
+        $('#payment_fee_amount').on('change', function(){
+            $('#payment_fee_percent').val('0');
+        });
+
+        $('#frm-invoice-settings').on('submit', function(e){
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "invoice/_save_setting",
+                data: formData, 
+                dataType:'json',
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        Swal.fire({                            
+                            text: "Invoice setting was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                //location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                    
+                }, beforeSend: function() {
+                    
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

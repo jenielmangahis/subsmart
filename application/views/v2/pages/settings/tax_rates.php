@@ -1,6 +1,10 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/invoice/invoice_modals'); ?>
-
+<style>
+.nsm-table .nsm-badge {
+    font-size:13px;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
         <i class="bx bx-receipt"></i>
@@ -39,8 +43,8 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
-                            <td data-name="Rate">Rate</td>
-                            <td data-name="Default">Default</td>
+                            <td data-name="Rate" style="width:10%;">Rate</td>
+                            <td data-name="Default"  style="width:5%;">Default</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -129,11 +133,11 @@
 
         $(document).on("click", ".delete-item", function(){
             let tid = $(this).attr("data-id");
-            let url = "<?php echo base_url(); ?>settings/delete_tax_rate";
+            let url = "<?php echo base_url(); ?>settings/_delete_tax_rate";
 
             Swal.fire({
                 title: 'Delete Tax Rate',
-                text: "Are you sure you want to delete this Tax Rate?",
+                text: "Are you sure you want to delete selected Tax Rate?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -144,17 +148,17 @@
                         type: "POST",
                         url: url,
                         data: {tid:tid},
+                        dataType: 'json',
                         success: function(o){
-                            Swal.fire({
-                                title: 'Good job!',
+                            Swal.fire({                                
                                 text: "Data Deleted Successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         }
                     });

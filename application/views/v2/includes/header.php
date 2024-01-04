@@ -112,6 +112,9 @@ if ($this->session->userdata('usertimezone') == null) {
             color: #fff !important;
         }
     </style>
+    <script>
+        var baseURL = '<?= base_url() ?>';
+    </script>
 </head>
 
 
@@ -460,7 +463,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul class="mt-3">
                         <li class="<?php if ($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("tools/business_tools") ?>">
+                            <a href="<?= base_url("tools/api_connectors") ?>">
                                 <i class='bx bx-fw bx-wrench'></i> Business Tools
                             </a>
                         </li>

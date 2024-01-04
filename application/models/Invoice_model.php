@@ -1159,6 +1159,13 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function cloneData($data){
+        unset($data->id);
+        $this->db->insert($this->table,$data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
 }
 
 /* End of file Invoice_model.php */

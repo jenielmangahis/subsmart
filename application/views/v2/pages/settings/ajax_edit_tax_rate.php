@@ -3,7 +3,7 @@
         <input type="text" placeholder="Tax Name" name="tax_name" class="nsm-field form-control mb-2" value="<?= $taxRate->name; ?>" required autocomplete="off" />
     </div>
     <div class="col-12">
-        <input type="number" placeholder="Rate (%)" name="tax_rate" class="nsm-field form-control mb-2" value="<?= $taxRate->rate; ?>" required autocomplete="off" min="0" />
+        <input type="number" step="any" placeholder="Rate (%)" name="tax_rate" class="nsm-field form-control mb-2" value="<?= $taxRate->rate; ?>" required autocomplete="off" min="0" />
     </div>
     <div class="col-12">
         <div class="form-check">

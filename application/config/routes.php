@@ -280,6 +280,11 @@ $route['adminlte/(:any)'] = 'adminlte/main/$1';
 
 // [Invoice]
 $route['invoice/recurring/add'] = 'invoice/recurring_add';
+$route['invoice/_save_setting'] = 'Invoice/ajax_save_setting';
+$route['invoice/_send_invoice_email'] = 'Invoice/ajax_send_invoice_email';
+$route['invoice/_delete_invoice'] = 'Invoice/ajax_delete_invoice';
+$route['invoice/_mark_as_due'] = 'Invoice/ajax_mark_as_due';
+$route['invoice/_clone_invoice'] = 'Invoice/ajax_clone_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
