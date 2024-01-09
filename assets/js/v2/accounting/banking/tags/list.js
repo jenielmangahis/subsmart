@@ -49,6 +49,44 @@ $('#create-tag-form').on('submit', function(e) {
     });
 });
 
+
+$(document).on('submit', '#tags-table .update_data-form', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+    var type = row.data().type;
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url:`/accounting/tags/update/${id}/${type}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success:function (res) {
+            if(row.data().type === 'group') {
+                row.attr('data-bs-toggle', 'collapse');
+        
+                var index = row.index();
+                row.attr('data-bs-target', `.collapse-${index}`);
+
+                var childTags = $(`#tags-table tr.collapse-${index}`).length;
+                var nameHtml = `<span><i class="bx bx-fw bx-chevron-down"></i> ${data.get('name')} (${childTags})</span>`;
+            } else {
+                if(row.data().type === 'group-tag') {
+
+                }
+                var nameHtml = data.get('name');
+            }
+            row.html(rowHtml);
+
+            row.find('td:nth-child(2)').html(nameHtml);
+        }
+    });
+});
+
 $('#group').select2({
     ajax: {
         url: '/accounting/tags/get-group-tags',
@@ -301,7 +339,7 @@ $('#tags-table .edit-group, #tags-table .edit-tag').on('click', function(e) {
                     <button class="nsm-button primary">Save</button>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <button class="nsm-button warning cancel-edit2">Cancel</button>
+                    <button class="nsm-button warning cancel-edit">Cancel</button>
                 </div>
             </div>
         </form>
@@ -311,26 +349,31 @@ $('#tags-table .edit-group, #tags-table .edit-tag').on('click', function(e) {
 $(document).on('click', '#tags-table .cancel-edit', function(e) {
     e.preventDefault();
 
-    // if($(this).closest('tr').data().type === 'group') {
-    //     $(this).closest('tr').attr('data-bs-toggle', 'collapse');
+    if($(this).closest('tr').data().type === 'group') {
+        $(this).closest('tr').attr('data-bs-toggle', 'collapse');
 
-    //     var index = $(this).closest('tr').index();
-    //     $(this).closest('tr').attr('data-bs-target', `.collapse-${index}`);
-    // }
-    // $(this).closest('tr').html(rowHtml);
+        var index = $(this).closest('tr').index();
+        $(this).closest('tr').attr('data-bs-target', `.collapse-${index}`);
+    }
+    $(this).closest('tr').html(rowHtml);
     // location.reload();
     // $(".nsm-page-content").load(window.location + ".nsm-page-content");
-    $(this).hide();
-    (".dropdown-menu-end").removeClass("show");
+    // $(this).hide();
+    // (".dropdown-menu .dropdown-menu-end").removeClass("show");
+    // document.querySelectorAll(".dropdown-menu .dropdown-menu-end").forEach(function(element) {
+    //     element.classList.remove("show");
+    //  });
+     
 });
 
 $(document).on('click', '#tags-table .cancel-edit2', function(e) {
     // e.preventDefault();
 
     // location.reload();
-    // $(".nsm-page-content").load(window.location + ".nsm-page-content");
+    // $("#tags-table").load(window.location + "#tags-table");
     $(this).hide();
-    (".dropdown-menu-end").removeClass("show");
+    (".dropdown-menu .dropdown-menu-end").removeClass("show");
+    // console.log($(".dropdown-menu .dropdown-menu-end"));
 });
 
 function refreshTable(){
@@ -378,3 +421,4 @@ $(document).on('submit', '#tags-table .edit-form', function(e) {
         }
     });
 });
+

@@ -739,6 +739,8 @@ class Share_Link extends MY_P_Controller
 
     public function work_order_pdf($wo_id)
     {
+        $this->load->model('Business_model');
+
         // $id = $this->input->post('id');
         // $wo_id = $this->input->post('wo_id');
 
@@ -767,9 +769,10 @@ class Share_Link extends MY_P_Controller
         $first = $this->workorder_model->getuserfirst($workData->company_representative_name);
         $second = $this->workorder_model->getusersecond($workData->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workData->secondary_account_holder_name);
+        $companyData = $this->Business_model->getById($workData->company_id);
+        $company_address = $companyData->street .' '.$companyData->city .', '.$companyData->state .' '.$companyData->postal_code;
 
-        $lead = $this->workorder_model->getleadSource($workData->lead_source_id);
-
+        $lead = $this->workorder_model->getleadSource($workData->lead_source_id);       
         $data = array(
             'workorder'                         => $workorder,
             'tags'                              => $workData->tags,
@@ -784,9 +787,12 @@ class Share_Link extends MY_P_Controller
             'primary_account_holder_name'       => $workData->primary_account_holder_name,
             'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
             'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+            'status'                            => $workData->status,
 
-            'company'                           => $cliets->business_name,
-            'business_address'                  => $cliets->business_address,
+            'company'                           => $companyData->business_name,
+            'business_address'                  => $company_address,
+            'bussiness_email'                   => $companyData->business_email,
+            'business_phone'                    => $companyData->office_phone,
             'phone_number'                      => $cliets->phone_number,
             'acs_name'                          => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
             'job_location'                      => $workData->job_location,
@@ -807,7 +813,7 @@ class Share_Link extends MY_P_Controller
             'third_verification_name'           => $customerData->third_verification_name,
             'third_number'                      => $customerData->third_number,
             'third_relation'                    => $customerData->third_relation,
-            'date_issued'                       => $workData->date_issued,
+            'date_issued'                       => date("m-d-Y",strtotime($workData->date_issued)),
             'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
             'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
             'business_name'                     => $customerData->business_name,
@@ -852,13 +858,14 @@ class Share_Link extends MY_P_Controller
             'second'                            => $second,
             'third'                             => $third,
             'company_id'                        => $company_id,
-
             'header'                            => $workData->header,
+            'job_name'                          => $workData->job_name,
+            'installation_date'                 => $workData->date_issued,
+            'job_description'                   => $workData->job_description,            
             
             // 'source' => $source
         );
-
-
+        
     // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
     // $filename = $workData->company_representative_signature;
             
@@ -915,7 +922,6 @@ class Share_Link extends MY_P_Controller
         $lead_source = $this->workorder_model->get_lead($workorder->lead_source_id);
 
         // dd($wo_id);
-
         $data = array(
             'workorder'                         => $workorderNo,
             'company_representative_signature'  => $workorder->company_representative_signature,
@@ -924,6 +930,7 @@ class Share_Link extends MY_P_Controller
             'primary_account_holder_name'       => $workorder->primary_account_holder_name,
             'secondary_account_holder_signature'=> $workorder->secondary_account_holder_signature,
             'secondary_account_holder_name'     => $workorder->secondary_account_holder_name,
+            'status'                            => $workorder->status,
 
             'items'                             => $items,
 

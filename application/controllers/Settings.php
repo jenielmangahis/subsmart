@@ -1476,6 +1476,124 @@ class Settings extends MY_Controller {
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('v2/pages/settings/ajax_edit_sms_template', $this->page_data);
     }
+
+    public function ajax_add_tax_rate(){
+        $this->load->model('TaxRates_model');
+        $this->load->model('Users_model');
+
+        $is_success = 1;
+        $msg = 'Cannot save data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        if( $post['tax_name'] == '' ){
+            $msg = 'Please enter tax name';
+            $is_succss = 0;
+        }
+
+        if( $post['tax_rate'] == '' ){
+            $msg = 'Please enter tax rate';
+            $is_succss = 0;
+        }
+
+        if( $is_success == 1 ){
+
+            $is_default = 0;
+            if( isset($post['is_default']) ){
+                $is_default = 1;
+                //Reset all company default. Can only set 1 default
+                $this->TaxRates_model->resetDefaultTaxRateByCompanyId($cid);
+            }
+
+            $data = [
+                'name' => $post['tax_name'],
+                'rate' => $post['tax_rate'],
+                'is_default' => $is_default,
+                'company_id' => $cid
+            ];
+
+            $taxRates = $this->TaxRates_model->create($data);
+            $msg = '';
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_tax_rate(){
+        $this->load->model('TaxRates_model');
+        $this->load->model('Users_model');
+
+        $is_success = 1;
+        $msg = 'Cannot save data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        if( $post['tax_name'] == '' ){
+            $msg = 'Please enter tax name';
+            $is_succss = 0;
+        }
+
+        if( $post['tax_rate'] == '' ){
+            $msg = 'Please enter tax rate';
+            $is_succss = 0;
+        }
+
+        if( $is_success == 1 ){
+
+            $taxRate = $this->TaxRates_model->getById($post['tid']);
+            if( $taxRate ){
+                $is_default = 0;
+                if( isset($post['is_default']) ){
+                    $is_default = 1;
+                    //Reset all company default. Can only set 1 default
+                    $this->TaxRates_model->resetDefaultTaxRateByCompanyId($cid);
+                }
+
+                $data = [
+                    'name' => $post['tax_name'],
+                    'rate' => $post['tax_rate'],
+                    'is_default' => $is_default,
+                    'company_id' => $cid
+                ];
+
+                $taxRates = $this->TaxRates_model->update($post['tid'],$data);
+                $msg = '';
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find data';
+            }            
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_tax_rate(){
+        $this->load->model('TaxRates_model');
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $taxRate = $this->TaxRates_model->getById($post['tid']);
+        if( $taxRate ){
+            $this->TaxRates_model->delete($post['tid']);
+            
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Cannot find data';
+        }    
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
 }
 
 /* End of file Settings.php */

@@ -1,6 +1,7 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="active">
+        <!-- <li class="<?php echo ($page_title == 'Accounting Dashboard') ? 'active' : '' ; ?>"> -->
+        <li class="<?php echo ($page_title == 'Banking') ? 'active' : '' ; ?>">
             <a class="nsm-page-link" href="/accounting/banking">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Accounting Dashboard</span>
@@ -12,7 +13,7 @@
                 <span>Banking</span>
             </a>
         </li>
-        <li >
+        <li class="<?php echo ($page_title == 'Cash Flow') ? 'active' : '' ; ?>">
             <a class="nsm-page-link" href="/accounting/cashflowplanner">
                 <i class='bx bx-fw bx-credit-card'></i>
                 <span>Cash Flow</span>

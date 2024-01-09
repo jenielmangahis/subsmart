@@ -545,7 +545,7 @@ visibility: visible;
     year = new Date().getFullYear(),
     html = '<option></option>';
 
-for(i = year; i >= year-18; i--) {
+for(i = year; i >= year-100; i--) {
   html += '<option value="' + i + '">' + i + '</option>';
 }
 

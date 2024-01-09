@@ -735,60 +735,17 @@ class Invoice extends MY_Controller
             mkdir($invoiceSettingFolderPath, 0777, true);
         }
 
+        $logo = '';
         if(isset($_FILES['userfile']) && $_FILES['userfile']['tmp_name'] != '') {
             $tmp_name   = $_FILES['userfile']['tmp_name'];
             $extension  = strtolower(end(explode('.',$_FILES['userfile']['name'])));
             $logo = "invoice_setting_".time().'.'.$extension;
             move_uploaded_file($tmp_name, $invoiceSettingFolderPath.$logo);
         }else{
-            if ($id) {
+            if ($id && post('img_setting') != '') {
                 $logo = post('img_setting');
-            } else {
-                $logo = '';
-            }
+            } 
         }
-
-        $payment_methods = array(
-            'cc' => post('payment_cc'),
-            'check' => post('payment_check'),
-            'cash' => post('payment_cash'),
-            'deposit' => post('payment_deposit')
-        );
-
-        $invoice_number = array(
-            'prefix' => post('prefix'),
-            'base' => post('base'),
-        );
-
-        $residential = array(
-            'default_msg' => post('message'),
-            'default_terms' => post('terms'),
-        );
-
-        $commercial = array(
-            'default_msg' => post('message_commercial'),
-            'default_terms' => post('terms_commercial'),
-        );
-
-        $payment_fee = array(
-            'percent' => post('payment_fee_percent'),
-            'amount' => post('payment_fee_amount'),
-        );
-
-        $invoice_template = array(
-            'item_price' => post('hide_item_price'),
-            'item_qty' => post('hide_item_qty'),
-            'item_tax' => post('hide_item_tax'),
-            'item_discount' => post('hide_item_discount'),
-            'item_total' => post('hide_item_total'),
-            'from_email' => post('hide_from_email'),
-            'item_subtotal' => post('show_item_type_subtotal')
-        );
-
-        $invoice_from = array(
-            'business_phone' => post('from_phone_show'),
-            'office_phone' => post('from_office_phone_show'),
-        );
         
         if (!$id) {
             $this->invoice_settings_model->create([
@@ -814,6 +771,8 @@ class Invoice extends MY_Controller
                 'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
                 'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
                 'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
+                'payment_fee_percent' => post('payment_fee_percent'),
+                'payment_fee_amount' => post('payment_fee_amount')
             ]);
         } else {
             $this->invoice_settings_model->update($id, [
@@ -838,6 +797,8 @@ class Invoice extends MY_Controller
                 'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
                 'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
                 'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
+                'payment_fee_percent' => post('payment_fee_percent'),
+                'payment_fee_amount' => post('payment_fee_amount')
             ]);
         }
 
@@ -1259,7 +1220,13 @@ class Invoice extends MY_Controller
     */
     public function genview($id)
     {
+        $this->load->model('CustomerAuditLog_model');
+
         $invoice = get_invoice_by_id($id);
+        if( $invoice->view_flag == 1 ){
+            redirect('invoice');
+        }
+
         $user = get_user_by_id(logged('id'));
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
         
@@ -1287,13 +1254,19 @@ class Invoice extends MY_Controller
         $invoiceData = $this->invoice_model->getinvoice($id);
         $inv_no = $invoiceData->invoice_number;
 
+        $invoiceLogs = $this->CustomerAuditLog_model->getAllByObjIdAndModule($id, 'Invoice');
 
         $this->page_data['record_payment'] = $this->input->get('do');
         $this->page_data['payments'] = $this->invoice_model->getPayments($inv_no);
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
-
         $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
-        $this->load->view('invoice/genview', $this->page_data);
+        $this->page_data['invoiceLogs'] = $invoiceLogs;
+        $this->page_data['page_title'] = "View Invoice";
+        $this->page_data['page']->title = 'Invoices & Payments';
+        $this->page_data['page']->parent = 'Sales';        
+
+        $this->load->view('v2/pages/invoice/genview', $this->page_data);
+        //$this->load->view('invoice/genview', $this->page_data);
     }
 
     public function print($id)
@@ -1344,21 +1317,23 @@ class Invoice extends MY_Controller
      */
     public function send($id)
     {
-        $invoice = get_invoice_by_id($id);
-        $user = get_user_by_id(logged('id'));
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
 
-        if (!empty($invoice)) {
-            foreach ($invoice as $key => $value) {
-                if (is_serialized($value)) {
-                    $invoice->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['invoice'] = $invoice;
-            $this->page_data['user'] = $user;
+        $invoice = get_invoice_by_id($id);
+        if ($invoice) {
+            $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+            $company  = $this->Business_model->getByCompanyId($invoice->company_id);
+            $this->page_data['invoice']   = $invoice;
+            $this->page_data['customer']  = $customer;
+            $this->page_data['company']   = $company;
             $this->page_data['scheduled'] = $this->input->get('scheduled');
+        }else{
+
         }
 
-        $this->load->view('invoice/send', $this->page_data);
+        //$this->load->view('invoice/send', $this->page_data);
+        $this->load->view('v2/pages/invoice/send', $this->page_data);
     }
 
     /**
@@ -1703,6 +1678,322 @@ class Invoice extends MY_Controller
 
         redirect('invoice/genview/'.post('invoice_id'));
     }
+
+    public function ajax_save_setting()
+    {
+        $is_success = 1;
+        $msg = 'Cannot find data';
+
+        $comp_id = logged('company_id');
+        $user = (object)$this->session->userdata('logged');
+        $invoiceSetting = $this->invoice_settings_model->getByCompanyId($comp_id);
+
+        $invoiceSettingFolderPath = "./uploads/invoice/settings/".$comp_id."/";            
+        if(!file_exists($invoiceSettingFolderPath)) {
+            mkdir($invoiceSettingFolderPath, 0777, true);
+        }
+
+        $logo = '';
+        if(isset($_FILES['userfile']) && $_FILES['userfile']['tmp_name'] != '') {
+            $tmp_name   = $_FILES['userfile']['tmp_name'];
+            $extension  = strtolower(end(explode('.',$_FILES['userfile']['name'])));
+            $logo = "invoice_setting_".time().'.'.$extension;
+            move_uploaded_file($tmp_name, $invoiceSettingFolderPath.$logo);
+        }else{            
+            if ($invoiceSetting && post('img_setting') != '') {
+                $logo = post('img_setting');
+            }
+        }        
+        
+        if( $is_success == 1 ){
+            if (!$invoiceSetting) {
+                $this->invoice_settings_model->create([
+                    'company_id' => $comp_id,
+                    'logo' => $logo,
+                    'invoice_num_prefix' => post('prefix'),
+                    'invoice_num_next' => post('base'),
+                    'check_payable_to' => post('payment_to'),
+                    'due_terms' => post('due_terms'),
+                    'payment_fee_amount' => serialize($payment_fee),
+                    'recurring' => post('recurring_on_add_child'),
+                    'mobile_payment' => post('payment_mobile_status'),
+                    'accept_tip' => post('tip_status') ? post('tip_status') : 0,
+                    'auto_convert_completed_work_order' => post('autoconvert_work_order'),
+                    'residential_message' => post('message') ? post('message') : '',
+                    'residential_terms_and_conditions' => post('terms') ? post('terms') : '',
+                    'commercial_message' => post('message_commercial') ? post('message_commercial') : '',
+                    'commercial_terms_and_conditions' => post('terms_commercial') ? post('terms_commercial') : '',
+                    'hide_item_price' => post('hide_item_price') ? post('hide_item_price') : 0,
+                    'hide_item_qty' => post('hide_item_qty') ? post('hide_item_qty') : 0,
+                    'hide_item_tax' => post('hide_item_tax') ? post('hide_item_tax') : 0,
+                    'hide_item_discount' => post('hide_item_discount') ? post('hide_item_discount') : 0,
+                    'hide_item_total' => post('hide_item_total') ? post('hide_item_total') : 0,
+                    'hide_from_email' => post('hide_from_email') ? post('hide_from_email') : 0,
+                    'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
+                    'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
+                    'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
+                    'payment_fee_percent' => post('payment_fee_percent'),
+                    'payment_fee_amount' => post('payment_fee_amount'),
+                    'accept_credit_card' => post('payment_cc') ? post('payment_cc') : 0,
+                    'accept_check' => post('payment_check') ? post('payment_check') : 0,
+                    'accept_cash' => post('payment_cash') ? post('payment_cash') : 0,
+                    'accept_direct_deposit' => post('payment_deposit') ? post('payment_deposit') : 0,
+                    'accept_credit' => 0,
+                    'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
+                ]);
+    
+                $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
+    
+            } else {
+                $this->invoice_settings_model->update($invoiceSetting->id, [
+                    'logo' => $logo,
+                    'invoice_num_prefix' => post('prefix'),
+                    'invoice_num_next' => post('base'),
+                    'check_payable_to' => post('payment_to'),
+                    'due_terms' => post('due_terms'),
+                    'payment_fee_amount' => serialize($payment_fee),
+                    'recurring' => post('recurring_on_add_child'),
+                    'mobile_payment' => post('payment_mobile_status'),
+                    'accept_tip' => post('tip_status') ? post('tip_status') : 0,
+                    'auto_convert_completed_work_order' => post('autoconvert_work_order'),
+                    'residential_message' => post('message') ? post('message') : '',
+                    'residential_terms_and_conditions' => post('terms') ? post('terms') : '',
+                    'commercial_message' => post('message_commercial') ? post('message_commercial') : '',
+                    'commercial_terms_and_conditions' => post('terms_commercial') ? post('terms_commercial') : '',
+                    'hide_item_price' => post('hide_item_price') ? post('hide_item_price') : 0,
+                    'hide_item_qty' => post('hide_item_qty') ? post('hide_item_qty') : 0,
+                    'hide_item_tax' => post('hide_item_tax') ? post('hide_item_tax') : 0,
+                    'hide_item_discount' => post('hide_item_discount') ? post('hide_item_discount') : 0,
+                    'hide_item_total' => post('hide_item_total') ? post('hide_item_total') : 0,
+                    'hide_from_email' => post('hide_from_email') ? post('hide_from_email') : 0,
+                    'hide_item_subtotal' => post('show_item_type_subtotal') ? post('show_item_type_subtotal') : 0,
+                    'hide_business_phone' => post('from_phone_show') ? post('from_phone_show') : 0,
+                    'hide_office_phone' => post('from_office_phone_show') ? post('from_office_phone_show') : 0,
+                    'payment_fee_percent' => post('payment_fee_percent'),
+                    'payment_fee_amount' => post('payment_fee_amount'),
+                    'accept_credit_card' => post('payment_cc') ? post('payment_cc') : 0,
+                    'accept_check' => post('payment_check') ? post('payment_check') : 0,
+                    'accept_cash' => post('payment_cash') ? post('payment_cash') : 0,
+                    'accept_direct_deposit' => post('payment_deposit') ? post('payment_deposit') : 0,
+                    'accept_credit' => 0,
+                    'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
+                ]);
+    
+                $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
+            }
+
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+        echo json_encode($return);
+    }
+
+    public function ajax_send_invoice_email()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $post     = $this->input->post();
+        $invoice  = get_invoice_by_id($post['invoice_id']);
+        $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+        if( !$customer ){
+            $msg = 'Cannot find customer data';
+            $is_success = 0;
+
+        }
+
+        if( !$invoice ){
+            $msg = 'Cannot find invoice data';
+            $is_success = 0;
+        }
+        
+        if( $is_success == 1 ){
+            $mail = email__getInstance();
+            $mail->FromName = 'NsmarTrac';
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            //$mail->addAddress($customer->email, $customerName);
+            $mail->addAddress('bryann.revina03@gmail.com', $customerName);
+            $mail->isHTML(true);
+            $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+            $mail->Body = $this->generateInvoiceHTML($invoice->id);
+
+            if(!$mail->Send()) {
+                $is_success = 0;
+                $msg = 'Cannot send email';
+            }
+
+            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer');
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_delete_invoice()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $post    = $this->input->post();
+        $invoice = $this->invoice_model->getinvoice($post['invoice_id']);
+        if($invoice){
+            $data = array(
+                'id' => $post['invoice_id'],
+                'view_flag' => '1',
+            );
+
+            $is_success = $this->invoice_model->deleteInvoice($data);
+            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Deleted invoice '.$invoice->invoice_number);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_mark_as_due()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $post    = $this->input->post();
+        $invoice = $this->invoice_model->getinvoice($post['invoice_id']);
+        if( $invoice ){
+            $this->invoice_model->markAsSent($post['invoice_id'], logged('company_id'));
+
+            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Updated invoice '.$invoice->invoice_number.' changed status to Due');
+            $this->activity_model->add("invoice #". $post['invoice_id'] ." Mark As Due by User:" . logged('name'));
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_clone_invoice()
+    {
+        $this->load->model('Invoice_settings_model');
+        $this->load->model('Invoice_items_model');
+
+        $is_success = 0;
+        $invoice_id = 0;
+        $msg = 'Cannot find invoice data';
+
+        $post    = $this->input->post();
+        $company_id = logged('company_id');
+        $invoice    = $this->invoice_model->getinvoice($post['invoice_id']);
+        if( $invoice ){
+            $invoice->status = 'Draft'; 
+            $invoice_id = $this->invoice_model->cloneData($invoice);               
+
+            //Generate new invoice number
+            $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+            if( $invoiceSettings ){            
+                $next_number = (int) $invoiceSettings->invoice_num_next;     
+                $prefix      = $invoiceSettings->invoice_num_prefix;        
+            }else{
+                $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+                $prefix     = 'INV-';
+                if( $lastInsert ){
+                    $next_number   = $lastInsert->id + 1;
+                }else{
+                    $next_number   = 1;
+                }
+            }
+    
+            $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);
+            $this->invoice_model->update($invoice_id,['invoice_number' => $invoiceNumber]);
+
+            //Copy invoice items
+            $invoiceItems = $this->Invoice_items_model->getAllByInvoiceId($post['invoice_id']);
+            if( $invoiceItems ){
+                foreach($invoiceItems as $item){
+                    $item->invoice_id = $invoice_id;
+                    $this->Invoice_items_model->cloneData($item);
+                }
+            }
+
+            //Update invoice settings
+            if( $invoiceSettings ){
+                $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+                $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+            }else{
+                $invoice_settings_data = [
+                    'invoice_num_prefix' => $prefix,
+                    'invoice_num_next' => $next_number,
+                    'check_payable_to' => '',
+                    'accept_credit_card' => 1,
+                    'accept_check' => 0,
+                    'accept_cash'  => 1,
+                    'accept_direct_deposit' => 0,
+                    'accept_credit' => 0,
+                    'mobile_payment' => 1,
+                    'capture_customer_signature' => 1,
+                    'hide_item_price' => 0,
+                    'hide_item_qty' => 0,
+                    'hide_item_tax' => 0,
+                    'hide_item_discount' => 0,
+                    'hide_item_total' => 0,
+                    'hide_from_email' => 0,
+                    'hide_item_subtotal' => 0,
+                    'hide_business_phone' => 0,
+                    'hide_office_phone' => 0,
+                    'accept_tip' => 0,
+                    'due_terms' => '',
+                    'auto_convert_completed_work_order' => 0,
+                    'message' => 'Thank you for your business.',
+                    'terms_and_conditions' => 'Thank you for your business.',
+                    'company_id' => $company_id,
+                    'commercial_message' => 'Thank you for your business.',
+                    'commercial_terms_and_conditions' => 'Thank you for your business.',
+                    'logo' => '',
+                    'payment_fee_percent' => '',
+                    'payment_fee_amount' => '',
+                    'recurring' => ''
+                ];
+
+                $this->Invoice_settings_model->create($invoice_settings_data);
+            }
+
+            $newInvoice    = $this->invoice_model->getinvoice($invoice_id);
+            customerAuditLog(logged('id'), $invoice->customer_id, $post['invoice_id'], 'Invoice', 'Cloned invoice. New invoice number '.$newInvoice->invoice_number);
+            customerAuditLog(logged('id'), $newInvoice->customer_id, $newInvoice->id, 'Invoice', 'Created invoice #'.$newInvoice->invoice_number);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'invoice_id' => $invoice_id,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
 }
 
 /* End of file Invoice.php */

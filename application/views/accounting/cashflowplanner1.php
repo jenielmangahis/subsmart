@@ -278,10 +278,9 @@ include viewPath('v2/includes/accounting_header');
                         </div>
                         <div class="col-md-4 banking-tab-container" align="right">
                             <div class="buttons">
-                                <a href="<?php echo base_url('accounting/cashflowPDF/') ?>" class="banking-tab btn btn-primary" id="moneyall" style="color:white;">Export as PDF</a>
+                                <a href="<?php echo base_url('accounting/cashflowPDF/') ?>" class="nsm-button banking-tab" id="moneyall" >Export as PDF</a>
                                 <div class="filter-btn-section">
-                                    <button class="btn btn-default filter-btn" type="button">
-                                        Filter <span class="fa fa-caret-down"></span></button>
+                                    <button class="nsm-button filter-btn" type="button" style="height: unset;">Filter <span class="fa fa-caret-down"></span></button>
                                     <div class="filter-panel" style="display: none;">
                                         <div class="achor-holder"><img src="<?= base_url("assets/img/accounting/customers/anchor.png") ?>" alt=""></div>
 
@@ -430,30 +429,33 @@ include viewPath('v2/includes/accounting_header');
                                         <div class="pull-right">
                                             <button class="btn btn-success apply-btn px-4" id="reset" type="button">Reset</button>
                                             <button class="btn btn-success apply-btn px-4" id="Apply" type="button">Apply</button>
-
                                         </div>
                                     </div>
                                 </div>
-                                <button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add
-                                    item</button>
+                                <button class="nsm-button primary banking-tab cfp_add_item" style="color:white;">Add Item</button>
                             </div>
                         </div>
                     </div>
+
                     <!-- form for adding items -->
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;height: rem;" id="cfp_add_item_area">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="float-end">
+                                    <button" style="font-size:20px;" class="close_add_item"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button>
+                                </span>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-3">
                                 <input type="text" id="date_plan" name="item_date" class="form-control date_plan" placeholder="Date" required>
                             </div>
-                            <div class="col-md-6 input-group" style="">
+                            <div class="col-md-6 input-group">
                                 <input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name" required> &nbsp;&nbsp;&nbsp;
                                 <input type="text" name="item_amt" class="form-control plan_amount" style="width: 30%;" placeholder="$0.00" required>
                             </div>
                             <div class="col-md-2">
                                 <label>Planned</label>
-                            </div>
-                            <div class="col-md-1" align="right">
-                                <button" style="font-size:20px;" class="close_add_item"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button>
                             </div>
                         </div>
 
@@ -635,10 +637,15 @@ include viewPath('v2/includes/accounting_header');
                                 </div>
                             </div>
                             </div>
-
                         </div>
                         <hr>
-                        <button class="btn btn-warning bton savecashflowplannedForm">Save</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="float-end">
+                                    <button class="nsm-button primary bton savecashflowplannedForm">Save</button>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <!-- end off adding items -->
                     <br><br>

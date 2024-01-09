@@ -11,7 +11,7 @@ class Accounting_model extends MY_Model {
         if ($reportType == "sales_tax_liability") {
         
         }
-
+        
         // Get Customer Contact List Report data in Database
         if ($reportType == "customer_contact_list") {
             $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, mail_add AS billingAddress, CONCAT(city, " ", state, " ", zip_code) AS shippingAddress');

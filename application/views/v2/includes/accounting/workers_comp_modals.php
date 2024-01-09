@@ -306,7 +306,7 @@
             <div class="modal-header">
                 <span class="modal-title content-title">
                     Add new employee or owner
-                </span>
+                </span> <i>(Optional)</i>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body" id="divpopemp">

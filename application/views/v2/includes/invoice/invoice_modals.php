@@ -26,7 +26,7 @@
 
 <div class="modal fade nsm-modal fade" id="new_tax_rate_modal" tabindex="-1" aria-labelledby="new_tax_rate_modal_label" aria-hidden="true">
     <div class="modal-dialog">
-        <?php echo form_open_multipart('settings/create_tax_rate', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-create-tax-rate', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="new_tax_rate_modal_label">New Tax Rate</span>
@@ -62,7 +62,7 @@
 
 <div class="modal fade nsm-modal fade" id="edit_tax_rate_modal" tabindex="-1" aria-labelledby="edit_tax_rate_modal_label" aria-hidden="true">
     <div class="modal-dialog">
-        <?php echo form_open_multipart('settings/update_tax_rate', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('settings/update_tax_rate', ['class' => 'form-validate', 'id' => 'frm-update-tax-rate', 'autocomplete' => 'off']); ?>
         <?php echo form_input(array('name' => 'tid', 'type' => 'hidden', 'value' => '', 'id' => 'tid')); ?>
         <div class="modal-content">
             <div class="modal-header">
@@ -86,3 +86,95 @@
         <?php echo form_close(); ?>
     </div>
 </div>
+
+<script>
+$(function(){
+    $('#frm-create-tax-rate').on('submit', function(e){
+        let _this = $(this);
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        var url = "<?php echo base_url('settings/_add_tax_rate'); ?>";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            success: function(result) {
+                if( result.is_success == 1 ){                    
+                    $('#new_tax_rate_modal').modal('hide');
+                    Swal.fire({
+                        text: "Tax rate was created successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
+    $('#frm-update-tax-rate').on('submit', function(e){
+        let _this = $(this);
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        var url = "<?php echo base_url('settings/_update_tax_rate'); ?>";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            success: function(result) {
+                if( result.is_success == 1 ){                    
+                    $('#edit_tax_rate_modal').modal('hide');
+                    Swal.fire({
+                        text: "Tax rate was updated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+});
+</script>

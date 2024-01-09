@@ -39,8 +39,10 @@
                                 <i class='bx bx-fw bx-upload'></i> Upload
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="receiptsUploadDropzone">Upload from computer</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="googleDriveConnectButton">Upload from Google Drive</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="receiptsUploadDropzone">Upload from computer <small class="text-muted">(Image File Only)</small></a></li>
+
+                                <!-- REMOVED TEMPORARILY -->
+                                <!-- <li><a class="dropdown-item" href="javascript:void(0);" id="googleDriveConnectButton">Upload from Google Drive</a></li> -->
                             </ul>
                             <button type="button" class="nsm-button" id="receiptForwardingButton">
                                 Set up receipt forwarding
