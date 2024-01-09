@@ -711,8 +711,11 @@ jQuery(document).ready(function() {
         var indic = $("#sched option:selected").val();
 
         if (name == "" || amt == "" || addDate == "" || plan == "") {
-
-            alert("input all fields");
+            Swal.fire({
+                title: "Unable to save",
+                text: "All Fields should not be empty!",
+                icon: "error"
+            });
         } else {
             if (p_type == "1") {
                 if ($("#sched option:selected").val() == "daily") {
@@ -810,7 +813,11 @@ jQuery(document).ready(function() {
                         w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
                     }
                     if (w_weeks == "" || w_days == "") {
-                        alert("input all fields");
+                        Swal.fire({
+                            title: "Unable to save",
+                            text: "All Fields should not be empty!",
+                            icon: "error"
+                        });
                     } else {
                         $.ajax({
                             url: baseURL + "accounting/savecashflowplan",
@@ -838,7 +845,11 @@ jQuery(document).ready(function() {
                             m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
                         }
                         if (m_months == "" || m_day == "") {
-                            alert("input all fields");
+                            Swal.fire({
+                                title: "Unable to save",
+                                text: "All Fields should not be empty!",
+                                icon: "error"
+                            });
                         } else {
                             $.ajax({
                                 url: baseURL + "accounting/savecashflowplan",
@@ -865,7 +876,11 @@ jQuery(document).ready(function() {
                             m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
                         }
                         if (sc_day == "" || sc_rank == "") {
-                            alert("input all fields");
+                            Swal.fire({
+                                title: "Unable to save",
+                                text: "All Fields should not be empty!",
+                                icon: "error"
+                            });
                         } else {
                             $.ajax({
                                 url: baseURL + "accounting/savecashflowplan",
@@ -915,7 +930,6 @@ jQuery(document).ready(function() {
 
 
     var valdata = Array();
-    load_money_in_out_table();
 
 
 
@@ -1053,6 +1067,10 @@ jQuery(document).ready(function() {
             }
         });
     }
+
+    $(document).ready(function () {
+        load_money_in_out_table();
+    });
 
     //table sorting
 

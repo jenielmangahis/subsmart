@@ -123,56 +123,6 @@
                 <form id="reportSettingsForm" method="POST">
                     <div class="row">
                         <div class="col-lg-12">
-                            <!-- FOR LATER UPDATES -->
-                            <!-- <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">User</label>
-                                        <select class="form-select">
-                                            <option value="all" selected>All</option>
-                                            <?php 
-                                                foreach ($customerByCompanyID as $customerByCompanyIDs) {
-                                                    echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Date Changed</label>
-                                        <select class="form-select">
-                                            <option value="Today">Today</option>
-                                            <option value="Yesterday">Yesterday</option>
-                                            <option value="This Week">This Week</option>
-                                            <option value="This Month">This Month</option>
-                                            <option value="This Quarter">This Quarter</option>
-                                            <option value="This Year">This Year</option>
-                                            <option value="Last Week">Last Week</option>
-                                            <option value="Last Month">Last Month</option>
-                                            <option value="Last Quarter">Last Quarter</option>
-                                            <option value="Last Year">Last Year</option>
-                                            <option value="Last Seven Years">Last Seven Years</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Event <small class="text-muted">(Module)</small></label>
-                                        <select class="form-select">
-                                            <option value="All">All</option>
-                                            <option value="Workorder">Workorder</option>
-                                            <option value="Invoice">Invoice</option>
-                                            <option value="Taskhub">Taskhub</option>
-                                            <option value="Customer">Customer</option>
-                                            <option value="Estimate">Estimate</option>
-                                            <option value="Event">Event</option>
-                                            <option value="Appointment">Appointment</option>
-                                            <option value="Jobs">Jobs</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="row">
                                 <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Logo</label>

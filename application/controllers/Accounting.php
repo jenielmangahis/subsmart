@@ -60,6 +60,7 @@ class Accounting extends MY_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('taskhub_status_model');
         $this->load->model('Crud', 'crud');
+        $this->load->model('Business_model');
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -154,6 +155,7 @@ class Accounting extends MY_Controller
 
     public function banking()
     {
+        $this->page_data['page_title'] = "Banking";
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
@@ -12810,39 +12812,660 @@ class Accounting extends MY_Controller
 
     public function cashflowplanner()
     {
-        add_css(array(
-            "assets/css/accounting/accounting_includes/cashflow.css",
-        ));
-        add_footer_js(array(
-            "assets/js/accounting/accounting/cashflow.js",
-        ));
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-
+        // OLD
+        // add_css(array(
+        //     "assets/css/accounting/accounting_includes/cashflow.css",
+        // ));
+        // add_footer_js(array(
+        //     "assets/js/accounting/accounting/cashflow.js",
+        // ));
+        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        // $this->page_data['customers']       = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        // $this->page_data['invoices']        = $this->invoice_model->getAllData(logged('company_id'));
+        // $this->page_data['clients']         = $this->invoice_model->getclientsData(logged('company_id'));
+        // $this->page_data['invoices_sales']  = $this->invoice_model->getAllDataSales(logged('company_id'));
+        // $this->page_data['OpenInvoices']    = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        // $this->page_data['InvOverdue']      = $this->invoice_model->InvOverdue(logged('company_id'));
+        // $this->page_data['getAllInvPaid']   = $this->invoice_model->getAllInvPaid(logged('company_id'));
+        // $this->page_data['items']           = $this->items_model->getItemlist();
+        // $this->page_data['packages']        = $this->workorder_model->getPackagelist(logged('company_id'));
+        // $this->page_data['estimates']       = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+        // $this->page_data['sales_receipts']  = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
+        // $this->page_data['credit_memo']     = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
+        // $this->page_data['employees']       = $this->users_model->getCompanyUsers(logged('company_id'));
+        // $this->page_data['statements']      = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        // $this->page_data['rpayments']       = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        // $this->page_data['checks']          = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        // $this->page_data['expenses']        = $this->expenses_model->getExpenseByComp(logged('company_id'));
+        // $this->page_data['plans']           = $this->vendors_model->getcashflowplan(logged('company_id'));
+        // $this->page_data['totoverdues']     = $this->invoice_model->totalcountOverdue(logged('company_id'));
+        // $this->page_data['overdues']        = $this->invoice_model->overdue(logged('company_id'));
+        // $this->load->view('accounting/cashflowplanner1', $this->page_data);
         $this->page_data['page_title'] = "Cash Flow";
 
-        $this->page_data['customers']       = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
-        $this->page_data['invoices']        = $this->invoice_model->getAllData(logged('company_id'));
-        $this->page_data['clients']         = $this->invoice_model->getclientsData(logged('company_id'));
-        $this->page_data['invoices_sales']  = $this->invoice_model->getAllDataSales(logged('company_id'));
-        $this->page_data['OpenInvoices']    = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
-        $this->page_data['InvOverdue']      = $this->invoice_model->InvOverdue(logged('company_id'));
-        $this->page_data['getAllInvPaid']   = $this->invoice_model->getAllInvPaid(logged('company_id'));
-        $this->page_data['items']           = $this->items_model->getItemlist();
-        $this->page_data['packages']        = $this->workorder_model->getPackagelist(logged('company_id'));
-        $this->page_data['estimates']       = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
-        $this->page_data['sales_receipts']  = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
-        $this->page_data['credit_memo']     = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
-        $this->page_data['employees']       = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['statements']      = $this->accounting_statements_model->getAllComp(logged('company_id'));
-        $this->page_data['rpayments']       = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
-        $this->page_data['checks']          = $this->vendors_model->get_check_by_comp(logged('company_id'));
-        $this->page_data['expenses']        = $this->expenses_model->getExpenseByComp(logged('company_id'));
-        $this->page_data['plans']           = $this->vendors_model->getcashflowplan(logged('company_id'));
-        $this->page_data['totoverdues']     = $this->invoice_model->totalcountOverdue(logged('company_id'));
-        $this->page_data['overdues']        = $this->invoice_model->overdue(logged('company_id'));
+        $this->page_data['companyInfo'] = $this->Business_model->getByCompanyId(logged('company_id'));
+        $this->load->view('v2/pages/accounting/banking/cashflowplanner', $this->page_data);
+    }
 
-        $this->load->view('accounting/cashflowplanner1', $this->page_data);
+    public function cashflowplanner_crud($process) 
+    {
+        $this->load->helper("report_helper");
+        $this->load->library('PHPXLSXWriter');
+        $this->load->model('Serversidetable_model', 'serverside_table');
+
+        // Get Current Company ID
+        $company_id = logged('company_id');
+
+        // Get Current Year
+        $currentYear = date('Y');
+
+        // ====== Default PDF Report Settings ===================================================
+        $companyInfo = $this->Business_model->getByCompanyId($company_id);
+        $businessName = strtoupper($companyInfo->business_name);
+        $reportName = "Daily Cash Flow Balance";
+        $reportDate = date('Y-m-d');
+        $filename = str_replace(' ', '_', strtoupper($companyInfo->business_name).' CashFlow Planner');
+
+        $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->setCreator(PDF_CREATOR);
+        $pdf->setAuthor("Sample Author");
+        $pdf->setTitle("Cashflow Planner Report");
+        $pdf->setSubject("Report");
+        
+        // Header Config Param: logoURL, showLogo, headerRepeat, headerPosition, businessName, reportName, reportDate
+        $pdf->setHeaderContent('', false, false, 'C', $businessName, $reportName, $reportDate);
+        $pdf->setFooterContent('C', date("l, F j, Y h:i A eP"));
+        $pdf->setMargins(10, 8, 10);
+        $pdf->setHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setFont('helvetica', 'N', 12.5);
+        $pdf->AddPage('P', "A4");
+
+        $defaultPDFStyle = '<style>
+            table { 
+                width: 100% !important; 
+            } 
+            .tableHeader { 
+                border-bottom: 1px solid gray;  
+                border-top: 1px solid gray; 
+            }
+            .COLUMN_NAME {
+                font-size: 13px;
+            }
+            .TD_NAME {
+                font-size: 13px;
+            }
+            .reportNotes {
+                text-align: left; 
+                font-size: 11.5px;
+            }
+            .reportDate {
+                text-align: center;
+            }
+            .PLACE_LEFT {
+                text-align: left;
+            }
+            .PLACE_RIGHT {
+                text-align: right;
+            }
+        </style>';
+        // ====== Default PDF Report Settings ===================================================
+    
+        // filter out the 'process' data if its insert, update, delete or read etc.
+        switch ($process) {
+            case 'insert':
+                $data = $this->input->post();
+                $data['company_id'] = $company_id; // Include Company ID
+                $query = $this->general_model->add_($data, 'accounting_cashflowplanner');
+                $result = ($query) ? 1 : 0 ;
+                echo $result;
+                break;
+            case 'update':
+                $data = $this->input->post();
+                $query = $this->general_model->update_with_key($data, $data['id'], 'accounting_cashflowplanner');
+                $result = ($query) ? 1 : 0 ;
+                echo $result;
+                break;
+            case 'delete':
+                $data = array(
+                    'table' => 'accounting_cashflowplanner',
+                    'where' => array(
+                        'id' => $this->input->post('id'),
+                    ),
+                );
+                $query = $this->general_model->delete_($data);
+                $result = ($query) ? 1 : 0 ;
+                echo $result;
+                break;
+            case 'read':
+                // Initialize Table Information
+                $initializeTable = $this->serverside_table->initializeTable(
+                    "accounting_cashflowplanner_view", 
+                    array('date', 'id', 'description', 'amount', 'type', 'transaction',),
+                    array('date', 'id', 'description', 'amount', 'type', 'transaction',),
+                    null,  
+                    array(
+                        'company_id' => $company_id,
+                        'type REGEXP' => "^(planned|projected)$",
+                    ),
+                );
+
+                // Define the where condition
+                $whereCondition = array('company_id' => $company_id);
+
+                $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
+
+                $data = $row = array();
+                $i = $this->input->post('start');
+                
+                foreach($getData as $getDatas){
+                    
+                    if ($getDatas->company_id == $company_id) {
+                        $id = $getDatas->id;
+                        $date = date("m/d/Y", strtotime($getDatas->date));
+                        $amount = ($getDatas->transaction == "money_in" || $getDatas->transaction == "paid_invoice") ? "<span style='color: green;'>+ $".number_format($getDatas->amount, 2, ".", ",")."</span>" : "<span style='color: red;'>- $".number_format($getDatas->amount, 2, ".", ",")."</span>";
+
+                        if ($getDatas->type == "planned") {
+                            $type = "Planned";
+                            $action_button = "<button type='button' class='nsm-button small customButton border-0' onclick='getItemData($getDatas->id, `$getDatas->type`)'><i class='bx bxs-edit' style='font-size: 20px;'></i></button>";
+                        } else if ($getDatas->type == "projected") {
+                            $type = "Planned <small class='text-muted'>(projected)</small>";
+                            $action_button = "";
+                        } else if ($getDatas->type == "invoiced") {
+                            $type = "Invoiced";
+                        }
+
+                        $data[] = array(
+                            $date,
+                            $id, 
+                            $getDatas->description, 
+                            $amount, 
+                            $type, 
+                            $getDatas->transaction, 
+                            $action_button,
+                        );
+                        $i++;
+                    }
+                }
+                
+                $output = array(
+                    "draw" => $this->input->post('draw'),
+                    "recordsTotal" => $this->serverside_table->countAll(),
+                    "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
+                    "data" => $data,
+                );
+                
+                // Output to JSON format
+                echo json_encode($output);
+                break;
+            case 'get_balance':
+                $getSumBalance = array(
+                    'select' => 'SUM(amount) AS total',
+                    'table' => 'accounting_cashflowplanner_view',
+                    'where' => array(
+                        'company_id' => $company_id,
+                        'transaction REGEXP' => '^(money_in)$',
+                    ),
+                );
+                $getSumBalanceData = $this->general_model->get_data_with_param($getSumBalance);
+                $getDiff = array(
+                    'select' => 'SUM(amount) AS total',
+                    'table' => 'accounting_cashflowplanner_view',
+                    'where' => array(
+                        'company_id' => $company_id,
+                        'transaction REGEXP' => '^(money_out)$',
+                    ),
+                );
+                $getDiffData = $this->general_model->get_data_with_param($getDiff);
+
+                $totalBalance = $getSumBalanceData[0]->total - $getDiffData[0]->total;
+                echo $totalBalance;
+                break;
+            case 'get_cashflowiteminfo':
+                $id = $this->input->post('id');
+                $getCashflow = array(
+                    'select' => '*',
+                    'table' => 'accounting_cashflowplanner_view',
+                    'where' => array(
+                        'id' => $id,
+                    ),
+                );
+                $getCashflowData = $this->general_model->get_data_with_param($getCashflow);
+                echo json_encode($getCashflowData);
+                break;
+            case 'get_12month_bargraph':
+                $backwardSteps = 9;
+                $forwardSteps = 12;
+                $data = array(
+                    'month_name' => [],
+                    'month_number' => [],
+                    'moneyin' => [],
+                    'moneyout' => [],
+                );
+                $currentDateTime = new DateTime(date('M') . ' 1');
+
+                for ($i = 0; $i < $backwardSteps; $i++) {
+                    $currentDateTime->modify('-1 month');
+                }
+
+                for ($i = 0; $i < $forwardSteps; $i++) {
+                    $data['month_name'][] = $currentDateTime->format('M');
+                    $data['month_number'][] = $currentDateTime->format('Y-m');
+                    $currentDateTime->modify('+1 month');
+                }
+
+                for ($i = 0; $i < $forwardSteps; $i++) {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%'.$data["month_number"][$i].'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyin'][$i] = ($result->moneyin) ? round($result->moneyin, 2) : 0 ;
+
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%'.$data["month_number"][$i].'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyout'][$i] = ($result->moneyout) ? round($result->moneyout, 2) : 0 ;
+                }
+
+                echo json_encode($data);
+                    break;
+            case 'get_6month_bargraph':
+                $backwardSteps = 3;
+                $forwardSteps = 6;
+                $data = array(
+                    'month_name' => [],
+                    'month_number' => [],
+                    'moneyin' => [],
+                    'moneyout' => [],
+                );
+                $currentDateTime = new DateTime(date('M') . ' 1');
+
+                for ($i = 0;$i < $backwardSteps;$i++)
+                {
+                    $currentDateTime->modify('-1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $data['month_name'][] = $currentDateTime->format('M');
+                    $data['month_number'][] = $currentDateTime->format('Y-m');
+                    $currentDateTime->modify('+1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyin'][$i] = ($result->moneyin) ? round($result->moneyin, 2) : 0;
+
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyout'][$i] = ($result->moneyout) ? round($result->moneyout, 2) : 0;
+                }
+
+                echo json_encode($data);
+                break;
+            case 'get_3month_bargraph':
+                $backwardSteps = 1;
+                $forwardSteps = 3;
+                $data = array(
+                    'month_name' => [],
+                    'month_number' => [],
+                    'moneyin' => [],
+                    'moneyout' => [],
+                );
+                $currentDateTime = new DateTime(date('M') . ' 1');
+
+                for ($i = 0;$i < $backwardSteps;$i++)
+                {
+                    $currentDateTime->modify('-1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $data['month_name'][] = $currentDateTime->format('M');
+                    $data['month_number'][] = $currentDateTime->format('Y-m');
+                    $currentDateTime->modify('+1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyin'][$i] = ($result->moneyin) ? round($result->moneyin, 2) : 0;
+
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyout'][$i] = ($result->moneyout) ? round($result->moneyout, 2) : 0;
+                }
+
+                echo json_encode($data);
+                break;
+            case 'get_thismonth_bargraph':
+                $backwardSteps = 0;
+                $forwardSteps = 1;
+                $data = array(
+                    'month_name' => [],
+                    'month_number' => [],
+                    'moneyin' => [],
+                    'moneyout' => [],
+                );
+                $currentDateTime = new DateTime(date('M') . ' 1');
+
+                for ($i = 0;$i < $backwardSteps;$i++)
+                {
+                    $currentDateTime->modify('-1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $data['month_name'][] = $currentDateTime->format('M');
+                    $data['month_number'][] = $currentDateTime->format('Y-m');
+                    $currentDateTime->modify('+1 month');
+                }
+
+                for ($i = 0;$i < $forwardSteps;$i++)
+                {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyin'][$i] = ($result->moneyin) ? round($result->moneyin, 2) : 0;
+
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%' . $data["month_number"][$i] . '%',
+                        ) ,
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $data['moneyout'][$i] = ($result->moneyout) ? round($result->moneyout, 2) : 0;
+                }
+
+                echo json_encode($data);
+                break;
+            case 'get_projection_data':
+                $deleteQuery = array(
+                    'table' => 'accounting_cashflowplanner',
+                    'where' => array(
+                        'company_id' => $company_id,
+                        'type' => 'projected',
+                    ),
+                );
+                $executeDeleteQuery = $this->general_model->delete_($deleteQuery);
+
+
+                $projectedMoneyInValue = array(0, 0, 0, 0);
+                $projectedMoneyOutValue = array(0, 0, 0, 0);
+                $months = array();
+
+                $currentYearMonth = new DateTime(date('M'));
+                $currentYearMonth->modify('-1 month');
+
+                for ($i = 0; $i < 2; $i++) { 
+                    $months[$i] = $currentYearMonth->format('Y-m');
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%'.$currentYearMonth->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $projectedMoneyInValue[$i] = round($result->moneyin, 2);
+
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%'.$currentYearMonth->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $projectedMoneyOutValue[$i] = round($result->moneyout, 2);
+
+                    $currentYearMonth->modify('+1 month');
+                }
+
+                for ($i = 0; $i < 2; $i++) {
+                    $data1 = ($projectedMoneyInValue[$i] + $projectedMoneyInValue[$i + 1]) / 2;
+                    $projectedMoneyInValue[$i + 2] = round($data1, 2);
+                    
+                    $data2 = ($projectedMoneyOutValue[$i] + $projectedMoneyOutValue[$i + 1]) / 2;
+                    $projectedMoneyOutValue[$i + 2] = round($data2, 2);
+
+                    $currentYearMonth->modify('+1 month');
+                    $months[$i + 2] = $currentYearMonth->format('Y-m');
+                }
+
+                $currentYearMonth->modify('-2 month');
+
+                for ($i = 0; $i < 2; $i++) {
+                    $data = array(
+                        'company_id' => $company_id,
+                        'date' => $currentYearMonth->format('Y-m').'-01',
+                        'description' => 'Projection',
+                        'amount' => $projectedMoneyInValue[$i + 2],
+                        'type' => 'projected',
+                        'transaction' => 'money_in',
+                        'frequency' => 'one_time',
+                    );
+                    $executeQuery = $this->general_model->add_($data, 'accounting_cashflowplanner');
+
+                    $data = array(
+                        'company_id' => $company_id,
+                        'date' => $currentYearMonth->format('Y-m').'-01',
+                        'description' => 'Projection',
+                        'amount' => $projectedMoneyOutValue[$i + 2],
+                        'type' => 'projected',
+                        'transaction' => 'money_out',
+                        'frequency' => 'one_time',
+                    );
+                    $executeQuery = $this->general_model->add_($data, 'accounting_cashflowplanner');
+                    $currentYearMonth->modify('+1 month');
+                }
+                // echo "<pre>";
+                // print_r($$executeQuery);
+                // print_r($projectedMoneyOutValue);
+                // print_r($months);
+                // print_r($currentYearMonth);
+                // echo "</pre>";
+                break;
+            case 'generate_pdf_report':
+                $backwardSteps = 9;
+                $forwardSteps = 10;
+                $currentDateTime = new DateTime(date('M') . ' 1');
+
+                $currentDateTime->modify('-9 month');
+                $dateFrom = $currentDateTime->format('M Y');
+                $currentDateTime->modify('+9 month');
+                $dateTo = $currentDateTime->format('M Y');
+                $reportDateRange = $dateFrom.' - '.$dateTo;
+
+                $header = '<table class="HEADER_INFO" cellpadding="1" cellspacing="0" border="0" style="text-align: center;">';
+                $header .= '<tr><td class="BUSINESS_NAME"><h2>'.$businessName.'</h2></td></tr>';
+                $header .= '<tr><td class="REPORT_NAME" style="font-size: 15.3px;">'.$reportName.'</td></tr>';
+                $header .= '<tr><td class="REPORT_DATE">'.$reportDateRange.'</td></tr>';
+                $header .= '<tr><td></td></tr>';
+                $header .= '</table>';
+
+                $monthly_summary_label = '<table class="HEADER_INFO" cellpadding="1" cellspacing="5" border="0" style="text-align: left;">';
+                $monthly_summary_label .= '<tr><td><h4>MONTHLY SUMMARY</h4></td></tr>';
+                $monthly_summary_label .= '</table>';
+                
+                $tableColumns = '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0">';
+                $tableColumns .= '<tr>';
+                $tableColumns .= '<th class="COLUMN_NAME">MONTH</th>';
+                $tableColumns .= '<th class="COLUMN_NAME">MONEY IN</th>';
+                $tableColumns .= '<th class="COLUMN_NAME">MONEY OUT</th>';
+                $tableColumns .= '<th class="COLUMN_NAME">ENDING BALANCE</th>';
+                $tableColumns .= '</tr>';
+                $tableColumns .= '</table>';
+
+                $tableContent = '<table cellpadding="0" cellspacing="4" border="0">';
+                $currentDateTime = new DateTime(date('M') . ' 1');
+                $currentDateTime->modify('-9 month');
+                $endingBalance = 0.0;
+                for ($i = 0; $i < $forwardSteps; $i++) {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%'.$currentDateTime->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $totalMoneyIn = round($result->moneyin, 2);
+                    // ==========
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%'.$currentDateTime->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $totalMoneyOut = round($result->moneyout, 2);
+
+                    $endingBalance += $totalMoneyIn - $totalMoneyOut;
+
+                    $tableContent .= '<tr>';
+                    $tableContent .= '<td class="TD_NAME">'.$currentDateTime->format('Y M').'</td>';
+                    $tableContent .= '<td class="TD_NAME">$'.$totalMoneyIn.'</td>';
+                    $tableContent .= '<td class="TD_NAME">$'.$totalMoneyOut.'</td>';
+                    $tableContent .= '<td class="TD_NAME">$'.$endingBalance.'</td>';
+                    $tableContent .= '</tr>';
+
+                    $currentDateTime->modify('+1 month');
+                }
+                $tableContent .= '</table>';
+
+                $projection_label = '<table class="HEADER_INFO" cellpadding="1" cellspacing="5" border="0" style="text-align: left;">';
+                $projection_label .= '<tr><td></td></tr>';
+                $projection_label .= '<tr><td><h4>PROJECTION</h4></td></tr>';
+                $projection_label .= '</table>';
+
+                $tableColumns_projection = '<table class="tableHeader" cellpadding="0" cellspacing="4" border="0">';
+                $tableColumns_projection .= '<tr>';
+                $tableColumns_projection .= '<th class="COLUMN_NAME">MONTH</th>';
+                $tableColumns_projection .= '<th class="COLUMN_NAME">MONEY IN</th>';
+                $tableColumns_projection .= '<th class="COLUMN_NAME">MONEY OUT</th>';
+                $tableColumns_projection .= '<th class="COLUMN_NAME">ENDING BALANCE</th>';
+                $tableColumns_projection .= '</tr>';
+                $tableColumns_projection .= '</table>';
+
+                $tableContent_projection = '<table cellpadding="0" cellspacing="4" border="0">';
+                for ($i = 0; $i < 2; $i++) {
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyin',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'type REGEXP' => '^(projected)$',
+                            'transaction REGEXP' => '^(money_in)$',
+                            'date LIKE' => '%'.$currentDateTime->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $totalMoneyIn = round($result->moneyin, 2);
+                    // ==========
+                    $query = array(
+                        'select' => 'SUM(amount) AS moneyout',
+                        'table' => 'accounting_cashflowplanner_view',
+                        'where' => array(
+                            'company_id' => $company_id,
+                            'type REGEXP' => '^(projected)$',
+                            'transaction REGEXP' => '^(money_out)$',
+                            'date LIKE' => '%'.$currentDateTime->format('Y-m').'%',
+                        ),
+                    );
+                    $result = $this->general_model->get_data_with_param($query, false);
+                    $totalMoneyOut = round($result->moneyout, 2);
+
+                    $endingBalance += $totalMoneyIn - $totalMoneyOut;
+
+                    $tableContent_projection .= '<tr>';
+                    $tableContent_projection .= '<td class="TD_NAME">'.$currentDateTime->format('Y M').'</td>';
+                    $tableContent_projection .= '<td class="TD_NAME">$'.$totalMoneyIn.'</td>';
+                    $tableContent_projection .= '<td class="TD_NAME">$'.$totalMoneyOut.'</td>';
+                    $tableContent_projection .= '<td class="TD_NAME">$'.$endingBalance.'</td>';
+                    $tableContent_projection .= '</tr>';
+
+                    $currentDateTime->modify('+1 month');
+                }
+                $tableContent_projection .= '</table>';
+
+                $renderHTML = $header . $monthly_summary_label . $tableColumns . $tableContent . $projection_label . $tableColumns_projection . $tableContent_projection . $defaultPDFStyle;
+
+                $pdf->writeHTML($renderHTML, true, false, true, false, 'L');
+                $pdf->Output(FCPATH . 'assets/pdf/accounting/' . $filename . '.pdf', 'F');
+                // echo $currentDateTime->format('Y-m');
+                break;
+        }
     }
 
     public function update_money_in_out_chart()

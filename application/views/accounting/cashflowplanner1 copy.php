@@ -424,8 +424,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add
-                                    item</button>
+                                <button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add item</button>
                             </div>
                         </div>
                     </div>
