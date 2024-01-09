@@ -65,6 +65,12 @@ class TaxRates_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function resetDefaultTaxRateByCompanyId($company_id)
+    {
+        $this->db->where('company_id', $company_id);
+        $this->db->update($this->table, ['is_default' => 0]);
+    }
 }
 
 /* End of file TaxRates_model.php */
