@@ -1,0 +1,719 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
+<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('includes/notifications'); ?>
+<style>
+    .from-job-swal-actions {
+        display: flex;
+        flex-direction: column;
+    }
+    .from-job-swal-actions button.swal2-styled {
+        width: 100%;
+        max-width: 70%;
+    }
+</style>
+<div class="wrapper" role="wrapper">
+    <?php //include viewPath('includes/sidebars/invoice'); ?>
+
+    <div class="row">
+        <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        </div>
+        <div class="col-12 mb-3">
+            <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
+        </div>
+    </div>
+    <div wrapper__section>            
+        <?php if (!empty($invoice)) : ?>
+            <div class="custom__div" style="padding:0 2% 2% 2%">
+                <div class="card">
+                    <div class="container-fluid" style="font-size:16px;padding:10px;">
+                        <div class="row">                                
+                            <div class="row col-xl-12" data-id="invoices">                                    
+                                <div class="col-xl-12 margin-bottom margin-top pr-0" style="text-align:right;">
+                                    <input type="hidden" id="autoOpenModalRP" value="<?php echo $record_payment ?>">
+                                    <input type="hidden" id="recordPaymentInvoiceId" value="<?php echo $invoice->id ?>">
+                                    
+                                    <div class="dropdown d-inline-block">
+                                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown" style="width:122px;">
+                                            <span>Action <i class='bx bx-fw bx-chevron-down'></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                        <li style="font-size:17px;">
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>"><i class="bx bx-edit"></i> Edit</a>
+                                        </li>
+                                        <?php if(strtolower($invoice->status) === 'paid') : ?>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><i class="bx bxs-envelope"></i> Send Invoice</a>
+                                            </li>
+                                        <?php elseif(strtolower($invoice->status) === 'due') : ?>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><i class='bx bx-list-ul' ></i> Record Payment</a>
+                                            </li>
+                                        <?php else : ?>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item btn-send-invoice" data-id="<?= $invoice->id; ?>" href="javascript:void(0);"><i class="bx bxs-envelope"></i> Send Invoice</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id .'?scheduled=1') ?>"><i class='bx bxs-calendar'></i> 
+                                                    Schedule
+                                                </a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item link-modal-open recordPaymentBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>"><i class='bx bx-list-ul' ></i> Record Payment</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
+                                            </li>
+                                        <?php endif; ?> 
+                                        <?php if(strtolower($invoice->status) === 'due') : ?>                                            
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><i class='bx bx-envelope' ></i> Resend Invoice</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item btn-share-invoice-link" href="javascript:void(0);"><i class='bx bx-share-alt' ></i> Share Invoice Link</a>
+                                            </li>
+                                        <?php elseif(strtolower($invoice->status) === 'paid') : ?>
+                                            <li style="font-size:17px;"> 
+                                                <a class="dropdown-item" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><i class='bx bx-envelope' ></i> Resend Invoice</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><i class='bx bx-envelope' ></i> Send Receipt</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item openMarkAsSent" href="javascript:void(0)" data-toggle="modal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><i class='bx bxs-check-circle' ></i> Mark as Due</a>
+                                            </li>
+                                        <?php endif; ?>    
+                                        <li style="font-size:17px;">
+                                            <a class="dropdown-item" href="javascript:void(0)" data-invoice-number="<?php echo $invoice->invoice_number ?>"
+                                            data-id="<?php echo $invoice->id ?>" id="deleteInvoiceBtnNew"><i class='bx bxs-trash-alt' ></i> Delete
+                                            </a>
+                                        </li>
+                                        <li><div class="dropdown-divider"></div></li>
+                                        <li style="font-size:17px;">
+                                            <a class="dropdown-item openCloneInvoice" href="javascript:void(0)" data-toggle="modal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><i class='bx bxs-copy-alt' ></i> Clone Invoice</a>
+                                        </li>
+                                        <li style="font-size:17px;">
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank"><i class='bx bxs-file-pdf' ></i> PDF</a>
+                                        </li>          
+                                        <li style="font-size:17px;">
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/print/'. $invoice->id . '?format=print') ?>" target="_blank"><i class='bx bxs-printer' ></i> Print</a>
+                                        </li>  
+                                        </ul>
+                                    </div>
+                                    <a class="nsm-button primary" href="<?php echo base_url('invoice') ?>">BACK TO INVOCE LIST</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-md-8">
+                                <script>
+                                    const $template = document.createElement("template");
+                                    $template.innerHTML = `<?= $invoice_template; ?>`;
+
+                                    class InvoicePreview extends HTMLElement {
+                                        constructor() {
+                                            super();
+                                            const shadowRoot = this.attachShadow({ mode: "open" });
+                                            shadowRoot.appendChild($template.content.cloneNode(true));
+                                        }
+                                    }
+
+                                    try {
+                                        window.customElements.define("invoice-preivew", InvoicePreview);
+                                    } catch (error) {}
+                                </script>
+                                <invoice-preivew></invoice-preivew>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel-info margin-bottom">
+                                    
+                                </div>
+
+                                <div class="nsm-card primary" style="max-height:400px;overflow-x:hidden;overflow-y:scroll;">
+                                    <div class="nsm-card-content">
+                                        <h3>Payments Received</h3>
+                                        <?php if(empty($payments)){ ?>
+                                        <p class="text-ter">No payments have been recorded</p>
+                                        <?php }else{ ?>
+                                        <table class="table">
+                                            <?php foreach($payments as $pay){ ?>
+                                                <tr>
+                                                    <td><b>Customer: </b></td>
+                                                    <td><?php echo $pay->first_name.' '.$pay->last_name; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Amount: </b></td>
+                                                    <td>$<?php echo number_format($pay->invoice_amount,2); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Tip: </b></td>
+                                                    <td>$<?php echo number_format($pay->invoice_tip,2); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Payment Date: </b></td>
+                                                    <td><?php echo $pay->payment_date; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Payment Method: </b></td>
+                                                    <td><div class="text-uppercase"><?php echo $pay->payment_method; ?></div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Reference number: </b></td>
+                                                    <td><?php echo $pay->reference_number; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Notes: </b></td>
+                                                    <td><?php echo $pay->notes; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                        <?php } ?>
+                                        <hr />
+                                        <h3>Logs</h3>          
+                                        <?php if($invoiceLogs){ ?>                          
+                                        <table class="table">
+                                            <?php foreach($invoiceLogs as $log){ ?>
+                                                <tr>
+                                                    <td style="width:1%;"><i class='bx bxs-calendar'></i></td>
+                                                    <td style="width:172px;"><?= date("m/d/Y H:i A", strtotime($log->date_created)); ?></td>
+                                                    <td><?= $log->remarks; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Record Payment -->
+                    <div class="modal fade nsm-modal fade" id="modalRecordPaymentForm" tabindex="-1" aria-labelledby="modalRecordPaymentForm_label" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <form id="frm-record-payment" method="POST">
+                                <input type="hidden" name="invoice_id" id="record_payment_invoice_id" value="" />
+                                <div class="modal-content" style="width:560px;">
+                                    <div class="modal-header">
+                                        <span class="modal-title content-title">Record Payment</span>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    </div>
+                                    <div class="modal-body"></div>
+                                    <div class="modal-footer">                    
+                                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="nsm-button primary">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Modal Pay Now -->
+                    <div class="modal in" id="modalPayNow_" tabindex="-1" role="dialog">
+                        <div class="modal-dialog pay-now-modal" role="document">
+                            <div class="modal-content">
+                            <?php echo form_open('invoice/stripePost', ['class' => 'form-validate require-validation', 'id' => 'payment_form', 'autocomplete' => 'off']); ?>
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Pay Now</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                <div class="row" id="plansItemDiv">
+                                        <div class="col-md-12 table-responsive">
+                                            <table class="table table-hover">
+                                                <input type="hidden" name="count" value="0" id="count">
+                                                <thead>
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th width="100px" id="qty_type_value">Quantity</th>
+                                                    <th width="100px">Price</th>
+                                                    <th width="100px">Discount</th>
+                                                    <th>Tax(%)</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="table_body">
+                                                <?php $total_tax = 0; ?>
+                                                <?php foreach ($items as $item ) { ?>
+                                                    <tr class="table-items__tr">
+                                                        <td valign="top">
+                                                            <?php //echo $value['item'] 
+                                                            echo $item->title; ?>
+                                                        </td>
+                                                        <td style="width: 100px;" valign="top">
+                                                            <?php //echo $value['quantity'] 
+                                                            echo $item->qty;?>                    
+                                                        </td>
+                                                        <td style="width: 100px;" valign="top">
+                                                            $ <?php //echo number_format($value['price'], 2, '.', ',') 
+                                                            echo number_format($item->costing, 2); ?>                    
+                                                        </td>
+                                                        <td style="width: 100px;" valign="top">
+                                                            <!-- $0.00                     -->
+                                                            $ <?php echo number_format($item->discount, 2); ?>
+                                                        </td>
+                                                        <td style="width: ;" valign="top">
+                                                            <!-- $<?php //echo number_format($value['tax'], 2, '.', ',') ?> <br> (7.5%)  -->
+                                                            <?php //$total_tax += floatval($value['tax']); ?>      
+                                                            <?php echo number_format($item->tax, 2); ?>             
+                                                        </td>
+                                                        <td style="width: ;" valign="top">
+                                                            $ <?php //echo number_format($value['total'], 2, '.', ',') ?>   
+                                                            <?php echo number_format($item->total, 2); ?>                 
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="table-items__tr-last">
+                                                        <td></td>
+                                                        <td colspan="6"></td>
+                                                    </tr>
+                                                <?php } ?>
+                                                </tbody>
+                                            </table>
+                                            <!-- <div class="row">
+                                                <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice"><span
+                                                            class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                <hr style="display:inline-block; width:91%">
+                                            </div> -->
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                &nbsp;
+                                                </div>
+                                                <div class="col-md-5 row pr-0">
+                                                    <div class="col-sm-5">
+                                                        <label style="padding: 0 .75rem;">Subtotal</label>
+                                                    </div>
+                                                    <div class="col-sm-6 text-right pr-3">
+                                                        <label id="invoice_sub_total">$<?php echo number_format(floatval($invoice->sub_total), 2, '.', ',') ?></label>
+                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='<?php echo $invoice->sub_total; ?>'>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <label style="padding: 0 .75rem;">Taxes</label>
+                                                    </div>
+                                                    <div class="col-sm-6 text-right pr-3">
+                                                        <label id="invoice_sub_total">$<?php echo number_format(floatval($invoice->taxes), 2, '.', ',') ?></label>
+                                                        <input type="hidden" name="taxes" id="taxes_form_input" value='<?php echo $invoice->taxes; ?>'>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" name="adjustment_name" value="<?php echo $invoice->adjustment_name;?>" placeholder="Adjustment" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" name="adjustment_total" id="adjustment_input" value="<?php echo $invoice->adjustment_value; ?>" class="form-control" style="width:100px; display:inline-block">
+                                                    </div>
+                                                    <div class="col-sm-3 text-right pt-2">
+                                                        <label id="adjustment_amount">$<?php echo number_format($invoice->adjustment_value, 2, '.', ',') ?></label>
+                                                        <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='<?php echo $invoice->adjustment_value; ?>'>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <hr>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <label style="padding: .375rem .75rem;">Grand Total ($)</label>
+                                                    </div>
+                                                    <div class="col-sm-6 text-right pr-3">
+                                                        <label id="invoice_grand_total">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></label>
+                                                        <input type="hidden" name="grand_total" id="grand_total_form_input" value='<?php echo $invoice->grand_total; ?>'>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <hr>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5>Payment Options</h5>
+                                            <span class="help help-sm help-block">Select type of payment you're comfortable.</span>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <select name="deposit_request" class="form-control">
+                                                <option value="1" selected="selected">Stripe</option>
+                                                <option value="2">Paypal</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="float-left mini-stat-img mr-4">Accept Credit Cards</label>
+                                            <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Pay Now</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                            <?php echo form_close(); ?>
+                        </div>
+                    </div>                    
+                    <div class="modal in" id="convertToWorkOrder" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" style="max-width:600px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title">Convert Invoice To Work Order</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="validation-error" style="display: none;"></div>
+                                    <form name="convert-to-work-order-modal-form">
+                                        <p>
+                                            You are going create a new work order based on <b>Invoice# <span id='workOrderInvoiceId'"></span></b>.<br>
+                                            The invoice items (e.g. materials, labour) will be copied to this work order.<br>
+                                            You can always edit/delete work order items as you need.
+                                        </p>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="button" data-convert-to-work-order-modal="submit">Convert To Work Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<?php include viewPath('v2/includes/footer'); ?>
+<script>
+$(document).on('click touchstart', '.btn-send-invoice', function(){
+    var invoice_id = $(this).attr('data-id');
+
+    Swal.fire({
+        text: "Send invoice to customer email?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + "invoice/_send_invoice_email",
+                data: {
+                    invoice_id: invoice_id
+                },
+                dataType:'json',
+                beforeSend: function(data) {
+                    $('#loading_modal').modal('show');
+                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email...');
+                },
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            text: "Invoice was successfully sent to customer",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                },
+                complete : function(){
+                    $('#loading_modal').modal('hide');
+                },
+            });
+        }
+    });
+});
+
+$(document).on('click touchstart', '.openMarkAsSent', function(){
+    var invoice_id = $(this).attr('data-id');
+    var invoice_number = $(this).attr('data-invoice-number');
+    
+    Swal.fire({
+        html: "Proceed with changing Invoice Number <b>"+ invoice_number +"</b> status to <b>due</b>?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + "invoice/_mark_as_due",
+                data: {
+                    invoice_id: invoice_id
+                },
+                dataType:'json',
+                beforeSend: function(data) {
+                    
+                },
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            text: "Invoice was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                },
+                complete : function(){
+                    
+                },
+            });
+        }
+    });
+});
+
+$(document).on('click touchstart', '.openCloneInvoice', function(){
+    var invoice_id = $(this).attr('data-id');
+    var invoice_number = $(this).attr('data-invoice-number');
+
+    Swal.fire({
+        html: "You are going create a new invoice based on invoice number <b>"+ invoice_number +"</b>.<br/><br /><small style='font-size:13px;'>The new invoice will contain the same items (e.g. materials, labour).Cloned invoice will have status as <b>draft</b>. You will be able to edit and remove the invoice items as you need.</small><br /><br />Do you wish to proceed with selected action?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + "invoice/_clone_invoice",
+                data: {
+                    invoice_id: invoice_id
+                },
+                dataType:'json',
+                beforeSend: function(data) {
+                    
+                },
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        var edit_invoice_url = base_url + 'invoice/invoice_edit/' + result.invoice_id;                        
+                        Swal.fire({
+                            html: 'Invoice was Invoice was successfully cloned.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            showDenyButton: true,
+                            confirmButtonText: 'Okay',
+                            denyButtonText: `Edit Invoice`,
+                            denyButtonColor: '#7367f0'
+                        }).then((result) => {
+                            if (result.isDenied) {
+                                location.href = edit_invoice_url;
+                            }else{
+                                location.reload();
+                            }                            
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                },
+                complete : function(){
+                    
+                },
+            });
+        }
+    });
+});
+
+$(document).on('click touchstart', '#deleteInvoiceBtnNew', function(){
+    var invoice_id = $(this).attr('data-id');
+    var invoice_number = $(this).attr('data-invoice-number');
+
+    Swal.fire({
+        html: "Delete Invoice Number <b>"+ invoice_number +"</b>?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + "invoice/_delete_invoice",
+                data: {
+                    invoice_id: invoice_id
+                },
+                dataType:'json',
+                beforeSend: function(data) {
+                    
+                },
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            text: "Invoice was successfully deleted",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.href = base_url  + "/invoice";
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                },
+                complete : function(){
+                    
+                },
+            });
+        }
+    });
+});
+
+$(document).on('click touchstart', '.btn-share-invoice-link', function(){
+    var _shareableLink = $("<input>");
+    $("body").append(_shareableLink);
+    _shareableLink.val("<?php echo base_url('/invoice/preview/'.$invoice->id.'?format=print'); ?>").select();
+    document.execCommand('copy');
+    _shareableLink.remove();
+
+    Swal.fire({
+        text: "Shareable link has been copied to clipboard.",
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonText: 'Okay'
+    });
+});
+
+$(document).on('click touchstart', '.recordPaymentBtn', function(){
+    var invoice_id = $(this).attr('data-id');
+
+    $('#modalRecordPaymentForm').modal('show');
+    $("#modalRecordPaymentForm .modal-body").html('<div class="alert alert-info alert-purple" role="alert">Loading...</div>');
+
+    $('#record_payment_invoice_id').val(invoice_id);
+
+    $.ajax({
+    url: base_url + "invoice/_load_record_payment_form",
+    type: "POST",
+    data: {
+        invoice_id: invoice_id
+    },
+    success: function (response) {
+        $("#modalRecordPaymentForm .modal-body").html(response);
+    },
+    });
+});
+
+$(document).on('submit', '#frm-record-payment', function(e){
+    e.preventDefault();
+    var url  = base_url + 'invoice/_create_payment';
+    var form = $(this);
+    $.ajax({
+        type: "POST",
+        url: url,
+        dataType:'json',
+        data: form.serialize(), 
+        success: function(data) {
+            if( data.is_success == 1 ){
+                $('#modal-quick-add-job').modal('hide');
+                $('#modal-quick-access-calendar-schedule').modal('show');
+
+                Swal.fire({
+                    text: 'Job has been added!',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#6a4a86',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    reloadQuickAccessCalendarSchedule();
+                });    
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: data.msg
+                });
+            }
+            
+            $("#btn-job-submit").html('Schedule');
+        }, beforeSend: function() {
+            $("#btn-job-submit").html('<span class="bx bx-loader bx-spin"></span>');
+        }
+    });
+});
+
+window.addEventListener('DOMContentLoaded', async (event) => {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    const invoiceId = "<?= $invoice->id ?>";
+    const invoiceJobId = "<?= $invoice->job_id ?>";
+
+    if (params.from && params.from === 'job') {
+        const response = await Swal.fire({
+            title: '',
+            icon: 'info',
+            text: 'Your invoice is now ready. What would you like to do next?',
+            confirmButtonText: 'Update Invoice',
+            showDenyButton: true,
+            showCancelButton: true,
+            denyButtonText: 'Collect Payment',
+            cancelButtonText: 'Review',
+            customClass: {
+                actions: 'from-job-swal-actions',
+            }
+        })
+
+        if (response.isConfirmed && invoiceId) {
+            window.location.href = `/invoice/invoice_edit/${invoiceId}`;
+            return;
+        }
+
+        if (response.isDenied && invoiceJobId) {
+            window.location.href = `/job/billing/${invoiceJobId}`;
+        }
+    }
+});
+</script>
