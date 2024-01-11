@@ -2,6 +2,18 @@
 
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('includes/notifications'); ?>
+<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>    
+<?php } ?>
+<script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.min.js"></script>
+<?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+<script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
+<?php } ?>
+<?php if($onlinePaymentAccount->square_access_token != '' && $onlinePaymentAccount->square_refresh_token != ''){ ?>
+    <link rel="stylesheet" href="/reference/sdks/web/static/styles/code-preview.css" preload>
+    <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+<?php } ?>
 <style>
     .from-job-swal-actions {
         display: flex;
@@ -48,10 +60,10 @@
                                             </li>
                                         <?php elseif(strtolower($invoice->status) === 'due') : ?>
                                             <li style="font-size:17px;">
-                                                <a class="dropdown-item link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
+                                                <a class="dropdown-item payNowBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
                                             </li>
                                             <li style="font-size:17px;">
-                                                <a class="dropdown-item link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><i class='bx bx-list-ul' ></i> Record Payment</a>
+                                                <a class="dropdown-item link-modal-open recordPaymentBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>"><i class='bx bx-list-ul' ></i> Record Payment</a>
                                             </li>
                                         <?php else : ?>
                                             <li style="font-size:17px;">
@@ -66,7 +78,7 @@
                                                 <a class="dropdown-item link-modal-open recordPaymentBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>"><i class='bx bx-list-ul' ></i> Record Payment</a>
                                             </li>
                                             <li style="font-size:17px;">
-                                                <a class="dropdown-item link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
+                                                <a class="dropdown-item payNowBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
                                             </li>
                                         <?php endif; ?> 
                                         <?php if(strtolower($invoice->status) === 'due') : ?>                                            
@@ -142,34 +154,20 @@
                                         <p class="text-ter">No payments have been recorded</p>
                                         <?php }else{ ?>
                                         <table class="table">
-                                            <?php foreach($payments as $pay){ ?>
+                                            <tr>
+                                                <td>Date</td>
+                                                <td>Amount</td>
+                                                <td>Balance</td>
+                                                <td>Payment Method</td>
+                                                <td>Notes</td>
+                                            </tr>
+                                            <?php foreach($payments as $p){ ?>
                                                 <tr>
-                                                    <td><b>Customer: </b></td>
-                                                    <td><?php echo $pay->first_name.' '.$pay->last_name; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Amount: </b></td>
-                                                    <td>$<?php echo number_format($pay->invoice_amount,2); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Tip: </b></td>
-                                                    <td>$<?php echo number_format($pay->invoice_tip,2); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Payment Date: </b></td>
-                                                    <td><?php echo $pay->payment_date; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Payment Method: </b></td>
-                                                    <td><div class="text-uppercase"><?php echo $pay->payment_method; ?></div></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Reference number: </b></td>
-                                                    <td><?php echo $pay->reference_number; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Notes: </b></td>
-                                                    <td><?php echo $pay->notes; ?></td>
+                                                    <td><?= date("m/d/Y", strtotime($p->payment_date)); ?></td>
+                                                    <td>$<?= number_format($p->invoice_amount,2,'','.'); ?></td>
+                                                    <td>$<?= number_format($p->balance,2,'','.'); ?></td>
+                                                    <td><?= $p->payment_method; ?></td>
+                                                    <td><?= $p->notes; ?></td>
                                                 </tr>
                                             <?php } ?>
                                         </table>
@@ -181,7 +179,7 @@
                                             <?php foreach($invoiceLogs as $log){ ?>
                                                 <tr>
                                                     <td style="width:1%;"><i class='bx bxs-calendar'></i></td>
-                                                    <td style="width:172px;"><?= date("m/d/Y H:i A", strtotime($log->date_created)); ?></td>
+                                                    <td style="width:130px;"><?= date("m/d/Y", strtotime($log->date_created)); ?></td>
                                                     <td><?= $log->remarks; ?></td>
                                                 </tr>
                                             <?php } ?>
@@ -206,6 +204,23 @@
                                     <div class="modal-footer">                    
                                         <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="nsm-button primary">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Modal Pay Now -->                           
+                    <div class="modal fade nsm-modal fade" id="modalPayNowForm" tabindex="-1" aria-labelledby="modalPayNowForm_label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <form id="frm-record-payment" method="POST">                                
+                                <div class="modal-content" style="width:560px;">
+                                    <div class="modal-header">
+                                        <span class="modal-title content-title">Pay Now : <span id="modal-invoice-number"></span></span>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    </div>
+                                    <div class="modal-body"></div>
+                                    <div class="modal-footer">                    
+                                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                                     </div>
                                 </div>
                             </form>
@@ -403,6 +418,10 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
+$(function(){
+    $('#modalPayNowForm').modal({backdrop: 'static', keyboard: false});
+});
+
 $(document).on('click touchstart', '.btn-send-invoice', function(){
     var invoice_id = $(this).attr('data-id');
 
@@ -644,6 +663,26 @@ $(document).on('click touchstart', '.recordPaymentBtn', function(){
     });
 });
 
+$(document).on('click touchstart', '.payNowBtn', function(){
+    var invoice_id = $(this).attr('data-id');
+    var invoice_number = $(this).attr('data-invoice-number');
+
+    $('#modalPayNowForm').modal('show');
+    $('#modal-invoice-number').html(invoice_number);
+    $("#modalPayNowForm .modal-body").html('<div class="alert alert-info alert-purple" role="alert">Loading...</div>');
+
+    $.ajax({
+    url: base_url + "invoice/_load_pay_now_form",
+    type: "POST",
+    data: {
+        invoice_id: invoice_id
+    },
+    success: function (response) {
+        $("#modalPayNowForm .modal-body").html(response);
+    },
+    });
+});
+
 $(document).on('submit', '#frm-record-payment', function(e){
     e.preventDefault();
     var url  = base_url + 'invoice/_create_payment';
@@ -655,18 +694,17 @@ $(document).on('submit', '#frm-record-payment', function(e){
         data: form.serialize(), 
         success: function(data) {
             if( data.is_success == 1 ){
-                $('#modal-quick-add-job').modal('hide');
-                $('#modal-quick-access-calendar-schedule').modal('show');
-
+                $('#modalRecordPaymentForm').modal('hide');
+                
                 Swal.fire({
-                    text: 'Job has been added!',
+                    text: 'Invoice payment was successfully created',
                     icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#6a4a86',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ok'
                 }).then((result) => {
-                    reloadQuickAccessCalendarSchedule();
+                    location.reload();
                 });    
             }else{
                 Swal.fire({
