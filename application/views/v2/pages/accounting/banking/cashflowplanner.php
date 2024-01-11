@@ -251,7 +251,7 @@ include viewPath('v2/includes/accounting_header');
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label class="mb-1 fw-xnormal">Date</label>
-                                <input name="date" class="form-control mt-0" type="date" min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" required>
+                                <input name="date" class="form-control mt-0" type="date" value="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="mb-1 fw-xnormal">Description</label>
@@ -266,7 +266,7 @@ include viewPath('v2/includes/accounting_header');
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label class="mb-1 fw-xnormal">Type</label>
-                                <select name="type" class="form-select form-select" required readonly>
+                                <select name="type" class="form-control form-control" required readonly>
                                     <option value="planned">Planned</option>
                                     <option value="invoiced">Invoiced</option>
                                 </select>
@@ -328,7 +328,7 @@ include viewPath('v2/includes/accounting_header');
                             <input name="id" class="form-control mt-0" type="hidden">
                             <div class="col-md-3 mb-3">
                                 <label class="mb-1 fw-xnormal">Date</label>
-                                <input name="date" class="form-control mt-0" min="<?php echo date('Y-m-d'); ?>" type="date" required>
+                                <input name="date" class="form-control mt-0" type="date" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="mb-1 fw-xnormal">Description</label>
@@ -343,7 +343,7 @@ include viewPath('v2/includes/accounting_header');
                             </div>
                             <div class="col-md-2 mb-3 forCashflowPlannedOnly">
                                 <label class="mb-1 fw-xnormal">Type</label>
-                                <select name="type" class="form-select form-select" required readonly>
+                                <select name="type" class="form-control form-control" required readonly>
                                     <option selected value="planned">Planned</option>
                                     <option value="invoiced">Invoiced</option>
                                 </select>
@@ -542,178 +542,178 @@ include viewPath('v2/includes/accounting_header');
     }
 
     function getGraphData(type) {
-    switch (type) {
-        case "bar_12_month":
-            $.ajax({
-                url: "/accounting/cashflowplanner_crud/get_12month_bargraph",
-                method: "POST",
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    const month = data['month_name'];
-                    const moneyIn = data['moneyin'];
-                    const moneyOut = data['moneyout'];
-                    chart.updateSeries([{
-                            name: 'Money in',
-                            data: moneyIn,
-                        },
-                        {
-                            name: 'Money out',
-                            data: moneyOut,
-                        },
-                    ]);
+        switch (type) {
+            case "bar_12_month":
+                $.ajax({
+                    url: "/accounting/cashflowplanner_crud/get_12month_bargraph",
+                    method: "POST",
+                    success: function(response) {
+                        const data = JSON.parse(response);
+                        const month = data['month_name'];
+                        const moneyIn = data['moneyin'];
+                        const moneyOut = data['moneyout'];
+                        chart.updateSeries([{
+                                name: 'Money in',
+                                data: moneyIn,
+                            },
+                            {
+                                name: 'Money out',
+                                data: moneyOut,
+                            },
+                        ]);
 
-                    chart.updateOptions({
-                        xaxis: {
-                            categories: month,
-                        },
-                        annotations: {
-                            xaxis: [{
-                                offsetX: 60,
-                                x: month[9], // Index for "Feb"
-                                x2: month[11], // Index for "Feb"
-                                borderColor: 'darkgreen',
-                                strokeDashArray: 8,
-                                label: {
-                                    offsetX: 135,
-                                    orientation: 'horizontal',
-                                    borderColor: '#53b700',
-                                    style: {
-                                        color: '#fff',
-                                        background: '#53b700',
+                        chart.updateOptions({
+                            xaxis: {
+                                categories: month,
+                            },
+                            annotations: {
+                                xaxis: [{
+                                    offsetX: 60,
+                                    x: month[9], // Index for "Feb"
+                                    x2: month[11], // Index for "Feb"
+                                    borderColor: 'darkgreen',
+                                    strokeDashArray: 8,
+                                    label: {
+                                        offsetX: 135,
+                                        orientation: 'horizontal',
+                                        borderColor: '#53b700',
+                                        style: {
+                                            color: '#fff',
+                                            background: '#53b700',
+                                        },
+                                        text: 'PROJECTION',
                                     },
-                                    text: 'PROJECTION',
-                                },
-                            }, ],
-                        },
+                                }, ],
+                            },
 
-                    });
-                },
-            });
-            break;
-        case "bar_6_month":
-            $.ajax({
-                url: "/accounting/cashflowplanner_crud/get_6month_bargraph",
-                method: "POST",
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    const month = data['month_name'];
-                    const moneyIn = data['moneyin'];
-                    const moneyOut = data['moneyout'];
-                    chart.updateSeries([{
-                            name: 'Money in',
-                            data: moneyIn,
-                        },
-                        {
-                            name: 'Money out',
-                            data: moneyOut,
-                        },
-                    ]);
+                        });
+                    },
+                });
+                break;
+            case "bar_6_month":
+                $.ajax({
+                    url: "/accounting/cashflowplanner_crud/get_6month_bargraph",
+                    method: "POST",
+                    success: function(response) {
+                        const data = JSON.parse(response);
+                        const month = data['month_name'];
+                        const moneyIn = data['moneyin'];
+                        const moneyOut = data['moneyout'];
+                        chart.updateSeries([{
+                                name: 'Money in',
+                                data: moneyIn,
+                            },
+                            {
+                                name: 'Money out',
+                                data: moneyOut,
+                            },
+                        ]);
 
-                    chart.updateOptions({
-                        xaxis: {
-                            categories: month,
-                        },
-                        annotations: {
-                            xaxis: [{
-                                offsetX: 130,
-                                x: month[3], // Index for "Feb"
-                                x2: month[5], // Index for "Feb"
-                                borderColor: 'darkgreen',
-                                strokeDashArray: 8,
-                                label: {
-                                    offsetX: 200,
-                                    orientation: 'horizontal',
-                                    borderColor: '#53b700',
-                                    style: {
-                                        color: '#fff',
-                                        background: '#53b700',
+                        chart.updateOptions({
+                            xaxis: {
+                                categories: month,
+                            },
+                            annotations: {
+                                xaxis: [{
+                                    offsetX: 130,
+                                    x: month[3], // Index for "Feb"
+                                    x2: month[5], // Index for "Feb"
+                                    borderColor: 'darkgreen',
+                                    strokeDashArray: 8,
+                                    label: {
+                                        offsetX: 200,
+                                        orientation: 'horizontal',
+                                        borderColor: '#53b700',
+                                        style: {
+                                            color: '#fff',
+                                            background: '#53b700',
+                                        },
+                                        text: 'PROJECTION',
                                     },
-                                    text: 'PROJECTION',
-                                },
-                            }, ],
-                        },
-                    });
-                },
-            });
-            break;
-        case "bar_3_month":
-            $.ajax({
-                url: "/accounting/cashflowplanner_crud/get_3month_bargraph",
-                method: "POST",
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    const month = data['month_name'];
-                    const moneyIn = data['moneyin'];
-                    const moneyOut = data['moneyout'];
-                    chart.updateSeries([{
-                            name: 'Money in',
-                            data: moneyIn,
-                        },
-                        {
-                            name: 'Money out',
-                            data: moneyOut,
-                        },
-                    ]);
+                                }, ],
+                            },
+                        });
+                    },
+                });
+                break;
+            case "bar_3_month":
+                $.ajax({
+                    url: "/accounting/cashflowplanner_crud/get_3month_bargraph",
+                    method: "POST",
+                    success: function(response) {
+                        const data = JSON.parse(response);
+                        const month = data['month_name'];
+                        const moneyIn = data['moneyin'];
+                        const moneyOut = data['moneyout'];
+                        chart.updateSeries([{
+                                name: 'Money in',
+                                data: moneyIn,
+                            },
+                            {
+                                name: 'Money out',
+                                data: moneyOut,
+                            },
+                        ]);
 
-                    chart.updateOptions({
-                        xaxis: {
-                            categories: month,
-                        },
-                        annotations: {
-                            xaxis: [{
-                                offsetX: 285,
-                                x: month[1], // Index for "Feb"
-                                x2: month[2], // Index for "Feb"
-                                borderColor: 'darkgreen',
-                                strokeDashArray: 8,
-                                label: {
-                                    offsetX: 370,
-                                    orientation: 'horizontal',
-                                    borderColor: '#53b700',
-                                    style: {
-                                        color: '#fff',
-                                        background: '#53b700',
+                        chart.updateOptions({
+                            xaxis: {
+                                categories: month,
+                            },
+                            annotations: {
+                                xaxis: [{
+                                    offsetX: 285,
+                                    x: month[1], // Index for "Feb"
+                                    x2: month[2], // Index for "Feb"
+                                    borderColor: 'darkgreen',
+                                    strokeDashArray: 8,
+                                    label: {
+                                        offsetX: 370,
+                                        orientation: 'horizontal',
+                                        borderColor: '#53b700',
+                                        style: {
+                                            color: '#fff',
+                                            background: '#53b700',
+                                        },
+                                        text: 'PROJECTION',
                                     },
-                                    text: 'PROJECTION',
-                                },
-                            }, ],
-                        },
-                    });
-                },
-            });
-            break;
-        case "bar_this_month":
-            $.ajax({
-                url: "/accounting/cashflowplanner_crud/get_thismonth_bargraph",
-                method: "POST",
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    const month = data['month_name'];
-                    const moneyIn = data['moneyin'];
-                    const moneyOut = data['moneyout'];
-                    chart.updateSeries([{
-                            name: 'Money in',
-                            data: moneyIn,
-                        },
-                        {
-                            name: 'Money out',
-                            data: moneyOut,
-                        },
-                    ]);
+                                }, ],
+                            },
+                        });
+                    },
+                });
+                break;
+            case "bar_this_month":
+                $.ajax({
+                    url: "/accounting/cashflowplanner_crud/get_thismonth_bargraph",
+                    method: "POST",
+                    success: function(response) {
+                        const data = JSON.parse(response);
+                        const month = data['month_name'];
+                        const moneyIn = data['moneyin'];
+                        const moneyOut = data['moneyout'];
+                        chart.updateSeries([{
+                                name: 'Money in',
+                                data: moneyIn,
+                            },
+                            {
+                                name: 'Money out',
+                                data: moneyOut,
+                            },
+                        ]);
 
-                    chart.updateOptions({
-                        xaxis: {
-                            categories: month,
-                        },
-                        annotations: {
-                            xaxis: [],
-                        },
-                    });
-                },
-            });
-            break;
+                        chart.updateOptions({
+                            xaxis: {
+                                categories: month,
+                            },
+                            annotations: {
+                                xaxis: [],
+                            },
+                        });
+                    },
+                });
+                break;
+        }
     }
-}
 
     function updateAllData() {
         getBalance();
@@ -749,9 +749,18 @@ include viewPath('v2/includes/accounting_header');
             href: filePath,
             download: filename + ".pdf",
         });
-        $("body").append(link);
-        link[0].click();
-        link.remove();
+
+        $.ajax({
+            url: "<?php echo base_url('/accounting/cashflowplanner_crud/generate_pdf_report') ?>",
+            method: "POST",
+            success: function(response) {
+                setTimeout(() => {
+                    $("body").append(link);
+                    link[0].click();
+                    link.remove();
+                }, 500);
+            },
+        });
     });
 
     $(".graph_month_span").change(function(e) {
@@ -961,28 +970,3 @@ include viewPath('v2/includes/accounting_header');
     chart.render();
     // Chart Configuration ===============
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<?php
-    // echo "<pre>";
-    // print_r($companyInfo);
-    // echo "</pre>";
-?>
