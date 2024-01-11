@@ -285,6 +285,12 @@ $route['invoice/_send_invoice_email'] = 'Invoice/ajax_send_invoice_email';
 $route['invoice/_delete_invoice'] = 'Invoice/ajax_delete_invoice';
 $route['invoice/_mark_as_due'] = 'Invoice/ajax_mark_as_due';
 $route['invoice/_clone_invoice'] = 'Invoice/ajax_clone_invoice';
+$route['invoice/_schedule_email_notification'] = 'Invoice/ajax_schedule_email_notification';
+$route['invoice/_load_record_payment_form'] = 'Invoice/ajax_load_record_payment_form';
+$route['invoice/_create_payment'] = 'Invoice/ajax_create_payment';
+$route['invoice/_load_pay_now_form'] = 'Invoice/ajax_load_pay_now_form';
+$route['invoice/_update_payment_status'] = 'Invoice/ajax_update_payment_status';
+$route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_payment';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1553,6 +1559,9 @@ $route['settings/_load_auto_sms_notification_module_smart_tags'] = 'Settings/aja
 
 //Cron SMS Notification
 $route['cron_notification/auto_sms_notification'] = 'Cron_Notification/auto_sms_notification';
+
+//Cron Invoice Notification Email
+$route['cron_notification/send_scheduled_invoice_notification'] = 'Cron_Notification/send_invoice_scheduled_email_notification';
 
 //Auth Key
 $route['tools/_send_auth_key'] = 'Tools/ajax_send_auth_key';

@@ -14,7 +14,7 @@ class Plans extends MY_Controller {
 	}
 	 
 	public function index()
-	{ 		
+	{ 	
 		$this->page_data['page']->title = 'Plans';
         $this->page_data['page']->parent = 'Sales';
         $role = logged('role');
@@ -48,6 +48,7 @@ class Plans extends MY_Controller {
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
+		$this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 		$this->page_data['items'] = $this->items_model->getItemlist();
 		// ifPermissions('add_plan');
 		$this->load->view('v2/pages/plans/add', $this->page_data);
@@ -63,9 +64,11 @@ class Plans extends MY_Controller {
 	public function edit($id){
 
 		//ifPermissions('plan_edit');
+		$plan = $this->plans_model->getById($id);
 		$this->page_data['page']->title = 'Plans';
 		$this->page_data['items'] = $this->items_model->getItemlist();
 		$this->page_data['plan'] = $this->plans_model->getById($id);
+		$this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 		$this->load->view('v2/pages/plans/edit', $this->page_data);
 	}
 

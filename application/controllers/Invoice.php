@@ -1221,6 +1221,7 @@ class Invoice extends MY_Controller
     public function genview($id)
     {
         $this->load->model('CustomerAuditLog_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         $invoice = get_invoice_by_id($id);
         if( $invoice->view_flag == 1 ){
@@ -1228,18 +1229,7 @@ class Invoice extends MY_Controller
         }
 
         $user = get_user_by_id(logged('id'));
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
-        
-        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
-
-        if (!empty($setting)) {
-            foreach ($setting as $key => $value) {
-                if (is_serialized($value)) {
-                    $setting->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['setting'] = $setting;
-        }
+        $cid  = logged('company_id');        
 
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
@@ -1251,16 +1241,15 @@ class Invoice extends MY_Controller
             $this->page_data['user'] = $user;
         }
 
-        $invoiceData = $this->invoice_model->getinvoice($id);
-        $inv_no = $invoiceData->invoice_number;
-
         $invoiceLogs = $this->CustomerAuditLog_model->getAllByObjIdAndModule($id, 'Invoice');
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
 
         $this->page_data['record_payment'] = $this->input->get('do');
-        $this->page_data['payments'] = $this->invoice_model->getPayments($inv_no);
+        $this->page_data['payments'] = $this->payment_records_model->getAllByInvoiceId($invoice->id);
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
         $this->page_data['invoice_template'] = $this->generateInvoiceHTML($id);
         $this->page_data['invoiceLogs'] = $invoiceLogs;
+        $this->page_data['onlinePaymentAccount'] = $companyOnlinePaymentAccount;
         $this->page_data['page_title'] = "View Invoice";
         $this->page_data['page']->title = 'Invoices & Payments';
         $this->page_data['page']->parent = 'Sales';        
@@ -1993,6 +1982,291 @@ class Invoice extends MY_Controller
 
         echo json_encode($return);    
     }
+
+    public function ajax_schedule_email_notification()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('InvoiceScheduledEmailNotification_model');
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $invoice_id = 0;
+        $msg = 'Cannot find invoice data';
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $invoice    = $this->invoice_model->getinvoice($post['invoice_id']);
+        if( $invoice ){
+            $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+            if( $customer && $customer->email != '' ){
+                $bccUsers = $this->Users_model->getCompanyUsers($company_id, $post['bcc']); 
+
+                $bcc_emails = array();
+                $bcc = '';
+                if( $bccUsers ){
+                    foreach($bccUsers as $user){
+                        $bcc_emails[] = $user->email;
+                    }
+
+                    if( !empty($bcc_emails) ){
+                        $bcc = implode("," , $bcc_emails);
+                    }
+                }
+
+                $subject = 'Invoice Reminder : ' . $invoice->invoice_number; 
+                $data = [
+                    'company_id' => $company_id,
+                    'invoice_id' => $invoice->id,
+                    'to_email' => $customer->email,
+                    'bcc_email' => $bcc,
+                    'from_email' => 'NsmarTrac',
+                    'subject_email' => $subject,
+                    'message_email' => $post['email_body'],
+                    'send_date' => date("Y-m-d",strtotime($post['email_scheduled_date'])),
+                    'is_sent' => 0,
+                    'is_with_error' => 0,
+                    'err_message' => '',
+                    'created'  => date("Y-m-d H:i:s")
+                ];
+
+                $this->InvoiceScheduledEmailNotification_model->create($data);
+
+                customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Send email reminder on '.$post['email_scheduled_date'].' for invoice number '.$newInvoice->invoice_number);
+                
+                $invoice_id = $invoice->id;
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Cannot find customer email';
+            }            
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'invoice_id' => $invoice_id,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_load_record_payment_form()
+    {
+        $post = $this->input->post();
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
+
+        $balance = $invoice->grand_total;
+        foreach($payments as $p){
+            $balance = $balance - $p->invoice_amount;
+        }
+
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['balance'] = $balance;
+        $this->load->view('v2/pages/invoice/record_payment_form', $this->page_data);
+    }
+
+    public function ajax_create_payment()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice';
+
+        $post = $this->input->post();
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        
+        if( $invoice ){
+            $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
+            $total_payment = 0;
+            if( $payments ){
+                foreach( $payments as $p ){
+                    $total_payment +=  $p->invoice_amount;
+                }   
+            }            
+
+            $balance = $invoice->grand_total - $total_payment;                   
+            if( round($balance) >= round($post['amount']) ){
+                $new_balance = $balance - $post['amount'];
+                $invoice_id = $this->payment_records_model->create([
+                    'invoice_id' => $invoice->id,
+                    'user_id' => $uid,
+                    'company_id' => $cid,
+                    'customer_id' => $invoice->customer_id,
+                    'invoice_amount' => $post['amount'],
+                    'invoice_tip' => $post['amount_tip'],
+                    'balance' => $new_balance,
+                    'payment_date' => date('Y-m-d', strtotime($post['date_payment'])),
+                    'payment_method' => $post['payment_method'],
+                    'invoice_number' => $invoice->invoice_number,
+                    'reference_number' => $post['reference'],
+                    'notes' => $post['notes']
+                ]);
+        
+                $this->activity_model->add('New Payment Record Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), logged('id'));
+                customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Created payment for invoice number '.$invoice->invoice_number.' amounting of $'.$post['amount']);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Amount entered is greater than invoice balance. Current balance is <b>'.$balance.'</b>';
+            }
+            
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_load_pay_now_form()
+    {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Business_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');   
+
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        $items   = $this->invoice_model->getItemsInv($invoice->id);
+
+        $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+        $braintree_token = '';
+        if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+            $gateway = new Braintree\Gateway([
+                'environment' => BRAINTREE_ENVIRONMENT,
+                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+            ]);
+
+            try {
+                $braintree_token = $gateway->ClientToken()->generate();	
+            } catch (Exception $e) {
+                $braintree_token = '';
+            }
+        }        
+
+        $company = $this->Business_model->getByCompanyId($cid);
+
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['items']   = $items;
+        $this->page_data['onlinePaymentAccount'] = $companyOnlinePaymentAccount;
+        $this->page_data['braintree_token'] = $braintree_token;
+        $this->page_data['square_client_id'] = $this->config->item('square_client_id');
+        $this->page_data['company_info'] = $company;
+        $this->load->view('v2/pages/invoice/ajax_load_pay_now_form', $this->page_data);
+    }
+
+    public function ajax_update_payment_status()
+    {
+        $is_success = 0;
+        $invoice_id = 0;
+        $msg = 'Cannot find invoice data';
+
+        $post = $this->input->post();
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        if( $invoice ){
+            $data = [
+                'status' => 'Paid',
+                'online_payments' => $post['payment_method'],
+                'payment_methods' => $post['payment_method'],
+
+            ];
+
+            $this->invoice_model->update($invoice->id, $data);
+            customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Mark as paid invoice number '.$invoice->invoice_number);
+
+            $this->payment_records_model->create([
+                'invoice_id' => $invoice->id,
+                'user_id' => $uid,
+                'company_id' => $cid,
+                'customer_id' => $invoice->customer_id,
+                'invoice_amount' => $invoice->grand_total,
+                'invoice_tip' => 0,
+                'balance' => 0,
+                'payment_date' => date('Y-m-d'),
+                'payment_method' => $post['payment_method'],
+                'invoice_number' => $invoice->invoice_number,
+                'reference_number' => '',
+                'notes' => 'Online Payment - ' . ucwords($post['payment_method'])
+            ]);
+
+            $this->activity_model->add('New Payment Record Invoice ID ' . $invoice->id . ' Created by User:' . logged('name'), $uid);
+            customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Created payment for invoice number '.$invoice->invoice_number.' amounting of $'.$invoice->grand_total);
+
+            $invoice_id = $invoice->id;
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_process_braintree_payment()
+	{
+		include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+		$is_success = 0;
+		$msg  = '';
+
+		$post = $this->input->post();
+        $cid  = logged('company_id');
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        if( $invoice ){
+        	$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+	        if( $companyOnlinePaymentAccount ){
+	    		$total_amount = $invoice->grand_total;
+
+	            $gateway = new Braintree\Gateway([
+	                'environment' => BRAINTREE_ENVIRONMENT,
+	                'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+	                'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+	                'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+	            ]);
+	            $result = $gateway->transaction()->sale([
+	                'amount' => floatval($total_amount),
+	                'paymentMethodNonce' => $post['nonce'],
+	                'options' => [
+	                    'submitForSettlement' => true
+	                ]
+	            ]);
+
+	            if($result->success || !is_null($result->transaction)) {
+	                $is_success = 1;
+	            }else{
+	                $errorString = "";
+	                foreach($result->errors->deepAll() as $error) {
+	                    $errorString .= 'Error: ' . $error->code . ": " . $error->message . "\n";
+	                }
+	                $msg = $errorString;                
+	            }
+	        }else{
+	        	$msg = 'Cannot process payment using braintree.';
+	        }	
+        }   
+        
+
+		$data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+	}
 
 }
 

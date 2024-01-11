@@ -33,6 +33,17 @@ class Payment_records_model extends MY_Model
         return $query->row();
     }
 
+    public function getAllByInvoiceId($invoice_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->order_by('id', 'ASC');
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
 
