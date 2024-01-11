@@ -2131,6 +2131,7 @@ class Invoice extends MY_Controller
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Business_model');
+        $this->config->load('api_credentials');
 
         $post = $this->input->post();
         $cid  = logged('company_id');   
@@ -2267,6 +2268,93 @@ class Invoice extends MY_Controller
 		$data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
 	}
+
+    public function ajax_square_process_payment()
+	{
+		$this->load->helper('square_helper');
+		$this->load->model('CompanyOnlinePaymentAccount_model');
+		$this->load->model('CompanySquarePaymentLogs_model');
+
+		$is_success = 0;
+		$msg  = 'Cannot find invoice data';
+
+		$post = json_decode(file_get_contents('php://input'), true);
+        $cid  = logged('company_id');
+
+        $invoice = get_invoice_by_id($post['invoice_id']);
+
+		if( $invoice ){
+			$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+			if( $post['token'] != '' ){
+	    		$total_amount = $invoice->grand_total;
+
+				$idempotency_key = uniqid() . $invoice->id;
+				$squarePayment = createPayment($companyOnlinePaymentAccount->square_access_token, $post['token'], $idempotency_key, $companyOnlinePaymentAccount->square_location_id, $total_amount);
+				if( isset($squarePayment) && $squarePayment->payment ){
+					$payment_data = [
+						'company_id' => $cid,
+						'access_token' => $companyOnlinePaymentAccount->square_access_token,
+						'object_id' => $invoice->id,
+						'object_type' => 'invoice',
+						'amount' => $total_amount,
+						'square_payment_id' => $squarePayment->payment->id,
+						'source_type' => $squarePayment->payment->source_type,
+						'status' => $squarePayment->payment->status,
+						'source_id' => $post['token'],
+						'location_id' => $companyOnlinePaymentAccount->square_location_id,
+						'receipt_url' => $squarePayment->payment->receipt_url,
+						'payment_date' => date('Y-m-d H:i:s')
+
+					];
+
+					$this->CompanySquarePaymentLogs_model->create($payment_data);
+
+					$is_success = 1;
+					$msg  = '';
+
+				}
+			}else{
+				$msg = 'Cannot process payment.';
+			}
+		}
+
+		$data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+	}
+
+    public function ajax_process_cash_payment()
+    {
+        $is_success = 0;
+		$msg  = 'Cannot find invoice data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+
+        $invoice = get_invoice_by_id($post['invoice_id']);
+        if( $invoice ){
+            $this->payment_records_model->create([
+                'invoice_id' => $invoice->id,
+                'user_id' => $uid,
+                'company_id' => $cid,
+                'customer_id' => $invoice->customer_id,
+                'invoice_amount' => $invoice->grand_total,
+                'invoice_tip' => 0,
+                'balance' => 0,
+                'payment_date' => date("Y-m-d", strtotime($post['date_payment'])),
+                'payment_method' => 'cash',
+                'invoice_number' => $invoice->invoice_number,
+                'reference_number' => $post['reference'],
+                'notes' => $post['notes']
+            ]);
+
+            $is_success = 1;
+			$msg  = '';
+        }
+
+        $data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+    }
 
 }
 
