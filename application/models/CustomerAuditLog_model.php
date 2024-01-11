@@ -41,6 +41,19 @@ class CustomerAuditLog_model extends MY_Model
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
     }
+
+    public function getAllByObjIdAndModule($object_id, $module)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('obj_id', $object_id);
+        $this->db->where('module', $module);
+        $this->db->order_by('id', 'DESC');
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file CustomerAuditLog_model.php */

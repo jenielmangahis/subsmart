@@ -489,5 +489,50 @@ class Cron_Notification extends MYF_Controller {
         echo $sms;
         exit;
     }
+
+    public function send_invoice_scheduled_email_notification()
+    {
+        $this->load->model('InvoiceScheduledEmailNotification_model');
+        
+        $total_sent = 0;
+        $total_errors = 0;
+
+        $emailInvoiceNotifications = $this->InvoiceScheduledEmailNotification_model->getAllTodayNotSent(10);
+        if( $emailInvoiceNotifications ){
+            foreach($emailInvoiceNotifications as $enotification){
+                $subject  = $enotification->subject_email;
+                $body     = $enotification->message_email;                    
+                $to       = $enotification->to_email;
+                $from     = $enotification->from_email;
+
+                $mail = email__getInstance(['subject' => $subject]);
+                $mail->FromName = $from;
+                $mail->addAddress($to, $to);
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body    = $body;
+                if (!$mail->Send()) {
+                    $total_errors++;
+                    $data_email = [
+                        'is_sent' => 0,
+                        'is_with_error' => 1,
+                        'err_message' => 'Cannot send email'
+                    ];                                                
+                }else{
+                    $total_sent++;
+                    $data_email = [
+                        'is_sent' => 1,
+                        'is_with_error' => 0,
+                        'err_message' => ''                        
+                    ];                                     
+                }
+
+                $this->InvoiceScheduledEmailNotification_model->updated($enotification->id, $data_email);
+            }
+        }
+
+        echo 'Total Sent :' . $total_sent . ' / Total Errors : ' . $total_errors;
+        
+    }
 }
 

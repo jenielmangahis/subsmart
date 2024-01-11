@@ -12948,7 +12948,7 @@ class Accounting extends MY_Controller
                     null,  
                     array(
                         'company_id' => $company_id,
-                        'type REGEXP' => "^(planned|projected)$",
+                        'type REGEXP' => "^(planned)$",
                     ),
                 );
 

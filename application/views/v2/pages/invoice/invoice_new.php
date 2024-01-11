@@ -244,7 +244,7 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal" data-bs-target="#clone_invoice_modal">Clone Invoice</a>
+                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal">Clone Invoice</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
@@ -331,18 +331,74 @@
             });
         });
 
-        $(document).on("click", ".clone-item", function(){
-            let invoice_number = $(this).data("invoice-number");
-            let id = $(this).data("id");
+        $(document).on('click touchstart', '.clone-item', function(){
+            var invoice_id = $(this).attr('data-id');
+            var invoice_number = $(this).attr('data-invoice-number');
 
-            $("#clone_invoice_id").text(invoice_number);
-            $("#clone_invoice").attr("data-id", id);
+            Swal.fire({
+                html: "You are going create a new invoice based on invoice number <b>"+ invoice_number +"</b>.<br/><br /><small style='font-size:13px;'>The new invoice will contain the same items (e.g. materials, labour).Cloned invoice will have status as <b>draft</b>. You will be able to edit and remove the invoice items as you need.</small><br /><br />Do you wish to proceed with selected action?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "invoice/_clone_invoice",
+                        data: {
+                            invoice_id: invoice_id
+                        },
+                        dataType:'json',
+                        beforeSend: function(data) {
+                            
+                        },
+                        success: function(result) {
+                            if( result.is_success == 1 ){
+                                var edit_invoice_url = base_url + 'invoice/invoice_edit/' + result.invoice_id;                        
+                                Swal.fire({
+                                    html: 'Invoice was Invoice was successfully cloned.',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    showDenyButton: true,
+                                    confirmButtonText: 'Okay',
+                                    denyButtonText: `Edit Invoice`,
+                                    denyButtonColor: '#7367f0'
+                                }).then((result) => {
+                                    if (result.isDenied) {
+                                        location.href = edit_invoice_url;
+                                    }else{
+                                        location.reload();
+                                    }                            
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        },
+                        complete : function(){
+                            
+                        },
+                    });
+                }
+            });
         });
 
-        $("#clone_invoice").on("click", function(){
-            let url = "<?php echo base_url(); ?>invoice/clone/" + $(this).attr("data-id");
-            location.href = url;
-        });
+        // $(document).on("click", ".clone-item", function(){
+        //     let invoice_number = $(this).data("invoice-number");
+        //     let id = $(this).data("id");
+
+        //     $("#clone_invoice_id").text(invoice_number);
+        //     $("#clone_invoice").attr("data-id", id);
+        // });
+
+        // $("#clone_invoice").on("click", function(){
+        //     let url = "<?php echo base_url(); ?>invoice/clone/" + $(this).attr("data-id");
+        //     location.href = url;
+        // });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

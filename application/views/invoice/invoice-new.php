@@ -58,26 +58,38 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
         }
 
         .companyimage {
-            width: 70px;
+            width: 161px;
             height: 70px;
-            min-width: 70px;
+            min-width: 161px;
             min-height: 70px;
             background-color: #e2e2e2;
             display: block;
+            margin:auto;
         }
 
         .companyimage.companyimage-big {
-            width: 100px;
-            height: 100px;
+            width: 265px;
+            height: auto;
             min-width: 100px;
             min-height: 100px;
+        }
+        .container-left{
+            width:50%;
+            float:left;
+        }
+        .container-right{
+            width:50%;
+            float:right;
+        }
+        .clear{
+            clear:both;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="main">
+    <div class="container" style="background-color:#ffffff;">
+        <div class="main" style="width:1000px;">
             <table>
                 <tr>
                     <td>
@@ -158,23 +170,30 @@ $payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
                     <td style="border: 1px solid; text-align: center; padding: 8px;"><?= $due_date; ?></td>
                 </tr>
             </table>
-
-            <table style="margin-bottom: 50px;">
-                <tr>
-                    <div><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></div>
-                    <div><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></div>
-                </tr>
-            </table>
-
-            <table style="margin-bottom: 50px;">
-                <tr>
-                    <div><?= strtoupper(trim($company_info->business_name)); ?></div>
-                    <div><?= strtoupper($company_info->street); ?></div>
-                    <div><?= strtoupper($company_info->city . ', ' . $company_info->state . ' ' . $company_info->postal_code); ?></div>
-                    <div>TEL: <?= $company_info->business_phone; ?></div>
-                </tr>
-            </table>
-
+            <hr style="margin-top:33px; margin-bottom:33px;" />
+            <div class="container-left">
+                <table style="margin-bottom: 50px;">
+                    <tr>
+                        <div><b>TO:</b></div>                    
+                        <div><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></div>
+                        <div><?= strtoupper($customer->mail_add); ?></div>
+                        <div><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></div>
+                        <div>TEL: <?= $customer->phone_m; ?></div>
+                    </tr>
+                </table>
+            </div>
+            <div class="container-right">
+                <table style="margin-bottom: 50px;">
+                    <tr>
+                        <div><b>FROM:</b></div>                    
+                        <div><?= strtoupper(trim($company_info->business_name)); ?></div>
+                        <div><?= strtoupper($company_info->street); ?></div>
+                        <div><?= strtoupper($company_info->city . ', ' . $company_info->state . ' ' . $company_info->postal_code); ?></div>
+                        <div>TEL: <?= $company_info->business_phone; ?></div>
+                    </tr>
+                </table>  
+            </div>
+            <div class="clear"></div>
             <table>
                 <tr>
                     <td style="text-align: center; border-bottom: 2px dashed;">
