@@ -33,13 +33,34 @@ class Payment_records_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalInvoiceAmountByCompanyIdAndDateRange($company_id, $date_range)
+    {
+        $this->db->select('SUM(invoice_amount)AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('payment_date >=', $date_range['from']);
+        $this->db->where('payment_date <=', $date_range['to']);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getTotalInvoiceAmountByCompanyId($company_id)
+    {
+        $this->db->select('SUM(invoice_amount)AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllByInvoiceId($invoice_id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('invoice_id', $invoice_id);
-        $this->db->order_by('id', 'ASC');
-        
+        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

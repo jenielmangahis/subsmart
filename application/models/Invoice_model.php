@@ -400,6 +400,28 @@ class Invoice_model extends MY_Model
         return $query;
     }  
 
+    public function getTotalInvoiceAmountByCompanyIdAndDateRange($company_id, $date_range)
+    {
+        $this->db->select('SUM(grand_total)AS total_invoice_amount');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('date_created >=', $date_range['from']);
+        $this->db->where('date_created <=', $date_range['to']);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getTotalInvoiceAmountByCompanyId($company_id)
+    {
+        $this->db->select('SUM(grand_total)AS total_invoice_amount');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllData($company_id)
     {
         // $where = array(
@@ -427,8 +449,8 @@ class Invoice_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('date_issued >=', $date_range['from']);
-        $this->db->where('date_issued <=', $date_range['to']);
+        $this->db->where('date_created >=', $date_range['from']);
+        $this->db->where('date_created <=', $date_range['to']);
         $this->db->where('view_flag', 0);        
         if( !empty($filter) ){
             $this->db->group_start();

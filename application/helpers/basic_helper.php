@@ -2426,6 +2426,7 @@ function get_invoice_amount($type)
 {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model');
     $company_id = logged('company_id');
     $result = 0;
     $start_date = date("Y") . "-01-01";
@@ -2439,12 +2440,47 @@ function get_invoice_amount($type)
         case "pending":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
             return total_invoice_amount($result);
-        case "paid":
-            $filter[] = ['field_name' => 'status', 'field_value' => 'Paid'];
-            $filter[] = ['field_name' => 'status', 'field_value' => 'Partially Paid'];
+        case "total":
+            $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyId($company_id);
+            $total_invoice = 0;
+            if( $resultInvoice ){
+                $total_invoice = $resultInvoice->total_invoice_amount;
+            }
+            return number_format($total_invoice, 2, '.', ',');
+        case "balance":
             $date_range = ['from' => $start_date, 'to' => $end_date];
-            $result = $CI->invoice_model->getAllByCompanyIdAndDateRange($company_id, $date_range, $filter);  
-            return total_invoice_amount($result);
+            $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyId($company_id);
+            $resultPayments = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
+
+            $total_invoice = 0;
+            if( $resultInvoice ){
+                $total_invoice = $resultInvoice->total_invoice_amount;
+            }
+
+            $total_payments = 0;
+            if( $resultPayments ){
+                $total_payments = $resultPayments->total_amount_paid;
+            }
+
+            $total_balance = $total_invoice - $total_payments;
+
+            return number_format($total_balance, 2, '.', ',');
+        case "paid":
+            // $filter[] = ['field_name' => 'status', 'field_value' => 'Paid'];
+            // $filter[] = ['field_name' => 'status', 'field_value' => 'Partially Paid'];
+            // $date_range = ['from' => $start_date, 'to' => $end_date];
+            // $result = $CI->invoice_model->getAllByCompanyIdAndDateRange($company_id, $date_range, $filter);  
+            // return total_invoice_amount($result);
+
+            $date_range = ['from' => $start_date, 'to' => $end_date];
+            $result = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
+            $total_invoice_amount = 0;
+            if( $result ){
+                $total_invoice_amount = $result->total_amount_paid;
+            }
+
+            return number_format($total_invoice_amount, 2, '.', ',');
+
         default:        
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
             return total_invoice_amount($result);
