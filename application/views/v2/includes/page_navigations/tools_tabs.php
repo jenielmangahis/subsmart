@@ -1,6 +1,6 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Quickbooks Accounting' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('tools/api_connectors') ?>">
                 <i class='bx bx-fw bx-wrench'></i>
                 <span>Business Tools</span>

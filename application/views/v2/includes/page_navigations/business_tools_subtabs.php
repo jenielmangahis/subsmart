@@ -21,6 +21,11 @@
                 <span>Quickbooks Payroll</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Quickbooks Accounting'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/quickbooks_accounting') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Quickbooks Accounting</span>
+            </a>
+        </li>
         <!-- <li class="<?php if($page->title == 'Nice Job'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tools/nicejob') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Nicejob</span>

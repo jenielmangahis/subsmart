@@ -12,9 +12,18 @@
     margin-top:10px;
 }
 #btn-braintree-pay-now, #card-button{
-    width: 101%;
+    width: 100%;
     margin-left: -1px;
     text-align: center;
+}
+.payment-status-container{
+    padding:10px 0px;
+}
+#btn-cash-pay-now{
+    width: 100%;
+    margin-left: -1px;
+    text-align: center;
+    margin-top:10px;
 }
 </style>
 <div class="row" id="plansItemDiv">
@@ -80,6 +89,7 @@
                     <div class="col-md-12 form-group">
                         <select name="payment_method" id="pay-now-payment-method" class="form-control">
                             <option value="" selected="selected">- Select Payment Method -</option>
+                            <option value="cash">Cash</option>
                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                 <option value="stripe">Stripe</option>
                             <?php } ?>
@@ -98,8 +108,40 @@
                         <a class="nsm nsm-button primary" id="btn-pay-stripe" href="javascript:void(0);" style="display:none;">PAY VIA STRIPE</a>
                     <?php } ?>
                     <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
-                        <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div>
+                        <div id="paypal-button-container" style="display: none;height: 44px;"></div>
                     <?php } ?>  
+                    <div id="cash-container" style="margin-top:10px;display:none;">  
+                        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-cash-payment', 'autocomplete' => 'off']); ?>  
+                        <input type="hidden" name="invoice_id" value="<?= $invoice->id; ?>" />                    
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Payment Date</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="date_payment" id="cash-payment-date" class="form-control" value="<?= date("Y-m-d"); ?>">                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Reference #</label> <span class="help">(optional)</span>
+                                    <input type="text" name="reference" value="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Comments / Notes</label> <span class="help">(optional)</span>
+                                    <input type="text" name="notes" value="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="nsm nsm-button primary" id="btn-cash-pay-now">Pay Now</button> 
+                        <?php echo form_close(); ?>
+                    </div>
                 </div>
             </div>
             <div class="col-5">
@@ -153,6 +195,38 @@
 
 <script>
 $(function(){
+    $('#cash-payment-date').datepicker({
+        minDate: '0',
+        format: "yyyy-mm-dd"
+    });
+
+    // Cash Payment
+    $('#frm-cash-payment').on('submit', function(e){
+        e.preventDefault();
+        var url  = base_url + 'invoice/_process_cash_payment';
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: form.serialize(), 
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    updateInvoiceToPaid('paypal');       
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#btn-cash-pay-now").html('Schedule');
+            }, beforeSend: function() {
+                $("#btn-cash-pay-now").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
     $('#pay-now-payment-method').on('change', function(){
         var selected = $(this).val();
         <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
@@ -162,6 +236,7 @@ $(function(){
                 $('#btn-pay-stripe').hide();
                 $('#braintree-container').hide();  
                 $('#square-container').hide();                 
+                $('#cash-container').hide();                 
                 // Render the PayPal button into #paypal-button-container
                 
                 paypal.Buttons({
@@ -201,7 +276,8 @@ $(function(){
                 $('#btn-pay-stripe').show();
                 $('#paypal-button-container').hide(); 
                 $('#braintree-container').hide();     
-                $('#square-container').hide();              
+                $('#square-container').hide();
+                $('#cash-container').hide();                               
             }
         <?php } ?>
 
@@ -210,7 +286,8 @@ $(function(){
                 $('#square-container').show();    
                 $('#btn-pay-stripe').hide();
                 $('#paypal-button-container').hide(); 
-                $('#braintree-container').hide();               
+                $('#braintree-container').hide();
+                $('#cash-container').hide();                                
             }
         <?php } ?>
 
@@ -219,9 +296,18 @@ $(function(){
                 $('#braintree-container').show();
                 $('#btn-pay-stripe').hide();
                 $('#paypal-button-container').hide();
-                $('#square-container').hide();    
+                $('#square-container').hide();  
+                $('#cash-container').hide();                   
             }                               
         <?php } ?>
+
+        if( selected == 'cash' ){
+            $('#cash-container').show();  
+            $('#braintree-container').hide();
+            $('#btn-pay-stripe').hide();
+            $('#paypal-button-container').hide();
+            $('#square-container').hide();
+        }
         
     });  
 
@@ -393,7 +479,7 @@ const paymentRequest = payments.paymentRequest({
         if (tokenResult.status === 'OK') {
         const source_type = 'APPLE PAY';
         //console.log(`Payment token is ${tokenResult.token}`);
-        const square_response = await fetch(base_url + `_square_process_payment`, {
+        const square_response = await fetch(base_url + `invoice/_process_square_payment`, {
                 method: "POST",
                 body: JSON.stringify({ token: tokenResult.token, invoice_id:invoice_id, source_type:source_type }),
                 headers: {    
@@ -403,14 +489,7 @@ const paymentRequest = payments.paymentRequest({
             });    
             const data = await square_response.json();  
             if( data.is_success == 1 ){
-                $('.payment-api-container').hide();
-                $('.square-form').hide();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful',
-                    text: 'Payment process completed.'
-                });       
+                updateInvoiceToPaid('square');          
             }else{
                 Swal.fire({
                     icon: 'error',
@@ -447,7 +526,7 @@ googlePayButton.addEventListener('click', async () => {
     const tokenResult = await googlePay.tokenize();
     if (tokenResult.status === 'OK') {
         //console.log(`Payment token is ${tokenResult.token}`);
-        const square_response = await fetch(base_url + `_square_process_payment`, {
+        const square_response = await fetch(base_url + `invoice/_process_square_payment`, {
             method: "POST",
             body: JSON.stringify({ token: tokenResult.token, invoice_id:invoice_id, source_type:source_type }),
             headers: {    
@@ -457,14 +536,7 @@ googlePayButton.addEventListener('click', async () => {
         });    
         const data = await square_response.json();  
         if( data.is_success == 1 ){
-            $('.payment-api-container').hide();
-            $('.square-form').hide();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful',
-                text: 'Payment process completed.'
-            });       
+            updateInvoiceToPaid('square');       
         }else{
             Swal.fire({
                 icon: 'error',
@@ -497,7 +569,7 @@ cardButton.addEventListener('click', async () => {
     const result = await card.tokenize();
     if (result.status === 'OK') {
         //console.log(`Payment token is ${result.token}`);
-        const square_response = await fetch(base_url + `_square_process_payment`, {
+        const square_response = await fetch(base_url + `invoice/_process_square_payment`, {
             method: "POST",
             body: JSON.stringify({ token: result.token, invoice_id:invoice_id, source_type:source_type }),
             headers: {    
@@ -507,14 +579,7 @@ cardButton.addEventListener('click', async () => {
         });    
         const data = await square_response.json();  
         if( data.is_success == 1 ){
-            $('.payment-api-container').hide();
-            $('.square-form').hide();
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful',
-                text: 'Payment process completed.'
-            });       
+            updateInvoiceToPaid('square');     
         }else{
             Swal.fire({
                 icon: 'error',
