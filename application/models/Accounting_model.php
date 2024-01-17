@@ -631,5 +631,30 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();            
         }
+
+        // Get Account List data in Database
+        if ($reportType == "account_list") {
+            $this->db->select('accounting_chart_of_accounts.id AS account_id, accounting_chart_of_accounts.name AS account, account.account_name AS type, account_detail.acc_detail_name AS detail_type, accounting_chart_of_accounts.description AS description, accounting_chart_of_accounts.balance AS balance');
+            $this->db->from('accounting_chart_of_accounts');
+            $this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id', 'left');
+            $this->db->join('account_detail', 'account_detail.acc_detail_id = accounting_chart_of_accounts.acc_detail_id', 'left');
+            $this->db->where('accounting_chart_of_accounts.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Employee Details data in Database
+        if ($reportType == "employee_details") {
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, roles.title AS role, users.pay_rate AS pay_rate');
+            $this->db->from('users');
+            $this->db->join('roles', 'roles.id = users.role', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 }
