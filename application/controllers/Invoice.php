@@ -25,25 +25,17 @@ class Invoice extends MY_Controller
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('Workorder_model', 'workorder_model');
 
-        $user_id = getLoggedUserID();
-
         // add css and js file path so that they can be attached on this page dynamically
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
-        add_css(array(
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+        add_css(array(            
+            'assets/css/v2/bootstrap-datepicker.min.css',
             'assets/frontend/css/invoice/main.css',
         ));
 
-
-        // JS to add only Customer module
-        add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+        add_footer_js(array(        
+            'assets/js/v2/bootstrap-datetimepicker.min.js',    
             'assets/frontend/js/invoice/add.js',
-            'assets/js/invoice.js'
+            //'assets/js/invoice.js'
         ));
     }
 
@@ -156,8 +148,8 @@ class Invoice extends MY_Controller
         } else {
             // search
             if (!empty(get('search'))) {
-                $this->page_data['search'] = get('search');
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
+                $this->page_data['search'] = trim(get('search'));
+                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => trim(get('search'))), $comp_id, $type);
             } elseif (!empty(get('order'))) {  
                 $sort_by = get('order');    
                 switch (get('order')) {
@@ -281,6 +273,7 @@ class Invoice extends MY_Controller
     public function add()
     {
         $this->load->helper('functions');
+        $this->load->model('JobTags_model');
 
         $query       = $this->input->get();        
         $workorder   = array();
@@ -295,21 +288,12 @@ class Invoice extends MY_Controller
         }
 
         $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
         $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        // }
         $company_id = logged('company_id');
         $role = logged('role');
-        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if ($role == 1 || $role == 2) {
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        if ($role == 1 || $role == 2) {            
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        } else {
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        } else {            
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
 
@@ -339,12 +323,14 @@ class Invoice extends MY_Controller
         $this->page_data['workorder']  = $workorder;
         $this->page_data['w_customer'] = $w_customer;
         $this->page_data['w_items']    = $w_items;
-        // $this->page_data['items']      = $this->items_model->getItemlist();
-        
+        $this->page_data['page_title'] = "Invoice Add";
+        $this->page_data['page']->title = 'Invoices & Payments';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['tags'] = $this->JobTags_model->getAllByCompanyId($company_id);        
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 
-        $this->load->view('invoice/add', $this->page_data);
+        $this->load->view('v2/pages/invoice/add', $this->page_data);
     }
 
     public function estimateConversion($id)
@@ -2061,7 +2047,7 @@ class Invoice extends MY_Controller
         foreach($payments as $p){
             $balance = $balance - $p->invoice_amount;
         }
-
+        
         $this->page_data['invoice'] = $invoice;
         $this->page_data['balance'] = $balance;
         $this->load->view('v2/pages/invoice/record_payment_form', $this->page_data);
@@ -2104,6 +2090,21 @@ class Invoice extends MY_Controller
                     'reference_number' => $post['reference'],
                     'notes' => $post['notes']
                 ]);
+
+                //Update invoice status
+                if( $new_balance <= $invoice->grand_total ){                    
+                    $status = 'Partially Paid';
+                    customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
+                }elseif( $new_balance == 0 ){
+                    $status = 'Paid';
+                }
+
+                $invoice_data = [
+                    'status' => $status,
+                    'balance' => $new_balance
+                ];
+
+                $this->invoice_model->update($invoice->id, $invoice_data);
         
                 $this->activity_model->add('New Payment Record Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), logged('id'));
                 customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Created payment for invoice number '.$invoice->invoice_number.' amounting of $'.$post['amount']);
@@ -2206,6 +2207,7 @@ class Invoice extends MY_Controller
 
             $this->activity_model->add('New Payment Record Invoice ID ' . $invoice->id . ' Created by User:' . logged('name'), $uid);
             customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Created payment for invoice number '.$invoice->invoice_number.' amounting of $'.$invoice->grand_total);
+            customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
 
             $invoice_id = $invoice->id;
             $is_success = 1;
@@ -2350,6 +2352,204 @@ class Invoice extends MY_Controller
 
             $is_success = 1;
 			$msg  = '';
+        }
+
+        $data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+    }
+
+    public function ajax_create_invoice()
+    {
+        $this->load->model('JobTags_model');
+        $this->load->model('Invoice_settings_model');
+        $this->load->model('AcsProfile_model');        
+
+        $is_success = 1;
+		$msg  = 'Cannot find invoice data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+
+        if( $post['grand_total'] <= 0 ){
+            $is_success = 0;
+            $msg = 'Cannot save 0 amount invoice';
+        }
+
+        if( $post['status'] == 'Partially Paid' && $post['amount_paid'] <= 0 ){
+            $is_success = 0;
+            $msg = 'Please specify amount paid';
+        }
+
+        if( $post['adjustment_value'] > 0 && $post['adjustment_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify adjustment name';
+        }
+
+        if( $post['customer_id'] <= 0 ){
+            $is_success = 0;
+            $msg = 'Please select customer';
+        }
+  
+        if( $is_success == 1 ){
+            $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($cid);
+            if( $invoiceSettings ){            
+                $next_number = (int) $invoiceSettings->invoice_num_next;     
+                $prefix      = $invoiceSettings->invoice_num_prefix;        
+            }else{
+                $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($cid);
+                $prefix     = 'INV-';
+                if( $lastInsert ){
+                    $next_number   = $lastInsert->id + 1;
+                }else{
+                    $next_number   = 1;
+                }
+            }
+
+            $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);
+            $customer = $this->AcsProfile_model->getByProfId($post['customer_id']); 
+            $jobTag   = $this->JobTags_model->getById($post['job_tag']);
+
+            if( $post['status'] == 'Paid' ){
+                $balance = 0;
+            }elseif( $post['status'] == 'Partially Paid' ){
+                $balance = $post['grand_total'] - $post['amount'];
+            }else{
+                $balance = $post['grand_total'];
+            }
+
+            $new_data = array(
+                'customer_id'               => $post['customer_id'],
+                'job_location'              => $post['jobs_location'],
+                'job_name'                  => $post['job_name'],
+                'job_id'                    => 0,
+                'job_number'                => '',
+                'business_name'             => $post['business_name'],
+                'tags'                      => $jobTag->name,
+                'invoice_type'              => '',
+                'work_order_number'         => '',
+                'purchase_order'            => $post['purchase_order'],
+                'invoice_number'            => $invoiceNumber,
+                'date_issued'               => date("Y-m-d",strtotime($post['date_issued'])),
+                'due_date'                  => date("Y-m-d",strtotime($post['due_date'])),
+                'customer_email'            => $customer->email,
+                'online_payments'           => '',
+                'billing_address'           => $customer->mail_add,
+                'shipping_to_address'       => $customer->mail_add,
+                'ship_via'                  => '',
+                'shipping_date'             => '',
+                'tracking_number'           => '',
+                'terms'                     => 0,     
+                'tip'                       => 0,     
+                'location_scale'            => '',
+                'message_to_customer'       => '',
+                'terms_and_conditions'      => $post['terms_and_conditions'],            
+                'attachments'               => '',
+                'status'                    => $post['status'],
+                'company_id'                => $cid,
+                'deposit_request_type'      => '',
+                'deposit_request'           => '',
+                'monthly_monitoring'        => $post['adjustment_otps'],
+                'program_setup'             => $post['monthly_monitoring'],
+                'installation_cost'         => $post['adjustment_ic'],
+                'payment_methods'           => '',
+                'sub_total'                 => $post['subtotal'],
+                'balance'                   => $balance,
+                'taxes'                     => $post['taxes'],
+                'adjustment_name'           => $post['adjustment_name'],
+                'adjustment_value'          => $post['adjustment_value'] > 0 ? $post['adjustment_value'] : 0,
+                'grand_total'               => $post['grand_total'],
+                'user_id'                   => $uid,
+                'date_created'              => date("Y-m-d H:i:s"),
+                'date_updated'              => date("Y-m-d H:i:s")
+            );
+    
+            $invoice_id = $this->invoice_model->createInvoice($new_data);
+
+            //Create invoice payment record if partially paid
+            if( $post['status'] == 'Partially Paid' || $post['status'] == 'Paid' ){
+                $this->payment_records_model->create([
+                    'invoice_id' => $invoice_id,
+                    'user_id' => $uid,
+                    'company_id' => $cid,
+                    'customer_id' => $customer->prof_id,
+                    'invoice_amount' => $post['grand_total'],
+                    'invoice_tip' => 0,
+                    'balance' => $balance,
+                    'payment_date' => date('Y-m-d', strtotime($post['payment_date'])),
+                    'payment_method' => $post['payment_method'],
+                    'invoice_number' => $invoiceNumber,
+                    'reference_number' => $post['reference_number'],
+                    'notes' => ''
+                ]);
+
+                customerAuditLog($uid, $customer->prof_id, $invoice_id, 'Invoice', 'Created payment for invoice number '.$invoiceNumber.' amounting of $'.$post['amount']);
+                $this->activity_model->add('New Payment Record Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), $uid);
+            }            
+
+            //Update invoice settings
+            if( $invoiceSettings ){
+                $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+                $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+            }else{
+                $invoice_settings_data = [
+                    'invoice_num_prefix' => $prefix,
+                    'invoice_num_next' => $next_number,
+                    'check_payable_to' => '',
+                    'accept_credit_card' => 1,
+                    'accept_check' => 0,
+                    'accept_cash'  => 1,
+                    'accept_direct_deposit' => 0,
+                    'accept_credit' => 0,
+                    'mobile_payment' => 1,
+                    'capture_customer_signature' => 1,
+                    'hide_item_price' => 0,
+                    'hide_item_qty' => 0,
+                    'hide_item_tax' => 0,
+                    'hide_item_discount' => 0,
+                    'hide_item_total' => 0,
+                    'hide_from_email' => 0,
+                    'hide_item_subtotal' => 0,
+                    'hide_business_phone' => 0,
+                    'hide_office_phone' => 0,
+                    'accept_tip' => 0,
+                    'due_terms' => '',
+                    'auto_convert_completed_work_order' => 0,
+                    'message' => 'Thank you for your business.',
+                    'terms_and_conditions' => 'Thank you for your business.',
+                    'company_id' => $company_id,
+                    'commercial_message' => 'Thank you for your business.',
+                    'commercial_terms_and_conditions' => 'Thank you for your business.',
+                    'logo' => '',
+                    'payment_fee_percent' => '',
+                    'payment_fee_amount' => '',
+                    'recurring' => ''
+                ];
+
+                $this->Invoice_settings_model->create($invoice_settings_data);
+            }
+
+            //Items
+            if( $post['item_id'] ){
+                foreach( $post['item_id'] as $key => $itemid ){
+                    $invoice_item_data = [
+                        'invoice_id' => $invoice_id,
+                        'items_id' => $itemid,
+                        'qty' => $post['quantity'][$key],
+                        'cost' => $post['price'][$key],
+                        'tax' => $post['tax'][$key],
+                        'discount' => $post['discount'][$key],
+                        'total' => $post['total'][$key]
+                    ];
+    
+                    $this->invoice_model->add_invoice_details($invoice_item_data);
+                }
+            }
+
+            $this->activity_model->add('Created Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), $uid);
+
+            $is_success = 1;
+            $msg = '';
         }
 
         $data = ['msg' => $msg, 'is_success' => $is_success];
