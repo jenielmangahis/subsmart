@@ -293,6 +293,7 @@ $route['invoice/_update_payment_status'] = 'Invoice/ajax_update_payment_status';
 $route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_payment';
 $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment';
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
+$route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 

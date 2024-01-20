@@ -2426,6 +2426,107 @@ class Debug extends MY_Controller {
         print_r($status);
 
     }
+
+    public function customerQuery()
+    {
+        $company_id = 31;
+        // build query
+        $query = "select acs_profile.*, concat(acs_profile.first_name, ' ', acs_profile.last_name) as contact_name, concat(acs_profile.mail_add, ', ', acs_profile.city, ', ', acs_profile.state, ' ', acs_profile.zip_code) as contact_address, concat('https://nsmartrac.com/uploads/customer_qr/', acs_profile.qr_img) as qr_img, ";
+        $query .= "acs_billing.mmr, acs_alarm.system_type, acs_office.entered_by, acs_office.lead_source, acs_profile.city, acs_profile.state, users.LName as tech_last_name, users.FName as tech_first_name from acs_profile ";
+        $query .= "left join users on users.id = acs_profile.fk_user_id ";
+        $query .= "left join acs_billing on acs_billing.fk_prof_id = acs_profile.prof_id ";
+        $query .= "left join acs_alarm on acs_alarm.fk_prof_id = acs_profile.prof_id ";
+        $query .= "left join acs_office on acs_office.fk_prof_id = acs_profile.prof_id ";
+        $query .= "left join acs_office as ao on ao.fk_prof_id = users.id ";
+        $query .= "where acs_profile.company_id = $company_id ";
+
+        // check $monitoring_id
+        //$monitoring_id = 1;
+        if (!empty($monitoring_id)) {
+            $query .= "and acs_alarm.monitor_id like '%$monitoring_id%' ";
+        }
+        // check $first_name
+        //$first_name = 'bryann';
+        if (!empty($first_name)) {
+            $query .= "and acs_profile.first_name like '%$first_name%' ";
+        }
+        // check $last_name
+        $last_name = 'jane';
+        if (!empty($last_name)) {
+            $query .= "and acs_profile.last_name like '%$last_name%' ";
+        }
+        // check $email
+        //$email = 'bryann.revina03@gmail.com';
+        if (!empty($email)) {
+            $query .= "and acs_profile.email like '%$email%' ";
+        }
+        // check $phone
+        //$phone = '23234234';
+        if (!empty($phone)) {
+            $query .= "and acs_profile.phone_h like '%$phone%' ";
+        }
+        // check $sales_date
+        //$sales_date = '9/20/2020';
+        if (!empty($sales_date)) {
+            $query .= "and acs_office.sales_date like '%$sales_date%' ";
+        }
+        // check $monitoring_company
+        //$monitoring_company = 'Stanley';
+        if (!empty($monitoring_company)) {
+            $query .= "and acs_alarm.monitor_comp like '%$monitoring_company%' ";
+        }
+        // check $panel_type
+        //$panel_type = 'AlarmNet';
+        if (!empty($panel_type)) {
+            $query .= "and acs_alarm.panel_type like '%$panel_type%' ";
+        }
+        // check $account_type
+        //$account_type = 'In-House';
+        if (!empty($account_type)) {
+            $query .= "and acs_alarm.acct_type like '%$account_type%' ";
+        }
+        // check $status
+        //$status = 'New';
+        if (!empty($status)) {
+            $query .= "and acs_profile.status like '%$status%' ";
+        }
+        // check $address
+        if (!empty($address)) {
+            $query .= "and acs_profile.mail_add like '%$address%' ";
+        }
+        // check $city
+        if (!empty($city)) {
+            $query .= "and acs_profile.city like '%$city%' ";
+        }
+        // check $state
+        if (!empty($state)) {
+            $query .= "and acs_profile.state like '%$state%' ";
+        }
+        // check $postal
+        if (!empty($postal)) {
+            $query .= "and acs_profile.zip_code like '%$postal%' ";
+        }
+        // check $routing_number
+        //$routing_number = '12345';
+        if (!empty($routing_number)) {
+            $query .= "and acs_billing.routing_num like '%$routing_number%' ";
+        }
+        // check $company_name
+        //$monitoring_company = 'Stanley';
+        if (!empty($company_name)) {
+            $query .= "and acs_alarm.monitor_comp like '%$company_name%' ";
+        }
+        // check $credit_score
+        if (!empty($credit_score)) {
+            $query .= "and acs_office.credit_score like '%$credit_score%' ";
+        }
+        // check $contract_term
+        if (!empty($contract_term)) {
+            $query .= "and acs_billing.contract_term like '%$contract_term%' ";
+        }
+
+        echo $query;
+    }
 }
 /* End of file Debug.php */
 

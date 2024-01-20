@@ -37,8 +37,8 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year">$<?php echo get_invoice_amount('year') ?></h2>
-                                    <span>This Year</span>
+                                    <h2 id="total_this_year">$<?php echo get_invoice_amount('total') ?></h2>
+                                    <span>Total Invoice</span>
                                 </div>
                             </div>
                         </div>
@@ -50,8 +50,8 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="pending_total">$<?php echo get_invoice_amount('pending') ?></h2>
-                                    <span>Pending</span>
+                                    <h2 id="pending_total">$<?php echo get_invoice_amount('balance') ?></h2>
+                                    <span>Unpaid</span>
                                 </div>
                             </div>
                         </div>
@@ -153,6 +153,7 @@
                             <td data-name="Job & Customer">Job & Customer</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
+                            <td data-name="Amount">Balance</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -222,6 +223,7 @@
                                         </span>
                                     </td>
                                     <td>$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
+                                    <td>$<?php echo number_format((float)$invoice->balance,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -238,7 +240,7 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) . "?do=payment_add" ?>">Record Invoice</a>
+                                                    <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
@@ -281,6 +283,27 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Modal Record Payment -->
+            <div class="modal fade nsm-modal fade" id="modalRecordPaymentForm" tabindex="-1" aria-labelledby="modalRecordPaymentForm_label" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <form id="frm-record-payment" method="POST">
+                        <input type="hidden" name="invoice_id" id="record_payment_invoice_id" value="" />
+                        <div class="modal-content" style="width:560px;">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Record Payment</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="btn-record-payment" class="nsm-button primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -383,6 +406,64 @@
                             
                         },
                     });
+                }
+            });
+        });
+
+        $(document).on('click touchstart', '.recordPaymentBtn', function(){
+            var invoice_id = $(this).attr('data-id');
+
+            $('#modalRecordPaymentForm').modal('show');
+            $("#modalRecordPaymentForm .modal-body").html('<div class="alert alert-info alert-purple" role="alert">Loading...</div>');
+
+            $('#record_payment_invoice_id').val(invoice_id);
+
+            $.ajax({
+            url: base_url + "invoice/_load_record_payment_form",
+            type: "POST",
+            data: {
+                invoice_id: invoice_id
+            },
+            success: function (response) {
+                $("#modalRecordPaymentForm .modal-body").html(response);
+            },
+            });
+        });
+
+        $(document).on('submit', '#frm-record-payment', function(e){
+            e.preventDefault();
+            var url  = base_url + 'invoice/_create_payment';
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType:'json',
+                data: form.serialize(), 
+                success: function(data) {
+                    if( data.is_success == 1 ){
+                        $('#modalRecordPaymentForm').modal('hide');
+                        
+                        Swal.fire({
+                            text: 'Invoice payment was successfully created',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#6a4a86',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            location.reload();
+                        });    
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: data.msg
+                        });
+                    }
+                    
+                    $("#btn-record-payment").html('Save');
+                }, beforeSend: function() {
+                    $("#btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
