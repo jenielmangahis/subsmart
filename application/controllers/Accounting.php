@@ -625,6 +625,7 @@ class Accounting extends MY_Controller
             ),
         );
         $this->page_data['chartOfAccount'] = $this->general_model->get_data_with_param($chartOfAccountListData, true);
+        
 
         $this->load->view('accounting/banking/receipts', $this->page_data);
         // $this->load->view('accounting/receipts', $this->page_data);
@@ -3391,6 +3392,21 @@ class Accounting extends MY_Controller
             $output .= '</td>';
             $output .= '</tr>';
         }
+        echo $output;
+    }
+
+    public function multiDeleteRulesData()
+    {
+        $count = 0;
+        $data = $this->input->post();
+        if(!empty($data['rule_ids'])) {
+            foreach($data['rule_ids'] as $rule_id) {
+                $this->rules_model->deleteMultiRulesData($rule_id);
+                $count++;
+            }
+        }
+
+        $output = '';
         echo $output;
     }
 

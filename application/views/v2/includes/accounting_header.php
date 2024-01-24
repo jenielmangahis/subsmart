@@ -947,7 +947,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     
     <script type="text/javascript">
         var user_id = <?= $user_id ?> ;
-        var baseURL = window.location.origin;
+        var baseURL = base_url; //window.location.origin;
         var current_user_company_id = <?=logged('company_id')?> ;
         var all_notifications_html = '';
         var notification_badge_value = 0;

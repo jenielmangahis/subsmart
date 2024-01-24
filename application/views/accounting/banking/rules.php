@@ -25,19 +25,17 @@
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <!-- <div class="dropdown d-inline-block">
+                        <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
                                     Batch Actions
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete">Delete</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="disable">Disable</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="enable">Enable</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end batch-actions rules-batch-actions">
+                                <li><a class="dropdown-item dropdown-item-delete-rule disabled" href="javascript:void(0);" id="multiDeleteRules">Delete</a></li>
                             </ul>
-                        </div> -->
+                        </div>                        
 
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" id="importRulesLink">
@@ -108,12 +106,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <form id="rulesTblFrm" class="rulesTblFrm">
                         <?php if(count($rules) > 0) : ?>
 						<?php foreach($rules as $rule) : ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select check-input-rules" type="checkbox">
+                                    <input type="checkbox" name="rule_ids[]" value="<?php echo $rule->id; ?>" id="check-input-rules" class="form-check-input select-one table-select check-input-rules" />
                                 </div>
                             </td>
                             <td>
@@ -161,6 +160,7 @@
 							</td>
 						</tr>
 						<?php endif; ?>
+                        </form>
                     </tbody>
                 </table>
             </div>

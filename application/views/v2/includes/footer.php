@@ -138,15 +138,26 @@
         $(document).ready(function() {
             getNotificationsAll();
 
+            $(".check-input-rules").click(function(){
+                var count_rule_list_check = $('.check-input-rules').filter(':checked').length;
+                if(count_rule_list_check > 0) {
+                    $(".dropdown-item-delete-rule").removeClass("disabled");
+                } else {
+                    $('.dropdown-item-delete-rule').addClass('disabled');
+                }             
+            })
+
             $(".select-all-rules").click(function(){
                 if(this.checked){
                     $('.check-input-rules').each(function(){
                         this.checked = true;
                     });
+                    $(".dropdown-item-delete-rule").removeClass("disabled");
                 }else{
                     $('.check-input-rules').each(function(){
                         this.checked = false;
                     });
+                    $('.dropdown-item-delete-rule').addClass('disabled');
                 }                
             });            
 
