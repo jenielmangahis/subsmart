@@ -293,7 +293,6 @@ $route['invoice/_update_payment_status'] = 'Invoice/ajax_update_payment_status';
 $route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_payment';
 $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment';
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
-$route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -366,6 +365,9 @@ $route['accounting/generate-pdf'] = "accounting_modals/generatePDF";
 $route['accounting/show-pdf'] = "accounting_modals/showPDF";
 $route['accounting/download-pdf'] = "accounting_modals/downloadPDF";
 $route['accounting/send-email-form']['post'] = "accounting_modals/showEmailModal";
+
+//Workers Comp
+$route['accounting/_create_workers_comp'] = "accounting/ajax_create_workers_comp_quote";
 
 // Accounting tags
 $route['accounting/tags'] = 'accounting_controllers/tags/index';

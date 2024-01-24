@@ -329,17 +329,22 @@ class Tools extends MY_Controller {
         if ($quickbooks_connector && $quickbooks_connector->status == 1) {
             $loginStatus = 1;
             $token = $this->quickbooksapi->refresh_token($quickbooks_connector->qb_payroll_refresh_token, $quickbooks_connector->qb_payroll_realm_id); 
-            if ($token) {
-                $companyQBInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $quickbooks_connector->qb_payroll_refresh_token, $quickbooks_connector->qb_payroll_realm_id);
-                
+            if ($token) {                
                 //Update company refresh token
                 $data_quickbooks['qb_payroll_refresh_token'] = $token->getRefreshToken();
                 $this->CompanyApiConnector_model->update($quickbooks_connector->id, $data_quickbooks);    
+
+                // Get Company Data in QuickBooks
+                $companyQBInfo = $this->quickbooksapi->get_qb_company_info_v2($token->getAccessToken(), $quickbooks_connector->qb_payroll_refresh_token, $quickbooks_connector->qb_payroll_realm_id);
+            } else {
+                $loginStatus = 0;
+                $quickbooks_auth_URL = $this->quickbooksapi->initialize_auth();
             }
         } else {
             $loginStatus = 0;
             $quickbooks_auth_URL = $this->quickbooksapi->initialize_auth();
         }
+
 
         $_SESSION['quickbooks_navloc'] = 'quickbooks_accounting';
         $this->page_data['quickbooks_navloc'] = $_SESSION['quickbooks_navloc'];
@@ -349,6 +354,190 @@ class Tools extends MY_Controller {
         $this->page_data['page']->title = 'Quickbooks Accounting';
         $this->page_data['page']->parent = 'Tools'; 
         $this->load->view('v2/pages/tools/quickbooks_accounting', $this->page_data);
+    }
+
+    public function quickbooks_import($process) {
+        $this->load->library('QuickbooksApi');
+        $this->load->model('CompanyApiConnector_model');
+        $company_id = logged('company_id');
+        $postInput = $this->input->post();
+        
+        $quickbooks_connector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_accounting');  
+        $token = $this->quickbooksapi->refresh_token($quickbooks_connector->qb_payroll_refresh_token, $quickbooks_connector->qb_payroll_realm_id); 
+        
+        $request = $this->quickbooksapi->getDataByQuery(
+            $token->getAccessToken(), 
+            $quickbooks_connector->qb_payroll_refresh_token, 
+            $quickbooks_connector->qb_payroll_realm_id, 
+            $postInput['data'], 
+            $postInput['dateFrom'], 
+            $postInput['dateTo'], 
+            $process,
+            $postInput['startPosition'], 
+            $postInput['maxResults'], 
+        );
+
+        if ($request) { 
+            if ($process == "import") {
+                switch ($postInput['data']) {
+                    case 'Customer':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'givenName' => $request[$i]->GivenName,
+                                'familyName' => $request[$i]->FamilyName,
+                                'companyName' => $request[$i]->CompanyName,
+                                'taxable' => $request[$i]->Taxable,
+                                'billAddr_Line1' => $request[$i]->BillAddr->Line1,
+                                'billAddr_City' => $request[$i]->BillAddr->City,
+                                'billAddr_CountrySubDivisionCode' => $request[$i]->BillAddr->CountrySubDivisionCode,
+                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
+                                'shipAddr_Line1' => $request[$i]->ShipAddr->Line1,
+                                'shipAddr_City' => $request[$i]->ShipAddr->City,
+                                'shipAddr_CountrySubDivisionCode' => $request[$i]->ShipAddr->CountrySubDivisionCode,
+                                'shipAddr_PostalCode' => $request[$i]->ShipAddr->PostalCode,
+                                'primaryPhone_FreeFormNumber' => $request[$i]->PrimaryPhone->FreeFormNumber,
+                                'contactName' => $request[$i]->ContactName,
+                                'altContactName' => $request[$i]->AltContactName,
+                                'customerTypeRef' => $request[$i]->CustomerTypeRef,
+                                'salesRepRef' => $request[$i]->SalesRepRef,
+                                'taxRateRef' => $request[$i]->TaxRateRef,
+                                'paymentMethodRef' => $request[$i]->PaymentMethodRef,
+                                'cCDetail' => $request[$i]->CCDetail,
+                                'balance' => $request[$i]->Balance,
+                                'openBalanceDate' => $request[$i]->OpenBalanceDate,
+                                'balanceWithJobs' => $request[$i]->BalanceWithJobs,
+                                'acctNum' => $request[$i]->AcctNum,
+                                'currencyRef' => $request[$i]->CurrencyRef,
+                                'overDueBalance' => $request[$i]->OverDueBalance,
+                                'totalRevenue' => $request[$i]->TotalRevenue,
+                                'totalExpense' => $request[$i]->TotalExpense,
+                                'preferredDeliveryMethod' => $request[$i]->PreferredDeliveryMethod,
+                                'organization' => $request[$i]->Organization,
+                                'title' => $request[$i]->Title,
+                                'displayName' => $request[$i]->DisplayName,
+                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
+                                'active' => $request[$i]->Active,
+                                'defaultTaxCodeRef' => $request[$i]->DefaultTaxCodeRef,
+                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
+                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('quickbooks_customer', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    case 'Employee':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'givenName' => $request[$i]->GivenName,
+                                'middleName' => $request[$i]->MiddleName,
+                                'familyName' => $request[$i]->FamilyName,
+                                'displayName' => $request[$i]->DisplayName,
+                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
+                                'birthDate' => $request[$i]->BirthDate,
+                                'ssn' => $request[$i]->SSN,
+                                'billableTime' => $request[$i]->BillableTime,
+                                'primaryAddr_Id' => $request[$i]->PrimaryAddr->Id,
+                                'primaryAddr_Line1' => $request[$i]->PrimaryAddr->Line1,
+                                'primaryAddr_City' => $request[$i]->PrimaryAddr->City,
+                                'primaryAddr_CountrySubDivisionCode' => $request[$i]->PrimaryAddr->CountrySubDivisionCode,
+                                'primaryAddr_PostalCode' => $request[$i]->PrimaryAddr->PostalCode,
+                                'hiredDate' => $request[$i]->HiredDate,
+                                'domain' => $request[$i]->Domain,
+                                'sparse' => $request[$i]->Sparse,
+                                'syncToken' => $request[$i]->SyncToken,
+                                'active' => $request[$i]->active,
+                                'v4IdPseudonym' => $request[$i]->v4IdPseudonym,
+                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
+                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('quickbooks_employee', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    case 'Estimate':
+                        
+                        break;
+                    case 'Invoice':
+                        
+                        break;
+                    case 'Item':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'name' => $request[$i]->Name,
+                                'active' => $request[$i]->Active,
+                                'fullyQualifiedName' => $request[$i]->FullyQualifiedName,
+                                'taxable' => $request[$i]->Taxable,
+                                'unitPrice' => $request[$i]->UnitPrice,
+                                'type' => $request[$i]->Type,
+                                'incomeAccountRef_Value' => $request[$i]->IncomeAccountRef->value,
+                                'incomeAccountRef_Name' => $request[$i]->IncomeAccountRef->name,
+                                'purchaseCost' => $request[$i]->PurchaseCost,
+                                'trackQtyOnHand' => $request[$i]->TrackQtyOnHand,
+                                'taxClassificationRef_Value' => $request[$i]->TaxClassificationRef->value,
+                                'taxClassificationRef_Name' => $request[$i]->TaxClassificationRef->name,
+                                'domain' => $request[$i]->Domain,
+                                'sparse' => $request[$i]->Sparse,
+                                'syncToken' => $request[$i]->SyncToken,
+                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
+                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('quickbooks_item', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    case 'Payment':
+                        
+                        break;
+                    case 'Vendor':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'displayName' => $request[$i]->DisplayName,
+                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
+                                'billAddr_Line1' => $request[$i]->BillAddr->Line1,
+                                'billAddr_City' => $request[$i]->BillAddr->City,
+                                'billAddr_CountrySubDivisionCode' => $request[$i]->BillAddr->CountrySubDivisionCode,
+                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
+                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
+                                'primaryEmailAddr_Address' => $request[$i]->PrimaryEmailAddr->Address,
+                                'primaryPhone_FreeFormNumber' => $request[$i]->PrimaryPhone->FreeFormNumber,
+                                'active' => $request[$i]->Active,
+                                'balance' => $request[$i]->Balance,
+                                'vendor1099' => $request[$i]->Vendor1099,
+                                'currencyRef_value' => $request[$i]->CurrencyRef->Value,
+                                'currencyRef_name' => $request[$i]->CurrencyRef->Name,
+                                'domain' => $request[$i]->Domain,
+                                'sparse' => $request[$i]->Sparse,
+                                'syncToken' => $request[$i]->SyncToken,
+                                'v4IDPseudonym' => $request[$i]->V4IDPseudonym,
+                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
+                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('quickbooks_vendor', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    default:
+                        echo 0;
+                        break;
+                }
+            } else if ($process == "read") {
+                echo $request;
+            } else {
+                echo 0;
+            }   
+        } else {
+            echo 0;
+        }
+
+        // echo $request;
     }
 
     public function mailchimp() {

@@ -947,7 +947,8 @@ if ($this->session->userdata('usertimezone') == null) {
                     
     <script type="text/javascript">
         var user_id = <?= $user_id ?> ;
-        var baseURL = window.location.origin;
+        //var baseURL = window.location.origin;
+        var baseURL = '<?= base_url(); ?>';
         var current_user_company_id = <?=logged('company_id')?> ;
         var all_notifications_html = '';
         var notification_badge_value = 0;
@@ -1069,7 +1070,7 @@ if ($this->session->userdata('usertimezone') == null) {
         var channel = pusher.subscribe('nsmarttrac');
         channel.bind('my-event', function(data) {
 
-            console.log(data.user_id);
+            // console.log(data.user_id);
             if (data.notif_action_made == "over8less9") {
                 if (data.user_id == user_id) {
                     notificationRing();
