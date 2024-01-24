@@ -95,7 +95,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input select-all table-select select-all-rules" id="select-all-rules" type="checkbox">
                             </td>
                             <td data-name="Priority">PRIORITY</td>
                             <td data-name="Rule Name">RULE NAME</td>
@@ -113,10 +113,16 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select check-input-rules" type="checkbox">
                                 </div>
                             </td>
-                            <td><?=$rule->priority?></td>
+                            <td>
+                                <?php if($rule->priority == 1) { ?>
+                                    <span class="nsm-badge success">Yes</span>
+                                <?php } else { ?>
+                                    <span class="nsm-badge">No</span>
+                                <?php } ?>
+                            </td>
                             <td><?=$rule->rules_name?></td>
                             <td></td>
                             <td></td>
@@ -145,7 +151,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <?php endforeach; ?>
+                        <?php endforeach; ?>  
 						<?php else : ?>
 						<tr>
 							<td colspan="19">
