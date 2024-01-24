@@ -317,7 +317,6 @@
                                             <div class="col-12">
                                                 <input type="hidden" name="count" id="count" value="0">                                                
                                                 <table class="table table-hover">
-                                                    <input type="hidden" name="count" value="0" id="count">
                                                     <thead style="background-color:#E9E8EA;">
                                                     <tr>
                                                         <th>Name</th>

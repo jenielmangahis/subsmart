@@ -15,15 +15,14 @@ $config['google_contact_redirect_url']    = 'http://nsmartrac.org/tools/api_goog
 $config['qb_client_secret']       = 'lbQD1t129fyCzeLgPTPlHqtteXA66Jc7xMDcS2xt';*/
 //$config['qb_redirect_uri']       = 'https://nsmartrac.org/tools/quickbooks';
 
-//QB Development
-/*$config['qb_client_id']     = 'AB8v4ZI2taAp4pMFdPazPReIe2nFvb5NwV5ebgeXkR1tl0DtAY';
-$config['qb_client_secret'] = '1q73wP26tjtVxwQIzmTuzBtHwR3In8DsHxd4QMOq';
-$config['qb_redirect_uri']  = 'https://nsmartrac.com/tools/quickbooks_connect';
-$config['qb_auth_scope']    = 'com.intuit.quickbooks.accounting openid profile email phone address';
-$config['qb_base_url']      = 'development';
-*/
+// QB Development
+// $config['qb_client_id']     = 'AB8v4ZI2taAp4pMFdPazPReIe2nFvb5NwV5ebgeXkR1tl0DtAY';
+// $config['qb_client_secret'] = '1q73wP26tjtVxwQIzmTuzBtHwR3In8DsHxd4QMOq';
+// $config['qb_redirect_uri']  = 'https://nsmartrac.local/tools/quickbooks_connect';
+// $config['qb_auth_scope']    = 'com.intuit.quickbooks.accounting openid profile email phone address';
+// $config['qb_base_url']      = 'development';
 
-//QB Production
+// QB Production
 $config['qb_client_id']     = 'ABxTY4sNiuXKKTPvPsFuUE6dne41fWAu0yoD9zMJIPiTOfPpP2';
 $config['qb_client_secret'] = 'OZ9fkgH5iu7qV1RkxcQGqbpE5rl6Zbr5Y1Oo7khJ';
 $config['qb_redirect_uri']  = 'https://nsmartrac.com/tools/quickbooks_connect';
