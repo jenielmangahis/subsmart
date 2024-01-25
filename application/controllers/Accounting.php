@@ -1392,7 +1392,7 @@ class Accounting extends MY_Controller
     }
 
     public function workerscomp()
-    {
+    {        
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
 
@@ -17089,6 +17089,88 @@ class Accounting extends MY_Controller
         //     exit(0);
         // }
 
+    }
+
+    public function ajax_create_workers_comp_quote()
+    {
+        $is_success = 1;
+		$msg  = 'Cannot create data';
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // dd($_POST);
+        $new_data = array(
+            'general_industry'              => $this->input->post('general_industry'),
+            'type_of_business'              => $this->input->post('type_of_business'),
+            'classification'                => $this->input->post('classification'),
+            'business_name'                 => $this->input->post('business_name'),
+            'business_address'              => $this->input->post('business_address'),
+            'suite'                         => $this->input->post('suite'),
+            'year_started'                  => $this->input->post('year_started'),
+            'legal_entity_type'             => $this->input->post('legal_entity_type'),
+            'federal_identification_number' => $this->input->post('federal_identification_number'),
+            'created_by'                    => $user_id,
+            'company_id'                    => $comp_id,
+            'date_created'                  => date("Y-m-d H:i:s"),
+            'date_modified'                 => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->account_model->createQuoteBusiness($new_data);
+
+        $new_data = array(
+            'total_est_annual_payroll'      => $this->input->post('total_est_annual_payroll'),
+            'payroll_frequency'             => $this->input->post('payroll_frequency'),
+            'quote_business'                => $addQuery,
+            'company_id'                    => $comp_id,
+            'date_created'                  => date("Y-m-d H:i:s"),
+            'date_modified'                 => date("Y-m-d H:i:s")
+        );
+
+        $addQuery2 = $this->account_model->createQuoteManagement($new_data);
+
+        $a = $this->input->post('mfullName');
+        $b = $this->input->post('mRole');
+        $c = $this->input->post('classCode');
+        $d = $this->input->post('annualPayroll');
+        $e = $this->input->post('mOwnership');
+
+        if($a){
+            $i = 0;
+            foreach ($a as $row) {
+                $data['name'] = $a[$i];
+                $data['role'] = $b[$i];
+                $data['class_code'] = $c[$i];
+                $data['annual_payroll'] = $d[$i];
+                $data['ownership'] = $e[$i];
+                $data['quote_management_id'] = $addQuery;
+                // $data['created_at'] = date("Y-m-d H:i:s");
+                // $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->account_model->createQuoteEmployees($data);
+                $i++;
+            }
+        }
+
+        $new_data = array(
+            'fname'                         => $this->input->post('first_name'),
+            'lname'                         => $this->input->post('last_name'),
+            'phone'                         => $this->input->post('phone'),
+            'email'                         => $this->input->post('email'),
+            'requested_policy_start_date'   => $this->input->post('policy_start_date'),
+            'quote_business'                => $addQuery,
+            'company_id'                    => $comp_id,
+            'date_created'                  => date("Y-m-d H:i:s"),
+            'date_modified'                 => date("Y-m-d H:i:s")
+        );
+
+        $addQuery3 = $this->account_model->createQuoteContacts($new_data);
+
+        $is_success = 1;
+        $msg = '';
+
+        $data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
+        exit;
     }
 }
 

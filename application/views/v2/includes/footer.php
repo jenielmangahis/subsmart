@@ -138,6 +138,18 @@
         $(document).ready(function() {
             getNotificationsAll();
 
+            $(".select-all-rules").click(function(){
+                if(this.checked){
+                    $('.check-input-rules').each(function(){
+                        this.checked = true;
+                    });
+                }else{
+                    $('.check-input-rules').each(function(){
+                        this.checked = false;
+                    });
+                }                
+            });            
+
             $('.hdr-drpdown-multi-accounts').on('click', function(){
                 var parent = $(this).closest('li');
                 if(parent.hasClass('shown')){

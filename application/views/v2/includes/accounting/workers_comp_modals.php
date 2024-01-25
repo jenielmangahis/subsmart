@@ -1,9 +1,9 @@
-<div class="modal fade nsm-modal getQuote" id="getQuote" tabindex="" role="dialog" aria-labelledby="myModalLabel2" style="font-family:'Quicksand', sans-serif !important;">
+<div class="modal fade nsm-modal getQuote" id="getQuote" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="print_preview_vendors_modal_label">
-                    <!-- <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" /> -->
+                    Get a Quote
                 </span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
@@ -23,9 +23,13 @@
                         <div class="step-counter">3</div>
                         <div class="step-name">Quote</div>
                     </div>
+                    <div class="stepper-item ">
+                        <div class="step-counter">4</div>
+                        <div class="step-name">Send</div>
+                    </div>
                 </div>
 
-                <div class="tab">
+                <div class="tab" id="form-1">
                     <h4>Your business</h4>
                     <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
 
@@ -86,24 +90,29 @@
                     </div>
                     
                     <br>Business name <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
-                    <input type="text" class="form-control nsm-field" name="business_name" style="font-family: 'Quicksand', sans-serif !important">
+                    <input type="text" class="form-control nsm-field" name="business_name">
 
                     <br>Principal business address <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
-                    <input type="text" class="form-control nsm-field"  name="business_address" style="font-family: 'Quicksand', sans-serif !important">
+                    <input type="text" class="form-control nsm-field"  name="business_address">
                     <br>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             Suite/Floor <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
-                            <br><input type="text" class="form-control nsm-field" style="" name="suite" style="font-family: 'Quicksand', sans-serif !important">
-                        </div>
+                            <br><input type="text" class="form-control nsm-field" style="" name="suite">
+                        </div> 
                         <div class="col-md-4">
                             Year business started <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
                             <br>
-                            <select class="form-control nsm-field" id="year" style="" name="year_started">
-                                <option></option>
-                            </select>
+                            <input type="number" max="<?= date("Y"); ?>" value="<?= date("Y"); ?>" name="year_started" id="year" class="form-control nsm-field date-picker-year" />
+                        </div>                                             
+                    </div>  
+                    <br> 
+                    <div class="row">
+                        <div class="col-md-6">
+                            Federal Identification Number <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
+                            <input type="text" class="form-control nsm-field" name="federal_identification_number">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             Legal entity type<br>
                             <select class="form-control nsm-field" name="legal_entity_type">
                                 <option value="Corporation">Corporation</option>
@@ -114,16 +123,14 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                    </div>                    
-
-                    <br>Federal Identification Number <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
-                    <input type="text" class="form-control nsm-field" style="width:40%;" name="federal_identification_number" style="font-family: 'Quicksand', sans-serif !important">
+                        
+                    </div>
                 </div>
-                <div class="tab">
+                <div class="tab" id="form-2">
                     <h4>Your owners, officers, and employees</h4>
                     <p>List all owners/officers and W-2 employees. In most cases, owners and officers may be excluded from a workers' comp policy, but this varies from state to state. Learn more</p>
 
-                    <table class="table">
+                    <table class="table" id="quote-employee-owners">
                         <thead>
                             <th>NAME</th>
                             <th>CLASS CODE</th>
@@ -135,10 +142,11 @@
                         </tbody>
                     </table>
                     <br>
-                    <a class="link-modal-open text-decoration-none" href="#" id="" data-bs-toggle="modal" data-bs-target="#employee_list">Add new employee or owner</a>
-                    <br>
+                    <a class="link-modal-open text-decoration-none nsm-button primary" href="#" id="" data-bs-toggle="modal" data-bs-target="#employee_list">Add new employee or owner</a>
+                    <br />
+                    <br />
                     <br>Total estimated annual payroll <span style="color:red;">*</span><span class="required_fields" style="color:red;display:none;">Required Field</span>
-                    <input type="text" class="form-control nsm-field" name="total_est_annual_payroll" style="font-family: 'Quicksand', sans-serif !important">
+                    <input type="text" class="form-control nsm-field" name="total_est_annual_payroll">
 
                     <br>Payroll frequency
                     <select class="form-control nsm-field" name="payroll_frequency">
@@ -147,7 +155,7 @@
                         <option value="Biweekly">Biweekly</option>
                     </select>
                 </div>
-                <div class="tab">
+                <div class="tab" id="form-3">
                     <h4>A few more details about your business</h4>
                     <p>Answer these questions to help us get a better picture of your business</p><br>
 
@@ -252,36 +260,37 @@
                         </tr>
                     </table>
                 </div>
-                <div class="tab">
+                <div class="tab" id="form-4">
                     <h4>Is this contact info up to date?</h4>
-                    <p>Let our insurance partner, AP Intego, know how to reach you to discuss and finalize your quote.</p>
+                    <!-- <p>Let our insurance partner, AP Intego, know how to reach you to discuss and finalize your quote.</p> -->
+                    <p>Let us know how to reach you to discuss and finalize your quote.</p>
 
                     <div class="row">
                         <div class="col-md-6">
                             First name
-                            <input type="text" class="form-control nsm-field" name="first_name" style="font-family: 'Quicksand', sans-serif !important">
+                            <input type="text" class="form-control nsm-field" name="first_name">
                         </div>
                         <div class="col-md-6">
                             Last name
-                            <input type="text" class="form-control nsm-field" name="last_name" style="font-family: 'Quicksand', sans-serif !important">
+                            <input type="text" class="form-control nsm-field" name="last_name">
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
                             Phone
-                            <input type="text" class="form-control nsm-field" name="phone" style="font-family: 'Quicksand', sans-serif !important">
+                            <input type="text" class="form-control nsm-field" name="phone">
                         </div>
                         <div class="col-md-6">
                             Email
-                            <input type="email" class="form-control nsm-field" name="email" style="font-family: 'Quicksand', sans-serif !important">
+                            <input type="email" class="form-control nsm-field" name="email">
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
                             Requested policy start date
-                            <input type="text" class="form-control nsm-field" id="datepicker_date" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date"  style="font-family: 'Quicksand', sans-serif !important">
+                            <input type="text" class="form-control nsm-field" id="datepicker_date" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date">
                         </div>
                         <!-- <div class="col-md-6">
                             Email
@@ -314,7 +323,7 @@
                 <div class="row">
                     <div class="col-md-6 col-12">
                         Name
-                        <input type="text" class="form-control nsm-field" id="fullName" style="font-family: 'Quicksand', sans-serif !important">
+                        <input type="text" class="form-control nsm-field" id="fullName">
                     </div>
                     <div class="col-md-6 col-12">
                         Role
@@ -346,13 +355,13 @@
                     </div>
                     <div class="col-md-6">
                         Ownership
-                        <input type="text" class="form-control nsm-field" id="mOwnership" style="font-family: 'Quicksand', sans-serif !important">
+                        <input type="text" class="form-control nsm-field" id="mOwnership">
                     </div>
                 </div>
             </div>
             <div class="modal-footer modal-footer-detail">
                 <div class="button-modal-list">
-                    <button class="nsm-button success addEmployeeData" id="addEmployeeData" data-bs-dismiss="modal">Add</button>
+                    <button class="nsm-button success addEmployeeData" id="addEmployeeData">Add</button>
                 </div>
             </div>
         </div>
@@ -369,7 +378,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
+                <form id="regForm" action="NULL">
                     <div style="padding:3%;border: solid gray 1px;width:60%;margin:-5px 20% 1% 20%;">
                         <h4>Connect your policy to nSmarTrac</h4>
 
@@ -386,7 +395,7 @@
                                     <option value="Guard">Guard</option>
                                     <option value="Other (please specify)">Other (please specify)</option>
                                 </select> 
-                                <input type="text" class="form-control nsm-field" id="insuranceCarrier" style="margin-top:10px;" style="font-family: 'Quicksand', sans-serif !important">
+                                <input type="text" class="form-control nsm-field" id="insuranceCarrier" style="margin-top:10px;">
                                 <br>
                                 Policy renewal date
                                 <table class="table">

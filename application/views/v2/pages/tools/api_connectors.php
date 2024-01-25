@@ -74,6 +74,33 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="">
+                            <div class="nsm-card-content h-100">
+                                <div class="row h-100 align-content-between">
+                                    <div class="col-12 text-center mb-3">
+                                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_quickbooks_payroll.png">
+
+                                        <div class="nsm-card-title">
+                                            <span>QuickBooks Accounting</span>
+                                        </div>
+                                        <label class="content-subtitle mb-2">Accounting Connectors</label>
+                                        <label class="nsm-subtitle d-block">
+                                            The connector allows you to import accounting data.
+                                        </label>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="row align-items-center mb-3">
+                                            <!-- <div class="col-12">
+                                                <label class="nsm-subtitle text-success">Free</label>
+                                            </div> -->
+                                        </div>
+                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks_accounting'); ?>'">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- <div class="col-12 col-md-3">
                         <div class="nsm-card primary p-5" role="">
                             <div class="nsm-card-content h-100">

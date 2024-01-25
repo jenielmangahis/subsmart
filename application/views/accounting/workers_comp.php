@@ -83,6 +83,9 @@
   border: 3px solid green;
   text-align: center;
 }
+.form-control{
+  font-family:'Quicksand', sans-serif !important;
+}
 
 /* Latest compiled and minified CSS included as External Resource*/
 
@@ -563,6 +566,12 @@ var navListItems = $('div.setup-panel div a'),
 
 allWells.hide();
 
+$('#datepicker_date').datepicker({
+    //format: 'yyyy-mm-dd',
+    format: 'mm/dd/yyyy',
+    autoclose: true,
+});
+
 navListItems.click(function (e) {
 	e.preventDefault();
 	var $target = $($(this).attr('href')),
@@ -627,23 +636,79 @@ function showTab(n) {
 }
 
 function nextPrev(n) {
+  var is_valid = 1;
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
-  // Exit the function if any field in the current tab is invalid:
-  if (n == 1 && !validateForm()) return false;
-  // Hide the current tab:
-  x[currentTab].style.display = "none";
-  // Increase or decrease the current tab by 1:
-  currentTab = currentTab + n;
-  // if you have reached the end of the form...
-  if (currentTab >= x.length) {
-    // ... the form gets submitted:
-    document.getElementById("regForm").submit();
-    return false;
+  var tabId = x[currentTab].id;
+  if( tabId == 'form-2' && n > 0 ){
+    var rowCount = $('#quote-employee-owners >tbody >tr').length;
+    if( rowCount == 0 ){
+
+      Swal.fire({
+          title: 'Error',
+          text: 'Please specify at least 1 owner or employee',
+          icon: 'error',
+          showCancelButton: false,
+          confirmButtonText: 'Okay'
+      });
+
+      is_valid = 0;
+    }
   }
+
+  if( is_valid == 1 ){
+    // Exit the function if any field in the current tab is invalid:
+      if (n == 1 && !validateForm()) return false;
+    // Hide the current tab:    
+    //console.log(tab.attr('id'))    
+    x[currentTab].style.display = "none";
+    // Increase or decrease the current tab by 1:
+    currentTab = currentTab + n;
+    // if you have reached the end of the form...
+    if (currentTab >= x.length) {
+      // ... the form gets submitted:
+      document.getElementById("regForm").submit();
+      return false;
+    }
+  }    
   // Otherwise, display the correct tab:
   showTab(currentTab);
 }
+
+$(document).on('submit', '#regForm', function(e){
+  e.preventDefault();
+  var form = $(this);        
+  $.ajax({
+      type: "POST",
+      url: base_url + "accounting/_create_workers_comp",
+      data: form.serialize(), 
+      dataType:'json',
+      success: function(result)
+      {
+        $('#new_estimate_modal').modal('hide');
+        if(result.is_success == 1){
+          Swal.fire({                        
+              text: "Quote was successfully created.",
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Okay'
+          }).then((result) => {
+              //if (result.value) {                    
+                location.reload();
+              //}
+          });                     
+        }else {
+          Swal.fire({
+              title: 'Error',
+              text: 'Cannot create data.',
+              icon: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Okay'
+          });
+        }
+      }
+  });
+});
 
 function validateForm() {
   // This function deals with validation of the form fields
@@ -653,7 +718,7 @@ function validateForm() {
   // A loop that checks every input field in the current tab:
   for (i = 0; i < y.length; i++) {
     // If a field is empty...
-    if (y[i].value == "") {
+    if (y[i].value === "") {
       // add an "invalid" class to the field:
       y[i].className += " invalid";
       $('.required_fields').show();
@@ -682,33 +747,7 @@ function fixStepIndicator(n) {
 <script>
 (function() {
   $(document).ready(function() {
-    // $('.switch-input').on('change', function() {
-    //   var isChecked = $(this).is(':checked');
-    //   var selectedData;
-    //   var $switchLabel = $('.switch-label');
-    //   console.log('isChecked: ' + isChecked); 
-      
-    //   if(isChecked) {
-    //     selectedData = $switchLabel.attr('data-on');
-    //   } else {
-    //     selectedData = $switchLabel.attr('data-off');
-    //   }
-      
-    //   console.log('Selected data: ' + selectedData);
-      
-    // });
-    
-    // // Params ($selector, boolean)
-    // function setSwitchState(el, flag) {
-    //   el.attr('', flag);
-    // }
-    
-    // // Usage
-    // setSwitchState($('.switch-input'), true);    
-
-    $("*[id^='switch-input']").each(function() {
-      // alert('test');
-            // $(this).upload()
+    $("*[id^='switch-input']").each(function() {      
             $(this).change(function(){ 
             var isChecked = $(this).is(':checked');
             var selectedData;
@@ -743,27 +782,59 @@ function fixStepIndicator(n) {
 
 <script>
 $("#addEmployeeData").click(function () {
-// alert('test');
+  var is_valid = 1;
   var fullName = $("#fullName").val();
   var mRole = $("#mRole").val();
   var classCode = $("#classCode").val();
   var annualPayroll = $("#annualPayroll").val();
   var mOwnership = $("#mOwnership").val();
 
-              markup = "<tr id=\"ss\">" +
-                "<td><span>"+fullName+"</span><input  value='"+fullName+"' type=\"hidden\" name=\"mfullName[]\"><input  value='"+annualPayroll+"' type=\"hidden\" name=\"annualPayroll[]\"></td>\n" +
-                "<td><span>"+classCode+"</span><input  value='"+classCode+"' type=\"hidden\" name=\"classCode[]\"></td>\n" +
-                "<td><span>"+mRole+"</span><input  value='"+mRole+"' type=\"hidden\" name=\"mRole[]\"></td>\n" +
-                "<td><span>"+mOwnership+"</span><input  value='"+mOwnership+"' type=\"hidden\" name=\"mOwnership[]\"></td>\n" +
-                "<td>\n" +
-                "<a href=\"#\" class=\"remove nsm-button error\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                "</td>\n" +
-                "</tr>";
-            tableBody = $("#employeesTable");
-            tableBody.append(markup);
+  if( fullName == '' ){
+    Swal.fire({
+        title: 'Error',
+        text: 'Please specify name',
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Okay'
+    });
 
-            $("#divpopemp").load(location.href + " #divpopemp");
+    is_valid = 0;
+  }
 
+  if( mOwnership == '' ){
+    Swal.fire({
+        title: 'Error',
+        text: 'Please specify ownership',
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Okay'
+    });
+
+    is_valid = 0;
+  }
+
+
+  if( is_valid == 1 ){
+    $('#employee_list').modal('hide');
+
+    markup = "<tr id=\"ss\">" +
+    "<td><span>"+fullName+"</span><input  value='"+fullName+"' type=\"hidden\" name=\"mfullName[]\"><input  value='"+annualPayroll+"' type=\"hidden\" name=\"annualPayroll[]\"></td>\n" +
+    "<td><span>"+classCode+"</span><input  value='"+classCode+"' type=\"hidden\" name=\"classCode[]\"></td>\n" +
+    "<td><span>"+mRole+"</span><input  value='"+mRole+"' type=\"hidden\" name=\"mRole[]\"></td>\n" +
+    "<td><span>"+mOwnership+"</span><input  value='"+mOwnership+"' type=\"hidden\" name=\"mOwnership[]\"></td>\n" +
+    "<td>\n" +
+    "<a href=\"#\" class=\"remove nsm-button error\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+    "</td>\n" +
+    "</tr>";
+    tableBody = $("#employeesTable");
+    tableBody.append(markup);
+
+    $("#divpopemp").load(location.href + " #divpopemp");
+
+    $('#fullName').val('');
+    $('#annualPayroll').val('');
+    $('#mOwnership').val('');
+  }  
 });
 
 </script>

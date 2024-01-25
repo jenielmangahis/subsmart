@@ -2427,6 +2427,12 @@ class Debug extends MY_Controller {
 
     }
 
+    public function debugApi(){
+        $token = 'EAAAEOsPygSaRwy27WWC3NEg0cstB9LXLw11cA4uFNb38YCW4XBIxtOzug2s_lZf';
+        $status = accessTokenStatus($token);       
+        
+    }
+    
     public function customerQuery()
     {
         $company_id = 31;
