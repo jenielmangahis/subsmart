@@ -1502,7 +1502,10 @@ $route['appointment_types/_create_appointment_type'] = 'Appointment_Types/ajax_c
 $route['appointment_types/_update_appointment_type'] = 'Appointment_Types/ajax_update_appointment_type';
 $route['appointment_types/_delete_appointment_type'] = 'Appointment_Types/ajax_delete_appointment_type';
 
+//Items
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
+$route['items/_add_product_list'] = 'Items/ajax_add_product_list';
+$route['items/_add_services_list'] = 'Items/ajax_add_services_list';
 
 //Support
 $route['support'] = 'Support/index';
