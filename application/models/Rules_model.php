@@ -160,11 +160,20 @@ class Rules_model extends MY_Model
     public function deleteRulesData($id){
         $this->db->where('id',$id);
         $this->db->delete('accounting_rules');
-//        Delete Conditions
+        //        Delete Conditions
         $this->db->where('rules_id',$id);
         $this->db->delete('accounting_rules_conditions');
         //        Delete Categories
         $this->db->where('rules_id',$id);
         $this->db->delete('accounting_rules_category');
+    }
+
+    public function deleteMultiRulesData($id) {
+        $this->db->where('id',$id);
+        $this->db->delete('accounting_rules');
+
+        //Delete Categories
+        $this->db->where('rules_id',$id);
+        $this->db->delete('accounting_rules_category');        
     }
 }

@@ -170,6 +170,7 @@ $(document).ready(function() {
             $(".add-split-section").last().remove();
         }
     });
+    
     //Delete Rules
     $(document).on('click', '#deleteRules', function() {
         var id = $(this).attr('data-id');
@@ -200,6 +201,42 @@ $(document).ready(function() {
             }
         });
     });
+
+    //Multiple Delete Rules
+    $(document).on('click', '#multiDeleteRules', function() {
+        var delete_url = base_url + 'accounting/multiDeleteRulesData';
+        var frmData = $("#rulesTblFrm").serialize();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: delete_url,
+                    method: "POST",
+                    data: frmData,
+                    //data: JSON.stringify(frmData),
+                    success: function(data) {
+                        console.log(data);
+
+                        $('.displayRules').html(data);
+                        window.location.reload();
+                        Swal.fire(
+                            'Deleted!',
+                            'Rule has been deleted.',
+                            'success'
+                        );
+                    }
+                });
+            }
+        });
+    });    
 
     // Expenses page
     function getArrayCategoriesId(category_id) {
