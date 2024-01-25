@@ -274,6 +274,11 @@ class Invoice extends MY_Controller
     {
         $this->load->helper('functions');
         $this->load->model('JobTags_model');
+        $this->load->model('TaxRates_model');
+
+        add_footer_js(array(        
+            'assets/js/v2/add_items.js',                
+        ));
 
         $query       = $this->input->get();        
         $workorder   = array();
@@ -317,7 +322,14 @@ class Invoice extends MY_Controller
             $default_cust_id = $this->input->get('cus_id');
         }
         
+        $defaullTaxRate = $this->TaxRates_model->getDefaultTaxRateByCompanyId($company_id);
+        if( $defaullTaxRate ){
+            $default_tax_percentage = $defaullTaxRate->rate;
+        }else{
+            $default_tax_percentage = 7.5;
+        }
 
+        $this->page_data['default_tax_percentage'] = $default_tax_percentage;
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['default_cust_id'] = $default_cust_id;
         $this->page_data['workorder']  = $workorder;
@@ -2362,11 +2374,12 @@ class Invoice extends MY_Controller
     {
         $this->load->model('JobTags_model');
         $this->load->model('Invoice_settings_model');
-        $this->load->model('AcsProfile_model');        
+        $this->load->model('AcsProfile_model');  
+        $this->load->model('Items_model');      
 
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
-
+        
         $post = $this->input->post();
         $cid  = logged('company_id');
         $uid  = logged('id');
@@ -2418,6 +2431,19 @@ class Invoice extends MY_Controller
                 $balance = $post['grand_total'];
             }
 
+            //Attachment
+            $attachmentFolderPath = "./uploads/invoice/attachments/".$cid."/";            
+            if(!file_exists($attachmentFolderPath)) {
+                mkdir($attachmentFolderPath, 0777, true);
+            }
+
+            if(isset($_FILES['attachment_file']) && $_FILES['attachment_file']['tmp_name'] != '') {
+                $tmp_name  = $_FILES['attachment_file']['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES['attachment_file']['name'])));
+                $attachment_file = $invoiceNumber."_attachment_".basename($_FILES["attachment_file"]["name"]);
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment_file);
+            }
+
             $new_data = array(
                 'customer_id'               => $post['customer_id'],
                 'job_location'              => $post['jobs_location'],
@@ -2444,7 +2470,7 @@ class Invoice extends MY_Controller
                 'location_scale'            => '',
                 'message_to_customer'       => '',
                 'terms_and_conditions'      => $post['terms_and_conditions'],            
-                'attachments'               => '',
+                'attachments'               => $attachment_file,
                 'status'                    => $post['status'],
                 'company_id'                => $cid,
                 'deposit_request_type'      => '',
@@ -2529,17 +2555,51 @@ class Invoice extends MY_Controller
                 $this->Invoice_settings_model->create($invoice_settings_data);
             }
 
-            //Items
-            if( $post['item_id'] ){
-                foreach( $post['item_id'] as $key => $itemid ){
+            //Invoice Products
+            if( $post['productIds'] && count($post['productIds']) > 0 ){
+                foreach( $post['productIds'] as $key => $pid ){
+                    $storage_id = $post['storageLocIds'][$key];
                     $invoice_item_data = [
                         'invoice_id' => $invoice_id,
-                        'items_id' => $itemid,
-                        'qty' => $post['quantity'][$key],
-                        'cost' => $post['price'][$key],
-                        'tax' => $post['tax'][$key],
-                        'discount' => $post['discount'][$key],
-                        'total' => $post['total'][$key]
+                        'storage_loc_id' => $storage_id,
+                        'item_type' => 'Product',
+                        'items_id' => $pid,
+                        'qty' => $post['productQty'][$key],
+                        'cost' => $post['productPrice'][$key],
+                        'tax' => $post['productTax'][$key],
+                        'discount' => $post['productDiscount'][$key],
+                        'total' => $post['productTotal'][$key]
+                    ];
+    
+                    $this->invoice_model->add_invoice_details($invoice_item_data);                    
+
+                    //Get Product item storage and deduct quantity                    
+                    $storageLocation = $this->Items_model->getItemLocation($storage_id, $pid);
+                    if( $storageLocation ){
+                        //Update qty
+                        if( $storageLocation->qty >= $post['productQty'][$key] ){
+                            $new_qty = $storageLocation->qty - $post['productQty'][$key];
+                        }else{
+                            $new_qty = 0;
+                        }
+
+                        $this->Items_model->updateLocationQty($storage_id, $pid, $new_qty);
+                    }
+                }
+            }
+
+            //Invoice Services
+            if( $post['serviceIds'] && count($post['serviceIds']) > 0 ){
+                foreach( $post['serviceIds'] as $key => $sid ){
+                    $invoice_item_data = [
+                        'invoice_id' => $invoice_id,
+                        'item_type' => 'Service',
+                        'items_id' => $sid,
+                        'qty' => $post['serviceQty'][$key],                        
+                        'cost' => $post['servicePrice'][$key],
+                        'tax' => $post['serviceTax'][$key],
+                        'discount' => $post['serviceDiscount'][$key],
+                        'total' => $post['serviceTotal'][$key]
                     ];
     
                     $this->invoice_model->add_invoice_details($invoice_item_data);

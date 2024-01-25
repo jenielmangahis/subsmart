@@ -622,7 +622,7 @@ class Items_model extends MY_Model
     public function getItemLocation($locationId, $itemId)
     {
         $this->db->where('item_id', $itemId);
-        $this->db->where('id', $locationId);
+        $this->db->where('loc_id', $locationId);
         $query = $this->db->get($this->table_has_location);
         return $query->row();
     }
@@ -640,7 +640,7 @@ class Items_model extends MY_Model
     public function updateLocationQty($locationId, $itemId, $newQty)
     {
         $this->db->where('item_id', $itemId);
-        $this->db->where('id', $locationId);
+        $this->db->where('loc_id', $locationId);
         return $this->db->update($this->table_has_location, ["qty" => $newQty]);
     }
 
@@ -921,6 +921,36 @@ class Items_model extends MY_Model
     {
         $insert = $this->db->insert('storage_loc', $data);
         return $this->db->insert_id();
+    }
+
+    public function getAllIsActiveByCompanyIdAndItemType($company_id,$item_type, $search=array())
+    {
+        $this->db->select('items.*,item_categories.name AS category_name');
+        $this->db->from($this->table);
+        $this->db->join('item_categories', 'items.item_categories_id = item_categories.item_categories_id','left');
+        $this->db->where('items.company_id', $company_id);
+        $this->db->where('items.type', $item_type);
+        $this->db->where('items.is_active', 1);
+
+        if( !empty($search) ){
+            $this->db->group_start();
+            foreach($search as $s){
+                $this->db->or_like($s['field'], $s['value'], 'both');
+            }
+            $this->db->group_end();
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllItemStorageQuantityByItemId($item_id){
+        $this->db->select('items_has_storage_loc.*,storage_loc.location_name AS storage_location');
+        $this->db->from($this->table_has_location);
+        $this->db->join('storage_loc', 'items_has_storage_loc.loc_id = storage_loc.loc_id','left');
+        $this->db->where('items_has_storage_loc.item_id', $item_id);
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

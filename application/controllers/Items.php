@@ -376,6 +376,67 @@ class Items extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_add_product_list()
+    {
+        $this->load->model('Items_model');
+        
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        if( isset($post['product_name']) && $post['product_name'] != '' ){
+            $search[] = ['field' => 'items.title', 'value' => trim($post['product_name'])];
+            $items = $this->Items_model->getAllIsActiveByCompanyIdAndItemType($cid,'Product',$search);
+        }else{
+            $items = $this->Items_model->getAllIsActiveByCompanyIdAndItemType($cid,'Product');
+        }        
+        
+        $companyItems = [];
+        foreach($items as $i){    
+            $item_data = [
+                'id' => $i->id,
+                'name' => $i->title,
+                'price' => $i->price,
+                'retail' => $i->retail,
+                'category' => $i->category_name
+            ];
+            $storage = $this->Items_model->getAllItemStorageQuantityByItemId($i->id);
+            if( $storage ){                
+                $companyItems[$i->id] = ['storage' => $storage, 'item' => $item_data];
+            }
+        }
+
+        $this->page_data['companyItems'] = $companyItems;
+        $this->load->view('v2/pages/items/ajax_add_product_list', $this->page_data);
+    }
+
+    public function ajax_add_services_list()
+    {
+        $this->load->model('Items_model');
+        
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        if( isset($post['service_name']) && $post['service_name'] != '' ){
+            $search[] = ['field' => 'items.title', 'value' => trim($post['service_name'])];
+            $items = $this->Items_model->getAllIsActiveByCompanyIdAndItemType($cid,'Service',$search);
+        }else{
+            $items = $this->Items_model->getAllIsActiveByCompanyIdAndItemType($cid,'Service');
+        }        
+        
+        $companyServices = [];
+        foreach($items as $i){    
+            $service_data = [
+                'id' => $i->id,
+                'name' => $i->title,
+                'price' => $i->price,
+                'retail' => $i->retail,
+                'category' => $i->category_name
+            ];
+            $companyServices[$i->id] = ['services' => $service_data];
+        }
+
+        $this->page_data['companyServices'] = $companyServices;
+        $this->load->view('v2/pages/items/ajax_add_services_list', $this->page_data);
+    }
 }
 
 

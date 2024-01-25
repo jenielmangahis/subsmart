@@ -479,6 +479,23 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    // This method needs is_checked field. 
+    // Only used in correcting customer records
+    public function getAllNotChecked($limit = 0)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_checked',0);   
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $query = $this->db->get();        
+        return $query->result();
+    }
 }
 
 /* End of file AcsProfile_model.php */
