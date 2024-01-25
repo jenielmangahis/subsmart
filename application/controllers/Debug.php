@@ -2533,6 +2533,75 @@ class Debug extends MY_Controller {
 
         echo $query;
     }
+    
+    public function fixCustomerRecords()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $total_updated = 0;
+
+        $limit = 2000;
+        $customers = $this->AcsProfile_model->getAllNotChecked($limit);
+        if( $customers ){            
+            foreach($customers as $c){
+                $to_check = 0;  
+                
+                $default_customer_type = $c->customer_type;
+                if( $c->customer_type == '' ){
+                    $to_check = 1;
+                    $default_customer_type = 'Residential';
+                }
+                
+                $default_phone_m = 'NA';
+                if( $c->phone_m == '' ){
+                    $to_check = 1;
+                    if( $c->phone_h != '' ){
+                        $default_phone_m = $c->phone_h;
+                    }
+                }else{
+                    $default_phone_m = $c->phone_m;
+                }
+
+                $phone_h = str_replace($c->phone_h, " ","");
+                $default_phone_h = 'NA';
+                if( trim($phone_h) == '' ){
+                    $to_check = 1;
+                    if( $c->phone_m != '' ){
+                        $default_phone_h = $c->phone_m;
+                    }
+                }else{
+                    $default_phone_h = $c->phone_h;
+                }
+
+                $default_mail_add = 'NA';
+                if( trim($c->mail_add) == '' ){
+                    $to_check = 1;
+                    if( $c->cross_street != '' ){
+                        $default_mail_add = $c->cross_street;
+                    }
+                }else{
+                    $default_mail_add = $c->mail_add;
+                }
+
+                if( $to_check == 1 ){
+                    //Do update
+                    $data = [
+                        'customer_type' => $default_customer_type,
+                        'phone_m' => $default_phone_m,
+                        'phone_h' => $default_phone_h,
+                        'mail_add' => $default_mail_add,
+                        'is_checked' => 1
+                    ];
+                    $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
+                    
+                    $total_updated++;
+                }
+                
+            }
+        }
+
+        echo 'Total updated :' .$total_updated;        
+    }
 }
 /* End of file Debug.php */
 
