@@ -127,7 +127,13 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td><?=$rule->is_active === '1' ? 'Active' : 'Inactive'?></td>
+                            <td>
+                                <?php if($rule->is_active == 1) { ?>
+                                    <span class="nsm-badge success">Active</span>
+                                <?php } else { ?>
+                                    <span class="nsm-badge">Inactive</span>
+                                <?php } ?>                                
+                            </td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -138,13 +144,14 @@
                                             <a class="dropdown-item" href="#">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Copy</a>
+                                            <a class="dropdown-item dropdown-item-copy-rule copyRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="copyRule">Copy</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Disable</a>
+     
+                                            <a class="dropdown-item dropdown-item-disable-rule disableRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="disableRule">Disable</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item dropdown-item-copy-rule deleteSingleRules" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="deleteSingleRules">Delete</a>
                                         </li>
                                     </ul>
                                 </div>

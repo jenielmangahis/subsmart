@@ -202,6 +202,127 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('click', '.deleteSingleRules', function() {
+        var delete_url = base_url + 'accounting/deleteSingleRuleData';
+        var id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: delete_url,
+                    method: "POST",
+                    data: { id: id },
+                    success: function(data) {
+                        //$('.displayRules').html(data);
+                        Swal.fire(
+                            'Deleted!',
+                            'Rule has been deleted.',
+                            'success'
+                        );
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.copyRule', function() {
+        var copy_rule_url = base_url + 'accounting/copyRuleData';
+        var id = $(this).attr('data-id');
+        var rule_name_text = $(this).attr('data-rule-name');
+        Swal.fire({
+            title: 'You are going create a new rule based on rule ' + rule_name_text,
+            text: "Do you wish to proceed with selected action?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#7367f0',
+            cancelButtonColor: '#6e7d88',
+            confirmButtonText: 'Proceed'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: copy_rule_url,
+                    method: "POST",
+                    data: { id: id },
+                    success: function(data) {
+                        //console.log(data);
+                        if(data == 'success') {
+                            Swal.fire(
+                                'Copy',
+                                'Rule has been successfully copy.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Copy',
+                                'Rule already have duplicate.',
+                                'warning'
+                            );
+                        }
+
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)                        
+                        
+                    }
+                });
+            }
+        });
+    });    
+
+    
+    $(document).on('click', '.disableRule', function() {
+        var delete_url = base_url + 'accounting/disableSingleRuleData';
+        var id = $(this).attr('data-id');
+        var rule_name_text = $(this).attr('data-rule-name');
+        Swal.fire({
+            title: 'Disable Rule?',
+            text: "Are you sure you want to disable " + rule_name_text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, disable it!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: delete_url,
+                    method: "POST",
+                    data: { id: id },
+                    success: function(data) {
+
+                        //$('.displayRules').html(data);
+                        if(data == 'success') {
+                            Swal.fire(
+                                'Disabled!',
+                                'Rule has been disable.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Disabled',
+                                'Disable unsuccessful.',
+                                'warning'
+                            );
+                        }                        
+
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)  
+
+                    }
+                });
+            }
+        });
+    });    
+
     //Multiple Delete Rules
     $(document).on('click', '#multiDeleteRules', function() {
         var delete_url = base_url + 'accounting/multiDeleteRulesData';

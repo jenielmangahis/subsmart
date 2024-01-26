@@ -3395,6 +3395,18 @@ class Accounting extends MY_Controller
         echo $output;
     }
 
+    public function deleteSingleRuleData() {
+        $count = 0;
+        $id = $this->input->post('id');
+        if(!empty($id)) {
+            $this->rules_model->deleteSingleRuleData($id);
+            $count = 1;
+        }
+
+        $output = '';
+        echo $output;     
+    }
+
     public function multiDeleteRulesData()
     {
         $count = 0;
@@ -3407,6 +3419,49 @@ class Accounting extends MY_Controller
         }
 
         $output = '';
+        echo $output;
+    }
+
+    public function disableSingleRuleData() {
+        $output = '';
+
+        $id = $this->input->post('id');
+        $is_disabled = $this->rules_model->disableRule($id);
+        if($is_disabled) {
+            $output = 'success';
+        }
+
+        echo $output;
+    }
+
+    public function copyRuleData() {
+        $output = '';
+
+        $id = $this->input->post('id');
+        $rule_data = $this->rules_model->getRulesById($id);   
+
+        if( $rule_data ){
+            $rule_name_copy = $rule_data[0]->rules_name . " (Copy)";
+            $copy_data = array(
+                'user_id'    => $rule_data[0]->user_id,
+                'rules_name' => $rule_name_copy,
+                'banks'      => $rule_data[0]->banks,
+                'apply_type' => $rule_data[0]->apply_type,
+                'include'    => $rule_data[0]->include,
+                'memo'       => $rule_data[0]->memo,
+                'priority'   => $rule_data[0]->priority,
+                'is_active'  => $rule_data[0]->is_active,
+                'auto'       => $rule_data[0]->auto
+            );
+
+            $rules_id = $this->rules_model->addRule($copy_data);
+            if ($rules_id != null) {   
+                $output = 'success';
+            } else {
+                $output = 'already have duplicate';
+            }
+        }
+
         echo $output;
     }
 

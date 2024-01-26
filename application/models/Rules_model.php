@@ -32,6 +32,38 @@ class Rules_model extends MY_Model
         }else{
             return null;
         }
+    }    
+
+    public function addRule($new_data){
+        $qry = $this->db->get_where('accounting_rules',array(
+            'rules_name'=> $new_data['rules_name']
+        ));
+
+        if ($qry->num_rows() == 0){
+
+            if ($new_data['auto'] == null){
+                $new_data['auto'] = 0;
+            }            
+
+            $data = array(
+              'user_id'     => $new_data['user_id'],
+              'rules_name'  => $new_data['rules_name'],
+              'banks'       => $new_data['banks'],
+              'apply_type'  => $new_data['apply_type'],
+              'include'     => $new_data['include'],
+              'memo'        => $new_data['memo'],
+              'priority'    => $new_data['priority'],
+              'is_active'   => $new_data['is_active'],
+              'auto'        => $new_data['auto']
+            );
+
+            $this->db->insert('accounting_rules',$data);
+            $get_id = $this->db->get_where('accounting_rules',array('rules_name'=> $new_data['rules_name']));
+
+            return $get_id->row()->id;
+        }else{
+            return null;
+        }
     }
 
     public function addConditions($description,$contain,$comment){
@@ -96,6 +128,21 @@ class Rules_model extends MY_Model
             return false;
         }
     }
+
+    public function disableRule($id){
+        $qry = $this->db->get_where('accounting_rules',array('id'=>$id));
+        if ($qry->num_rows() == 1){
+            $data = array(
+                'is_active' => 0
+            );
+            $this->db->where('id',$id);
+            $this->db->update('accounting_rules',$data);
+            return true;
+        }else{
+            return false;
+        }
+    }    
+
     public function updateConditions($con_id,$description,$contain,$comment,$rules_id){
         for($x = 0; $x < count($description);$x++){
 //            $data[] = [
@@ -128,6 +175,7 @@ class Rules_model extends MY_Model
         }
         return true;
     }
+
     public function updateCategories($cat_id,$category,$percentage,$rules_id){
         for($x = 0; $x < count($category);$x++){
 //            $data[] = [
@@ -157,6 +205,13 @@ class Rules_model extends MY_Model
         return true;
     }
 
+    public function cloneData($data){
+        unset($data->id);
+        $this->db->insert('accounting_rules',$data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }    
+
     public function deleteRulesData($id){
         $this->db->where('id',$id);
         $this->db->delete('accounting_rules');
@@ -167,6 +222,15 @@ class Rules_model extends MY_Model
         $this->db->where('rules_id',$id);
         $this->db->delete('accounting_rules_category');
     }
+
+    public function deleteSingleRuleData($id) {
+        $this->db->where('id',$id);
+        $this->db->delete('accounting_rules');
+
+        //Delete Categories
+        $this->db->where('rules_id',$id);
+        $this->db->delete('accounting_rules_category');        
+    }    
 
     public function deleteMultiRulesData($id) {
         $this->db->where('id',$id);
