@@ -22,7 +22,7 @@ $('#create-tag-form').on('submit', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url: '/accounting/tags/add-tag',
+        url: base_url + 'accounting/tags/add-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -37,11 +37,11 @@ $('#create-tag-form').on('submit', function(e) {
                     html: result.message,
                     icon: 'error',
                     showCloseButton: false,
-                    confirmButtonColor: '#2ca01c',
+                    //confirmButtonColor: '#2ca01c',
                     confirmButtonText: 'Yes',
                     showCancelButton: true,
                     cancelButtonText: 'No',
-                    cancelButtonColor: '#d33',
+                    //cancelButtonColor: '#d33',
                     timer: 2000
                 });
             }
@@ -101,7 +101,7 @@ $(document).on('submit', '#tags-group-form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url: '/accounting/tags/add-group-tag',
+        url: base_url + 'accounting/tags/add-group-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -163,7 +163,7 @@ $(document).on('submit', '#tags-form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url: '/accounting/tags/add-tag',
+        url: base_url + 'accounting/tags/add-tag',
         data: data,
         type: 'post',
         processData: false,
@@ -245,34 +245,43 @@ $('#tags-table .select-one').on('change', function() {
 
 $('#delete-tags-button').on('click', function() {
     var data = new FormData();
-
+    var total_checked = 0;
     $('#tags-table tbody tr input.select-one:checked').each(function() {
         data.append('tags[]', $(this).val());
+        total_checked = total_checked + 1;
     });
 
-    Swal.fire({
-        title: 'Are you sure you want to delete the selected tags?',
-        icon: 'warning',
-        showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
-        confirmButtonText: 'Yes',
-        showCancelButton: true,
-        cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
-    }).then((result) => {
-        if(result.isConfirmed) {
-            $.ajax({
-                url: '/accounting/tags/delete-tags',
-                data: data,
-                type: 'post',
-                processData: false,
-                contentType: false,
-                success: function(res) {
-                    location.reload();
-                }
-            });
-        }
-    });
+    if( total_checked > 0 ){
+        Swal.fire({
+            title: 'Are you sure you want to delete the selected tags?',
+            icon: 'question',
+            showCloseButton: false,
+            //confirmButtonColor: '#2ca01c',
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+            cancelButtonText: 'No',
+            //cancelButtonColor: '#d33'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                $.ajax({
+                    url: '/accounting/tags/delete-tags',
+                    data: data,
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            html: 'Please select tags to delete.'
+        });
+    }
 });
 
 $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) {
@@ -283,13 +292,13 @@ $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) 
 
     Swal.fire({
         title: `Are you sure you want to delete the selected ${type.replace('group-', '')}?`,
-        icon: 'warning',
+        icon: 'question',
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        //confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Yes',
         showCancelButton: true,
         cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
+        //cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
