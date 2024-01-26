@@ -378,7 +378,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <form id="regForm" action="NULL">
+                <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
                     <div style="padding:3%;border: solid gray 1px;width:60%;margin:-5px 20% 1% 20%;">
                         <h4>Connect your policy to nSmarTrac</h4>
 

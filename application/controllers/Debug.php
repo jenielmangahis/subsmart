@@ -2552,22 +2552,25 @@ class Debug extends MY_Controller {
                     $default_customer_type = 'Residential';
                 }
                 
+                $phone_m = str_replace(" ","",trim($c->phone_m));
                 $default_phone_m = 'NA';
-                if( $c->phone_m == '' ){
+                if( trim($phone_m) == '' ){
                     $to_check = 1;
-                    if( $c->phone_h != '' ){
-                        $default_phone_m = $c->phone_h;
+                    $phone_h = str_replace(" ","",trim($c->phone_h));
+                    if( $phone_h != '' ){
+                        $default_phone_m = $phone_h;
                     }
                 }else{
                     $default_phone_m = $c->phone_m;
                 }
 
-                $phone_h = str_replace($c->phone_h, " ","");
+                $phone_h = str_replace(" ","",trim($c->phone_h));
                 $default_phone_h = 'NA';
                 if( trim($phone_h) == '' ){
                     $to_check = 1;
-                    if( $c->phone_m != '' ){
-                        $default_phone_h = $c->phone_m;
+                    $phone_m = str_replace(" ","",trim($c->phone_m));
+                    if( $phone_m != '' ){
+                        $default_phone_h = $phone_m;
                     }
                 }else{
                     $default_phone_h = $c->phone_h;

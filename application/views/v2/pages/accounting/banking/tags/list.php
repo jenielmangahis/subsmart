@@ -85,17 +85,17 @@
                                             <a class="dropdown-item add-tag" href="#">Add tag</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item edit-group" href="#">Edit group</a>
+                                            <a class="dropdown-item btn-edit-tag" data-id="<?= $tag['id']; ?>" data-type="<?= $tag['type']; ?>" data-name="<?= $tag['name']; ?>" href="javascript:void(0);">Edit group</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-group" href="#">Delete group</a>
+                                            <a class="dropdown-item delete-group" href="javascript:void(0);">Delete group</a>
                                         </li>
                                         <?php else : ?>
                                         <li>
-                                            <a class="dropdown-item edit-tag" href="#">Edit tag</a>
+                                            <a class="dropdown-item btn-edit-tag" data-id="<?= $tag['id']; ?>" data-type="<?= $tag['type']; ?>" data-name="<?= $tag['name']; ?>" href="javascript:void(0);">Edit tag</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-tag" href="#">Delete tag</a>
+                                            <a class="dropdown-item delete-tag" href="javascript:void(0);">Delete tag</a>
                                         </li>
                                         <?php endif; ?>
                                     </ul>
@@ -114,18 +114,18 @@
                             <td></td>
                             <td>
                                 <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown">
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="#">Run Report</a>
+                                            <a class="dropdown-item" href="javascript:void(0);">Run Report</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item edit-tag" href="#">Edit tag</a>
+                                            <a class="dropdown-item btn-edit-tag" href="javascript:void(0);" data-id="<?= $groupTag['id']; ?>" data-type="tag" data-name="<?= $groupTag['name']; ?>">Edit tag</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-tag" href="#">Delete tag</a>
+                                            <a class="dropdown-item delete-tag" href="javascript:void(0);">Delete tag</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -149,5 +149,61 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('.btn-edit-tag').on('click', function(){
+        var tid = $(this).attr('data-id');
+        var tag_type = $(this).attr('data-type');
+        var tag_name = $(this).attr('data-name');
 
+        $('#edit-tid').val(tid);
+        $('#edit-tag-type').val(tag_type);
+        $('#edit-tag-name').val(tag_name);
+        $('#edit_accounting_tag_modal').modal('show');
+    });
+
+    $("#frm-accounting-edit-tag").on("submit", function(e) {
+        let _this = $(this);
+        e.preventDefault();
+
+        var url = base_url + "accounting/_update_tag";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:'json',
+            success: function(result) {
+                console.log(result);
+                if (result.is_success === "1") {
+                    Swal.fire({                        
+                        text: "Tags has been updated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+
+                $("#edit_accounting_tag_modal").modal('hide');
+                _this.trigger("reset");
+
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
