@@ -340,7 +340,6 @@ table.dataTable.no-footer {
             "processing": true,
             "serverSide": true,
             // "order": [],
-            "responsive" : true,
             "ajax": {
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
                 "type": "POST"
