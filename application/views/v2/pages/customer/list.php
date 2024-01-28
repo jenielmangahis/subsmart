@@ -326,13 +326,6 @@ table.dataTable.no-footer {
 </div>
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap5.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap5.min.css">
-
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         var CUSTOMER_LIST_TABLE = $('#customer-list').DataTable({
@@ -340,7 +333,6 @@ table.dataTable.no-footer {
             "processing": true,
             "serverSide": true,
             // "order": [],
-            "responsive" : true,
             "ajax": {
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
                 "type": "POST"

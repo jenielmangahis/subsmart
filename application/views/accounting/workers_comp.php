@@ -745,39 +745,31 @@ function fixStepIndicator(n) {
 </script>
 
 <script>
-(function() {
-  $(document).ready(function() {
-    $("*[id^='switch-input']").each(function() {      
-            $(this).change(function(){ 
-            var isChecked = $(this).is(':checked');
-            var selectedData;
-            var $switchLabel = $('.switch-label');
-            // console.log('isChecked: ' + isChecked); 
-            
-            if(isChecked) {
-              selectedData = 'yes';
-            } else {
-              selectedData = 'no';
-            }
-            
-            $(this).val(selectedData);
-            // alert(selectedData);
-      
-    });
-    
-    // Params ($selector, boolean)
-    function setSwitchState(el, flag) {
-      el.attr('', flag);
-    }
-    
-    // Usage
-    setSwitchState($('#switch-input'), true);
-             
-            });
-        });
-  // });
+$(document).ready(function() {
+  // $("*[id^='switch-input']").each(function() {      
+  //   $(this).change(function(){ 
+  //     var isChecked = $(this).is(':checked');
+  //     var selectedData;
+  //     var $switchLabel = $('.switch-label');
+  //     // console.log('isChecked: ' + isChecked);             
+  //     if(isChecked) {
+  //       selectedData = 'yes';
+  //     } else {
+  //       selectedData = 'no';
+  //     }      
+  //     $(this).val(selectedData);
+  //     // alert(selectedData);      
+  //   });
   
-})();
+  // // Params ($selector, boolean)
+  // function setSwitchState(el, flag) {
+  //   el.attr('', flag);
+  // }
+  // // Usage
+  // setSwitchState($('#switch-input'), true);
+
+  // });
+});
 </script>
 
 <script>
