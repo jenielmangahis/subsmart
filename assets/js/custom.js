@@ -2183,8 +2183,8 @@ $(document).on("focusout", ".discount", function () {
 });
 
 function calculation(counter) {
-  // alert('calc 2');
-  // alert('test');
+  //alert('calc 2');
+  //alert('test');
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val();
@@ -2300,6 +2300,17 @@ function calculation(counter) {
       grand_total_w = grand_total_w - offer_code_cost;
     }    
   }
+
+  var adjustmentIdSelectors = ["adjustment_ic","otps","adjustment_mm"];
+  var total_adjustment_selectors = 0;
+  adjustmentIdSelectors.forEach(selector => {
+    var $element = document.getElementById(selector);
+      if ($element) {
+          total_adjustment_selectors = parseFloat(total_adjustment_selectors) + parseFloat($element.value);                
+      }
+  });
+
+  grand_total_w = grand_total_w + total_adjustment_selectors;
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_input").val(subtotaltax.toFixed(2));

@@ -384,6 +384,7 @@ $route['accounting/tags/print-transactions']['post'] = "accounting_controllers/t
 $route['accounting/tags/transactions/add-tags']['post'] = "accounting_controllers/tags/add_tags";
 $route['accounting/tags/transactions/load-tags-to-remove']['post'] = "accounting_controllers/tags/load_tags_to_remove";
 $route['accounting/tags/transactions/remove-tags']['post'] = "accounting_controllers/tags/remove_tags";
+$route['accounting/_update_tag'] = "accounting_controllers/tags/ajax_update_tag";
 
 // Modals
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";

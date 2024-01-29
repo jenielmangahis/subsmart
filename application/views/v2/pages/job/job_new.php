@@ -1066,13 +1066,13 @@
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax_rate) ? number_format((float)$jobs_data->tax_rate, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
-                                                    <?php if( in_array($cid, adi_company_ids()) ){ ?>
+                                                    <?php //if( in_array($cid, adi_company_ids()) ){ ?>
                                                         <div class="row mt-3">
                                                             <div class="col-sm-6">
                                                                 <label>Installation Cost</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($job_latest_payment) ? $job_latest_payment->installation_cost : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($job_latest_payment) ? $job_latest_payment->installation_cost : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -1080,7 +1080,7 @@
                                                                 <label>One time (Program and Setup)</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($job_latest_payment) ? $job_latest_payment->program_setup : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($job_latest_payment) ? $job_latest_payment->program_setup : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2 mb-2">
@@ -1088,10 +1088,10 @@
                                                                 <label>Monthly Monitoring</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($job_latest_payment) ? $job_latest_payment->monthly_monitoring : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($job_latest_payment) ? $job_latest_payment->monthly_monitoring : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
-                                                    <?php } ?>
+                                                    <?php //} ?>
                                                     <div class="row">
                                                         <hr>
                                                     </div>                                                    

@@ -559,17 +559,40 @@ a.btn-primary.btn-md {
                                             <tr>
                                                 <td>Subtotal</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total"></td>
+                                                <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>Taxes</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input" value="0"></td>
                                             </tr>
                                             <tr>
-                                                <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment"></td>
-                                                <td style="width:150px;"><input type="number"  class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="0"></td>
-                                                <td align="right">0.00</td>
+                                                <td colspan="2">Installation Cost</td>
+                                                <!-- <td></td> -->
+                                                <td align="right">
+                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0" required="" style="text-align:right;" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">One time (Program and Setup)</td>
+                                                <!-- <td></td> -->
+                                                <td align="right">
+                                                    <input type="number" style="text-align:right;" step="any" min="0" class="form-control" id="otps" name="otps" value="0" required="" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">Monthly Monitoring</td>
+                                                <!-- <td></td> -->
+                                                <td align="right">
+                                                    <input type="number" style="text-align:right;" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0" required="" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment"></td>
+                                                <td align="right">
+                                                    <input type="number" style="text-align:right;" min="0"  class="form-control" name="adjustment_value" id="adjustment_input" value="0">
+                                                </td>
+                                                
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
@@ -1192,7 +1215,22 @@ a.btn-primary.btn-md {
 <script type="module"  src="<?= base_url("assets/js/customer/dashboard/index.js") ?>"></script>
 
 <script>
+$(document).on('change', '#adjustment_ic, #otps, #adjustment_mm, #adjustment_input', function(){
+    var adjustmentIdSelectors = ["adjustment_ic","otps","adjustment_mm", "adjustment_input"];
+    var total_adjustment_selectors = 0;
+    adjustmentIdSelectors.forEach(selector => {
+        var $element = document.getElementById(selector);
+        if ($element) {
+            total_adjustment_selectors = parseFloat(total_adjustment_selectors) + parseFloat($element.value);                
+        }
+    });
+    var item_total = $('#item_total').val();
+    var tax_total  = $('#total_tax_input').val();
+    var new_grand_total = total_adjustment_selectors + parseFloat(item_total) + parseFloat(tax_total);
+    $('#grand_total_input').val(new_grand_total.toFixed(2));
+    $('#grand_total').text(new_grand_total.toFixed(2));
 
+});
 document.getElementById("payment_method").onchange = function() {
     if (this.value == 'Cash') {
         // alert('cash');
@@ -1640,7 +1678,6 @@ $(".updateHeaderSave").on("click", function(e) {
 // });
 </script> 
 <script>
-    
     $(".select_item2a").click(function () {
             var idd = this.id;
             var title = $(this).data('itemname');
@@ -1753,7 +1790,7 @@ $(".updateHeaderSave").on("click", function(e) {
 
             tableBody2 = $("#device_audit_datas");
             tableBody2.append(markup2);
-            calculate_subtotal();
+            //calculate_subtotal();
             $(".location").select2({
                 placeholder: "Choose Location"
             });

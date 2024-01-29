@@ -1719,17 +1719,25 @@ function Signing(hash) {
       const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
       await Promise.all(promises);
 
-      let dateTime = moment();
-      const field = window.__esigndata.fields.find((f) => f.id === fieldId);
+      const jid = window.__esigndata.job_id;
+      const endpoint = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
+      const response = await fetch(endpoint);
+      companyDataTime = await response.json();
+      //console.log(window.__esigndata.job_id)      
 
-      if (field && field.value) {
-        const { created_at } = field.value;
-        if (created_at) {
-          dateTime = moment(created_at);
-        }
-      }
+      const dateTimeFormatted = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
 
-      const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
+      // let dateTime = moment();
+      // const field = window.__esigndata.fields.find((f) => f.id === fieldId);
+
+      // if (field && field.value) {
+      //   const { created_at } = field.value;
+      //   if (created_at) {
+      //     dateTime = moment();
+      //   }
+      // }
+
+      // const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
 
       const html = `
         <div class="fillAndSign__signatureContainer">
