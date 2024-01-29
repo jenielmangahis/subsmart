@@ -491,6 +491,7 @@ $route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_in
 
 $route['accounting/lists'] = 'accounting/lists';
 
+
 // Accounting attachments
 $route['accounting/attachments'] = 'accounting_controllers/attachments/index';
 $route['accounting/attachments/upload']['post'] = 'accounting_controllers/attachments/upload';
@@ -800,6 +801,13 @@ $route['accounting/reconcile/audit-history/(:any)/(:any)'] = 'reconcile/audit_hi
 $route['accounting/reconcile/save/history'] = 'reconcile/addReconcile_history';
 $route['accounting/reconcile/add/servicecharge/history'] = 'reconcile/insert_servicecharge_history';
 $route['accounting/reconcile/add/interestearned/history'] = 'reconcile/insert_interestearned_history';
+
+//Accounting - Rules
+$route['accounting/deleteRulesData'] = 'accounting/deleteRulesData';
+$route['accounting/rules/delete_single_rule'] = 'accounting/deleteSingleRuleData';
+$route['accounting/rules/delete_multi_rule'] = 'accounting/multiDeleteRulesData';
+$route['accounting/rules/copy_rule'] = 'accounting/copyRuleData';
+
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
 $route['more/addon/booking/products'] = 'booking/products';
