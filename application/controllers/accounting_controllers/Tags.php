@@ -45,8 +45,7 @@ class Tags extends MY_Controller {
         ));
 
         add_footer_js(array(
-            "assets/plugins/dropzone/dist/dropzone.js",
-            "assets/js/accounting/sweetalert2@9.js",
+            "assets/plugins/dropzone/dist/dropzone.js",            
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
             "assets/js/accounting/modal-forms1.js",
@@ -1658,5 +1657,26 @@ class Tags extends MY_Controller {
 
             $unlinkTags = $this->tags_model->unlink_multiple_transaction_tags($transactionType, $transaction[1], $post['tags']);
         }
+    }
+
+    public function ajax_update_tag()
+    {
+        $is_success = 0;
+		$msg  = 'Cannot find data';
+        
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        if( $post['tag_type'] == 'group' ){
+            $this->tags_model->update($post['tid'],$post['tag_name'],'tag_group');
+        }else{
+            $this->tags_model->update($post['tid'],$post['tag_name'],'tag');
+        }  
+
+        $msg = '';
+        $is_success = 1;
+
+        $data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
     }
 }

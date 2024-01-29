@@ -427,7 +427,7 @@ $("#attachment-file").change(function() {
         }
 
         function calculate_subtotal(tax=0, def=false, discount=0){
-            console.log("Calculating subtotal...");
+            //console.log("Calculating subtotal...");
             var subtotal = 0 ;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');

@@ -2565,6 +2565,30 @@ SQL;
         echo json_encode(['data' => $template]);
     }
 
+    public function getUserdate()
+    {
+        $this->load->model('CalendarSettings_model');
+        $this->load->model('Jobs_model');
+
+        $default_timezone   = 'America/New_York';
+
+        $jid = $this->input->get('jid');
+        $job = $this->Jobs_model->get_specific_job($jid);
+        if( $job ){
+            $calender_settings  = $this->CalendarSettings_model->getByCompanyId($job->company_id); 
+            if( $calender_settings ){
+                $default_timezone = $calender_settings->timezone;
+            }
+        }
+        
+
+        date_default_timezone_set($default_timezone);
+        $current_date_time = date("Y-m-d g:i A");
+
+        header('content-type: application/json');
+        echo json_encode(['current_date_time' => $current_date_time]);
+    }
+
     public function apiUploadTemplateThumbnail()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

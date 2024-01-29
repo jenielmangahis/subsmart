@@ -177,7 +177,7 @@ $(function(){
             dataType:'json',
             success: function(result) {
                 console.log(result);
-                if (result.is_success === "1") {
+                if (result.is_success === 1) {
                     Swal.fire({                        
                         text: "Tags has been updated successfully.",
                         icon: 'success',
