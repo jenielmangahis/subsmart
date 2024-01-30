@@ -107,7 +107,7 @@ class Tags extends MY_Controller {
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/banking/tags/list.js"
@@ -171,7 +171,6 @@ class Tags extends MY_Controller {
                 }
             }
         }
-
         $this->page_data['tags'] = $tags;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->load->view('accounting/tags/index', $this->page_data);
@@ -387,7 +386,7 @@ class Tags extends MY_Controller {
     }
     
     public function transactions()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/banking/tags/transactions.js"
@@ -1504,15 +1503,35 @@ class Tags extends MY_Controller {
         $data = [];
         foreach($groups as $group)
         {
-            $tagsExisted = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, $group['id']);
-
-            if(count($tagsExisted) > 0) {
-                if($search !== '') {
-                    $searched = array_filter($tagsExisted, function($v, $k) use ($search) {
-                        return stripos($v->name, $search) !== false;
-                    }, ARRAY_FILTER_USE_BOTH);
-    
-                    if(count($searched) > 0) {
+            if( $existingTags ){         
+                $tagsExisted = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, $group['id']);
+                if(count($tagsExisted) > 0) {
+                    if($search !== '') {
+                        $searched = array_filter($tagsExisted, function($v, $k) use ($search) {
+                            return stripos($v->name, $search) !== false;
+                        }, ARRAY_FILTER_USE_BOTH);
+        
+                        if(count($searched) > 0) {
+                            $data[] = [
+                                'id' => $group['id'],
+                                'type' => 'group',
+                                'name' => $group['name']
+                            ];
+            
+                            foreach($tagsExisted as $gTag) {
+                                $count = array_filter($existingTags, function($v, $k) use ($gTag) {
+                                    return $gTag->id === $v;
+                                }, ARRAY_FILTER_USE_BOTH);
+        
+                                $data[] = [
+                                    'id' => $gTag->id,
+                                    'type' => 'group-tag',
+                                    'name' => $gTag->name,
+                                    'count' => count($count)
+                                ];
+                            }
+                        }
+                    } else {
                         $data[] = [
                             'id' => $group['id'],
                             'type' => 'group',
@@ -1523,7 +1542,7 @@ class Tags extends MY_Controller {
                             $count = array_filter($existingTags, function($v, $k) use ($gTag) {
                                 return $gTag->id === $v;
                             }, ARRAY_FILTER_USE_BOTH);
-    
+        
                             $data[] = [
                                 'id' => $gTag->id,
                                 'type' => 'group-tag',
@@ -1532,44 +1551,48 @@ class Tags extends MY_Controller {
                             ];
                         }
                     }
-                } else {
-                    $data[] = [
-                        'id' => $group['id'],
-                        'type' => 'group',
-                        'name' => $group['name']
-                    ];
-    
-                    foreach($tagsExisted as $gTag) {
-                        $count = array_filter($existingTags, function($v, $k) use ($gTag) {
-                            return $gTag->id === $v;
-                        }, ARRAY_FILTER_USE_BOTH);
-    
-                        $data[] = [
-                            'id' => $gTag->id,
-                            'type' => 'group-tag',
-                            'name' => $gTag->name,
-                            'count' => count($count)
-                        ];
-                    }
                 }
-            }
+            }            
         }
 
-        $ungroupedExists = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, null);
-        if(count($ungroupedExists) > 0) {
-            if($search !== '') {
-                $searched = array_filter($ungroupedExists, function($v, $k) use ($search) {
-                    return stripos($v->name, $search) !== false;
-                }, ARRAY_FILTER_USE_BOTH);
-    
-                if(count($searched) > 0) {
+        /*
+        Code below causing duplicate
+        if( $existingTags ){
+            $ungroupedExists = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, null);
+            if(count($ungroupedExists) > 0) {
+                if($search !== '') {
+                    $searched = array_filter($ungroupedExists, function($v, $k) use ($search) {
+                        return stripos($v->name, $search) !== false;
+                    }, ARRAY_FILTER_USE_BOTH);
+        
+                    if(count($searched) > 0) {
+                        $data[] = [
+                            'id' => 'ungrouped',
+                            'type' => 'ungrouped-group',
+                            'name' => 'Ungrouped'
+                        ];
+            
+                        foreach($searched as $ugTag) {
+                            $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
+                                return $ugTag->id === $v;
+                            }, ARRAY_FILTER_USE_BOTH);
+            
+                            $data[] = [
+                                'id' => $ugTag->id,
+                                'type' => 'ungrouped-tag',
+                                'name' => $ugTag->name,
+                                'count' => count($count)
+                            ];
+                        }
+                    }
+                } else {
                     $data[] = [
                         'id' => 'ungrouped',
                         'type' => 'ungrouped-group',
                         'name' => 'Ungrouped'
                     ];
         
-                    foreach($searched as $ugTag) {
+                    foreach($ungroupedExists as $ugTag) {
                         $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
                             return $ugTag->id === $v;
                         }, ARRAY_FILTER_USE_BOTH);
@@ -1582,27 +1605,9 @@ class Tags extends MY_Controller {
                         ];
                     }
                 }
-            } else {
-                $data[] = [
-                    'id' => 'ungrouped',
-                    'type' => 'ungrouped-group',
-                    'name' => 'Ungrouped'
-                ];
-    
-                foreach($ungroupedExists as $ugTag) {
-                    $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
-                        return $ugTag->id === $v;
-                    }, ARRAY_FILTER_USE_BOTH);
-    
-                    $data[] = [
-                        'id' => $ugTag->id,
-                        'type' => 'ungrouped-tag',
-                        'name' => $ugTag->name,
-                        'count' => count($count)
-                    ];
-                }
             }
         }
+        */      
 
         echo json_encode($data);
     }

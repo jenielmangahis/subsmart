@@ -5,7 +5,7 @@
                 <span class="modal-title content-title" id="print_transactions_modal_label">Print Transactions By Tag List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height:500px;overflow-y:auto;">
                 <table class="nsm-table">
                     <thead>
                         <tr>

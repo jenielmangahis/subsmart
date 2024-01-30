@@ -319,7 +319,7 @@ $('#filter-date').on('change', function() {
 });
 
 $('#filter-from, #filter-to').on('change', function() {
-    $('#filter-date').val('custom').trigger('change');
+    //$('#filter-date').val('custom').trigger('change');
 });
 
 $('#apply-filters-button').on('click', function() {
@@ -447,7 +447,7 @@ $('#transactions-table tbody tr td:not(:first-child)').on('click', function() {
         type: type
     };
 
-    $.get(`/accounting/view-transaction/${type.replace(' ', '-').toLowerCase()}/${data.id}`, function(res) {
+    $.get(base_url + `accounting/view-transaction/${type.replace(' ', '-').toLowerCase()}/${data.id}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -571,7 +571,7 @@ $('#add-tags-modal #tags').select2({
     dropdownParent: $('#add-tags-modal'),
     allowClear: true,
     ajax: {
-        url: '/accounting/get-job-tags',
+        url: base_url + 'accounting/get-job-tags',
         dataType: 'json'
     }
 });
@@ -590,7 +590,7 @@ $('#apply-add-tags').on('click', function() {
     });
 
     $.ajax({
-        url: '/accounting/tags/transactions/add-tags',
+        url: base_url + 'accounting/tags/transactions/add-tags',
         data: data,
         type: 'post',
         processData: false,
@@ -690,7 +690,7 @@ $('#remove-tags-button').on('click', function() {
         });
     
         $.ajax({
-            url: '/accounting/tags/transactions/remove-tags',
+            url: base_url + 'accounting/tags/transactions/remove-tags',
             data: data,
             type: 'post',
             processData: false,
@@ -723,7 +723,7 @@ function initialize_remove_tags_table() {
     data.set('search', $('#remove-tags-modal #search-tags-to-remove').val());
 
     $.ajax({
-        url: '/accounting/tags/transactions/load-tags-to-remove',
+        url: base_url + 'accounting/tags/transactions/load-tags-to-remove',
         data: data,
         type: 'post',
         processData: false,

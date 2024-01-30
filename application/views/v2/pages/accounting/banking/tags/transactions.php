@@ -1,6 +1,13 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/tags_transactions_modals'); ?>
-
+<style>
+.row-hover:hover{
+    cursor:pointer;
+}
+.tag-name{
+    font-size:12px;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/banking'); ?>
@@ -80,19 +87,19 @@
                                             <option value="this-week" <?=!empty($date) && $date === 'this-week' ? 'selected' : ''?>>This week</option>
                                             <option value="this-month" <?=!empty($date) && $date === 'this-month' ? 'selected' : ''?>>This month</option>
                                             <option value="this-quarter" <?=!empty($date) && $date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
-                                            <option value="this-year" <?=!empty($date) && $date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                            <option value="this-year" <?=empty($date) || $date === 'this-year' ? 'selected' : ''?>>This year</option>
                                             <option value="last-week" <?=!empty($date) && $date === 'last-week' ? 'selected' : ''?>>Last week</option>
                                             <option value="last-month" <?=!empty($date) && $date === 'last-month' ? 'selected' : ''?>>Last month</option>
                                             <option value="last-quarter" <?=!empty($date) && $date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
                                             <option value="last-year" <?=!empty($date) && $date === 'last-year' ? 'selected' : ''?>>Last year</option>
-                                            <option value="last-365-days" <?=empty($date) || $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
+                                            <option value="last-365-days" <?=!empty($date) && $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
                                             <option value="custom" <?=!empty($date) && $date === 'custom' ? 'selected' : ''?>>Custom</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-4 mt-3">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=!empty($fromDate) ? $fromDate : date("m/d/Y", strtotime("-1 year"))?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control date" value="<?=!empty($fromDate) ? $fromDate : date("01/01/Y")?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4 mt-3">
@@ -206,12 +213,12 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
-                            <td><?=$transaction['date']?></td>
-                            <td><?=$transaction['from_to']?></td>
-                            <td><?=$transaction['category']?></td>
-                            <td><?=$transaction['memo']?></td>
-                            <td><?=$transaction['type']?></td>
-                            <td>
+                            <td class="row-hover"><?=$transaction['date']?></td>
+                            <td class="row-hover"><?=$transaction['from_to']?></td>
+                            <td class="row-hover"><?=$transaction['category']?></td>
+                            <td class="row-hover"><?=$transaction['memo']?></td>
+                            <td class="row-hover"><?=$transaction['type']?></td>
+                            <td class="row-hover">
                                 <?php 
                                     $amount = '$'.number_format(floatval($transaction['amount']), 2);
                                     echo str_replace('$-', '-$', $amount);
@@ -219,7 +226,7 @@
                             </td>
                             <td>
                                 <?php if(count($transaction['tags']) > 0) : ?>
-                                <span class="nsm-badge"><?=$transaction['tags'][0]->name?></span>
+                                <span class="nsm-badge tag-name"><?=$transaction['tags'][0]->name?></span>
                                 <?php if(count($transaction['tags']) > 1) : ?>
                                 <div class="dropdown d-inline-block">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -229,7 +236,7 @@
                                         <?php foreach($transaction['tags'] as $index => $tag) : ?>
                                         <?php if($index > 0) : ?>
                                         <li>
-                                            <span class="nsm-badge"><?=$tag->name?></span>
+                                            <span class="nsm-badge tag-name"><?=$tag->name?></span>
                                         </li>
                                         <?php endif; ?>
                                         <?php endforeach; ?>
