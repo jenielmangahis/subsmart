@@ -105,10 +105,10 @@ class Tags_model extends MY_Model
     public function get_transaction_tags($transactionType, $transactionId) {
 		$this->db->select('job_tags.*');
         $this->db->from('job_tags');
+        $this->db->join('accounting_transaction_tags', 'accounting_transaction_tags.tag_id = job_tags.id');
         $this->db->where('accounting_transaction_tags.transaction_type', $transactionType);
         $this->db->where('accounting_transaction_tags.transaction_id', $transactionId);
-        $this->db->order_by('accounting_transaction_tags.order_no', 'asc');
-		$this->db->join('accounting_transaction_tags', 'accounting_transaction_tags.tag_id = job_tags.id');
+        $this->db->order_by('accounting_transaction_tags.order_no', 'asc');		
         $query = $this->db->get();
         return $query->result();
     }
@@ -926,16 +926,19 @@ class Tags_model extends MY_Model
     public function get_tag_by_ids_and_group_id($tags = [0, ""], $groupId)
     {
         $this->db->where_in('id', $tags);
-        $this->db->where('status', 1);
-        if(is_null($groupId)) {
-            $this->db->where('group_tag_id', null);
-            $this->db->or_where_in('id', $tags);
-            $this->db->where('status', 1);
-            $this->db->where('group_tag_id', 0);
-            $this->db->or_where_in('id', $tags);
-            $this->db->where('status', 1);
-            $this->db->where('group_tag_id', "");
-        } else {
+        //$this->db->where('status', 1);
+        // if(is_null($groupId)) {
+        //     $this->db->where('group_tag_id', null);
+        //     $this->db->or_where_in('id', $tags);
+        //     $this->db->where('status', 1);
+        //     $this->db->where('group_tag_id', 0);
+        //     $this->db->or_where_in('id', $tags);
+        //     $this->db->where('status', 1);
+        //     $this->db->where('group_tag_id', "");
+        // } else {
+        //     $this->db->where('group_tag_id', $groupId);
+        // }
+        if( $groupId > 0 ){
             $this->db->where('group_tag_id', $groupId);
         }
         $query = $this->db->get('job_tags');

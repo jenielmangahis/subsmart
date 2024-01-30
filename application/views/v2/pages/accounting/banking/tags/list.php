@@ -50,7 +50,6 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Tag and Tag Groups">TAGS AND TAG GROUPS</td>
-                            <td data-name="Transactions">TRANSACTIONS</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -151,6 +150,8 @@
 </div>
 <script>
 $(function(){
+    $("#tags-table").nsmPagination();  
+    
     $('.btn-edit-tag').on('click', function(){
         var tid = $(this).attr('data-id');
         var tag_type = $(this).attr('data-type');
