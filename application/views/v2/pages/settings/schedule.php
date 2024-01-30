@@ -163,7 +163,7 @@
                                 <select name="calendar_timezone" class="nsm-field form-select" required>
                                     <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
                                         <option value="<?php echo $key ?>" <?= $settings && $settings->timezone == $key ? 'selected="selected"' : ''; ?>>
-                                            <?php echo $zone ?>
+                                            <?php echo $key ?>
                                         </option>
                                     <?php } ?>
                                 </select>
