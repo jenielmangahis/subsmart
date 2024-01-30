@@ -190,12 +190,15 @@ $(document).ready(function() {
                     data: { id: id },
                     success: function(data) {
                         $('.displayRules').html(data);
-                        window.location.reload();
                         Swal.fire(
                             'Deleted!',
                             'Rule has been deleted.',
                             'success'
                         );
+
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000) 
                     }
                 });
             }
@@ -203,7 +206,8 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.deleteSingleRules', function() {
-        var delete_url = base_url + 'accounting/deleteSingleRuleData';
+        //var delete_url = base_url + 'accounting/deleteSingleRuleData';
+        var delete_url = base_url + 'accounting/rules/delete_single_rule';
         var id = $(this).attr('data-id');
         Swal.fire({
             title: 'Are you sure?',
@@ -226,7 +230,9 @@ $(document).ready(function() {
                             'Rule has been deleted.',
                             'success'
                         );
-                        window.location.reload();
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1000)                         
                     }
                 });
             }
@@ -234,7 +240,8 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.copyRule', function() {
-        var copy_rule_url = base_url + 'accounting/copyRuleData';
+        //var copy_rule_url = base_url + 'accounting/copyRuleData';
+        var copy_rule_url = base_url + 'accounting/rules/copy_rule';
         var id = $(this).attr('data-id');
         var rule_name_text = $(this).attr('data-rule-name');
         Swal.fire({
@@ -325,7 +332,8 @@ $(document).ready(function() {
 
     //Multiple Delete Rules
     $(document).on('click', '#multiDeleteRules', function() {
-        var delete_url = base_url + 'accounting/multiDeleteRulesData';
+        //var delete_url = base_url + 'accounting/multiDeleteRulesData';
+        var delete_url = base_url + 'accounting/rules/delete_multi_rule';
         var frmData = $("#rulesTblFrm").serialize();
 
         Swal.fire({
