@@ -721,7 +721,6 @@ $('#print-transactions').on('click', function(e) {
 
 $('#categorize-selected').on('click', function(e) {
     e.preventDefault();
-
     $('#select_category_modal').modal('show');
 });
 
