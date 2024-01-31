@@ -31,8 +31,13 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-transactions">Print transactions</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="categorize-selected">Categorize selected</a></li>
+
+                                <!-- Note: add backup just in case we need to revert -->
+                                <!-- <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-transactions">Print transactions</a></li> -->
+                                <!-- <li><a class="dropdown-item disabled" href="javascript:void(0);" id="categorize-selected">Categorize selected</a></li> -->
+
+                                <li><a class="dropdown-item dropdown-item-print-transaction disabled" href="javascript:void(0);" id="expenses-print-transactions">Print transactions</a></li>
+                                <li><a class="dropdown-item dropdown-item-categorize-selected disabled" href="javascript:void(0);" id="expenses-categorize-selected">Categorize selected</a></li>
                             </ul>
                         </div>
 
@@ -250,7 +255,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input select-all table-select check-input-all-expenses" id="check-input-all-expenses" type="checkbox">
                             </td>
                             <td data-name="Date">DATE</td>
                             <td data-name="Type">TYPE</td>
@@ -276,7 +281,7 @@
                         <tr data-type="<?=$transaction['type']?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$transaction['id']?>">
+                                    <input class="form-check-input select-one table-select check-input-expenses" id="check-input-expenses" type="checkbox" value="<?=$transaction['id']?>">
                                 </div>
                             </td>
                             <td><?=$transaction['date']?></td>

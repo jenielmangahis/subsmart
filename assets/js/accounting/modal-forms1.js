@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function(e) {
 		e.preventDefault();
-
         if($(this).hasClass('nsm-button')) {
             var view = $(this).attr('id').replace('-', '_');
             view += '_modal';
@@ -15,6 +14,7 @@ $(document).ready(function () {
         }
 
         $.get(GET_OTHER_MODAL_URL + view, function(res) {
+        //$.get(base_url + 'accounting/get-other-modals/' + view, function(res) {
             if ($('div#modal-container').length > 0) {
                 $('div#modal-container').html(res);
             } else {

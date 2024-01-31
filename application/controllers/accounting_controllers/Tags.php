@@ -386,7 +386,7 @@ class Tags extends MY_Controller {
     }
     
     public function transactions()
-    {        
+    {   
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/banking/tags/transactions.js"
@@ -466,7 +466,7 @@ class Tags extends MY_Controller {
 
         $filter['tags'] = $tags;
 
-        if(!empty(get('type'))) {
+        if(!empty(get('type'))) {            
             $this->page_data['type'] = get('type');
 
             if(get('type') === 'money-in') {
@@ -476,6 +476,8 @@ class Tags extends MY_Controller {
                 $filter['money-out'] = get('money-out');
                 $this->page_data['moneyOut'] = get('money-out');
             }
+        }else{
+            $this->page_data['type'] = 'all-transactions';
         }
 
         if(!empty(get('date'))) {
@@ -506,12 +508,10 @@ class Tags extends MY_Controller {
             $filter['contact_id'] = $cont[1];
         }
 
-        $transactions = $this->get_transactions($filter);
-
+        $transactions = $this->get_transactions($filter);        
         usort($transactions, function($a, $b) {
             return strtotime($a['date']) < strtotime($b['date']);
         });
-
         $this->page_data['transactions'] = $transactions;
         $this->page_data['page']->title = 'Transactions by tag';
         $this->page_data['groups'] = $groups;

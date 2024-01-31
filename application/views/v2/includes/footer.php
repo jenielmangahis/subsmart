@@ -145,7 +145,7 @@
                 } else {
                     $('.dropdown-item-delete-rule').addClass('disabled');
                 }             
-            })
+            }) 
 
             $(".select-all-rules").click(function(){
                 if(this.checked){
@@ -159,7 +159,34 @@
                     });
                     $('.dropdown-item-delete-rule').addClass('disabled');
                 }                
-            });            
+            });           
+            
+            $(".check-input-expenses").click(function(){
+                var count_expenses_list_check = $('.check-input-expenses').filter(':checked').length;
+                if(count_expenses_list_check > 0) {
+                    $(".dropdown-item-print-transaction").removeClass("disabled");
+                    $(".dropdown-item-categorize-selected").removeClass("disabled");
+                } else {
+                    $(".dropdown-item-print-transaction").addClass("disabled");
+                    $(".dropdown-item-categorize-selected").addClass("disabled");
+                }             
+            })      
+            
+            $(".check-input-all-expenses").click(function(){
+                if(this.checked){
+                    $('.check-input-expenses').each(function(){
+                        this.checked = true;
+                    });
+                    $(".dropdown-item-print-transaction").removeClass("disabled");
+                    $(".dropdown-item-categorize-selected").removeClass("disabled");
+                }else{
+                    $('.check-input-expenses').each(function(){
+                        this.checked = false;
+                    });
+                    $(".dropdown-item-print-transaction").addClass("disabled");
+                    $(".dropdown-item-categorize-selected").addClass("disabled");
+                }                
+            });
 
             $('.hdr-drpdown-multi-accounts').on('click', function(){
                 var parent = $(this).closest('li');

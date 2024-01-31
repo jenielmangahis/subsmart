@@ -7,6 +7,12 @@
 .tag-name{
     font-size:12px;
 }
+.group-header{
+    background-color:#b3b3b3;
+}
+.group-header:hover{
+    background-color:#b3b3b3 !important;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -36,7 +42,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content" id="transactions-filter-dropdown">
                                 <div class="row">
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-6 col-md-6">
                                         <label for="filter-type">Type</label>
                                         <select class="nsm-field form-select" name="filter_type" id="filter-type">
                                             <option value="all-transactions" <?=empty($type) || $type === 'all-transactions' ? 'selected' : ''?>>All transactions</option>
@@ -44,39 +50,37 @@
                                             <option value="money-out" <?=!empty($type) && $type === 'money-out' ? 'selected' : ''?>>Money Out</option>
                                         </select>
                                     </div>
-                                </div>
-                                <?php if(!empty($type)) : ?>
-                                <div class="row">
-                                    <div class="col-12 col-md-4 mt-3">
-                                        <label for="filter-<?=$type?>">Money <?=$type === 'money-in' ? 'in' : 'out'?> transactions</label>
-                                        <select id="filter-<?=$type?>" class="form-select nsm-field">
-                                            <?php if($type === 'money-in') : ?>
-                                            <option value="all" <?=empty($moneyIn) || $moneyIn === 'all' ? 'selected' : ''?>>All money in</option>
-                                            <option value="invoice" <?=!empty($moneyIn) && $moneyIn === 'invoice' ? 'selected' : ''?>>Invoice</option>
-                                            <option value="sales-receipt" <?=!empty($moneyIn) && $moneyIn === 'sales-receipt' ? 'selected' : ''?>>Sales receipt</option>
-                                            <option value="estimate" <?=!empty($moneyIn) && $moneyIn === 'estimate' ? 'selected' : ''?>>Estimate</option>
-                                            <option value="cc-credit" <?=!empty($moneyIn) && $moneyIn === 'cc-credit' ? 'selected' : ''?>>Credit card credit</option>
-                                            <option value="vendor-credit" <?=!empty($moneyIn) && $moneyIn === 'vendor-credit' ? 'selected' : ''?>>Vendor credit</option>
-                                            <option value="credit-memo" <?=!empty($moneyIn) && $moneyIn === 'credit-memo' ? 'selected' : ''?>>Credit memo</option>
-                                            <option value="activity-charge" <?=!empty($moneyIn) && $moneyIn === 'activity-charge' ? 'selected' : ''?>>Activity charge</option>
-                                            <option value="deposit" <?=!empty($moneyIn) && $moneyIn === 'deposit' ? 'selected' : ''?>>Deposit</option>
-                                            <?php else : ?>
-                                            <option value="all" <?=empty($moneyOut) || $moneyOut === 'all' ? 'selected' : ''?>>All money out</option>
-                                            <option value="expense" <?=!empty($moneyOut) && $moneyOut === 'expense' ? 'selected' : ''?>>Expense</option>
-                                            <option value="bill" <?=!empty($moneyOut) && $moneyOut === 'bill' ? 'selected' : ''?>>Bill</option>
-                                            <option value="credit-memo" <?=!empty($moneyOut) && $moneyOut === 'credit-memo' ? 'selected' : ''?>>Credit memo</option>
-                                            <option value="refund-receipt" <?=!empty($moneyOut) && $moneyOut === 'refund-receipt' ? 'selected' : ''?>>Refund receipt</option>
-                                            <option value="cash-purchase" <?=!empty($moneyOut) && $moneyOut === 'cash-purchase' ? 'selected' : ''?>>Cash purchase</option>
-                                            <option value="check" <?=!empty($moneyOut) && $moneyOut === 'check' ? 'selected' : ''?>>Check</option>
-                                            <option value="cc-expense" <?=!empty($moneyOut) && $moneyOut === 'cc-expense' ? 'selected' : ''?>>Credit card expense</option>
-                                            <option value="purchase-order" <?=!empty($moneyOut) && $moneyOut === 'purchase-order' ? 'selected' : ''?>>Purchase order</option>
-                                            <option value="vendor-credit" <?=!empty($moneyOut) && $moneyOut === 'vendor-credit' ? 'selected' : ''?>>Vendor credit</option>
-                                            <option value="activity-credit" <?=!empty($moneyOut) && $moneyOut === 'activity-credit' ? 'selected' : ''?>>Activity credit</option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
+                                    <?php if(!empty($type) && $type != 'all-transactions') : ?>
+                                        <div class="col-6 col-md-6">
+                                            <label for="filter-<?=$type?>">Money <?=$type === 'money-in' ? 'in' : 'out'?> transactions</label>
+                                            <select id="filter-<?=$type?>" class="form-select nsm-field">
+                                                <?php if($type === 'money-in') : ?>
+                                                <option value="all" <?=empty($moneyIn) || $moneyIn === 'all' ? 'selected' : ''?>>All money in</option>
+                                                <option value="invoice" <?=!empty($moneyIn) && $moneyIn === 'invoice' ? 'selected' : ''?>>Invoice</option>
+                                                <option value="sales-receipt" <?=!empty($moneyIn) && $moneyIn === 'sales-receipt' ? 'selected' : ''?>>Sales receipt</option>
+                                                <option value="estimate" <?=!empty($moneyIn) && $moneyIn === 'estimate' ? 'selected' : ''?>>Estimate</option>
+                                                <option value="cc-credit" <?=!empty($moneyIn) && $moneyIn === 'cc-credit' ? 'selected' : ''?>>Credit card credit</option>
+                                                <option value="vendor-credit" <?=!empty($moneyIn) && $moneyIn === 'vendor-credit' ? 'selected' : ''?>>Vendor credit</option>
+                                                <option value="credit-memo" <?=!empty($moneyIn) && $moneyIn === 'credit-memo' ? 'selected' : ''?>>Credit memo</option>
+                                                <option value="activity-charge" <?=!empty($moneyIn) && $moneyIn === 'activity-charge' ? 'selected' : ''?>>Activity charge</option>
+                                                <option value="deposit" <?=!empty($moneyIn) && $moneyIn === 'deposit' ? 'selected' : ''?>>Deposit</option>
+                                                <?php else : ?>
+                                                <option value="all" <?=empty($moneyOut) || $moneyOut === 'all' ? 'selected' : ''?>>All money out</option>
+                                                <option value="expense" <?=!empty($moneyOut) && $moneyOut === 'expense' ? 'selected' : ''?>>Expense</option>
+                                                <option value="bill" <?=!empty($moneyOut) && $moneyOut === 'bill' ? 'selected' : ''?>>Bill</option>
+                                                <option value="credit-memo" <?=!empty($moneyOut) && $moneyOut === 'credit-memo' ? 'selected' : ''?>>Credit memo</option>
+                                                <option value="refund-receipt" <?=!empty($moneyOut) && $moneyOut === 'refund-receipt' ? 'selected' : ''?>>Refund receipt</option>
+                                                <option value="cash-purchase" <?=!empty($moneyOut) && $moneyOut === 'cash-purchase' ? 'selected' : ''?>>Cash purchase</option>
+                                                <option value="check" <?=!empty($moneyOut) && $moneyOut === 'check' ? 'selected' : ''?>>Check</option>
+                                                <option value="cc-expense" <?=!empty($moneyOut) && $moneyOut === 'cc-expense' ? 'selected' : ''?>>Credit card expense</option>
+                                                <option value="purchase-order" <?=!empty($moneyOut) && $moneyOut === 'purchase-order' ? 'selected' : ''?>>Purchase order</option>
+                                                <option value="vendor-credit" <?=!empty($moneyOut) && $moneyOut === 'vendor-credit' ? 'selected' : ''?>>Vendor credit</option>
+                                                <option value="activity-credit" <?=!empty($moneyOut) && $moneyOut === 'activity-credit' ? 'selected' : ''?>>Activity credit</option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>                                
                                 <div class="row">
                                     <div class="col-12 col-md-4 mt-3">
                                         <label for="filter-date">Date</label>
@@ -110,8 +114,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12 col-md-4 mt-3">
-                                        <label for="filter-contact">By Contact</label>
+                                    <div class="col-12 col-md-8 mt-3">
+                                        <label for="filter-contact">Customer</label>
                                         <select class="nsm-field form-select" name="filter_contact" id="filter-contact">
                                             <?php if(!empty($contact)) : ?>
                                             <option value="<?=$contact->value?>" selected><?=$contact->name?></option>
@@ -196,9 +200,9 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Date">DATE</td>
-                            <td data-name="From/To">FROM/TO</td>
-                            <td data-name="Category">CATEGORY</td>
-                            <td data-name="Memo">MEMO</td>
+                            <td data-name="From/To">CUSTOMER</td>
+                            <!-- <td data-name="Category">CATEGORY</td>
+                            <td data-name="Memo">MEMO</td> -->
                             <td data-name="Type">TYPE</td>
                             <td data-name="Amount">AMOUNT</td>
                             <td data-name="Tags">TAGS</td>
@@ -213,10 +217,10 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
-                            <td class="row-hover"><?=$transaction['date']?></td>
+                            <td class="row-hover" style="width:10%;"><?=$transaction['date']?></td>
                             <td class="row-hover"><?=$transaction['from_to']?></td>
-                            <td class="row-hover"><?=$transaction['category']?></td>
-                            <td class="row-hover"><?=$transaction['memo']?></td>
+                            <!-- <td class="row-hover"><?=$transaction['category']?></td>
+                            <td class="row-hover"><?=$transaction['memo']?></td> -->
                             <td class="row-hover"><?=$transaction['type']?></td>
                             <td class="row-hover">
                                 <?php 
@@ -226,23 +230,25 @@
                             </td>
                             <td>
                                 <?php if(count($transaction['tags']) > 0) : ?>
-                                <span class="nsm-badge tag-name"><?=$transaction['tags'][0]->name?></span>
-                                <?php if(count($transaction['tags']) > 1) : ?>
-                                <div class="dropdown d-inline-block">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        + <?=count($transaction['tags']) - 1?>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end p-3">
-                                        <?php foreach($transaction['tags'] as $index => $tag) : ?>
-                                        <?php if($index > 0) : ?>
-                                        <li>
-                                            <span class="nsm-badge tag-name"><?=$tag->name?></span>
-                                        </li>
-                                        <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </div>
-                                <?php endif; ?>
+                                    <span class="nsm-badge tag-name"><?=$transaction['tags'][0]->name?></span>
+                                    <?php if(count($transaction['tags']) > 1) : ?>
+                                    <div class="dropdown d-inline-block">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            + <?=count($transaction['tags']) - 1?>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end p-3">
+                                            <?php foreach($transaction['tags'] as $index => $tag) : ?>
+                                            <?php if($index > 0) : ?>
+                                            <li>
+                                                <span class="nsm-badge tag-name"><?=$tag->name?></span>
+                                            </li>
+                                            <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <span class="nsm-badge tag-name">---</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -262,5 +268,9 @@
         </div>
     </div>
 </div>
-
+<script>
+$(function(){
+    $("#transactions-table").nsmPagination({itemsPerPage:10});    
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -279,7 +279,6 @@ $('#make-active').on('click', function(e) {
 
 $('#new-time-activity').on('click', function(e) {
     e.preventDefault();
-
     $.get('/accounting/get-other-modals/single_time_activity_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);

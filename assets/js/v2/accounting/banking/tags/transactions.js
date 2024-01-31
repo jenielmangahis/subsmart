@@ -54,7 +54,7 @@ $('#transactions-filter-dropdown select').each(function() {
     } else {
         $(this).select2({
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {
@@ -74,11 +74,11 @@ $('#transactions-filter-dropdown select').each(function() {
 });
 
 $('#filter-type').on('change', function() {
-    var row = $(this).parent().parent();
+    var row = $(this).parent();
     switch($(this).val()) {
         case 'all-transactions' :
-            $('#filter-money-in').parent().parent().remove();
-            $('#filter-money-out').parent().parent().remove();
+            $('#filter-money-in').parent().remove();
+            $('#filter-money-out').parent().remove();
         break;
         case 'money-in' :
             var options = `<option value="all" selected>All money in</option>
@@ -90,14 +90,13 @@ $('#filter-type').on('change', function() {
             <option value="credit-memo">Credit memo</option>
             <option value="activity-charge">Activity charge</option>
             <option value="deposit">Deposit</option>`;
-            var field = `<div class="row">
-                <div class="col-12 col-md-4 mt-3">
+            var field = `
+                <div class="col-6 col-md-6">
                     <label for="filter-money-in">Money in transactions</label>
                     <select id="filter-money-in" class="form-select nsm-field">
                         ${options}
                     </select>
-                </div>
-            </div>`;
+                </div>`;
 
             if($('#filter-money-out').length > 0) {
                 $('#filter-money-out').prev().attr('for', 'filter-money-in');
@@ -124,14 +123,12 @@ $('#filter-type').on('change', function() {
             <option value="purchase-order">Purchase order</option>
             <option value="vendor-credit">Vendor credit</option>
             <option value="activity-credit">Activity credit</option>`;
-            var field = `<div class="row">
-                <div class="col-4">
+            var field = `<div class="col-6 col-md-6">
                     <label for="filter-money-out">Money out transactions</label>
                     <select id="filter-money-out" class="form-select nsm-field">
                         ${options}
                     </select>
-                </div>
-            </div>`;
+                </div>`;
 
             if($('#filter-money-in').length > 0) {
                 $('#filter-money-in').prev().attr('for', 'filter-money-out');
@@ -434,7 +431,7 @@ $("#btn_print_transactions").on("click", function() {
     $("#transactions_table_print").printThis();
 });
 
-$('#transactions-table tbody tr td:not(:first-child)').on('click', function() {
+$('#transactions-table tbody tr td.row-hover').on('click', function() {
     var row = $(this).parent();
     var id = row.find('.select-one').val().split('-');
     id = id[id.length - 1];
@@ -732,7 +729,11 @@ function initialize_remove_tags_table() {
             var res = JSON.parse(result);
 
             $.each(res, function(index, value) {
-                $('#remove-tags-table tbody').append(`<tr data-type="${value.type}" data-id="${value.id}">
+                var row_class = 'group-tag-header';
+                if( value.type == 'group' ){
+                    row_class = 'group-header';
+                }
+                $('#remove-tags-table tbody').append(`<tr class="${row_class}" data-type="${value.type}" data-id="${value.id}">
                     <td>
                         <div class="table-row-icon table-checkbox">
                             <input class="form-check-input select-one table-select" type="checkbox" value="${value.type}-${value.id}">

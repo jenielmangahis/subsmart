@@ -717,9 +717,37 @@ $('#print-transactions').on('click', function(e) {
     $('#print-transactions-form').remove();
 });
 
+$('#expenses-print-transactions').on('click', function(e) {
+    e.preventDefault();
+    var print_url = base_url + 'accounting/expenses/print-multiple-transactions';
+    $('#expenses-table').parent().append('<form id="print-transactions-form" action="' + print_url + '" method="post" class="d-none" target="_blank"></form>');
+    $('#expenses-table tbody tr:visible .select-one:checked').each(function() {
+        var row = $(this).closest('tr');
+        var transactionType = row.find('td:nth-child(3)').text().trim();
+        transactionType = transactionType.replaceAll(' ', '-');
+        transactionType = transactionType.toLowerCase();
+
+        if(row.find('td:nth-child(3)').text().trim() === 'Purchase Order') {
+            if($(`#print-transactions-form input[value="${$(this).val()}"]`).length === 0) {
+                $('#print-transactions-form').append(`<input type="hidden" value ="${transactionType+'_'+$(this).val()}" name="transactions[]">`);
+            }
+        } else {
+            $('#print-transactions-form').find(`input[value="${transactionType+'_'+$(this).val()}"]`).remove();;
+        }
+    });
+
+    $('#print-transactions-form').submit();
+    $('#print-transactions-form').remove();
+});
+
 $('#categorize-selected').on('click', function(e) {
     e.preventDefault();
 
+    $('#select_category_modal').modal('show');
+});
+
+$('#expenses-categorize-selected').on('click', function(e) {
+    e.preventDefault();
     $('#select_category_modal').modal('show');
 });
 
@@ -788,7 +816,6 @@ $('#pay-bills').on('click', function(e) {
 
 $('#new-time-activity').on('click', function(e) {
     e.preventDefault();
-
     $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="single_time_activity_modal"]').trigger('click');
 });
 

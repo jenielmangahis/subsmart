@@ -16,6 +16,7 @@ $('#createRules select').each(function() {
 				allowClear: true,
                 ajax: {
                     url: '/accounting/get-dropdown-choices',
+                    //url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -174,11 +175,13 @@ $('#createRules #transaction-type').on('change', function() {
 });
 
 $('#createRules #for-accounts').on('change', function() {
+    var get_dropdown_url = base_url + 'accounting/get-dropdown-choices?type=public&field=bank-account&modal=create-rules';
     var values = $(this).val();
     var el = $(this);
     if(values.includes('all-bank-accounts')) {
         $.ajax({
             url: '/accounting/get-dropdown-choices?type=public&field=bank-account&modal=create-rules',
+            //url: get_dropdown_url,
             dataType: 'json',
             success: function(res) {
                 var results = res.results;
