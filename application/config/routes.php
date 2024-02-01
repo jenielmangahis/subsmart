@@ -1518,6 +1518,8 @@ $route['appointment_types/_delete_appointment_type'] = 'Appointment_Types/ajax_d
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 $route['items/_add_product_list'] = 'Items/ajax_add_product_list';
 $route['items/_add_services_list'] = 'Items/ajax_add_services_list';
+$route['items/_edit_product_stock'] = 'Items/ajax_edit_product_stock';
+$route['items/_update_product_stock'] = 'Items/ajax_update_product_stock';
 
 //Support
 $route['support'] = 'Support/index';
