@@ -71,6 +71,7 @@ class Accounting_modals extends MY_Controller
 
     public function index($view ="")
     {
+        //header("Strict-Transport-Security: strict-origin-when-cross-origin");
         if ($view) {
             switch ($view) {
                 case 'pay_down_credit_card_modal':
@@ -11468,7 +11469,12 @@ class Accounting_modals extends MY_Controller
             if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) &&
             $this->input->get('modal') !== 'printChecksModal' &&
             $field !== 'sales-tax-category' && !is_null($this->input->get('modal'))) {
-                array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+                if($field == 'person-tracking') {
+                    $text_label = "+ Add New Vendor";               
+                } else {
+                    $text_label = "+ Add New";      
+                }
+                array_unshift($return['results'], ['id' => 'add-new', 'text' => $text_label]);
             }
         }
 
