@@ -5619,8 +5619,8 @@ $(function() {
                     var query = '';
                 break;
             }
-
-            $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
+            
+            $.get(base_url + `/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
                 if(form !== 'item') {
                     $('#modal-container').append(result);
                 } else {
@@ -5641,6 +5641,10 @@ $(function() {
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
                         }
 
+                        if(form == 'payee') {
+                            $('#modal-container #payee-modal .modal-title').html('Add New Vendor');
+                        }
+                        
                         if(form === 'payee' && modalTitle !== '') {
                             $('#modal-container #payee-modal .modal-title').html(modalTitle);
                             $('#modal-container #payee-modal #payee_type').select2({
@@ -7106,9 +7110,7 @@ $(function() {
 
     $(document).on('click', '#modal-container form #expenseModal #delete-expense', function(e) {
         e.preventDefault();
-
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
-
         $.ajax({
             url: `/accounting/delete-transaction/expense/${split[1]}`,
             type: 'DELETE',
@@ -7148,7 +7150,6 @@ $(function() {
         e.preventDefault();
 
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
-
         $.ajax({
             url: `/accounting/delete-transaction/check/${split[1]}`,
             type: 'DELETE',
