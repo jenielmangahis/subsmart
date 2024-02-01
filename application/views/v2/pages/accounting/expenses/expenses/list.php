@@ -38,6 +38,7 @@
 
                                 <li><a class="dropdown-item dropdown-item-print-transaction disabled" href="javascript:void(0);" id="expenses-print-transactions">Print transactions</a></li>
                                 <li><a class="dropdown-item dropdown-item-categorize-selected disabled" href="javascript:void(0);" id="expenses-categorize-selected">Categorize selected</a></li>
+                                <li><a class="dropdown-item dropdown-item-delete-expenses disabled" href="javascript:void(0);" id="expenses-delete-selected">Delete selected</a></li>
                             </ul>
                         </div>
 
@@ -276,73 +277,75 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($transactions) > 0) : ?>
-                        <?php foreach($transactions as $transaction): ?>
-                        <tr data-type="<?=$transaction['type']?>">
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select check-input-expenses" id="check-input-expenses" type="checkbox" value="<?=$transaction['id']?>">
-                                </div>
-                            </td>
-                            <td><?=$transaction['date']?></td>
-                            <td><?=$transaction['type']?></td>
-                            <td><?=$transaction['number']?></td>
-                            <td><?=$transaction['payee']?></td>
-                            <td><?=$transaction['method']?></td>
-                            <td><?=$transaction['source']?></td>
-                            <td>
-                                <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
-                                <select name="expense_account[]" class="form-control nsm-field">
-                                    <option value="<?=$transaction['category']['id']?>"><?=$transaction['category']['name']?></option>
-                                </select>
-                                <?php else : ?>
-                                <?=$transaction['category']?>
-                                <?php endif; ?>
-                            </td>
-                            <td><?=$transaction['memo']?></td>
-                            <td><?=$transaction['due_date']?></td>
-                            <td><?=$transaction['balance']?></td>
-                            <td><?=$transaction['total']?></td>
-                            <td><?=$transaction['status']?></td>
-                            <td class="overflow-visible">
-                                <?php if(count($transaction['attachments']) > 0) : ?>
-                                    <div class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
-                                            <?php foreach($transaction['attachments'] as $attachment) : ?>
-                                            <li>
-                                                <a href="#" class="dropdown-item view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
-                                                    <div class="row">
-                                                        <div class="col-5 pr-0">
-                                                            <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <div class="d-flex align-items-center h-100 w-100">
-                                                                <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
+                        <form id="expensesTblFrm" class="expensesTblFrm">
+                            <?php if(count($transactions) > 0) : ?>
+                            <?php foreach($transactions as $transaction): ?>
+                            <tr data-type="<?=$transaction['type']?>">
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select check-input-expenses" id="check-input-expenses" type="checkbox" value="<?=$transaction['id']?>">
+                                    </div>
+                                </td>
+                                <td><?=$transaction['date']?></td>
+                                <td><?=$transaction['type']?></td>
+                                <td><?=$transaction['number']?></td>
+                                <td><?=$transaction['payee']?></td>
+                                <td><?=$transaction['method']?></td>
+                                <td><?=$transaction['source']?></td>
+                                <td>
+                                    <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
+                                    <select name="expense_account[]" class="form-control nsm-field">
+                                        <option value="<?=$transaction['category']['id']?>"><?=$transaction['category']['name']?></option>
+                                    </select>
+                                    <?php else : ?>
+                                    <?=$transaction['category']?>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?=$transaction['memo']?></td>
+                                <td><?=$transaction['due_date']?></td>
+                                <td><?=$transaction['balance']?></td>
+                                <td><?=$transaction['total']?></td>
+                                <td><?=$transaction['status']?></td>
+                                <td class="overflow-visible">
+                                    <?php if(count($transaction['attachments']) > 0) : ?>
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
+                                                <?php foreach($transaction['attachments'] as $attachment) : ?>
+                                                <li>
+                                                    <a href="#" class="dropdown-item view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
+                                                        <div class="row">
+                                                            <div class="col-5 pr-0">
+                                                                <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <div class="d-flex align-items-center h-100 w-100">
+                                                                    <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <?php endforeach; ?>
-                                        </ul>
+                                                    </a>
+                                                </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?=$transaction['manage']?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php else : ?>
+                            <tr>
+                                <td colspan="15">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
                                     </div>
-                                <?php endif; ?>
-                            </td>
-                            <td><?=$transaction['manage']?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php else : ?>
-                        <tr>
-                            <td colspan="15">
-                                <div class="nsm-empty">
-                                    <span>No results found.</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        </form>
                     </tbody>
                 </table>
             </div>
