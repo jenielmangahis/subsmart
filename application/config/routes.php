@@ -742,6 +742,8 @@ $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/
 $route['accounting/expenses/update-transaction-category']['post'] = 'accounting_controllers/expenses/update_transaction_category';
 $route['accounting/expenses/copy-to-bill/(:any)'] = 'accounting_controllers/expenses/copy_to_bill/$1';
 
+$route['accounting/expenses/delete_multi_transaction'] = 'accounting_modals/delete_multi_transaction';
+
 $route['accounting/reports'] = 'accounting_controllers/reports/index';
 $route['accounting/reports/add-to-favorites/(:any)'] = 'accounting_controllers/reports/add_to_favorites/$1';
 $route['accounting/reports/remove-from-favorites/(:any)'] = 'accounting_controllers/reports/remove_from_favorites/$1';

@@ -431,7 +431,6 @@ $('#expenses-table .copy-to-bill').on('click', function(e) {
 
 $('#expenses-table .delete-transaction').on('click', function(e) {
     e.preventDefault();
-
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
     var transactionType = row.find('td:nth-child(3)').text().trim();

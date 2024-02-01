@@ -283,7 +283,8 @@
                             <tr data-type="<?=$transaction['type']?>">
                                 <td>
                                     <div class="table-row-icon table-checkbox">
-                                        <input class="form-check-input select-one table-select check-input-expenses" id="check-input-expenses" type="checkbox" value="<?=$transaction['id']?>">
+                                        <input type="hidden" name="expenses_transaction_type[<?php echo $transaction['id']; ?>]" value="<?php echo $transaction['type']; ?>" />
+                                        <input class="form-check-input select-one table-select check-input-expenses" id="check-input-expenses" type="checkbox" name="expenses_transaction_ids[]" value="<?php echo $transaction['id']; ?>" />
                                     </div>
                                 </td>
                                 <td><?=$transaction['date']?></td>

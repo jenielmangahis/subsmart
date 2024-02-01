@@ -437,9 +437,9 @@ $('#expenses-table .delete-transaction').on('click', function(e) {
     transactionType = transactionType.replaceAll(' (Credit Card)', '');
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
-
+   
     $.ajax({
-        url: `/accounting/delete-transaction/${transactionType}/${id}`,
+        url: base_url + `/accounting/delete-transaction/${transactionType}/${id}`,
         type: 'DELETE',
         dataType: 'json',
         success: function(result) {
@@ -741,7 +741,7 @@ $('#expenses-print-transactions').on('click', function(e) {
 });
 
 $(document).on('click', '#expenses-delete-selected', function() {
-    var delete_url = base_url + 'accounting/expenses/delete_multi_expenses';
+    var delete_url = base_url + 'accounting/expenses/delete_multi_transaction';
     var frmData = $("#expensesTblFrm").serialize();
 
     Swal.fire({
@@ -760,12 +760,11 @@ $(document).on('click', '#expenses-delete-selected', function() {
                 data: frmData,
                 success: function(data) {
                     console.log(data);
-
-                    $('.displayRules').html(data);
+                    $('.displayExpensesDelete').html(data);
                     window.location.reload();
                     Swal.fire(
                         'Deleted!',
-                        'Expenses has been deleted.',
+                        'Expenses transaction has been deleted.',
                         'success'
                     );
                 }

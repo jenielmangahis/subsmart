@@ -20638,6 +20638,72 @@ class Accounting_modals extends MY_Controller
         ]);
     }
 
+    public function delete_multi_transaction() {
+        $count = 0;
+        $data = $this->input->post();
+
+        if(!empty($this->input->post())) {
+
+            $expenses_transaction_type = $this->input->post('expenses_transaction_type');
+            $expenses_transaction_ids = $this->input->post('expenses_transaction_ids');
+
+            if(!empty($expenses_transaction_type) && !empty($expenses_transaction_ids)) {
+                foreach($expenses_transaction_ids as $expenses_transaction_id) {
+                    if(isset($expenses_transaction_type[$expenses_transaction_id])) {
+                        $transaction_type = strtolower($expenses_transaction_type[$expenses_transaction_id]);
+                        if($transaction_type == 'expense') {
+                            $delete = $this->delete_expense($expenses_transaction_id);
+                        }elseif($transaction_type == 'check') {
+                            $delete = $this->delete_check($expenses_transaction_id);
+                        }elseif($transaction_type == 'bill') {
+                            $delete = $this->delete_bill($expenses_transaction_id);
+                        }elseif($transaction_type == 'purchase-order') {
+                            $delete = $this->delete_purchase_order($expenses_transaction_id);
+                        }elseif($transaction_type == 'vendor-credit') {
+                            $delete = $this->delete_vendor_credit($expenses_transaction_id);
+                        }elseif($transaction_type == 'cc-credit') {
+                            $delete = $this->delete_cc_credit($expenses_transaction_id);
+                        }elseif($transaction_type == 'credit-card-payment') {
+                            $delete = $this->delete_cc_payment($expenses_transaction_id);
+                        }elseif($transaction_type == 'bill-payment') {
+                            $delete = $this->delete_bill_payment($expenses_transaction_id);
+                        }elseif($transaction_type == 'deposit') {
+                            $delete = $this->delete_deposit($expenses_transaction_id);
+                        }elseif($transaction_type == 'journal') {
+                            $delete = $this->delete_journal_entry($expenses_transaction_id);
+                        }elseif($transaction_type == 'transfer') {
+                            $delete = $this->delete_transfer($expenses_transaction_id);
+                        }elseif($transaction_type == 'inventory-qty-adjust') {
+                            $delete = $this->delete_qty_adjustment($expenses_transaction_id);
+                        }elseif($transaction_type == 'credit-card-pmt') {
+                            $delete = $this->delete_cc_payment($expenses_transaction_id);
+                        }elseif($transaction_type == 'time-activity') {
+                            $delete = $this->delete_time_activity($expenses_transaction_id);
+                        }elseif($transaction_type == 'receive-payment') {
+                            $delete = $this->delete_receive_payment($expenses_transaction_id);
+                        }elseif($transaction_type == 'credit-memo') {
+                            $delete = $this->delete_credit_memo($expenses_transaction_id);
+                        }elseif($transaction_type == 'sales-receipt') {
+                            $delete = $this->delete_sales_receipt($expenses_transaction_id);
+                        }elseif($transaction_type == 'refund-receipt') {
+                            $delete = $this->delete_refund_receipt($expenses_transaction_id);
+                        }elseif($transaction_type == 'delayed-credit') {
+                            $delete = $this->delete_delayed_credit($expenses_transaction_id);
+                        }elseif($transaction_type == 'delayed-charge') {
+                            $delete = $this->delete_delayed_charge($expenses_transaction_id);
+                        }elseif($transaction_type == 'invoice') {
+                            $delete = $this->delete_invoice($expenses_transaction_id);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        $output = 'success';
+        echo $output;        
+    }
+
     private function delete_expense($expenseId)
     {
         $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
