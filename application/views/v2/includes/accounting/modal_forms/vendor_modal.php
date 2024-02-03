@@ -15,21 +15,21 @@
                 <div class="row">
                     <div class="col-12 col-md-7">
                         <div class="row">
-                            <div class="col-6 col-md-1">
+                            <div class="col-6 col-md-2">
                                 <label for="title">Title</label>
                                 <input type="text" name="title" id="title" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->title : ''?>">
                             </div>
                             <div class="col-6 col-md-3">
                                 <label for="f_name">First name</label>
-                                <input type="text" name="f_name" id="f_name" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->f_name : ''?>">
+                                <input type="text" name="f_name" id="f_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->f_name : ''?>">
                             </div>
-                            <div class="col-6 col-md-3">
+                            <div class="col-6 col-md-2">
                                 <label for="m_name">Middle name</label>
-                                <input type="text" name="m_name" id="m_name" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->m_name : ''?>">
+                                <input type="text" name="m_name" id="m_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->m_name : ''?>">
                             </div>
                             <div class="col-6 col-md-3">
                                 <label for="l_name">Last name</label>
-                                <input type="text" name="l_name" id="l_name" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->l_name : ''?>">
+                                <input type="text" name="l_name" id="l_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->l_name : ''?>">
                             </div>
                             <div class="col-6 col-md-2">
                                 <label for="suffix">Suffix</label>
