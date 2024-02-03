@@ -294,6 +294,7 @@ $route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_p
 $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment';
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
 $route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
+$route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1146,6 +1147,7 @@ $route['job/bird_eye_view'] = 'Workorder/map';
 $route['job/_load_job_payments'] = 'Job/ajax_load_job_payments';
 $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
+$route['job/add'] = 'Job/new_job1';
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
 //Estimates
