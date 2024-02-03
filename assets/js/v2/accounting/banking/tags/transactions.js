@@ -435,9 +435,20 @@ $('#transactions-table tbody tr td.row-hover').on('click', function() {
     var row = $(this).parent();
     var id = row.find('.select-one').val().split('-');
     id = id[id.length - 1];
-    var type = row.find('td:nth-child(6)').text().trim() === 'Credit card expense' ? 'Expense' : row.find('td:nth-child(6)').text().trim();
-    type = type === 'Activity charge' ? 'Delayed Charge' : type;
-    type = type === 'Activity credit' ? 'Delayed Credit' : type;
+    //var type = row.find('td:nth-child(6)').text().trim() === 'Credit card expense' ? 'Expense' : row.find('td:nth-child(6)').text().trim();
+    //type = type === 'Activity charge' ? 'Delayed Charge' : type;
+    //type = type === 'Activity credit' ? 'Delayed Credit' : type;
+
+    var row_type = $(this).attr('data-type');
+    if( row_type === 'Activity charge' ){
+        $row_type = 'Activity charge';
+    }
+
+    if( row_type === 'Activity credit' ){
+        $row_type = 'Delayed Credit';
+    }
+
+    var type = row_type;
 
     var data = {
         id: id,

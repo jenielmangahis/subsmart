@@ -217,12 +217,12 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
-                            <td class="row-hover" style="width:10%;"><?=$transaction['date']?></td>
-                            <td class="row-hover"><?=$transaction['from_to']?></td>
+                            <td class="row-hover" style="width:10%;" data-type="<?=$transaction['type']?>"><?=$transaction['date']?></td>
+                            <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['from_to']?></td>
                             <!-- <td class="row-hover"><?=$transaction['category']?></td>
                             <td class="row-hover"><?=$transaction['memo']?></td> -->
-                            <td class="row-hover"><?=$transaction['type']?></td>
-                            <td class="row-hover">
+                            <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['type']?></td>
+                            <td class="row-hover" data-type="<?=$transaction['type']?>">
                                 <?php 
                                     $amount = '$'.number_format(floatval($transaction['amount']), 2);
                                     echo str_replace('$-', '-$', $amount);

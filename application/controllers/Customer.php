@@ -213,7 +213,7 @@ class Customer extends MY_Controller
                         array_push($data_arr, $lead);
                     }
                     if (in_array('added', $enabled_table_headers)){
-                        array_push($data_arr, $customer->entered_by);
+                        array_push($data_arr, $customer->entered_by2);
                     }
                     if (in_array('sales_rep', $enabled_table_headers)){
                         $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
@@ -286,7 +286,7 @@ class Customer extends MY_Controller
                     $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
                     array_push($data_arr, $lead);
                     //added
-                    $added_by = trim($customer->entered_by) != '' ? $customer->entered_by : '---';
+                    $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
                     array_push($data_arr, $added_by);
                     //sales rep
                     $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
@@ -1953,16 +1953,16 @@ class Customer extends MY_Controller
             'select' => '*',
         );
 
-        $get_customer_status = array(
-            'where' => array(
-                    'company_id' => logged('company_id')
-            ),
-            'or_where' => array(
-                'company_id' => 0,
-            ),
-            'table' => 'acs_cust_status',
-            'select' => '*',
-        );
+        // $get_customer_status = array(
+        //     'where' => array(
+        //             'company_id' => logged('company_id')
+        //     ),
+        //     'or_where' => array(
+        //         'company_id' => 0,
+        //     ),
+        //     'table' => 'acs_cust_status',
+        //     'select' => '*',
+        // );
 
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
@@ -1990,7 +1990,7 @@ class Customer extends MY_Controller
     
         // fetch customer statuses
         // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-        $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
+        // $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
