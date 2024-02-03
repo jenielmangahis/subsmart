@@ -114,7 +114,7 @@ $('#export-form').on('submit', function(e) {
 $('#add-vendor-button').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-add-vendor-details-modal', function(result) {
+    $.get( base_url + 'accounting/get-add-vendor-details-modal', function(result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`${result}`);
         } else {
