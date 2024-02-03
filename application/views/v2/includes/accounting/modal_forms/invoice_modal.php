@@ -3,7 +3,7 @@
 <?php if(!isset($invoice)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/invoice/<?=$invoice->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?= base_url('accounting/update-transaction/invoice/'.$invoice->id) ?>">
 <?php endif; ?>
     <div id="invoiceModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -908,7 +908,6 @@
                                         <i class="bx bx-fw bx-chevron-up text-white"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
                                         <a class="dropdown-item" href="#" onclick="saveAndSendForm(event)">Save and send</a>
                                         <a class="dropdown-item" href="#">Save and share link</a>
                                     </div>

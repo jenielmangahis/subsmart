@@ -101,18 +101,19 @@
                     </div>
                     <div class="col-xl-12 mb-3">
                         <select class="searchCard" multiple="multiple">
-                            <!-- <option value="customerCard">Customer</option> -->
+                            <option value="customerCard">Customer</option>
                             <option value="vendorCard">Vendor</option>
                             <option value="employeeCard">Employee</option>
                             <option value="itemCard">Item</option>
-                            <!-- <option value="invoiceCard">Invoice</option> -->
-                            <!-- <option value="paymentCard">Payment</option> -->
-                            <!-- <option value="estimateCard">Estimate</option> -->
+                            <option value="accountCard">Account</option>
+                            <!-- <option value="invoiceCard">Invoice</option>
+                            <option value="paymentCard">Payment</option>
+                            <option value="estimateCard">Estimate</option> -->
                         </select>
                     </div>
                     <div class="container-fluid">
                     <div class="row" id="masonryContainer">
-                        <!-- <div class="col-xl-2 mb-3 customerCard cardToggle">
+                        <div class="col-xl-2 mb-3 customerCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
                                     <form class="quickbooks_import_form">
@@ -131,7 +132,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="col-xl-2 mb-3 vendorCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
@@ -192,6 +193,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-2 mb-3 accountCard cardToggle">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="quickbooks_import_form">
+                                        <h5 class="card-title">Account</h5>
+                                        <span class="card-text text-muted">Accounts are what businesses use to track transactions. Accounts can track money coming in (income or revenue) and going out (expenses). They can also track the value of things (assets), like vehicles and equipment.</span>
+                                        <hr class="hrMargin">
+                                        <div class="input-group">
+                                            <input type="hidden" name="data" value="Account">
+                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                        </div>
+                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
+                                        <hr class="hrMargin">
+                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
+                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <!-- <div class="col-xl-2 mb-3 invoiceCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
@@ -211,8 +232,8 @@
                                     </form>
                                 </div>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-xl-2 mb-3 paymentCard cardToggle">
+                        </div>
+                        <div class="col-xl-2 mb-3 paymentCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
                                     <form class="quickbooks_import_form">
@@ -231,8 +252,8 @@
                                     </form>
                                 </div>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-xl-2 mb-3 estimateCard cardToggle">
+                        </div>
+                        <div class="col-xl-2 mb-3 estimateCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
                                     <form class="quickbooks_import_form">
@@ -414,14 +435,24 @@
                                             formDisabler(form, true);
                                         },
                                         success: function(response) {
-                                            if (startPosition + 200 <= resultCount) {
+                                            if (startPosition + 200 < resultCount) {
                                                 importDataRecursion(form, formData, startPosition + 200, resultCount);
                                                 $('.currentRecordCount').text(startPosition + 200 - 1);
                                                 var percentage = Math.trunc(((startPosition + 200 - 1) / resultCount) * 100)
                                                 $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
-                                                $('.modalTitle').text(form.find('input[name="data"]').val());
                                             } else {
                                                 formDisabler(form, false);
+                                                $('.modalTitle').text(form.find('input[name="data"]').val());
+                                                $('.currentRecordCount').text(resultCount);
+                                                $('.importProgressBar > div > div').css('width', 100 + '%').text(100  + '%');
+                                                setTimeout(() => {
+                                                    $('.importModal').modal('hide');
+                                                    Swal.fire({
+                                                        title: "Success!",
+                                                        text: form.find('input[name="data"]').val() + " Data was imported successfully.",
+                                                        icon: "success"
+                                                    });
+                                                }, 250);
                                             }
                                         },
                                     });
@@ -442,7 +473,7 @@
                                                 $('.importModal').modal('hide');
                                                 Swal.fire({
                                                     title: "Success!",
-                                                    text: "Data was imported successfully.",
+                                                    text: form.find('input[name="data"]').val() + " data was imported successfully.",
                                                     icon: "success"
                                                 });
                                             }, 250);

@@ -293,6 +293,7 @@ $route['invoice/_update_payment_status'] = 'Invoice/ajax_update_payment_status';
 $route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_payment';
 $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment';
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
+$route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -740,6 +741,8 @@ $route['accounting/expenses/print-transactions']['post'] = 'accounting_controlle
 $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/export';
 $route['accounting/expenses/update-transaction-category']['post'] = 'accounting_controllers/expenses/update_transaction_category';
 $route['accounting/expenses/copy-to-bill/(:any)'] = 'accounting_controllers/expenses/copy_to_bill/$1';
+
+$route['accounting/expenses/delete_multi_transaction'] = 'accounting_modals/delete_multi_transaction';
 
 $route['accounting/reports'] = 'accounting_controllers/reports/index';
 $route['accounting/reports/add-to-favorites/(:any)'] = 'accounting_controllers/reports/add_to_favorites/$1';
@@ -1517,6 +1520,8 @@ $route['appointment_types/_delete_appointment_type'] = 'Appointment_Types/ajax_d
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 $route['items/_add_product_list'] = 'Items/ajax_add_product_list';
 $route['items/_add_services_list'] = 'Items/ajax_add_services_list';
+$route['items/_edit_product_stock'] = 'Items/ajax_edit_product_stock';
+$route['items/_update_product_stock'] = 'Items/ajax_update_product_stock';
 
 //Support
 $route['support'] = 'Support/index';

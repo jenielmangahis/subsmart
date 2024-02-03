@@ -437,9 +437,9 @@ $('#expenses-table .delete-transaction').on('click', function(e) {
     transactionType = transactionType.replaceAll(' (Credit Card)', '');
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
-
+   
     $.ajax({
-        url: `/accounting/delete-transaction/${transactionType}/${id}`,
+        url: base_url + `/accounting/delete-transaction/${transactionType}/${id}`,
         type: 'DELETE',
         dataType: 'json',
         success: function(result) {
@@ -739,6 +739,39 @@ $('#expenses-print-transactions').on('click', function(e) {
     $('#print-transactions-form').submit();
     $('#print-transactions-form').remove();
 });
+
+$(document).on('click', '#expenses-delete-selected', function() {
+    var delete_url = base_url + 'accounting/expenses/delete_multi_transaction';
+    var frmData = $("#expensesTblFrm").serialize();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: delete_url,
+                method: "POST",
+                data: frmData,
+                success: function(data) {
+                    console.log(data);
+                    $('.displayExpensesDelete').html(data);
+                    window.location.reload();
+                    Swal.fire(
+                        'Deleted!',
+                        'Expenses transaction has been deleted.',
+                        'success'
+                    );
+                }
+            });
+        }
+    });
+});   
 
 $('#categorize-selected').on('click', function(e) {
     e.preventDefault();

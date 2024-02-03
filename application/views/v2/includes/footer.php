@@ -166,9 +166,11 @@
                 if(count_expenses_list_check > 0) {
                     $(".dropdown-item-print-transaction").removeClass("disabled");
                     $(".dropdown-item-categorize-selected").removeClass("disabled");
+                    $(".dropdown-item-delete-expenses").removeClass("disabled");
                 } else {
                     $(".dropdown-item-print-transaction").addClass("disabled");
                     $(".dropdown-item-categorize-selected").addClass("disabled");
+                    $(".dropdown-item-delete-expenses").addClass("disabled");
                 }             
             })      
             
@@ -179,12 +181,14 @@
                     });
                     $(".dropdown-item-print-transaction").removeClass("disabled");
                     $(".dropdown-item-categorize-selected").removeClass("disabled");
+                    $(".dropdown-item-delete-expenses").removeClass("disabled");
                 }else{
                     $('.check-input-expenses').each(function(){
                         this.checked = false;
                     });
                     $(".dropdown-item-print-transaction").addClass("disabled");
                     $(".dropdown-item-categorize-selected").addClass("disabled");
+                    $(".dropdown-item-delete-expenses").addClass("disabled");
                 }                
             });
 

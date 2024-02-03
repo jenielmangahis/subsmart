@@ -13,8 +13,8 @@ $(document).ready(function () {
             modalName = target.target;
         }
 
-        $.get(GET_OTHER_MODAL_URL + view, function(res) {
-        //$.get(base_url + 'accounting/get-other-modals/' + view, function(res) {
+        //$.get(GET_OTHER_MODAL_URL + view, function(res) {
+        $.get(base_url + 'accounting/get-other-modals/' + view, function(res) {
             if ($('div#modal-container').length > 0) {
                 $('div#modal-container').html(res);
             } else {
@@ -72,7 +72,7 @@ $(document).ready(function () {
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-dropdown-choices',
+                            url: base_url + 'accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {

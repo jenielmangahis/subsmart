@@ -24,19 +24,9 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Vendor Contact List data in Database
-        // if ($reportType == "vendor_contact_list") {
-        //     $this->db->select('id, company AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, CONCAT(f_name, " ", m_name, " ", l_name, " ", suffix) AS fullname, CONCAT(street, ", ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
-        //     $this->db->from('accounting_vendors');
-        //     $this->db->where('company_id', $companyID);
-        //     $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-        //     $this->db->limit($reportConfig['page_size']);
-        //     $data = $this->db->get();
-        //     return $data->result();
-        // }
-
         if ($reportType == "vendor_contact_list") {
-            $this->db->select('quickbooks_vendor.id AS vendor_id, quickbooks_vendor.displayName AS vendor, quickbooks_vendor.primaryPhone_FreeFormNumber AS phone_numbers, quickbooks_vendor.primaryEmailAddr_Address AS email, quickbooks_vendor.printOnCheckName AS fullname, CONCAT(quickbooks_vendor.billAddr_Line1, ", ", quickbooks_vendor.billAddr_City, ", ", quickbooks_vendor.billAddr_CountrySubDivisionCode, " ", quickbooks_vendor.billAddr_PostalCode) AS address, "" AS account_number');
-            $this->db->from('quickbooks_vendor');
+            $this->db->select('id, display_name AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, display_name AS fullname, CONCAT(street, ", ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
+            $this->db->from('accounting_vendors');
             $this->db->where('company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -439,27 +429,18 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Product/Service list data in Database
-        // if ($reportType == "product_service_list") {
-        //     $this->db->select('items.id AS item_id, items.title AS product_service, items.type AS type, items.description AS description, items.price AS price, items.cost AS cost, items_has_storage_loc.qty AS qty_on_hand');
-        //     $this->db->from('items');
-        //     $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
-        //     $this->db->where('items.title !=', '');
-        //     $this->db->where('items.company_id', $companyID);
-        //     $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-        //     $this->db->limit($reportConfig['page_size']);
-        //     $query = $this->db->get();
-        //     return $query->result();
-        // }
         if ($reportType == "product_service_list") {
-            $this->db->select('quickbooks_item.id AS item_id, quickbooks_item.name AS product_service, quickbooks_item.type AS type, "" AS description, quickbooks_item.unitPrice AS price, quickbooks_item.purchaseCost AS cost, 0 AS qty_on_hand');
-            $this->db->from('quickbooks_item');
-            $this->db->where('quickbooks_item.company_id', $companyID);
+            $this->db->select('items.id AS item_id, items.title AS product_service, items.type AS type, items.description AS description, items.price AS price, items.cost AS cost, items_has_storage_loc.qty AS qty_on_hand');
+            $this->db->from('items');
+            $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
+            $this->db->where('items.title !=', '');
+            $this->db->where('items.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $query = $this->db->get();
             return $query->result();
         }
-
+        
         // Get Sales by Product/Service Summary data in Database
         if ($reportType == "sales_by_product_service_summary") {
             $this->db->select('invoices.id AS invoice_id, items.title AS product_service, invoices_items.qty AS quantity, SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) AS amount, ((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / (SELECT SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) FROM invoices LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id LEFT JOIN items ON items.id = invoices_items.items_id WHERE invoices.company_id = '.$companyID.')) * 100) AS sales_percentage, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / invoices_items.qty) AS average_price, SUM(items.COGS * invoices_items.qty) AS COGS, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) AS gross_margin, (((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) / SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax)) * 100) AS gross_margin_percentage');
@@ -653,7 +634,7 @@ class Accounting_model extends MY_Model {
 
         // Get Account List data in Database
         if ($reportType == "account_list") {
-            $this->db->select('accounting_chart_of_accounts.id AS account_id, accounting_chart_of_accounts.name AS account, account.account_name AS type, account_detail.acc_detail_name AS detail_type, accounting_chart_of_accounts.description AS description, accounting_chart_of_accounts.balance AS balance');
+            $this->db->select('accounting_chart_of_accounts.id AS account_id, accounting_chart_of_accounts.name AS account, accounting_chart_of_accounts.description AS type, account_detail.acc_detail_name AS detail_type, "" AS description, accounting_chart_of_accounts.balance AS balance');
             $this->db->from('accounting_chart_of_accounts');
             $this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id', 'left');
             $this->db->join('account_detail', 'account_detail.acc_detail_id = accounting_chart_of_accounts.acc_detail_id', 'left');
@@ -665,26 +646,16 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Employee Details data in Database
-        // if ($reportType == "employee_details") {
-        //     $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, roles.title AS role, users.pay_rate AS pay_rate');
-        //     $this->db->from('users');
-        //     $this->db->join('roles', 'roles.id = users.role', 'left');
-        //     $this->db->where('users.company_id', $companyID);
-        //     $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-        //     $this->db->limit($reportConfig['page_size']);
-        //     $data = $this->db->get();
-        //     return $data->result();
-        // }
-
         if ($reportType == "employee_details") {
-            $this->db->select('quickbooks_employee.id AS user_id, CONCAT(quickbooks_employee.givenName, " ", quickbooks_employee.familyName) AS name,
-            quickbooks_employee.birthDate AS birthdate, TIMESTAMPDIFF(YEAR, quickbooks_employee.birthDate, CURDATE()) AS age, CONCAT(quickbooks_employee.primaryAddr_Line1, " ", quickbooks_employee.primaryAddr_City, ", ", quickbooks_employee.primaryAddr_CountrySubDivisionCode, ", ", quickbooks_employee.primaryAddr_PostalCode) AS address, "" AS phone_number, "" AS mobile_number, quickbooks_employee.hiredDate AS date_hired, "" AS role, 0 AS pay_rate');
-            $this->db->from('quickbooks_employee');
-            $this->db->where('quickbooks_employee.company_id', $companyID);
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, roles.title AS role, users.pay_rate AS pay_rate');
+            $this->db->from('users');
+            $this->db->join('roles', 'roles.id = users.role', 'left');
+            $this->db->where('users.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
+
     }
 }
