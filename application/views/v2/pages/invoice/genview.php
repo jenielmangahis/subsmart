@@ -24,21 +24,26 @@
         max-width: 70%;
     }
 </style>
-<div class="wrapper" role="wrapper">
+<div class="row page-content g-0" role="wrapper">
     <?php //include viewPath('includes/sidebars/invoice'); ?>
-
-    <div class="row">
-        <div class="col-12 mb-3">
-            <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
-        </div>
-        <div class="col-12 mb-3">
-            <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
-        </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
     </div>
-    <div wrapper__section>            
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
+    </div>    
+    <div class="col-12">
         <?php if (!empty($invoice)) : ?>
-            <div class="custom__div" style="padding:0 2% 2% 2%">
-                <div class="card">
+            <div class="nsm-page">
+                <div class="nsm-page-content">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="nsm-callout primary">
+                                <button name="button"><i class='bx bx-x'></i></button>
+                                An invoice provides customers with a detailed description and cost of the products or services that you have provided. Invoices are required for sales where the customers do not pay you immediately. Our invoices are tracked so that you know how much each customer owes you and when payment is due. This listing and our dashboard widget will help you keep your eyes on your money.
+                            </div>
+                        </div>
+                    </div>
                     <div class="container-fluid" style="font-size:16px;padding:10px;">
                         <div class="row">                                
                             <div class="row col-xl-12" data-id="invoices">                                    

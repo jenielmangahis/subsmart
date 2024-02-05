@@ -17,6 +17,24 @@ class AcsAccess_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getByProfId($prof_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('fk_prof_id', $prof_id); 
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function updateByProfId($prof_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('fk_prof_id', $prof_id);
+        $this->db->update();
+    }
 }
 
 /* End of file AcsAccess_model.php */

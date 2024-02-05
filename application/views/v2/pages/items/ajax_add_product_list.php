@@ -14,6 +14,22 @@
     position: relative;
     top: 2px;
 }
+.add-product, .edit-product-stock{
+    margin:1px !important;
+}
+.item-storage-name{
+    margin-left:11px;
+}
+#nsm-table-products tbody{
+    display: block;
+    max-height:650px;
+    overflow-y: scroll;
+}
+#nsm-table-products thead, #nsm-table-products tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;/* even columns width , fix width of table too*/
+}
 </style>
 <table class="nsm-table" id="nsm-table-products">
     <thead>
@@ -31,7 +47,7 @@
             </tr>   
             <tr>
                 <td class="row-subheader">Storage Location</td>
-                <td class="row-subheader" style="text-align:right">Quantity</td>
+                <td class="row-subheader" style="text-align:right">Stock</td>
             </tr>         
             <?php foreach($item['storage'] as $storage){ ?>
                 <tr>
@@ -40,7 +56,10 @@
                             <button type="button" class="nsm-button primary small add-product" data-productname="<?= $item['item']['name']; ?>" data-storageid="<?= $storage->loc_id; ?>" data-itemid="<?= $item['item']['id']; ?>" data-itemprice="<?= $item['item']['price']; ?>" data-onhand="<?= $storage->qty; ?>">
                                 <i class='bx bx-plus-medical'></i>
                             </button>
-                            <?= $storage->storage_location == '' ? 'Storage name not found' : $storage->storage_location; ?>
+                            <button type="button" class="nsm-button primary small edit-product-stock" data-storageid="<?= $storage->loc_id; ?>" data-itemid="<?= $item['item']['id']; ?>">
+                                <i class='bx bxs-pencil'></i>
+                            </button>
+                            <span class="item-storage-name"><?= $storage->storage_location == '' ? 'Storage name not found' : $storage->storage_location; ?></span>
                         </div>
                     </td>
                     <td style="text-align:right"><?= $storage->qty > 0 ? $storage->qty : 0; ?></td>                    
@@ -54,6 +73,24 @@
 </table>
 <script>
 $(function(){
-    $("#nsm-table-products").nsmPagination();    
+    $("#nsm-table-products").nsmPagination({itemsPerPage:15});    
+
+    $('.add-product').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Add product to list';
+        } 
+    });
+
+    $('.edit-product-stock').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Edit product stock';
+        } 
+    });
 });
 </script>

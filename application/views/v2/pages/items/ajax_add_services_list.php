@@ -43,5 +43,14 @@
 <script>
 $(function(){
     $("#nsm-table-services").nsmPagination();    
+
+    $('.add-services').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Add services to list';
+        } 
+    });
 });
 </script>

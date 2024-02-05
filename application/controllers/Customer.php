@@ -7095,11 +7095,42 @@ class Customer extends MY_Controller
     public function ajax_get_customer_data()
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAccess_model');
 
         $customer_id = $this->input->post('customer_id');
         $company_id  = logged('company_id');
 
-        $customer = $this->AcsProfile_model->getdataAjax($customer_id);        
+        $customer = $this->AcsProfile_model->getdataAjax($customer_id); 
+        if( $customer->phone_m != '' ){
+            $customer->phone_m = formatPhoneNumber($customer->phone_m);
+        }else{
+            $customer->phone_m = 'Not Specified';
+        }          
+
+        if( $customer->phone_h != '' ){
+            $customer->phone_h = formatPhoneNumber($customer->phone_h);
+        }else{
+            $customer->phone_h = 'Not Specified';
+        }     
+
+        if( $customer->business_name == '' || $customer->business_name == NULL ){
+            $customer->business_name = 'Not Specified';
+        }
+        
+        if( $customer->date_of_birth == '' || $customer->date_of_birth == NULL ){
+            $customer->date_of_birth = date("m/d/Y");
+        } 
+
+        if( $customer->ssn == '' || $customer->ssn == NULL ){
+            $customer->ssn = 'Not Specified';
+        } 
+
+        $acsAccess = $this->AcsAccess_model->getByProfId($customer_id);
+        if( $acsAccess ){
+            $customer->access_password = $acsAccess->access_password;
+        }else{
+            $customer->access_password = 'Not Specified';
+        }
         echo json_encode($customer);
     }
     
