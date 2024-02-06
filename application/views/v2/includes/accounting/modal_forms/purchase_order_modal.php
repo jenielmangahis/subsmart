@@ -274,47 +274,46 @@
                                                             <?php endif; ?>
 
                                                             <?php do {?>
-                                                            <tr>
-                                                                <td><?=$count?></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php if(isset($purchaseOrder) && !$is_copy) : ?>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php endif; ?>
-                                                                <td>
-                                                                    <button type="button" class="nsm-button delete-row">
-                                                                        <i class='bx bx-fw bx-trash'></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        <select name="expense_account[]" class="nsm-field form-control" required></select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="category[]" class="nsm-field form-control">
+                                                                            <option disabled selected>&nbsp;</option>
+                                                                            <option value="fixed">Fixed Cost</option>
+                                                                            <option value="variable">Variable Cost</option>
+                                                                            <option value="periodic">Periodic Cost</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="text" name="description[]" class="nsm-field form-control"></td>
+                                                                    <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01"></td>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                    <td>
+                                                                        <div class="table-row-icon table-checkbox">
+                                                                            <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="category_customer[]" class="nsm-field form-control"></select>
+                                                                    </td>
+                                                                    <?php if(isset($purchaseOrder) && !$is_copy) : ?>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <?php endif; ?>
+                                                                    <td>
+                                                                        <button type="button" class="nsm-button delete-row">
+                                                                            <i class='bx bx-fw bx-trash'></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
-                                                            <tr>
-                                                                <td>2</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php if(isset($purchaseOrder) && !$is_copy) : ?>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php endif; ?>
-                                                                <td>
-                                                                    <button type="button" class="nsm-button delete-row">
-                                                                        <i class='bx bx-fw bx-trash'></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
