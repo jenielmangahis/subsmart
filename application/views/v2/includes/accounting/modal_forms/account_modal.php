@@ -7,11 +7,11 @@
                 <button type="button" class="close-account-modal" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <?php $action = isset($account) ? '/accounting/chart-of-accounts/update/'.$account->id : '/accounting/chart-of-accounts/add'; ?>
-            <form action="<?=$action?>" method="post" class="form-validate" novalidate="novalidate">
+            <form action="<?=$action?>" method="post" class="form-validate">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-md-6 mt-3">
-                        <label for="account_type">Account Type</label>
+                        <label for="account_type">Account Type1</label>
                         <select name="account_type" id="account_type" class="nsm-field mb-2 form-control" required>
                             <option value="<?=$accountType->id?>" selected><?=$accountType->account_name?></option>
                         </select>
@@ -52,7 +52,7 @@
                         <?php if(!isset($account)) : ?>
                         <div class="mt-3">
                             <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
-                            <select name="choose_time" id="choose_time" class="nsm-field mb-2 form-control" required>
+                            <select name="choose_time" id="choose_time" class="nsm-field mb-2 form-control">
                                 <option selected="selected" disabled>Choose one</option>
                                 <option value="beginning-of-year">Beginning of this year</option>
                                 <option value="beginning-of-month">Beginning of this month</option>
@@ -70,7 +70,7 @@
 
                         <div class="mt-3 d-none">
                             <label for="balance">Account balance at end of <span id="selected-date"></span></label>
-                            <input type="text" class="form-control nsm-field mb-2" name="balance" id="balance" required placeholder="Enter Balance"/>
+                            <input type="number" min="0" value="0" class="form-control nsm-field mb-2" name="balance" id="balance" placeholder="Enter Balance"/>
                         </div>
                         <?php else : ?>
                         <div class="mt-3">

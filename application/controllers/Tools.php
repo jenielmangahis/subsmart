@@ -360,6 +360,7 @@ class Tools extends MY_Controller {
         $this->load->library('QuickbooksApi');
         $this->load->model('CompanyApiConnector_model');
         $company_id = logged('company_id');
+        $user_id = logged('id');
         $postInput = $this->input->post();
         
         $quickbooks_connector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_accounting');  
@@ -382,148 +383,272 @@ class Tools extends MY_Controller {
                 switch ($postInput['data']) {
                     case 'Customer':
                         for ($i = 0; $i < count($request); $i++) { 
-                            $data = array(
-                                'company_id' => $company_id,
-                                'qbid' => $request[$i]->Id,
-                                'givenName' => $request[$i]->GivenName,
-                                'familyName' => $request[$i]->FamilyName,
-                                'companyName' => $request[$i]->CompanyName,
-                                'taxable' => $request[$i]->Taxable,
-                                'billAddr_Line1' => $request[$i]->BillAddr->Line1,
-                                'billAddr_City' => $request[$i]->BillAddr->City,
-                                'billAddr_CountrySubDivisionCode' => $request[$i]->BillAddr->CountrySubDivisionCode,
-                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
-                                'shipAddr_Line1' => $request[$i]->ShipAddr->Line1,
-                                'shipAddr_City' => $request[$i]->ShipAddr->City,
-                                'shipAddr_CountrySubDivisionCode' => $request[$i]->ShipAddr->CountrySubDivisionCode,
-                                'shipAddr_PostalCode' => $request[$i]->ShipAddr->PostalCode,
-                                'primaryPhone_FreeFormNumber' => $request[$i]->PrimaryPhone->FreeFormNumber,
-                                'contactName' => $request[$i]->ContactName,
-                                'altContactName' => $request[$i]->AltContactName,
-                                'customerTypeRef' => $request[$i]->CustomerTypeRef,
-                                'salesRepRef' => $request[$i]->SalesRepRef,
-                                'taxRateRef' => $request[$i]->TaxRateRef,
-                                'paymentMethodRef' => $request[$i]->PaymentMethodRef,
-                                'cCDetail' => $request[$i]->CCDetail,
-                                'balance' => $request[$i]->Balance,
-                                'openBalanceDate' => $request[$i]->OpenBalanceDate,
-                                'balanceWithJobs' => $request[$i]->BalanceWithJobs,
-                                'acctNum' => $request[$i]->AcctNum,
-                                'currencyRef' => $request[$i]->CurrencyRef,
-                                'overDueBalance' => $request[$i]->OverDueBalance,
-                                'totalRevenue' => $request[$i]->TotalRevenue,
-                                'totalExpense' => $request[$i]->TotalExpense,
-                                'preferredDeliveryMethod' => $request[$i]->PreferredDeliveryMethod,
-                                'organization' => $request[$i]->Organization,
-                                'title' => $request[$i]->Title,
-                                'displayName' => $request[$i]->DisplayName,
-                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
-                                'active' => $request[$i]->Active,
-                                'defaultTaxCodeRef' => $request[$i]->DefaultTaxCodeRef,
-                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
-                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
-                            );
-                            $query = $this->db->replace('quickbooks_customer', $data);
+                            if ($request[$i]->GivenName != "" || $request[$i]->FamilyName != "") {
+                                $data = array(
+                                    'company_id' => $company_id,
+                                    'fk_user_id' => $user_id,
+                                    'fk_sa_id' => 0,
+                                    'adt_sales_project_id' => 0,
+                                    'industry_type_id' => 0,
+                                    'qbid' => $request[$i]->Id,
+                                    'contact_name' => $request[$i]->ContactName,
+                                    'status' => "Active",
+                                    'customer_type' => "Residential",
+                                    'business_name' => $request[$i]->CompanyName,
+                                    'first_name' => $request[$i]->GivenName,
+                                    'middle_name' => $request[$i]->MiddleName,
+                                    'last_name' => $request[$i]->FamilyName,
+                                    'suffix' => $request[$i]->Suffix,
+                                    'mail_add' => $request[$i]->BillAddr->Line1,
+                                    'city' => $request[$i]->BillAddr->City,
+                                    'state' => $request[$i]->BillAddr->CountrySubDivisionCode,
+                                    'zip_code' => $request[$i]->BillAddr->PostalCode,
+                                    'email' => $request[$i]->PrimaryEmailAddr->Address,
+                                    'phone_h' => $request[$i]->PrimaryPhone->FreeFormNumber,
+                                    'phone_m' => $request[$i]->Mobile->FreeFormNumber,
+                                    'notes' => $request[$i]->Notes,
+                                    'notify_email' => 1,
+                                    'notify_sms' => 0,
+                                    'custom_fields' => $request[$i]->CustomField,
+                                    'activated' => 1,
+                                    'is_sync' => 0,
+                                    // 'Taxable' => $request[$i]->Taxable,
+                                    // 'OtherAddr' => $request[$i]->OtherAddr,
+                                    // 'AltContactName' => $request[$i]->AltContactName,
+                                    // 'Job' => $request[$i]->Job,
+                                    // 'BillWithParent' => $request[$i]->BillWithParent,
+                                    // 'RootCustomerRef' => $request[$i]->RootCustomerRef,
+                                    // 'ParentRef' => $request[$i]->ParentRef,
+                                    // 'Level' => $request[$i]->Level,
+                                    // 'CustomerTypeRef' => $request[$i]->CustomerTypeRef,
+                                    // 'SalesTermRef' => $request[$i]->SalesTermRef,
+                                    // 'SalesRepRef' => $request[$i]->SalesRepRef,
+                                    // 'TaxGroupCodeRef' => $request[$i]->TaxGroupCodeRef,
+                                    // 'TaxRateRef' => $request[$i]->TaxRateRef,
+                                    // 'PaymentMethodRef' => $request[$i]->PaymentMethodRef,
+                                    // 'CCDetail' => $request[$i]->CCDetail,
+                                    // 'PriceLevelRef' => $request[$i]->PriceLevelRef,
+                                    // 'Balance' => $request[$i]->Balance,
+                                    // 'OpenBalanceDate' => $request[$i]->OpenBalanceDate,
+                                    // 'BalanceWithJobs' => $request[$i]->BalanceWithJobs,
+                                    // 'CreditLimit' => $request[$i]->CreditLimit,
+                                    // 'AcctNum' => $request[$i]->AcctNum,
+                                    // 'CurrencyRef' => $request[$i]->CurrencyRef,
+                                    // 'OverDueBalance' => $request[$i]->OverDueBalance,
+                                    // 'TotalRevenue' => $request[$i]->TotalRevenue,
+                                    // 'TotalExpense' => $request[$i]->TotalExpense,
+                                    // 'PreferredDeliveryMethod' => $request[$i]->PreferredDeliveryMethod,
+                                    // 'ResaleNum' => $request[$i]->ResaleNum,
+                                    // 'JobInfo' => $request[$i]->JobInfo,
+                                    // 'TDSEnabled' => $request[$i]->TDSEnabled,
+                                    // 'CustomerEx' => $request[$i]->CustomerEx,
+                                    // 'SecondaryTaxIdentifier' => $request[$i]->SecondaryTaxIdentifier,
+                                    // 'ARAccountRef' => $request[$i]->ARAccountRef,
+                                    // 'PrimaryTaxIdentifier' => $request[$i]->PrimaryTaxIdentifier,
+                                    // 'TaxExemptionReasonId' => $request[$i]->TaxExemptionReasonId,
+                                    // 'IsProject' => $request[$i]->IsProject,
+                                    // 'BusinessNumber' => $request[$i]->BusinessNumber,
+                                    // 'GSTIN' => $request[$i]->GSTIN,
+                                    // 'GSTRegistrationType' => $request[$i]->GSTRegistrationType,
+                                    // 'IsCISContractor' => $request[$i]->IsCISContractor,
+                                    // 'ClientCompanyId' => $request[$i]->ClientCompanyId,
+                                    // 'ClientEntityId' => $request[$i]->ClientEntityId,
+                                    // 'IntuitId' => $request[$i]->IntuitId,
+                                    // 'Organization' => $request[$i]->Organization,
+                                    // 'Title' => $request[$i]->Title,
+                                    // 'FullyQualifiedName' => $request[$i]->FullyQualifiedName,
+                                    // 'DisplayName' => $request[$i]->DisplayName,
+                                    // 'PrintOnCheckName' => $request[$i]->PrintOnCheckName,
+                                    // 'UserId' => $request[$i]->UserId,
+                                    // 'Active' => $request[$i]->Active,
+                                    // 'Fax' => $request[$i]->Fax,
+                                    // 'WebAddr' => $request[$i]->WebAddr,
+                                    // 'OtherContactInfo' => $request[$i]->OtherContactInfo,
+                                    // 'DefaultTaxCodeRef' => $request[$i]->DefaultTaxCodeRef,
+                                    // 'SyncToken' => $request[$i]->SyncToken,
+                                    // 'AttachableRef' => $request[$i]->AttachableRef,
+                                    // 'domain' => $request[$i]->domain,
+                                    // 'sparse' => $request[$i]->sparse,
+                                    // 'MetaData_CreateTime' => $request[$i]->MetaData->CreateTime,
+                                    // 'MetaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                                );
+                                $query = $this->db->replace('acs_profile', $data);
+                            }
                         }
                         echo ($query) ? "success" : "fail" ;
                         break;
                     case 'Employee':
                         for ($i = 0; $i < count($request); $i++) { 
+                            $username = strtolower(str_replace(' ', '', $request[$i]->GivenName)) . strtolower(str_replace(' ', '', $request[$i]->FamilyName));
+                            $passwordHash = hash("sha256", $username."142");
+                            $passwordPlain = $username."142";
+
                             $data = array(
                                 'company_id' => $company_id,
                                 'qbid' => $request[$i]->Id,
-                                'givenName' => $request[$i]->GivenName,
-                                'middleName' => $request[$i]->MiddleName,
-                                'familyName' => $request[$i]->FamilyName,
-                                'displayName' => $request[$i]->DisplayName,
-                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
-                                'birthDate' => $request[$i]->BirthDate,
-                                'ssn' => $request[$i]->SSN,
-                                'billableTime' => $request[$i]->BillableTime,
-                                'primaryAddr_Id' => $request[$i]->PrimaryAddr->Id,
-                                'primaryAddr_Line1' => $request[$i]->PrimaryAddr->Line1,
-                                'primaryAddr_City' => $request[$i]->PrimaryAddr->City,
-                                'primaryAddr_CountrySubDivisionCode' => $request[$i]->PrimaryAddr->CountrySubDivisionCode,
-                                'primaryAddr_PostalCode' => $request[$i]->PrimaryAddr->PostalCode,
-                                'hiredDate' => $request[$i]->HiredDate,
-                                'domain' => $request[$i]->Domain,
-                                'sparse' => $request[$i]->Sparse,
-                                'syncToken' => $request[$i]->SyncToken,
-                                'active' => $request[$i]->active,
-                                'v4IdPseudonym' => $request[$i]->v4IdPseudonym,
-                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
-                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                                'FName' => $request[$i]->GivenName,
+                                'MName' => $request[$i]->MiddleName,
+                                'LName' => $request[$i]->FamilyName,
+                                'suffix' => $request[$i]->Suffix,
+                                'username' => $username,
+                                'email' => $request[$i]->PrimaryEmailAddr->Address,
+                                'password' => $passwordHash,
+                                'password_plain' => $passwordPlain,
+                                'role' => 22,
+                                'status' => 1,
+                                'notify_email' => 1,
+                                'notify_sms' => 0,
+                                'birthdate' => $request[$i]->BirthDate,
+                                'date_hired' => $request[$i]->HiredDate,
+                                'created_at' => $request[$i]->MetaData->CreateTime,
+                                'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                                'phone' => $request[$i]->PrimaryPhone->FreeFormNumber,
+                                'mobile' => $request[$i]->Mobile->FreeFormNumber,
+                                'address' => $request[$i]->PrimaryAddr->Line1,
+                                'city' => $request[$i]->PrimaryAddr->City,
+                                'state' => $request[$i]->PrimaryAddr->CountrySubDivisionCode,
+                                'postal_code' => $request[$i]->PrimaryAddr->PostalCode,
+                                'payscale_id' => 25,
+                                'base_salary' => "0.0",
+                                'base_hourly' => "0.0",
+                                'base_weekly' => "0.0",
+                                'base_monthly' => "0.0",
+                                'jobtypebase_amount' => "0.0",
+                                'compensation_base' => "0.0",
+                                'compensation_rate' => "0.0",
+                                'commission_id' => 0,
+                                'commission_percentage' => "0.0",
+                                'has_web_access' => 1,
+                                'has_app_access' => 1,
+                                // 'CompanyName' => $request[$i]->CompanyName,
+                                // 'EmployeeType' => $request[$i]->EmployeeType,
+                                // 'EmployeeNumber' => $request[$i]->EmployeeNumber,
+                                // 'SSN' => $request[$i]->SSN,
+                                // 'OtherAddr' => $request[$i]->OtherAddr,
+                                // 'BillableTime' => $request[$i]->BillableTime,
+                                // 'BillRate' => $request[$i]->BillRate,
+                                // 'Gender' => $request[$i]->Gender,
+                                // 'ReleasedDate' => $request[$i]->ReleasedDate,
+                                // 'UseTimeEntry' => $request[$i]->UseTimeEntry,
+                                // 'EmployeeEx' => $request[$i]->EmployeeEx,
+                                // 'IntuitId' => $request[$i]->IntuitId,
+                                // 'Organization' => $request[$i]->Organization,
+                                // 'Title' => $request[$i]->Title,
+                                // 'FullyQualifiedName' => $request[$i]->FullyQualifiedName,
+                                // 'DisplayName' => $request[$i]->DisplayName,
+                                // 'PrintOnCheckName' => $request[$i]->PrintOnCheckName,
+                                // 'UserId' => $request[$i]->UserId,
+                                // 'Active' => $request[$i]->Active,
+                                // 'Fax' => $request[$i]->Fax,
+                                // 'WebAddr' => $request[$i]->WebAddr,
+                                // 'OtherContactInfo' => $request[$i]->OtherContactInfo,
+                                // 'DefaultTaxCodeRef' => $request[$i]->DefaultTaxCodeRef,
+                                // 'SyncToken' => $request[$i]->SyncToken,
+                                // 'CustomField' => $request[$i]->CustomField,
+                                // 'AttachableRef' => $request[$i]->AttachableRef,
+                                // 'domain' => $request[$i]->domain,
+                                // 'status' => $request[$i]->status,
+                                // 'sparse' => $request[$i]->sparse,
                             );
-                            $query = $this->db->replace('quickbooks_employee', $data);
+                            $query = $this->db->replace('users', $data);
                         }
                         echo ($query) ? "success" : "fail" ;
-                        break;
-                    case 'Estimate':
-                        
-                        break;
-                    case 'Invoice':
-                        
                         break;
                     case 'Item':
                         for ($i = 0; $i < count($request); $i++) { 
                             $data = array(
                                 'company_id' => $company_id,
                                 'qbid' => $request[$i]->Id,
-                                'name' => $request[$i]->Name,
-                                'active' => $request[$i]->Active,
-                                'fullyQualifiedName' => $request[$i]->FullyQualifiedName,
-                                'taxable' => $request[$i]->Taxable,
-                                'unitPrice' => $request[$i]->UnitPrice,
+                                'title' => $request[$i]->Name,
                                 'type' => $request[$i]->Type,
-                                'incomeAccountRef_Value' => $request[$i]->IncomeAccountRef->value,
-                                'incomeAccountRef_Name' => $request[$i]->IncomeAccountRef->name,
-                                'purchaseCost' => $request[$i]->PurchaseCost,
-                                'trackQtyOnHand' => $request[$i]->TrackQtyOnHand,
-                                'taxClassificationRef_Value' => $request[$i]->TaxClassificationRef->value,
-                                'taxClassificationRef_Name' => $request[$i]->TaxClassificationRef->name,
-                                'domain' => $request[$i]->Domain,
-                                'sparse' => $request[$i]->Sparse,
-                                'syncToken' => $request[$i]->SyncToken,
-                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
-                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                                'description' => "",
+                                'COGS' => 0.0,
+                                'price' => 0.0,
+                                'retail' => 0.0,
+                                'retail' => "0",
+                                'is_active' => 1,
+                                'modified' => $request[$i]->MetaData->LastUpdatedTime,
+                                'cost' => 0.0,
+                                // 'active' => $request[$i]->Active,
+                                // 'fullyQualifiedName' => $request[$i]->FullyQualifiedName,
+                                // 'taxable' => $request[$i]->Taxable,
+                                // 'unitPrice' => $request[$i]->UnitPrice,
+                                // 'incomeAccountRef_Value' => $request[$i]->IncomeAccountRef->value,
+                                // 'incomeAccountRef_Name' => $request[$i]->IncomeAccountRef->name,
+                                // 'purchaseCost' => $request[$i]->PurchaseCost,
+                                // 'trackQtyOnHand' => $request[$i]->TrackQtyOnHand,
+                                // 'taxClassificationRef_Value' => $request[$i]->TaxClassificationRef->value,
+                                // 'taxClassificationRef_Name' => $request[$i]->TaxClassificationRef->name,
+                                // 'domain' => $request[$i]->Domain,
+                                // 'sparse' => $request[$i]->Sparse,
+                                // 'syncToken' => $request[$i]->SyncToken,
+                                // 'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
                             );
-                            $query = $this->db->replace('quickbooks_item', $data);
+                            $query = $this->db->replace('items', $data);
                         }
                         echo ($query) ? "success" : "fail" ;
-                        break;
-                    case 'Payment':
-                        
                         break;
                     case 'Vendor':
                         for ($i = 0; $i < count($request); $i++) { 
                             $data = array(
                                 'company_id' => $company_id,
                                 'qbid' => $request[$i]->Id,
-                                'displayName' => $request[$i]->DisplayName,
-                                'printOnCheckName' => $request[$i]->PrintOnCheckName,
-                                'billAddr_Line1' => $request[$i]->BillAddr->Line1,
-                                'billAddr_City' => $request[$i]->BillAddr->City,
-                                'billAddr_CountrySubDivisionCode' => $request[$i]->BillAddr->CountrySubDivisionCode,
-                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
-                                'billAddr_PostalCode' => $request[$i]->BillAddr->PostalCode,
-                                'primaryEmailAddr_Address' => $request[$i]->PrimaryEmailAddr->Address,
-                                'primaryPhone_FreeFormNumber' => $request[$i]->PrimaryPhone->FreeFormNumber,
-                                'active' => $request[$i]->Active,
-                                'balance' => $request[$i]->Balance,
-                                'vendor1099' => $request[$i]->Vendor1099,
-                                'currencyRef_value' => $request[$i]->CurrencyRef->Value,
-                                'currencyRef_name' => $request[$i]->CurrencyRef->Name,
-                                'domain' => $request[$i]->Domain,
-                                'sparse' => $request[$i]->Sparse,
-                                'syncToken' => $request[$i]->SyncToken,
-                                'v4IDPseudonym' => $request[$i]->V4IDPseudonym,
-                                'metaData_CreateTime' => $request[$i]->MetaData->CreateTime,
-                                'metaData_LastUpdatedTime' => $request[$i]->MetaData->LastUpdatedTime,
+                                'email' => $request[$i]->PrimaryEmailAddr->Address,
+                                'company' => $request[$i]->CompanyName,
+                                'display_name' => $request[$i]->DisplayName,
+                                'to_display' => 1,
+                                'print_on_check_name' => $request[$i]->PrintOnCheckName,
+                                'street' => $request[$i]->BillAddr->Line1,
+                                'city' => $request[$i]->BillAddr->City,
+                                'state' => $request[$i]->BillAddr->CountrySubDivisionCode,
+                                'zip' => $request[$i]->BillAddr->PostalCode,
+                                'phone' => $request[$i]->PrimaryPhone->FreeFormNumber,
+                                'opening_balance' => $request[$i]->Balance,
+                                'tax_id' => $request[$i]->TaxIdentifier,
+                                'default_expense_account' => 1,
+                                'created_by' => $user_id,
+                                'status' => 1,
+                                'created_at' => $request[$i]->MetaData->CreateTime,
+                                'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                                // 'vendor1099' => $request[$i]->Vendor1099,
+                                // 'currencyRef_value' => $request[$i]->CurrencyRef->Value,
+                                // 'currencyRef_name' => $request[$i]->CurrencyRef->Name,
+                                // 'domain' => $request[$i]->Domain,
+                                // 'sparse' => $request[$i]->Sparse,
+                                // 'syncToken' => $request[$i]->SyncToken,
+                                // 'v4IDPseudonym' => $request[$i]->V4IDPseudonym,
+                                
                             );
-                            $query = $this->db->replace('quickbooks_vendor', $data);
+                            $query = $this->db->replace('accounting_vendors', $data);
                         }
                         echo ($query) ? "success" : "fail" ;
                         break;
+                    case 'Account':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'name' => $request[$i]->Name,
+                                'description' => $request[$i]->Classification,
+                                'balance' => $request[$i]->CurrentBalance,
+                                'active' => 1,
+                                'created_at' => $request[$i]->MetaData->CreateTime,
+                                'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('accounting_chart_of_accounts', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    // case 'Estimate':
+                        
+                    //     break;
+                    // case 'Invoice':
+                        
+                    //     break;
+                    
+                    // case 'Payment':
+                        
+                    //     break;
                     default:
                         echo 0;
                         break;

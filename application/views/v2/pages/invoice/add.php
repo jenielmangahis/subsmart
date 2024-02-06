@@ -259,35 +259,35 @@
                                         $ <span id="span_total_tax_invoice">0.00</span>
                                         <input type="hidden" name="taxes" id="item_total_tax" value="0" />
                                     </div>                                    
-                                    <?php if( in_array($cid, adi_company_ids()) ){ ?>
-                                        <div class="col-12 col-md-6 d-flex align-items-center">
-                                            <label class="content-title">Installation Cost</label>
+                                    <?php //if( in_array($cid, adi_company_ids()) ){ ?>
+                                    <div class="col-12 col-md-6 d-flex align-items-center">
+                                        <label class="content-title">Installation Cost</label>
+                                    </div>
+                                    <div class="col-12 col-md-3 offset-md-3 text-end">
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" step="any" min=0 name="adjustment_ic" id="adjustment-ic" class="nsm-field form-control text-end" value="0">
                                         </div>
-                                        <div class="col-12 col-md-3 offset-md-3 text-end">
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" step="any" min=0 name="adjustment_ic" id="adjustment-ic" class="nsm-field form-control text-end" value="0">
-                                            </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 d-flex align-items-center">
+                                        <label class="content-title">One time (Program and Setup)</label>
+                                    </div>
+                                    <div class="col-12 col-md-3 offset-md-3 text-end">
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" step="any" min=0 name="adjustment_otps" id="adjustment-otps" class="nsm-field form-control text-end" value="0">
                                         </div>
-                                        <div class="col-12 col-md-6 d-flex align-items-center">
-                                            <label class="content-title">One time (Program and Setup)</label>
+                                    </div>
+                                    <div class="col-12 col-md-6 d-flex align-items-center">
+                                        <label class="content-title">Monthly Monitoring</label>
+                                    </div>
+                                    <div class="col-12 col-md-3 offset-md-3 text-end">
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" step="any" min=0 name="monthly_monitoring" id="adjustment-mm" class="nsm-field form-control text-end" value="0">
                                         </div>
-                                        <div class="col-12 col-md-3 offset-md-3 text-end">
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" step="any" min=0 name="adjustment_otps" id="adjustment-otps" class="nsm-field form-control text-end" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6 d-flex align-items-center">
-                                            <label class="content-title">Monthly Monitoring</label>
-                                        </div>
-                                        <div class="col-12 col-md-3 offset-md-3 text-end">
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" step="any" min=0 name="monthly_monitoring" id="adjustment-mm" class="nsm-field form-control text-end" value="0">
-                                            </div>
-                                        </div>
-                                    <?php } ?>
+                                    </div>
+                                    <?php //} ?>
                                     <div class="col-12 col-md-6 d-flex align-items-center">
                                         <input type="text" class="nsm-field form-control" placeholder="Adjustment Name" name="adjustment_name" id="adjustment_name" style="border: 1px dashed #d1d1d1;">                                                        
                                         <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;"></i>
@@ -296,6 +296,18 @@
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
                                             <input type="number" step="any" min=0 name="adjustment_value" id="adjustment-input" class="nsm-field form-control text-end" value="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6 d-flex align-items-center">
+                                        <label class="content-title">Is Tax Exempted</label>
+                                    </div>
+                                    <div class="col-12 col-md-3 offset-md-3 text-end">
+                                        <div class="input-group">
+                                            <select class="form-control" id="tax-exempted" name="is_tax_exempted" style="text-align:center;">
+                                                <option value="1">Yes</option>
+                                                <option value="0" selected="selected">No</option>
+                                            </select>
                                         </div>
                                     </div>
                                     
@@ -383,51 +395,12 @@
         </div>
     </div>
 
-    <div class="modal fade nsm-modal" id="modal-product-list" tabindex="-1" role="dialog" aria-labelledby="modal-product-listLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newcustomerLabel">Product List</h5>
-                    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-12 col-md-12">    
-                        <div class="nsm-field-group search" style="max-width:100% !important;">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_product" name="search" value="" placeholder="Search Product">
-                        </div>
-                    </div>
-                    <div class="product-list-container"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade nsm-modal" id="modal-services-list" tabindex="-1" role="dialog" aria-labelledby="modal-services-listLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newcustomerLabel">Services List</h5>
-                    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="bx bx-fw bx-x m-0"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-12 col-md-12">    
-                        <div class="nsm-field-group search" style="max-width:100% !important;">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_services" name="search" value="" placeholder="Search Services">
-                        </div>
-                    </div>
-                    <div class="services-list-container"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 
 </div>      
 <?php include viewPath('v2/includes/job/quick_add'); ?>
+<?php include viewPath('v2/includes/inventory/quick_add_item_modals'); ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
@@ -483,6 +456,10 @@ $(document).ready(function() {
     CKEDITOR.editorConfig = function( config ) {
         config.height = '200px';
     };
+
+    $('#modal-edit-product-stock').modal({backdrop: 'static', keyboard: false});
+    $('#modal-product-list').modal({backdrop: 'static', keyboard: false});
+    $('#modal-services-list').modal({backdrop: 'static', keyboard: false});
 
     $('#help-popover-customer-message').popover({
         placement: 'top',
@@ -565,6 +542,16 @@ $(document).ready(function() {
         loadAddServicesList();
     });
 
+    $(document).on('click', '.edit-product-stock', function(){
+        var storageid   = $(this).attr('data-storageid');
+        var itemid      = $(this).attr('data-itemid');
+        var containerid = 'product-stock-container';
+
+        $('#modal-product-list').modal('hide');
+        $('#modal-edit-product-stock').modal('show');
+        loadEditProductStock(storageid, itemid, containerid);
+    });
+
     $('#status').on('change', function(){
         var selected = $(this).val();
         if( selected == 'Partially Paid' ){
@@ -584,6 +571,10 @@ $(document).ready(function() {
         var query = $(this).val();
         serviceSearch(query);
     }, 500));
+
+    $('#tax-exempted').on('change', function(){
+        recomputeTotalSummary();
+    });
 
     function recomputeProductRowTotal(row_number){
         var row_product_quantity = $('.row-product-qty-'+row_number).val();
@@ -625,7 +616,14 @@ $(document).ready(function() {
             }
         });
 
-        var grand_total = parseFloat(invoice_sub_total) + parseFloat(invoice_tax_total) + parseFloat(total_adjustment_selectors);
+        var is_tax_exempted = $('#tax-exempted').val();
+        if( is_tax_exempted == 1 ){
+            var grand_total = parseFloat(invoice_sub_total) + parseFloat(total_adjustment_selectors);
+        }else{
+            var grand_total = parseFloat(invoice_sub_total) + parseFloat(invoice_tax_total) + parseFloat(total_adjustment_selectors);
+        }
+
+        
         $('#grand_total').html(grand_total.toFixed(2));
         $('#grand_total_input').val(grand_total.toFixed(2));
     }
@@ -832,7 +830,7 @@ $(document).ready(function() {
         var formData = new FormData(this);
 
         var url = base_url + "invoice/_create_invoice";
-        _this.find("button[type=submit]").html("Submitting");
+        _this.find("button[type=submit]").html("Saving");
         _this.find("button[type=submit]").prop("disabled", true);
 
         $.ajax({
