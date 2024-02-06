@@ -347,123 +347,106 @@
                                                                     </button>
                                                                 </td>
                                                             </tr>
-                                                            
                                                             <?php $count = 1; ?>
                                                             <?php if(isset($categories) && count($categories) > 0) : ?>
-                                                                    <?php foreach($categories as $category) : ?>
-                                                                            <tr>
-                                                                                <td><?=$count?></td>
-                                                                                <td>
-                                                                                    <select name="expense_account[]" class="nsm-field form-control" required>
-                                                                                        <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select name="category[]" class="nsm-field form-control">
-                                                                                        <option disabled selected>&nbsp;</option>
-                                                                                        <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
-                                                                                        <option value="variable" <?=$category->category === 'variable' ? 'selected' : ''?>>Variable Cost</option>
-                                                                                        <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <td><input type="text" name="description[]" class="nsm-field form-control" value="<?=$category->description?>"></td>
-                                                                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=str_replace(',', '', number_format(floatval($category->amount), 2, '.', ','))?>"></td>
-                                                                                <td>
-                                                                                    <div class="table-row-icon table-checkbox">
-                                                                                        <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
-                                                                                <td>
-                                                                                    <div class="table-row-icon table-checkbox">
-                                                                                        <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                                        <option value="<?=$category->customer_id?>">
-                                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </td>
-                                                                                <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
-                                                                                <td>
-                                                                                <?php if(!is_null($category->linked_transaction_type) && !is_null($category->linked_transaction_id)) : ?>
-                                                                                    <div class="dropdown">
-                                                                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
-                                                                                        <div class="dropdown-menu">
-                                                                                            <table class="nsm-table">
-                                                                                                <thead>
-                                                                                                    <tr>
-                                                                                                        <td data-name="Type">Type</td>
-                                                                                                        <td data-name="Date">Date</td>
-                                                                                                        <td data-name="Amount">Amount</td>
-                                                                                                        <td data-name="Action"></td>
-                                                                                                    </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                    <tr>
-                                                                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$category->linked_transaction_id?>" data-type="purchase-order">Puchase Order</a></td>
-                                                                                                        <td><?=date("m/d/Y", strtotime($category->linked_transac->purchase_order_date))?></td>
-                                                                                                        <td>
-                                                                                                            <?php
-                                                                                                            $transacAmount = $category->linked_transac->total_amount;
-                                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
-
-                                                                                                            echo str_replace('$-', '-$', $transacAmount);
-                                                                                                            ?>
-                                                                                                        </td>
-                                                                                                        <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
-                                                                                                    </tr>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <input type="hidden" value="<?=$category->linked_transaction_type?>-<?=$category->linked_transaction_id?>" name="category_linked_transaction[]">
-                                                                                    <input type="hidden" value="<?=$category->linked_transaction_category_id?>" name="transaction_category_id[]">
-                                                                                <?php endif; ?>
-                                                                                </td>
-                                                                                <?php endif; ?>
-                                                                                <td>
-                                                                                    <button type="button" class="nsm-button delete-row">
-                                                                                        <i class='bx bx-fw bx-trash'></i>
-                                                                                    </button>
-                                                                                </td>
-                                                                            </tr>
-                                                                    <?php $count++; endforeach; ?>
-                                                            <?php endif; ?>
-
-                                                            <?php do {?>
-                                                             <tr>
-                                                                <td>1</td>
+                                                            <?php foreach($categories as $category) : ?>
+                                                            <tr>
+                                                                <td><?=$count?></td>
                                                                 <td>
-                                                                    <select name="expense_account[]" class="nsm-field form-control" required></select>
+                                                                    <select name="expense_account[]" class="nsm-field form-control" required>
+                                                                        <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
+                                                                    </select>
                                                                 </td>
                                                                 <td>
                                                                     <select name="category[]" class="nsm-field form-control">
                                                                         <option disabled selected>&nbsp;</option>
-                                                                        <option value="fixed">Fixed Cost</option>
-                                                                        <option value="variable">Variable Cost</option>
-                                                                        <option value="periodic">Periodic Cost</option>
+                                                                        <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
+                                                                        <option value="variable" <?=$category->category === 'variable' ? 'selected' : ''?>>Variable Cost</option>
+                                                                        <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type="text" name="description[]" class="nsm-field form-control"></td>
-                                                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01"></td>
+                                                                <td><input type="text" name="description[]" class="nsm-field form-control" value="<?=$category->description?>"></td>
+                                                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=str_replace(',', '', number_format(floatval($category->amount), 2, '.', ','))?>"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
-                                                                        <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
+                                                                        <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
-                                                                        <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
+                                                                        <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
                                                                 </td>
+                                                                <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
+                                                                <td>
+                                                                <?php if(!is_null($category->linked_transaction_type) && !is_null($category->linked_transaction_id)) : ?>
+                                                                    <div class="dropdown">
+                                                                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="bx bx-fw bx-link"></i></a>
+                                                                        <div class="dropdown-menu">
+                                                                            <table class="nsm-table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <td data-name="Type">Type</td>
+                                                                                        <td data-name="Date">Date</td>
+                                                                                        <td data-name="Amount">Amount</td>
+                                                                                        <td data-name="Action"></td>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td><a class="text-decoration-none open-transaction" href="#" data-id="<?=$category->linked_transaction_id?>" data-type="purchase-order">Puchase Order</a></td>
+                                                                                        <td><?=date("m/d/Y", strtotime($category->linked_transac->purchase_order_date))?></td>
+                                                                                        <td>
+                                                                                            <?php
+                                                                                            $transacAmount = $category->linked_transac->total_amount;
+                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                                                            ?>
+                                                                                        </td>
+                                                                                        <td><button class="nsm-button unlink-transaction" data-type="purchase-order" data-id="<?=$category->linked_transaction_id?>">Remove</button></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden" value="<?=$category->linked_transaction_type?>-<?=$category->linked_transaction_id?>" name="category_linked_transaction[]">
+                                                                    <input type="hidden" value="<?=$category->linked_transaction_category_id?>" name="transaction_category_id[]">
+                                                                <?php endif; ?>
+                                                                </td>
+                                                                <?php endif; ?>
+                                                                <td>
+                                                                    <button type="button" class="nsm-button delete-row">
+                                                                        <i class='bx bx-fw bx-trash'></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <?php $count++; endforeach; ?>
+                                                            <?php endif; ?>
+
+                                                            <?php do {?>
+                                                            <tr>
+                                                                <td><?=$count?></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
+                                                                <td></td>
+                                                                <?php endif; ?>
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -471,6 +454,22 @@
                                                                 </td>
                                                             </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
+                                                            <tr>
+                                                                <td>2</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>
+                                                                    <button type="button" class="nsm-button delete-row">
+                                                                        <i class='bx bx-fw bx-trash'></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
