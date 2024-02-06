@@ -601,7 +601,7 @@ $('#expense-table-filters select').each(function() {
         var field = $(this).attr('id') === 'filter-payee' ? 'payee' : 'expense-account';
         $(this).select2({
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {

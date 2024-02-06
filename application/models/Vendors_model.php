@@ -18,6 +18,15 @@ class Vendors_model extends MY_Model {
 
 		return $query->result();
 	}
+
+	public function getAllByCompanyAndAllStatus() {
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where("display_name <>",'');
+		$this->db->order_by('f_name', 'asc');
+		$query = $this->db->get($this->table);
+		return $query->result();		
+	}
+
 	public function get_vendors_with_unbilled_po($status = [1])
 	{
 		$companyId = logged('company_id');

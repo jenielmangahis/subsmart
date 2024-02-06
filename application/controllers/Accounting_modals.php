@@ -71,7 +71,6 @@ class Accounting_modals extends MY_Controller
 
     public function index($view ="")
     {
-        //header("Strict-Transport-Security: strict-origin-when-cross-origin");
         if ($view) {
             switch ($view) {
                 case 'pay_down_credit_card_modal':
@@ -11498,7 +11497,7 @@ class Accounting_modals extends MY_Controller
 
     private function get_vendor_choices($choices, $search = null, $field)
     {
-        $vendors = $this->vendors_model->getAllByCompany();
+        $vendors = $this->vendors_model->getAllByCompanyAndAllStatus(); //$this->vendors_model->getAllByCompany();
         if(!isset($choices['results'])) {
             $choices['results'] = [];
         }
