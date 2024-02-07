@@ -332,25 +332,21 @@ echo put_header_assets();
             <?php include viewPath('estimate/v2/header'); ?>
 
             <div class="page-title-box">
-                <div class="row align-items-center">
+                <!-- <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h4 style="font-family: Sarabun, sans-serif">Submit Standard Estimate</h4>
-                        <!-- <ol class="breadcrumb">
+                        <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
                             </li>
-                        </ol> -->
+                        </ol>
                     </div>
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown d-flex justify-content-end">
-                                <?php //if (hasPermissions('WORKORDER_MASTER')) :
-                                ?>
                                 <a href="<?php echo base_url('estimate') ?>" class="nsm-button primary" aria-expanded="false">
                                     <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                 </a>
-                                <?php //endif
-                                ?>
                             </div>
                         </div>
                     </div>
@@ -358,7 +354,7 @@ echo put_header_assets();
 
                 <div style="background-color:white; width:100%;padding:.5%;">
                     Submit your estimate. Include a breakdown of all costs for this job.
-                </div>
+                </div> -->
                 <div class="nsm-callout primary">
                     <button><i class="bx bx-x"></i></button>
                     Our standard estimate form is carefully design with quantity takeoff of each items. With a clear break down of the items to be included in each project, this will insure a higher acceptance rate. Try our options form layout if you wish to give your customers a choice of multiple projects.
@@ -371,25 +367,22 @@ echo put_header_assets();
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="customers" class="required"><b>Customer</b></label>
+                                    <div class="d-flex justify-content-between">
+                                        <label for="job_name"><b>Customer</b></label>
+                                        <a class="nsm-link d-flex align-items-center" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
+                                            <span class="bx bx-plus"></span>Create Customer
+                                        </a>
+                                    </div>
                                     <div id="sel-customerdiv">
-                                        <select name="customer_id" id="sel-customer" class="form-control" required>
-                                            <option value="0">Select a customer</option>
-                                            <?php foreach ($customers as $customer) : ?>
-                                                <?php if ($default_customer_id > 0) { ?>
-                                                    <option <?= $default_customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                <?php } else { ?>
-                                                    <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                <?php } ?>
-
-                                            <?php endforeach; ?>
+                                        <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                            <option value="">- Select Customer -</option>
+                                            <?php if( $default_customer_id > 0 ){ ?>
+                                                <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
+                                            <?php } ?>                                        
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
                                 </div>
                             </div>
 
@@ -932,32 +925,12 @@ echo put_header_assets();
         </div>
         <!-- end container-fluid -->
 
-        <!-- Modal New Customer -->
-        <div class="modal fade nsm-modal" id="modalQuickAddCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <form id="frm-estimate-quick-add-customer" method="POST">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
     </div>
     <!-- page wrapper end -->
 </div>
 
 <?php echo $file_selection; ?>
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php
 // JS to add only Job module
 add_footer_js(array(
@@ -992,6 +965,88 @@ add_footer_js(array(
     //     })
     //   })
     $(document).ready(function() {
+
+        $('#customer_id').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+            return repo.text;
+            }
+
+            var $container = $(
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            );
+
+            return $container;
+        }
+
+        $("#new_customer_form").submit(function(e) {
+            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/add_new_customer_from_jobs",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        Swal.fire({
+                            //title: 'Nice!',
+                            html: 'Customer Added Successfully',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            
+                        });                        
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: 'There is an error adding Customer. Contact Administrator'
+                        });                        
+                    }
+                }
+            });
+        });
 
         $('#modal_items_list').DataTable({
             "autoWidth": false,

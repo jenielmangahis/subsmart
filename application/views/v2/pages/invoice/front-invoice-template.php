@@ -119,7 +119,7 @@ if ($invoice->due_date > date('Y-m-d')) {
             <?php endforeach; ?>
 
             <tr>
-                <td colspan="3" rowspan="5">
+                <td colspan="3" rowspan="9">
                     <?php if( $invoice->status != 'Paid' ){ ?>
                     <a href="javascript:void(0);" class="payinvoice">
                         <b>PAY INVOICE</b>
@@ -177,6 +177,43 @@ if ($invoice->due_date > date('Y-m-d')) {
                 </td>
                 <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
             </tr>
+
+            <tr>
+                <td colspan="2" style="padding: 8px; border: 1px solid;">
+                    <b>INSTALLATION COST</b>
+                </td>
+                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->installation_cost , 2, '.', ','); ?></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="padding: 8px; border: 1px solid;">
+                    <b>ONE TIME (PROGRAM AND SETUP)</b>
+                </td>
+                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->otp_setup, 2, '.', ','); ?></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="padding: 8px; border: 1px solid;">
+                    <b>MONTHLY MONITORING</b>
+                </td>
+                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->monthly_monitoring, 2, '.', ','); ?></td>
+            </tr>
+            <?php if( $invoice->adjustment_value > 0 ){ ?>
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;text-transform: uppercase;">
+                        <b><?=  $invoice->adjustment_name != '' ? $invoice->adjustment_name : 'ADJUSTMENT' ?></b>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->adjustment_value, 2, '.', ','); ?></td>
+                </tr>
+            <?php } ?>
+            <?php if( $invoice->no_tax == 1 ){ ?>
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;">
+                        <b>TAX EXEMPTED</b>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">YES</td>
+                </tr>
+            <?php } ?>
 
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">

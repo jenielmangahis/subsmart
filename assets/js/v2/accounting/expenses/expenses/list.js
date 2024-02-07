@@ -437,9 +437,40 @@ $('#expenses-table .delete-transaction').on('click', function(e) {
     transactionType = transactionType.replaceAll(' (Credit Card)', '');
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
+
+    var delete_single_url = base_url + `accounting/delete-transaction/${transactionType}/${id}`;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: delete_single_url,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(result) {
+                    Swal.fire({
+                        text: result.message,
+                        icon: result.success ? 'success' : 'error',
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        timer: 1500,
+                        onClose: applyExpenseFilter
+                    })
+                    window.location.reload();
+                }
+            });
+        }
+    });    
    
+    /*
     $.ajax({
-        url: base_url + `/accounting/delete-transaction/${transactionType}/${id}`,
+        url: base_url + `accounting/delete-transaction/${transactionType}/${id}`,
         type: 'DELETE',
         dataType: 'json',
         success: function(result) {
@@ -453,6 +484,7 @@ $('#expenses-table .delete-transaction').on('click', function(e) {
             })
         }
     });
+    */
 });
 
 $('#expenses-table .void-transaction').on('click', function(e) {
@@ -569,7 +601,7 @@ $('#expense-table-filters select').each(function() {
         var field = $(this).attr('id') === 'filter-payee' ? 'payee' : 'expense-account';
         $(this).select2({
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {

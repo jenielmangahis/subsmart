@@ -4220,6 +4220,7 @@ class Workorder extends MY_Controller
 
     public function savenewWorkorder(){
         $this->load->model('WorkorderSettings_model');
+        $this->load->model('AcsAccess_model');
 
         $is_success = 0;
         $msg = '';
@@ -4723,8 +4724,10 @@ class Workorder extends MY_Controller
                     'state' => $state,
                     'zip_code' => $zip_code
                 ];
-
                 $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+
+                $access_data = ['access_login' => $this->input->post('password')];
+                $this->AcsAccess_model->updateByProfId($customer->prof_id, $access_data);
 
             }
 
@@ -12029,6 +12032,8 @@ class Workorder extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
+        $this->load->model('Checklist_model');
+        $this->load->model('AcsAccess_model');
 
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
@@ -12167,9 +12172,38 @@ class Workorder extends MY_Controller
 
         if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $acsAccess = $this->AcsAccess_model->getByProfId($estimate->customer_id);
             // $client   = $this->Clients_model->get_company($company_id);
             $client   = $this->Clients_model->getCompanyCompanyId($company_id);
 
+            $termsCondi = $this->workorder_model->getTerms($company_id);
+            if($termsCondi){
+                // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+                $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            }else{
+                // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+                $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            }
+
+            $termsUse = $this->workorder_model->getTermsUse($company_id);
+            if($termsUse){
+                // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+                $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
+            }else{
+                // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+                $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
+            }
+
+            $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
+            $checklists = array();
+            foreach( $checkListsHeader as $h ){
+                $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+                $checklists[$h->id]['header'] = ['name' => $h->checklist_name, 'id' => $h->id];
+                $checklists[$h->id]['items']  = $checklistItems;            
+            }
+            
+            $this->page_data['checklists'] = $checklists;
+            $this->page_data['acsAccess'] = $acsAccess;
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
             $this->page_data['estimate'] = $estimate;
@@ -12182,7 +12216,8 @@ class Workorder extends MY_Controller
             $this->page_data['items_dataBD1'] = $this->estimate_model->getItemlistByIDBundle1($id);
             $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);
 
-            $this->load->view('workorder/addWorkEstimate', $this->page_data);
+            //$this->load->view('workorder/addWorkEstimate', $this->page_data);            
+            $this->load->view('v2/pages/workorder/addWorkEstimate', $this->page_data);
         } else {
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -12614,42 +12649,7 @@ class Workorder extends MY_Controller
                 'margin' => 0,
                 'amount_collected' => 0,
                 'gross_profit' => 0,
-                'job_account_number' => '',
-                'BILLING_METHOD' => $post['BILLING_METHOD'],
-                'CC_CREDITCARDNUMBER' => '',
-                'CC_EXPIRATION' => '',
-                'CC_CVV' => '',
-                'DC_CREDITCARDNUMBER' => '',
-                'DC_EXPIRATION' => '',
-                'DC_CVV' => '',
-                'CHECK_CHECKNUMBER' => '',
-                'CHECK_ROUTINGNUMBER' => '',
-                'CHECK_ACCOUNTNUMBER' => '',
-                'ACH_ROUTINGNUMBER' => '',
-                'ACH_ACCOUNTNUMBER' => '',
-                'VENMO_ACCOUNTCREDENTIAL' => '',
-                'VENMO_ACCOUNTNOTE' => '',
-                'VENMO_CONFIRMATION' => '',
-                'PP_ACCOUNTCREDENTIAL' => '',
-                'PP_ACCOUNTNOTE' => '',
-                'PP_CONFIRMATION' => '',
-                'SQ_ACCOUNTCREDENTIAL' => '',
-                'SQ_ACCOUNTNOTE' => '',
-                'SQ_CONFIRMATION' => '',
-                'WW_ACCOUNTCREDENTIAL' => '',
-                'WW_ACCOUNTNOTE' => '',
-                'HOF_ACCOUNTCREDENTIAL' => '',
-                'HOF_ACCOUNTNOTE' => '',
-                'ET_ACCOUNTCREDENTIAL' => '',
-                'ET_ACCOUNTNOTE' => '',
-                'INV_TERM' => '',
-                'INV_INVOICEDATE' => '',
-                'INV_DUEDATE' => '',
-                'OCCP_CREDITCARDNUMBER' => '',
-                'OCCP_EXPIRATION' => '',
-                'OCCP_CVV' => '',
-                'OPT_ACCOUNTCREDENTIAL' => '',
-                'OPT_ACCOUNTNOTE' => ''
+                'job_account_number' => ''                
             );
 
             $job_id = $this->Jobs_model->createJob($jobs_data);

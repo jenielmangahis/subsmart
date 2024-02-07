@@ -197,7 +197,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>Import rules</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="close-item-modal"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
 
@@ -353,7 +353,7 @@
                     </div>
                 </div>
                 <div class="modal-footer-importRules">
-                    <button class="btn btn-default" style="float: left;" id="importRulesCancel">Cancel</button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-default close-item-modal">Cancel</button>                    
                     <button class="btn btn-success" style="float: right;" id="importRulesNext">Next</button>
                 </div>
             </div>

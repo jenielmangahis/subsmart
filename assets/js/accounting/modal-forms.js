@@ -181,7 +181,7 @@ $(function() {
                 });
                 $('div#payrollModal .modal-body select#bank-account').select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -897,7 +897,7 @@ $(function() {
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-dropdown-choices',
+                            url: base_url + 'accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {
@@ -949,7 +949,7 @@ $(function() {
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-dropdown-choices',
+                            url: base_url + 'accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {
@@ -1297,7 +1297,7 @@ $(function() {
                 var type = $(this).attr('name').includes('customer') ? 'customer' : 'service';
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -1635,7 +1635,7 @@ $(function() {
 
         if(service !== null && service !== '' && service !== undefined) {
             if($('#singleTimeModal #billable').prop('checked')) {
-                $.get(`/accounting/get-item-details/${service}`, function(res) {
+                $.get(base_url + `accounting/get-item-details/${service}`, function(res) {
                     var result = JSON.parse(res);
                     var rate = result.item !== null ? result.item.price : '';
         
@@ -2092,7 +2092,7 @@ $(function() {
         var row = $(this).parent().parent();
 
         if(input.val() !== 'add-new') {
-            $.get(`/accounting/get-item-details/${input.val()}`, function(res) {
+            $.get(base_url + `accounting/get-item-details/${input.val()}`, function(res) {
                 var result = JSON.parse(res);
     
                 row.children(':nth-child(3)').html(result.item.description);
@@ -2295,7 +2295,7 @@ $(function() {
         e.preventDefault();
 
         if ($('#modal-container #products_list.modal').length === 0) {
-            $.get('/accounting/get-products-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-products-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #products_list table').nsmPagination({
@@ -2313,7 +2313,7 @@ $(function() {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
 
-        $.get('/accounting/get-item-details/' + id, function(res) {
+        $.get(base_url + 'accounting/get-item-details/' + id, function(res) {
             var result = JSON.parse(res);
             var item = result.item;
             var locations = result.locations;
@@ -3199,7 +3199,7 @@ $(function() {
                             if (dropdownFields.includes(type)) {
                                 $(this).select2({
                                     ajax: {
-                                        url: '/accounting/get-dropdown-choices',
+                                        url: base_url + 'accounting/get-dropdown-choices',
                                         dataType: 'json',
                                         data: function(params) {
                                             var query = {
@@ -5486,7 +5486,7 @@ $(function() {
 
                             $(this).select2({
                                 ajax: {
-                                    url: '/accounting/get-dropdown-choices',
+                                    url: base_url + 'accounting/get-dropdown-choices',
                                     dataType: 'json',
                                     data: function(params) {
                                         var query = {
@@ -5527,7 +5527,7 @@ $(function() {
 
     $(document).on('change', '#weeklyTimesheetModal #timesheet-table select[name="service[]"]', function() {
         var el = $(this);
-        $.get(`/accounting/get-item-details/${$(this).val()}`, function(res) {
+        $.get(base_url + `accounting/get-item-details/${$(this).val()}`, function(res) {
             var result = JSON.parse(res);
             var rate = result.item !== null ? result.item.price : '';
 
@@ -5619,8 +5619,8 @@ $(function() {
                     var query = '';
                 break;
             }
-            
-            $.get(base_url + `/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
+
+            $.get(base_url + `accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
                 if(form !== 'item') {
                     $('#modal-container').append(result);
                 } else {
@@ -5641,10 +5641,6 @@ $(function() {
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
                         }
 
-                        if(form == 'payee') {
-                            $('#modal-container #payee-modal .modal-title').html('Add New Vendor');
-                        }
-                        
                         if(form === 'payee' && modalTitle !== '') {
                             $('#modal-container #payee-modal .modal-title').html(modalTitle);
                             $('#modal-container #payee-modal #payee_type').select2({
@@ -5840,7 +5836,7 @@ $(function() {
                 if (dropdownFields.includes(dropdownType)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-dropdown-choices',
+                            url: base_url + 'accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {
@@ -5990,7 +5986,7 @@ $(function() {
 
             $(this).parent().find('select').select2({
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -6050,7 +6046,7 @@ $(function() {
 
             $(this).parent().find('select[name="item[]"]').select2({
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -6156,26 +6152,54 @@ $(function() {
 
     $(document).on('submit', '#account-modal #ajax-add-account', function(e) {
         e.preventDefault();
+        var choose_time = $('#choose_time').val();
+        var balance = $('#balance').val();
+        var is_valid = 1;
 
-        var data = new FormData(this);
+        if( choose_time == '' || choose_time === null ){
+            Swal.fire({
+                title: 'Error',
+                text: 'Please specify when do you want to track your finances',
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            });
+            is_valid = 0;
+        }
 
-        $.ajax({
-            url: '/accounting/ajax-add-account',
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var res = JSON.parse(result);
+        if( balance == '' || balance === null ){
+            Swal.fire({
+                title: 'Error',
+                text: 'Please specify your account balance',
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            });
+            is_valid = 0;
+        }
 
-                if(res.success) {
-                    dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
-                    dropdownEl.trigger('change');
+        if( is_valid == 1 ){
+            var data = new FormData(this);
 
-                    $('#account-modal').modal('hide');
+            $.ajax({
+                url: base_url + 'accounting/ajax-add-account',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    var res = JSON.parse(result);
+
+                    if(res.success) {
+                        dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
+                        dropdownEl.trigger('change');
+
+                        $('#account-modal').modal('hide');
+                    }
                 }
-            }
-        });
+            });
+        }
+        
     });
 
     $(document).on('submit', '#payment-method-modal #ajax-add-payment-method', function(e) {
@@ -6517,7 +6541,7 @@ $(function() {
                     if(select.attr('id') === 'term' || select.attr('id') === 'expense_account') {
                         select.select2({
                             ajax: {
-                                url: '/accounting/get-dropdown-choices',
+                                url: base_url + 'accounting/get-dropdown-choices',
                                 dataType: 'json',
                                 data: function(params) {
                                     var query = {
@@ -7110,7 +7134,9 @@ $(function() {
 
     $(document).on('click', '#modal-container form #expenseModal #delete-expense', function(e) {
         e.preventDefault();
+
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
         $.ajax({
             url: `/accounting/delete-transaction/expense/${split[1]}`,
             type: 'DELETE',
@@ -7150,6 +7176,7 @@ $(function() {
         e.preventDefault();
 
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
         $.ajax({
             url: `/accounting/delete-transaction/check/${split[1]}`,
             type: 'DELETE',
@@ -7982,7 +8009,7 @@ $(function() {
 
                             $(this).select2({
                                 ajax: {
-                                    url: '/accounting/get-dropdown-choices',
+                                    url: base_url + 'accounting/get-dropdown-choices',
                                     dataType: 'json',
                                     data: function(params) {
                                         var query = {
@@ -8696,7 +8723,7 @@ $(function() {
         e.preventDefault();
 
         if ($('#modal-container #item_list.modal').length === 0) {
-            $.get('/accounting/get-items-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-items-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #item_list table').nsmPagination({
@@ -8714,7 +8741,7 @@ $(function() {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
 
-        $.get('/accounting/get-item-details/' + id, function(res) {
+        $.get(base_url + 'accounting/get-item-details/' + id, function(res) {
             var result = JSON.parse(res);
             var item = result.item;
             var type = item.type;
@@ -8942,7 +8969,7 @@ $(function() {
         e.preventDefault();
 
         if ($('#modal-container #package_item_list.modal').length === 0) {
-            $.get('/accounting/get-items-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-items-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #item_list').attr('id', 'package_item_list');
@@ -8962,7 +8989,7 @@ $(function() {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
 
-        $.get('/accounting/get-item-details/' + id, function(res) {
+        $.get(base_url + 'accounting/get-item-details/' + id, function(res) {
             var result = JSON.parse(res);
             var item = result.item;
 
@@ -9347,7 +9374,7 @@ $(function() {
 
     $(document).on('click', '#options-estimate-modal #option-1-item-table #add_option_1_item, #options-estimate-modal #option-2-item-table #add_option_2_item, #bundle-estimate-modal #bundle-1-item-table #add_bundle_1_item, #bundle-estimate-modal #bundle-2-item-table #add_bundle_2_item', function() {
         if ($('#modal-container #item_list.modal').length === 0) {
-            $.get('/accounting/get-items-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-items-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #item_list table').nsmPagination({
@@ -9524,6 +9551,8 @@ $(function() {
 const convertToDecimal = (el) => {
     if($(el).val() !== '') {
         $(el).val(formatter.format(parseFloat($(el).val())).replace('$', '').replaceAll(',', ''));
+    }else{
+        $(el).val(0);
     }
 }
 
@@ -10123,6 +10152,10 @@ const computeBankDepositeTotal = () => {
     }
 
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
+
+    if( isNaN(totalDepositAmount) ){
+		totalDepositAmount = '0.00';
+	}
 
     $('div#depositModal span.other-funds-total').html(formatter.format(parseFloat(otherFundsTotal)));
     $('div#depositModal .transaction-total-amount').html(formatter.format(parseFloat(totalDepositAmount)));
@@ -11123,7 +11156,7 @@ const showHiddenFields = (el) => {
             var number = id.replace('billable_', '');
             var serviceId = $(el).parent().parent().parent().prev().find('[name="service[]"]').val();
 
-            $.get(`/accounting/get-item-details/${serviceId}`, function(res) {
+            $.get(base_url + `accounting/get-item-details/${serviceId}`, function(res) {
                 var result = JSON.parse(res);
                 var rate = result.item !== null ? result.item.price : '';
                 $(el).parent().parent().parent().append(`
@@ -11440,7 +11473,7 @@ const makeRecurring = (modalName) => {
         if (dropdownFields.includes(type)) {
             $(this).select2({
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -12318,7 +12351,7 @@ const initModalFields = (modalName, data = {}) => {
             if (dropdownFields.includes(type)) {
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -12377,7 +12410,7 @@ const initModalFields = (modalName, data = {}) => {
             addRemoveLinks: true,
             init: function() {
                 if(!$.isEmptyObject(data)) {
-                    $.getJSON('/accounting/get-linked-attachments/'+transactionType+'/'+data.id, function(attachments) {
+                    $.getJSON(base_url + 'accounting/get-linked-attachments/'+transactionType+'/'+data.id, function(attachments) {
                         if(attachments.length > 0) {
                             $.each(attachments, function(index, val) {
                                 $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
@@ -12653,7 +12686,7 @@ const initAccountModal = () => {
             case 'account-type':
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -12682,7 +12715,7 @@ const initAccountModal = () => {
             case 'detail-type':
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -12708,7 +12741,7 @@ const initAccountModal = () => {
             case 'parent-account':
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: base_url + 'accounting/get-dropdown-choices',
                         dataType: 'json',
                         data: function(params) {
                             var query = {
@@ -13307,7 +13340,7 @@ const clearForm = () => {
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-dropdown-choices',
+                            url: base_url + 'accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {
@@ -14088,7 +14121,7 @@ const printcheck = () => {
 			if (type === 'payment-account') {
 				$(this).select2({
 					ajax: {
-						url: '/accounting/get-dropdown-choices',
+						url: base_url + 'accounting/get-dropdown-choices',
 						dataType: 'json',
 						data: function(params) {
 							var query = {
@@ -14170,7 +14203,7 @@ const addcheck = () => {
 			if (dropdownFields.includes(type)) {
 				$(this).select2({
 					ajax: {
-						url: '/accounting/get-dropdown-choices',
+						url: base_url + 'accounting/get-dropdown-choices',
 						dataType: 'json',
 						data: function(params) {
 							var query = {

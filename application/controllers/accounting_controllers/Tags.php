@@ -386,7 +386,7 @@ class Tags extends MY_Controller {
     }
     
     public function transactions()
-    {   
+    {           
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/banking/tags/transactions.js"
@@ -747,6 +747,7 @@ class Tags extends MY_Controller {
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Credit Card Credit', $ccCredit->id),
                 'memo' => $ccCredit->memo,
+                'status' => $ccCredit->status === "2" ? "Paid" : "Open",
                 'type' => 'CC Credit',
                 'amount' => $ccCredit->total_amount,
                 'tags' => $tags
@@ -776,6 +777,7 @@ class Tags extends MY_Controller {
                 'from_to' => $this->vendors_model->get_vendor_by_id($vCredit->vendor_id)->display_name,
                 'category' => $this->category_col('Vendor Credit', $vCredit->id),
                 'memo' => $vCredit->memo,
+                'status' => $vCredit->status === "2" ? "Paid" : "Open",
                 'type' => 'Vendor Credit',
                 'amount' => $vCredit->total_amount,
                 'tags' => $tags
@@ -854,6 +856,7 @@ class Tags extends MY_Controller {
                 'from_to' => $from,
                 'category' => $category,
                 'memo' => $deposit->memo,
+                'status' => $deposit->status === "2" ? "Paid" : "Open",
                 'type' => 'Deposit',
                 'amount' => $deposit->total_amount,
                 'tags' => $tags
@@ -905,6 +908,7 @@ class Tags extends MY_Controller {
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Expense', $expense->id),
                 'memo' => $expense->memo,
+                'status' => $expense->status === "2" ? "Paid" : "Open",
                 'type' => 'Expense',
                 'amount' => $expense->total_amount,
                 'tags' => $tags
@@ -934,6 +938,7 @@ class Tags extends MY_Controller {
                 'from_to' => $this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name,
                 'category' => $this->category_col('Bill', $bill->id),
                 'memo' => $bill->memo,
+                'status' => $bill->status === "2" ? "Paid" : "Open",
                 'type' => 'Bill',
                 'amount' => $bill->total_amount,
                 'tags' => $tags
@@ -978,6 +983,7 @@ class Tags extends MY_Controller {
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Check', $check->id),
                 'memo' => $check->memo,
+                'status' => $check->status === "2" ? "Paid" : "Open",
                 'type' => 'Check',
                 'amount' => $check->total_amount,
                 'tags' => $tags
@@ -1058,6 +1064,7 @@ class Tags extends MY_Controller {
                 'from_to' => $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name,
                 'category' => $this->category_col('Purchase Order', $purchaseOrder->id),
                 'memo' => $purchaseOrder->memo,
+                'status' => $purchaseOrder->status === "2" ? "Paid" : "Open",
                 'type' => 'Purchase Order',
                 'amount' => $purchaseOrder->total_amount,
                 'tags' => $tags
@@ -1090,6 +1097,7 @@ class Tags extends MY_Controller {
                 'from_to' => $name,
                 'category' => $this->category_col('Invoice', $invoice->id),
                 'memo' => $invoice->message_on_invoice,
+                'status' => $invoice->status,
                 'type' => 'Invoice',
                 'amount' => $invoice->grand_total,
                 'tags' => $tags
