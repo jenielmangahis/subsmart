@@ -203,6 +203,7 @@
                             <td data-name="From/To">CUSTOMER</td>
                             <!-- <td data-name="Category">CATEGORY</td>
                             <td data-name="Memo">MEMO</td> -->
+                            <td data-name="Status">STATUS</td>
                             <td data-name="Type">TYPE</td>
                             <td data-name="Amount">AMOUNT</td>
                             <td data-name="Tags">TAGS</td>
@@ -221,6 +222,15 @@
                             <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['from_to']?></td>
                             <!-- <td class="row-hover"><?=$transaction['category']?></td>
                             <td class="row-hover"><?=$transaction['memo']?></td> -->
+                            <td class="row-hover" data-type="<?=$transaction['type']?>">
+                                <?php 
+                                    if( isset($transaction['status']) && ($transaction['status'] != '' || $transaction['status'] != NULL ) ){
+                                        echo $transaction['status'];
+                                    }else{
+                                        echo 'NA';
+                                    }
+                                ?>
+                            </td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['type']?></td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>">
                                 <?php 
