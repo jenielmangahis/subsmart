@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-md-6 mt-3">
-                        <label for="account_type">Account Type1</label>
+                        <label for="account_type">Account Type</label>
                         <select name="account_type" id="account_type" class="nsm-field mb-2 form-control" required>
                             <option value="<?=$accountType->id?>" selected><?=$accountType->account_name?></option>
                         </select>
