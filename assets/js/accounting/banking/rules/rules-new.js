@@ -15,7 +15,7 @@ $('#createRules select').each(function() {
                 placeholder: 'Select account',
 				allowClear: true,
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     //url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
@@ -41,7 +41,7 @@ $('#createRules select').each(function() {
 				dropdownParent: $('#createRules'),
 				allowClear: true,
 				ajax: {
-					url: '/accounting/get-job-tags',
+					url: base_url + 'accounting/get-job-tags',
 					dataType: 'json'
 				}
             });
@@ -50,7 +50,7 @@ $('#createRules select').each(function() {
             $(this).select2({
                 placeholder: 'Select a category',
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -73,7 +73,7 @@ $('#createRules select').each(function() {
             $(this).select2({
                 placeholder: '(Recommended)',
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -95,7 +95,7 @@ $('#createRules select').each(function() {
         case 'assign-to-customer' :
             $(this).select2({
                 ajax: {
-                    url: '/accounting/get-dropdown-choices',
+                    url: base_url + 'accounting/get-dropdown-choices',
                     dataType: 'json',
                     data: function(params) {
                         var query = {
@@ -154,7 +154,7 @@ $('#createRules #transaction-type').on('change', function() {
 
     $('#createRules #assign-to-customer').select2({
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {
@@ -180,7 +180,7 @@ $('#createRules #for-accounts').on('change', function() {
     var el = $(this);
     if(values.includes('all-bank-accounts')) {
         $.ajax({
-            url: '/accounting/get-dropdown-choices?type=public&field=bank-account&modal=create-rules',
+            url: base_url + 'accounting/get-dropdown-choices?type=public&field=bank-account&modal=create-rules',
             //url: get_dropdown_url,
             dataType: 'json',
             success: function(res) {
@@ -362,7 +362,7 @@ $('#createRules #assign-rule').on('click', function(e) {
         $('#createRules #assign-to-category').select2({
             placeholder: 'Select a category',
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {
@@ -384,7 +384,7 @@ $('#createRules #assign-rule').on('click', function(e) {
         $('#createRules #assign-to-payee').select2({
             placeholder: '(Recommended)',
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {
@@ -405,7 +405,7 @@ $('#createRules #assign-rule').on('click', function(e) {
 
         $('#createRules #assign-to-customer').select2({
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {
@@ -429,7 +429,7 @@ $('#createRules #assign-rule').on('click', function(e) {
             dropdownParent: $('#createRules'),
             allowClear: true,
             ajax: {
-                url: '/accounting/get-job-tags',
+                url: base_url + 'accounting/get-job-tags',
                 dataType: 'json'
             }
         });
@@ -502,7 +502,7 @@ $(document).on('click', '#createRules #add-split', function(e) {
     $('#createRules select[name="split_detail_category[]"]').select2({
         placeholder: 'Select a category',
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {
@@ -552,7 +552,7 @@ $(document).on('click', '#createRules .add-line', function(e) {
     $(this).closest('.row').prev().find('select[name="split_detail_category[]"]').select2({
         placeholder: 'Select a category',
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {
@@ -615,7 +615,7 @@ $(document).on('click', '#createRules .remove-split-detail', function(e) {
         $('#createRules #assign-to-category').select2({
             placeholder: 'Select a category',
             ajax: {
-                url: '/accounting/get-dropdown-choices',
+                url: base_url + 'accounting/get-dropdown-choices',
                 dataType: 'json',
                 data: function(params) {
                     var query = {

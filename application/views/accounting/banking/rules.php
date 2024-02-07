@@ -1,6 +1,14 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/rules_modals'); ?>
-
+<style>
+.custom-badge{
+    font-size:14px;
+}
+.nsm-badge.danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/banking'); ?>
@@ -94,13 +102,12 @@
                         <tr>
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select select-all-rules" id="select-all-rules" type="checkbox">
-                            </td>
-                            <td data-name="Priority">PRIORITY</td>
+                            </td>                            
                             <td data-name="Rule Name">RULE NAME</td>
                             <td data-name="Applied To">APPLIED TO</td>
                             <td data-name="Conditions">CONDITIONS</td>
-                            <td data-name="Settings">SETTINGS</td>
                             <td data-name="Auto Add">AUTO ADD</td>
+                            <td data-name="Priority">PRIORITY</td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -114,24 +121,39 @@
                                 <div class="table-row-icon table-checkbox">
                                     <input type="checkbox" name="rule_ids[]" value="<?php echo $rule->id; ?>" id="check-input-rules" class="form-check-input select-one table-select check-input-rules" />
                                 </div>
+                            </td>                            
+                            <td><?=$rule->rules_name?></td>
+                            <td><?= $rule->apply_type; ?></td>
+                            <td>
+                                <?php if( !empty($rule->conditions) ){ ?>
+                                <ul>
+                                    <?php foreach($rule->conditions as $c){ ?>
+                                        <li><?= $c; ?></li>
+                                    <?php } ?>
+                                </ul>
+                                <?php }else{ ?>
+                                    No conditions set
+                                <?php } ?>
+                            </td>
+                            <td>
+                                <?php if( $rule->auto == 1 ){ ?>
+                                    <span class="nsm-badge success custom-badge">Yes</span>
+                                <?php }else{ ?>
+                                    <span class="nsm-badge danger custom-badge">No</span>
+                                <?php } ?>
                             </td>
                             <td>
                                 <?php if($rule->priority == 1) { ?>
-                                    <span class="nsm-badge success">Yes</span>
+                                    <span class="nsm-badge success custom-badge">Yes</span>
                                 <?php } else { ?>
-                                    <span class="nsm-badge">No</span>
+                                    <span class="nsm-badge danger custom-badge">No</span>
                                 <?php } ?>
                             </td>
-                            <td><?=$rule->rules_name?></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>
                                 <?php if($rule->is_active == 1) { ?>
-                                    <span class="nsm-badge success">Active</span>
+                                    <span class="nsm-badge success custom-badge">Active</span>
                                 <?php } else { ?>
-                                    <span class="nsm-badge">Inactive</span>
+                                    <span class="nsm-badge custom-badge">Inactive</span>
                                 <?php } ?>                                
                             </td>
                             <td>
@@ -174,5 +196,11 @@
         </div>
     </div>
 </div>
-
+<script>
+$(function(){
+    $('#importRulesLink').on('click', function(){
+        $('#importRules').modal('show');
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

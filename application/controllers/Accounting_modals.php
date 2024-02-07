@@ -11218,6 +11218,10 @@ class Accounting_modals extends MY_Controller
                 $dropdown = $this->input->get('dropdown');
                 $return = $this->get_account_types_choices($return, $search, $dropdown);
             break;
+            case 'account' :
+                $dropdown = $this->input->get('dropdown');
+                $return = $this->get_account_types_choices($return, $search, $dropdown);
+            break;
             case 'detail-type' :
                 $accType = $this->input->get('accType');
                 $dropdown = $this->input->get('dropdown');

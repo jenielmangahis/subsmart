@@ -556,27 +556,25 @@ class Accounting extends MY_Controller
     }
 
     public function rules()
-    {
+    {        
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $rules = $this->rules_model->getRules();
+        $rules = $this->rules_model->getRules();        
+        foreach($rules as $rule){
+            $conditions = $this->rules_model->getConditionById($rule->id);
+            $a_rules = [];
+            foreach( $conditions as $c ){
+                $a_rules[] = $c->description . ' ' . $c->contain . ' ' . $c->comment;
+            }
+            $rule->conditions = $a_rules;
+        }
         add_css([
-            // 'assets/css/accounting/banking/rules/rules.css',
-            'https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css',
-
             // stepper
             'https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css',
         ]);
         add_footer_js([
             // 'assets/js/accounting/banking/rules/rules.js',
             'assets/js/accounting/banking/rules/rules-new.js',
-
-            // for some reason the oldest version is the only one that
-            // works while implementing this. not sure why though.
-            // https://cdn.datatables.net/rowreorder/
-            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js',
-
             'assets/js/accounting/banking/rules/libs/download/download.min.js',
-
             // stepper
             'https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
         ]);
