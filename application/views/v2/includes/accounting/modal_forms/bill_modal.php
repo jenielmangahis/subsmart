@@ -433,7 +433,7 @@
                                                             <?php $count++; endforeach; ?>
                                                             <?php endif; ?>
 
-                                                            <?php do {?>
+                                                            <?php do { ?>
                                                             <tr>
                                                                 <td><?=$count?></td>
                                                                 <td></td>
@@ -454,7 +454,7 @@
                                                                 </td>
                                                             </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td>2</td>
                                                                 <td></td>
                                                                 <td></td>
@@ -469,7 +469,7 @@
                                                                         <i class='bx bx-fw bx-trash'></i>
                                                                     </button>
                                                                 </td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
