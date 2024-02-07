@@ -12554,6 +12554,7 @@ class Workorder extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Customer_model');
+        $this->load->model('JobType_model');
 
         $is_success = 1;
         $msg = 'Cannot send email';
@@ -12609,6 +12610,8 @@ class Workorder extends MY_Controller
                 move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment);
             }
 
+            $jobType = $this->JobType_model->getById($post['job_type']);
+
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => 0,
@@ -12622,6 +12625,7 @@ class Workorder extends MY_Controller
                 'jobtypebase_amount' => 0,
                 'job_name' => $job_number . ' - ' . $post['job_type'],
                 'job_location' => $job_location,
+                'job_account_number' => $post['job_account_number'],
                 'job_description' => $post['job_description'],
                 'start_date' => date("Y-m-d",strtotime($post['start_date'])),
                 'start_time' => $post['start_time'],
@@ -12639,17 +12643,17 @@ class Workorder extends MY_Controller
                 'attachment' => $attachment,
                 'tax_percentage' => $post['tax_percentage'],
                 'tax_rate' => $post['tax'],
-                'job_type' => $post['job_type'],
+                'job_type' => $jobType->title,
                 'date_issued' => date("Y-m-d",strtotime($post['start_date'])),
                 'work_order_id' => $job_workorder_id,
+                'timezone' => $post['timezone'],
                 'commission' => 0,
                 'tech_commission' => 0,
                 'tech_commission_total' => 0,
                 'fix_cost' => 0,
                 'margin' => 0,
                 'amount_collected' => 0,
-                'gross_profit' => 0,
-                'job_account_number' => ''                
+                'gross_profit' => 0,             
             );
 
             $job_id = $this->Jobs_model->createJob($jobs_data);
