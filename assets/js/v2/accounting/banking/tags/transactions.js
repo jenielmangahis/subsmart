@@ -587,26 +587,40 @@ $('#add-tags-modal #tags').select2({
 $('#apply-add-tags').on('click', function() {
     var data = new FormData();
     var tags = $('#add-tags-modal #tags').val();
-    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');
+    var checked = $('#transactions-table tbody tr:visible input.select-one:checked');    
 
+    var total_tags = 0;
     checked.each(function() {
         data.append('transactions[]', $(this).val());
     });
 
     $.each(tags, function(index, value) {
         data.append('tags[]', value);
+        total_tags = total_tags + 1;
     });
 
-    $.ajax({
-        url: base_url + 'accounting/tags/transactions/add-tags',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            location.reload();
-        }
-    });
+    if( total_tags > 0 ){
+        $.ajax({
+            url: base_url + 'accounting/tags/transactions/add-tags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                location.reload();
+            }
+        });
+    }else{
+        
+        Swal.fire({
+            text: "Please select tag.",
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonText: 'OK',
+            timer: 2000
+        });
+    }
+    
 });
 
 $('#remove-tags').on('click', function(e) {
@@ -709,13 +723,12 @@ $('#remove-tags-button').on('click', function() {
         });
     } else {
         Swal.fire({
-            text: "Please selected at least 1 tag to remove.",
+            text: "Please select at least 1 tag to remove.",
             icon: 'error',
             showCloseButton: true,
-            confirmButtonColor: '#2ca01c',
             confirmButtonText: 'OK',
             timer: 2000
-        })
+        });
     }
 });
 
