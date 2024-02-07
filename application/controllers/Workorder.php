@@ -4768,23 +4768,25 @@ class Workorder extends MY_Controller
                 $discount   = $this->input->post('discount');
                 $total      = $this->input->post('total');
 
-                $i = 0;
-                foreach($a as $row){
-                    if ($a[$i] == 0) {
-                        continue;
-                    }
+                if( $a ){
+                    $i = 0;
+                    foreach($a as $row){
+                        if ($a[$i] == 0) {
+                            continue;
+                        }
 
-                    $data['items_id']       = $a[$i];
-                    $data['package_id ']    = $packageID[$i];
-                    $data['qty']            = $quantity[$i];
-                    $data['cost']           = $price[$i];
-                    $data['tax']            = $h[$i];
-                    $data['discount']       = $discount[$i];
-                    $data['total']          = $total[$i];
-                    $data['work_order_id '] = $addQuery;
-                    $addQuery2 = $this->workorder_model->add_work_order_details($data);
-                    $i++;
-                }
+                        $data['items_id']       = $a[$i];
+                        $data['package_id ']    = $packageID[$i];
+                        $data['qty']            = $quantity[$i];
+                        $data['cost']           = $price[$i];
+                        $data['tax']            = $h[$i];
+                        $data['discount']       = $discount[$i];
+                        $data['total']          = $total[$i];
+                        $data['work_order_id '] = $addQuery;
+                        $addQuery2 = $this->workorder_model->add_work_order_details($data);
+                        $i++;
+                    }
+                }                
 
                 $getname = $this->workorder_model->getname($user_id);
 
