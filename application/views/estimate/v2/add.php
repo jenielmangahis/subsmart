@@ -1182,45 +1182,60 @@ add_footer_js(array(
             } 
         }); 
 
-        $('#sel-customer').change(function() {
+        $('#customer_id').change(function() {
             var id = $(this).val();
-            load_customer_address(id);
+            load_customer_data(id);
         });
 
         <?php if ($default_customer_id > 0) { ?>
-            load_customer_address("<?= $default_customer_id; ?>");
+            load_customer_data("<?= $default_customer_id; ?>");
         <?php } ?>
 
-        function load_customer_address(id) {
-
+        function load_customer_data(customer_id){            
             $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url(); ?>/accounting/addLocationajax",
-                data: {
-                    id: id
+                type: "POST",
+                url: base_url + 'customer/_get_customer_data',
+                data: {customer_id:customer_id},
+                dataType:'json',
+                beforeSend: function(response) {
+                    
                 },
-                dataType: 'json',
                 success: function(response) {
-                    if (response.customer.email) {
-                        $("#estimate-customer-email").val(response.customer.email);
-                    }else{
-                        $("#estimate-customer-email").val('');
-                    }
+                    setTimeout(function(){
+                        var customer_business_name = response.business_name;
+                        var customer_name = response.first_name + ' ' + response.last_name;
+                        var customer_email = response.email;
+                        var customer_phone = response.phone_h;
+                        var customer_mobile = response.phone_m;
+                        var customer_address = response.mail_add + ' ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip_code;
 
-                    if (response.customer.phone_m) {
-                        $("#estimate-customer-mobile").val(response.customer.phone_m);
-                    }
+                        if( customer_business_name == '' ){
+                            customer_business_name = 'Not Specified';
+                        }
 
-                    $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
-                    $('#business_name').val(response['customer'].business_name);
+                        if( customer_email == '' ){
+                            customer_email = 'Not Specified';
+                        }                        
 
+                        if( customer_phone == '' ){
+                            customer_phone = 'Not Specified';
+                        }
+
+                        if( customer_mobile == '' ){
+                            customer_mobile = 'Not Specified';
+                        }
+
+                        $("#estimate-customer-email").val(customer_email);
+                        $("#estimate-customer-mobile").val(customer_mobile);
+                        $("#job_location").val(customer_address);
+                        $('#business_name').val(customer_business_name);
+                    },200);                
                 },
-                error: function(response) {
-                    //alert('Error'+response);
-
+                error: function(e) {
+                    
                 }
             });
-        }
+        }        
 
         var table = $('#dt-package-list').DataTable({
             "searching": true,
