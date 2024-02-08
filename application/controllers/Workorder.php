@@ -4668,7 +4668,7 @@ class Workorder extends MY_Controller
                 }
 
                 $phone_m = $customer->phone_m;
-                if( $this->input->post('phone_number') != '' ){
+                if( $this->input->post('mobile_number') != '' ){
                     $phone_m = $this->input->post('mobile_number');
                 }
 
@@ -4726,7 +4726,7 @@ class Workorder extends MY_Controller
                 ];
                 $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
 
-                $access_data = ['access_login' => $this->input->post('password')];
+                $access_data = ['access_password' => $this->input->post('password')];
                 $this->AcsAccess_model->updateByProfId($customer->prof_id, $access_data);
 
             }
