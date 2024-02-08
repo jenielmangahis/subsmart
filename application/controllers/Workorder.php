@@ -47,7 +47,7 @@ class Workorder extends MY_Controller
 
 
     public function index($tab_index = 0)
-    {
+    {        
         $this->hasAccessModule(24); 
         
         $role = logged('role');
@@ -4760,7 +4760,7 @@ class Workorder extends MY_Controller
         //     }
 
             if($addQuery > 0){
-                $a          = $this->input->post('itemid');
+                $a          = $this->input->post('item_id');
                 $packageID  = $this->input->post('packageID');
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
@@ -12030,7 +12030,7 @@ class Workorder extends MY_Controller
     }
 
     public function estimateConversionWorkorder($id)
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
