@@ -201,73 +201,69 @@ a.btn-primary.btn-md {
                 </div>
                 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="customers" class="required"><b>Customer</b></label>
+                        <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="bx bx-plus" style="color:#02A32C;"></span>New Customer</a>
                         <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required class="form-control searchable-dropdown" placeholder="Select">
-                            <option>- Select Customer -</option>
-                            <?php foreach($customers as $c){ ?>
                                 <?php if( $default_customer_id > 0 ){ ?>
                                     <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php }else{ ?>
-                                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php } ?>                                            
-                            <?php } ?>
+                                <?php } ?>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <br>
-                        <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
-                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-5 form-group">
                         <label for="city"><b>Business Name</b> (optional)</label>
                         <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="" />
-                    </div>
+                    </div>                    
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
+                <div class="row"> 
+                    <div class="col-md-5">
                         <label for="job_location" class="required"><b>Service Location</b></label>
                         <input type="text" class="form-control" name="service_location" id="service_location"
                                 required placeholder="Enter Location"
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>
+                    </div>                                                                             
+                </div>
+                <div class="row">
                     <div class="col-md-2">
                         <label for="job_location" class="required"><b>City</b></label>
                         <input type="text" class="form-control" name="customer_city" id="customer_city"
                                 required placeholder="Enter City" 
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>
-                </div>
-                <div class="row">
+                    </div>  
                     <div class="col-md-2">
                         <label for="job_location" class="required"><b>State</b></label>
                         <input type="text" class="form-control" name="customer_state" id="customer_state"
                                 required placeholder="Enter State" 
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label for="job_location" class="required"><b>Zip Code</b></label>
                         <input type="text" class="form-control" name="customer_zip" id="customer_zip"
                                 required placeholder="Enter Zip Code" 
                                 onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>
-                    <div class="col-md-2" style="display: ;">
-                        <label for="job_location" class="required"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" />
-                    </div>
+                    </div>                    
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row">                    
+                    <div class="col-md-2">
+                        <label for="job_location" class="required"><b>Phone Number</b></label>
+                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" />
+                        <br />
+                        <label for="job_location" class="required"><b>Mobile Number</b></label>
+                        <input type="text" class="form-control" name="customer_mobile" id="customer_mobile" required placeholder="Enter Phone Number" />
+                    </div>
+                    <div class="col-md-3">
                         <label for="job_name"><b>Service description</b> (optional)</label>
                         <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
-                        <textarea class="form-control" name="service_description"></textarea>
+                        <textarea class="form-control" name="service_description" style="height:110px;"></textarea>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
+                    <div class="col-md-5 form-group">
+                        <label for="city">Service Tag</label>
+                        <a class="" href="javascript:void(0)" target="_new" style="color:#02A32C;float:right;" href="<?= base_url('job/job_tags'); ?>"><span class="bx bx-plus" style="color:#02A32C;"></span>Manage Tag</a>
                         <select class="form-control" name="job_tag">
                             <?php foreach($tags as $t){ ?>
                                 <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
@@ -1136,8 +1132,50 @@ a.btn-primary.btn-md {
     });
     
     $('#sel-customer_t').select2({         
-        minimumInputLength: 0        
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection
     });
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
+
     $('#appointment-user').select2({
             ajax: {
                 url: base_url + 'autocomplete/_company_users',
@@ -1501,61 +1539,72 @@ document.getElementById("payment_method").onchange = function() {
     
 $(document).ready(function(){
  
- $('#sel-customer_t').change(function(){
- var id  = $(this).val();
-//  alert(id);
+    $('#sel-customer_t').change(function(){
+        var customer_selected = $(this).val();
+        load_customer_data(customer_selected);
+    });
 
-     $.ajax({
-         type: 'POST',
-         url:"<?php echo base_url(); ?>accounting/addLocationajax",
-         data: {id : id },
-         dataType: 'json',
-         success: function(response){
-            // console.log(response);
-            // console.log(response.data);
-            //  alert('success');
-             // console.log(response['customer']);
-         // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+    function load_customer_data(customer_id){
+        $.ajax({
+            type: "POST",
+            url: base_url + 'customer/_get_customer_data',
+            data: {customer_id:customer_id},
+            dataType:'json',
+            beforeSend: function(response) {
+                
+            },
+            success: function(response) {
+                var customer_business_name = response.business_name;
+                var customer_name = response.first_name + ' ' + response.last_name;
+                var customer_email = response.email;
+                var customer_phone = response.phone_h;
+                var customer_mobile = response.phone_m;
+                var customer_address = response.mail_add;
 
-         // var phone = response['customer'].phone_h;
-         // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
-         var phone = response['customer'].phone_h;
-             // phone = normalize(phone);
-         
-         var mobile = response['customer'].phone_m;
-             // mobile = normalize(mobile);
+                if( customer_business_name == '' ){
+                    customer_business_name = 'Not Specified';
+                }                
 
-        //  var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-        //  var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-         
-         $("#service_location").val(response['customer'].mail_add);
-         $("#customer_city").val(response['customer'].city);
-         $("#customer_state").val(response['customer'].state);
-         $("#customer_zip").val(response['customer'].zip_code);
-         $("#customer_phone").val(response['customer'].phone_h +' '+ response['customer'].phone_m);
-         $("#business_name").val(response['customer'].business_name);
-        //  $("#email").val(response['customer'].email);
-        //  $("#date_of_birth").val(response['customer'].date_of_birth);
-        //  $("#phone_no").val(test_p);
-        //  $("#mobile_no").val(test_m);
-        //  $("#city").val(response['customer'].city);
-        //  $("#state").val(response['customer'].state);
-        //  $("#zip").val(response['customer'].zip_code);
-        //  $("#cross_street").val(response['customer'].cross_street);
-        //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+                if( customer_email == '' ){
+                    customer_email = 'Not Specified';
+                }
 
-        //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+                if( customer_phone == '' ){
+                    customer_phone = 'Not Specified';
+                }
 
-        //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
-     
-         },
-             error: function(response){
-             //alert('Error'+response);
-    
-             }
-     });
-});
+                if( customer_mobile == '' ){
+                    customer_mobile = 'Not Specified';
+                }
 
+                var customer_zip_code = response.zip_code;
+                if( response.zip_code == '' ){
+                    customer_zip_code = 'Not Specified';
+                }
+
+                var customer_state = response.state;
+                if( response.state == '' ){
+                    customer_state = 'Not Specified';
+                }
+
+                var customer_city = response.city;
+                if( response.city == '' ){
+                    customer_city = 'Not Specified';
+                }
+
+                $('#business_name').val(customer_business_name);
+                $('#customer_mobile').val(customer_mobile);
+                $('#customer_phone').val(customer_phone);
+                $('#customer_zip').val(response.zip_code)
+                $('#customer_state').val(customer_state);
+                $('#customer_city').val(customer_city);
+                $('#service_location').val(customer_address);               
+            },
+            error: function(e) {
+                
+            }
+        });
+    }
 });
 </script>
 
