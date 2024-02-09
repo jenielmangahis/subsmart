@@ -741,12 +741,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $ccCredit->status != 2 ){
+                $now = time();
+                $date_created = strtotime($ccCredit->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Credit Card Credit', $ccCredit->id),
                 'memo' => $ccCredit->memo,
+                'num_days' => $count_days,
                 'status' => $ccCredit->status === "2" ? "Paid" : "Open",
                 'type' => 'CC Credit',
                 'amount' => $ccCredit->total_amount,
@@ -771,12 +780,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $vCredit->status != 2 ){
+                $now = time();
+                $date_created = strtotime($vCredit->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $vCredit->id,
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($vCredit->vendor_id)->display_name,
                 'category' => $this->category_col('Vendor Credit', $vCredit->id),
                 'memo' => $vCredit->memo,
+                'num_days' => $count_days,
                 'status' => $vCredit->status === "2" ? "Paid" : "Open",
                 'type' => 'Vendor Credit',
                 'amount' => $vCredit->total_amount,
@@ -850,11 +868,20 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $deposit->status != 2 ){
+                $now = time();
+                $date_created = strtotime($deposit->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'from_to' => $from,
                 'category' => $category,
+                'num_days' => $count_days,
                 'memo' => $deposit->memo,
                 'status' => $deposit->status === "2" ? "Paid" : "Open",
                 'type' => 'Deposit',
@@ -932,12 +959,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $bill->status != 2 ){
+                $now = time();
+                $date_created = strtotime($bill->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $bill->id,
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name,
                 'category' => $this->category_col('Bill', $bill->id),
                 'memo' => $bill->memo,
+                'num_days' => $count_days,
                 'status' => $bill->status === "2" ? "Paid" : "Open",
                 'type' => 'Bill',
                 'amount' => $bill->total_amount,
@@ -977,12 +1013,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $check->status != 2 ){
+                $now = time();
+                $date_created = strtotime($check->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Check', $check->id),
                 'memo' => $check->memo,
+                'num_days' => $count_days,
                 'status' => $check->status === "2" ? "Paid" : "Open",
                 'type' => 'Check',
                 'amount' => $check->total_amount,
@@ -1029,11 +1074,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $ccCredit->status != 2 ){
+                $now = time();
+                $date_created = strtotime($ccCredit->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $ccExpense->id,
                 'date' => date("m/d/Y", strtotime($ccExpense->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Expense', $ccExpense->id),
+                'status' => $ccExpense->status === "2" ? "Paid" : "Open",
+                'num_days' => $count_days,
                 'memo' => $ccExpense->memo,
                 'type' => 'Credit card expense',
                 'amount' => $ccExpense->total_amount,
@@ -1058,12 +1113,21 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $count_days = 0;
+            if( $purchaseOrder->status != 2 ){
+                $now = time();
+                $date_created = strtotime($purchaseOrder->date_created);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $purchaseOrder->id,
                 'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name,
                 'category' => $this->category_col('Purchase Order', $purchaseOrder->id),
                 'memo' => $purchaseOrder->memo,
+                'num_days' => $count_days,            
                 'status' => $purchaseOrder->status === "2" ? "Paid" : "Open",
                 'type' => 'Purchase Order',
                 'amount' => $purchaseOrder->total_amount,
@@ -1091,13 +1155,22 @@ class Tags extends MY_Controller {
             $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
             $name = $customer->first_name . ' ' . $customer->last_name;
 
+            $count_days = 0;
+            if( $invoice->status != 'Paid' ){
+                $now = time();
+                $date_created = strtotime($invoice->date_issued);
+                $count_days = $now - $date_created;
+                $count_days = round($count_days / (60 * 60 * 24));
+            }
+
             $data[] = [
                 'id' => $invoice->id,
                 'date' => date("m/d/Y", strtotime($invoice->date_issued)),
-                'from_to' => $name,
+                'from_to' => $name . ' ' . $invoice->id,
                 'category' => $this->category_col('Invoice', $invoice->id),
                 'memo' => $invoice->message_on_invoice,
                 'status' => $invoice->status,
+                'num_days' => $count_days,
                 'type' => 'Invoice',
                 'amount' => $invoice->grand_total,
                 'tags' => $tags
@@ -1123,11 +1196,21 @@ class Tags extends MY_Controller {
                 $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
                 $name = $customer->first_name . ' ' . $customer->last_name;
 
+                $count_days = 0;
+                if( $salesReceipt->status != 2 ){
+                    $now = time();
+                    $date_created = strtotime($salesReceipt->date_created);
+                    $count_days = $now - $date_created;
+                    $count_days = round($count_days / (60 * 60 * 24));
+                }
+
                 $data[] = [
                     'id' => $salesReceipt->id,
                     'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
                     'from_to' => $name,
                     'category' => $this->category_col('Sales Receipt', $salesReceipt->id),
+                    'num_days' => $count_days,
+                    'status' => $salesReceipt->status === "2" ? "Paid" : "Open",
                     'memo' => $salesReceipt->message_sales_receipt,
                     'type' => 'Sales Receipt',
                     'amount' => $salesReceipt->total_amount,

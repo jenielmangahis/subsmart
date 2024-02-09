@@ -13224,7 +13224,7 @@ class Accounting_modals extends MY_Controller
             case 'journal' :
                 $this->view_journal($transactionId);
             break;
-            case 'bill':
+            case 'bill':                
                 $this->view_bill($transactionId);
             break;
             case 'cc-credit' :
