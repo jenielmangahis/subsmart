@@ -203,6 +203,7 @@
                             <td data-name="From/To">CUSTOMER</td>
                             <!-- <td data-name="Category">CATEGORY</td>
                             <td data-name="Memo">MEMO</td> -->
+                            <td data-name="Status">DAYS NOT PAID</td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="Type">TYPE</td>
                             <td data-name="Amount">AMOUNT</td>
@@ -218,14 +219,25 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
-                            <td class="row-hover" style="width:10%;" data-type="<?=$transaction['type']?>"><?=$transaction['date']?></td>
+                            <td class="row-hover" style="width:10%;" data-type="Bill"><?=$transaction['date']?></td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['from_to']?></td>
                             <!-- <td class="row-hover"><?=$transaction['category']?></td>
                             <td class="row-hover"><?=$transaction['memo']?></td> -->
+                            <td class="row-hover" data-type="<?=$transaction['type']?>"><?= isset($transaction['num_days']) ? $transaction['num_days'] : 0; ?></td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>">
                                 <?php 
                                     if( isset($transaction['status']) && ($transaction['status'] != '' || $transaction['status'] != NULL ) ){
-                                        echo $transaction['status'];
+                                        if( $transaction['type'] == 'Invoice' ){
+                                            if( $transaction['status'] != 'Paid' ){
+                                                echo 'Unpaid';
+                                            }else{
+                                                echo 'Paid';
+                                            }
+                                        }else{
+                                            echo $transaction['status'];
+                                        }
+                                        
+                                        
                                     }else{
                                         echo 'NA';
                                     }

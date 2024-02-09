@@ -324,8 +324,8 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="email">Email</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
+                                <li><a class="dropdown-item dropdown-email  disabled" href="javascript:void(0);" id="email">Email</a></li>
+                                <li><a class="dropdown-item dropdown-make-inactive disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                             </ul>
                         </div>
 
@@ -510,5 +510,19 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){   
 
+    $(".select-all").click(function(){
+        var count_vendor_list_check = $('.select-all').filter(':checked').length;
+        if(count_vendor_list_check > 0) {
+            $(".dropdown-make-inactive").removeClass("disabled");
+            $(".dropdown-email").removeClass("disabled");            
+        } else {
+            $(".dropdown-make-inactive").addClass("disabled");
+            $(".dropdown-email").addClass("disabled");
+        }             
+    }) 
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
