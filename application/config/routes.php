@@ -1670,3 +1670,4 @@ $route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 //Job Import data
 $route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
 $route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
+$route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
