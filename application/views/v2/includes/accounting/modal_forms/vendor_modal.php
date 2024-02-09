@@ -1,10 +1,10 @@
 <div id="vendor-modal" class="modal fade modal-fluid nsm-modal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl test">
         <!-- Modal content-->
         <?php if(!isset($vendorDetails)) : ?>
         <form id="add-vendor-form">
         <?php else : ?>
-        <form action="/accounting/vendors/<?=$vendorDetails->id?>/update" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
+        <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
         <?php endif; ?>
         <div class="modal-content">
             <div class="modal-header">
@@ -185,17 +185,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <div class="row w-100">
-                    <div class="col-12 col-md-6">
-                        <button type="button" class="nsm-button cancel-add-vendor" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <button type="submit" class="nsm-button success float-end" name="save">Save</button>
-                    </div>
-                </div>
+            <div class="modal-footer">                
+                <button type="button" class="nsm-button cancel-add-vendor" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary float-end" name="save">Save</button>
             </div>
         </div>
         </form>
     </div>
 </div>
+<script>
+$('#vendor-modal').modal({backdrop: 'static', keyboard: false});
+</script>
