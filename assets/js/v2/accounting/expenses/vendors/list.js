@@ -167,7 +167,7 @@ $('#add-vendor-button').on('click', function(e) {
             autoclose: true
         });
 
-        $('#modal-container #vendor-modal form').attr('action', '/accounting/vendors/add');
+        $('#modal-container #vendor-modal form').attr('action', base_url + 'accounting/vendors/add');
         $('#modal-container #vendor-modal form').attr('method', 'post');
         $('#modal-container #vendor-modal form').attr('novalidate', 'novalidate');
         $('#modal-container #vendor-modal form').attr('enctype', 'multipart/form-data');
