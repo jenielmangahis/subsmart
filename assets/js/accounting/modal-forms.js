@@ -6371,7 +6371,7 @@ $(function() {
         }
 
         $.ajax({
-            url: '/accounting/add-new-payee',
+            url: base_url + 'accounting/add-new-payee',
             data: data,
             type: 'post',
             processData: false,

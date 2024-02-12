@@ -492,6 +492,8 @@ $route['accounting/print-sales-transactions']['post'] = 'accounting_modals/print
 $route['accounting/send-sales-transactions']['post'] = 'accounting_modals/send_sales_transactions';
 $route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_invoice_reminders';
 
+$route['accounting/mark-as-paid-transaction/(:any)/(:any)'] = 'accounting_modals/mark_as_paid_transaction/$1/$2';
+
 $route['accounting/lists'] = 'accounting/lists';
 
 
