@@ -14,7 +14,7 @@
     #import-vendors-modal label{
         font-size: 12px !important;
         margin-bottom: 1px !important;
-    }
+    }    
     #import-vendors-modal hr{
         border: 2px solid #32243d !important;
         width: 100%;
@@ -326,6 +326,7 @@
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item dropdown-email  disabled" href="javascript:void(0);" id="email">Email</a></li>
                                 <li><a class="dropdown-item dropdown-make-inactive disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
+                                <li><a class="dropdown-item dropdown-delete-vendor disabled" href="javascript:void(0);" id="delete-vendor">Delete</a></li>
                             </ul>
                         </div>
 
@@ -471,23 +472,29 @@
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <?php if($vendor->status === '0') : ?>
                                         <li>
-                                            <a class="dropdown-item make-active" href="#">Make active</a>
+                                            <a class="dropdown-item make-active" href="javascript:void(0);">Make active</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);">Delete</a>
                                         </li>
                                         <?php else : ?>
                                         <li>
-                                            <a class="dropdown-item create-bill" href="#">Create bill</a>
+                                            <a class="dropdown-item create-bill" href="javascript:void(0);">Create bill</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item create-expense" href="#">Create expense</a>
+                                            <a class="dropdown-item create-expense" href="javascript:void(0);">Create expense</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item write-check" href="#">Write check</a>
+                                            <a class="dropdown-item write-check" href="javascript:void(0);">Write check</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item create-purchase-order" href="#">Create purchase order</a>
+                                            <a class="dropdown-item create-purchase-order" href="javascript:void(0);">Create purchase order</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                                            <a class="dropdown-item make-inactive" href="javascript:void(0);">Make inactive</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);">Delete</a>
                                         </li>
                                         <?php endif; ?>
                                     </ul>
