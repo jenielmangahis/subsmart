@@ -112,7 +112,7 @@ class Vendors extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/expenses/vendors/list.js"
@@ -549,6 +549,31 @@ class Vendors extends MY_Controller
         } else {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
         }
+    }
+
+    public function delete_selected()
+    {
+        $msg = '';
+        $is_success = 0;
+
+        $vendors = $this->input->post('vendors');
+        $total_deleted = 0;
+        
+        $data = [];
+        foreach ($vendors as $vendorId) {
+            //$this->vendors_model->delete($vendorId);
+            $total_deleted++;
+        }
+
+        if( $total_deleted > 0 ){
+            $msg = '';
+            $is_success = 1;
+        }else{
+            $msg = 'Vendor data not found';
+        }
+
+        $data = ['msg' => $msg, 'is_success' => $is_success, 'total_deleted' => $total_deleted];
+		echo json_encode($data);
     }
 
     public function make_active()
