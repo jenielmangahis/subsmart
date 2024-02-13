@@ -14,16 +14,16 @@
                             <td data-name="No.">NO.</td>
                             <td data-name="Payee">PAYEE</td>
                             <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
+                            <!-- <td data-name="Source">SOURCE</td> -->
                             <td data-name="Category">CATEGORY</td>
                             <td data-name="Memo">MEMO</td>
                             <td data-name="Due Date">DUE DATE</td>
                             <td data-name="Balance">BALANCE</td>
                             <td data-name="Total">TOTAL</td>
                             <td data-name="Status">STATUS</td>
-                            <td class="table-icon text-center" data-name="Attachments">
+                            <!-- <td class="table-icon text-center" data-name="Attachments">
                                 <i class='bx bx-paperclip'></i>
-                            </td>
+                            </td> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -37,7 +37,7 @@
                                 <td><?=$transaction['number']?></td>
                                 <td><?=$transaction['payee']?></td>
                                 <td><?=$transaction['method']?></td>
-                                <td><?=$transaction['source']?></td>
+                                <!-- <td><?php //$transaction['source'] ?></td> -->
                                 <td>
                                     <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
                                     <?=$transaction['category']['name']?>
@@ -50,7 +50,7 @@
                                 <td><?=$transaction['balance']?></td>
                                 <td><?=$transaction['total']?></td>
                                 <td><?=$transaction['status']?></td>
-                                <td><?=count($transaction['attachments'])?></td>
+                                <!-- <td><?=count($transaction['attachments'])?></td> -->
                             </tr>
                             <?php endforeach; ?>
                         <?php
@@ -93,16 +93,16 @@
                             <td data-name="No.">NO.</td>
                             <td data-name="Payee">PAYEE</td>
                             <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
+                            <!-- <td data-name="Source">SOURCE</td> -->
                             <td data-name="Category">CATEGORY</td>
                             <td data-name="Memo">MEMO</td>
                             <td data-name="Due Date">DUE DATE</td>
                             <td data-name="Balance">BALANCE</td>
                             <td data-name="Total">TOTAL</td>
                             <td data-name="Status">STATUS</td>
-                            <td class="table-icon text-center" data-name="Attachments">
+                            <!-- <td class="table-icon text-center" data-name="Attachments">
                                 <i class='bx bx-paperclip'></i>
-                            </td>
+                            </td> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -116,7 +116,7 @@
                                 <td><?=$transaction['number']?></td>
                                 <td><?=$transaction['payee']?></td>
                                 <td><?=$transaction['method']?></td>
-                                <td><?=$transaction['source']?></td>
+                                <!-- <td><?php //echo $transaction['source'] ?></td> -->
                                 <td>
                                     <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
                                     <?=$transaction['category']['name']?>
@@ -129,7 +129,7 @@
                                 <td><?=$transaction['balance']?></td>
                                 <td><?=$transaction['total']?></td>
                                 <td><?=$transaction['status']?></td>
-                                <td><?=count($transaction['attachments'])?></td>
+                                <!-- <td><?php // echo count($transaction['attachments']) ?></td> -->
                             </tr>
                             <?php endforeach; ?>
                         <?php
