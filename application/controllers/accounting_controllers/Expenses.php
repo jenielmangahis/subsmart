@@ -1748,9 +1748,9 @@ class Expenses extends MY_Controller
         if(in_array('status', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Status";
         }
-        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Attachments";
-        }
+        //if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
+            //$headers[] = "Attachments";
+        //}
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
         $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
@@ -1758,7 +1758,12 @@ class Expenses extends MY_Controller
             $keys = array_keys($transaction);
 
             foreach($keys as $key) {
+                
                 if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
+                    unset($transaction[$key]);
+                }
+
+                if(in_array($key, ['attachments'])) {
                     unset($transaction[$key]);
                 }
             }
