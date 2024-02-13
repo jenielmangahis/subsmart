@@ -577,9 +577,9 @@ class Accounting_model extends MY_Model {
 
         // Get Bill Payment List data in Database
         if ($reportType == "bill_payment_list") {
-            $this->db->select('accounting_bill.id AS bill_id, accounting_vendors.id AS vendor_id, accounting_bill.bill_date AS bill_date, accounting_bill.id AS num, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.total_amount AS amount');
+            $this->db->select('accounting_bill.id AS bill_id, accounting_vendors.id AS vendor_id, accounting_bill.bill_date AS bill_date, accounting_bill.id AS num, accounting_vendors.display_name AS vendor, accounting_bill.total_amount AS amount');
             $this->db->from('accounting_bill');
-            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.vendor_id', 'left');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.qbid', 'left');
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_bill.company_id', $companyID);

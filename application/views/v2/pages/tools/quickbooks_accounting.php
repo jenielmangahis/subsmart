@@ -106,6 +106,7 @@
                             <option value="employeeCard">Employee</option>
                             <option value="itemCard">Item</option>
                             <option value="accountCard">Account</option>
+                            <option value="billCard">Bill</option>
                             <!-- <option value="invoiceCard">Invoice</option>
                             <option value="paymentCard">Payment</option>
                             <option value="estimateCard">Estimate</option> -->
@@ -120,10 +121,10 @@
                                         <h5 class="card-title">Customer</h5>
                                         <span class="card-text text-muted">Consumer of the service or product that your business offers.</span>
                                         <hr class="hrMargin">
-                                        <div class="input-group">
+                                        <div class="input-group d-none">
                                             <input type="hidden" name="data" value="Customer">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
                                         <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
                                         <hr class="hrMargin">
@@ -140,10 +141,10 @@
                                         <h5 class="card-title">Vendor</h5>
                                         <span class="card-text text-muted">Represents the seller from whom your company purchases any service or product.</span>
                                         <hr class="hrMargin">
-                                        <div class="input-group">
+                                        <div class="input-group d-none">
                                             <input type="hidden" name="data" value="Vendor">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
                                         <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
                                         <hr class="hrMargin">
@@ -160,10 +161,10 @@
                                         <h5 class="card-title">Employee</h5>
                                         <span class="card-text text-muted">Represents a person working for the company.</span>
                                         <hr class="hrMargin">
-                                        <div class="input-group">
+                                        <div class="input-group d-none">
                                             <input type="hidden" name="data" value="Employee">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
                                         <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
                                         <hr class="hrMargin">
@@ -180,10 +181,10 @@
                                         <h5 class="card-title">Item</h5>
                                         <span class="card-text text-muted">A thing that your company buys, sells, or re-sells, such as products and services.</span>
                                         <hr class="hrMargin">
-                                        <div class="input-group">
+                                        <div class="input-group d-none">
                                             <input type="hidden" name="data" value="Item">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
                                         <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
                                         <hr class="hrMargin">
@@ -200,10 +201,30 @@
                                         <h5 class="card-title">Account</h5>
                                         <span class="card-text text-muted">Accounts are what businesses use to track transactions. Accounts can track money coming in (income or revenue) and going out (expenses). They can also track the value of things (assets), like vehicles and equipment.</span>
                                         <hr class="hrMargin">
-                                        <div class="input-group">
+                                        <div class="input-group d-none">
                                             <input type="hidden" name="data" value="Account">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateFrom" type="date" value="2000-01-01">
-                                            <input class="form-control form-control-sm mb-2 d-none" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                        </div>
+                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
+                                        <hr class="hrMargin">
+                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
+                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 mb-3 billCard cardToggle">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="quickbooks_import_form">
+                                        <h5 class="card-title">Bill</h5>
+                                        <span class="card-text text-muted">AP transaction representing a request-for-payment from a third party for goods/services rendered, received, or both.</span>
+                                        <hr class="hrMargin">
+                                        <div class="input-group">
+                                            <input type="hidden" name="data" value="Bill">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2014-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
                                         <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
                                         <hr class="hrMargin">
@@ -320,6 +341,8 @@
                     <script>
                         $(document).ready(function () {
                             var masonry = new Masonry(document.getElementById('masonryContainer'), {percentPosition: true,});
+                            var resultCount = 0;
+                            var dataCount = 0;
 
                             $(".searchCard").selectize({
                                 plugins: ["remove_button", "clear_button"],
@@ -365,7 +388,6 @@
                                 }
                             }
 
-                            var resultCount = 0;
                             $('.quickbooks_import_form').submit(function (e) { 
                                 e.preventDefault();
                                 const form = $(this);
@@ -425,20 +447,146 @@
                                 importDataRecursion(form, form.serialize(), 1, resultCount);
                             });
 
+
                             function importDataRecursion(form, formData, startPosition, resultCount) {
-                                if (resultCount >= 1000) {
+                                if (resultCount >= 0 && resultCount <= 250) {
+                                    dataCount = 25;
                                     $.ajax({
                                         url: "<?php echo base_url('/tools/quickbooks_import/import') ?>",
                                         method: "POST",
-                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + 200,
+                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + dataCount,
                                         beforeSend: function() {
                                             formDisabler(form, true);
                                         },
                                         success: function(response) {
-                                            if (startPosition + 200 < resultCount) {
-                                                importDataRecursion(form, formData, startPosition + 200, resultCount);
-                                                $('.currentRecordCount').text(startPosition + 200 - 1);
-                                                var percentage = Math.trunc(((startPosition + 200 - 1) / resultCount) * 100)
+                                            if (startPosition + dataCount < resultCount) {
+                                                importDataRecursion(form, formData, startPosition + dataCount, resultCount);
+                                                $('.currentRecordCount').text(startPosition + dataCount - 1);
+                                                var percentage = Math.trunc(((startPosition + dataCount - 1) / resultCount) * 100)
+                                                $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
+                                            } else {
+                                                formDisabler(form, false);
+                                                $('.modalTitle').text(form.find('input[name="data"]').val());
+                                                $('.currentRecordCount').text(resultCount);
+                                                $('.importProgressBar > div > div').css('width', 100 + '%').text(100  + '%');
+                                                setTimeout(() => {
+                                                    $('.importModal').modal('hide');
+                                                    Swal.fire({
+                                                        title: "Success!",
+                                                        text: form.find('input[name="data"]').val() + " Data was imported successfully.",
+                                                        icon: "success"
+                                                    });
+                                                }, 250);
+                                            }
+                                        },
+                                    });
+                                } else if (resultCount >= 251 && resultCount <= 500) {
+                                    dataCount = 50;
+                                    $.ajax({
+                                        url: "<?php echo base_url('/tools/quickbooks_import/import') ?>",
+                                        method: "POST",
+                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + dataCount,
+                                        beforeSend: function() {
+                                            formDisabler(form, true);
+                                        },
+                                        success: function(response) {
+                                            if (startPosition + dataCount < resultCount) {
+                                                importDataRecursion(form, formData, startPosition + dataCount, resultCount);
+                                                $('.currentRecordCount').text(startPosition + dataCount - 1);
+                                                var percentage = Math.trunc(((startPosition + dataCount - 1) / resultCount) * 100)
+                                                $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
+                                            } else {
+                                                formDisabler(form, false);
+                                                $('.modalTitle').text(form.find('input[name="data"]').val());
+                                                $('.currentRecordCount').text(resultCount);
+                                                $('.importProgressBar > div > div').css('width', 100 + '%').text(100  + '%');
+                                                setTimeout(() => {
+                                                    $('.importModal').modal('hide');
+                                                    Swal.fire({
+                                                        title: "Success!",
+                                                        text: form.find('input[name="data"]').val() + " Data was imported successfully.",
+                                                        icon: "success"
+                                                    });
+                                                }, 250);
+                                            }
+                                        },
+                                    });
+                                } else if (resultCount >= 501 && resultCount <= 750) {
+                                    dataCount = 75;
+                                    $.ajax({
+                                        url: "<?php echo base_url('/tools/quickbooks_import/import') ?>",
+                                        method: "POST",
+                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + dataCount,
+                                        beforeSend: function() {
+                                            formDisabler(form, true);
+                                        },
+                                        success: function(response) {
+                                            if (startPosition + dataCount < resultCount) {
+                                                importDataRecursion(form, formData, startPosition + dataCount, resultCount);
+                                                $('.currentRecordCount').text(startPosition + dataCount - 1);
+                                                var percentage = Math.trunc(((startPosition + dataCount - 1) / resultCount) * 100)
+                                                $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
+                                            } else {
+                                                formDisabler(form, false);
+                                                $('.modalTitle').text(form.find('input[name="data"]').val());
+                                                $('.currentRecordCount').text(resultCount);
+                                                $('.importProgressBar > div > div').css('width', 100 + '%').text(100  + '%');
+                                                setTimeout(() => {
+                                                    $('.importModal').modal('hide');
+                                                    Swal.fire({
+                                                        title: "Success!",
+                                                        text: form.find('input[name="data"]').val() + " Data was imported successfully.",
+                                                        icon: "success"
+                                                    });
+                                                }, 250);
+                                            }
+                                        },
+                                    });
+                                } else if (resultCount >= 751 && resultCount <= 1000) {
+                                    dataCount = 100;
+                                    $.ajax({
+                                        url: "<?php echo base_url('/tools/quickbooks_import/import') ?>",
+                                        method: "POST",
+                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + dataCount,
+                                        beforeSend: function() {
+                                            formDisabler(form, true);
+                                        },
+                                        success: function(response) {
+                                            if (startPosition + dataCount < resultCount) {
+                                                importDataRecursion(form, formData, startPosition + dataCount, resultCount);
+                                                $('.currentRecordCount').text(startPosition + dataCount - 1);
+                                                var percentage = Math.trunc(((startPosition + dataCount - 1) / resultCount) * 100)
+                                                $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
+                                            } else {
+                                                formDisabler(form, false);
+                                                $('.modalTitle').text(form.find('input[name="data"]').val());
+                                                $('.currentRecordCount').text(resultCount);
+                                                $('.importProgressBar > div > div').css('width', 100 + '%').text(100  + '%');
+                                                setTimeout(() => {
+                                                    $('.importModal').modal('hide');
+                                                    Swal.fire({
+                                                        title: "Success!",
+                                                        text: form.find('input[name="data"]').val() + " Data was imported successfully.",
+                                                        icon: "success"
+                                                    });
+                                                }, 250);
+                                            }
+                                        },
+                                    });
+                                } else if (resultCount >= 1001) {
+                                    dataCount = 200;
+                                    $.ajax({
+                                        url: "<?php echo base_url('/tools/quickbooks_import/import') ?>",
+                                        method: "POST",
+                                        data: formData + "&startPosition=" + startPosition + "&maxResults=" + dataCount,
+                                        beforeSend: function() {
+                                            formDisabler(form, true);
+                                        },
+                                        success: function(response) {
+                                            if (startPosition + dataCount < resultCount) {
+                                                importDataRecursion(form, formData, startPosition + dataCount, resultCount);
+                                                $('.currentRecordCount').text(startPosition + dataCount - 1);
+                                                var percentage = Math.trunc(((startPosition + dataCount - 1) / resultCount) * 100)
                                                 $('.importProgressBar > div > div').css('width', percentage + '%').text(percentage  + '%');
                                             } else {
                                                 formDisabler(form, false);
