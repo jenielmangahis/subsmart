@@ -639,6 +639,28 @@ class Tools extends MY_Controller {
                         }
                         echo ($query) ? "success" : "fail" ;
                         break;
+                    case 'Bill':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            $data = array(
+                                'company_id' => $company_id,
+                                'qbid' => $request[$i]->Id,
+                                'vendor_id' => $request[$i]->VendorRef,
+                                'mailing_address' => $request[$i]->ShipAddr,
+                                'bill_date' => $request[$i]->MetaData->CreateTime,
+                                'due_date' => $request[$i]->DueDate,
+                                'memo' => $request[$i]->Memo,
+                                'total_amount' => $request[$i]->TotalAmt,
+                                'status' => 1,
+                                'created_at' => $request[$i]->MetaData->CreateTime,
+                                'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                            );
+                            $query = $this->db->replace('accounting_bill', $data);
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        echo "<pre>";
+                        print_r($request);
+                        echo "</pre>";
+                        break;
                     // case 'Estimate':
                         
                     //     break;

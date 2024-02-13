@@ -167,7 +167,7 @@ $('#add-vendor-button').on('click', function(e) {
             autoclose: true
         });
 
-        $('#modal-container #vendor-modal form').attr('action', '/accounting/vendors/add');
+        $('#modal-container #vendor-modal form').attr('action', base_url + 'accounting/vendors/add');
         $('#modal-container #vendor-modal form').attr('method', 'post');
         $('#modal-container #vendor-modal form').attr('novalidate', 'novalidate');
         $('#modal-container #vendor-modal form').attr('enctype', 'multipart/form-data');
@@ -193,8 +193,10 @@ $('#pay-bills').on('click', function(e) {
 $('#vendors-table .select-all').on('change', function() {
     if($(this).prop('checked')) {
         $('#vendors-table tbody input.select-one').prop('checked', true);
+        $('#delete-vendor').removeClass('disabled');
     } else {
         $('#vendors-table tbody input.select-one').prop('checked', false);
+        $('#delete-vendor').addClass('disabled');
     }
 });
 
@@ -222,27 +224,39 @@ $('#vendors-table .select-one').on('change', function() {
 
     if(checked.length > 0) {
         $('#make-inactive').removeClass('disabled');
+        $('#delete-vendor').removeClass('disabled');
     } else {
         $('#make-inactive').addClass('disabled');
+        $('#delete-vendor').addClass('disabled');
     }
     $('#email').attr('href', href);
 });
 
 $('#make-inactive').on('click', function() {
     var data = new FormData();
-
+    
     $('#vendors-table tbody input.select-one:checked').each(function() {
         data.append('vendors[]', $(this).val());
     });
 
-    $.ajax({
-        url: '/accounting/vendors/make-inactive',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            location.reload();
+    Swal.fire({            
+        html: "Change the selected vendor status to <b>inactive</b>?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/make-inactive',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    location.reload();
+                }
+            });
         }
     });
 });
@@ -254,14 +268,132 @@ $('#vendors-table .make-inactive').on('click', function(e) {
     var data = new FormData();
     data.set('vendors[]', row.find('.select-one').val());
 
-    $.ajax({
-        url: '/accounting/vendors/make-inactive',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            location.reload();
+    Swal.fire({            
+        html: "Change the selected vendor status to <b>inactive</b>?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/make-inactive',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#delete-vendor').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    
+    $('#vendors-table tbody input.select-one:checked').each(function() {
+        data.append('vendors[]', $(this).val());
+    });
+
+    Swal.fire({            
+        html: "Are you sure you want to delete selected vendors?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/delete-selected',
+                data: data,
+                type: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    if (result.is_success == 1) {
+                        if( result.total_deleted == 1 ){
+                            var text_vendor = 'vendor';
+                        }else if( result.total_deleted  > 1 ){
+                            var text_vendor = 'vendors';                            
+                        }                        
+
+                        Swal.fire({
+                            text: "Selected "+ text_vendor +" was deleted successfully",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: o.msg
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
+
+$('#vendors-table .delete-vendor').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var data = new FormData();
+    data.set('vendors[]', row.find('.select-one').val());
+
+    Swal.fire({            
+        html: "Are you sure you want to delete selected vendor?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/delete-selected',
+                data: data,
+                type: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    if (result.is_success == 1) {
+                        if( result.total_deleted == 1 ){
+                            var text_vendor = 'vendor';
+                        }else if( result.total_deleted  > 1 ){
+                            var text_vendor = 'vendors';                            
+                        }                        
+
+                        Swal.fire({
+                            text: "Selected "+ text_vendor +" was deleted successfully",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: o.msg
+                        });
+                    }
+                }
+            });
         }
     });
 });

@@ -6371,7 +6371,7 @@ $(function() {
         }
 
         $.ajax({
-            url: '/accounting/add-new-payee',
+            url: base_url + 'accounting/add-new-payee',
             data: data,
             type: 'post',
             processData: false,
@@ -6858,7 +6858,7 @@ $(function() {
         data.set('payee_type', 'vendor');
 
         $.ajax({
-            url: '/accounting/add-full-payee-details',
+            url: base_url + 'accounting/add-full-payee-details',
             data: data,
             type: 'post',
             processData: false,
@@ -10208,7 +10208,7 @@ const clearTableLines = (e) => {
                 }
                 $(this).find('td:first-child()').html(count);
             }
-            if(index >= rowCount) {
+            if(index >= rowCount - 1) {
                 $(this).remove();
             }
         });

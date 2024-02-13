@@ -245,7 +245,7 @@ class Expenses extends MY_Controller
                         
                         if($bill->status !== "2") {
                             $manageCol .= '<li><a class="dropdown-item" href="#">Schedule payment</a></li>';
-                            $manageCol .= '<li><a class="dropdown-item" href="#">Mark as paid</a></li>';
+                            $manageCol .= '<li><a class="dropdown-item mark-as-paid-transaction" href="#">Mark as paid</a></li>';
                         }
                         $manageCol .= '<li>
                                     <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>

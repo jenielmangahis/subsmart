@@ -47,7 +47,7 @@ class Workorder extends MY_Controller
 
 
     public function index($tab_index = 0)
-    {
+    {        
         $this->hasAccessModule(24); 
         
         $role = logged('role');
@@ -4668,7 +4668,7 @@ class Workorder extends MY_Controller
                 }
 
                 $phone_m = $customer->phone_m;
-                if( $this->input->post('phone_number') != '' ){
+                if( $this->input->post('mobile_number') != '' ){
                     $phone_m = $this->input->post('mobile_number');
                 }
 
@@ -4726,7 +4726,7 @@ class Workorder extends MY_Controller
                 ];
                 $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
 
-                $access_data = ['access_login' => $this->input->post('password')];
+                $access_data = ['access_password' => $this->input->post('password')];
                 $this->AcsAccess_model->updateByProfId($customer->prof_id, $access_data);
 
             }
@@ -4760,7 +4760,7 @@ class Workorder extends MY_Controller
         //     }
 
             if($addQuery > 0){
-                $a          = $this->input->post('itemid');
+                $a          = $this->input->post('item_id');
                 $packageID  = $this->input->post('packageID');
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
@@ -4768,23 +4768,25 @@ class Workorder extends MY_Controller
                 $discount   = $this->input->post('discount');
                 $total      = $this->input->post('total');
 
-                $i = 0;
-                foreach($a as $row){
-                    if ($a[$i] == 0) {
-                        continue;
-                    }
+                if( $a ){
+                    $i = 0;
+                    foreach($a as $row){
+                        if ($a[$i] == 0) {
+                            continue;
+                        }
 
-                    $data['items_id']       = $a[$i];
-                    $data['package_id ']    = $packageID[$i];
-                    $data['qty']            = $quantity[$i];
-                    $data['cost']           = $price[$i];
-                    $data['tax']            = $h[$i];
-                    $data['discount']       = $discount[$i];
-                    $data['total']          = $total[$i];
-                    $data['work_order_id '] = $addQuery;
-                    $addQuery2 = $this->workorder_model->add_work_order_details($data);
-                    $i++;
-                }
+                        $data['items_id']       = $a[$i];
+                        $data['package_id ']    = $packageID[$i];
+                        $data['qty']            = $quantity[$i];
+                        $data['cost']           = $price[$i];
+                        $data['tax']            = $h[$i];
+                        $data['discount']       = $discount[$i];
+                        $data['total']          = $total[$i];
+                        $data['work_order_id '] = $addQuery;
+                        $addQuery2 = $this->workorder_model->add_work_order_details($data);
+                        $i++;
+                    }
+                }                
 
                 $getname = $this->workorder_model->getname($user_id);
 
@@ -12028,7 +12030,7 @@ class Workorder extends MY_Controller
     }
 
     public function estimateConversionWorkorder($id)
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
@@ -12554,6 +12556,7 @@ class Workorder extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Customer_model');
+        $this->load->model('JobType_model');
 
         $is_success = 1;
         $msg = 'Cannot send email';
@@ -12609,6 +12612,8 @@ class Workorder extends MY_Controller
                 move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment);
             }
 
+            $jobType = $this->JobType_model->getById($post['job_type']);
+
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => 0,
@@ -12622,6 +12627,7 @@ class Workorder extends MY_Controller
                 'jobtypebase_amount' => 0,
                 'job_name' => $job_number . ' - ' . $post['job_type'],
                 'job_location' => $job_location,
+                'job_account_number' => $post['job_account_number'],
                 'job_description' => $post['job_description'],
                 'start_date' => date("Y-m-d",strtotime($post['start_date'])),
                 'start_time' => $post['start_time'],
@@ -12639,17 +12645,17 @@ class Workorder extends MY_Controller
                 'attachment' => $attachment,
                 'tax_percentage' => $post['tax_percentage'],
                 'tax_rate' => $post['tax'],
-                'job_type' => $post['job_type'],
+                'job_type' => $jobType->title,
                 'date_issued' => date("Y-m-d",strtotime($post['start_date'])),
                 'work_order_id' => $job_workorder_id,
+                'timezone' => $post['timezone'],
                 'commission' => 0,
                 'tech_commission' => 0,
                 'tech_commission_total' => 0,
                 'fix_cost' => 0,
                 'margin' => 0,
                 'amount_collected' => 0,
-                'gross_profit' => 0,
-                'job_account_number' => ''                
+                'gross_profit' => 0,             
             );
 
             $job_id = $this->Jobs_model->createJob($jobs_data);

@@ -3888,7 +3888,7 @@ $(document).ready(function(){
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: o.msg
+                        html: data.msg
                     });
                 }
                 

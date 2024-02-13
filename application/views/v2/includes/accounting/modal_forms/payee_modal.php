@@ -9,9 +9,17 @@
             </div>
             <div class="modal-body">
                 <div class="row" style="min-height: 100%">
+                    <div class="col-6">
+                        <label for="name"><span class="text-danger">*</span> First Name</label>
+                        <input type="text" name="first_name" id="first_name" class="nsm-field form-control mb-2">
+                    </div>
+                    <div class="col-6">
+                        <label for="name"><span class="text-danger">*</span> Last Name</label>
+                        <input type="text" name="last_name" id="last_name" class="nsm-field form-control mb-2">
+                    </div>
                     <div class="col-12">
-                        <label for="name"><span class="text-danger">*</span> Name</label>
-                        <input type="text" name="payee_name" id="payee_name" class="nsm-field form-control mb-2">
+                        <label for="business_name"><span class="text-danger"></span> Business Name</label>
+                        <input type="text" name="business_name" id="business_name" class="nsm-field form-control mb-2">
                     </div>
                     <?php if($type !== 'vendor' && $type !== 'customer') : ?>
                     <div class="col-12">

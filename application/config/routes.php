@@ -294,6 +294,7 @@ $route['invoice/_process_braintree_payment'] = 'Invoice/ajax_process_braintree_p
 $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment';
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
 $route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
+$route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -490,6 +491,8 @@ $route['accounting/save-print-checks-settings']['post'] = 'accounting_modals/sav
 $route['accounting/print-sales-transactions']['post'] = 'accounting_modals/print_sales_transactions';
 $route['accounting/send-sales-transactions']['post'] = 'accounting_modals/send_sales_transactions';
 $route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_invoice_reminders';
+
+$route['accounting/mark-as-paid-transaction/(:any)/(:any)'] = 'accounting_modals/mark_as_paid_transaction/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -712,6 +715,7 @@ $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
+$route['accounting/vendors/delete-selected']['post'] = 'accounting_controllers/vendors/delete_selected';
 $route['accounting/vendors/make-active']['post'] = 'accounting_controllers/vendors/make_active';
 $route['accounting/vendors/print-vendors']['post'] = 'accounting_controllers/vendors/print';
 $route['accounting/vendors/export-vendors']['post'] = 'accounting_controllers/vendors/export';
@@ -1146,6 +1150,9 @@ $route['job/bird_eye_view'] = 'Workorder/map';
 $route['job/_load_job_payments'] = 'Job/ajax_load_job_payments';
 $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
+$route['job/_create_job'] = 'Job/ajax_create_job';
+$route['job/add'] = 'Job/new_job_v2';
+
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
 //Estimates
@@ -1657,9 +1664,13 @@ $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 //Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
 
-//Quick Add
+//Job Quick Add
 $route['job/_quick_add_job_type'] = 'Job/ajax_quick_add_job_type';
 $route['job/_quick_add_job_tag'] = 'Job/ajax_quick_add_job_tag';
 $route['job/_quick_add_lead_source'] = 'Job/ajax_quick_add_lead_source';
 $route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 
+//Job Import data
+$route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
+$route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
+$route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';

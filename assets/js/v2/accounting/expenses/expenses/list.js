@@ -467,25 +467,52 @@ $('#expenses-table .delete-transaction').on('click', function(e) {
             });
         }
     });    
-   
-    /*
-    $.ajax({
-        url: base_url + `accounting/delete-transaction/${transactionType}/${id}`,
-        type: 'DELETE',
-        dataType: 'json',
-        success: function(result) {
-            Swal.fire({
-                text: result.message,
-                icon: result.success ? 'success' : 'error',
-                showConfirmButton: false,
-                showCloseButton: true,
-                timer: 1500,
-                onClose: applyExpenseFilter
-            })
+});
+
+$('#expenses-table .mark-as-paid-transaction').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.find('.select-one').val();
+    var transactionType = row.find('td:nth-child(3)').text().trim();
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    var mark_as_paid_url = base_url+ `accounting/mark-as-paid-transaction/${transactionType}/${id}`;
+    Swal.fire({
+        title: 'Mark as paid?',
+        text: "",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: mark_as_paid_url,
+                type: 'post',
+                dataType: 'json',
+                success: function(result) {
+                    Swal.fire({
+                        text: result.message,
+                        icon: result.success ? 'success' : 'error',
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        timer: 3000
+                    })
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2500);
+                    
+                }
+            });
         }
     });
-    */
-});
+
+}); 
 
 $('#expenses-table .void-transaction').on('click', function(e) {
     e.preventDefault();

@@ -4818,7 +4818,7 @@ class Customer extends MY_Controller
     }
 
     public function addTicket()
-    {
+    {        
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
@@ -7124,6 +7124,26 @@ class Customer extends MY_Controller
         if( $customer->ssn == '' || $customer->ssn == NULL ){
             $customer->ssn = 'Not Specified';
         } 
+        
+        if( $customer->state == '' || $customer->state == NULL ){
+            $customer->state = '';
+        }
+
+        if( $customer->country == '' || $customer->country == NULL ){
+            $customer->country = 'Not Specified';
+        }
+
+        if( $customer->country == '' || $customer->country == NULL ){
+            $customer->country = 'Not Specified';
+        }
+
+        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+            $customer->cross_street = '';
+        }
+
+        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+            $customer->cross_street = '';
+        }
 
         $acsAccess = $this->AcsAccess_model->getByProfId($customer_id);
         if( $acsAccess ){
@@ -7131,6 +7151,7 @@ class Customer extends MY_Controller
         }else{
             $customer->access_password = 'Not Specified';
         }
+
         echo json_encode($customer);
     }
     

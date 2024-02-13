@@ -596,7 +596,7 @@
                                             <select id="inputState" name="timezone" class="form-control ">
                                                 <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
                                                     <option value="<?php echo $key ?>">
-                                                        <?php echo $zone ?>
+                                                        <?php echo $key ?>
                                                     </option>
                                                 <?php } ?>
                                                 <!-- <option value="utc5">Central Time (UTC -5)</option> -->
@@ -775,7 +775,7 @@
                                             <div class="col-md-12">
                                                 <div class="col-md-12">
                                                         <h6>Job Account Number</h6>
-                                                        <input value="<?php echo ($workorder->job_account_number) ? $workorder->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
+                                                        <input value="<?php echo ($workorder->job_account_number) ? $workorder->job_account_number : ""; ?>" type="text" class="form-control" name="job_account_number">
                                                     </div>
                                                 <div class="col-md-12">
                                                     <hr>
@@ -793,7 +793,7 @@
                                                                 <option value="">Select Type</option>
                                                                 <?php if(!empty($job_types)): ?>
                                                                     <?php foreach ($job_types as $type): ?>
-                                                                        <option <?php if(isset($workorder) && $workorder->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
+                                                                        <option <?php if(isset($workorder) && $workorder->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->id; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
                                                                     <?php endforeach; ?>
                                                                 <?php endif; ?>
                                                             </select>
@@ -1065,186 +1065,6 @@
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <h6>Billing Method</h6>
-                                                        <select class="form-select" name="BILLING_METHOD" required>
-                                                            <option value="">Select Billing Method</option>
-                                                            <option value="CC">Credit Card</option>
-                                                            <option value="DC">Debit Card</option>
-                                                            <option value="CHECK">Check</option>
-                                                            <option value="CASH">Cash</option>
-                                                            <option value="ACH">ACH</option>
-                                                            <option value="VENMO">Venmo</option>
-                                                            <option value="PP">Paypal</option>
-                                                            <option value="SQ">Square</option>
-                                                            <option value="WW">Warranty Work</option>
-                                                            <option value="HOF">Home Owner Financing</option>
-                                                            <option value="ET">e-Transfer</option>
-                                                            <option value="INV">Invoicing</option>
-                                                            <option value="OCCP">Other Credit Card Processor</option>
-                                                            <option value="OPT">Other Payment Type</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="CC_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="CC_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 CC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="CC_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="DC_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="DC_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 DC_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="DC_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Check Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXXXX" name="CHECK_CHECKNUMBER">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Routing Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXX" name="CHECK_ROUTINGNUMBER">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 CHECK_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="CHECK_ACCOUNTNUMBER">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Routing Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXX" name="ACH_ROUTINGNUMBER">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 ACH_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXXXXXXXXXX" name="ACH_ACCOUNTNUMBER">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="VENMO_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="VENMO_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 VENMO_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="" type="text" class="form-control" name="VENMO_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="PP_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="PP_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 PP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="" type="text" class="form-control" name="PP_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="SQ_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="SQ_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3 SQ_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Confirmation</h6>
-                                                        <input value="" type="text" class="form-control" name="SQ_CONFIRMATION">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="WW_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 WW_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="WW_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="HOF_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 HOF_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="HOF_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="ET_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 ET_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="ET_ACCOUNTNOTE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Term</h6>
-                                                        <select class="form-select" name="INV_TERM">
-                                                            <option value="Due On Receipt">Due On Receipt</option>
-                                                            <option value="Net 5">Net 5</option>
-                                                            <option value="Net 10">Net 10</option>
-                                                            <option value="Net 15">Net 15</option>
-                                                            <option value="Net 30">Net 30</option>
-                                                            <option value="Net 60">Net 60</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Invoice Date</h6>
-                                                        <input value="" type="date" class="form-control" name="INV_INVOICEDATE">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 INV_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Due Date</h6>
-                                                        <input value="" type="date" class="form-control" name="INV_DUEDATE">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Credit Card Number</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXXX XXXX XXXX XXXX" name="OCCP_CREDITCARDNUMBER">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Expiration</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="MM/YY" name="OCCP_EXPIRATION">
-                                                    </div>
-                                                    <div class="col-md-2 mb-3 OCCP_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>CVV</h6>
-                                                        <input value="" type="text" class="form-control" placeholder="XXX" name="OCCP_CVV">
-                                                    </div>
-                                                    <!-- ======= -->
-                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Credential</h6>
-                                                        <input value="" type="text" class="form-control" name="OPT_ACCOUNTCREDENTIAL">
-                                                    </div>
-                                                    <div class="col-md-4 mb-3 OPT_INPUTS HIDE_ALL_INPUTS">
-                                                        <h6>Account Note</h6>
-                                                        <input value="" type="text" class="form-control" name="OPT_ACCOUNTNOTE">
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <hr>
-                                                    </div>
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">

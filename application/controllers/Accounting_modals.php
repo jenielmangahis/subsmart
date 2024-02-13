@@ -10850,49 +10850,61 @@ class Accounting_modals extends MY_Controller
         $nameCount = count($name);
 
         if ($post['payee_type'] === 'vendor') {
-            $data = [
-                'company_id' => logged('company_id'),
-                'display_name' => trim($post['payee_name']),
-                'print_on_check_name' => trim($post['payee_name']),
-                'status' => 1
-            ];
 
-            switch (strval($nameCount)) {
-                case '1':
-                    $data['f_name'] = $name[0];
-                break;
-                case '2':
-                    $data['f_name'] = $name[0];
-                    $data['l_name'] = $name[1];
-                break;
-                case '3':
-                    $data['f_name'] = $name[0];
-                    $data['m_name'] = $name[1];
-                    $data['l_name'] = $name[2];
-                break;
-                case '4':
-                    $data['title'] = $name[0];
-                    $data['f_name'] = $name[1];
-                    $data['m_name'] = $name[2];
-                    $data['l_name'] = $name[3];
-                break;
-                case '5':
-                    $data['title'] = $name[0];
-                    $data['f_name'] = $name[1];
-                    $data['m_name'] = $name[2];
-                    $data['l_name'] = $name[3];
-                    $data['suffix'] = $name[4];
-                break;
-            }
-
+            if(!empty($post['first_name']) || $post['last_name']) {
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'display_name' => trim($post['first_name'] . " " . $post['last_name']),
+                    'print_on_check_name' => trim($post['first_name'] . " " . $post['last_name']),
+                    'status' => 1
+                ];
+            } else {
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'display_name' => trim($post['payee_name']),
+                    'print_on_check_name' => trim($post['payee_name']),
+                    'status' => 1
+                ];               
+                
+                switch (strval($nameCount)) {
+                    case '1':
+                        $data['f_name'] = $name[0];
+                    break;
+                    case '2':
+                        $data['f_name'] = $name[0];
+                        $data['l_name'] = $name[1];
+                    break;
+                    case '3':
+                        $data['f_name'] = $name[0];
+                        $data['m_name'] = $name[1];
+                        $data['l_name'] = $name[2];
+                    break;
+                    case '4':
+                        $data['title'] = $name[0];
+                        $data['f_name'] = $name[1];
+                        $data['m_name'] = $name[2];
+                        $data['l_name'] = $name[3];
+                    break;
+                    case '5':
+                        $data['title'] = $name[0];
+                        $data['f_name'] = $name[1];
+                        $data['m_name'] = $name[2];
+                        $data['l_name'] = $name[3];
+                        $data['suffix'] = $name[4];
+                    break;
+                }              
+            }            
             $id = $this->vendors_model->createVendor($data);
-
             $payee = $this->vendors_model->get_vendor_by_id($id);
         } else {
+
             $data = [
                 'fk_user_id' => logged('id'),
                 'company_id' => logged('company_id'),
-                'business_name' => trim($post['payee_name']),
+                'first_name' => $post['first_name'],
+                'middle_name' => null,
+                'last_name' => $post['last_name'],
+                'business_name' => trim($post['business_name']),
                 'customer_type' => $post['customer_type'],
                 'mail_add' => $post['street'],
                 'city' => $post['city'],
@@ -10902,7 +10914,7 @@ class Accounting_modals extends MY_Controller
                 'phone_m' => $post['mobile']
             ];
 
-            switch (strval($nameCount)) {
+            /*switch (strval($nameCount)) {
                 case '1':
                     $data['first_name'] = $name[0];
                 break;
@@ -10928,7 +10940,7 @@ class Accounting_modals extends MY_Controller
                     $data['last_name'] = $name[3];
                     $data['suffix'] = $name[4];
                 break;
-            }
+            }*/
 
             $id = $this->accounting_customers_model->createCustomer($data);
             $payee = $this->accounting_customers_model->getCustomerDetails($id)[0];
@@ -13224,7 +13236,7 @@ class Accounting_modals extends MY_Controller
             case 'journal' :
                 $this->view_journal($transactionId);
             break;
-            case 'bill':
+            case 'bill':                
                 $this->view_bill($transactionId);
             break;
             case 'cc-credit' :
@@ -20564,6 +20576,94 @@ class Accounting_modals extends MY_Controller
         // ];
 
         echo json_encode($data);
+    }
+    
+
+
+    public function mark_as_paid_transaction($transactionType, $transactionId)
+    {
+        $is_mark_paid = false;
+        switch ($transactionType) {
+            case 'expense':
+                
+            break;
+            case 'check':
+                
+            break;
+            case 'bill':
+                $update = array(
+                    'status' => 2
+                );
+                $find = array(
+                    'id' => $transactionId
+                );
+                $check = $this->db->where($find);
+                if($check == true){
+                    $this->db->update('accounting_bill',$update);
+                    $is_mark_paid = true;
+                }
+            break;
+            case 'purchase-order':
+                
+            break;
+            case 'vendor-credit':
+                
+            break;
+            case 'cc-credit' :
+                
+            break;
+            case 'credit-card-payment':
+               
+            break;
+            case 'bill-payment':
+                
+            break;
+            case 'deposit' :
+                
+            break;
+            case 'journal' :
+                
+            break;
+            case 'transfer' :
+                
+            break;
+            case 'inventory-qty-adjust' :
+                
+            break;
+            case 'credit-card-pmt':
+                
+            break;
+            case 'time-activity' :
+               
+            break;
+            case 'receive-payment' :
+               
+            break;
+            case 'credit-memo' :
+               
+            break;
+            case 'sales-receipt' :
+               
+            break;
+            case 'refund-receipt' :
+                
+            break;
+            case 'delayed-credit' :
+                
+            break;
+            case 'delayed-charge' :
+                
+            break;
+            case 'invoice' : 
+              
+            break;
+        }
+
+        echo json_encode([
+            'data' => $transactionId,
+            'success' => $is_mark_paid ? true : false,
+            'message' => $is_mark_paid ? 'Transaction successfully mark as paid!' : 'Unexpected error occurred.'
+        ]);        
     }
 
     public function delete_transaction($transactionType, $transactionId)

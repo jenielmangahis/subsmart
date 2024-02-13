@@ -54,7 +54,7 @@ class Tickets extends MY_Controller
 
     
     public function savenewTicket()
-    {        
+    {   
         $this->load->helper(array('hashids_helper', 'form'));
         $this->load->model('JobSettings_model');
 
@@ -112,9 +112,11 @@ class Tickets extends MY_Controller
             // 'hash_id'                   => $hasID,
             'company_id'                => $company_id,
             'created_at'                => date("Y-m-d H:i:s"),
-            'updated_at'                => date("Y-m-d H:i:s")
-        );
-        
+            'updated_at'                => date("Y-m-d H:i:s"),
+            'otp_setup'                 => $this->input->post('otps'),
+            'monthly_monitoring'        => $this->input->post('monthly_monitoring'),
+            'installation_cost'         => $this->input->post('installation_cost')
+        );        
 
         $addQuery = $this->tickets_model->save_tickets($new_data);
         
@@ -325,6 +327,52 @@ class Tickets extends MY_Controller
 
         if ($addQuery > 0) {
 
+            //Auto update customer info
+            $this->load->model('AcsProfile_model');
+            $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+            if( $customer ){
+                $phone_h = $customer->phone_h;
+                if( $this->input->post('customer_phone') != '' ){
+                    $phone_h = $this->input->post('customer_phone');
+                }
+
+                $phone_m = $customer->phone_m;
+                if( $this->input->post('customer_mobile') != '' ){
+                    $phone_m = $this->input->post('customer_mobile');
+                }
+
+                $business_name = $customer->business_name;
+                if( $this->input->post('business_name') != '' ){
+                    $business_name = $this->input->post('business_name');
+                }
+
+                $city = $customer->city;
+                if( $this->input->post('customer_city') != '' ){
+                    $city = $this->input->post('customer_city');
+                }
+
+                $state = $customer->state;
+                if( $this->input->post('customer_state') != '' ){
+                    $state = $this->input->post('customer_state');
+                }
+
+                $zip_code = $customer->zip_code;
+                if( $this->input->post('customer_zip') != '' ){
+                    $zip_code = $this->input->post('customer_zip');
+                }
+
+                $customer_data = [
+                    'phone_h' => $phone_h,
+                    'phone_m' => $phone_m,
+                    'business_name' => $business_name,
+                    'city' => $city,
+                    'state' => $state,
+                    'zip_code' => $zip_code
+                ];
+                $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+
+            }
+
             $temp_items             = $this->input->post('temp_items');
             $temp_item_type         = $this->input->post('temp_item_type');
             $temp_quantity          = $this->input->post('temp_quantity');
@@ -440,8 +488,6 @@ class Tickets extends MY_Controller
         $job_location = $customer->mail_add;
 
         // set data for jobs table
-        // 
-        
         $jobs_data = array(
             'job_number' => $job_number,
             'customer_id' => $input['customer_id'],
@@ -475,8 +521,7 @@ class Tickets extends MY_Controller
             $jobs_data['message'] = $input['message'];
         }
 
-        // insert data to job
-        
+        // insert data to job        
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
         //Update job settings
@@ -495,6 +540,19 @@ class Tickets extends MY_Controller
             $this->JobSettings_model->create($data_job_settings);
         }
 
+        //Create initial job_payment data
+        $job_payment_query = array(
+            'amount' => $this->input->post('grandtotal'),
+            'program_setup' => $this->input->post('otps'),
+            'monthly_monitoring' => $this->input->post('monthly_monitoring'),
+            'installation_cost' => $this->input->post('installation_cost'),
+            'equipment_cost' => $this->input->post('subtotal'),
+            'tax' => $this->input->post('taxes'),
+            'job_id' => $jobs_id,
+            'date_created' => date("Y-m-d h:i:s")
+        );
+        $this->general->add_($job_payment_query, 'job_payments');
+        
         //Create hash_id
         $job_hash_id = hashids_encrypt($jobs_id, '', 15);
         $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
@@ -539,13 +597,6 @@ class Tickets extends MY_Controller
             'jobs_id' => $jobs_id,
         );
         $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-        // insert data to job payments table
-        $job_payment_query = array(
-            'amount' => $this->input->post('grandtotal'),
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($job_payment_query, 'job_payments');
 
         createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', $input['employee_id'], $input['employee_id'], 0);
         foreach($assign_techs as $uid){
