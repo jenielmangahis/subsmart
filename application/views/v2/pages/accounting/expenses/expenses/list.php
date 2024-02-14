@@ -263,7 +263,7 @@
                             <td data-name="No.">NO.</td>
                             <td data-name="Payee">PAYEE</td>
                             <td data-name="Method">METHOD</td>
-                            <td data-name="Source">SOURCE</td>
+                            <!-- <td data-name="Source">SOURCE</td> -->
                             <td data-name="Category">CATEGORY</td>
                             <td data-name="Memo" class="text-truncate">MEMO</td>
                             <td data-name="Due date">DUE DATE</td>
@@ -292,7 +292,7 @@
                                 <td><?=$transaction['number']?></td>
                                 <td><?=$transaction['payee']?></td>
                                 <td><?=$transaction['method']?></td>
-                                <td><?=$transaction['source']?></td>
+                                <!-- <td><?php //$transaction['source']?></td> -->
                                 <td>
                                     <?php if($transaction['category'] !== '-Split-' && $transaction['category'] !== '') : ?>
                                     <select name="expense_account[]" class="form-control nsm-field">

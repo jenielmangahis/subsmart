@@ -987,7 +987,7 @@ $(function() {
         if (parentTable.find('tbody tr').length < rowCount) {
             parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
         }
-
+        
         var num = 1;
 
         parentTable.find('tbody tr').each(function() {
@@ -1047,7 +1047,6 @@ $(function() {
 
     $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td button.delete-row', function() {
         var el = $(this);
-
         if(el.closest('tr').find('input[name="category_linked_transaction[]"]').length < 1) {
             el.closest('tr').remove();
 
