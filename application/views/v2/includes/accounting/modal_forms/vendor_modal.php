@@ -4,7 +4,7 @@
         <?php if(!isset($vendorDetails)) : ?>
         <form id="add-vendor-form">
         <?php else : ?>
-        <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
+        <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" enctype="multipart/form-data">
         <?php endif; ?>
         <div class="modal-content">
             <div class="modal-header">
@@ -21,15 +21,15 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <label for="f_name">First name</label>
-                                <input type="text" name="f_name" id="f_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->f_name : ''?>">
+                                <input type="text" name="f_name" id="f_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->f_name : ''?>" required>
                             </div>
                             <div class="col-6 col-md-2">
                                 <label for="m_name">Middle name</label>
-                                <input type="text" name="m_name" id="m_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->m_name : ''?>">
+                                <input type="text" name="m_name" id="m_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->m_name : ''?>" required>
                             </div>
                             <div class="col-6 col-md-3">
                                 <label for="l_name">Last name</label>
-                                <input type="text" name="l_name" id="l_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->l_name : ''?>">
+                                <input type="text" name="l_name" id="l_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->l_name : ''?>" required>
                             </div>
                             <div class="col-6 col-md-2">
                                 <label for="suffix">Suffix</label>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-12 col-md-5">
                         <label for="email">Email</label>
-                        <input type="text" class="form-control nsm-field mb-2" name="email" id="email" placeholder="Separate multiple emails with commas" value="<?=isset($vendorDetails) ? $vendorDetails->email : ''?>">
+                        <input type="text" class="form-control nsm-field mb-2" name="email" id="email" placeholder="Separate multiple emails with commas" value="<?=isset($vendorDetails) ? $vendorDetails->email : ''?>" required>
                     </div>
                 </div>
                 <div class="row">

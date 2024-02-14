@@ -162,8 +162,8 @@
                                         <h2>Step 2</h2>
                                         <p>Map Headings</p>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Name</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Name</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector0" onclick="test()">
@@ -172,8 +172,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Company</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Company</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector1" onclick="test()">
@@ -182,8 +182,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Email</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Email</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
@@ -192,8 +192,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Phone</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Phone</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector3" onclick="test()">
@@ -202,8 +202,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Mobile</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Mobile</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector4" onclick="test()">
@@ -212,8 +212,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Fax</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Fax</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector5" onclick="test()">
@@ -222,8 +222,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Website</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Website</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector6" onclick="test()">
@@ -232,8 +232,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Street</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Street</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector7" onclick="test()">
@@ -242,8 +242,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >City</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >City</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector8" onclick="test()">
@@ -252,8 +252,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Province/Region/State</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Province/Region/State</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
@@ -262,8 +262,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >ZIP Code</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >ZIP Code</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector10" onclick="test()">
@@ -272,8 +272,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Country</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Country</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector11" onclick="test()">
@@ -282,8 +282,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Opening Balance</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Opening Balance</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector12" onclick="test()">
@@ -292,8 +292,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Opening Balance Date</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Opening Balance Date</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector13" onclick="test()">
@@ -302,8 +302,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-vendors-center justify-content-center">
-                                                <b >Tax ID No.</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-3 d-flex align-vendors-center">
+                                                <b >Tax ID No.</b>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector14" onclick="test()">
