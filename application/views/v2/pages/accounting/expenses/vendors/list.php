@@ -239,6 +239,12 @@
         justify-content: center;
         margin: auto;
     }
+    .vendor-name, .vendor-company-name{
+        display:block;
+    }
+    .vendor-company-name{
+        font-size:11px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -409,7 +415,7 @@
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <td data-name="Vendor">VENDOR/COMPANY</td>
+                            <td data-name="Vendor">NAME</td>
                             <td data-name="Address">ADDRESS</td>
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
@@ -429,10 +435,15 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$vendor->id?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'"><?=$vendor->display_name?><?=$vendor->status === '0' ? ' (deleted)' : ''?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'">
+                                <span class="vendor-name"><i class='bx bx-user-circle' ></i> <?=  $vendor->f_name . ' ' . $vendor->l_name; ?></span>
+                                <?php if( $vendor->company != '' ){ ?>
+                                    <span class="vendor-company-name text-muted"><i class='bx bx-buildings'></i> Company : <?= $vendor->company; ?></span>
+                                <?php } ?>
+                            </td>
                             <td>
                                 <?php 
-                                    $address = $vendor->street . ' ' . $vendor->city . ', ' . $vendor->state . ' ' . $vendor->zip;
+                                    $address = $vendor->street . ', ' . $vendor->city . ', ' . $vendor->state . ' ' . $vendor->zip;
                                     if( trim($vendor->street) == '' && trim($vendor->city) == '' && trim($vendor->state) == '' ){
                                         $address = 'Not Specified';
                                     }

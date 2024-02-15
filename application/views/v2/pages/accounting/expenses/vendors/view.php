@@ -351,14 +351,7 @@
                                             </table>
                                         </div>
                                         <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
-                                            <div class="row g-2">
-                                                <div class="col-12 grid-mb text-end">
-                                                    <div class="nsm-page-buttons page-button-container">
-                                                        <button type="button" class="nsm-button edit-vendor">
-                                                            <i class='bx bx-fw bx-pencil'></i> Edit
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            <div class="row g-2">                                                
                                                 <div class="col-12 col-md-4">
                                                     <table class="nsm-table">
                                                         <tbody>
@@ -381,10 +374,6 @@
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Fax</td>
                                                                 <td><?=$vendorDetails->fax?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="fw-bold nsm-text-primary">Other</td>
-                                                                <td></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Website</td>
@@ -424,15 +413,7 @@
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Company</td>
                                                                 <td><?=$vendorDetails->company?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="fw-bold nsm-text-primary">Notes</td>
-                                                                <td>
-                                                                    <div class="notes-container w-50">
-                                                                        <textarea name="notes" class="form-control nsm-field cursor-pointer" disabled><?=$vendorDetails->notes === '' || $vendorDetails->notes === null ? 'No notes available. Please click to add notes.' : $vendorDetails->notes?></textarea>                              
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
+                                                            </tr>                                                            
                                                         </tbody>
                                                     </table>
                                                 </div>
