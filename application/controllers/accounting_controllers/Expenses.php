@@ -1764,6 +1764,7 @@ class Expenses extends MY_Controller
                 }
 
                 if(in_array($key, ['attachments'])) {
+                    //this will delete attachement column
                     unset($transaction[$key]);
                 }
             }
