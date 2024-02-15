@@ -104,7 +104,7 @@ $(document).ready(function () {
                     dropdownParent: $(modal_element),
                     allowClear: true,
                     ajax: {
-                        url: '/accounting/get-job-tags',
+                        url: base_url + 'accounting/get-job-tags',
                         dataType: 'json'
                     }
                 });
