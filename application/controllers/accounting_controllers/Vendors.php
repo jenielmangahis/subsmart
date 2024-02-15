@@ -112,7 +112,7 @@ class Vendors extends MY_Controller
     }
 
     public function index()
-    {        
+    {       
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/expenses/vendors/list.js"
@@ -561,7 +561,7 @@ class Vendors extends MY_Controller
         
         $data = [];
         foreach ($vendors as $vendorId) {
-            //$this->vendors_model->delete($vendorId);
+            $this->vendors_model->delete($vendorId);
             $total_deleted++;
         }
 
