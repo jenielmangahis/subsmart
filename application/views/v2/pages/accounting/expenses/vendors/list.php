@@ -68,6 +68,9 @@
     #import-vendors-modal #progress-bar-container li:hover {
         color: #444;
     }
+    .step:hover{
+        cursor:default !important;
+    }
 
     #import-vendors-modal #progress-bar-container li::after {
         content: " ";
@@ -427,8 +430,17 @@
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'"><?=$vendor->display_name?><?=$vendor->status === '0' ? ' (deleted)' : ''?></td>
-                            <td></td>
-                            <td><?=$vendor->phone?></td>
+                            <td>
+                                <?php 
+                                    $address = $vendor->street . ' ' . $vendor->city . ', ' . $vendor->state . ' ' . $vendor->zip;
+                                    if( trim($vendor->street) == '' && trim($vendor->city) == '' && trim($vendor->state) == '' ){
+                                        $address = 'Not Specified';
+                                    }
+
+                                    echo $address;
+                                ?>
+                            </td>
+                            <td><?= $vendor->phone != '' || $vendor->phone != null ?  formatPhoneNumber($vendor->phone) : 'Not Specified'; ?></td>
                             <td><?=$vendor->email?></td>
                             <td class="overflow-visible">
                                 <?php $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id) ?>

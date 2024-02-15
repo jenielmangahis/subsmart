@@ -169,7 +169,7 @@ $('#add-vendor-button').on('click', function(e) {
 
         $('#modal-container #vendor-modal form').attr('action', base_url + 'accounting/vendors/add');
         $('#modal-container #vendor-modal form').attr('method', 'post');
-        $('#modal-container #vendor-modal form').attr('novalidate', 'novalidate');
+        //$('#modal-container #vendor-modal form').attr('novalidate', 'novalidate');
         $('#modal-container #vendor-modal form').attr('enctype', 'multipart/form-data');
         $('#modal-container #vendor-modal form').addClass('form-validate');
         $('#modal-container #vendor-modal form').removeAttr('id');
@@ -454,7 +454,7 @@ $('#vendors-table .create-bill').on('click', function(e) {
 
     var row = $(this).closest('tr');
 
-    $.get('/accounting/get-other-modals/bill_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/bill_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
