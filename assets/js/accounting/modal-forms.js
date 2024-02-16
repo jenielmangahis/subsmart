@@ -5812,7 +5812,7 @@ $(function() {
         var type = e.currentTarget.dataset.href;
 
         itemTypeSelection = $('#modal-container #item-modal .modal-content').html();
-        $.get('/accounting/item-form/'+type, function(result) {
+        $.get(base_url + 'accounting/item-form/'+type, function(result) {
             $('#item-modal .modal-content').html(result);
 
             if(type === 'product' || type === 'bundle') {
@@ -6135,7 +6135,7 @@ $(function() {
             var type = $(this).attr('id').replaceAll('ajax-', '').replaceAll('-item-form', '');
 
             $.ajax({
-                url: '/accounting/ajax-add-item/'+type,
+                url: base_url + 'accounting/ajax-add-item/'+type,
                 data: data,
                 type: 'post',
                 processData: false,

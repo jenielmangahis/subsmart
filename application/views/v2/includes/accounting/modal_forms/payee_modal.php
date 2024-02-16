@@ -9,11 +9,15 @@
             </div>
             <div class="modal-body">
                 <div class="row" style="min-height: 100%">
-                    <div class="col-6">
+                    <div class="col-4">
                         <label for="name"><span class="text-danger">*</span> First Name</label>
                         <input type="text" name="first_name" id="first_name" class="nsm-field form-control mb-2" required />
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
+                        <label for="name"><span class="text-danger">*</span> Middle Name</label>
+                        <input type="text" name="middle_name" id="middle_name" class="nsm-field form-control mb-2" required />
+                    </div>
+                    <div class="col-4">
                         <label for="name"><span class="text-danger">*</span> Last Name</label>
                         <input type="text" name="last_name" id="last_name" class="nsm-field form-control mb-2" required />
                     </div>
