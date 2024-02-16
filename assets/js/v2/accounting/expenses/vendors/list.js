@@ -479,7 +479,7 @@ $('#vendors-table .create-expense').on('click', function(e) {
 
     var row = $(this).closest('tr');
 
-    $.get('/accounting/get-other-modals/expense_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/expense_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -529,7 +529,7 @@ $('#vendors-table .create-purchase-order').on('click', function(e) {
 
     var row = $(this).closest('tr');
 
-    $.get('/accounting/get-other-modals/purchase_order_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/purchase_order_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
