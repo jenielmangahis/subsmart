@@ -2475,7 +2475,7 @@ $(function() {
 
             switch (split[0]) {
                 case 'vendor':
-                    $.get('/accounting/get-vendor-details/' + split[1], function(res) {
+                    $.get(base_url + 'accounting/get-vendor-details/' + split[1], function(res) {
                         var vendor = JSON.parse(res);
 
                         var vendorName = '';
@@ -2549,7 +2549,7 @@ $(function() {
 
     $(document).on('change', '#purchaseOrderModal #vendor, #billModal #vendor, #vendorCreditModal #vendor', function() {
         var modalId = $('#modal-container form .modal').attr('id');
-        $.get('/accounting/get-vendor-details/' + $(this).val(), function(res) {
+        $.get(base_url + 'accounting/get-vendor-details/' + $(this).val(), function(res) {
             var vendor = JSON.parse(res);
 
             $(`#${modalId} #email`).val(vendor.email);
@@ -6212,7 +6212,7 @@ $(function() {
         var data = new FormData(this);
 
         $.ajax({
-            url: '/accounting/ajax-add-payment-method',
+            url: base_url + 'accounting/ajax-add-payment-method',
             data: data,
             type: 'post',
             processData: false,
@@ -10610,9 +10610,8 @@ const submitModalForm = (event, el) => {
         });
     }
     data.append('modal_name', $(el).children().attr('id'));
-
     $.ajax({
-        url: '/accounting/submit-modal-form',
+        url: base_url + 'accounting/submit-modal-form',
         data: data,
         type: 'post',
         processData: false,
@@ -12849,7 +12848,7 @@ const changeItemType = (type) => {
 const fillItemDropdownFields = (data, type) => {
     switch(data[0]) {
         case 'vendor' :
-            $.get(`/accounting/get-vendor-details/${data[1]}`, function(result) {
+            $.get(base_url + `accounting/get-vendor-details/${data[1]}`, function(result) {
                 var vendor = JSON.parse(result);
                 $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${vendor.display_name}</option>`);
             });
