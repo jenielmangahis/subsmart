@@ -651,7 +651,9 @@ $('#expense-table-filters select').each(function() {
 
 $('.export-items').on('click', function() {
     if($('#export-form').length < 1) {
-        $('body').append('<form action="/accounting/expenses/export" method="post" id="export-form"></form>');
+        //$('body').append('<form action="/accounting/expenses/export" method="post" id="export-form"></form>');
+        var export_url = base_url + 'accounting/expenses/export';
+        $('body').append('<form action="'+ export_url +'" method="post" id="export-form"></form>');
     }
 
     var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');

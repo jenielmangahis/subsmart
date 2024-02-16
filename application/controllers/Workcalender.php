@@ -1408,7 +1408,7 @@ class Workcalender extends MY_Controller
             $new_end_date = $new_start_date;
         }        
 
-        if( $post['event_type'] == 'jobs' ){
+        if( $post['event_type'] == 'job' ){
             if( $post['user_id'] > 0 ){
                 $jobs_data = [
                     'start_date' => $new_start_date,

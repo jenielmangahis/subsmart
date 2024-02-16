@@ -14828,13 +14828,23 @@ class Accounting_modals extends MY_Controller
         $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
         $payee = explode('-', $data['payee']);
 
+        if( isset($data['print_later'])){
+            $check_no = '';
+        }else{
+            if( $data['check_no'] != '' ){
+                $check_no = $data['check_no'];
+            }else{
+                $check_no = ''; 
+            }
+        }
+
         $checkData = [
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
             'bank_account_id' => $data['bank_account'],
             'mailing_address' => nl2br($data['mailing_address']),
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+            'check_no' => $check_no,
             'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'to_print' => $data['print_later'],
             'memo' => $data['memo'],
