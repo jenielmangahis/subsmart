@@ -2318,10 +2318,15 @@ $(function() {
             var locations = result.locations;
             var locs = '';
             var item_cost = 0;
+            var item_price = 0;
 
             if(item.cost != null) {
                 item_cost = item.cost;
-            }
+            }     
+            
+            if(item.price != null) {
+                item_price = item.price;
+            }            
 
             if(item.type === 'product' || item.type === 'Product' || item.type === 'inventory' || item.type === 'Inventory') {
                 locs += '<select name="location[]" class="nsm-field form-control" required>';
@@ -2369,7 +2374,7 @@ $(function() {
                     <td>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
                     <td>${locs}</td>
                     <td>${qtyField}</td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_cost}"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
