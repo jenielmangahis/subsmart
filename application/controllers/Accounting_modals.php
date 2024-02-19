@@ -10933,7 +10933,7 @@ class Accounting_modals extends MY_Controller
                 'fk_user_id' => logged('id'),
                 'company_id' => logged('company_id'),
                 'first_name' => $post['first_name'],
-                'middle_name' => 'Not Specified',
+                'middle_name' => !empty($post['middle_name']) ? $post['middle_name'] : 'Not Specified',
                 'last_name' => $post['last_name'],
                 'business_name' => $business_name,
                 'customer_type' => $post['customer_type'],
@@ -12846,7 +12846,7 @@ class Accounting_modals extends MY_Controller
                     're_order_points' => $post['reorder_point'],
                     'description' => $post['description'],
                     'price' => $post['price'],
-                    'vendor_id' => $post['vendor'],
+                    'vendor_id' => isset($post['vendor']) ? $post['vendor'] : 0,
                     'cost' => $post['cost'],
                     'is_active' => 1
                 ];
