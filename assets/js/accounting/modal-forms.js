@@ -7820,7 +7820,7 @@ $(function() {
             } else {
                 table.children('tbody').html('');
                 $.each(transactions, function(key, transaction) {
-                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="viewTransaction(this, event)">
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(this, event)">
                         <td>${transaction.type}</td>
                         <td>${transaction.date}</td>
                         <td>${transaction.amount}</td>
