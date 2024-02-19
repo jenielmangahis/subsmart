@@ -182,7 +182,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="mailing_address">Mailing address</label>
-                                    <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
+                                    <textarea name="mailing_address" style="height:100px;" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="payment_date">Payment date</label>
