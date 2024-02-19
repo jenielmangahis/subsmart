@@ -941,6 +941,7 @@ $(function() {
                 var type = $(this).attr('id');
                 if (type === undefined) {
                     type = $(this).attr('name').includes('expense_account') ? 'expense-account' : type;
+                    type = $(this).attr('name').includes('category') ? 'category' : type;
                     type = $(this).attr('name').includes('customer') ? 'customer' : type;
                 } else {
                     type = type.replaceAll('_', '-');
@@ -2475,7 +2476,7 @@ $(function() {
 
             switch (split[0]) {
                 case 'vendor':
-                    $.get('/accounting/get-vendor-details/' + split[1], function(res) {
+                    $.get(base_url + 'accounting/get-vendor-details/' + split[1], function(res) {
                         var vendor = JSON.parse(res);
 
                         var vendorName = '';
@@ -2549,7 +2550,7 @@ $(function() {
 
     $(document).on('change', '#purchaseOrderModal #vendor, #billModal #vendor, #vendorCreditModal #vendor', function() {
         var modalId = $('#modal-container form .modal').attr('id');
-        $.get('/accounting/get-vendor-details/' + $(this).val(), function(res) {
+        $.get(base_url + 'accounting/get-vendor-details/' + $(this).val(), function(res) {
             var vendor = JSON.parse(res);
 
             $(`#${modalId} #email`).val(vendor.email);
@@ -6212,7 +6213,7 @@ $(function() {
         var data = new FormData(this);
 
         $.ajax({
-            url: '/accounting/ajax-add-payment-method',
+            url: base_url + 'accounting/ajax-add-payment-method',
             data: data,
             type: 'post',
             processData: false,
@@ -7205,11 +7206,13 @@ $(function() {
 
         $('#modal-container form #checkModal #print_later').prop('checked', true).trigger('change');
 
-        submitType = 'save-and-close';
+        submitType = 'checkModal';
+        //submitType = 'save-and-close';
 
         $('#modal-container form').submit();
 
-        $('#new-popup #accounting_vendors .ajax-modal[data-view="print_checks_modal"]').trigger('click');
+        //$('#new-popup #accounting_vendors .ajax-modal[data-view="print_checks_modal"]').trigger('click');
+        //$('#print-checks').trigger('click');        
     });
 
     $(document).on('click', '#modal-container form #billPaymentModal #print-check', function(e) {
@@ -7797,7 +7800,7 @@ $(function() {
         var table = $(this).find('table.recent-transactions-table');
         var tableId = table.attr('id');
 
-        $.get('/accounting/load-recent-transactions?type='+tableId.replace('recent-', ''), function(res) {
+        $.get(base_url + 'accounting/load-recent-transactions?type='+tableId.replace('recent-', ''), function(res) {
             var transactions = JSON.parse(res);
 
             if(transactions.length < 1) {
@@ -10610,9 +10613,8 @@ const submitModalForm = (event, el) => {
         });
     }
     data.append('modal_name', $(el).children().attr('id'));
-
     $.ajax({
-        url: '/accounting/submit-modal-form',
+        url: base_url + 'accounting/submit-modal-form',
         data: data,
         type: 'post',
         processData: false,
@@ -10625,7 +10627,7 @@ const submitModalForm = (event, el) => {
             if(res.success === true) {
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
                     // $(el).children().modal('hide');
-                    location.reload();
+                    //location.reload();
                 }
 
                 if(submitType !== 'save-and-close' && submitType !== 'save-and-new' && modalId !== '#payBillsModal') {
@@ -10936,6 +10938,10 @@ const submitModalForm = (event, el) => {
 
                 if(submitType === 'save-and-new') {
                     clearForm();
+                }
+
+                if( type == 'check' ){
+                    load_print_check_modal();
                 }
             }
 
@@ -12849,7 +12855,7 @@ const changeItemType = (type) => {
 const fillItemDropdownFields = (data, type) => {
     switch(data[0]) {
         case 'vendor' :
-            $.get(`/accounting/get-vendor-details/${data[1]}`, function(result) {
+            $.get(base_url + `accounting/get-vendor-details/${data[1]}`, function(result) {
                 var vendor = JSON.parse(result);
                 $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${vendor.display_name}</option>`);
             });
@@ -13244,6 +13250,14 @@ const saveAndNewForm = (e) => {
     submitType = 'save-and-new';
 
     $('#modal-form').submit();
+
+    // Clear inputs after saving
+    $('#payee').empty().change();
+    $('#mailing_address, #memo, #tags').empty().change();
+    $('#check_no, #permit_number').val(null).change();
+    $("#print_later").prop("checked", false).change();
+    $('#account-balance').text('$0.00');
+    $('.delete-row').click();
 }
 
 const saveAndVoid = (e) => {
@@ -14201,6 +14215,7 @@ const addcheck = () => {
 				'customer',
 				'payee',
 				'expense-account',
+				'category',
 				'bank-account',
 			];
 
@@ -14310,6 +14325,74 @@ const addcheck = () => {
 
 		$('#checkModal').modal('show');
 	});
+}
+
+function load_print_check_modal(){
+    $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $(`#printChecksModal select`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (type === 'payment-account') {
+                $(this).select2({
+                    ajax: {
+                        url: base_url + 'accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: 'printChecksModal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#printChecksModal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#printChecksModal')
+                });
+            }
+        });
+
+        if ($(`#printChecksModal .dropdown`).length > 0) {
+            $(`#printChecksModal .dropdown-menu`).on('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        $('#printChecksModal').on('hidden.bs.modal', function() {
+            $('#modal-container').remove();
+            $('.modal-backdrop').remove();
+        });
+
+        $('#printChecksModal').modal('show');
+    });
 }
 
 const get_bill_payment_linkable_transactions = () => {

@@ -353,5 +353,15 @@
         </div>
     </div>
 </div>
-
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    // if user wants to access the check UI using URL eg. nsmartrac.com/check
+    $(document).ready(function () {
+        const currentPath = window.location.href;
+        const origin =  window.location.origin;
+        if (currentPath.includes(origin + "/check")) {
+            $('a[data-view="check_modal"]').click();
+        }
+    });
+</script>

@@ -3210,11 +3210,19 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Please select payment account.';
         } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
+        } elseif (!isset($data['payee'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payee.';
+        }elseif (!isset($data['payment_method'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payment method.';
         } else {
             $payee = explode('-', $data['payee']);
 
@@ -3698,14 +3706,32 @@ class Accounting_modals extends MY_Controller
         $return = [];
 
         if ($this->form_validation->run() === false) {
+            if( !isset($data['payee']) || $data['payee'] == '' ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select payee.';
+            }elseif( !isset($data['bank_account']) || $data['bank_account'] <= 0 ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select bank account.';
+            }else{
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Cannot create data';
+            }
+        }elseif( $data['check_no'] == '' && !isset($data['print_later']) ){
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
-        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+            $return['message'] = 'Please enter check number.';
+        }elseif (!isset($data['payee']) ) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payee.';
+        }elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
-        } else {
+        }else {
             $payee = explode('-', $data['payee']);
 
             $checkData = [
@@ -10898,20 +10924,28 @@ class Accounting_modals extends MY_Controller
             $payee = $this->vendors_model->get_vendor_by_id($id);
         } else {
 
+            $business_name = 'Not Specified';
+            if( trim($post['business_name']) != '' ){
+                $business_name = trim($post['business_name']);
+            }
+
             $data = [
                 'fk_user_id' => logged('id'),
                 'company_id' => logged('company_id'),
                 'first_name' => $post['first_name'],
-                'middle_name' => null,
+                'middle_name' => 'Not Specified',
                 'last_name' => $post['last_name'],
-                'business_name' => trim($post['business_name']),
+                'business_name' => $business_name,
                 'customer_type' => $post['customer_type'],
                 'mail_add' => $post['street'],
+                'cross_street' => $post['street'],
                 'city' => $post['city'],
                 'state' => $post['state'],
                 'zip_code' => $post['zip_code'],
                 'email' => $post['email'],
-                'phone_m' => $post['mobile']
+                'phone_m' => $post['mobile'],
+                'phone_h' => $post['mobile'],
+                'status' => 'New'
             ];
 
             /*switch (strval($nameCount)) {

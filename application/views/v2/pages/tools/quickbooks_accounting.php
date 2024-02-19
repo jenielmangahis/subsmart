@@ -107,6 +107,8 @@
                             <option value="itemCard">Item</option>
                             <option value="accountCard">Account</option>
                             <option value="billCard">Bill</option>
+                            <option value="taxRateCard">Tax Rate</option>
+                            <option value="termCard">Term</option>
                             <!-- <option value="invoiceCard">Invoice</option>
                             <option value="paymentCard">Payment</option>
                             <option value="estimateCard">Estimate</option> -->
@@ -234,6 +236,66 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-2 mb-3 taxRateCard cardToggle">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="quickbooks_import_form">
+                                        <h5 class="card-title">Tax Rate</h5>
+                                        <span class="card-text text-muted">Represents rate applied to calculate tax liability.</span>
+                                        <hr class="hrMargin">
+                                        <div class="input-group d-none">
+                                            <input type="hidden" name="data" value="TaxRate">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                        </div>
+                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
+                                        <hr class="hrMargin">
+                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
+                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 mb-3 termCard cardToggle">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="quickbooks_import_form">
+                                        <h5 class="card-title">Term</h5>
+                                        <span class="card-text text-muted">Represents the terms under which a sale is made, typically expressed in the form of days due after the goods are received.</span>
+                                        <hr class="hrMargin">
+                                        <div class="input-group d-none">
+                                            <input type="hidden" name="data" value="Term">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2000-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                        </div>
+                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
+                                        <hr class="hrMargin">
+                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
+                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-xl-2 mb-3 estimateCard cardToggle">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="quickbooks_import_form">
+                                        <h5 class="card-title">Estimate</h5>
+                                        <span class="card-text text-muted">Represents a proposal for a financial transaction from a business to a customer for goods or services proposed to be sold, including proposed pricing.</span>
+                                        <hr class="hrMargin">
+                                        <div class="input-group">
+                                            <input type="hidden" name="data" value="Estimate">
+                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="2014-01-01">
+                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
+                                        </div>
+                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
+                                        <hr class="hrMargin">
+                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
+                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>  -->
                         <!-- <div class="col-xl-2 mb-3 invoiceCard cardToggle">
                             <div class="card">
                                 <div class="card-body">
@@ -263,26 +325,6 @@
                                         <hr class="hrMargin">
                                         <div class="input-group">
                                             <input type="hidden" name="data" value="Payment">
-                                            <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="<?php echo $lastYearDate; ?>">
-                                            <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
-                                        </div>
-                                        <div>&mdash; Result: <span class="fw-normal-custom resultLabel">...</span></div>
-                                        <hr class="hrMargin">
-                                        <button type="button" class="btn btn-primary fw-bold importButton" disabled>Import</button>
-                                        <button type="submit" class="btn btn-secondary fw-bold">Fetch</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-2 mb-3 estimateCard cardToggle">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form class="quickbooks_import_form">
-                                        <h5 class="card-title">Estimate</h5>
-                                        <span class="card-text text-muted">Represents a proposal for a financial transaction from a business to a customer for goods or services proposed to be sold, including proposed pricing.</span>
-                                        <hr class="hrMargin">
-                                        <div class="input-group">
-                                            <input type="hidden" name="data" value="Estimate">
                                             <input class="form-control form-control-sm mb-2" name="dateFrom" type="date" value="<?php echo $lastYearDate; ?>">
                                             <input class="form-control form-control-sm mb-2" name="dateTo" type="date" value="<?php echo date('Y-m-d')?>">
                                         </div>
