@@ -109,7 +109,7 @@ $(document).on('click', '#expenses-table .view-edit-expense', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/expense/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/expense/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -136,7 +136,7 @@ $(document).on('click', '#expenses-table .view-edit-check', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/check/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/check/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -163,7 +163,7 @@ $(document).on('click', '#expenses-table .view-edit-bill', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/bill/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/bill/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -190,7 +190,7 @@ $(document).on('click', '#expenses-table .view-edit-purch-order', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/purchase-order/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/purchase-order/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -217,7 +217,7 @@ $(document).on('click', '#expenses-table .view-edit-vendor-credit', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/vendor-credit/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/vendor-credit/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -244,7 +244,7 @@ $(document).on('click', '#expenses-table .view-edit-cc-credit', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/cc-credit/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/cc-credit/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -271,7 +271,7 @@ $(document).on('click', '#expenses-table .view-edit-transfer', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/transfer/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/transfer/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -300,7 +300,7 @@ $(document).on('click', '#expenses-table .view-edit-cc-payment', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/credit-card-pmt/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/credit-card-pmt/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -327,7 +327,7 @@ $(document).on('click', '#expenses-table .view-edit-bill-payment', function() {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/bill-payment/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/bill-payment/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
