@@ -2495,10 +2495,10 @@ $(function() {
                             $('#checkModal #mailing_address').append('\n');
                         }
                         var address = '';
-                        address += vendor.street !== "" && vendor.street !== null ? vendor.street + '\n' : "";
-                        address += vendor.city !== "" && vendor.city !== null ? vendor.city + ', ' : "";
-                        address += vendor.state !== "" && vendor.state !== null ? vendor.state + ' ' : "";
-                        address += vendor.zip !== "" && vendor.zip !== null ? vendor.zip : "";
+                        address += vendor.street !== "" && vendor.street !== null && vendor.street !== 'Not Specified' ? vendor.street + '\n' : "";
+                        address += vendor.city !== "" && vendor.city !== null && vendor.city !== 'Not Specified' ? vendor.city + ', ' : "";
+                        address += vendor.state !== "" && vendor.state !== null && vendor.state !== 'Not Specified' ? vendor.state + ' ' : "";
+                        address += vendor.zip !== "" && vendor.zip !== null && vendor.zip !== 'Not Specified' ? vendor.zip : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2519,12 +2519,13 @@ $(function() {
                             $('#checkModal #mailing_address').append(customer.business_name);
                             $('#checkModal #mailing_address').append('\n');
                         }
+
                         var address = '';
-                        address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
-                        address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
-                        address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
-                        address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
-                        address += customer.country !== "" && customer.country !== null ? customer.country : "";
+                        address += customer.mail_add !== "" && customer.mail_add !== null &&  customer.mail_add !== "Not Specified" ? customer.mail_add + '\n' : "";
+                        address += customer.city !== "" && customer.city !== null && customer.city !== 'Not Specified' ? customer.city + ', ' : "";
+                        address += customer.state !== "" && customer.state !== null && customer.state !== 'Not Specified' ? customer.state + ' ' : "";
+                        address += customer.zip_code !== "" && customer.zip_code !== null && customer.zip_code !== 'Not Specified' ? customer.zip_code + ' ' : "";
+                        address += customer.country !== "" && customer.country !== null && customer.country !== 'Not Specified' ? customer.country : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
