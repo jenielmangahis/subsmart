@@ -657,13 +657,67 @@ class Tools extends MY_Controller {
                             $query = $this->db->replace('accounting_bill', $data);
                         }
                         echo ($query) ? "success" : "fail" ;
-                        echo "<pre>";
-                        print_r($request);
-                        echo "</pre>";
                         break;
+                    case 'TaxRate':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            if (!empty($request[$i]->RateValue)) {
+                                $data = array(
+                                    'company_id' => $company_id,
+                                    'qbid' => $request[$i]->Id,
+                                    'name' => $request[$i]->Name,
+                                    'rate' => $request[$i]->RateValue,
+                                    'is_default' => 0,
+                                    'date_created' => $request[$i]->MetaData->CreateTime,
+                                );
+                                $query = $this->db->replace('tax_rates', $data);
+                            }
+                        }
+                        echo ($query) ? "success" : "fail" ;
+                        break;
+                    case 'Term':
+                        for ($i = 0; $i < count($request); $i++) { 
+                            if ($request[$i]->Type == "STANDARD") {
+                                $data = array(
+                                    'company_id' => $company_id,
+                                    'qbid' => $request[$i]->Id,
+                                    'name' => $request[$i]->Name,
+                                    'type' => 1,
+                                    'net_due_days' => $request[$i]->DueDays,
+                                    'day_of_month_due' => $request[$i]->DayOfMonthDue,
+                                    'discount_percentage' => $request[$i]->DiscountPercent,
+                                    'discount_days' => $request[$i]->DiscountDays,
+                                    'discount_on_day_of_month' => $request[$i]->DiscountDayOfMonth,
+                                    'status' => ($request[$i]->Active == "true") ? 1 : 0,
+                                    'created_at' => $request[$i]->MetaData->CreateTime,
+                                    'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                                );
+                                $query = $this->db->replace('accounting_terms', $data);
+                            } else if ($request[$i]->Type == "DATE_DRIVEN") {
+                                $data = array(
+                                    'company_id' => $company_id,
+                                    'qbid' => $request[$i]->Id,
+                                    'name' => $request[$i]->Name,
+                                    'type' => 2,
+                                    'net_due_days' => $request[$i]->DueDays,
+                                    'day_of_month_due' => $request[$i]->DayOfMonthDue,
+                                    'discount_percentage' => $request[$i]->DiscountPercent,
+                                    'discount_days' => $request[$i]->DiscountDays,
+                                    'discount_on_day_of_month' => $request[$i]->DiscountDayOfMonth,
+                                    'status' => ($request[$i]->Active == "true") ? 1 : 0,
+                                    'created_at' => $request[$i]->MetaData->CreateTime,
+                                    'updated_at' => $request[$i]->MetaData->LastUpdatedTime,
+                                );
+                                $query = $this->db->replace('accounting_terms', $data);
+                            }
+                        }
+                        break;  
                     // case 'Estimate':
-                        
+                    //     echo json_encode($request);
+                    //     break;  
+                    // case 'Department':
+
                     //     break;
+                    
                     // case 'Invoice':
                         
                     //     break;

@@ -1,4 +1,13 @@
 <!-- Modal for bank deposit-->
+<style>
+    .btn-recent-checks-print{
+        display:inline-block;
+        float:right;
+    }
+    #checkModal h5.dropdown-header{
+        display:inline-block;
+    }
+</style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -18,6 +27,7 @@
                                 </a>
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Checks</h5>
+                                    <a class="nsm btn-recent-checks-print text-decoration-none" href="javascript:void(0);"><i class='bx bx-printer'></i> Print Checks</a>
                                     <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-checks">
                                         <tbody></tbody>
                                     </table>
@@ -671,3 +681,74 @@
     <!--end of modal-->
 </form>
 </div>
+<script>
+$(function(){
+    $('.btn-recent-checks-print').on('click', function(){
+        $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+    
+            $(`#printChecksModal select`).each(function() {
+                var type = $(this).attr('id');
+                if (type === undefined) {
+                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                } else {
+                    type = type.replaceAll('_', '-');
+    
+                    if (type.includes('transfer')) {
+                        type = 'transfer-account';
+                    }
+                }
+    
+                if (type === 'payment-account') {
+                    $(this).select2({
+                        ajax: {
+                            url: base_url + 'accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type,
+                                    modal: 'printChecksModal'
+                                }
+    
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect,
+                        dropdownParent: $('#printChecksModal')
+                    });
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#printChecksModal')
+                    });
+                }
+            });
+    
+            if ($(`#printChecksModal .dropdown`).length > 0) {
+                $(`#printChecksModal .dropdown-menu`).on('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+    
+            $('#printChecksModal').on('hidden.bs.modal', function() {
+                $('#modal-container').remove();
+                $('.modal-backdrop').remove();
+            });
+    
+            $('#printChecksModal').modal('show');
+        });
+    })
+});
+</script>

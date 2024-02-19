@@ -3706,14 +3706,32 @@ class Accounting_modals extends MY_Controller
         $return = [];
 
         if ($this->form_validation->run() === false) {
+            if( !isset($data['payee']) || $data['payee'] == '' ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select payee.';
+            }elseif( !isset($data['bank_account']) || $data['bank_account'] <= 0 ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select bank account.';
+            }else{
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Cannot create data';
+            }
+        }elseif( $data['check_no'] == '' && !isset($data['print_later']) ){
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
-        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+            $return['message'] = 'Please enter check number.';
+        }elseif (!isset($data['payee']) ) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payee.';
+        }elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
-        } else {
+        }else {
             $payee = explode('-', $data['payee']);
 
             $checkData = [
