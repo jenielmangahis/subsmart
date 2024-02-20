@@ -983,7 +983,7 @@ class Vendors extends MY_Controller
                     
                     if($bill->status !== "2") {
                         $manageCol .= '<li><a class="dropdown-item" href="#">Schedule payment</a></li>';
-                        $manageCol .= '<li><a class="dropdown-item" href="#">Mark as paid</a></li>';
+                        $manageCol .= '<li><a class="dropdown-item bill-mark-paid" data-id="'.$bill->id.'" href="javascript:void(0)">Mark as paid</a></li>';
                     }
                     $manageCol .= '<li>
                                 <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
@@ -2967,5 +2967,28 @@ class Vendors extends MY_Controller
         }
 
         die(json_encode($data_arr));
+    }
+
+    public function ajax_bill_mark_paid()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $bill = $this->vendors_model->get_bill_by_id($post['bill_id']);
+        if( $bill ){
+            $data = ['status' => 2];
+            $this->vendors_model->update_bill($post['bill_id'], $data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 }
