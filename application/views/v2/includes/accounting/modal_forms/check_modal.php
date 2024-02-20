@@ -27,8 +27,8 @@
                                 </a>
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Checks</h5>
-                                    <a class="nsm btn-recent-checks-print text-decoration-none" href="javascript:void(0);"><i class='bx bx-printer'></i> Print Checks</a>
-                                    <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-checks">
+                                    <!-- <a class="nsm btn-recent-checks-print text-decoration-none" href="javascript:void(0);"><i class='bx bx-printer'></i> Print Checks</a> -->
+                                    <table class="cursor-pointer recent-transactions-table" id="recent-checks">
                                         <tbody></tbody>
                                     </table>
                                 </div>
@@ -182,7 +182,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="mailing_address">Mailing address</label>
-                                    <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
+                                    <textarea name="mailing_address" style="height:100px;" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="payment_date">Payment date</label>

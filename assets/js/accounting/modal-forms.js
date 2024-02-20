@@ -2319,10 +2319,15 @@ $(function() {
             var locations = result.locations;
             var locs = '';
             var item_cost = 0;
+            var item_price = 0;
 
             if(item.cost != null) {
                 item_cost = item.cost;
-            }
+            }     
+            
+            if(item.price != null) {
+                item_price = item.price;
+            }            
 
             if(item.type === 'product' || item.type === 'Product' || item.type === 'inventory' || item.type === 'Inventory') {
                 locs += '<select name="location[]" class="nsm-field form-control" required>';
@@ -2370,7 +2375,7 @@ $(function() {
                     <td>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
                     <td>${locs}</td>
                     <td>${qtyField}</td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_cost}"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
@@ -2490,10 +2495,10 @@ $(function() {
                             $('#checkModal #mailing_address').append('\n');
                         }
                         var address = '';
-                        address += vendor.street !== "" && vendor.street !== null ? vendor.street + '\n' : "";
-                        address += vendor.city !== "" && vendor.city !== null ? vendor.city + ', ' : "";
-                        address += vendor.state !== "" && vendor.state !== null ? vendor.state + ' ' : "";
-                        address += vendor.zip !== "" && vendor.zip !== null ? vendor.zip : "";
+                        address += vendor.street !== "" && vendor.street !== null && vendor.street !== 'Not Specified' ? vendor.street + '\n' : "";
+                        address += vendor.city !== "" && vendor.city !== null && vendor.city !== 'Not Specified' ? vendor.city + ', ' : "";
+                        address += vendor.state !== "" && vendor.state !== null && vendor.state !== 'Not Specified' ? vendor.state + ' ' : "";
+                        address += vendor.zip !== "" && vendor.zip !== null && vendor.zip !== 'Not Specified' ? vendor.zip : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -2514,12 +2519,13 @@ $(function() {
                             $('#checkModal #mailing_address').append(customer.business_name);
                             $('#checkModal #mailing_address').append('\n');
                         }
+
                         var address = '';
-                        address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
-                        address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
-                        address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
-                        address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
-                        address += customer.country !== "" && customer.country !== null ? customer.country : "";
+                        address += customer.mail_add !== "" && customer.mail_add !== null &&  customer.mail_add !== "Not Specified" ? customer.mail_add + '\n' : "";
+                        address += customer.city !== "" && customer.city !== null && customer.city !== 'Not Specified' ? customer.city + ', ' : "";
+                        address += customer.state !== "" && customer.state !== null && customer.state !== 'Not Specified' ? customer.state + ' ' : "";
+                        address += customer.zip_code !== "" && customer.zip_code !== null && customer.zip_code !== 'Not Specified' ? customer.zip_code + ' ' : "";
+                        address += customer.country !== "" && customer.country !== null && customer.country !== 'Not Specified' ? customer.country : "";
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
@@ -5813,7 +5819,7 @@ $(function() {
         var type = e.currentTarget.dataset.href;
 
         itemTypeSelection = $('#modal-container #item-modal .modal-content').html();
-        $.get('/accounting/item-form/'+type, function(result) {
+        $.get(base_url + 'accounting/item-form/'+type, function(result) {
             $('#item-modal .modal-content').html(result);
 
             if(type === 'product' || type === 'bundle') {
@@ -6136,7 +6142,7 @@ $(function() {
             var type = $(this).attr('id').replaceAll('ajax-', '').replaceAll('-item-form', '');
 
             $.ajax({
-                url: '/accounting/ajax-add-item/'+type,
+                url: base_url + 'accounting/ajax-add-item/'+type,
                 data: data,
                 type: 'post',
                 processData: false,
@@ -7814,7 +7820,7 @@ $(function() {
             } else {
                 table.children('tbody').html('');
                 $.each(transactions, function(key, transaction) {
-                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="viewTransaction(this, event)">
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(this, event)">
                         <td>${transaction.type}</td>
                         <td>${transaction.date}</td>
                         <td>${transaction.amount}</td>
@@ -13250,14 +13256,6 @@ const saveAndNewForm = (e) => {
     submitType = 'save-and-new';
 
     $('#modal-form').submit();
-
-    // Clear inputs after saving
-    $('#payee').empty().change();
-    $('#mailing_address, #memo, #tags').empty().change();
-    $('#check_no, #permit_number').val(null).change();
-    $("#print_later").prop("checked", false).change();
-    $('#account-balance').text('$0.00');
-    $('.delete-row').click();
 }
 
 const saveAndVoid = (e) => {
@@ -13280,6 +13278,14 @@ const saveAndVoid = (e) => {
 }
 
 const clearForm = () => {
+    // Clear inputs after saving
+    $('#payee').empty().change();
+    $('#mailing_address, #memo, #tags').empty().change();
+    $('#check_no, #permit_number').val(null).change();
+    $("#print_later").prop("checked", false).change();
+    $('#account-balance').text('$0.00');
+    $('.delete-row').click();
+
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!

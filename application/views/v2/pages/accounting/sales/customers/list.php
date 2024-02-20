@@ -420,7 +420,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input table-select check-input-all-customers" id="check-input-all-customers" type="checkbox">
                             </td>
                             <td data-name="Customer/Company">CUSTOMER/COMPANY</td>
                             <td data-name="Address">ADDRESS</td>
@@ -437,7 +437,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$customer->prof_id?>">
+                                    <input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" type="checkbox" value="<?=$customer->prof_id?>">
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/customers/view/' . $customer->prof_id) ?>'"><?=$customer->last_name.', '.$customer->first_name?></td>

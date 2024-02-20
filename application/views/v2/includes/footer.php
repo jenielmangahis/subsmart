@@ -192,6 +192,18 @@
                 }                
             });
 
+            $(".check-input-all-customers").click(function(){
+                if(this.checked){
+                    $('.check-input-customers').each(function(){
+                        this.checked = true;
+                    });
+                }else{
+                    $('.check-input-customers').each(function(){
+                        this.checked = false;
+                    });
+                }                
+            });
+
             $('.hdr-drpdown-multi-accounts').on('click', function(){
                 var parent = $(this).closest('li');
                 if(parent.hasClass('shown')){
