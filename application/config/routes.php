@@ -97,6 +97,7 @@ $route['customer/status'] = 'Customer/settingStatus';
 $route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
 $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
+$route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1153,6 +1154,8 @@ $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
 $route['job/_create_job'] = 'Job/ajax_create_job';
 $route['job/add'] = 'Job/new_job_v2';
+$route['job/edit/(:num)'] = 'Job/edit_job_v2/$1';
+$route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
