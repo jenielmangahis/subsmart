@@ -587,7 +587,8 @@ a.nsm-button {
 }
 
 .nsm-button.success {
-	background-color: #198754;
+	/* background-color: #198754; */
+	background-color: #6a4a86;
 	color: #fff;
 }
 
