@@ -25,19 +25,19 @@ endif;
         <?php
         $partially_paid = 0;
         $due = 0;
-        $Approved = 0;
+        $approved = 0;
         $status = "";
-        foreach ($upcomingInvoice as $UI) {
-            $status = $UI->status;
+        foreach ($upcomingInvoice as $UI) {            
+            $status = trim($UI->status);
             if ($status == "Due") {
-                $due += $UI->total_due;
-            } else if ($status == 'Approved') {
-                $Approved += $UI->total_due;
+                $due++;
+            } elseif ($status == 'Approved') {
+                $approved++;
             } else {
-                $partially_paid += $UI->total_due;
+                $partially_paid++;
             }
         }
-        if ($partially_paid == 0 && $due == 0 && $Approved == 0) {
+        if ($partially_paid == 0 && $due == 0 && $approved == 0) {
         ?>
             <div class="nsm-empty">
                 <i class='bx bx-meh-blank'></i>
@@ -63,11 +63,11 @@ if ($upcomingInvoice) {
         if ($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid') {
             $status = $UI->status;
             if ($status == "Due") {
-                $due += $UI->total_due;
+                $due++;
             } else if ($status == 'Approved') {
-                $Approved += $UI->total_due;
+                $Approved++;
             } else {
-                $partially_paid += $UI->total_due;
+                $partially_paid++;
             }
 ?>
             <script type="text/javascript">
