@@ -279,7 +279,7 @@ $('#make-active').on('click', function(e) {
 
 $('#new-time-activity').on('click', function(e) {
     e.preventDefault();
-    $.get('/accounting/get-other-modals/single_time_activity_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/single_time_activity_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -302,7 +302,7 @@ $('#new-time-activity').on('click', function(e) {
 $('#new-bill').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/bill_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/bill_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -325,7 +325,7 @@ $('#new-bill').on('click', function(e) {
 $('#new-expense').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/expense_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/expense_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -348,7 +348,7 @@ $('#new-expense').on('click', function(e) {
 $('#new-check').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/check_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/check_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -371,7 +371,7 @@ $('#new-check').on('click', function(e) {
 $('#new-purchase-order').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/purchase_order_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/purchase_order_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -394,7 +394,7 @@ $('#new-purchase-order').on('click', function(e) {
 $('#new-vendor-credit').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/vendor_credit_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/vendor_credit_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1074,21 +1074,31 @@ $('#transactions-table .delete-transaction').on('click', function(e) {
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
 
-    $.ajax({
-        url: `/accounting/delete-transaction/${transactionType}/${id}`,
-        type: 'DELETE',
-        dataType: 'json',
-        success: function(result) {
-            Swal.fire({
-                text: result.message,
-                icon: result.success ? 'success' : 'error',
-                showConfirmButton: false,
-                showCloseButton: true,
-                timer: 1500,
-                onClose: function() {
-                    location.reload();
+    Swal.fire({            
+        html: 'Delete selected transaction?',
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {   
+            $.ajax({
+                url: `/accounting/delete-transaction/${transactionType}/${id}`,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(result) {
+                    Swal.fire({
+                        text: "Transaction data has been deleted successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
                 }
-            })
+            });
+        }else{
+            
         }
     });
 });
