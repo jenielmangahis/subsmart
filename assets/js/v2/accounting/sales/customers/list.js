@@ -4,7 +4,8 @@ $('.dropdown-menu.table-settings, .dropdown-menu.table-filter').on('click', func
 });
 
 $("#customers-table").nsmPagination({
-    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    //itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    itemsPerPage: 10
 });
 
 $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {

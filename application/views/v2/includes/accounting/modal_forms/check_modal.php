@@ -28,7 +28,7 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Checks</h5>
                                     <!-- <a class="nsm btn-recent-checks-print text-decoration-none" href="javascript:void(0);"><i class='bx bx-printer'></i> Print Checks</a> -->
-                                    <table class="nsm-table cursor-pointer recent-transactions-table" id="recent-checks">
+                                    <table class="cursor-pointer recent-transactions-table" id="recent-checks">
                                         <tbody></tbody>
                                     </table>
                                 </div>

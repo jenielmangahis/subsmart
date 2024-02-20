@@ -13256,14 +13256,6 @@ const saveAndNewForm = (e) => {
     submitType = 'save-and-new';
 
     $('#modal-form').submit();
-
-    // Clear inputs after saving
-    $('#payee').empty().change();
-    $('#mailing_address, #memo, #tags').empty().change();
-    $('#check_no, #permit_number').val(null).change();
-    $("#print_later").prop("checked", false).change();
-    $('#account-balance').text('$0.00');
-    $('.delete-row').click();
 }
 
 const saveAndVoid = (e) => {
@@ -13286,6 +13278,14 @@ const saveAndVoid = (e) => {
 }
 
 const clearForm = () => {
+    // Clear inputs after saving
+    $('#payee').empty().change();
+    $('#mailing_address, #memo, #tags').empty().change();
+    $('#check_no, #permit_number').val(null).change();
+    $("#print_later").prop("checked", false).change();
+    $('#account-balance').text('$0.00');
+    $('.delete-row').click();
+
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
