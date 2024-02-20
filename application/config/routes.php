@@ -1107,7 +1107,8 @@ $route['onboarding/_save_business_availability'] = 'Onboarding/ajax_save_busines
 $route['onboarding/_complete_onboarding'] = 'Onboarding/ajax_complete_onboarding';
 
 //check
-$route['accounting/check'] = 'Check/index';
+// $route['accounting/check'] = 'Check/index'; // old / not working
+$route['check'] = 'accounting_controllers/expenses/index';
 $route['accounting/check/do_upload'] = 'Check/do_upload';
 $route['accounting/check/view/showData'] = 'Check/showData';
 
