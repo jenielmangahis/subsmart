@@ -320,10 +320,10 @@
                     <div class="col-12 col-md-4">
                         <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
                             <div class="row h-100">
-                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
-                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                <div class="col-12 col-md-10 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2 id="total_this_year"><?=count($payments)?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
@@ -335,7 +335,7 @@
                     <div class="col-12 col-md-4 grid-mb">
                         <form action="<?php echo base_url('accounting/customers') ?>" method="get">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search by tag name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search by customer info." value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                         </form>
                     </div>
