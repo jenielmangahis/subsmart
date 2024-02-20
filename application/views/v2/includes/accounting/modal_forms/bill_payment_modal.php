@@ -373,7 +373,7 @@
                             </div>
                         </div>
 
-                        <?php if(count($linkableTransactions) > 0) : ?>
+                        <?php if( $linkableTransactions && count($linkableTransactions) > 0) : ?>
                         <div class="w-auto nsm-callout primary" style="max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">

@@ -229,7 +229,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="mailing_address">Mailing address</label>
-                                    <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill) && !isset($purchaseOrder)) ? str_replace("<br />", "", $bill->mailing_address) : str_replace("<br />", "", $purchaseOrder->mailing_address) : ""?></textarea>
+                                    <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2" style="height:100px;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill) && !isset($purchaseOrder)) ? str_replace("<br />", "", $bill->mailing_address) : str_replace("<br />", "", $purchaseOrder->mailing_address) : ""?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="term">Terms</label>
