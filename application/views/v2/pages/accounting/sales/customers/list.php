@@ -351,7 +351,7 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="create-statements">Create statements</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="email-action">Email</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="select-customer-type">Select customer type</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="select-customer-type">Change customer type</a></li>
                             </ul>
                         </div>
 
@@ -444,17 +444,16 @@
                             <td>
                                 <?php
                                     $address = '';
-                                    $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-                                    $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-
-                                    echo $address;
+                                    $address .= $customer->mail_add !== null ? $customer->mail_add : "";
+                                    $address .= $customer->city !== null ? '<br />' . $customer->city : "";
+                                    $address .= $customer->state !== null ? ', ' . $customer->state : "";
+                                    $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
+                                    echo !empty($address) ? $address : 'Not Specified';
                                 ?>
                             </td>
-                            <td><?=$customer->phone_h?></td>
-                            <td><?=$customer->email?></td>
-                            <td><?=$customer->customer_type?></td>
+                            <td><?= !empty($customer->phone_h) ? $customer->phone_h : 'Not Specified';?></td>
+                            <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
+                            <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
                             <td></td>
                             <td>
                                 <div class="dropdown table-management">
