@@ -1158,6 +1158,8 @@ $route['job/add'] = 'Job/new_job_v2';
 $route['job/edit/(:num)'] = 'Job/edit_job_v2/$1';
 $route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
+$route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
+$route['job/_update_job'] = 'Job/ajax_update_job';
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
