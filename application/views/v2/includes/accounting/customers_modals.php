@@ -1,3 +1,10 @@
+<style>
+ .customer-modal-scroll {
+    overflow: scroll !important;
+    height: 800px !important;
+ }
+</style>
+
 <div class="modal fade nsm-modal" id="print_customers_modal" tabindex="-1" aria-labelledby="print_customers_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -5,7 +12,7 @@
                 <span class="modal-title content-title" id="print_customers_modal_label">Print Customers List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body customer-modal-scroll" id="customer-modal-scroll">
                 <table class="nsm-table">
                     <thead>
                         <tr>
@@ -25,17 +32,17 @@
                             <td>
                                 <?php
                                     $address = '';
-                                    $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-                                    $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+                                    $address .= $customer->mail_add !== null ? $customer->mail_add : "";
+                                    $address .= $customer->city !== null ? '<br />' . $customer->city : "";
+                                    $address .= $customer->state !== null ? ', ' . $customer->state : "";
+                                    $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
 
-                                    echo $address;
+                                    echo !empty($address) ? $address : 'Not Specified';
                                 ?>
                             </td>
-                            <td><?=$customer->phone_h?></td>
-                            <td><?=$customer->email?></td>
-                            <td><?=$customer->customer_type?></td>
+                            <td><?= !empty($customer->phone_h) ? $customer->phone_h : 'Not Specified';?></td>
+                            <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
+                            <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
                             <td></td>
                         </tr>
                         <?php endforeach; ?>
@@ -66,7 +73,7 @@
                 <span class="modal-title content-title" id="print_preview_customers_modal_label">Print Customers List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body customer-modal-scroll" id="customer-modal-scroll">
                 <table class="w-100" id="customers_table_print">
                     <thead>
                         <tr>
