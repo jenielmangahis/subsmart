@@ -1869,8 +1869,8 @@ class Invoice extends MY_Controller
             $mail = email__getInstance();
             $mail->FromName = 'NsmarTrac';
             $customerName = $customer->first_name . ' ' . $customer->last_name;
-            //$mail->addAddress($customer->email, $customerName);
-            $mail->addAddress('bryann.revina03@gmail.com', $customerName);
+            $mail->addAddress($customer->email, $customerName);
+            //$mail->addAddress('bryann.revina03@gmail.com', $customerName);
             $mail->isHTML(true);
             $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
             $mail->Body = $this->generateInvoiceHTML($invoice->id);
@@ -2547,9 +2547,11 @@ class Invoice extends MY_Controller
                 'sub_total'                 => $post['subtotal'],
                 'balance'                   => $balance,
                 'taxes'                     => $post['taxes'],
+                'no_tax'                    => $post['is_tax_exempted'],
                 'adjustment_name'           => $post['adjustment_name'],
                 'adjustment_value'          => $post['adjustment_value'] > 0 ? $post['adjustment_value'] : 0,
                 'grand_total'               => $post['grand_total'],
+                'total_due'                 => $post['grand_total'],    
                 'user_id'                   => $uid,
                 'date_created'              => date("Y-m-d H:i:s"),
                 'date_updated'              => date("Y-m-d H:i:s")
@@ -2623,11 +2625,14 @@ class Invoice extends MY_Controller
             //Invoice Products
             if( $post['productIds'] && count($post['productIds']) > 0 ){
                 foreach( $post['productIds'] as $key => $pid ){
+                    $item = $this->Items_model->getByID($pid);
                     $storage_id = $post['storageLocIds'][$key];
                     $invoice_item_data = [
                         'invoice_id' => $invoice_id,
                         'storage_loc_id' => $storage_id,
+                        'location_id' => $storage_id,
                         'item_type' => 'Product',
+                        'item_name' => $item->title,
                         'items_id' => $pid,
                         'qty' => $post['productQty'][$key],
                         'cost' => $post['productPrice'][$key],
@@ -2656,9 +2661,13 @@ class Invoice extends MY_Controller
             //Invoice Services
             if( $post['serviceIds'] && count($post['serviceIds']) > 0 ){
                 foreach( $post['serviceIds'] as $key => $sid ){
+                    $item = $this->Items_model->getByID($pid);
                     $invoice_item_data = [
                         'invoice_id' => $invoice_id,
+                        'storage_loc_id' => 0,
+                        'location_id' => 0,
                         'item_type' => 'Service',
+                        'item_name' => $item->title,
                         'items_id' => $sid,
                         'qty' => $post['serviceQty'][$key],                        
                         'cost' => $post['servicePrice'][$key],
