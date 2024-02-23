@@ -37,14 +37,6 @@ class AcsProfile_model extends MY_Model
         $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
-        // $query = $query1->result();
-        // $data = array();
-        // foreach($query as $q){
-        //     $data [] = array(
-        //         "id" => $q->prof_id,
-        //         "name" => $q->first_name
-        //     );
-        // }
         return $query->result();
     }
 
@@ -494,6 +486,19 @@ class AcsProfile_model extends MY_Model
         }
 
         $query = $this->db->get();        
+        return $query->result();
+    }
+
+    public function getAllRecentCustomerByCompanyId($company_id, $limit = 10)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);        
+        $this->db->order_by('prof_id', 'DESC');
+        $this->db->limit($limit);
+
+        $query = $this->db->get();
         return $query->result();
     }
 }
