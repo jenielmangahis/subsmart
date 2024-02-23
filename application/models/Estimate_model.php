@@ -9,15 +9,12 @@ class Estimate_model extends MY_Model
 
     public function getAllByCompany($company_id, $sort = '', $filter = array())
     {
-        $where = array(
-            'view_flag'     => '0',
-            'estimates.company_id'    => $company_id
-          );
 
-        $this->db->select('estimates.*');
+        $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
-        $this->db->where($where);  
+        $this->db->where('estimates.company_id', $company_id);  
+        $this->db->where('estimates.view_flag', 0);  
         
         if( !empty($filter) ){
             $this->db->group_start();
@@ -60,7 +57,7 @@ class Estimate_model extends MY_Model
                 $this->db->order_by('grand_total', 'DESC');
                 break;
             default:
-                $this->db->order_by('id', 'DESC');
+                $this->db->order_by('estimates.id', 'DESC');
         }
         
 
@@ -357,6 +354,22 @@ class Estimate_model extends MY_Model
         $this->db->where('view_flag', '0');
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllOpenEstimatesByCompanyId($company_id)
+    {
+        $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id');
+        $this->db->where('estimates.company_id', $company_id);
+        $this->db->where('estimates.status !=', 'Lost');
+        $this->db->where('estimates.status !=', 'Invoiced');
+        $this->db->where('estimates.status !=', 'Declined By Customer');
+        $this->db->where('estimates.view_flag', '0');        
+        $this->db->order_by('estimates.id', 'DESC');
+        $query = $this->db->get();
+        
         return $query->result();
     }
 

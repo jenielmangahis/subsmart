@@ -40,12 +40,22 @@ class JobType_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByTitleAndCompanyId($title, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get()->row();
         return $query;

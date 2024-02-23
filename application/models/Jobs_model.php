@@ -143,6 +143,29 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        //$cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->where("jobs.id", $id);
+        $this->db->where("jobs.company_id", $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getJobPaymentByJobId($jobid){        
+        $this->db->select('*');
+        $this->db->from($this->table_job_payments);        
+        $this->db->where("job_id", $jobid);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    /**
+     * @return mixed
+     */
     public function get_specific_job_by_work_order_id($work_order_id)
     {
         //$cid=logged('company_id');
@@ -198,6 +221,16 @@ class Jobs_model extends MY_Model
         $this->db->where("job_items.job_id", $id);
         $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getJobItemsByJobId($job_id)
+    {
+        $this->db->select('job_items.*, items.title, items.price');
+        $this->db->from($this->table_items);
+        $this->db->join('items', 'items.id = job_items.items_id', 'left');
+        $this->db->where("job_items.job_id", $job_id);
         $query = $this->db->get();
         return $query->result();
     }
@@ -904,6 +937,45 @@ class Jobs_model extends MY_Model
             return true;
         // ===============
         }
+    }
+
+    public function jobStatusSequence(){
+        $status_sequence = [
+            1 => 'Draft',
+            2 => 'Scheduled',
+            3 => 'Arrived',
+            4 => 'Started',
+            6 => 'Approved',
+            7 => 'Finished',
+            8 => 'Invoiced',
+            9 => 'Completed'
+        ];
+
+        return $status_sequence;
+    }
+
+    public function getStatusNumber($job_status){
+        $status_number = 1;
+
+        $status_sequence = [
+            1 => 'Draft',
+            2 => 'Scheduled',
+            3 => 'Arrival',
+            4 => 'Started',
+            5 => 'Approved',
+            6 => 'Finished',
+            7 => 'Invoiced',
+            8 => 'Completed'
+        ];
+
+        foreach( $status_sequence as $key => $status ){
+            if( $status == $job_status ){
+                $status_number = $key;
+                break;
+            }
+        }
+
+        return $status_number;
     }
 
 }
