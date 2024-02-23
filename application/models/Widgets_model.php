@@ -212,7 +212,7 @@ class Widgets_model extends MY_Model {
         $this->db->join('widgets','widgets_users.wu_widget_id = widgets.w_id','left');
         $this->db->where('wu_company_id', $company_id);
         $this->db->order_by('wu_order', 'ASC');
-        $this->db->group_by('widgets.wu_widget_id'); 
+        $this->db->group_by('widgets_users.wu_widget_id'); 
         $result = $this->db->get('widgets_users')->result();
         return $result;
         
