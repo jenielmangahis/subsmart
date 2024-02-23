@@ -102,6 +102,9 @@ table.dataTable.no-footer {
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
+
+                            <button type="button" class="nsm-button dupEntryButton d-none"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
+
                             <button type="button" class="nsm-button" onclick="location.href='<?= url('customer/import_customer') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Import
                             </button>
@@ -136,6 +139,7 @@ table.dataTable.no-footer {
                                     <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
                                     <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
                                     <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
+                                    <?php if (in_array('rate_plan', $enabled_table_headers)) : ?><td data-name="Rate Plan">Rate Plan</td><?php endif; ?>
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
                                     <?php if (in_array('job_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
                                     <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
@@ -225,6 +229,9 @@ table.dataTable.no-footer {
                                         <?php endif; ?>
                                         <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
                                             <td><?php echo $customer->system_type; ?></td>
+                                        <?php endif; ?>
+                                        <?php if (in_array('rate_plan', $enabled_table_headers)) : ?>
+                                            <td><?php echo $customer->rate_plan; ?></td>
                                         <?php endif; ?>
                                         <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
                                             <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
@@ -524,6 +531,21 @@ table.dataTable.no-footer {
 
         $("#btn_send_email").html('<span class="bx bx-loader bx-spin"></span>');
     });
+
+    function loadTotalDupEntries() {
+        $.ajax({
+            type: "POST",
+            url: '<?php echo base_url("customer/getDuplicatedEntry"); ?>',
+            success: function (response) {
+                if (response == 0) {
+                    $('.dupEntryCount').text('(' + response + ')');
+                } else {
+                    $('.dupEntryButton').removeClass('d-none');
+                    $('.dupEntryCount').text('(' + response + ')');
+                }
+            }
+        });
+    } loadTotalDupEntries();
 
     $(document).on('submit', '#frm-send-message', function(e){
         e.preventDefault();

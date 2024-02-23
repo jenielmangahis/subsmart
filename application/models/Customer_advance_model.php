@@ -751,4 +751,29 @@ class Customer_advance_model extends MY_Model {
         $returnData->techrep_paid = $totalTechRepPaid + $jobResult->techrep_commission;
         return $returnData;    
     }
+
+    public function getTotalDuplicatedEntry($company_id) {
+        $this->db->select('COUNT(*) AS residential');
+        $this->db->from("
+            (SELECT COUNT(*) AS duplicate_count
+            FROM acs_profile
+            WHERE company_id = $company_id AND customer_type = 'Residential'
+            GROUP BY first_name, last_name
+            HAVING COUNT(*) > 1) AS subquery
+         ");
+        $query = $this->db->get();
+        $residential = $query->row()->residential;
+        // ============
+        $this->db->select('COUNT(*) AS business');
+        $this->db->from("
+            (SELECT COUNT(*) AS duplicate_count
+            FROM acs_profile
+            WHERE company_id = $company_id AND customer_type = 'Business'
+            GROUP BY business_name
+            HAVING COUNT(*) > 1) AS subquery
+         ");
+        $query = $this->db->get();
+        $business = $query->row()->residential;
+        return $residential + $business;
+    }
 }
