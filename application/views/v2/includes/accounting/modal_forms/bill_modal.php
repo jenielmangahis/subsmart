@@ -714,15 +714,14 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group float-end" role="group">
-                                <button type="button" class="nsm-button success" id="save-and-schedule-payment">
+                                <button type="button" onclick="saveAndCloseForm(event)" class="nsm-button success" id="save-and-schedule-payment">
                                     Save and schedule payment
                                 </button>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="bx bx-fw bx-chevron-up text-white"></i>
                                     </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    <div class="dropdown-menu">                                        
                                         <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
                                     </div>
                                 </div>
