@@ -26,9 +26,10 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
-            <div id="jobsData">
-            </div>
-            <div id="companiesData">
+            <div id="recent-customer-container">
+                <div class="nsm-loader">
+                    <i class='bx bx-loader-alt bx-spin'></i>
+                </div>
             </div>
         </div>
     </div>
