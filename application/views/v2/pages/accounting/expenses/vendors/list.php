@@ -277,7 +277,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-bills' ? 'selected' : ''?><?=$transaction === 'open-bills' ? 'co-selected' : ''?>" id="overdue-bills">
+                        <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-bills' ? 'selected' : ''?>" id="overdue-bills">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>

@@ -273,8 +273,8 @@
                                                         <td data-name="Balance">BALANCE</td>
                                                         <td data-name="Total">TOTAL</td>
                                                         <td data-name="Status">STATUS</td>
-                                                        <td class="table-icon text-center" data-name="Attachments">
-                                                            <i class='bx bx-paperclip'></i>
+                                                        <td class="" data-name="Attachments">
+                                                            Attachment
                                                         </td>
                                                         <td data-name="Manage"></td>
                                                     </tr>
@@ -309,7 +309,7 @@
                                                         <td><?=$transaction['total']?></td>
                                                         <td><?=$transaction['status']?></td>
                                                         <td class="overflow-visible">
-                                                            <?php if(count($transaction['attachments']) > 0) : ?>
+                                                            <?php if(count($transaction['attachments']) > 0) { ?>
                                                                 <div class="dropdown">
                                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                                         <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
@@ -333,7 +333,9 @@
                                                                         <?php endforeach; ?>
                                                                     </ul>
                                                                 </div>
-                                                            <?php endif; ?>
+                                                            <?php }else{ ?>
+                                                                No Attachment
+                                                            <?php } ?>                                                            
                                                         </td>
                                                         <td><?=$transaction['manage']?></td>
                                                     </tr>
@@ -429,5 +431,50 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $(document).on('click', '.bill-mark-paid', function(){
+        var bill_id = $(this).attr('data-id');
+        Swal.fire({            
+            html: 'Mark as paid selected transaction?',
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {   
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "accounting/vendor/_bill_mark_paid",
+                    data: {bill_id:bill_id}, 
+                    dataType:'json',
+                    success: function(result) {
+                        if( result.is_success == 1 ){
+                            Swal.fire({
+                                text: "Transaction data has been updated successfully.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                        
+                    }, beforeSend: function() {
 
+                    }                    
+                });
+
+
+            }
+        });
+    });    
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

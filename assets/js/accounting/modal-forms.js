@@ -2572,10 +2572,10 @@ $(function() {
                 $(`#${modalId} #mailing_address`).append('\n');
             }
             var address = '';
-            address += vendor.street !== "" && vendor.street !== null ? vendor.street + '\n' : "";
-            address += vendor.city !== "" && vendor.city !== null ? vendor.city + ', ' : "";
-            address += vendor.state !== "" && vendor.state !== null ? vendor.state + ' ' : "";
-            address += vendor.zip !== "" && vendor.zip !== null ? vendor.zip : "";
+            address += vendor.street !== "" && vendor.street !== null && vendor.street !== "Not Specified" ? vendor.street + '\n' : "";
+            address += vendor.city !== "" && vendor.city !== null && vendor.city !== "Not Specified" ? vendor.city + ', ' : "";
+            address += vendor.state !== "" && vendor.state !== null && vendor.state !== "Not Specified" ? vendor.state + ' ' : "";
+            address += vendor.zip !== "" && vendor.zip !== null && vendor.zip !== "Not Specified" ? vendor.zip : "";
 
             $(`#${modalId} #mailing_address`).append(address.trim());
         });
@@ -6243,7 +6243,7 @@ $(function() {
         var data = new FormData(this);
 
         $.ajax({
-            url: '/accounting/ajax-add-term',
+            url: base_url + 'accounting/ajax-add-term',
             data: data,
             type: 'post',
             processData: false,

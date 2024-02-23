@@ -259,7 +259,9 @@ class Customers extends MY_Controller {
         if(!empty($search)) {
             $this->page_data['customers'] = array_filter($this->page_data['customers'], function($customer, $key) use ($search) {
                 $name = $customer->last_name.', '.$customer->first_name;
-                return (stripos($name, $search) !== false);
+                $email = $customer->email;
+                $customer_type = $customer->customer_type;
+                return (stripos($name . ' ' . $email . ' ' . $customer_type, $search) !== false);
             }, ARRAY_FILTER_USE_BOTH);
 
             $this->page_data['search'] = $search;
