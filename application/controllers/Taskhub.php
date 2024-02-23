@@ -449,17 +449,9 @@ class Taskhub extends MY_Controller {
 	public function ajax_add_new_task()
 	{
 		$this->load->model('Taskhub_status_model');
-		$this->load->model('Users_model');
-        $this->load->model('AcsProfile_model');
-
-        $cid = logged('company_id');
-		$companyCustomers = $this->AcsProfile_model->getAllByCompanyId($cid);
-        $companyUsers     = $this->Users_model->getCompanyUsers($cid);
 
         $this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
         $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
-        $this->page_data['companyCustomers'] = $companyCustomers;
-        $this->page_data['companyUsers'] = $companyUsers;        
         $this->load->view('workcalender/taskhub/ajax_add_new_task', $this->page_data);
 	}
 
