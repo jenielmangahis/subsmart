@@ -2560,55 +2560,68 @@ class Vendors extends MY_Controller
         $headers = [];
 
         $headers[] = "Date";
+        $fields[]  = "date";
         if(in_array('type', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Type";
+            $fields[]  = "type";
         }
         if(in_array('number', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "No.";
+            $fields[]  = "number";
         }
         if(in_array('payee', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Payee";
+            $fields[]  = "payee";
         }
         if(in_array('method', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Method";
+            $fields[]  = "method";
         }
         if(in_array('source', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Source";
+            $fields[]  = "source";
         }
         if(in_array('category', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Category";
+            $fields[]  = "category";
         }
         if(in_array('memo', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Memo";
+            $fields[]  = "memo";
         }
         if(in_array('due_date', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Due date";
+            $fields[]  = "due_date";
         }
         if(in_array('balance', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Balance";
+            $fields[]  = "balance";
         }
         $headers[] = "Total";
+        $fields[]  = "total";
         if(in_array('status', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Status";
+            $fields[]  = "status";
         }
-        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
-            $headers[] = "Attachments";
-        }
+        // if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
+        //     $headers[] = "Attachments";
+        //     $fields[]  = "attachments";
+        // }
 
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
         $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
+        $transaction_data = [];
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
-
             foreach($keys as $key) {
-                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
+                if(!in_array($key, $fields) && !in_array($key, $post['fields'])) {
                     unset($transaction[$key]);
                 }
             }
-
             $writer->writeSheetRow('Sheet1', $transaction);
         }
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="expenses.xlsx"');
         header('Cache-Control: max-age=0');
