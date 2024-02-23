@@ -99,12 +99,12 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="new_feed_modal_label">Taskhub List</span>
+                <span class="modal-title content-title" id="new_feed_modal_label"><i class='bx bx-task'></i> Taskhub List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body modal-taskhub-list-container" style="max-height:500px; overflow-y: auto;overflow-x: hidden;"></div>
+            <div class="modal-body modal-taskhub-list-container" style="max-height:600px; overflow-y: auto;overflow-x: hidden;"></div>
             <div class="modal-footer">
-                <button type="button" class="nsm-button primary btn-add-task"><i class='bx bx-fw bx-task'></i> New Task</button>
+                
             </div>
         </div>
     </div>
@@ -114,7 +114,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="new_feed_modal_label">Add New Task</span>
+                <span class="modal-title content-title" id="new_feed_modal_label"><i class='bx bx-plus-medical' ></i> Add New Task</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <form action="" id="frm-add-new-task">

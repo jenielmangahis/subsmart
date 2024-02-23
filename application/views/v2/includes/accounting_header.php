@@ -127,6 +127,26 @@ if ($this->session->userdata('usertimezone') == null) {
         .nsm-nav-items #clockOut i{
             color: "green";
         }
+        .swal2-styled.swal2-confirm {
+            background-color: #7367f0 !important;
+            color: #fff !important;
+        }
+        .swal2-styled.swal2-confirm {
+            border: 0;
+            border-radius: 0.25em;
+            background: initial;
+            background-color: #7367f0;
+            color: #fff;
+            font-size: 1em;
+        }
+        .swal2-styled.swal2-cancel {
+            border: 0;
+            border-radius: 0.25em;
+            background: initial;
+            background-color: #6e7d88;
+            color: #fff;
+            font-size: 1em;
+        }
     </style>
     
 </head>
