@@ -566,6 +566,23 @@ class Dashboard extends Widgets {
 
     }
 
+    public function ajax_recent_customers()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $cid = logged('company_id');
+
+        $recentCustomers = $this->AcsProfile_model->getAllRecentCustomerByCompanyId($cid, 10);
+        if( empty($recentCustomers) ){
+            $is_success = 0;
+        }
+
+        $data_arr = array("success" => $is_success, "recentCustomers" => $recentCustomers);
+        die(json_encode($data_arr));
+
+    }
+
     public function customer_status()
     {
         $customerStatus =$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
