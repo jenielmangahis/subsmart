@@ -1,3 +1,25 @@
+<style>
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-primary {
+    color: #fff;
+    background-color: #007bff;
+}
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+.badge{
+    width: 100%;
+    display: block;
+}
+#nsm-table-open-estimates .badge{
+    display: block;
+    width: 100%;
+}
+</style>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '<div class="col-12 col-lg-4">';
@@ -35,61 +57,69 @@ function formatEstimateNumber($number) {
     </div>
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
-            <?php
-            if ($estimates) :
-                $estimate_limit = 5;
-                $estimate_count = 0;
-                foreach ($estimates as $estimate) :
-                    switch ($estimate->status):
-                        case 'Submitted':
-                            $class = "primary";
-                            break;
-                        case 'Draft':
-                            $class = "default";
-                            break;
-                        case 'Accepted':
-                            $class = "success";
-                            break;
-                        default:
-                            $class = "default";
-                            break;
-                    endswitch;
-
-                    if ($estimate_count < $estimate_limit) :
-            ?>
-                        <div class="widget-item">
-                            <div class="content">
-                                <div class="details">
-                                    <span class="content-title"><?php echo formatEstimateNumber($estimate->estimate_number); ?> </span>
-                                    <span class="content-subtitle d-block"><?php if($estimate->grand_total == NULL || $estimate->grand_total == 0){ echo '$0.00';}else{ echo currency($estimate->grand_total);  } ?></span>
+            <table class="nsm-table" id="nsm-table-open-estimates">
+                <thead style="display:none;">
+                    <tr>            
+                        <td data-name="EstimateNumber">Estimate Number</td>
+                        <td data-name="TotalDue"></td>                            
+                        <td data-name="Status"></td>                     
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($estimates)) { ?>
+                        <?php foreach ($estimates as $estimate) { ?>
+                            <?php 
+                                switch ($estimate->status):
+                                    case 'Submitted':
+                                        $class = "badge-primary";
+                                        break;
+                                    case 'Draft':
+                                        $class = "badge-secondary";
+                                        break;
+                                    case 'Accepted':
+                                        $class = "badge-info";
+                                        break;
+                                    default:
+                                        $class = "badge-primary";
+                                        break;
+                                endswitch;    
+                            ?>
+                            <tr>                    
+                                <td>
+                                    <span class="content-title"><?= $estimate->estimate_number; ?></span>
+                                    <span class="content-subtitle d-block"><?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
+                                </td>                                    
+                                <td>
+                                    <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?= $estimate->grand_total == NULL || $estimate->grand_total == 0 ? '0.00' : number_format($estimate->grand_total,2); ?></span>
+                                    <span class="content-subtitle d-block">Total Due</span>
+                                </td>
+                                <td style="width:25%;text-align:right;">
+                                    <span class="nsm-badge <?= $class ?>"><?= ucwords($estimate->status); ?></span>
+                                    <span class="content-subtitle d-block mt-2"><?= date('F d, Y', strtotime($estimate->updated_at)); ?></span>
+                                </td>  
+                            </tr>
+                        <?php } ?>
+                    <?php }else { ?>
+                        <tr>
+                            <td colspan="3">
+                                <div class="nsm-empty">
+                                    <span>No results found.</span>
                                 </div>
-
-                                <div class="controls">
-                                    <span class="nsm-badge <?= $class ?>"><?php echo ucwords($estimate->status); ?></span>
-                                    <span class="content-subtitle mt-1 d-block">Last Update: <?php echo date('F d, Y', strtotime($estimate->updated_at)); ?></span>
-                                </div>
-                            </div>
-                        </div>
-
-                <?php
-                    endif;
-                    $estimate_count++;
-                endforeach;
-            else :
-                ?>
-                <div class="nsm-empty">
-                    <i class='bx bx-meh-blank'></i>
-                    <span>Open estimate list is empty.</span>
-                </div>
-            <?php
-            endif;
-            ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
+<script>
+$(function(){
+    $("#nsm-table-open-estimates").nsmPagination({itemsPerPage:5});   
+});
+</script>
