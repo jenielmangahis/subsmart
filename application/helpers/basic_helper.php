@@ -4531,6 +4531,7 @@ if (!function_exists('is_admin_logged')) {
             'sales_rep' => 'Sales Rep',
             'tech' => 'Tech',
             'plan_type' => 'Plan Type',
+            'rate_plan' => 'Rate Plan',
             'subscription_amount' => 'Subscription Amount',
             'job_amount' => 'Job Amount',
             'phone' => 'Phone',

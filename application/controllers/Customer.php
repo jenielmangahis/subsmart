@@ -226,6 +226,9 @@ class Customer extends MY_Controller
                     if (in_array('plan_type', $enabled_table_headers)){
                         array_push($data_arr, $customer->system_type);
                     }
+                    if (in_array('rate_plan', $enabled_table_headers)){
+                        array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : "$0.00");
+                    }
                     if (in_array('subscription_amount', $enabled_table_headers)){
                         $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                         array_push($data_arr, "$".$subs_amt);
@@ -383,6 +386,13 @@ class Customer extends MY_Controller
         echo json_encode($output);
     }
 
+    public function getDuplicatedEntry() 
+    {
+        $company_id = logged('company_id');
+        $result = $this->customer_ad_model->getTotalDuplicatedEntry($company_id);
+        echo $result;
+    }
+    
     public function getCustomerList(){
         $get_company_settings = array(
             'where' => array(

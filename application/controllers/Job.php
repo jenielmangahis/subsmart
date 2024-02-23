@@ -2554,10 +2554,10 @@ class Job extends MY_Controller
                 'commission' => $input['commission_amount'],
                 'tech_commission' => json_encode($jobTechCommission_amount),
                 'tech_commission_total' => $techcommission_total,
-                'fix_cost' => $input['input_totalFixCost'],
-                'margin' => $input['input_totalEquipmentMargin'],
-                'amount_collected' => $input['input_totalAmountCollected'],
-                'gross_profit' => $input['input_totalJobGrossProfit'],
+                //'fix_cost' => $input['input_totalFixCost'],
+                //'margin' => $input['input_totalEquipmentMargin'],
+                //'amount_collected' => $input['input_totalAmountCollected'],
+                //'gross_profit' => $input['input_totalJobGrossProfit'],
                 'job_account_number' => $input['JOB_ACCOUNT_NUMBER']                
             );
 

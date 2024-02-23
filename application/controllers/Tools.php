@@ -393,7 +393,7 @@ class Tools extends MY_Controller {
                                     'qbid' => $request[$i]->Id,
                                     'contact_name' => $request[$i]->ContactName,
                                     'status' => "Active",
-                                    'customer_type' => "Residential",
+                                    'customer_type' => ($request[$i]->CompanyName != "") ? "Business" : "Residential",
                                     'business_name' => $request[$i]->CompanyName,
                                     'first_name' => $request[$i]->GivenName,
                                     'middle_name' => $request[$i]->MiddleName,
