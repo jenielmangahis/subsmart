@@ -207,4 +207,14 @@ class Widgets_model extends MY_Model {
         
     }
 
+    function getWidgetsByCompanyId($company_id)
+    {
+        $this->db->join('widgets','widgets_users.wu_widget_id = widgets.w_id','left');
+        $this->db->where('wu_company_id', $company_id);
+        $this->db->order_by('wu_order', 'ASC');
+        $result = $this->db->get('widgets_users')->result();
+        return $result;
+        
+    }
+
 }
