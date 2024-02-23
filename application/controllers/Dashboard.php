@@ -125,8 +125,7 @@ class Dashboard extends Widgets {
     }
 
     public function index() {     
-        // load necessary model and functions
-        
+        // load necessary model and functions        
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
@@ -156,8 +155,6 @@ class Dashboard extends Widgets {
         
         $company_id = logged('company_id');
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
-        // echo $this->db->last_query(); 
-        // echo "<br>";
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if ($this->page_data['activity_list_count'] > 5) {
             array_pop($this->page_data['activity_list']);
@@ -201,7 +198,7 @@ class Dashboard extends Widgets {
         // $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
-        $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetsByCompanyId($companyId);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
             return $widget->wu_is_main == true;
         });
