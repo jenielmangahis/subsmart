@@ -1106,3 +1106,46 @@ function test(){
         }
     }
 }
+
+
+$(document).on('click', '#make-inactive', function() {
+    var delete_url = base_url + '/accounting/customers/delete_multi_customers';
+    var frmData = $("#accountingCustomerTblFrm").serialize();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Make the selected function Inactive!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!'
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: delete_url,
+                method: "POST",
+                data: frmData,
+                success: function(data) {
+                    console.log(data);
+                    if(data.is_success == 0) {
+                        Swal.fire(
+                            'Updated!',
+                            'Customer has been updated to inactive.',
+                            'success'
+                        );
+                    } else {
+                        //window.location.reload();
+                        Swal.fire(
+                            'Updated!',
+                            'Customer has been updated to inactive.',
+                            'success'
+                        );
+                    }
+
+                }
+            });
+        }
+    });
+    
+}); 

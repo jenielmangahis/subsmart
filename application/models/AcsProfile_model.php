@@ -501,6 +501,14 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function update_customer_status($prof_id)
+    {
+        $this->db->where('prof_id', $prof_id);
+        $this->db->from($this->table);
+        $cust = $this->db->update($this->table, ['status' => 'Inactive']);
+		return $cust;        
+    }    
 }
 
 /* End of file AcsProfile_model.php */

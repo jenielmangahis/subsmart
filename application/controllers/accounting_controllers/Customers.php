@@ -3900,4 +3900,26 @@ class Customers extends MY_Controller {
 
         redirect($_SERVER['HTTP_REFERER']);
     }
+
+    public function delete_multi_customers()
+    {
+        $is_success = 0;
+        $prof_ids = $this->input->post('customer_prof_ids');
+        if($prof_ids) {
+            foreach($prof_ids as $prof_id)
+            {
+                $updated = $this->AcsProfile_model->update_customer_status($prof_id);   
+            }
+                         
+        } else {
+            echo json_encode([
+                'success' => 0
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => $updated > 0 ? 1 : 0
+        ]);        
+    }
 }

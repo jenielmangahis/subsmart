@@ -401,11 +401,12 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            50
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
@@ -432,76 +433,78 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($customers) > 0) : ?>
-						<?php foreach($customers as $customer) : ?>
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" type="checkbox" value="<?=$customer->prof_id?>">
-                                </div>
-                            </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/customers/view/' . $customer->prof_id) ?>'"><?=$customer->last_name.', '.$customer->first_name?></td>
-                            <td>
-                                <?php
-                                    $address = '';
-                                    $address .= $customer->mail_add !== null ? $customer->mail_add : "";
-                                    $address .= $customer->city !== null ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== null ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
-                                    echo !empty($address) ? $address : 'Not Specified';
-                                ?>
-                            </td>
-                            <td><?= !empty($customer->phone_h) ? $customer->phone_h : 'Not Specified';?></td>
-                            <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
-                            <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
-                            <td></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item receive-payment" href="#">Receive payment</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item send-reminder" href="#">Send reminder</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-statement" href="#">Create statement</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-invoice" href="#">Create invoice</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-sales-receipt" href="#">Create sales receipt</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-standard-estimate" href="#">Create standard estimate</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-options-estimate" href="#">Create options estimate</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item create-bundle-estimate" href="#">Create bundle estimate</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item send-payment-link" href="#">Send payment link</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="19">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
+                        <form id="accountingCustomerTblFrm" class="accountingCustomerTblFrm">
+                            <?php if(count($customers) > 0) : ?>
+                            <?php foreach($customers as $customer) : ?>
+                            <tr>
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" name="customer_prof_ids[]" type="checkbox" value="<?=$customer->prof_id?>">
+                                    </div>
+                                </td>
+                                <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/customers/view/' . $customer->prof_id) ?>'"><?=$customer->last_name.', '.$customer->first_name?></td>
+                                <td>
+                                    <?php
+                                        $address = '';
+                                        $address .= $customer->mail_add !== null ? $customer->mail_add : "";
+                                        $address .= $customer->city !== null ? '<br />' . $customer->city : "";
+                                        $address .= $customer->state !== null ? ', ' . $customer->state : "";
+                                        $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
+                                        echo !empty($address) ? $address : 'Not Specified';
+                                    ?>
+                                </td>
+                                <td><?= !empty($customer->phone_h) ? formatPhoneNumber($customer->phone_h) : 'Not Specified';?></td>
+                                <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
+                                <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
+                                <td></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item receive-payment" href="#">Receive payment</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item send-reminder" href="#">Send reminder</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-statement" href="#">Create statement</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-invoice" href="#">Create invoice</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-sales-receipt" href="#">Create sales receipt</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-standard-estimate" href="#">Create standard estimate</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-options-estimate" href="#">Create options estimate</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item create-bundle-estimate" href="#">Create bundle estimate</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item send-payment-link" href="#">Send payment link</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php else : ?>
+                            <tr>
+                                <td colspan="19">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        </form>
                     </tbody>
                 </table>
             </div>
