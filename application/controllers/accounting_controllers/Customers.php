@@ -3901,7 +3901,7 @@ class Customers extends MY_Controller {
         redirect($_SERVER['HTTP_REFERER']);
     }
 
-    public function delete_multi_customers()
+    public function update_multi_customers_status()
     {
         $is_success = 0;
         $prof_ids = $this->input->post('customer_prof_ids');

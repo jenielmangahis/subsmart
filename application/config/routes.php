@@ -559,7 +559,7 @@ $route['accounting/customers/(:any)/export-transactions']['post'] = 'accounting_
 $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_controllers/customers/create_invoice/$1/$2';
 $route['accounting/customers/print-transaction/(:any)/(:any)'] = 'accounting_controllers/customers/print_transaction/$1/$2';
 $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/customers/send_transaction/$1/$2';
-$route['accounting/customers/delete_multi_customers'] = 'accounting_controllers/customers/delete_multi_customers';
+$route['accounting/customers/update_multi_customers_status'] = 'accounting_controllers/customers/update_multi_customers_status';
 
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 

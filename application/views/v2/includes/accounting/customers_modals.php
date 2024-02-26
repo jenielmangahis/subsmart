@@ -2576,13 +2576,13 @@
                         <div class="progress-wrapper" style="padding-bottom: 100px;">
                             <div id="progress-bar-container">
                                 <ul>
-                                    <li class="step step01 active">
+                                    <li class="step step01 pointers-none active">
                                         <div class="step-inner">Step 1</div>
                                     </li>
-                                    <li class="step step02">
+                                    <li class="step step02 pointers-none">
                                         <div class="step-inner">Step 2</div>
                                     </li>
-                                    <li class="step step03">
+                                    <li class="step step03 pointers-none">
                                         <div class="step-inner">Step 3</div>
                                     </li>
                                 </ul>
@@ -2670,3 +2670,9 @@
         <center><p>Processing...</p></center>
     </div>
 </div>
+
+<style>
+    .pointers-none {
+        pointer-events: none;
+    }    
+</style>

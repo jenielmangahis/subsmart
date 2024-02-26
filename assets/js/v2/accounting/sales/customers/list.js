@@ -1109,7 +1109,7 @@ function test(){
 
 
 $(document).on('click', '#make-inactive', function() {
-    var delete_url = base_url + '/accounting/customers/delete_multi_customers';
+    var update_url = base_url + 'accounting/customers/update_multi_customers_status';
     var frmData = $("#accountingCustomerTblFrm").serialize();
 
     Swal.fire({
@@ -1123,7 +1123,7 @@ $(document).on('click', '#make-inactive', function() {
     }).then((result) => {
         if (result.value) {
             $.ajax({
-                url: delete_url,
+                url: update_url,
                 method: "POST",
                 data: frmData,
                 success: function(data) {
