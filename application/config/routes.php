@@ -568,6 +568,7 @@ $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sale
 
 $route['accounting/credit-notes'] = 'accounting_controllers/credit_notes/index';
 $route['accounting/credit-notes/export']['post'] = 'accounting_controllers/credit_notes/export';
+$route['accounting/credit-notes/delete-selected'] = 'accounting_controllers/credit_notes/ajax_delete_selected';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';
@@ -1684,3 +1685,6 @@ $route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 $route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
 $route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
 $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
+
+//Wdigets
+$route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
