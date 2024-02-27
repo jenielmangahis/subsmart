@@ -55,41 +55,62 @@ $(document).ready(function() {
         console.log('Error:', error);
     });
 
-    fetch('<?= base_url('Dashboard/upcoming_jobs') ?>', {
+    fetch('<?= base_url('dashboard/_recent_customers') ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
-        var {success, companies, upcomingJobs } = response;
-
-        if(success){
-            if(companies){
-                companies = companies.map(company => {
-                    return new Proxy(company, {
-                        // return fallback if property/value is null
-                        get: (object, key) => object[key] === null ? "--" : object[key],
-                    });
-                });
-                
-                for(var i=0; i < companies.length; i++){
-                    $("#companiesData").append(
-                        '<div class="widget-item cursor-pointer" id="companiesData"><div class="nsm-list-icon"><i class="bx bx-buildings"></i></div><div class="content ms-2"><div class="details"><span class="content-title" id="customer_name">'+ companies[i].business_name+'</span><span class="content-subtitle d-block mb-1">'+companies[i].website+'</span><span class="content-subtitle d-block"><i>Since </i>'+companies[i].year_est+'</span></div><div class="controls"><span class="nsm-badge primary"></span><span class="content-subtitle d-block mt-1">'+companies[i].business_email+'</span></div></div></div>'
-                    )
+        var {success, companies, recentCustomers } = response;
+        $("#recent-customer-container").html('');
+        if(success == 1){
+            for(var j=0; j < recentCustomers.length; j++){
+            var nn = "NN";
+                if(recentCustomers[j].last_name[0]){
+                    nn = recentCustomers[j].last_name[0]+''+recentCustomers[j].first_name[0];
                 }
-            }else{
-                for(var j=0; j < upcomingJobs.length; j++){
-                var nn = "NN";
-                    if(upcomingJobs[j].last_name[0]){
-                        nn = upcomingJobs[j].last_name[0]+''+upcomingJobs[j].first_name[0];
-                    }
-                    $("#jobsData").append(
-                        '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+upcomingJobs[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+upcomingJobs[j].last_name+' '+upcomingJobs[j].first_name+'</span><span class="content-subtitle d-block">'+upcomingJobs[j].city+', '+upcomingJobs[j].state+' '+upcomingJobs[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">Pending</span><span class="content-subtitle d-block mt-1">'+upcomingJobs[j].email+'</span></div></div></div>'
-                    )
-                }
+                $("#recent-customer-container").append(
+                    '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+recentCustomers[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+recentCustomers[j].last_name+' '+recentCustomers[j].first_name+'</span><span class="content-subtitle d-block">'+recentCustomers[j].city+', '+recentCustomers[j].state+' '+recentCustomers[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">'+recentCustomers[j].customer_type+'</span><span class="content-subtitle d-block mt-1">'+recentCustomers[j].email+'</span></div></div></div>'
+                )
             }
         }
 
     }).catch((error) => {
         console.log('Error:', error);
     });
+
+    // fetch('<?= base_url('Dashboard/upcoming_jobs') ?>', {
+    //     method: 'GET',
+    // }) .then(response => response.json() ).then(response => {
+    //     var {success, companies, upcomingJobs } = response;
+
+    //     if(success){
+    //         if(companies){
+    //             companies = companies.map(company => {
+    //                 return new Proxy(company, {
+    //                     // return fallback if property/value is null
+    //                     get: (object, key) => object[key] === null ? "--" : object[key],
+    //                 });
+    //             });
+                
+    //             for(var i=0; i < companies.length; i++){
+    //                 $("#companiesData").append(
+    //                     '<div class="widget-item cursor-pointer" id="companiesData"><div class="nsm-list-icon"><i class="bx bx-buildings"></i></div><div class="content ms-2"><div class="details"><span class="content-title" id="customer_name">'+ companies[i].business_name+'</span><span class="content-subtitle d-block mb-1">'+companies[i].website+'</span><span class="content-subtitle d-block"><i>Since </i>'+companies[i].year_est+'</span></div><div class="controls"><span class="nsm-badge primary"></span><span class="content-subtitle d-block mt-1">'+companies[i].business_email+'</span></div></div></div>'
+    //                 )
+    //             }
+    //         }else{
+    //             for(var j=0; j < upcomingJobs.length; j++){
+    //             var nn = "NN";
+    //                 if(upcomingJobs[j].last_name[0]){
+    //                     nn = upcomingJobs[j].last_name[0]+''+upcomingJobs[j].first_name[0];
+    //                 }
+    //                 $("#jobsData").append(
+    //                     '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+upcomingJobs[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+upcomingJobs[j].last_name+' '+upcomingJobs[j].first_name+'</span><span class="content-subtitle d-block">'+upcomingJobs[j].city+', '+upcomingJobs[j].state+' '+upcomingJobs[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">Pending</span><span class="content-subtitle d-block mt-1">'+upcomingJobs[j].email+'</span></div></div></div>'
+    //                 )
+    //             }
+    //         }
+    //     }
+
+    // }).catch((error) => {
+    //     console.log('Error:', error);
+    // });
 
     fetch('<?= base_url('Dashboard/customer_status') ?>', {
         method: 'GET',
