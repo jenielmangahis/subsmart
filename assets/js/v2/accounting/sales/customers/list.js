@@ -634,7 +634,7 @@ $('#customers-table .create-invoice').on('click', function(e) {
     var lastName = customerName[0];
     customerName = firstName+' '+lastName;
 
-    $.get('/accounting/get-other-modals/invoice_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/invoice_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -937,7 +937,7 @@ $(document).on('click', '#customer-types-modal .delete-customer-type', function(
     Swal.fire({
         title: 'Are you sure?',
         html: `You want to delete <b>${name}</b>?`,
-        icon: 'warning',
+        icon: 'question',
         showCloseButton: false,
         confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Yes',
@@ -1014,19 +1014,26 @@ $(document).on('click', "#import-customers-modal .step01", function () {
 });
 
 $(document).on('click', "#import-customers-modal .step02", function () {
+
     $("#import-customers-modal #line-progress").css("width", "50%");
     $("#import-customers-modal .step2").addClass("active").siblings().removeClass("active");
 
-    $('#import-customers-modal .modal-footer').html(`<button type="button" class="nsm-button step01">Back</button>
-    <button type="button" class="nsm-button primary step03">Next</button>`);
+    $('#import-customers-modal .modal-footer').html(`
+        <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button step01">Back</button>
+        <button type="button" class="nsm-button primary step03">Next</button>
+    `);
 });
 
 $(document).on('click', "#import-customers-modal .step03", function () {
     $("#import-customers-modal #line-progress").css("width", "100%");
     $("#import-customers-modal .step3").addClass("active").siblings().removeClass("active");
 
-    $('#import-customers-modal .modal-footer').html(`<button type="button" class="nsm-button step02">Back</button>
-    <button type="button" class="nsm-button primary" id="importCustomer">Import</button>`);
+    $('#import-customers-modal .modal-footer').html(`
+        <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="nsm-button step02">Back</button>
+        <button type="button" class="nsm-button primary" id="importCustomer">Import</button>
+    `);
 });
 
 $(document).on('click', "#import-customers-modal #importCustomer", function(e) {

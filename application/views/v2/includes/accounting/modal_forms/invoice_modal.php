@@ -218,7 +218,7 @@
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
-                                    <label for="job-location">Job location (optional, select, or add new one)</label>
+                                    <label for="job-location" style="font-size: 13px;">Job location (optional, select, or add new one)</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="job-location" name="job_location" value="<?=isset($invoice) ? $invoice->job_location : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
@@ -739,8 +739,8 @@
                                                                 <div class="col-3">
                                                                     <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($invoice) ? number_format(floatval($invoice->adjustment_value), 2, '.', ',') : ''?>">
                                                                 </div>
-                                                                <div class="col-1 d-flex align-items-center">
-                                                                    <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
+                                                                <div class="col-1 d-flex align-items-center" style="padding-left: 0 !important;">
+                                                                    <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10." style=""></span>
                                                                 </div>
                                                             </div>
                                                         </td>
