@@ -388,7 +388,17 @@ class Event_model extends MY_Model
     */
     public function getLeadSourceWithCount()
     {
-        $cid=logged('company_id');
+        $this->db->select('acs_office.lead_source, count(acs_office.lead_source) as leadSourceCount');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.lead_source !=', "");
+        $this->db->group_by('acs_office.lead_source');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCompanyLeadSourceWithCount($cid)
+    {
         $this->db->select('acs_office.lead_source, count(acs_office.lead_source) as leadSourceCount');
         $this->db->from('acs_profile');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');

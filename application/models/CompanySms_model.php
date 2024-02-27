@@ -59,12 +59,14 @@ class CompanySms_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
+                $this->db->group_start();
                 $this->db->like('company_sms.to_number', $filters['search'], 'both');
                 $this->db->or_like('company_sms.txt_message', $filters['search'], 'both');
+                $this->db->group_end();
             }
         }
 
-        $this->db->order_by('company_sms.id', 'ASC');
+        $this->db->order_by('company_sms.date_created', 'DESC');
 
         $query = $this->db->get();
         return $query->result();

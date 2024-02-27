@@ -65,7 +65,7 @@ class Widgets_model extends MY_Model {
 
     function rawGetTagsWithCount($company_id)
     {
-        $sql = 'SELECT job_tags.id, job_tags.name, job_tags.company_id, (SELECT COUNT(*) FROM jobs WHERE DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.tags = job_tags.id) AS total_job_tags FROM job_tags WHERE job_tags.company_id = '.$company_id.' ';
+        $sql = 'SELECT job_tags.id, job_tags.name, job_tags.company_id, (SELECT COUNT(*) FROM jobs WHERE DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.tags = job_tags.name) AS total_job_tags FROM job_tags WHERE job_tags.company_id = '.$company_id.' ';
         $query = $this->db->query($sql);
         return $query->result();
     }
