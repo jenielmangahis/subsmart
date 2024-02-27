@@ -466,36 +466,36 @@ function Signing(hash) {
     if( field_name == "Equipment Cost" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return equipment_cost;
+          return equipment_cost > 0 ? equipment_cost : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return equipment_cost;
+        return equipment_cost > 0 ? equipment_cost : 0;
       }
     }
 
     if( field_name == "One Time Activation (OTP)" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return otps;
+          return otps > 0 ? otps : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return otps;
+        return otps > 0 ? otps : 0;
       }
     }
 
     if( field_name == "Monthly Monitoring Rate" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return monthly_monitoring;
+          return monthly_monitoring > 0 ? monthly_monitoring : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return monthly_monitoring;
+        return monthly_monitoring > 0 ? monthly_monitoring : 0;
       }      
       
     }
@@ -574,13 +574,13 @@ function Signing(hash) {
       if( specs_field_name.name === "equipment_cost" ) {
         //return jp_tax_equipment_cost;
         //return equipment_cost;
-        return inv_equipment_cost;
+        return inv_equipment_cost > 0 ? inv_equipment_cost : '0.00';
       }
 
       if( specs_field_name.name === "one_time_activation" ) {
         //return otps;
         //return jp_program_setup;
-        return inv_program_setup;
+        return inv_program_setup > 0 ? inv_program_setup : '0.00';        
       }
 
       if( specs_field_name.name === "total_due" ) {
@@ -590,7 +590,7 @@ function Signing(hash) {
       if( specs_field_name.name === "first_month_monitoring" ) {
         //return monthly_monitoring;
         //return jp_monthly_monitoring
-        return inv_monthly_monitoring
+        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : '0.00';
       }
 
       if( specs_field_name.name === "card_security_code" ) {
