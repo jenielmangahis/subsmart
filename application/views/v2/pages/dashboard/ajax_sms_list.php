@@ -10,7 +10,7 @@
     text-align: right;
 }
 .truncate-message {
-  width: 400px;
+  width: 345px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -49,6 +49,6 @@
 <?php } ?>
 <script>
 $(function(){
-    $("#sms_list_table").nsmPagination({itemsPerPage:3});
+    $("#sms_list_table").nsmPagination({itemsPerPage:5});
 });
 </script>
