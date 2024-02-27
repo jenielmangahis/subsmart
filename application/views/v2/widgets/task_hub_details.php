@@ -33,7 +33,7 @@ if ($tasks) :
                             </div>
                             <div class="col-12 col-lg-5 d-flex flex-column justify-content-evenly align-items-end">
                                 <span class="nsm-badge <?= $assignee_class ?>"><?= ($assignee ? 'Unassigned' : ucfirst($task->FName)) ?></span>
-                                <span class="content-subtitle d-block"><?= date('F d, Y', strtotime($task->estimated_date_complete)) ?></span>
+                                <span class="content-subtitle d-block mt-3"><?= date('F d, Y', strtotime($task->estimated_date_complete)) ?></span>
                             </div>
                         </div>
                     </div>
@@ -46,13 +46,8 @@ if ($tasks) :
 else :
     ?>
     <div class="nsm-empty">
-        <a class="btn-add-task" href="javascript:void(0);" style="text-decoration: none; color:#6a4a86 !important;">
-            <i class='bx bx-plus-circle'></i>
-            <br />
-            <span>Add Task</span>
-        </a>
-        <!-- <i class='bx bx-meh-blank'></i>
-        <span>All Caught Up!11</span> -->
+        <i class="bx bx-meh-blank"></i>
+        <span>There is currently no leaderboard recorded.</span>
     </div>
 <?php
 endif;

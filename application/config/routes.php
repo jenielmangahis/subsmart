@@ -97,6 +97,7 @@ $route['customer/status'] = 'Customer/settingStatus';
 $route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
 $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
+$route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -558,6 +559,7 @@ $route['accounting/customers/(:any)/export-transactions']['post'] = 'accounting_
 $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_controllers/customers/create_invoice/$1/$2';
 $route['accounting/customers/print-transaction/(:any)/(:any)'] = 'accounting_controllers/customers/print_transaction/$1/$2';
 $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/customers/send_transaction/$1/$2';
+$route['accounting/customers/delete_multi_customers'] = 'accounting_controllers/customers/delete_multi_customers';
 
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
@@ -732,6 +734,7 @@ $route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_con
 $route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_controllers/vendors/export_transactions/$1';
 $route['accounting/vendors/get-import-data']['post'] = 'accounting_controllers/vendors/get_import_data';
 $route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controllers/vendors/import_vendors_data';
+$route['accounting/vendor/_bill_mark_paid']['post'] = 'accounting_controllers/vendors/ajax_bill_mark_paid';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
@@ -1153,6 +1156,11 @@ $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
 $route['job/_create_job'] = 'Job/ajax_create_job';
 $route['job/add'] = 'Job/new_job_v2';
+$route['job/edit/(:num)'] = 'Job/edit_job_v2/$1';
+$route['job/_update_job_status'] = 'Job/ajax_update_job_status';
+$route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
+$route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
+$route['job/_update_job'] = 'Job/ajax_update_job';
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 

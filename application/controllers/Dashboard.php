@@ -125,8 +125,7 @@ class Dashboard extends Widgets {
     }
 
     public function index() {     
-        // load necessary model and functions
-        
+        // load necessary model and functions        
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
@@ -153,11 +152,9 @@ class Dashboard extends Widgets {
         ));
 
         $user_id = logged('id');
-        
-        $company_id = logged('company_id');
+        $companyId = logged('company_id');
+
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
-        // echo $this->db->last_query(); 
-        // echo "<br>";
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if ($this->page_data['activity_list_count'] > 5) {
             array_pop($this->page_data['activity_list']);
@@ -183,9 +180,6 @@ class Dashboard extends Widgets {
             $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
         }
-        
-        $companyId = logged('company_id');
-        $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
 
         //$this->page_data['events'] = $this->event_model->get_all_events(5);
         //$this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
@@ -201,7 +195,7 @@ class Dashboard extends Widgets {
         // $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
-        $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetsByCompanyId($companyId);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
             return $widget->wu_is_main == true;
         });
@@ -330,8 +324,8 @@ class Dashboard extends Widgets {
         $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
         $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
-
-        $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
+        $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
+        
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
@@ -565,6 +559,23 @@ class Dashboard extends Widgets {
             $upcomingJobs = $this->event_model->getRecentCustomer();
         }
         $data_arr = array("success" => true, "companies" => $companies, "upcomingJobs" => $upcomingJobs);
+        die(json_encode($data_arr));
+
+    }
+
+    public function ajax_recent_customers()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $cid = logged('company_id');
+
+        $recentCustomers = $this->AcsProfile_model->getAllRecentCustomerByCompanyId($cid, 10);
+        if( empty($recentCustomers) ){
+            $is_success = 0;
+        }
+
+        $data_arr = array("success" => $is_success, "recentCustomers" => $recentCustomers);
         die(json_encode($data_arr));
 
     }

@@ -191,7 +191,7 @@
                                                             </div>
                                                         </ul>
 
-                                                        <button type="button" class="nsm-button export-transactions">
+                                                        <button type="button" class="nsm-button export-transactions" data-id="<?= $vendorDetails->id; ?>">
                                                             <i class='bx bx-fw bx-export'></i> Export
                                                         </button>
                                                         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_vendor_transactions_modal">
@@ -433,6 +433,11 @@
 </div>
 <script>
 $(function(){
+    $(document).on('click', '.export-transactions', function(){
+        var vendor_id = $(this).attr('data-id');
+        location.href = base_url + 'accounting/vendors/export_transactions/'+vendor_id;
+    });
+
     $(document).on('click', '.bill-mark-paid', function(){
         var bill_id = $(this).attr('data-id');
         Swal.fire({            

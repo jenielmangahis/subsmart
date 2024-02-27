@@ -7164,5 +7164,44 @@ class Customer extends MY_Controller
 
         echo json_encode($customer);
     }
+
+    public function ajax_quick_add_customer(){
+        $is_valid = 1;
+        $msg      = '';      
+        $customer = [];  
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['first_name'] == '' || $post['last_name'] == ''){
+            $is_valid = 0;
+            $msg = 'Please enter customer name';
+        }
+
+        if( $post['email'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please enter customer email';
+        }
+
+        if( $post['customer_type'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please select customer type';
+        }
+
+        if( $is_valid == 1 ){
+            $post['company_id'] = $cid;
+            $post['status']     = 'New';
+
+            $prof_id = $this->customer_ad_model->add($post, "acs_profile");
+
+            $customer = [
+                'id' => $prof_id,
+                'name' => $post['first_name'] . ' ' . $post['last_name']
+            ];
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
     
 }

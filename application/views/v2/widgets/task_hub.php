@@ -13,6 +13,9 @@
             <a role="button" class="nsm-button btn-sm m-0 me-2 btn-complete-all" href="javascript:void(0);">
                 Clear All
             </a>
+            <a role="button" class="nsm-button btn-sm m-0 me-2 btn-add-task" href="javascript:void(0);">
+                Add Task
+            </a>
             <a role="button" class="nsm-button btn-sm m-0 me-2 btn-task-list" href="javascript:void(0);">
                 See More
             </a>
