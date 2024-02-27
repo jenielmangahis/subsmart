@@ -9,6 +9,12 @@
     vertical-align: top;
     text-align: right;
 }
+.truncate-message {
+  width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
 <?php if( $smsMessages ){ ?>
     <table class="nsm-table" id="sms_list_table">
@@ -24,7 +30,7 @@
                     <div class="content nsm-messages">
                         <div class="details">
                             <span class="content-title"><?= $sms['from']; ?></span>
-                            <span class="content-subtitle d-block"><?= $sms['msg']; ?></span>
+                            <span class="content-subtitle d-block truncate-message dashboard-sms-message" data-msg="<?= $sms['msg']; ?>"><?= $sms['msg']; ?></span>
                         </div>
                         <div class="sms-date">
                             <span class="content-subtitle d-block"><?= date("F j, Y g:i A", strtotime($sms['date'])); ?></span>
