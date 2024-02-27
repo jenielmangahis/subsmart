@@ -216,7 +216,7 @@ $('#apply-button').on('click', function() {
 });
 
 $('#new-credit-note').on('click', function() {
-    $.get('/accounting/get-other-modals/credit_memo_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/credit_memo_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
