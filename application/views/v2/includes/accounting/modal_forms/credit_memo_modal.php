@@ -1,3 +1,18 @@
+<style>
+.autocomplete-left{
+    display: inline-block;
+    width: 65px;    
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 75s%;
+    vertical-align: top;
+}
+.autocomplete-img {
+    height: 50px;
+    width: 50px;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($creditMemo)) : ?>
@@ -139,7 +154,8 @@
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="sales-rep">Sales Rep</label>
-                                    <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>">
+                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
+                                    <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>"> -->
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
@@ -491,3 +507,50 @@
     <!--end of modal-->
 </form>
 </div>
+<script>
+$(function(){
+    $('#sales-rep').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        dropdownParent: $('#creditMemoModal .modal-content'),
+        placeholder: 'Select User',
+        maximumSelectionLength: 5,
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+});
+</script>
