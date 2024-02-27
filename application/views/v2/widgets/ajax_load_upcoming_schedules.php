@@ -288,7 +288,11 @@
                             </td>
                             <td style="vertical-align: text-top;padding-top: 16px;">
                                 <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
-                                    <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
+                                    <?php if( trim($schedule_tags) != '' ){ ?>
+                                        <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
+                                    <?php }else{ ?>
+                                        <?= $schedule_number . ' : ' . trim($schedule_type); ?> 
+                                    <?php } ?>                                    
                                 </label>
                                 <?php if( $is_appointment_event == 0 ){ ?>
                                     <?php if( $schedule_customer_name != '' ){ ?>
