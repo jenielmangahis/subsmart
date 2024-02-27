@@ -7163,6 +7163,7 @@ class Accounting_modals extends MY_Controller
 
     private function credit_memo($data)
     {
+        $this->load->model('Users_model');
         $this->form_validation->set_rules('item[]', 'Item', 'required');
 
         if(isset($data['template_name'])) {
@@ -7206,6 +7207,8 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
+            $salesRep = $this->Users_model->getById($data['sales_rep']);
+
             $creditMemoData = [
                 'company_id' => logged('company_id'),
                 'customer_id' => $data['customer'],
@@ -7215,7 +7218,7 @@ class Accounting_modals extends MY_Controller
                 'billing_address' => nl2br($data['billing_address']),
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
-                'sales_rep' => $data['sales_rep'],
+                'sales_rep' => $salesRep->FName . ' ' . $salesRep->LName,
                 'message_credit_memo' => $data['message_credit_memo'],
                 'message_on_statement' => $data['message_on_statement'],
                 'adjustment_name' => $data['adjustment_name'],
