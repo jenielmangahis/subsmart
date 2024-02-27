@@ -12,7 +12,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Credit Notes message
+                            Indicate a return of funds in the event of an invoice error, incorrect or damaged products, purchase cancellation or otherwise specified circumstance.
                         </div>
                     </div>
                 </div>
@@ -232,6 +232,12 @@
 </div>
 
 <script>
+$(function(){
     const companyName = "<?=$company->business_name?>";
+    $(".select-all").click(function(){
+        $('.select-one').not(this).prop('checked', this.checked);
+    });
+});
+    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
