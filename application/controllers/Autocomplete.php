@@ -156,7 +156,7 @@ class Autocomplete extends MY_Controller
             $n = ucwords($l->firstname[0]) . ucwords($l->lastname[0]);
             $name_acro = "<div class='nsm-profile'><span>".$n."</span></div>";
 
-            if( $l->email_add == '' || $l->email_add != 'NULL' ){
+            if( $l->email_add == '' || $l->email_add == 'NULL' ){
                 $email = 'Not Specified';
             }else{
                 $email = $l->email_add;
