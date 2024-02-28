@@ -4663,6 +4663,8 @@ if (!function_exists('getTaskAssignedUser')) {
 
         if ($taskAssigned) {
             return ucwords($taskAssigned->assigned_user);
+        }else{
+            return 'No assigned user';
         }
     }
 }

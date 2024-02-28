@@ -33,7 +33,7 @@
                     data-value="<?php if(isset($profile_info)) { echo $profile_info->customer_type; } ?>" 
                 >
                     <option value="Residential">Residential</option>
-                    <option value="Business">Business</option>
+                    <option value="Commercial">Commercial</option>
                 </select>
             </div>
         </div>

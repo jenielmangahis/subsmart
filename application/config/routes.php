@@ -98,6 +98,7 @@ $route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
 $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 $route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
+$route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1519,6 +1520,7 @@ $route['autocomplete/_company_reasons'] = 'Autocomplete/company_reasons';
 $route['autocomplete/_company_furnishers'] = 'Autocomplete/company_furnishers';
 $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instructions';
 $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
+$route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';

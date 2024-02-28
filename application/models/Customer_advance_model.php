@@ -776,4 +776,35 @@ class Customer_advance_model extends MY_Model {
         $business = $query->row()->residential;
         return $residential + $business;
     }
+
+    public function createLead($data)
+    {
+        $this->db->insert('ac_leads', $data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+
+    public function getAllLeadsByCompanyId($company_id, $filters=array())
+    {
+
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('firstname !=', '');
+        $this->db->where('lastname !=', '');
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->group_start();
+                    $this->db->like('firstname', $filters['search'], 'both');
+                    $this->db->or_like('lastname', $filters['search'], 'both');
+                $this->db->group_end();
+            }
+        }
+
+        $this->db->order_by('firstname', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
