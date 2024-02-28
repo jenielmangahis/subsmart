@@ -1180,15 +1180,69 @@ add_footer_js(array(
         }); 
 
         $('#customer_id').change(function() {
-            var id = $(this).val();
-            load_customer_data(id);
+            var customer_leads = $(this).val();
+            var customerLeads  = customer_leads.split("/");  
+            var customer_lead_type = customerLeads[1];   
+            var customer_lead_id   = customerLeads[0];
+            
+            if( customer_lead_type == 'Customer' ){
+                load_customer_data(customer_lead_id);
+            }else{
+                load_lead_data(customer_lead_id)
+            }
         });
 
         <?php if ($default_customer_id > 0) { ?>
             load_customer_data("<?= $default_customer_id; ?>");
         <?php } ?>
 
-        function load_customer_data(customer_id){            
+        function load_lead_data(lead_id){  
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customer/_get_lead_data',
+                data: {lead_id:lead_id},
+                dataType:'json',
+                beforeSend: function(response) {
+                    
+                },
+                success: function(response) {
+                    setTimeout(function(){
+                        var lead_business_name = '';
+                        var lead_name    = response.firstname + ' ' + response.lastname;
+                        var lead_email   = response.email_add;
+                        var lead_phone   = response.phone_home;
+                        var lead_mobile  = response.phone_cell;
+                        var lead_address = response.address + ', ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip;
+
+                        if( lead_email == '' ){
+                            lead_email = 'Not Specified';
+                        }                        
+
+                        if( lead_phone == '' ){
+                            lead_phone = 'Not Specified';
+                        }
+
+                        if( lead_mobile == '' ){
+                            lead_mobile = 'Not Specified';
+                        }
+
+                        $("#estimate-customer-email").val(lead_email);
+                        $("#estimate-customer-mobile").val(lead_mobile);
+                        $("#job_location").val(lead_address);
+                        $('#business_name').val(lead_business_name);
+
+                        var map_source = 'http://maps.google.com/maps?q='+lead_address+'&output=embed';
+                        var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="370" width="100%" style=""></iframe>';
+                        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                    },200);                
+                },
+                error: function(e) {
+                    
+                }
+            });
+        }  
+
+        function load_customer_data(customer_id){  
             $.ajax({
                 type: "POST",
                 url: base_url + 'customer/_get_customer_data',
@@ -1204,7 +1258,7 @@ add_footer_js(array(
                         var customer_email = response.email;
                         var customer_phone = response.phone_h;
                         var customer_mobile = response.phone_m;
-                        var customer_address = response.mail_add + ' ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip_code;
+                        var customer_address = response.mail_add + ', ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip_code;
 
                         if( customer_business_name == '' ){
                             customer_business_name = 'Not Specified';
