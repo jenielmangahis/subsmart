@@ -1077,6 +1077,7 @@ $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
 $route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
+$route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
