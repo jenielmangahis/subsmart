@@ -154,6 +154,7 @@ class Estimate extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+        $post       = $this->input->post();
 
         //Generate Estimate Number
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
@@ -173,8 +174,21 @@ class Estimate extends MY_Controller
         $estimate_number = str_pad($next_num, 9, "0", STR_PAD_LEFT);
         $estimate_number = $prefix . $estimate_number;
 
+        $customer_lead = explode('/',$this->input->post('customer_id'));
+        $customer_id = 0;
+        $lead_id     = 0;
+
+        if( $customer_lead[1] == 'Customer' ){
+            $customer_id = $customer_lead[0];
+        }
+
+        if( $customer_lead[1] == 'Lead' ){
+            $lead_id = $customer_lead[0];
+        }
+
         $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
+            'customer_id' => $customer_id,
+            'lead_id' => $lead_id,
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
             'estimate_number' => $estimate_number,
@@ -392,7 +406,7 @@ class Estimate extends MY_Controller
 
 
     public function add()
-    {        
+    {           
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateSettings_model');       
 
