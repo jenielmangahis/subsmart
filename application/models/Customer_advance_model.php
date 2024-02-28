@@ -807,4 +807,14 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getLeadByLeadId($lead_id)
+    {
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('leads_id', $lead_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
 }

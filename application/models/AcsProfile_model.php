@@ -508,7 +508,7 @@ class AcsProfile_model extends MY_Model
         $this->db->from($this->table);
         $cust = $this->db->update($this->table, ['status' => 'Inactive']);
 		return $cust;        
-    }    
+    }        
 }
 
 /* End of file AcsProfile_model.php */
