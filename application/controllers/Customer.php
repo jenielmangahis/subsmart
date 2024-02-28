@@ -1851,7 +1851,7 @@ class Customer extends MY_Controller
     }
 
     public function add_advance($id=null)
-    {
+    {        
         $this->load->model('IndustryType_model');
 
         $this->hasAccessModule(9);
@@ -1961,18 +1961,7 @@ class Customer extends MY_Controller
             ),
             'table' => 'ac_system_package_type',
             'select' => '*',
-        );
-
-        // $get_customer_status = array(
-        //     'where' => array(
-        //             'company_id' => logged('company_id')
-        //     ),
-        //     'or_where' => array(
-        //         'company_id' => 0,
-        //     ),
-        //     'table' => 'acs_cust_status',
-        //     'select' => '*',
-        // );
+        );        
 
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
@@ -2000,7 +1989,17 @@ class Customer extends MY_Controller
     
         // fetch customer statuses
         // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-        // $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
+        $get_customer_status = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+            ),
+            'or_where' => array(
+                'company_id' => 0,
+            ),
+            'table' => 'acs_cust_status',
+            'select' => '*',
+        );
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
@@ -7189,6 +7188,61 @@ class Customer extends MY_Controller
         }
 
         if( $is_valid == 1 ){
+            $post['company_id'] = $cid;
+            $post['status']     = 'New';
+
+            $prof_id = $this->customer_ad_model->add($post, "acs_profile");
+
+            $customer = [
+                'id' => $prof_id,
+                'name' => $post['first_name'] . ' ' . $post['last_name']
+            ];
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_lead(){
+        $is_valid = 1;
+        $msg      = '';      
+        $customer = [];  
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['first_name'] == '' || $post['last_name'] == ''){
+            $is_valid = 0;
+            $msg = 'Please enter customer name';
+        }
+
+        if( $post['email'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please enter customer email';
+        }
+
+        if( $post['customer_type'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please select customer type';
+        }
+
+        if( $is_valid == 1 ){
+            $lead_data = [
+                'company_id' => $cid,
+                'firstname' => $post['first_name'],
+                'middlename' => $post['middlename'],
+                'lastname' => $post['last_name'],
+                'address' => $post['address'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip' => $post['zip_code'],
+                'phone_home' => $post['phone_home'],
+                'phone_cell' => $post['phone_cell'],
+                'email_add' => $post['email'],
+                'sss_num' => $post['sss_num'],
+                'status' => 'New',
+                'date_created' => date("Y-m-d H:i:s")
+            ];
             $post['company_id'] = $cid;
             $post['status']     = 'New';
 
