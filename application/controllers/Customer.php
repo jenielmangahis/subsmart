@@ -7175,7 +7175,7 @@ class Customer extends MY_Controller
         if( $lead->phome_cell != '' && $lead->phone_cell != 'NULL' ){
             $lead->phome_cell = formatPhoneNumber($lead->phome_cell);
         }else{
-            $customer->phone_m = 'Not Specified';
+            $lead->phome_cell = 'Not Specified';
         }          
 
         if( $lead->phone_home != '' && $lead->phone_home != 'NULL' ){
