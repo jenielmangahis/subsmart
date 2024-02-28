@@ -47,32 +47,20 @@ class Autocomplete extends MY_Controller
         $filter = ['search' => $search];
         $cid    = logged('company_id');
         $customers = $this->AcsProfile_model->getAllByCompanyId($cid, array(), $filter);  
-        
-        if (strlen($c->phone_h) == 32) {
-            $phone_m = substr($c->phone_h, 0, 12);
-        } else if (strlen($c->phone_h) >= 33) {
-            $phone_m = substr($c->phone_h, 20, 32);
-        }
 
         $result = array(); 
         foreach($customers as $c){            
             $c->id   = $c->prof_id;
+            $n = ucwords($c->first_name[0]) . ucwords($c->last_name[0]);
+            $name_acro = "<div class='nsm-profile'><span>".$n."</span></div>";
+
             if( $c->phone_m == '' ){
-                $phone_m = $c->phone_h;
-                if ($c->phone_h == '') {
-                    $phone_m = 'Not Specified';
-                } else if (strlen($c->phone_h) <= 31) {
-                    $phone_m = $c->phone_h;
-                } else if (strlen($c->phone_h) == 32) {
-                    $phone_m = substr($c->phone_h, 0, 12);
-                } else if (strlen($c->phone_h) >= 33) {
-                    $phone_m = substr($c->phone_h, 20, 32);
-                }
+                $phone_m = formatPhoneNumber($c->phone_h);                
             }else{
-                $phone_m = $c->phone_m;
+                $phone_m = formatPhoneNumber($c->phone_m);
             }
 
-            if( $c->email == '' ){
+            if( $c->email == '' || $c->email == 'NULL' ){
                 $email = 'Not Specified';
             }else{
                 $email = $c->email;
@@ -84,14 +72,14 @@ class Autocomplete extends MY_Controller
                 $address = 'Not Specified';    
             }
 
-
             $result[] = [
                 'id' => $c->prof_id,
                 'first_name' => $c->first_name,
                 'last_name' => $c->last_name,
                 'phone_m' => $phone_m,
                 'address' => $address,
-                'email' => $email
+                'email' => $email,
+                'acro' => $name_acro
             ]; 
         }
 
