@@ -453,10 +453,40 @@
                                         echo !empty($address) ? $address : 'Not Specified';
                                     ?>
                                 </td>
-                                <td><?= !empty($customer->phone_h) ? formatPhoneNumber($customer->phone_h) : 'Not Specified';?></td>
+                                <td>
+                                    <?php 
+                                        if(!empty($customer->phone_h)) {
+                                            if($customer->phone_h != "") {
+                                                if (ctype_space($customer->phone_h)) {
+                                                    echo 'Not Specified'; 
+                                                } else {
+                                                    echo formatPhoneNumber($customer->phone_h);
+                                                }
+                                            } else {
+                                                echo 'Not Specified'; 
+                                            }
+                                        } else {
+                                            echo 'Not Specified'; 
+                                        }
+                                        //!empty($customer->phone_h) ? formatPhoneNumber($customer->phone_h) : 'Not Specified'; 
+                                    ?>
+                                </td>
                                 <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
-                                <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
-                                <td></td>
+                                <td>
+                                    <?php
+                                        if(!empty($customer->customer_type)) {
+                                            if($customer->customer_type == 'Business') {
+                                                echo 'Commercial';
+                                            } else {
+                                                echo $customer->customer_type;
+                                            }
+                                        } else {
+                                            echo 'Not Specified'; 
+                                        }
+                                        //!empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; 
+                                    ?>
+                                </td>
+                                <td>0</td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
