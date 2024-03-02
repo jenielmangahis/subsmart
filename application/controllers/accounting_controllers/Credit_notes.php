@@ -111,7 +111,7 @@ class Credit_notes extends MY_Controller {
     }
 
     public function index()
-    {        
+    {                
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
@@ -169,7 +169,7 @@ class Credit_notes extends MY_Controller {
                 'attachments' => '',
                 'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
                 'po_number' => '',
-                'sales_rep' => '',
+                'sales_rep' => $creditMemo->sales_rep,
                 'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
                 'manage' => $manageCol
             ];

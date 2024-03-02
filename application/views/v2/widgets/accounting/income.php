@@ -44,6 +44,9 @@ endif;
                                 foreach ($upcomingInvoice as $UI) {
                                     if ($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid') {
                                         $total++;
+                                        if( date("Y-m-d") > $UI->due_date ){
+                                            $overdue++;
+                                        }
                                     }else if($UI->status == "Overdue"){
                                         $overdue++;
                                     }

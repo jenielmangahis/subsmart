@@ -14,21 +14,11 @@
 <div class="row">
     <div class="col-6 mt-3 company-select">
         <label for="">Customer <small>(optional)</small></label>
-        <select name="customer_id" id="" class="nsm-field mb-2 form-control d-select2-customer">     
-            <option value="">Select Customer</option>
-            <?php foreach($companyCustomers as $c){ ?>
-                <option value="<?= $c->prof_id; ?>"><?= $c->first_name.' '.$c->last_name; ?></option>
-            <?php } ?>
-        </select>
+        <select name="customer_id" id="taskhub-customer-id" class="nsm-field mb-2 form-control"></select>
     </div>
     <div class="col-6 mt-3 company-select">
         <label for="">Assigned to</label>
-        <select name="user_id" id="" class="nsm-field mb-2 form-control d-select2-user" required="">     
-            <option value="">Select User</option>
-            <?php foreach($companyUsers as $u){ ?>
-                <option value="<?= $u->id; ?>"><?= $u->FName.' '.$c->LName; ?></option>
-            <?php } ?>
-        </select>
+        <select name="user_id" id="taskhub-user-id" class="nsm-field mb-2 form-control" required=""></select>
     </div>
 </div>
 <div class="row">    
@@ -72,21 +62,96 @@
 <script>
 $(function(){
     CKEDITOR.replace('task-editor',{
-        height: '100px',
+        height: '200px',
     });
 
-    $('.d-select2-customer').select2({
-        placeholder: 'Select Customer',
-        allowClear: true,
-        dropdownParent: $('#modalAddTaskHub'),
-        width: 'resolve'            
+    $('#taskhub-customer-id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection
     });
 
-    $('.d-select2-user').select2({
+    $('#taskhub-user-id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
         placeholder: 'Select User',
-        allowClear: true,
+        maximumSelectionLength: 5,
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
         dropdownParent: $('#modalAddTaskHub'),
-        width: 'resolve'            
+        templateSelection: formatRepoSelectionUser
     });
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
 });
 </script>

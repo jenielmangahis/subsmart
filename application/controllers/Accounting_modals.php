@@ -7199,9 +7199,16 @@ class Accounting_modals extends MY_Controller
 
         $return = [];
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
-            $return['success'] = false;
-            $return['message'] = 'Error';
+            if( $data['customer'] == '' ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select customer';
+            }else{
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Error';
+            }
+            
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;

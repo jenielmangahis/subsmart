@@ -31,20 +31,7 @@ endif;
         <div class="nsm-widget-table">
             <div class="stat_content">
                 <div class="row row-pad">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-9">
-                                <h6>Customer Status</h6>
-                            </div>
-                            <div class="col-3" style="text-align: center;">
-                                <h6>Count</h6>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="customer_status">
-
-                    </div>
+                    <div id="customer_status"></div>
                 </div>
             </div>
         </div>

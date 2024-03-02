@@ -1078,6 +1078,7 @@ $route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
+$route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';

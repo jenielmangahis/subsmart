@@ -8,6 +8,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     font-size: 19px;
     padding: 10px;
 }
+.customer-link{
+  text-decoration:none;
+  color:inherit;
+}
 </style>
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('includes/notifications'); ?>
@@ -100,10 +104,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <td style="text-align:left;">Status:</td>
                           <td style="text-align: right;"><b><?= $estimate->status; ?></b></td>
                         </tr>
+                        <?php if( $estimate->customer_id > 0 ){ ?>
                         <tr>
                           <td style="text-align:left;">Business Name:</td>
                           <td style="text-align: right;"><b><?= $customer->business_name; ?></b></td>
                         </tr>
+                        <?php } ?>
                       </table>
                     </div>
                   </div>
@@ -119,12 +125,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>                    
                     <div class="col-md-4 col-12" style="font-size:16px;">
                         <h4 class="title-border">To</h4>
-                        <h4><i class="bx bx-buildings"></i>  <?= $customer->first_name . ' ' . $customer->last_name; ?></h4>
-                        <div class="">
-                          <span class=""><?= $customer->mail_add . " " . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
-                          <span class=""><span class=""><?= $customer->email; ?></span><br />
-                          <span class=""><span class=""><?= formatPhoneNumber($customer->phone_m); ?></span><br />
-                        </div>
+                        <?php if( $estimate->customer_id > 0 ){ ?>
+                          <a class="customer-link" href="<?= base_url('customer/preview_/'.$estimate->customer_id); ?>">
+                            <h4><i class='bx bx-user-pin'></i>  <?= $customer->first_name . ' ' . $customer->last_name; ?></h4>
+                          </a>
+                          <div class="">
+                            <span class=""><?= $customer->mail_add . "<br />" . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
+                            <span class=""><span class=""><?= $customer->email; ?></span><br />
+                            <span class=""><span class=""><?= formatPhoneNumber($customer->phone_m); ?></span><br />
+                          </div>
+                        <?php }elseif( $estimate->lead_id > 0 ){ ?>
+                          <a class="customer-link" href="<?= base_url('customer/add_lead/'.$estimate->lead_id); ?>">
+                            <h4><i class='bx bx-user-pin'></i>  <?= $lead->firstname . ' ' . $lead->lastname; ?></h4>
+                          </a>
+                          <div class="">
+                            <span class=""><?= $lead->address . "<br />" . $lead->city.', '. $lead->state .' '. $lead->zip;  ?></span><br />
+                            <span class=""><span class=""><?= $lead->email_add; ?></span><br />
+                            <span class=""><span class=""><?= formatPhoneNumber($lead->phone_cell); ?></span><br />
+                          </div>
+                        <?php } ?>
                     </div>
                   </div>
                   <div class="row mt-4">

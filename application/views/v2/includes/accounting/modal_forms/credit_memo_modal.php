@@ -400,30 +400,12 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div class="row">
-                                                        <div class="col-8">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($creditMemo) ? $creditMemo->adjustment_name : ''?>">
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_value), 2, '.', ',') : ''?>">
-                                                        </div>
-                                                        <div class="col-1 d-flex align-items-center">
-                                                            <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
-                                                        </div>
-                                                    </div>
+                                                    <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($creditMemo) ? $creditMemo->adjustment_name : ''?>" style="display:inline-block; width:80%;">
+                                                    <span id="help-popover-adjustment" class="bx bx-fw bx-help-circle"></span>
                                                 </td>
                                                 <td>
-                                                    <span class="transaction-adjustment">
-                                                    <?php if(isset($creditMemo)) : ?>
-                                                        <?php
-                                                        $amount = '$'.number_format(floatval($creditMemo->adjustment_value), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                        ?>
-                                                    <?php else : ?>
-                                                        $0.00
-                                                    <?php endif; ?>
-                                                    </span>
+                                                    <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_value), 2, '.', ',') : ''?>" style="width:50%;float:right;direction:rtl;">
+                                                    <span class="transaction-adjustment" style="display:none;"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -509,6 +491,15 @@
 </div>
 <script>
 $(function(){
+    $('#help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
+    
     $('#sales-rep').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',

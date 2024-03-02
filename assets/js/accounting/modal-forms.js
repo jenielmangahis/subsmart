@@ -10944,6 +10944,9 @@ const submitModalForm = (event, el) => {
 
                 if(submitType === 'save-and-new') {
                     clearForm();
+                    if( modalId == 'creditMemoModal' ){
+
+                    }
                 }
 
                 if( type == 'check' ){
@@ -13285,6 +13288,12 @@ const clearForm = () => {
     $("#print_later").prop("checked", false).change();
     $('#account-balance').text('$0.00');
     $('.delete-row').click();
+    alert('modal' + modalName);
+    if( modalName == 'creditMemoModal' ){
+        $('#sales-rep').empty().change();
+        $('#billing-address').val('');
+        $('#purchase-order-no').val('');
+    }    
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

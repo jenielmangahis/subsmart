@@ -16,6 +16,9 @@
 {
     display: none;
 }
+.MAP_LOADER_CONTAINER{
+    min-height: 350px;
+}
 
 @media only screen and (max-device-width: 600px) {
     .label-element{
@@ -183,82 +186,105 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
-                                                <input type="text" name="workorder_number" id="workorder-number" class="nsm-field form-control" value="<?= $prefix . $next_num; ?>" readonly required />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="row g-3">
-                                                    <div class="col-6">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Select Customer</label>
+                                            <div class="col-6 col-md-4">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-12">
+                                                        <input type="hidden" name="acs_fullname" id="acs_fullname">
+                                                        <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name . ' ' . $companyDet->last_name; ?>">
+                                                        <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
+                                                        <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
+                                                        <!-- <hr> -->
+                                                    </div>                                                    
+                                                    <div class="col-12 col-md-12 mb-4">
+                                                        <div class="row g-3">
+                                                            <div class="col-6">
+                                                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                                            </div>
+                                                        </div>
+                                                        <?php 
+                                                            $cust_lead_name = '';
+                                                            $cust_lead_id   = '';
+                                                            $ssn            = '';
+                                                            $job_location   = '';
+                                                            $business_name  = '';
+                                                            $email          = '';
+                                                            $phone_m        = '';
+                                                            $phone_h        = '';
+                                                            $password       = '';
+                                                            $cust_lead      = '';
+
+                                                            if( $estimate->customer_id > 0 ){
+                                                                $cust_lead_name = $customer->first_name . ' ' . $customer->last_name;
+                                                                $cust_lead_id = $estimate->customer_id;
+                                                                $ssn = $customer->ssn;
+                                                                $business_name = $customer->business_name;
+                                                                $email = $customer->email;
+                                                                $job_location = $customer->mail_add . ', ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code;
+                                                                $phone_m = $customer->phone_m;
+                                                                $phone_h = $customer->phone_h;
+                                                                $password = $acsAccess ? $acsAccess->access_password : '';
+                                                                $cust_lead = 'Customer';
+                                                            }elseif( $estimate->lead_id > 0 ){
+                                                                $cust_lead_name = $lead->firstname . ' ' . $lead->lastname;
+                                                                $cust_lead_id = $estimate->lead_id;
+                                                                $ssn = $lead->ssn_num;
+                                                                $email = $lead->email_add;
+                                                                $job_location = $lead->address . ', ' . $lead->city . ', ' . $lead->state . ' ' . $custleadomer->zip;
+                                                                $phone_m = $lead->phone_cell;
+                                                                $phone_h = $lead->phone_home;
+                                                                $cust_lead = 'Lead';
+                                                            }
+                                                        ?>
+                                                        <input type="text" class="form-control" name="cust_lead_name" value="<?= $cust_lead_name; ?>" readonly="" />
+                                                        <input type="hidden" class="form-control" name="cust_lead_id" value="<?= $cust_lead_id; ?>" />
+                                                        <input type="hidden" class="form-control" name="cust_lead" value="<?= $cust_lead; ?>" />
                                                     </div>
-                                                    <div class="col-6 text-end">
-                                                        <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link" data-bs-toggle="modal" data-bs-target="#new_customer_modal">Add New Customer</a>
+                                                    <?php if( $estimate->customer_id > 0 && ($customer->customer_type == 'Business' || $customer->customer_type == 'Commercial') ){ ?>
+                                                        <div class="col-12 col-md-12 mb-4">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
+                                                            <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?= $business_name; ?>" />
+                                                        </div>
+                                                    <?php } ?>
+
+                                                    <div class="col-6 col-md-6 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Social Security Number</label>
+                                                        <input type="text" name="security_number" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" value="<?= $ssn; ?>" required />
+                                                    </div>
+                                                    <div class="col-6 col-md-6 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                                                        <input type="email" name="email" id="email" class="nsm-field form-control" required value="<?= $email; ?>" />
+                                                    </div>
+
+                                                    <div class="col-12 col-md-6 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
+                                                        <input type="text" name="phone_number" id="phone_no" class="nsm-field form-control number-field" value="<?= $phone_h; ?>" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
+                                                        <input type="text" name="mobile_number" id="mobile_no" class="nsm-field form-control number-field" value="<?= $phone_m; ?>" />
+                                                    </div>
+
+                                                    <div class="col-12 col-md-8 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
+                                                        <input type="text" name="job_location" id="job_location" class="nsm-field form-control" readonly="" value="<?= $job_location; ?>" />
+                                                    </div>
+
+                                                    <div class="col-12 col-md-4 mb-4">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                                                        <input type="text" name="password" id="password" class="nsm-field form-control" value="<?= $password; ?>" required />
                                                     </div>
                                                 </div>
-                                                <select class="nsm-field form-select select2" name="customer_id" id="sel-customer">
-                                                    <option value="0">- none -</option>
-                                                    <?php foreach ($customers as $c) { ?>
-                                                        <option value="<?= $c->prof_id; ?>" <?php if($estimate->customer_id == $c->prof_id){ echo 'selected'; } ?>><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number</label>
-                                                <input type="text" name="security_number" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" value="<?php echo $customer->ssn; ?>" required />
+                                            <div class="col-6 col-md-8">
+                                                <div class="col-md-12 MAP_LOADER_CONTAINER">                                        
+                                                    <div class="text-center MAP_LOADER">
+                                                        <?php $map_url = 'http://maps.google.com/maps?q='.$job_location.'&output=embed'; ?>
+                                                        <iframe id="TEMPORARY_MAP_VIEW" src="<?= $map_url; ?>" height="370" width="100%" style=""></iframe>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
-                                                <input type="text" name="birthdate" id="birthdate" class="nsm-field form-control" required value="<?php echo date("m/d/Y", strtotime($customer->date_of_birth)); ?>" />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                                                <input type="text" name="phone_number" id="phone_no" class="nsm-field form-control number-field" value="<?php echo $customer->phone_h; ?>"  />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                                                <input type="text" name="mobile_number" id="mobile_no" class="nsm-field form-control number-field" value="<?php echo $customer->phone_m; ?>" />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Email</label>
-                                                <input type="email" name="email" id="email" class="nsm-field form-control" required value="<?php echo $customer->email; ?>"  />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                                                <input type="text" name="password" id="password" class="nsm-field form-control" value="<?= $acsAccess ? $acsAccess->access_password : 'Not Specified'; ?>" required />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
-                                                <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="<?php echo $customer->business_name; ?>" />
-                                            </div>
-                                            <div class="col-12 col-md-3">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
-                                                <input type="text" name="job_location" id="job_location" class="nsm-field form-control" required value="<?php echo $customer->mail_add.', '.$customer->city.', '.$customer->state.', '.$customer->zip_code; ?>"  />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city" id="city" class="nsm-field form-control" required  value="<?php echo $customer->city; ?>" />
-                                            </div>
-                                            <div class="col-12 col-md-3">
-                                                <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                                                <input type="text" name="state" id="state" class="nsm-field form-control" required value="<?php echo $customer->state; ?>"  />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
-                                                <input type="text" name="zip_code" id="zip" class="nsm-field form-control" required  value="<?php echo $customer->zip_code; ?>" />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Cross Street</label>
-                                                <input type="text" name="cross_street" id="cross_street" class="nsm-field form-control" value="<?php echo $customer->cross_street; ?>" />
-                                            </div>
-                                            <div class="col-12">
-                                                <input type="hidden" name="acs_fullname" id="acs_fullname">
-                                                <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name . ' ' . $companyDet->last_name; ?>">
-                                                <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
-                                                <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
-                                                <!-- <hr> -->
-                                            </div>
-
+                                        </div>
+                                        <div class="row g-3 mt-5">
                                             <?php 
                                             // print_r($fieldsName);
                                             foreach ($fieldsName as $field) { ?>

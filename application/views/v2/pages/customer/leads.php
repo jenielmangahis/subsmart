@@ -35,7 +35,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4">
+                        <form action="<?php echo base_url('customer/leads') ?>" method="GET">
+                            <div class="nsm-field-group search">
+                                <input type="search" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Leads" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Add New Lead
@@ -48,12 +55,9 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
-                            <td data-name="City">City</td>
-                            <td data-name="State">State</td>
-                            <td data-name="Assigned To">Assigned To</td>
-                            <td data-name="Email">Email</td>
-                            <td data-name="SSS Number">SSS Number</td>
-                            <td data-name="Phone">Phone</td>
+                            <td data-name="Address">Address</td>
+                            <td data-name="SalesRep">Sales Representative</td>                            
+                            <td data-name="LeadType">Lead Type</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -65,28 +69,19 @@
                             <?php
                             foreach ($leads as $lead) :
                                 switch($lead->status):
-                                    case 'Lead':
+                                    case 'New':
                                         $badge = 'primary';
                                         break;
-                                    case 'Attempted Contact':
+                                    case 'Contacted':
                                         $badge = 'secondary';
                                         break;
                                     case 'Follow Up':
                                         $badge = 'secondary';
                                         break;
-                                    case 'Assigned':
+                                    case 'Converted':
                                         $badge = 'success';
-                                        break;
-                                    case 'Appointed':
-                                        $badge = 'success';
-                                        break;
-                                    case 'Presented':
-                                        $badge = 'success';
-                                        break;
-                                    case 'Pending':
-                                        $badge = 'secondary';
-                                        break;
-                                    case 'Not Interested':
+                                        break;                                   
+                                    case 'Closed':
                                         $badge = 'error';
                                         break;
                                     default:
@@ -96,17 +91,23 @@
                             ?>
                                 <tr>
                                     <td>
+                                        <?php 
+                                            $n = ucwords($lead->firstname[0]) . ucwords($lead->lastname[0]);
+                                        ?>
                                         <div class="table-row-icon">
-                                            <i class='bx bx-chart'></i>
+                                            <div class='nsm-profile'><span><?= $n; ?></span></div>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $lead->firstname.' '.$lead->lastname; ?></td>
-                                    <td><?= $lead->city ?></td>
-                                    <td><?= $lead->state ?></td>
-                                    <td><?= $lead->FName. ' '. $lead->LName; ?></td>
-                                    <td><?= $lead->email_add; ?></td>
-                                    <td><?= $lead->sss_num; ?></td>
-                                    <td><?= $lead->phone_cell; ?></td>
+                                    <td class="fw-bold nsm-text-primary">
+                                        <?= $lead->firstname.' '.$lead->lastname; ?><br />
+                                        <small class="text-muted"><i class='bx bx-envelope'></i> <?=  $lead->email_add; ?></small>
+                                    </td>
+                                    <td>
+                                        <i class='bx bx-map-pin' ></i> <?= $lead->address; ?><br />
+                                        <small class="text-muted"><?= $lead->city . ', ' . $lead->state . ' ' . $lead->zip; ?><small>
+                                    </td>
+                                    <td><?= $lead->FName ? $lead->FName . ' ' . $lead->LName : 'Not Specified';  ?></td>
+                                    <td><?= $lead->lead_type ? $lead->lead_type : 'Not Specified'; ?></td>
                                     <td><span class="nsm-badge row-lead-status <?= $badge ?>"><?= $lead->status; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
@@ -116,6 +117,9 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item btn-convert-to-customer" data-id="<?= $lead->leads_id; ?>" href="javascript:void(0);">Convert to Customer</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item lead-send-sms-message" data-customer-name="<?= ucwords($lead->firstname) . ' ' . ucwords($lead->lastname) ?>" data-id="<?= $lead->leads_id; ?>" data-phone="<?= $lead->phone_cell; ?>" href="javascript:void(0);">Send SMS</a>
@@ -252,6 +256,58 @@
     $(document).ready(function() {
         $(".nsm-table").nsmPagination({
             itemsPerPage: 10,
+        });
+
+        $("#search_field").on("input", debounce(function() {
+            let _form = $(this).closest("form");
+
+            _form.submit();
+        }, 1500));
+
+        $('.btn-convert-to-customer').on('click', function(){
+            var lead_id = $(this).attr('data-id');
+            Swal.fire({
+                title: 'Confirmation',
+                text: "Convert the selected lead to customer?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "customer/_convert_lead_to_customer",
+                        data: {
+                            lead_id: lead_id
+                        },
+                        dataType:'json',
+                        success: function(r) {
+                            if(r.is_success == 1){
+                                Swal.fire({
+                                    text: "Lead was successfully converted to customer",
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    cancelButtonText: 'Reload List',
+                                    confirmButtonText: "Edit New Customer",
+                                }).then((swal_result) => {
+                                    if(swal_result.value){
+                                        location.href = base_url + 'customer/add_advance/'+r.prof_id;
+                                    }else{
+                                        location.reload();
+                                    }
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: r.msg
+                                });
+                            }
+                        },
+                    });
+                }
+            });
         });
 
         $(document).on('click', '.lead-send-sms-message', function(){

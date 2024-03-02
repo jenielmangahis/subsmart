@@ -40,7 +40,7 @@ class Estimate extends MY_Controller
     }
 
     public function index($tab = '')
-    {
+    {        
         $is_allowed = $this->isAllowedModuleAccess(18);
         if (!$is_allowed) {
             $this->page_data['module'] = 'estimate';
@@ -2048,6 +2048,7 @@ class Estimate extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');
+        $this->load->model('Customer_advance_model');
 
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
@@ -2056,9 +2057,11 @@ class Estimate extends MY_Controller
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
             // $client   = $this->Clients_model->get_company($company_id);
             $client   = $this->Clients_model->getCompanyCompanyId($company_id);
+            $lead     = $this->Customer_advance_model->getLeadByLeadId($estimate->lead_id);
 
             $this->page_data['customer'] = $customer;
-            $this->page_data['client'] = $client;
+            $this->page_data['lead']     = $lead;
+            $this->page_data['client']   = $client;
             $this->page_data['estimate'] = $estimate;
 
             // $this->page_data['items_data'] = $this->estimate_model->getItems($id);
@@ -2084,14 +2087,35 @@ class Estimate extends MY_Controller
             $this->load->model('AcsProfile_model');
             $this->load->model('Clients_model');
             $this->load->model('Business_model');
+            $this->load->model('Customer_advance_model');
 
             $company_id = $estimate->company_id;
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $lead      = $this->Customer_advance_model->getLeadByLeadId($estimate->lead_id);
             //$client   = $this->Clients_model->getById($company_id);
             $business = $this->business_model->getByCompanyId($company_id);
             // $estimateItems = unserialize($estimate->estimate_items);
             $estimateItems = $this->estimate_model->getEstimatesItems($id);
 
+            if( $estimate->customer_id > 0 ){
+                $firstname = $customer->first_name;
+                $lastname  = $customer->last_name;
+                $phone_m   = $customer->phone_m;
+                $email     = $lead->email;
+                $address = $customer->mail_add;
+                $city    = $customer->city;
+                $state   = $customer->state;
+                $zip     = $customer->zip_code;
+            }elseif( $estimate->lead_id > 0 ){
+                $firstname = $lead->firstname;
+                $lastname  = $lead->lastname;
+                $phone_m   = $lead->phone_cell;
+                $email     = $lead->email_add;
+                $address = $lead->address;
+                $city    = $lead->city;
+                $state   = $lead->state;
+                $zip     = $lead->zip;
+            }
             $html = '
             <table style="padding-top:-40px;">
                 <tr>
@@ -2103,11 +2127,11 @@ class Estimate extends MY_Controller
                         <span class="">EMAIL: '.$business->business_email.'</span><br />
                         <span class="">PHONE: '.formatPhoneNumber($business->business_phone).'</span>
                         <br/><br /><br />
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$customer->first_name . ' ' .$customer->last_name.'</span></h5>
+                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$firstname . ' ' .$lastname.'</span></h5>
                         <br />
-                        <span class="">'.$customer->mail_add. "<br />" .$customer->city. ", " . $customer->state . " " .$customer->zip_code.'</span><br />
-                        <span class="">EMAIL: '.$customer->email.'</span><br />
-                        <span class="">PHONE: '.formatPhoneNumber($customer->phone_m).'</span>
+                        <span class="">'.$address. "<br />" .$city. ", " . $state . " " .$zip.'</span><br />
+                        <span class="">EMAIL: '.$email.'</span><br />
+                        <span class="">PHONE: '.formatPhoneNumber($phone_m).'</span>
                     </td>
                     <td colspan=1></td>
                     <td style="text-align:right;">

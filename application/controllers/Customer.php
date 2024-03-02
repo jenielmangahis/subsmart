@@ -2027,13 +2027,26 @@ class Customer extends MY_Controller
 
     public function leads()
     {   
-        $this->page_data['page']->title = 'Leads Manager List';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->hasAccessModule(14);
         
         $user_id = logged('id');
-        $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+
+        $search = '';
+        if (!empty(get('search'))) {
+            $search = get('search');
+            $filter[] = ['field' => 'ac_leads.firstname', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leads.lastname', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leads.status', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leadtypes.lead_name', 'value' => get('search')];
+            $leads = $this->customer_ad_model->get_leads_data($filter);
+        }else{
+            $leads = $this->customer_ad_model->get_leads_data();
+        }
+
+        $this->page_data['page']->title = 'Leads Manager List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['search'] = $search;
+        $this->page_data['leads'] = $leads;
         $this->load->view('v2/pages/customer/leads', $this->page_data);
     }
 
@@ -7211,7 +7224,8 @@ class Customer extends MY_Controller
         echo json_encode($lead);
     }
 
-    public function ajax_quick_add_customer(){
+    public function ajax_quick_add_customer()
+    {
         $is_valid = 1;
         $msg      = '';      
         $customer = [];  
@@ -7250,7 +7264,8 @@ class Customer extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function ajax_quick_add_lead(){
+    public function ajax_quick_add_lead()
+    {
         $is_valid = 1;
         $msg      = '';      
         $customer = [];  
@@ -7295,6 +7310,31 @@ class Customer extends MY_Controller
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_convert_lead_to_customer()
+    {
+        $is_success = 0;
+        $msg        = 'Cannot find data';
+        $prof_id    = 0;
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $lead = $this->customer_ad_model->getByLeadId($post['lead_id']);
+        if( $lead ){
+            $result = $this->customer_ad_model->convertLeadToCustomer($post['lead_id'], $cid, $uid);
+            
+            if( $result['is_converted'] == 1 ){
+                $prof_id = $result['prof_id'];
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'prof_id' => $prof_id];
         echo json_encode($json_data);
     }
     
