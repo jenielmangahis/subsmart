@@ -183,8 +183,8 @@ function ringCentralAllMessages($ringCentral, $date_from)
     $apiResponse = $platform->get("/restapi/v1.0/account/~/extension/~/message-store", $queryParams);
     $jsonResponse = json_decode($apiResponse->text());
     foreach (array_reverse($jsonResponse->records) as $r){
-        $sms_message = explode('-', $r->subject);
-        $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
+        //$sms_message = explode('-', $r->subject);
+        $replies[] = ['msg' => trim($r->subject), 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
     } 
 
     return array_reverse($replies);

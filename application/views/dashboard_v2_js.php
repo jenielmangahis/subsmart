@@ -66,14 +66,8 @@ $(document).ready(function() {
                 if(recentCustomers[j].last_name[0]){
                     nn = recentCustomers[j].last_name[0]+''+recentCustomers[j].first_name[0];
                 }
-
-                var customer_type = 'Commercial'
-                if( recentCustomers[j].customer_type == 'Residential' ){
-                    customer_type = 'Residential';
-                }
-
                 $("#recent-customer-container").append(
-                    '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+recentCustomers[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+recentCustomers[j].last_name+' '+recentCustomers[j].first_name+'</span><span class="content-subtitle d-block">'+recentCustomers[j].city+', '+recentCustomers[j].state+' '+recentCustomers[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">'+customer_type+'</span><span class="content-subtitle d-block mt-1">'+recentCustomers[j].email+'</span></div></div></div>'
+                    '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+recentCustomers[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+recentCustomers[j].last_name+' '+recentCustomers[j].first_name+'</span><span class="content-subtitle d-block">'+recentCustomers[j].city+', '+recentCustomers[j].state+' '+recentCustomers[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">'+recentCustomers[j].customer_type+'</span><span class="content-subtitle d-block mt-1">'+recentCustomers[j].email+'</span></div></div></div>'
                 )
             }
         }

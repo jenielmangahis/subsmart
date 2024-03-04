@@ -1445,10 +1445,9 @@ class Debug extends MY_Controller {
         $this->load->model('RingCentralAccounts_model');
 
         $cid = logged('company_id');
-        $cid = 2;
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
-        $date_from = '2021-04-03';
+        $date_from = '2022-04-03';
         $messages  = ringCentralAllMessages($ringCentral, $date_from);
 
         echo "<pre>";
