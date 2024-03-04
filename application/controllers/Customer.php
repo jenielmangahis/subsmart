@@ -1851,7 +1851,7 @@ class Customer extends MY_Controller
     }
 
     public function add_advance($id=null)
-    {
+    {        
         $this->load->model('IndustryType_model');
 
         $this->hasAccessModule(9);
@@ -1961,18 +1961,7 @@ class Customer extends MY_Controller
             ),
             'table' => 'ac_system_package_type',
             'select' => '*',
-        );
-
-        // $get_customer_status = array(
-        //     'where' => array(
-        //             'company_id' => logged('company_id')
-        //     ),
-        //     'or_where' => array(
-        //         'company_id' => 0,
-        //     ),
-        //     'table' => 'acs_cust_status',
-        //     'select' => '*',
-        // );
+        );        
 
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
@@ -2000,7 +1989,17 @@ class Customer extends MY_Controller
     
         // fetch customer statuses
         // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-        // $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
+        $get_customer_status = array(
+            'where' => array(
+                    'company_id' => logged('company_id')
+            ),
+            'or_where' => array(
+                'company_id' => 0,
+            ),
+            'table' => 'acs_cust_status',
+            'select' => '*',
+        );
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
@@ -2028,13 +2027,26 @@ class Customer extends MY_Controller
 
     public function leads()
     {   
-        $this->page_data['page']->title = 'Leads Manager List';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->hasAccessModule(14);
         
         $user_id = logged('id');
-        $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+
+        $search = '';
+        if (!empty(get('search'))) {
+            $search = get('search');
+            $filter[] = ['field' => 'ac_leads.firstname', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leads.lastname', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leads.status', 'value' => get('search')];
+            $filter[] = ['field' => 'ac_leadtypes.lead_name', 'value' => get('search')];
+            $leads = $this->customer_ad_model->get_leads_data($filter);
+        }else{
+            $leads = $this->customer_ad_model->get_leads_data();
+        }
+
+        $this->page_data['page']->title = 'Leads Manager List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['search'] = $search;
+        $this->page_data['leads'] = $leads;
         $this->load->view('v2/pages/customer/leads', $this->page_data);
     }
 
@@ -7123,35 +7135,35 @@ class Customer extends MY_Controller
             $customer->phone_h = 'Not Specified';
         }     
 
-        if( $customer->business_name == '' || $customer->business_name == NULL ){
+        if( $customer->business_name == '' || $customer->business_name == 'NULL' ){
             $customer->business_name = 'Not Specified';
         }
         
-        if( $customer->date_of_birth == '' || $customer->date_of_birth == NULL ){
+        if( $customer->date_of_birth == '' || $customer->date_of_birth == 'NULL' ){
             $customer->date_of_birth = date("m/d/Y");
         } 
 
-        if( $customer->ssn == '' || $customer->ssn == NULL ){
+        if( $customer->ssn == '' || $customer->ssn == 'NULL' ){
             $customer->ssn = 'Not Specified';
         } 
         
-        if( $customer->state == '' || $customer->state == NULL ){
+        if( $customer->state == '' || $customer->state == 'NULL' ){
             $customer->state = '';
         }
 
-        if( $customer->country == '' || $customer->country == NULL ){
+        if( $customer->country == '' || $customer->country == 'NULL' ){
             $customer->country = 'Not Specified';
         }
 
-        if( $customer->country == '' || $customer->country == NULL ){
+        if( $customer->country == '' || $customer->country == 'NULL' ){
             $customer->country = 'Not Specified';
         }
 
-        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+        if( $customer->cross_street == '' || $customer->cross_street == 'NULL' ){
             $customer->cross_street = '';
         }
 
-        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+        if( $customer->cross_street == '' || $customer->cross_street == 'NULL' ){
             $customer->cross_street = '';
         }
 
@@ -7165,7 +7177,55 @@ class Customer extends MY_Controller
         echo json_encode($customer);
     }
 
-    public function ajax_quick_add_customer(){
+    public function ajax_get_lead_data()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $lead_id = $this->input->post('lead_id');
+        $company_id  = logged('company_id');
+
+        $lead = $this->Customer_advance_model->getLeadByLeadId($lead_id); 
+        if( $lead->phome_cell != '' && $lead->phone_cell != 'NULL' ){
+            $lead->phome_cell = formatPhoneNumber($lead->phome_cell);
+        }else{
+            $lead->phome_cell = 'Not Specified';
+        }          
+
+        if( $lead->phone_home != '' && $lead->phone_home != 'NULL' ){
+            $lead->phone_home = formatPhoneNumber($lead->phone_home);
+        }else{
+            $lead->phone_home = 'Not Specified';
+        } 
+        
+        if( $lead->date_of_birth == '' || $lead->date_of_birth == 'NULL' ){
+            $lead->date_of_birth = date("m/d/Y");
+        } 
+
+        if( $lead->sss_num == '' || $lead->sss_num == 'NULL' ){
+            $lead->sss_num = 'Not Specified';
+        } 
+        
+        if( $lead->state == '' || $lead->state == 'NULL' ){
+            $lead->state = '';
+        }
+
+        if( $lead->country == '' || $lead->country == 'NULL' ){
+            $lead->country = 'Not Specified';
+        }
+
+        if( $lead->county == '' || $customleader->county == 'NULL' ){
+            $lead->county = 'Not Specified';
+        }
+
+        if( $lead->address == '' || $lead->address == 'NULL' ){
+            $lead->lead = '';
+        }
+
+        echo json_encode($lead);
+    }
+
+    public function ajax_quick_add_customer()
+    {
         $is_valid = 1;
         $msg      = '';      
         $customer = [];  
@@ -7201,6 +7261,80 @@ class Customer extends MY_Controller
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_quick_add_lead()
+    {
+        $is_valid = 1;
+        $msg      = '';      
+        $customer = [];  
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['first_name'] == '' || $post['last_name'] == ''){
+            $is_valid = 0;
+            $msg = 'Please enter lead name';
+        }
+
+        if( $post['email'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please enter lead email';
+        }
+
+        if( $is_valid == 1 ){
+            $lead_data = [
+                'company_id' => $cid,
+                'firstname' => $post['first_name'],
+                'middlename' => $post['middle_name'],
+                'lastname' => $post['last_name'],
+                'address' => $post['address'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip' => $post['zip_code'],
+                'phone_home' => $post['phone_home'],
+                'phone_cell' => $post['phone_cell'],
+                'email_add' => $post['email'],
+                'sss_num' => $post['sss_num'],
+                'status' => 'New',
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $lead_id = $this->customer_ad_model->createLead($lead_data);
+
+            $customer = [
+                'id' => $lead_id,
+                'name' => $post['first_name'] . ' ' . $post['last_name']
+            ];
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_convert_lead_to_customer()
+    {
+        $is_success = 0;
+        $msg        = 'Cannot find data';
+        $prof_id    = 0;
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $lead = $this->customer_ad_model->getByLeadId($post['lead_id']);
+        if( $lead ){
+            $result = $this->customer_ad_model->convertLeadToCustomer($post['lead_id'], $cid, $uid);
+            
+            if( $result['is_converted'] == 1 ){
+                $prof_id = $result['prof_id'];
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'prof_id' => $prof_id];
         echo json_encode($json_data);
     }
     

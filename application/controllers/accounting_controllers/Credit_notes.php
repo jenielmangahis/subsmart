@@ -111,7 +111,7 @@ class Credit_notes extends MY_Controller {
     }
 
     public function index()
-    {
+    {                
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
@@ -169,7 +169,7 @@ class Credit_notes extends MY_Controller {
                 'attachments' => '',
                 'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
                 'po_number' => '',
-                'sales_rep' => '',
+                'sales_rep' => $creditMemo->sales_rep,
                 'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
                 'manage' => $manageCol
             ];
@@ -204,6 +204,30 @@ class Credit_notes extends MY_Controller {
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['notes'] = $notes;
         $this->load->view('accounting/sales/credit_notes', $this->page_data);
+    }
+
+    public function ajax_delete_selected()
+    {
+        $post = $this->input->post();
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        foreach ($post['creditNotes'] as $credit_note_id) {
+            $this->accounting_credit_memo_model->delete($credit_note_id);
+            $total_deleted++;
+        }
+
+        if( $total_deleted > 0 ){
+            $msg = '';
+            $is_success = 1;
+        }else{
+            $msg = 'Credit note data not found';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
+        exit;
     }
 
     public function export()

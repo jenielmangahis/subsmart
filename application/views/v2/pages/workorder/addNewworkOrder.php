@@ -220,12 +220,7 @@
                                                 </div>
                                                 <div class="row g-3">
                                                     <div class="col-8">
-                                                        <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;">
-                                                            <!-- <option value="0">- none -</option> -->
-                                                            <?php //foreach ($customers as $c) { ?>
-                                                                <!-- <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option> -->
-                                                            <?php //} ?>
-                                                        </select>
+                                                        <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;"></select>
                                                     </div>
                                                     <div class="col-3">
                                                         <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
@@ -2419,7 +2414,7 @@ $(document).on('click','.save_terms_of_use',function(){
                 return repo.text;
             }
             var $container = $(
-                '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
             );
             return $container;
         }

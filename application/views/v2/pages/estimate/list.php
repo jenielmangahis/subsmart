@@ -1,5 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
+<style>
+.nsm-table .nsm-badge{
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    border-radius: 7px;
+}
+</style>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -119,11 +128,10 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Estimate Number">Estimate Number</td>
-                            <td data-name="Job & Customer">Job & Customer</td>
-                            <td data-name="Date">Date</td>
+                            <td data-name="EstimateNumber">Estimate Number</td>
+                            <td data-name="Customer">Customer / Lead</td>
                             <td data-name="Type">Type</td>
-                            <td data-name="Status">Status</td>
+                            <td data-name="Status" style="width:8%;">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Amount">Is Email Seen</td>
                             <td data-name="Manage"></td>
@@ -163,32 +171,30 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>
-                                    <td>
-                                        <label class="d-block"><?php echo $estimate->job_name; ?></label>
-                                        <a class="nsm-link" href="<?php echo base_url('customer/preview_/' . $estimate->customer_id) ?>">
-                                            <?php echo get_customer_by_id($estimate->customer_id)->first_name . ' ' . get_customer_by_id($estimate->customer_id)->last_name ?>
-                                        </a>
+                                    <td>                                        
+                                        <?php if( $estimate->customer_id > 0 ){ ?>
+                                            <a class="nsm-link" href="<?php echo base_url('customer/preview_/' . $estimate->customer_id) ?>">
+                                                <?= $estimate->customer_name; ?> ()
+                                            </a>
+                                        <?php }elseif( $estimate->lead_id > 0 ){ ?>
+                                            <a class="nsm-link" href="<?php echo base_url('customer/add_lead/' . $estimate->lead_id) ?>">
+                                                <?= $estimate->lead_name; ?>
+                                            </a>
+                                        <?php } ?>
+                                        <br />
+                                        Estimate Date : <?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?>
                                     </td>
-                                    <td><?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?></td>
                                     <td><?php echo $estimate->estimate_type; ?></td>
                                     <td><span class="nsm-badge <?= $badge ?>"><?= $estimate->status; ?></span></td>
-                                    <td>
+                                    <td style="width:10%;text-align:right;">
                                         <?php
                                         $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
                                         $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
-
-                                        // if ($estimate->estimate_type == 'Option') {
-                                        //     echo '$ ' . number_format(floatval($total1),2);
-                                        // } elseif ($estimate->estimate_type == 'Bundle') {
-                                        //     echo '$ ' . number_format(floatval($total2),2);
-                                        // } else {
-                                        //     echo '$ ' . number_format(floatval($estimate->grand_total),2);
-                                        // }
                                         echo '$ ' . number_format(floatval($estimate->grand_total),2);
 
                                         ?>
                                     </td>
-                                    <td>
+                                    <td style="width:8%;text-align:center;">
                                         <?php if ($estimate->is_mail_open == 1): ?>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                                 <path fill="#888888" d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z"/>

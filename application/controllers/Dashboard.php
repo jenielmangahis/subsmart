@@ -184,11 +184,20 @@ class Dashboard extends Widgets {
         //$this->page_data['events'] = $this->event_model->get_all_events(5);
         //$this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice']=$this->event_model->getUnpaidInvoices();
-        $this->page_data['subs']=$this->event_model->getAllsubs();
+        $this->page_data['subs']=$this->event_model->getAllsubsByCompanyId($companyId);
         
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
-        $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
+        $latestJobs = $this->event_model->getLatestJobs();
+        foreach( $latestJobs as $job ){
+            $jobPayment = $this->jobs_model->getJobPaymentByJobId($job->id);
+            if( $jobPayment ){
+                $job->amount = $jobPayment->amount;
+            }else{
+                $job->payment = 0;
+            }
+        }
+        $this->page_data['latestJobs'] = $latestJobs; // fetch Sales Rep and customer they are assigned to
         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
 
         $this->page_data['sales']=$this->event_model->getAllSales();

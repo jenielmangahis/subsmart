@@ -599,6 +599,18 @@ class Jobs_model extends MY_Model
         return $jobNum . "-" . ((intval($result) > 9) ? strval(intval($result) + 1) : "0" . strval(intval($result) + 1));
     }
 
+    public function getAllJobsByCompanyIdAnDateRange($company_id, $date_range)
+    {
+        $this->db->select('jobs.*, job_payments.amount');
+        $this->db->from($this->table);
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->where('jobs.date_created >=', $date_range['from']);
+        $this->db->where('jobs.date_created <=', $date_range['to']);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAssignEmp($job_id)
     {
         $this->db->select('*');
@@ -615,20 +627,19 @@ class Jobs_model extends MY_Model
         $start_date = date('Y-m-d');
         $end_date   = date('Y-m-d', strtotime($start_date . ' +7 day'));
 
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, job_payments.amount AS job_total_amount, 
-        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.tax_rate, jobs.priority, cust.prof_id,
-        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.phone_m as cust_phone, cust.phone_h as cust_phone_home, cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName, users.id AS e_employee_id,ea.id AS employee2_employee_id, ea.profile_img AS employee2_img,ea.FName AS employee2_fname,ea.LName AS employee2_lname,eb.id AS employee3_employee_id,eb.profile_img AS employee3_img,eb.FName AS employee3_fname,eb.LName AS employee3_lname,ec.id AS employee4_employee_id, ec.profile_img AS employee4_img,ec.FName AS employee4_fname,ec.LName AS employee4_lname');
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.tax_rate, jobs.priority, cust.prof_id,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.phone_m as cust_phone, cust.phone_h as cust_phone_home, cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,users.FName,users.LName, users.id AS e_employee_id,ea.id AS employee2_employee_id, ea.profile_img AS employee2_img,ea.FName AS employee2_fname,ea.LName AS employee2_lname,eb.id AS employee3_employee_id,eb.profile_img AS employee3_img,eb.FName AS employee3_fname,eb.LName AS employee3_lname,ec.id AS employee4_employee_id, ec.profile_img AS employee4_img,ec.FName AS employee4_fname,ec.LName AS employee4_lname');
 
         $this->db->from($this->table);
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
-        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
-        $this->db->join('job_tags', 'jobs.tags = job_tags.id', 'left');
+        //$this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        //$this->db->join('job_tags', 'jobs.tags = job_tags.id', 'left');
         $this->db->join('acs_profile as cust', 'jobs.customer_id = cust.prof_id', 'left');
         $this->db->join('users', 'jobs.employee_id = users.id', 'left');
         $this->db->join('users ea', 'jobs.employee2_id = ea.id', 'left');
         $this->db->join('users eb', 'jobs.employee3_id = eb.id', 'left');
         $this->db->join('users ec', 'jobs.employee4_id = ec.id', 'left');
-        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        //$this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
         
         $this->db->where('jobs.company_id', $company_id);
         //$this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');

@@ -86,7 +86,7 @@ class Widgets extends MY_Controller
         $this->load->model('Event_model');
         $comp_id = logged('company_id');
 
-        $leadSource =$this->Event_model->getLeadSourceWithCount();
+        $leadSource =$this->Event_model->getCompanyLeadSourceWithCount($comp_id);
 
         foreach ($leadSource as $ld) :
             $leadNames[] = $ld->lead_name;
@@ -601,14 +601,13 @@ class Widgets extends MY_Controller
 
         $cid = logged('company_id');
         
-        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);
+        $upcomingJobs   = $this->Jobs_model->getAllUpcomingJobsByCompanyId($cid);       
         $upcomingEvents = $this->Event_model->getAllUpComingEventsByCompanyId($cid);
         $upcomingServiceTickets = $this->Tickets_model->get_upcoming_tickets_by_company_id($cid);
         $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($cid);    
         $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($cid);    
 
         $upcomingSchedules = array();
-
         foreach( $upcomingJobs as $job ){
             $date_index = date("Y-m-d", strtotime($job->start_date));
             $jobItems = $this->Jobs_model->get_specific_job_items($job->id);

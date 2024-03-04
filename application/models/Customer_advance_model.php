@@ -195,13 +195,25 @@ class Customer_advance_model extends MY_Model {
 
 
 
-    public function get_leads_data(){
+    public function get_leads_data( $filter = [] ){
         $cid=logged('company_id');
         $this->db->from("ac_leads");
-        $this->db->select('ac_leads.*,users.FName,users.LName');
-        $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
-        $this->db->order_by('id', "DESC");
+        $this->db->select('ac_leads.*,users.FName,users.LName,ac_leadtypes.lead_name AS lead_type');
+        $this->db->join('users', 'ac_leads.fk_sr_id = users.id','left');
+        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_type_id = ac_leadtypes.lead_id','left');
         $this->db->where("ac_leads.company_id", $cid);
+        $this->db->where("ac_leads.status !=", 'Converted');
+
+        if( !empty($filter) ){
+            $this->db->group_start();
+            foreach($filter as $f){                
+                $this->db->or_like($f['field'], trim($f['value']));
+            }
+            $this->db->group_end();
+        }     
+
+        $this->db->order_by('id', "DESC");        
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -210,9 +222,9 @@ class Customer_advance_model extends MY_Model {
     {
         $this->db->from("ac_leads");
         $this->db->select('ac_leads.*,users.FName,users.LName, business_profile.business_name, ac_leadtypes.lead_name AS lead_type');
-        $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
-        $this->db->join('business_profile', 'business_profile.company_id = ac_leads.company_id','left');
-        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_id = ac_leadtypes.lead_id','left');
+        $this->db->join('users', 'ac_leads.fk_sr_id = users.id','left');
+        $this->db->join('business_profile', 'ac_leads.company_id = business_profile.company_id','left');
+        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_type_id = ac_leadtypes.lead_id','left');
         $this->db->where('ac_leads.leads_id', $lead_id);
         $query = $this->db->get($tablename);
         return $query->row();
@@ -775,5 +787,119 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         $business = $query->row()->residential;
         return $residential + $business;
+    }
+
+    public function createLead($data)
+    {
+        $this->db->insert('ac_leads', $data);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+
+    public function getAllLeadsByCompanyId($company_id, $filters=array())
+    {
+
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('firstname !=', '');
+        $this->db->where('lastname !=', '');
+        $this->db->where('status !=', 'Converted');
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->group_start();
+                    $this->db->like('firstname', $filters['search'], 'both');
+                    $this->db->or_like('lastname', $filters['search'], 'both');
+                $this->db->group_end();
+            }
+        }
+
+        $this->db->order_by('firstname', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getLeadByLeadId($lead_id)
+    {
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('leads_id', $lead_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function customerDuplicateLookup($data) {
+        $this->db->select('acs_profile.prof_id,  acs_profile.first_name,  acs_profile.last_name,  acs_profile.customer_type,  COUNT(DISTINCT invoices.id) AS Invoices, COUNT(DISTINCT jobs.id) AS Jobs,  COUNT(DISTINCT estimates.id) AS Estimates, COUNT(DISTINCT events.id) AS events, COUNT(DISTINCT tickets.id) AS tickets, COUNT(DISTINCT payment_records.id) AS Payment');
+        $this->db->from('acs_profile');
+        $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('jobs', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('estimates', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('events', 'events.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('tickets', 'tickets.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('payment_records', 'payment_records.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $data['company_id']);
+        $this->db->where('acs_profile.first_name', $data['first_name']);
+        $this->db->where('acs_profile.last_name', $data['last_name']);
+        $this->db->where('acs_profile.activated', 1);
+        $this->db->group_by('acs_profile.prof_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function convertLeadToCustomer($lead_id, $cid, $uid)
+    {
+        $is_converted = 0;
+        $prof_id = 0;
+        $msg     = 'Cannot convert to customer';
+
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('leads_id', $lead_id);
+        
+        $query = $this->db->get();
+        $lead  = $query->row();
+        if( $lead ){
+            $customer_data = [
+                'company_id' => $cid,
+                'fk_user_id' => $uid,
+                'industry_type_id' => 0,
+                'status' => 'New',
+                'customer_type' => 'Residential',
+                'first_name' => $lead->firstname,
+                'middle_name' => $lead->middlename,
+                'last_name' => $lead->lastname,
+                'suffix' => $lead->suffix,
+                'mail_add' => $lead->address,
+                'city' => $lead->city,
+                'state' => $lead->state,
+                'zip_code' => $lead->zip,
+                'cross_street' => $lead->address,
+                'country' => $lead->country,
+                'ssn' => $lead->sss_num,
+                'date_of_birth' => date("Y-m-d",strtotime($lead->date_of_birth)),
+                'email' => $lead->email_add,
+                'phone_h' => $lead->phone_home,
+                'phone_m' => $lead->phone_cell,
+                'county' => $lead->county
+            ];
+
+            $this->db->insert('acs_profile', $customer_data);
+            $prof_id = $this->db->insert_id();
+            
+            if( $prof_id > 0 ){
+                $lead_data = ['status' => 'Converted', 'prof_id' => $prof_id];
+                $this->db->update('ac_leads', $lead_data, ['leads_id' => $lead_id]);
+
+                $is_converted = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_converted' => $is_converted, 'msg' => $msg, 'prof_id' => $prof_id];
+
+        return $return;
     }
 }

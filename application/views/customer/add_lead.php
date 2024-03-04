@@ -1,10 +1,5 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/customer/customer_modals'); ?>
-<?php include viewPath('customer/css/import_customer_css'); ?>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
@@ -42,11 +37,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">
                                     <div class="col-md-5 mb-3">
                                         <span>Lead Type</span>
-                                        <select class="form-select" id="fk_lead_id" name="fk_lead_id">
+                                        <select class="form-select" id="fk_lead_type_id" name="fk_lead_type_id" required="">
                                             <?php
                                                 echo "<option value hidden>Select Type</option>";
                                                 foreach ($lead_types as $lt) {
-                                                    if($leads_data->fk_lead_id == $lt->lead_id){
+                                                    if($leads_data->fk_lead_type_id == $lt->lead_id){
                                                         echo "<option selected value='$lt->lead_id'>$lt->lead_name</option>";
                                                     } else {
                                                         echo "<option value='$lt->lead_id'>$lt->lead_name</option>";   
@@ -83,20 +78,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-7 mb-3">
-                                        <span>Assigned To</span>
-                                        <select class="form-select" id="fk_assign_id" name="fk_assign_id">
-                                            <?php
-                                                foreach ($users as $user) {
-                                                    if($leads_data->fk_assign_id == $user->id){
-                                                    echo "<option selected value='$user->id'>$user->FName $user->LName</option>";
-                                                    } else{
-                                                        echo "<option value='$user->id'>$user->FName $user->LName</option>";
-                                                    }
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -120,8 +101,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <input class="form-control" type="text" name="firstname" id="firstname" value="<?php if(isset($leads_data)){ echo $leads_data->firstname; } ?>" required>
                                     </div>
                                     <div class="col-md-2 mb-3">
-                                        <span>Middle Initial</span>
-                                        <input class="form-control" type="text" maxlength="1" oninput="$(this).val($(this).val().toUpperCase())" name="middle_initial" id="middle_initial" value="<?php if(isset($leads_data)){ echo $leads_data->middle_initial; } ?>">
+                                        <span>Middlename</span>
+                                        <input class="form-control" type="text" name="middlename" id="middlename" value="<?php if(isset($leads_data)){ echo $leads_data->middle_name; } ?>">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span>Lastname</span>
@@ -144,14 +125,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="col-md-3 mb-3">
                                         <span>Birthdate</span>
                                         <input class="form-control" type="date" name="date_of_birth" id="date_of_birt" value="<?php if(isset($leads_data)){ echo $leads_data->date_of_birth; } ?>">
+                                    </div>                                    
+                                    <div class="col-md-3 mb-3">
+                                        <span>Email Address</span>
+                                        <input class="form-control" type="email" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span>Mobile Number</span>
                                         <input class="form-control phone_number" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <span>Email Address</span>
-                                        <input class="form-control" type="email" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <span>Home Phone Number</span>
@@ -191,8 +172,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <select class="form-select" id="status" name="status">
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'New'){echo "selected";} } ?> value="New">New</option>
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'Contacted'){echo "selected";} } ?> value="Contacted">Contacted</option>
-                                            <option <?php if(isset($leads_data)){ if($leads_data->status == 'Follow Up'){echo "selected";} } ?> value="Follow Up">Follow Up</option>
-                                            <option <?php if(isset($leads_data)){ if($leads_data->status == 'Assigned'){echo "selected";} } ?> value="Assigned">Assigned</option>
+                                            <option <?php if(isset($leads_data)){ if($leads_data->status == 'Follow Up'){echo "selected";} } ?> value="Follow Up">Follow Up</option>                                            
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'Converted'){echo "selected";} } ?> value="Converted">Converted</option>
                                             <option <?php if(isset($leads_data)){ if($leads_data->status == 'Closed'){echo "selected";} } ?> value="Closed">Closed</option>
                                         </select>
@@ -201,103 +181,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">
                                     <div class="col-md-12">                                        
                                         <div class="form-group float-end">
-                                        <button type="button" name="convert_customer" class="nsm-button primary btn-convert-customer"><span class="fa fa-exchange"></span>Convert to Customer</button>
-                                            <button type="submit" class="nsm-button primary"><i class='bx bxs-paper-plane'></i> Save</button>
-                                            <a href="<?php echo base_url('customer/leads'); ?>"><button type="button" class="nsm-button primary"><i class='bx bx-window-close'></i> Cancel</button></a>
+                                            <button type="button" name="convert_customer" class="nsm-button primary btn-convert-customer" style="display:none;"><span class="fa fa-exchange"></span>Convert to Customer</button>
+                                            <button type="submit" class="nsm-button primary">Save</button>
+                                            <button type="button" class="nsm-button primary" id="btn-cancel">Cancel</button>                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-5 mb-3">
-                        <div class="nsm-card primary" style="height: auto;">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span class="d-block">
-                                        <div class="right-text">
-                                            <span class="page-title " style="font-weight: bold;font-size: 18px;">New Credit Report</span>
-                                        </div>
-                                    </span>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="nsm-card-body">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <select class="form-select" id="credit_report" name="credit_report">
-                                            <option value="TrunsUnion">TransUnion</option>
-                                            <option value="Experian">Experian</option>
-                                            <option value="Equifax">Equifax</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <button class="nsm-button primary" type="submit">Run Credit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- <div class="col-lg-12 mb-3">
-                        <div class="nsm-card primary" style="height: auto;">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span class="d-block">
-                                        <div class="right-text">
-                                            <span class="page-title " style="font-weight: bold;font-size: 18px;">Report History</span>
-                                        </div>
-                                    </span>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="nsm-card-body">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <input value="No History" type="text" class="form-control" name="report_history" disabled id="report_history"/>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <?php
-                                            if(isset($leads_data)){
-                                        ?>
-                                            <input value="<?=  $leads_data->leads_id; ?>" type="hidden" class="form-control" name="leads_id" />
-                                        <?php
-                                            }
-                                        ?>                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </form>
-
-                <!-- end form -->
             </div>
         </div>
     </div>
 </div>
-
-
 <?php include viewPath('v2/includes/footer'); ?>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-<script >
+<script>
+    
+    $('#btn-cancel').on('click', function(){
+        location.href = base_url + 'customer/leads';
+    });
+
     $("#new_lead_form").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
         $.ajax({
             type: "POST",
-            url: "<?= base_url()?>customer/save_new_lead",
+            url: base_url + "customer/save_new_lead",
             data: form.serialize(), // serializes the form's elements.
             success: function(data)
             {
                 console.log(data);
                  if(data === "Saved"){
-                    sucess_add('Good Job!','Successfully Added!','success');
+                    sucess_add('','Lead data has been saved successfully.','success');
                  }else{
                     sucess_add('Sorry!', data.msg,'error');
                 }
@@ -315,9 +237,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ok'
         }).then((result) => {
-            if (result.value) {
+            //if (result.value) {
                 window.location.href='<?= base_url(); ?>customer/leads';
-            }
+            //}
         });
     }
 

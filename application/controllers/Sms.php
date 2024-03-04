@@ -267,10 +267,50 @@ class Sms extends Widgets {
         $cid = logged('company_id');
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
-        $date_from = '2022-04-03';
+        //$date_from = '2022-04-03';
+        $date_from    = date("Y-01-01");
         $smsMessages  = ringCentralAllMessages($ringCentral, $date_from);
 
         $this->page_data['smsMessages'] = $smsMessages;
         $this->load->view('v2/pages/dashboard/ajax_sms_list.php', $this->page_data);
+    }
+
+    public function ajax_company_lead_send_sms() 
+    {
+        $this->load->helper('sms_helper');
+
+        $this->load->model('CompanySms_model');                
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('Clients_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+        $from_number = '';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $client = $this->Clients_model->getById($cid);
+
+        if( $client->default_sms_api == 'ring_central' ){
+            $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+            if( $ringCentral ){                
+                $is_sent = smsRingCentral($ringCentral, $post['customer_phone'], $post['sms_txt_message']);                        
+                if( $is_sent['is_success'] == 1 ){                    
+                    $is_success = 1;
+                    $from_number = $is_sent['from_number'];
+                }else{
+                    $msg = $is_sent['msg'];
+                }
+            }else{
+                $msg = 'You do not have a valid ring central account. Cannot send SMS.';  
+            }
+            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 }

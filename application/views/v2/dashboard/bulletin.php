@@ -47,7 +47,7 @@ endif;
                 <div class="col-12">
                     <div class="widget-item timesheet-item">
                         <div class="content">
-                            <div class="details">
+                            <div class="details" style="width:45% !important;">
                                 <span class="content-subtitle fw-bold">Employee</span>
                             </div>
                             <div class="controls">

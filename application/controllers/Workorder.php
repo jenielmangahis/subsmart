@@ -4221,6 +4221,7 @@ class Workorder extends MY_Controller
     public function savenewWorkorder(){
         $this->load->model('WorkorderSettings_model');
         $this->load->model('AcsAccess_model');
+        $this->load->model('Customer_advance_model');
 
         $is_success = 0;
         $msg = '';
@@ -4344,7 +4345,6 @@ class Workorder extends MY_Controller
             }
 
             $new_data = array(
-                
                 'work_order_number'                     => $wo_id,
                 'customer_id'                           => $this->input->post('customer_id'),
                 'security_number'                       => $this->input->post('security_number'),
@@ -4428,6 +4428,25 @@ class Workorder extends MY_Controller
 
             // var_dump($new_data);
             $addQuery = $this->workorder_model->save_workorder($new_data);
+
+            //Auto convert lead to customer
+            if( $this->input->post('cust_lead') == 'Lead' ){
+                //Check if lead is already converted
+                $lead = $this->Customer_advance_model->getLeadByLeadId($this->input->post('customer_id'));
+                if( $lead ){
+                    if( $lead->prof_id > 0 ){
+                        //Update workorder                        
+                        $this->workorder_model->update($addQuery, ['customer_id' => $lead->prof_id]);
+                    }else{
+                        //Convert to customer and update workorder
+                        $result = $this->Customer_advance_model->convertLeadToCustomer($this->input->post('customer_id'),$company_id, $user_id);
+                        if( $result['is_converted'] == 1 ){
+                            $this->workorder_model->update($addQuery, ['customer_id' => $result['prof_id']]);
+                        }
+                    }
+                }
+                
+            }
 
             //Update workorder setting
             if( $setting ){
@@ -12033,6 +12052,7 @@ class Workorder extends MY_Controller
     {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
+        $this->load->model('Customer_advance_model');
         $this->load->model('Clients_model');
         $this->load->model('Checklist_model');
         $this->load->model('AcsAccess_model');
@@ -12174,6 +12194,7 @@ class Workorder extends MY_Controller
 
         if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $lead     = $this->Customer_advance_model->getLeadByLeadId($estimate->lead_id);
             $acsAccess = $this->AcsAccess_model->getByProfId($estimate->customer_id);
             // $client   = $this->Clients_model->get_company($company_id);
             $client   = $this->Clients_model->getCompanyCompanyId($company_id);
@@ -12207,6 +12228,7 @@ class Workorder extends MY_Controller
             $this->page_data['checklists'] = $checklists;
             $this->page_data['acsAccess'] = $acsAccess;
             $this->page_data['customer'] = $customer;
+            $this->page_data['lead'] = $lead;
             $this->page_data['client'] = $client;
             $this->page_data['estimate'] = $estimate;
 

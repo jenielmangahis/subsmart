@@ -1,3 +1,18 @@
+<style>
+.autocomplete-left{
+    display: inline-block;
+    width: 65px;    
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 75s%;
+    vertical-align: top;
+}
+.autocomplete-img {
+    height: 50px;
+    width: 50px;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($creditMemo)) : ?>
@@ -139,7 +154,8 @@
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="sales-rep">Sales Rep</label>
-                                    <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>">
+                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
+                                    <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>"> -->
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
@@ -384,30 +400,12 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div class="row">
-                                                        <div class="col-8">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($creditMemo) ? $creditMemo->adjustment_name : ''?>">
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_value), 2, '.', ',') : ''?>">
-                                                        </div>
-                                                        <div class="col-1 d-flex align-items-center">
-                                                            <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
-                                                        </div>
-                                                    </div>
+                                                    <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($creditMemo) ? $creditMemo->adjustment_name : ''?>" style="display:inline-block; width:80%;">
+                                                    <span id="help-popover-adjustment" class="bx bx-fw bx-help-circle"></span>
                                                 </td>
                                                 <td>
-                                                    <span class="transaction-adjustment">
-                                                    <?php if(isset($creditMemo)) : ?>
-                                                        <?php
-                                                        $amount = '$'.number_format(floatval($creditMemo->adjustment_value), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                        ?>
-                                                    <?php else : ?>
-                                                        $0.00
-                                                    <?php endif; ?>
-                                                    </span>
+                                                    <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_value), 2, '.', ',') : ''?>" style="width:50%;float:right;direction:rtl;">
+                                                    <span class="transaction-adjustment" style="display:none;"></span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -491,3 +489,59 @@
     <!--end of modal-->
 </form>
 </div>
+<script>
+$(function(){
+    $('#help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
+    
+    $('#sales-rep').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        dropdownParent: $('#creditMemoModal .modal-content'),
+        placeholder: 'Select User',
+        maximumSelectionLength: 5,
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+});
+</script>

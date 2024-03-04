@@ -2164,3 +2164,25 @@ span.select2-selection {
     color: #ffffff !important;
     background-color: #dc3545 !important;
 }
+
+/*Custom Select2*/
+.select2-results__option .contact-acro, .select2-results__option .contact-info{
+	display:inline-block;
+}
+.select2-results__option .contact-acro{
+	margin-right: 7px;
+	position:relative;
+	top:-8px;
+}
+.select2-results__group .optgroup{
+	background-color: #b3b3b3 !important;
+    padding: 11px;
+    font-size: 15px;
+	margin:0px;
+}
+.select2-results__option{
+	margin-left:0px !important;
+}
+.select2-results__group{
+	padding:0px !important;
+}

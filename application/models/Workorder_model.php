@@ -7,12 +7,14 @@ class Workorder_model extends MY_Model
     public $table = 'work_orders';
     public $table_workorder_settings = 'work_order_settings';
 
-    public function getAllOrderByCompany($company_id, $options = array())
+    public function getAllOrderByCompany($company_id, $options = array(), $search = array())
     {
 
-        $this->db->select('*');
+        $this->db->select('work_orders.*, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        $this->db->where('work_orders.company_id', $company_id);
+        $this->db->where('work_orders.work_order_number !=', '');
 
         if (!empty($options)) {
 
@@ -22,6 +24,15 @@ class Workorder_model extends MY_Model
             }
         }
 
+        if( !empty($search) ){
+            $this->db->group_start();
+            foreach($search as $s){
+                $this->db->or_like($s['field'], $s['value'], 'both');
+            }
+            $this->db->group_end();
+        }
+
+        $this->db->order_by('work_orders.id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

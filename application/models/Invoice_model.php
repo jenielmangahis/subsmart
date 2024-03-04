@@ -111,19 +111,45 @@ class Invoice_model extends MY_Model
         return  $insert_id;
     }
 
-    public function getAllByCompany($comp_id, $type, $filter = array())
+    public function getAllByCompany($cid, $type = '', $search = array())
     {
         $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
-        $this->db->where('invoices.company_id', $comp_id);
-        $this->db->where('is_recurring', $type);
+        $this->db->where('invoices.company_id', $cid);
+        if( $type != '' ){
+            $this->db->where('is_recurring', $type);
+        }        
 
-        if (!empty($filter)) {
-            if (isset($filter['q'])) {
-                $this->db->like('acs_profile.first_name', $filter['q'], 'both');
-                $this->db->like('acs_profile.last_name', $filter['q'], 'both');
+        if( !empty($search) ){
+            $this->db->group_start();
+            foreach($search as $s){
+                $this->db->or_like($s['field'], $s['value'], 'both');
             }
+            $this->db->group_end();
+        }
+
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllNotVoidedByCompanyId($cid, $search = array())
+    {
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.voided', 0);
+        
+
+        if( !empty($search) ){
+            $this->db->group_start();
+            foreach($search as $s){
+                $this->db->or_like($s['field'], $s['value'], 'both');
+            }
+            $this->db->group_end();
         }
 
         $this->db->order_by('invoices.id', 'DESC');
@@ -181,9 +207,10 @@ class Invoice_model extends MY_Model
 
     public function getinvoice($invoice_id)
     {
-        $this->db->select('*');
-        $this->db->from($this->table);        
-        $this->db->where('id', $invoice_id);
+        $this->db->select('invoices.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->from($this->table);       
+        $this->db->join('acs_profile', 'invoices.customer_id  = acs_profile.prof_id'); 
+        $this->db->where('invoices.id', $invoice_id);
 
         $query = $this->db->get();
         return $query->row();
@@ -393,7 +420,6 @@ class Invoice_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('job_id', $job_id);
 
         $query = $this->db->get()->row();
@@ -915,16 +941,6 @@ class Invoice_model extends MY_Model
     }
     public function getInvoiceItems($id)
     {
-        // $this->db->select('*');
-        // $this->db->from('work_orders_items');
-        // $this->db->where('work_order_id', $id);
-        // $query = $this->db->get();
-        // $cus = $query->row();
-
-        // $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
-        // $this->db->from('work_orders');
-        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
-
         $this->db->select('*, invoices_items.cost as iCost, invoices_items.tax as itax, invoices_items.total as iTotal, items.title, items.type as item_type');
         $this->db->from('invoices_items');
         $this->db->join('items', 'invoices_items.items_id  = items.id');

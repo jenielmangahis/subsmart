@@ -12,7 +12,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Credit Notes message
+                            Indicate a return of funds in the event of an invoice error, incorrect or damaged products, purchase cancellation or otherwise specified circumstance.
                         </div>
                     </div>
                 </div>
@@ -24,6 +24,17 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
+                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>
+                                    Batch Actions
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
+                                <li><a class="dropdown-item dropdown-delete-credit-notes disabled" href="javascript:void(0);" id="delete-credit-notes">Delete</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -31,10 +42,10 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="filter-date">Date</label>
-                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                            <option value="last-365-days" <?=empty($date) || $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
+                                        <select class="nsm-field form-select" name="filter_date" id="filter-date-credit-notes">
+                                            <option value="last-365-days" <?= $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
                                             <option value="custom" <?=$date === 'custom' ? 'selected' : ''?>>Custom</option>
-                                            <option value="today" <?=$date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="today" <?= empty($date) || $date === 'today' ? 'selected' : ''?>>Today</option>
                                             <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
                                             <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
                                             <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
@@ -49,15 +60,11 @@
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" value="<?=empty($from_date) ? date("m/d/Y", strtotime("-1 year")) : $from_date?>" id="filter-from">
-                                        </div>
+                                        <input type="date" id="filter-from" class="nsm-field form-control date" value="<?=empty($from_date) ? date("Y-m-d", strtotime("-1 year")) : $from_date?>" required>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" id="filter-to" value="<?=empty($to_date) ? '' : $to_date?>">
-                                        </div>
+                                        <input type="date" id="filter-to" class="nsm-field form-control date"value="<?=empty($to_date) ? date("Y-m-d", strtotime("-1 year")) : $to_date?>" required>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -151,15 +158,16 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            50
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);" data-row="10">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="50">50</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="75">75</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="100">100</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="150">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="300">300</a></li>
                                     </ul>
                                 </div>
                                 <div class="form-check">
@@ -170,6 +178,7 @@
                         </div>
                     </div>
                 </div>
+                <form id="frm-credit-notes" method="POST">
                 <table class="nsm-table" id="credit-notes-table">
                     <thead>
                         <tr>
@@ -197,7 +206,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$note['id']?>">
+                                    <input class="form-check-input select-one table-select" name="creditNotes[]" type="checkbox" value="<?=$note['id']?>">
                                 </div>
                             </td>
                             <td><?=$note['date']?></td>
@@ -226,12 +235,216 @@
 						<?php endif; ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+$(function(){
     const companyName = "<?=$company->business_name?>";
+    $('#credit-notes-table').nsmPagination({itemsPerPage: 10});
+    
+    $(".select-all").click(function(){
+        var count_vendor_list_check = $('.select-all').filter(':checked').length;
+        if(count_vendor_list_check > 0) {
+            $(".dropdown-delete-credit-notes").removeClass("disabled");
+        } else {
+            $(".dropdown-delete-credit-notes").addClass("disabled");
+        }   
+        $('.select-one').not(this).prop('checked', this.checked);
+    });
+
+    $(".select-one").click(function(){
+        var count_vendor_list_check = $('.select-one').filter(':checked').length;
+        if(count_vendor_list_check > 0) {
+            $(".dropdown-delete-credit-notes").removeClass("disabled");
+        } else {
+            $(".dropdown-delete-credit-notes").addClass("disabled");
+        }           
+    });
+
+    $('#table-rows a').on('click', function(){
+        var data_row = $(this).attr('data-row');
+        $('#credit-notes-table').nsmPagination({itemsPerPage: data_row});
+    });
+
+    $('#delete-credit-notes').on('click', function(){
+        Swal.fire({            
+            html: "Proceed with deleting selected rows?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                var url = base_url + "accounting/credit-notes/delete-selected";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $('#frm-credit-notes').serialize(),
+                    dataType: 'json',
+                    beforeSend: function(data) {
+                        
+                    },
+                    success: function(data) {                                                
+                        Swal.fire({                        
+                            text: "Credit notes was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });                                         
+                    },
+                    complete : function(){
+                        
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
+            }
+        });
+    });
+
+    $('#filter-date-credit-notes').on('change', function(){
+        switch($(this).val()) {
+            case 'last-365-days' :
+                var date = new Date();
+                date.setDate(date.getDate() - 365);
+
+                var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = '';
+            break;            
+            case 'today' :
+                var date = new Date();
+                var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            break;
+            case 'yesterday' :
+                var date = new Date();
+                date.setDate(date.getDate() - 1);
+                var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+            break;
+            case 'this-week' :
+                var date = new Date();
+                var from = date.getDate() - date.getDay();
+                var to = from + 6;
+
+                var from_date = new Date(date.setDate(from));
+                var to_date = new Date(date.setDate(to));
+
+                from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            break;
+            case 'this-month' :
+                var date = new Date();
+                var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+                from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            break;
+            case 'this-quarter' :
+                var date = new Date();
+                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+                
+                switch(currQuarter) {
+                    case 1 :
+                        var from_date = '01/01/' + date.getFullYear();
+                        var to_date = '03/31/'+ date.getFullYear();
+                    break;
+                    case 2 :
+                        var from_date = '04/01/' + date.getFullYear();
+                        var to_date = '06/30/'+ date.getFullYear();
+                    break;
+                    case 3 :
+                        var from_date = '07/01/' + date.getFullYear();
+                        var to_date = '09/30/'+ date.getFullYear();
+                    break;
+                    case 4 :
+                        var from_date = '10/01/' + date.getFullYear();
+                        var to_date = '12/31/'+ date.getFullYear();
+                    break;
+                }
+            break;
+            case 'this-year' :
+                var date = new Date();
+
+                var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+            break;
+            case 'last-week' :
+                var date = new Date();
+                var from = date.getDate() - date.getDay();
+
+                var from_date = new Date(date.setDate(from - 7));
+                var to_date = new Date(date.setDate(date.getDate() + 6));
+
+                from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            break;
+            case 'last-month' :
+                var date = new Date();
+                var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
+
+                from_date = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            break;
+            case 'last-quarter' :
+                var date = new Date();
+                var currQuarter = Math.floor(date.getMonth() / 3 + 1);
+                
+                switch(currQuarter) {
+                    case 1 :
+                        var from_date = new Date('01/01/' + date.getFullYear());
+                        var to_date = new Date('03/31/'+ date.getFullYear());
+                    break;
+                    case 2 :
+                        var from_date = new Date('04/01/' + date.getFullYear());
+                        var to_date = new Date('06/30/'+ date.getFullYear());
+                    break;
+                    case 3 :
+                        var from_date = new Date('07/01/' + date.getFullYear());
+                        var to_date = new Date('09/30/'+ date.getFullYear());
+                    break;
+                    case 4 :
+                        var from_date = new Date('10/01/' + date.getFullYear());
+                        var to_date = new Date('12/31/'+ date.getFullYear());
+                    break;
+                }
+
+                from_date.setMonth(from_date.getMonth() - 3);
+                to_date.setMonth(to_date.getMonth() - 3);
+
+                if(to_date.getDate() === 1) {
+                    to_date.setDate(to_date.getDate() - 1);
+                }
+
+                from_date = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
+                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            break;
+            case 'last-year' :
+                var date = new Date();
+                date.setFullYear(date.getFullYear() - 1);
+
+                var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+            break;
+            default :
+                var from_date = '';
+                var to_date = '';
+            break;
+        }
+
+        $('#filter-from').val(moment(from_date).format('YYYY-MM-DD'));
+        $('#filter-to').val(moment(to_date).format('YYYY-MM-DD'));
+    });
+});
+    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

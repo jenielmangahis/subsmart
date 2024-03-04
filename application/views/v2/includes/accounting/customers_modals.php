@@ -2471,7 +2471,7 @@
 </div>
 
 <div class="modal fade nsm-modal" id="customer-types-modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Customer Types</span>
@@ -2576,13 +2576,13 @@
                         <div class="progress-wrapper" style="padding-bottom: 100px;">
                             <div id="progress-bar-container">
                                 <ul>
-                                    <li class="step step01 active">
+                                    <li class="step step01 pointers-none active">
                                         <div class="step-inner">Step 1</div>
                                     </li>
-                                    <li class="step step02">
+                                    <li class="step step02 pointers-none">
                                         <div class="step-inner">Step 2</div>
                                     </li>
-                                    <li class="step step03">
+                                    <li class="step step03 pointers-none">
                                         <div class="step-inner">Step 3</div>
                                     </li>
                                 </ul>
@@ -2657,6 +2657,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a class="nsm-button default" href="<?php echo site_url('uploads/import_templates/import_customers_template.csv'); ?>">Download Template</a>
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="nsm-button primary step02" id="nextBtn1" disabled>Next</button>
             </div>
@@ -2670,3 +2671,9 @@
         <center><p>Processing...</p></center>
     </div>
 </div>
+
+<style>
+    .pointers-none {
+        pointer-events: none;
+    }    
+</style>

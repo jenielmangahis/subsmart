@@ -15,16 +15,19 @@
     width: 100%;
     display: block;
 }
+#nsm-taskhub-list thead tr{
+    background-color:#cccccc;
+}
 </style>
-<table class="nsm-table">
+<table class="nsm-table" id="nsm-taskhub-list">
     <thead>
         <tr>            
             <td class="Subject">Subject</td>
             <td data-name="Customer">Customer</td>                            
-            <td data-name="Assigned">Assigned</td>                            
+            <td data-name="Assigned">Assigned User</td>                  
+            <td data-name="Date Completion" style="width:15%;">Due Date</td>                      
             <td data-name="Priority" style="width:8%;">Priority</td>
-            <td data-name="Status" style="width:8%;">Status</td>
-            <td data-name="Date Completion" style="width:15%;">Date Completion</td>            
+            <td data-name="Status" style="width:8%;">Status</td>            
         </tr>
     </thead>
     <tbody>
@@ -36,8 +39,9 @@
             ?>
                 <tr>                    
                     <td><?= $th->subject; ?></td>                                    
-                    <td><?= $th->customer_name; ?></td>
+                    <td><?= $th->customer_name ? $th->customer_name : 'No customer assigned'; ?></td>
                     <td><?= getTaskAssignedUser($th->task_id); ?></td>
+                    <td><?= date("F d, Y",strtotime($th->estimated_date_complete)); ?></td>
                     <td><span class="badge badge-info" style="background-color: <?= $th->status_color; ?>;display: block;width:100%;"><?= $th->status_text; ?></span></td>
                     <td>
                         <?php 
@@ -54,8 +58,7 @@
                             endswitch;
                         ?>
                         <span class="badge <?= $class_priority; ?>"><?= ucwords($th->priority); ?></span>
-                    </td>
-                    <td><?= date("F d, Y",strtotime($th->estimated_date_complete)); ?></td>
+                    </td>                    
                 </tr>
             <?php
             endforeach;
@@ -74,17 +77,9 @@
         endif;
         ?>
     </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="3">
-                <nav class="nsm-table-pagination">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                        <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
-                    </ul>
-                </nav>
-            </td>
-        </tr>
-    </tfoot>
 </table>
+<script>
+$(function(){
+    $("#nsm-taskhub-list").nsmPagination({itemsPerPage:10});  
+});
+</script>

@@ -75,6 +75,10 @@ echo put_header_assets();
             transition: .4s;
         }
 
+        .MAP_LOADER_CONTAINER{
+            min-height: 350px;
+        }
+
         input:checked+.slider {
             background-color: #10ab06;
         }
@@ -367,69 +371,67 @@ echo put_header_assets();
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="d-flex justify-content-between">
-                                        <label for="job_name"><b>Customer</b></label>
-                                        <a class="nsm-link d-flex align-items-center" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
-                                            <span class="bx bx-plus"></span>Create Customer
-                                        </a>
+                            <div class="row mb-3">                                
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="d-flex justify-content-between">
+                                                <label for="job_name"><b>Customer</b></label>
+                                                <div class="d-flex">
+                                                    <a class="nsm-link d-flex align-items-center"  data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
+                                                        <span class="bx bx-plus"></span>Create Customer
+                                                    </a>
+                                                    <a class="nsm-link d-flex align-items-center" style="margin-left:5px;" data-bs-toggle="modal" data-bs-target="#quick-add-lead" href="javascript:void(0);">
+                                                        <span class="bx bx-plus"></span>Create Lead
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div id="sel-customerdiv">
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                                    <option value="">- Select Customer -</option>
+                                                    <?php if( $default_customer_id > 0 ){ ?>
+                                                        <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
+                                                    <?php } ?>                                        
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="job_name"><b>Customer Email</b></label>
+                                            <input id="estimate-customer-email" type="text" class="form-control" disabled />
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="job_name"><b>Customer Mobile</b></label>
+                                            <input id="estimate-customer-mobile" type="text" class="form-control" disabled />
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="job_location"><b>Job Location</b></label>
+                                            <input type="text" class="form-control" name="job_location" id="job_location" />
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="job_name"><b>Job Name</b> (optional)</label>
+                                            <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
+                                        </div>
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="job_name"><b>Business Name</b> (optional)</label>
+                                            <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
+                                        </div>
+
                                     </div>
-                                    <div id="sel-customerdiv">
-                                        <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                            <option value="">- Select Customer -</option>
-                                            <?php if( $default_customer_id > 0 ){ ?>
-                                                <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
-                                            <?php } ?>                                        
-                                        </select>
+                                </div>
+                                <div class="col-md-1"></div>
+                                <div class="col-md-7">
+                                    <div class="col-md-12 MAP_LOADER_CONTAINER">                                        
+                                        <div class="text-center MAP_LOADER">
+                                            <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="370" width="100%" style=""></iframe>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Email</b></label>
-                                    <input id="estimate-customer-email" type="text" class="form-control" disabled />
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Mobile</b></label>
-                                    <input id="estimate-customer-mobile" type="text" class="form-control" disabled />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b></label>
-                                    <!-- <input
-                                            id="autocomplete"
-                                            placeholder="Enter Location"
-                                            type="text"
-                                            class="form-control"
-                                            autocomplete="on" runat="server"
-                                        /> -->
-                                    <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
-                                    <input type="text" class="form-control" name="job_location" id="job_location" />
-
-                                    <!-- <input type="hidden" id="city2" name="city2" />
-                                        <input type="hidden" id="cityLat" name="cityLat" />
-                                        <input type="hidden" id="cityLng" name="cityLng" /> -->
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Job Name</b> (optional)</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Business Name</b> (optional)</label>
-                                    <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
-                                </div>
+                                
                             </div>
                             <hr>
                             <div class="row mb-3" style="background-color:white;">
@@ -931,6 +933,7 @@ echo put_header_assets();
 
 <?php echo $file_selection; ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/leads/quick_add'); ?>
 <?php
 // JS to add only Job module
 add_footer_js(array(
@@ -968,7 +971,7 @@ add_footer_js(array(
 
         $('#customer_id').select2({
             ajax: {
-                url: base_url + 'autocomplete/_company_customer',
+                url: base_url + 'autocomplete/_company_customer_lead',
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -977,15 +980,15 @@ add_footer_js(array(
                     page: params.page
                   };
                 },
-                processResults: function (data, params) {
-                  params.page = params.page || 1;
-
-                  return {
-                    results: data
-                    // pagination: {
-                    //   more: (params.page * 30) < data.total_count
-                    // }
-                  };
+                processResults: function(data) {
+                return {
+                        results: [{
+                        children: $.map(data, function(item) {
+                            item.text = item.name;
+                            return item;
+                        })
+                        }]
+                    };
                 },
                 cache: true
               },
@@ -995,39 +998,33 @@ add_footer_js(array(
         });
 
         function formatRepoCustomerSelection(repo) {
-            if( repo.first_name != null ){
-                return repo.first_name + ' ' + repo.last_name;      
-            }else{
-                return repo.text;
-            }
+            return repo.text;
         }
 
         function formatRepoCustomer(repo) {
-            if (repo.loading) {
-            return repo.text;
-            }
+            if (!repo.id){
+                var $container = $(repo.text);
+                return $container;
+            } 
 
-            var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
-            );
+            var $container = $(repo.html);
 
             return $container;
         }
 
         $("#new_customer_form").submit(function(e) {
-            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
-            e.preventDefault(); // avoid to execute the actual submit of the form.
+            e.preventDefault(); 
             var form = $(this);
-            //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: base_url + "customer/add_new_customer_from_jobs",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
+                url: base_url + "customer/_quick_add_customer",
+                data: form.serialize(), 
+                dataType:'json',
+                success: function(result)
                 {
-                    if(data === "Success"){
+                    if(result.is_success == 1){
+                        $('#new_customer').modal('hide');
                         Swal.fire({
-                            //title: 'Nice!',
                             html: 'Customer Added Successfully',
                             icon: 'success',
                             showCancelButton: false,
@@ -1041,7 +1038,7 @@ add_footer_js(array(
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            html: 'There is an error adding Customer. Contact Administrator'
+                            html: result.msg
                         });                        
                     }
                 }
@@ -1183,15 +1180,69 @@ add_footer_js(array(
         }); 
 
         $('#customer_id').change(function() {
-            var id = $(this).val();
-            load_customer_data(id);
+            var customer_leads = $(this).val();
+            var customerLeads  = customer_leads.split("/");  
+            var customer_lead_type = customerLeads[1];   
+            var customer_lead_id   = customerLeads[0];
+            
+            if( customer_lead_type == 'Customer' ){
+                load_customer_data(customer_lead_id);
+            }else{
+                load_lead_data(customer_lead_id)
+            }
         });
 
         <?php if ($default_customer_id > 0) { ?>
             load_customer_data("<?= $default_customer_id; ?>");
         <?php } ?>
 
-        function load_customer_data(customer_id){            
+        function load_lead_data(lead_id){  
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customer/_get_lead_data',
+                data: {lead_id:lead_id},
+                dataType:'json',
+                beforeSend: function(response) {
+                    
+                },
+                success: function(response) {
+                    setTimeout(function(){
+                        var lead_business_name = '';
+                        var lead_name    = response.firstname + ' ' + response.lastname;
+                        var lead_email   = response.email_add;
+                        var lead_phone   = response.phone_home;
+                        var lead_mobile  = response.phone_cell;
+                        var lead_address = response.address + ', ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip;
+
+                        if( lead_email == '' ){
+                            lead_email = 'Not Specified';
+                        }                        
+
+                        if( lead_phone == '' ){
+                            lead_phone = 'Not Specified';
+                        }
+
+                        if( lead_mobile == '' ){
+                            lead_mobile = 'Not Specified';
+                        }
+
+                        $("#estimate-customer-email").val(lead_email);
+                        $("#estimate-customer-mobile").val(lead_mobile);
+                        $("#job_location").val(lead_address);
+                        $('#business_name').val(lead_business_name);
+
+                        var map_source = 'http://maps.google.com/maps?q='+lead_address+'&output=embed';
+                        var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="370" width="100%" style=""></iframe>';
+                        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                    },200);                
+                },
+                error: function(e) {
+                    
+                }
+            });
+        }  
+
+        function load_customer_data(customer_id){  
             $.ajax({
                 type: "POST",
                 url: base_url + 'customer/_get_customer_data',
@@ -1207,7 +1258,7 @@ add_footer_js(array(
                         var customer_email = response.email;
                         var customer_phone = response.phone_h;
                         var customer_mobile = response.phone_m;
-                        var customer_address = response.mail_add + ' ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip_code;
+                        var customer_address = response.mail_add + ', ' + response.city + ', ' + ' ' + response.state + ' ' + response.zip_code;
 
                         if( customer_business_name == '' ){
                             customer_business_name = 'Not Specified';
@@ -1229,6 +1280,10 @@ add_footer_js(array(
                         $("#estimate-customer-mobile").val(customer_mobile);
                         $("#job_location").val(customer_address);
                         $('#business_name').val(customer_business_name);
+
+                        var map_source = 'http://maps.google.com/maps?q='+customer_address+'&output=embed';
+                        var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="370" width="100%" style=""></iframe>';
+                        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
                     },200);                
                 },
                 error: function(e) {
