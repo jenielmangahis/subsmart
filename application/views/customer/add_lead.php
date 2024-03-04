@@ -197,7 +197,13 @@
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 <script>
+    
     $('#btn-cancel').on('click', function(){
         location.href = base_url + 'customer/leads';
     });

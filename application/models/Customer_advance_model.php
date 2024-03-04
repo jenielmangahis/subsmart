@@ -831,6 +831,24 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+    public function customerDuplicateLookup($data) {
+        $this->db->select('acs_profile.prof_id,  acs_profile.first_name,  acs_profile.last_name,  acs_profile.customer_type,  COUNT(DISTINCT invoices.id) AS Invoices, COUNT(DISTINCT jobs.id) AS Jobs,  COUNT(DISTINCT estimates.id) AS Estimates, COUNT(DISTINCT events.id) AS events, COUNT(DISTINCT tickets.id) AS tickets, COUNT(DISTINCT payment_records.id) AS Payment');
+        $this->db->from('acs_profile');
+        $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('jobs', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('estimates', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('events', 'events.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('tickets', 'tickets.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('payment_records', 'payment_records.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $data['company_id']);
+        $this->db->where('acs_profile.first_name', $data['first_name']);
+        $this->db->where('acs_profile.last_name', $data['last_name']);
+        $this->db->where('acs_profile.activated', 1);
+        $this->db->group_by('acs_profile.prof_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
     public function convertLeadToCustomer($lead_id, $cid, $uid)
     {
         $is_converted = 0;
