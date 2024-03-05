@@ -63,7 +63,7 @@ class Widgets extends MY_Controller
             $sales_name  = $s->FName . ' ' . $s->LName;
             $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id);
             if( $sales->total_sales > 0 ){
-                $salesLeaderBoards[] = ['uid' => $t->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
+                $salesLeaderBoards[] = ['uid' => $s->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
             }            
         }
 
