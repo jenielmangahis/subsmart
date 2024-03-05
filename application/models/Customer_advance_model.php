@@ -862,4 +862,17 @@ class Customer_advance_model extends MY_Model {
         
         return $result = $query->result();
     }
+
+    public function getAllRecentLeadsByCompanyId($company_id, $limit = 10)
+    {
+
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('company_id', $company_id);        
+        $this->db->order_by('leads_id', 'DESC');
+        $this->db->limit($limit);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
