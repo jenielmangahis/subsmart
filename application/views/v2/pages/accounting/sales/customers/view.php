@@ -533,7 +533,7 @@
                                                 <div class="col-12 col-md-4">
                                                     <table class="nsm-table">
                                                         <tbody>
-                                                            <tr>
+                                                            <tr style="height: 68px !important;">
                                                                 <td class="fw-bold nsm-text-primary">Customer</td>
                                                                 <td><?=in_array($customer->business_name, ['', null]) ?  $customer->first_name.' '.$customer->last_name : $customer->business_name?></td>
                                                             </tr>
@@ -543,21 +543,23 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Phone</td>
-                                                                <td><?=$customer->phone_h?></td>
+                                                                <td><?= formatPhoneNumber($customer->phone_h) ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Mobile</td>
-                                                                <td><?=$customer->phone_m?></td>
+                                                                <td><?= formatPhoneNumber($customer->phone_m) ?></td>
                                                             </tr>
+                                                            <!-- 
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Other</td>
                                                                 <td></td>
                                                             </tr>
+                                                            -->
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Notes</td>
                                                                 <td>
-                                                                    <div class="notes-container w-50">
-                                                                        <textarea name="notes" class="form-control nsm-field cursor-pointer" disabled><?=$vendorDetails->notes === '' || $vendorDetails->notes === null ? 'No notes available. Please click to add notes.' : $vendorDetails->notes?></textarea>                              
+                                                                    <div class="notes-container w-100">
+                                                                        <textarea name="notes" class="form-control nsm-field cursor-pointer" disabled><?=$vendorDetails->notes === '' || $vendorDetails->notes === null ? '' : $vendorDetails->notes?></textarea>                              
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -580,14 +582,20 @@
                                                 <div class="col-12 col-md-4">
                                                     <table class="nsm-table">
                                                         <tbody>
-                                                            <tr rowspan="2">
+                                                            <tr>
                                                                 <td class="fw-bold nsm-text-primary">Billing address</td>
                                                                 <td>
-                                                                    <p class="m-0"><?=$customer->mail_add?></p>
-                                                                    <p class="m-0"><?=$customer->city?>,<?=$customer->state?></p>
-                                                                    <p class="m-0"><?=$customer->zip_code?></p>
+                                                                    <?php
+                                                                        $address = '';
+                                                                        $address .= $customer->mail_add !== null ? $customer->mail_add : "";
+                                                                        $address .= $customer->city !== null ? '<br />' . $customer->city : "";
+                                                                        $address .= $customer->state !== null ? ', ' . $customer->state : "";
+                                                                        $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
+                                                                        echo !empty($address) ? $address : 'Not Specified';
+                                                                    ?>                                                                    
                                                                 </td>
                                                             </tr>
+                                                            <!--
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Terms</td>
                                                                 <td></td>
@@ -600,6 +608,7 @@
                                                                 <td class="fw-bold nsm-text-primary">Preferred delivery method</td>
                                                                 <td></td>
                                                             </tr>
+                                                            -->
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Customer type</td>
                                                                 <td><?=$customer->customer_type?></td>
@@ -608,10 +617,10 @@
                                                                 <td class="fw-bold nsm-text-primary">Customer language</td>
                                                                 <td>English</td>
                                                             </tr>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td class="fw-bold nsm-text-primary">Tax reg. no.</td>
                                                                 <td></td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                 </div>
