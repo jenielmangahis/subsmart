@@ -1,5 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
 <style>
 .row-adt-project{
     background-color: #d1b3ff !important;
@@ -59,12 +60,20 @@
         display: none;
     }
     table.dataTable thead th, table.dataTable thead td {
-    padding: 10px 18px;
+    padding: 10px !important;
     border-bottom: 1px solid lightgray;
 }
 table.dataTable.no-footer {
      border-bottom: 0px solid #111; 
      margin-bottom: 10px;
+}
+
+#customerDuplicateTable td {
+    padding: 0.8rem 0rem;
+}
+
+#customerDuplicateTable_info { 
+    display: none;
 }
 </style>
 
@@ -100,11 +109,9 @@ table.dataTable.no-footer {
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer...">
                         </div>
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
+                    <div class="col-md-8 grid-mb text-end">
+                    <button type="button" class="nsm-button dupEntryButton d-none" data-bs-toggle="modal" data-bs-target=".duplicateRemoverModal"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
                         <div class="nsm-page-buttons page-button-container">
-
-                            <button type="button" class="nsm-button dupEntryButton d-none"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
-
                             <button type="button" class="nsm-button" onclick="location.href='<?= url('customer/import_customer') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Import
                             </button>
@@ -128,23 +135,23 @@ table.dataTable.no-footer {
                         <table class="customerTbl customer-list" id="customer-list" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <td class="table-icon"></td>
-                                    <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
-                                    <?php if (in_array('email', $enabled_table_headers)) : ?><td data-name="Name">Email</td><?php endif; ?>
-                                    <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
-                                    <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
-                                    <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
-                                    <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
-                                    <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
-                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
-                                    <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
-                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
-                                    <?php if (in_array('rate_plan', $enabled_table_headers)) : ?><td data-name="Rate Plan">Rate Plan</td><?php endif; ?>
-                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
-                                    <?php if (in_array('job_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
-                                    <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
-                                    <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
-                                    <td data-name="Manage"></td>
+                                    <th class="table-icon"></th>
+                                    <?php if (in_array('name', $enabled_table_headers)) : ?><th data-name="Name">Name</th><?php endif; ?>
+                                    <?php if (in_array('email', $enabled_table_headers)) : ?><th data-name="Name">Email</th><?php endif; ?>
+                                    <?php if (in_array('industry', $enabled_table_headers)) : ?><th data-name="Name">Industry</th><?php endif; ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) : ?><th data-name="City">City</th><?php endif; ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) : ?><th data-name="State">State</th><?php endif; ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) : ?><th data-name="Source">Source</th><?php endif; ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) : ?><th data-name="Added">Added</th><?php endif; ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><th data-name="Sales Rep">Sales Rep</th><?php endif; ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) : ?><th data-name="Tech">Tech</th><?php endif; ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?><th data-name="Plan Type">Plan Type</th><?php endif; ?>
+                                    <?php if (in_array('rate_plan', $enabled_table_headers)) : ?><th data-name="Rate Plan">Rate Plan</th><?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><th data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </th><?php endif; ?>
+                                    <?php if (in_array('job_amount', $enabled_table_headers)) : ?><th data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></th><?php endif; ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) : ?><th data-name="Phone">Phone</th><?php endif; ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) : ?><th data-name="Status">Status</th><?php endif; ?>
+                                    <th data-name="Manage"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -303,23 +310,23 @@ table.dataTable.no-footer {
                         <table class="customerTbl " id="customer-list" style="width:100%">
                             <thead>
                                 <tr>
-                                    <td class="table-icon"></td>
-                                    <td data-name="Name">Name   </td>
+                                    <th class="table-icon"></th>
+                                    <th data-name="Name">Name   </th>
                                     <?php if($companyId == 1): ?>
-                                    <td data-name="Name">Industry</td>
+                                    <th data-name="Name">Industry</th>
                                     <?php endif; ?>
-                                    <td data-name="City">City</td>
-                                    <td data-name="State">State</td>
-                                    <td data-name="Source">Source</td>
-                                    <td data-name="Added">Added</td>
-                                    <td data-name="Sales Rep">Sales Rep</td>
-                                    <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
-                                    <td data-name="Plan Type">Plan Type</td>
-                                    <td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></td>
-                                    <td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td>
-                                    <td data-name="Phone">Phone</td>
-                                    <td data-name="Status">Status</td>
-                                    <td data-name="Manage"></td>
+                                    <th data-name="City">City</th>
+                                    <th data-name="State">State</th>
+                                    <th data-name="Source">Source</th>
+                                    <th data-name="Added">Added</th>
+                                    <th data-name="Sales Rep">Sales Rep</th>
+                                    <th data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></th>
+                                    <th data-name="Plan Type">Plan Type</th>
+                                    <th data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></th>
+                                    <th data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></th>
+                                    <th data-name="Phone">Phone</th>
+                                    <th data-name="Status">Status</th>
+                                    <th data-name="Manage"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -332,9 +339,135 @@ table.dataTable.no-footer {
     </div>
 </div>
 
+<div class="modal duplicateRemoverModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-clone"></i>&nbsp;&nbsp;<span class="modalTitle">Customer Duplicate List</span></div>
+                <!-- <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 mb-3">
+                    <table id="customerDuplicateTable" class="nsm-table w-100 border-0" style="border-color: #cdcdcd !important;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>CUSTOMER</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>
+                                <td>⯈</td>
+                                <td><strong>Louie Jay Ibanez (5)</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><center><input class="form-check-input table-select check-input-all-customers" id="check-input-all-customers" type="checkbox"></center></td>
+                                <td>&mdash;&nbsp;&nbsp;<small>Louie Jay Ibanez</small></td>
+                                <td>
+                                    <button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button>
+                                    <button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><center><input class="form-check-input table-select check-input-all-customers" id="check-input-all-customers" type="checkbox"></center></td>
+                                <td>&mdash;&nbsp;&nbsp;<small>Louie Jay Ibanez</small></td>
+                                <td>
+                                    <button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button>
+                                    <button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <hr class="mt-0 g-0">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-end">
+                            <button type="button" class="nsm-button normal" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+    const URL_ORIGIN = window.origin;
+
+    function loadDuplicateCustomerData(status) {
+        if (status == "Initialize") {
+            $.ajax({
+                type: "POST",
+                url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
+                success: function(response) {
+                    $('#customerDuplicateTable > tbody').html(response);
+                    var customerDuplicateTable = $('#customerDuplicateTable').DataTable({
+                        "ordering": false,
+                        pageLength: 25
+                    });
+                }
+            });
+        } else if (status == "Reload") {
+            $.ajax({
+                type: "POST",
+                url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
+                success: function(response) {
+                    $('#customerDuplicateTable > tbody').html(response);
+                    // var customerDuplicateTable = $('#customerDuplicateTable').DataTable({
+                    //     "ordering": false,
+                    //     pageLength: 25
+                    // });
+                }
+            });
+        }
+    } loadDuplicateCustomerData("Initialize");
+
+    function viewCustomer(customerID) {
+        const left = (screen.width - 1280) / 2;
+        const top = (screen.height - 720) / 2;
+        window.open(URL_ORIGIN + "/customer/module/" + customerID, "Customer Dashboard", "width=" + 1280 + ", height=" + 720 + ", top=" + top + ", left=" + left);
+    }
+
+    function removeCustomer(customerID, customerName, customerNumber) {
+        Swal.fire({
+            icon: "warning",
+            title: "Remove Customer",
+            html: "Are you sure you want <br>to remove Customer <strong>" + customerName + " #" + customerNumber + "</strong> ?",
+            showCancelButton: true,
+            confirmButtonText: "Remove",
+        }).then((result) => {
+            if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: URL_ORIGIN + "/Customer/ajax_delete_customer",
+                data: "cid=" + customerID,
+                success: function (response) {
+                Swal.fire({
+                    title: "Removed Successfully!",
+                    icon: "success",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.loadDuplicateCustomerData("Reload");
+                    }
+                });
+                }
+            });
+            } 
+        });
+        }
+
     $(document).ready(function() {
+
         var CUSTOMER_LIST_TABLE = $('#customer-list').DataTable({
             "ordering": false,
             "processing": true,
@@ -547,6 +680,7 @@ table.dataTable.no-footer {
         });
     } loadTotalDupEntries();
 
+    
     $(document).on('submit', '#frm-send-message', function(e){
         e.preventDefault();
 

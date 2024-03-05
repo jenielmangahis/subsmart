@@ -69,11 +69,13 @@
                                                         endforeach;
                                                 endif;
                                                 ?>
-                                                
-                                                
                                                 <?php if($company_id == 31): ?>
-                                                    <div class="col-12 col-md-12"> </div>
-                                                    <br><br><br><hr><h3>Alarm Fields</h3>
+                                                    <div class="col-12 col-md-12 mt-3">
+                                                        <div class="nsm-card-title">
+                                                            <span>Alarm Fields</span>
+                                                        </div>
+                                                        <label class="nsm-subtitle mb-3">Specify Alarm fields.</label>
+                                                    </div>
                                                     <?php $alarm_fields = alarm_info_header(); ?>
                                                     <?php foreach($alarm_fields as $alarm): ?>
                                                         <?php 
