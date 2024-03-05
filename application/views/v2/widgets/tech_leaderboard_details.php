@@ -1,14 +1,21 @@
 <?php
-if (count($tech_leaderboard) > 0) :
-    foreach ($tech_leaderboard as $tech) :
+if (count($techLeaderBoards) > 0) :
+    $count = 0;
+    foreach ($techLeaderBoards as $tech) :
 ?>
+        <?php 
+            if( $count > 10 ){
+                break;
+            }   
+        
+        ?>
         <div class="widget-item">
             <?php
-            $image = userProfilePicture($tech->id);
+            $image = userProfilePicture($tech['uid']);
             if (is_null($image)) :
             ?>
                 <div class="nsm-profile">
-                    <span><?php echo getLoggedNameInitials($tech->id); ?></span>
+                    <span><?php echo getLoggedNameInitials($tech['uid']); ?></span>
                 </div>
             <?php
             else :
@@ -19,21 +26,22 @@ if (count($tech_leaderboard) > 0) :
             ?>
             <div class="content">
                 <div class="details">
-                    <span class="content-title"><?= $tech->FName . ' ' . $tech->LName ?></span>
-                    <span class="content-subtitle d-block"><?= $tech->email ?></span>
+                    <span class="content-title"><?= $tech['name']; ?></span>
+                    <span class="content-subtitle d-block"><?= $tech['email'] ?></span>
                 </div>
                 <div class="controls">
-                    <span class="content-subtitle d-block nsm-text-success fw-bold"><?= $tech->totalJobs; ?> <?= $tech->totalJobs > 1 ? ' Jobs' : ' Job'; ?></span>
+                    <span class="content-subtitle d-block nsm-text-success fw-bold"><?= $tech['total_jobs']; ?> <?= $tech['total_jobs'] > 1 ? ' Jobs' : ' Job'; ?></span>
                 </div>
             </div>
         </div>
     <?php
+    $count++;
     endforeach;
 else :
     ?>
     <div class="nsm-empty">
         <i class='bx bx-meh-blank'></i>
-        <span>Tech leaderboard is empty.</span>
+        <span>Tech Leaderboard is empty.</span>
     </div>
 <?php
 endif;

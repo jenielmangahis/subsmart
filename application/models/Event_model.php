@@ -787,6 +787,19 @@ class Event_model extends MY_Model
         }
     }
 
+    public function getAllJobsByCompanyIdAndDateIssued($company_id, $date_range = [])
+    {
+        $this->db->select('jobs.*, COALESCE(job_payments.amount,0)AS payment_amount');
+        $this->db->from('jobs');
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->where('jobs.date_issued >=', $date_range['from']);
+        $this->db->where('jobs.date_issued <=', $date_range['to']);
+
+        $query = $this->db->get();
+        return $query->result();        
+    }
+
     public function getAllSales()
     {
         $query = $this->db->get_where('invoices', array('company_id' => logged('company_id'), 'status' => 'Paid'));

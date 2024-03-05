@@ -1,5 +1,26 @@
 <script>
 $(document).ready(function() {
+    $('#frm-feeds').on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: base_url + "dashboard/sendFeed",
+            dataType: 'json',
+            data: $('#frm-feeds').serialize(),
+            success: function (data) {                               
+                if(data.success){
+                    $('#new_feed_modal').modal('hide');                    
+                    notifyUser('',data.msg,'success');
+                    $('#feedSubject').val('');
+                    $('#feedMessage').val('');
+                }
+                //console.log(data);
+            }, beforeSend: function() {
+                
+            }
+        });
+    });
+
     fetch('<?= base_url('Dashboard/todays_stats') ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
@@ -21,10 +42,10 @@ $(document).ready(function() {
             today = yyyy + '-' + mm + '-' + dd;
 
             //earned
-            for(var x=0; x<data.length; x++){
-                if(today == data[x].date_issued){
-                        totalPayments += parseFloat(data[x].amount);
-                    }
+            for(var x=0; x<jobsCompleted.length; x++){
+                //if(today == data[x].date_issued){
+                    totalPayments += parseFloat(jobsCompleted[x].payment_amount);
+                //}
             }
             //collected
             for(var x=0; x<paymentInvoice.length; x++){
@@ -34,14 +55,14 @@ $(document).ready(function() {
             }
             //jobs completed
             for(var x=0; x<jobsCompleted.length; x++){
-                if(jobsCompleted[x].status == "Completed"){
-                    if(today == jobsCompleted[x].date_issued){
+                if(jobsCompleted[x].status == "Completed" || jobsCompleted[x].status == "Invoiced" || jobsCompleted[x].status == "Finished"){
+                    //if(today == jobsCompleted[x].date_issued){
                         totalJobsCompleted++;
-                    }
+                    //}
                 }else if(jobsCompleted[x].status == "New" || jobsCompleted[x].status == "Scheduled"){
-                    if(today == jobsCompleted[x].date_issued){
+                    //if(today == jobsCompleted[x].date_issued){
                         totalJobsAdded++;
-                    }
+                    //}
                 }
             }
             $("#earned").text('$'+totalPayments); // total earned
@@ -68,6 +89,27 @@ $(document).ready(function() {
                 }
                 $("#recent-customer-container").append(
                     '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/'+recentCustomers[j].prof_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+recentCustomers[j].last_name+' '+recentCustomers[j].first_name+'</span><span class="content-subtitle d-block">'+recentCustomers[j].city+', '+recentCustomers[j].state+' '+recentCustomers[j].zip_code+'</span></div><div class="controls"><span class="nsm-badge primary">'+recentCustomers[j].customer_type+'</span><span class="content-subtitle d-block mt-1">'+recentCustomers[j].email+'</span></div></div></div>'
+                )
+            }
+        }
+
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+
+    fetch('<?= base_url('dashboard/_recent_leads') ?>', {
+        method: 'GET',
+    }) .then(response => response.json() ).then(response => {
+        var {success, recentLeads } = response;
+        $("#recent-leads-container").html('');
+        if(success == 1){
+            for(var j=0; j < recentLeads.length; j++){
+            var nn = "NN";
+                if(recentLeads[j].lastname[0]){
+                    nn = recentLeads[j].lastname[0]+''+recentLeads[j].firstname[0];
+                }
+                $("#recent-leads-container").append(
+                    '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/add_lead/'+recentLeads[j].leads_id+'`"><div class="nsm-profile"><span>'+nn+'</span></div><div class="content ms-2"><div class="details"><span class="content-title">'+recentLeads[j].lastname+' '+recentLeads[j].firstname+'</span><span class="content-subtitle d-block">'+recentLeads[j].city+', '+recentLeads[j].state+' '+recentLeads[j].zip+'</span></div><div class="controls"><span class="content-subtitle d-block mt-1">'+recentLeads[j].email_add+'</span></div></div></div>'
                 )
             }
         }

@@ -27,30 +27,27 @@
     </div>
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
-            <div id="tech_leaderboard">
-
-            </div>
+            <div id="tech_leaderboard"></div>
         </div>
     </div>
 </div>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function(){
-        //loadTechLeaderboards();
+        loadTechLeaderboards();        
     });
 
     function loadTechLeaderboards(){
         $.ajax({
-            url: '<?php echo base_url(); ?>widgets/loadV2TechLeaderBoard',
+            url: base_url + 'widgets/loadV2TechLeaderBoard',
             method: 'get',
             data: {},
             success: function (response) {
-                console.log(response);
-                $('.techleaderboard-container').html(response);
+                $('#tech_leaderboard').html(response);
             }
         });
     }
-</script> -->
+</script>
 
 <?php
     if(!is_null($dynamic_load) && $dynamic_load == true):
