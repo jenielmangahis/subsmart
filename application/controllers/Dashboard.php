@@ -82,8 +82,8 @@ class Dashboard extends Widgets {
         $this->load->model('Feeds_model');
         $this->load->model('users_model');
         
-        $subject = post('subject');
-        $feedMessage = post('message');
+        $subject = post('feed_subject');
+        $feedMessage = post('feed_message');
         $company_id = logged('company_id');
         $user_id = logged('id');
         $userDetails = $this->users_model->getUser($user_id);
@@ -102,7 +102,7 @@ class Dashboard extends Widgets {
             if($userDetails->device_token!="")
                 $notifyResult = $this->notify->send_ios_push($registrationIds, 'Feeds - '.$subject, $feedMessage);
             
-            $json_response = array('success' => true, 'msg' => 'Successfully Sent');
+            $json_response = array('success' => true, 'msg' => 'Message was successfully sent');
             array_push($json_response, json_decode($notifyResult));
             
             echo json_encode($json_response);
@@ -278,9 +278,10 @@ class Dashboard extends Widgets {
 
         // get customer subscription history
         $feeds_query = array(
-            //'where' => array('company_id' => logged('company_id')),
+            'where' => array('company_id' => logged('company_id')),
             'table' => 'feed',
             'select' => '*',
+            'order' => ['order_by' => 'id', 'ordering' => 'DESC']
         );
         $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
 
@@ -547,9 +548,13 @@ class Dashboard extends Widgets {
 
     public function todays_stats()
     {
+        $cid = logged('company_id');
+        $date_from = date('Y-m-d',strtotime('last monday'));
+        $date_to   = date("Y-m-d", strtotime('sunday this week')); 
+
         $payment=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices=$this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
-        $jobsDone = $this->event_model->getAllJobs();
+        $jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
         $collectedAccounts =$this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
         $lostAccounts =$this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
@@ -585,6 +590,23 @@ class Dashboard extends Widgets {
         }
 
         $data_arr = array("success" => $is_success, "recentCustomers" => $recentCustomers);
+        die(json_encode($data_arr));
+
+    }
+
+    public function ajax_recent_leads()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 1;
+        $cid = logged('company_id');
+
+        $recentLeads = $this->Customer_advance_model->getAllRecentLeadsByCompanyId($cid, 10);
+        if( empty($recentLeads) ){
+            $is_success = 0;
+        }
+
+        $data_arr = array("success" => $is_success, "recentLeads" => $recentLeads);
         die(json_encode($data_arr));
 
     }

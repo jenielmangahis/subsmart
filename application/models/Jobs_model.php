@@ -163,6 +163,15 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalSalesBySalesRepresentative($employee_id){        
+        $this->db->select('COALESCE(SUM(job_payments.amount),0)AS total_sales');
+        $this->db->from($this->table_job_payments);
+        $this->db->join('jobs', 'job_payments.job_id = jobs.id', 'left');        
+        $this->db->where("jobs.employee_id", $employee_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     /**
      * @return mixed
      */
@@ -901,6 +910,22 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table_job_payments);
         $this->db->where("job_id", $job_id);
         $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function countAssignedJobsByUserId($user_id)
+    {
+        $this->db->select('COUNT(id)AS total_jobs_assigned');
+        $this->db->from($this->table);
+        $this->db->group_start();
+            //$this->db->or_where('employee_id', $user_id);
+            $this->db->or_where('employee2_id', $user_id);
+            $this->db->or_where('employee3_id', $user_id);
+            $this->db->or_where('employee4_id', $user_id);
+            $this->db->or_where('employee5_id', $user_id);
+            $this->db->or_where('employee6_id', $user_id);
+        $this->db->group_end();
         $query = $this->db->get();
         return $query->row();
     }

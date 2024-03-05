@@ -1692,3 +1692,4 @@ $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
 
 //Wdigets
 $route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
+$route['dashboard/_recent_leads'] = 'Dashboard/ajax_recent_leads';

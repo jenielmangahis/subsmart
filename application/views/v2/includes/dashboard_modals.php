@@ -51,6 +51,7 @@
 
 <div class="modal fade nsm-modal fade" id="new_feed_modal" tabindex="-1" aria-labelledby="new_feed_modal_label" aria-hidden="true">
     <div class="modal-dialog">
+        <form id="frm-feeds">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="new_feed_modal_label">New Feed</span>
@@ -59,16 +60,17 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <input type="text" placeholder="Title" id="feedSubject" class="nsm-field form-control mb-2" required />
-                        <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
+                        <input type="text" placeholder="Title" name="feed_subject" id="feedSubject" class="nsm-field form-control mb-2" required />
+                        <textarea style="height:130px;" name="feed_message" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="nsm-button primary" onclick="sendFeed()">Save Feed</button>
+                <button type="submit" class="nsm-button primary">Save Feed</button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 

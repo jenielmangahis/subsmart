@@ -26,11 +26,53 @@ class Widgets extends MY_Controller
     }
 
     public function loadV2TechLeaderboard()
-    {
-        $comp_id = getLoggedCompanyID();
+    {        
         $this->load->model('widgets_model');
-        $data['tech_leaderboard'] = $this->widgets_model->loadTechLeaderboard($comp_id);
+        $this->load->model('Users_model');
+        $this->load->model('Jobs_model');
+
+        $cid   = getLoggedCompanyID();
+        $techs = $this->Users_model->getCompanyUsers($cid);
+
+        $techLeaderBoards = [];
+        foreach( $techs as $t ){
+            $tech_name  = $t->FName . ' ' . $t->LName;
+            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id);
+            $techLeaderBoards[] = ['uid' => $t->id, 'name' => $tech_name, 'email' => $t->email, 'total_jobs' => $jobs->total_jobs_assigned];
+        }
+
+        usort($techLeaderBoards, function($a, $b) {
+            return $b["total_jobs"] - $a["total_jobs"];
+        });
+
+        $data['techLeaderBoards'] = $techLeaderBoards;
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
+    }
+
+    public function loadV2SalesLeaderboard()
+    {        
+        $this->load->model('widgets_model');
+        $this->load->model('Users_model');
+        $this->load->model('Jobs_model');
+
+        $cid   = getLoggedCompanyID();
+        $sales = $this->Users_model->getCompanyUsers($cid);
+
+        $salesLeaderBoards = [];
+        foreach( $sales as $s ){
+            $sales_name  = $s->FName . ' ' . $s->LName;
+            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id);
+            if( $sales->total_sales > 0 ){
+                $salesLeaderBoards[] = ['uid' => $t->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
+            }            
+        }
+
+        usort($salesLeaderBoards, function($a, $b) {
+            return $b["total_sales"] - $a["total_sales"];
+        });
+
+        $data['salesLeaderBoards'] = $salesLeaderBoards;
+        $this->load->view('v2/widgets/sales_leaderboard_details', $data);
     }
 
     public function getOverdueInvoices()

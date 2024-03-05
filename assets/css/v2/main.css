@@ -2186,3 +2186,6 @@ span.select2-selection {
 .select2-results__group{
 	padding:0px !important;
 }
+.select2-container--default .select2-results__option .select2-results__option .select2-results__option {    
+    padding-left: 0.5em !important;
+}

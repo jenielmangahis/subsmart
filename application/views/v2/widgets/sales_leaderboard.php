@@ -29,11 +29,9 @@ endif;
         </div>
     </div>
 
-    <div class="nsm-card-content jobs_stat">
+    <div class="nsm-card-content">
         <div class="nsm-widget-table">
-            <div id="sales_leaderboard">
-
-            </div>
+            <div id="sales_leaderboard_v2"></div>
         </div>
     </div>      
 
@@ -44,3 +42,20 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        loadSalesLeaderboards();        
+    });
+
+    function loadSalesLeaderboards(){
+        $.ajax({
+            url: base_url + 'widgets/loadV2SalesLeaderBoard',
+            method: 'get',
+            data: {},
+            success: function (response) {
+                $('#sales_leaderboard_v2').html(response);
+            }
+        });
+    }
+</script>

@@ -236,34 +236,47 @@
                             <span>Feeds</span>
                         </div>
                     </div>
-                    <div class="nsm-card-content">
+                    <div class="nsm-card-content">                        
                         <div class="nsm-widget-table">
-                            <?php
-                            if (count($feeds) > 0) :
-                                foreach ($feeds as $feed) :
-                            ?>
-                                    <div class="widget-item">
-                                        <div class="content">
-                                            <div class="details">
-                                                <span class="content-title mb-1"><?= ucfirst($feed->title) ?></span>
-                                                <span class="content-subtitle d-block"><?= ucfirst($feed->message) ?></span>
+                        <?php if ($feeds) { ?>
+                        <table class="nsm-table" id="dashboard-feeds">
+                            <thead>
+                                <tr><td data-name="Activity"></td></tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach($feeds as $feed){ ?>
+                                <tr>
+                                    <td>
+                                        <div class="widget-item">
+                                            <?php $image = userProfilePicture($feed->sender_id); ?>
+                                            <?php if (is_null($image)) { ?>
+                                                <div class="nsm-profile">
+                                                    <span><?php echo getLoggedNameInitials($feed->sender_id); ?></span>
+                                                </div>
+                                            <?php } else { ?>
+                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                                            <?php } ?>
+                                            <div class="content">
+                                                <div class="details">                                                    
+                                                    <span class="content-title"><?= $feed->title ?></span>
+                                                    <span class="content-subtitle d-block"><?= $feed->message ?></span>
+                                                </div>
+                                                <div class="controls">                                                   
+                                                    <span class="content-subtitle d-block mt-3"><?= date('F d, Y g:i A', strtotime($feed->date_created)) ?></span>
+                                                </div>
                                             </div>
-                                            <div class="controls"></div>
                                         </div>
-                                    </div>
-                                <?php
-                                endforeach;
-                                ?>
-                            <?php
-                            else :
-                            ?>
-                                <div class="nsm-empty">
-                                    <i class='bx bx-meh-blank'></i>
-                                    <span>Feed is empty.</span>
-                                </div>
-                            <?php
-                            endif;
-                            ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                        <?php }else{ ?>
+                            <div class="nsm-empty">
+                                <i class='bx bx-meh-blank'></i>
+                                <span>Feed is empty.</span>
+                            </div>
+                        <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -360,6 +373,10 @@
 <script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
 <?php //include viewPath('tickets/add_modal'); ?>
 <script>
+    $(function(){
+        $("#dashboard-feeds").nsmPagination({itemsPerPage:5});    
+    });
+    
     $(document).on('click', '#btn-quick-add-service-ticket', function(){
        var url = base_url + "ticket/_quick_add_service_ticket_form";
        var default_date = moment(new Date());
