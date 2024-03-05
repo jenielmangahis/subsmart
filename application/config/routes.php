@@ -98,6 +98,7 @@ $route['customer/_add_customer_status'] = 'Customer/ajax_add_customer_status';
 $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_status';
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 $route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
+$route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -559,7 +560,7 @@ $route['accounting/customers/(:any)/export-transactions']['post'] = 'accounting_
 $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_controllers/customers/create_invoice/$1/$2';
 $route['accounting/customers/print-transaction/(:any)/(:any)'] = 'accounting_controllers/customers/print_transaction/$1/$2';
 $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/customers/send_transaction/$1/$2';
-$route['accounting/customers/delete_multi_customers'] = 'accounting_controllers/customers/delete_multi_customers';
+$route['accounting/customers/update_multi_customers_status'] = 'accounting_controllers/customers/update_multi_customers_status';
 
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
@@ -568,6 +569,7 @@ $route['accounting/all-sales/export']['post'] = 'accounting_controllers/all_sale
 
 $route['accounting/credit-notes'] = 'accounting_controllers/credit_notes/index';
 $route['accounting/credit-notes/export']['post'] = 'accounting_controllers/credit_notes/export';
+$route['accounting/credit-notes/delete-selected'] = 'accounting_controllers/credit_notes/ajax_delete_selected';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 // $route['accounting/all-sales'] = 'accounting/allsales';
@@ -735,6 +737,7 @@ $route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_co
 $route['accounting/vendors/get-import-data']['post'] = 'accounting_controllers/vendors/get_import_data';
 $route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controllers/vendors/import_vendors_data';
 $route['accounting/vendor/_bill_mark_paid']['post'] = 'accounting_controllers/vendors/ajax_bill_mark_paid';
+$route['accounting/vendors/export_transactions/(:any)'] = 'accounting_controllers/vendors/export_transactions/$1';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
@@ -1074,6 +1077,8 @@ $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
 $route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
+$route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
+$route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
@@ -1517,6 +1522,7 @@ $route['autocomplete/_company_reasons'] = 'Autocomplete/company_reasons';
 $route['autocomplete/_company_furnishers'] = 'Autocomplete/company_furnishers';
 $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instructions';
 $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
+$route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
@@ -1683,3 +1689,6 @@ $route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 $route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
 $route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
 $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
+
+//Wdigets
+$route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
