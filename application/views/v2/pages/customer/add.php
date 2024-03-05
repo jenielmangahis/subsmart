@@ -45,7 +45,7 @@
                 <form id="customer_form">
                     <div class="row g-3 align-items-start">
                         <div class="col-12 col-md-12">
-                            <div class="row ">
+                            <div class="row">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_papers'); ?>
                             </div>
                         </div>
@@ -68,7 +68,40 @@
     </div>
 </div>
 
+<div class="modal duplicateWarningModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;<span class="modalTitle">Duplicate Found!</span></div>
+                <!-- <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i> -->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p><span class="customerNameType"></span> <strong class="duplicateCustomer"></strong> was already exist in the customer's list.</p>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="table-responsive duplicateEntryTable">
+                            
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-0 g-0">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-end">
+                            <button type="button" class="nsm-button normal" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 

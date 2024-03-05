@@ -1,7 +1,21 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/customers_modals'); ?>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
 <style>
+    .customerViewInfo {
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+    }
+
+    #customers-table_length,
+    #customers-table_filter {
+        display: none;
+    }
+
     .nsm-counter.selected, .nsm-counter.co-selected {
         border-bottom: 6px solid rgba(0, 0, 0, 0.35);
     }
@@ -434,7 +448,7 @@
                     </thead>
                     <tbody>
                         <form id="accountingCustomerTblFrm" class="accountingCustomerTblFrm">
-                            <?php if(count($customers) > 0) : ?>
+                            <!-- <?php if(count($customers) > 0) : ?>
                             <?php foreach($customers as $customer) : ?>
                             <tr>
                                 <td>
@@ -533,7 +547,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <?php endif; ?>
+                            <?php endif; ?> -->
                         </form>
                     </tbody>
                 </table>
@@ -543,3 +557,28 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    $(document).ready(function () {
+        // DataTable Configuration ===============
+        const customers_table = $('#customers-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": "<?php echo base_url('accounting_controllers/Customers/customerServersideLoad/'); ?>",
+                "type": "POST",
+            },
+            "language": {
+                "infoFiltered": "",
+            },
+            // "order": [[0, 'desc'] ],
+        });
+
+        $('#search_field').keyup(function() {
+            customers_table.search($(this).val()).draw();
+        }); 
+
+        $('#customers-table').find('tfoot').remove();
+    });
+</script>

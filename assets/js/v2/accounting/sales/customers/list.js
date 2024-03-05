@@ -598,8 +598,7 @@ $("body").delegate(".remove_item_row", "click", function(){
     $(this).parent().parent().remove();
 });
 
-$('#customers-table .receive-payment').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .receive-payment', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -626,8 +625,7 @@ $('#customers-table .receive-payment').on('click', function(e) {
     });
 });
 
-$('#customers-table .create-invoice').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .create-invoice', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -654,8 +652,7 @@ $('#customers-table .create-invoice').on('click', function(e) {
     });
 });
 
-$('#customers-table .create-sales-receipt').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .create-sales-receipt', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -682,8 +679,7 @@ $('#customers-table .create-sales-receipt').on('click', function(e) {
     });
 });
 
-$('#customers-table .create-standard-estimate').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .create-standard-estimate', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -710,8 +706,7 @@ $('#customers-table .create-standard-estimate').on('click', function(e) {
     });
 });
 
-$('#customers-table .create-options-estimate').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .create-options-estimate', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -738,8 +733,7 @@ $('#customers-table .create-options-estimate').on('click', function(e) {
     });
 });
 
-$('#customers-table .create-bundle-estimate').on('click', function(e) {
-    e.preventDefault();
+$(document).on('click', '#customers-table .create-bundle-estimate', function(e) {
     var customerId = $(this).closest('tr').find('.select-one').val();
     var customerName = $(this).closest('tr').find('td:nth-child(2)').text().split(', ');
     var firstName = customerName[1];
@@ -766,11 +760,12 @@ $('#customers-table .create-bundle-estimate').on('click', function(e) {
     });
 });
 
-$("#search_field").on("input", debounce(function() {
-    let _form = $(this).closest("form");
+// Remove Manual Search Field
+// $("#search_field").on("input", debounce(function() {
+//     let _form = $(this).closest("form");
 
-    _form.submit();
-}, 1500));
+//     _form.submit();
+// }, 1500));
 
 $('.nsm-counter').on('click', function() {
     var currUrl = window.location.href;

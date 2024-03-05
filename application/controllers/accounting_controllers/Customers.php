@@ -35,7 +35,7 @@ class Customers extends MY_Controller {
         $this->load->model('business_model');
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('Clients_model');
-
+        $this->load->model('Serversidetable_model', 'serverside_table');
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Sales';
 
@@ -292,6 +292,70 @@ class Customers extends MY_Controller {
 
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
+
+    public function customerServersideLoad() {
+        $company_id = logged('company_id');
+
+        // Initialize Table Information
+        $initializeTable = $this->serverside_table->initializeTable(
+            "accounting_customer_view", 
+            array('customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance'),
+            array('customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance'),
+            null,  
+            array(
+                'company_id' => $company_id,
+            ),
+        );
+
+        // Define the where condition
+        $whereCondition = array('company_id' => $company_id);
+        $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
+
+        $data = $row = array();
+        $i = $this->input->post('start');
+        
+        foreach($getData as $getDatas){
+            if ($getDatas->company_id == $company_id) {
+
+                $customer_id = $getDatas->customer_id;
+                $customer_name = ($getDatas->customer_name != "") ? $getDatas->customer_name : $getDatas->business_name;
+                $customer_address = ($getDatas->customer_address != "") ? $getDatas->customer_address : "Not Specified";
+                if ($getDatas->phone_h == "")  {
+                    $contact = $getDatas->phone_m;
+                } else if ($getDatas->phone_m == "") {
+                    $contact = $getDatas->phone_h;
+                } else {
+                    $contact = "Not Specified";
+                }
+                $email = ($getDatas->email != "") ? $getDatas->email : "Not Specified";
+                $customer_type = ($getDatas->customer_type == "Residential") ? "Residential" : "Not Specified";
+                $open_balance = ($getDatas->open_balance != 0 ) ? $getDatas->open_balance : "0.00";
+
+                $data[] = array(
+                    '<center><div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" name="customer_prof_ids[]" type="checkbox" value="'.$customer_id.'"></div></center>',
+                    "<a class='customerViewInfo' onclick='location.href=`" . base_url('accounting/customers/view/'). $customer_id . "`'><strong>$customer_name</strong></a>",
+                    $customer_address, 
+                    $contact, 
+                    $email,
+                    $customer_type,
+                    '$'.$open_balance,
+                    '<div class="dropdown table-management"> <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="bx bx-fw bx-dots-vertical-rounded"></i> </a> <ul class="dropdown-menu dropdown-menu-end" style=""> <li> <a class="dropdown-item receive-payment" href="#">Receive payment</a> </li> <li> <a class="dropdown-item send-reminder" href="#">Send reminder</a> </li> <li> <a class="dropdown-item create-statement" href="#">Create statement</a> </li> <li> <a class="dropdown-item create-invoice" href="#">Create invoice</a> </li> <li> <a class="dropdown-item create-sales-receipt" href="#">Create sales receipt</a> </li> <li> <a class="dropdown-item create-standard-estimate" href="#">Create standard estimate</a> </li> <li> <a class="dropdown-item create-options-estimate" href="#">Create options estimate</a> </li> <li> <a class="dropdown-item create-bundle-estimate" href="#">Create bundle estimate</a> </li> <li> <a class="dropdown-item send-payment-link" href="#">Send payment link</a> </li> </ul> </div>',
+                );
+                $i++;
+            }
+        }
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->serverside_table->countAll(),
+            "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
+            "data" => $data,
+        );
+        
+        // Output to JSON format
+        echo json_encode($output);
+
+    }    
 
     public function batch_select_customer_type()
     {
