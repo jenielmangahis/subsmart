@@ -153,9 +153,12 @@
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($creditMemo) ? $creditMemo->po_number : ""?>">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label for="sales-rep">Sales Rep</label>
+                                    <label for="sales-rep">Sales Representative</label>
                                     <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
                                     <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>"> -->
+
+                                    <label for="ref-no" style="margin-top:12px;">Reference No.</label>
+                                    <input type="text" class="form-control nsm-field mb-2" name="ref_no" id="ref-no" value="<?=isset($creditMemo) ? $creditMemo->ref_no : ""?>">
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
