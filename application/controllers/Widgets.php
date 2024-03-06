@@ -31,13 +31,17 @@ class Widgets extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('Jobs_model');
 
-        $cid   = getLoggedCompanyID();
-        $techs = $this->Users_model->getCompanyUsers($cid);
+        $cid       = getLoggedCompanyID();
+        $date_from = post('tech_leaderboard_date_from');
+        $date_to   = post('tech_leaderboard_date_to');
+
+        $techs     = $this->Users_model->getCompanyUsers($cid);
 
         $techLeaderBoards = [];
+        $date_range       = ['from' => $date_from, 'to' => $date_to];
         foreach( $techs as $t ){
             $tech_name  = $t->FName . ' ' . $t->LName;
-            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id);
+            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range);
             $techLeaderBoards[] = ['uid' => $t->id, 'name' => $tech_name, 'email' => $t->email, 'total_jobs' => $jobs->total_jobs_assigned];
         }
 
@@ -55,16 +59,19 @@ class Widgets extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('Jobs_model');
 
-        $cid   = getLoggedCompanyID();
-        $sales = $this->Users_model->getCompanyUsers($cid);
+        $cid       = getLoggedCompanyID();
+        $date_from = post('sales_leaderboard_date_from') . ' 00:00:00';
+        $date_to   = post('sales_leaderboard_date_to') . ' 23:59:59';
+        $sales     = $this->Users_model->getCompanyUsers($cid);
 
         $salesLeaderBoards = [];
+        $date_range        = ['from' => $date_from, 'to' => $date_to];
         foreach( $sales as $s ){
-            $sales_name  = $s->FName . ' ' . $s->LName;
-            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id);
-            if( $sales->total_sales > 0 ){
+            $sales_name = $s->FName . ' ' . $s->LName;
+            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id, $date_range);
+            //if( $sales->total_sales > 0 ){
                 $salesLeaderBoards[] = ['uid' => $s->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
-            }            
+            //}            
         }
 
         usort($salesLeaderBoards, function($a, $b) {

@@ -286,12 +286,12 @@ class Dashboard extends Widgets {
         $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
 
         // get customer newsletter
-        $news_query = array(
-            'where' => array('company_id' => logged('company_id')),
-            'table' => 'news',
-            'select' => '*',
-        );
-        $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+        // $news_query = array(
+        //     'where' => array('company_id' => logged('company_id')),
+        //     'table' => 'news',
+        //     'select' => '*',
+        // );
+        // $this->page_data['news'] = $this->general->get_data_with_param($news_query);
 
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();    
         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
