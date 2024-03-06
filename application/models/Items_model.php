@@ -40,6 +40,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getLocationListByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('storage_loc');
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getItemlist()
     {
         // $this->db->where('company_id', getLoggedCompanyID());
@@ -951,6 +960,12 @@ class Items_model extends MY_Model
         $this->db->where('items_has_storage_loc.item_id', $item_id);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function updateStorageLocationByLocId($loc_id, $data)
+    {
+        $this->db->where('loc_id', $loc_id);
+        return $this->db->update($this->table_storage_location, $data);
     }
 }
 
