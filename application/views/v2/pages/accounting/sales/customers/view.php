@@ -555,14 +555,14 @@
                                                                 <td></td>
                                                             </tr>
                                                             -->
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td class="fw-bold nsm-text-primary">Notes</td>
                                                                 <td>
                                                                     <div class="notes-container w-100">
                                                                         <textarea name="notes" class="form-control nsm-field cursor-pointer" disabled><?=$vendorDetails->notes === '' || $vendorDetails->notes === null ? '' : $vendorDetails->notes?></textarea>                              
                                                                     </div>
                                                                 </td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                     <div class="attachments-container w-75">
