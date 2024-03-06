@@ -290,35 +290,7 @@
                     </div>
                     <div class="nsm-card-content">
                         <div class="nsm-widget-table">
-                            <?php
-                            if (count($news) > 0) :
-                                foreach ($news as $new) :
-                            ?>
-                                    <div class="widget-item">
-                                        <div class="content">
-                                            <div class="details">
-                                                <span class="content-title mb-1"><?= ucfirst($new->message) ?></span>
-                                                <span class="content-subtitle d-block">
-                                                    <a href="<?= base_url('' . $new->file_link) ?>" target="_blank" class="nsm-link"><?= ucfirst($new->file_link) ?></a>
-                                                </span>
-                                            </div>
-                                            <div class="controls"></div>
-                                        </div>
-                                    </div>
-                                <?php
-                                endforeach;
-                                ?>
-                            <?php
-                            else :
-                            ?>
-                                <div class="nsm-empty">
-                                    <i class='bx bx-meh-blank'></i>
-                                    <span>Bulletin is empty.</span>
-                                </div>
-                                <?php
-                            endif;
-                                ?>
-                                </div>
+                            <div id="dashboard-newsletter"></div>
                         </div>
                     </div>
                 </div>
@@ -376,6 +348,19 @@
     $(function(){
         $("#dashboard-feeds").nsmPagination({itemsPerPage:5});    
     });
+
+    function load_company_newsletter(){
+        $.ajax({
+            url: base_url + 'widgets/_company_newsletter',
+            method: 'post',            
+            success: function (response) {
+                $('#dashboard-newsletter').html(response);
+            },
+            beforeSend: function() {
+                $('#dashboard-newsletter').html("<span class='bx bx-loader bx-spin'></span>");
+            },
+        });
+    }
     
     $(document).on('click', '#btn-quick-add-service-ticket', function(){
        var url = base_url + "ticket/_quick_add_service_ticket_form";
