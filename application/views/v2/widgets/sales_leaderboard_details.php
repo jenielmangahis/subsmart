@@ -4,7 +4,7 @@ if (count($salesLeaderBoards) > 0) :
     foreach ($salesLeaderBoards as $sales) :
 ?>
         <?php 
-            if( $count > 5 ){
+            if( $count > 10 ){
                 break;
             }   
         
