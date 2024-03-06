@@ -7592,8 +7592,7 @@ $(function() {
     });
 
     $(document).on('click', '#creditMemoModal .modal-footer #save-and-print', function(e) {
-        e.preventDefault();
-
+        e.preventDefault();        
         submitType = 'save-and-print';
 
         $('#modal-container form').submit();
@@ -13950,7 +13949,7 @@ const printPreviewInvoice = () => {
 const printPreviewCreditMemo = () => {
     var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-    $.get('/accounting/print-credit-memo-modal/'+split[1], function(result) {
+    $.get(base_url + 'accounting/print-credit-memo-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);
 
         $('#viewPrintCreditMemoModal').modal('show');
