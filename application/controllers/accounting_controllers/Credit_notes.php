@@ -111,7 +111,7 @@ class Credit_notes extends MY_Controller {
     }
 
     public function index()
-    {                
+    {            
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
@@ -125,54 +125,56 @@ class Credit_notes extends MY_Controller {
         foreach($creditMemos as $creditMemo)
         {
             $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            if( $customer ){
+                $customerName = $customer->first_name . ' ' . $customer->last_name;
 
-            $manageCol = "<div class='dropdown table-management'>
-                <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class='dropdown-menu dropdown-menu-end'>
-                    <li>
-                        <a class='dropdown-item print-credit-memo' href='/accounting/customers/print-transaction/credit-memo/$creditMemo->id' target='_blank'>Print</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item send-credit-memo' href='#'>Send</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item view-edit-credit-memo' href='#'>View/Edit</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item copy-transaction' href='#'>Copy</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item void-credit-memo' href='#'>Void</a>
-                    </li>
-                </ul>
-            </div>";
+                $manageCol = "<div class='dropdown table-management'>
+                    <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                    </a>
+                    <ul class='dropdown-menu dropdown-menu-end'>
+                        <li>
+                            <a class='dropdown-item print-credit-memo' href='/accounting/customers/print-transaction/credit-memo/$creditMemo->id' target='_blank'>Print</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item send-credit-memo' href='#'>Send</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item view-edit-credit-memo' href='#'>View/Edit</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item copy-transaction' href='#'>Copy</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item void-credit-memo' href='#'>Void</a>
+                        </li>
+                    </ul>
+                </div>";
 
-            $notes[] = [
-                'id' => $creditMemo->id,
-                'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
-                'type' => 'Credit Memo',
-                'no' => $creditMemo->ref_no,
-                'customer' => $customerName,
-                'customer_id' => $creditMemo->customer_id,
-                'method' => '',
-                'source' => '',
-                'memo' => $creditMemo->message_credit_memo,
-                'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
-                'aging' => '',
-                'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
-                'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
-                'last_delivered' => '',
-                'email' => $creditMemo->email,
-                'attachments' => '',
-                'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
-                'po_number' => '',
-                'sales_rep' => $creditMemo->sales_rep,
-                'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
-                'manage' => $manageCol
-            ];
+                $notes[] = [
+                    'id' => $creditMemo->id,
+                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'type' => 'Credit Memo',
+                    'no' => $creditMemo->ref_no,
+                    'customer' => $customerName,
+                    'customer_id' => $creditMemo->customer_id,
+                    'method' => '',
+                    'source' => '',
+                    'memo' => $creditMemo->message_credit_memo,
+                    'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'aging' => '',
+                    'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
+                    'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
+                    'last_delivered' => '',
+                    'email' => $creditMemo->email,
+                    'attachments' => '',
+                    'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
+                    'po_number' => $creditMemo->po_number,
+                    'sales_rep' => trim($creditMemo->sales_rep),
+                    'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
+                    'manage' => $manageCol
+                ];
+            }            
         }
 
         if(!empty(get('from'))) {
