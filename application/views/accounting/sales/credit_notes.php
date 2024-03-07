@@ -1,6 +1,15 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/credit_notes_modals'); ?>
-
+<?php 
+    $date = 'today';
+    $from_date = date("Y-m-d");
+    $to_date   = date("Y-m-d");
+    if( isset($dates_filter['type'])){
+        $date = $dates_filter['type'];
+        $from_date = $dates_filter['start-date'];
+        $to_date   = $dates_filter['end-date'];
+    } 
+?>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -60,21 +69,21 @@
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
-                                        <input type="date" id="filter-from" class="nsm-field form-control date" value="<?=empty($from_date) ? date("Y-m-d", strtotime("-1 year")) : $from_date?>" required>
+                                        <input type="date" id="filter-from" class="nsm-field form-control date" value="<?=empty($from_date) ? date("Y-m-d") : $from_date?>" required>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
-                                        <input type="date" id="filter-to" class="nsm-field form-control date"value="<?=empty($to_date) ? date("Y-m-d", strtotime("-1 year")) : $to_date?>" required>
+                                        <input type="date" id="filter-to" class="nsm-field form-control date"value="<?=empty($to_date) ? date("Y-m-d") : $to_date?>" required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="<?=$type === 'recently-paid' ? 'col-12' : 'col-5'?>">
                                         <label for="filter-customer">Customer</label>
                                         <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
-                                            <?php if(empty($customer)) : ?>
+                                            <?php if(empty($customer_filter)) : ?>
                                                 <option value="all" selected="selected">All</option>
                                             <?php else : ?>
-                                                <option value="<?=$customer->id?>"><?=$customer->name?></option>
+                                                <option value="<?=$customer_filter->prof_id?>"><?=$customer_filter->first_name . ' ' . $customer_filter->last_name; ?></option>
                                             <?php endif; ?>
                                         </select>
                                     </div>
