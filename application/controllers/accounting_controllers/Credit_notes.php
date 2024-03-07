@@ -118,10 +118,12 @@ class Credit_notes extends MY_Controller {
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
-
+        
         $creditMemos = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
 
         $notes = [];
+        $dates_filter = [];
+        $customer_filter = [];
         foreach($creditMemos as $creditMemo)
         {
             $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
@@ -153,7 +155,7 @@ class Credit_notes extends MY_Controller {
 
                 $notes[] = [
                     'id' => $creditMemo->id,
-                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'date' => date("Y-m-d", strtotime($creditMemo->credit_memo_date)),
                     'type' => 'Credit Memo',
                     'no' => $creditMemo->ref_no,
                     'customer' => $customerName,
@@ -178,18 +180,20 @@ class Credit_notes extends MY_Controller {
         }
 
         if(!empty(get('from'))) {
-            $dates = [
+            $dates_filter = [
                 'start-date' => get('from'),
-                'end-date' => get('to')
+                'end-date' => get('to'),
+                'type' => get('today')
             ];
 
-            $notes = array_filter($notes, function($v, $k) use ($dates) {
-                return strtotime($v['date']) >= strtotime($dates['start-date']) && strtotime($v['date']) <= strtotime($dates['end-date']);
+            $notes = array_filter($notes, function($v, $k) use ($dates_filter) {
+                return strtotime($v['date']) >= strtotime($dates_filter['start-date']) && strtotime($v['date']) <= strtotime($dates_filter['end-date']);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
         if(!empty(get('customer'))) {
             $customerId = get('customer');
+            $customer_filter = $this->AcsProfile_model->getByProfId($customerId);
             $notes = array_filter($notes, function($v, $k) use ($customerId) {
                 return $customerId === $v['customer_id'];
             }, ARRAY_FILTER_USE_BOTH);
@@ -205,6 +209,8 @@ class Credit_notes extends MY_Controller {
         $this->page_data['page']->title = 'Credit Notes';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['notes'] = $notes;
+        $this->page_data['dates_filter'] = $dates_filter;
+        $this->page_data['customer_filter'] = $customer_filter;
         $this->load->view('accounting/sales/credit_notes', $this->page_data);
     }
 
