@@ -621,6 +621,10 @@
                                                                 <td class="fw-bold nsm-text-primary">Business Name</td>
                                                                 <td><?php echo $customer->business_name; ?></td>
                                                             </tr>
+                                                            <!-- <tr>
+                                                                <td class="fw-bold nsm-text-primary">Tax reg. no.</td>
+                                                                <td></td>
+                                                            </tr> -->
                                                         </tbody>
                                                     </table>
                                                 </div>
