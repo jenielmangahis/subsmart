@@ -3986,4 +3986,23 @@ class Customers extends MY_Controller {
             'success' => $updated > 0 ? 1 : 0
         ]);        
     }
+
+    public function update_single_customers_status()
+    {
+        $success = 0;
+        $prof_id = $this->input->post('customer_prof_ids');
+        if($prof_id) {
+            $updated = $this->AcsProfile_model->update_customer_status($prof_id);        
+            $success = 1;         
+        } else {
+            echo json_encode([
+                'success' => 0
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => $success
+        ]);        
+    }    
 }

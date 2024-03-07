@@ -115,7 +115,7 @@
                                     <div class="col-12 col-md-2">
                                         <label for="expiry-date">Expiry Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : ''?>">
+                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : date("m/d/Y"); ?>">
                                         </div>
                                     </div>
                                 </div>
