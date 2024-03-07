@@ -38,4 +38,13 @@ class Feeds_model extends MY_Model {
         
         return $res;
     }
+
+    public function getAllNewsLetterByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->bulletin);        
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

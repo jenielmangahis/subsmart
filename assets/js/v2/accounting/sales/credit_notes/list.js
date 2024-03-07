@@ -25,7 +25,7 @@ $('.table-filter select:not(#filter-customer)').select2({
 
 $('#filter-customer').select2({
     ajax: {
-        url: '/accounting/get-dropdown-choices',
+        url: base_url + 'accounting/get-dropdown-choices',
         dataType: 'json',
         data: function(params) {
             var query = {
@@ -197,7 +197,7 @@ $('#reset-button').on('click', function() {
 $('#apply-button').on('click', function() {
     var selected = $('.nsm-counter.selected');
 
-    var filterDate = $('#filter-date').val();
+    var filterDate = $('#filter-date-credit-notes').val();
     var filterFrom = $('#filter-from').val();
     var filterTo = $('#filter-to').val();
     var filterCustomer = $('#filter-customer').val();

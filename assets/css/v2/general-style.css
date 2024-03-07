@@ -62,7 +62,7 @@
 }
 
 .nsm-badge.primary{
-	background-color: #6a4a8624;
+	background-color: #6a4a8624 !important;
     color: #6a4a86;
 }
 

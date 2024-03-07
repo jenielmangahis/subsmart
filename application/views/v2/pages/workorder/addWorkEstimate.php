@@ -236,7 +236,7 @@
                                                             }
                                                         ?>
                                                         <input type="text" class="form-control" name="cust_lead_name" value="<?= $cust_lead_name; ?>" readonly="" />
-                                                        <input type="hidden" class="form-control" name="cust_lead_id" value="<?= $cust_lead_id; ?>" />
+                                                        <input type="hidden" class="form-control" name="customer_id" value="<?= $cust_lead_id; ?>" />
                                                         <input type="hidden" class="form-control" name="cust_lead" value="<?= $cust_lead; ?>" />
                                                     </div>
                                                     <?php if( $estimate->customer_id > 0 && ($customer->customer_type == 'Business' || $customer->customer_type == 'Commercial') ){ ?>

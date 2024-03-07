@@ -561,6 +561,7 @@ $route['accounting/customers/create-invoice/(:any)/(:any)'] = 'accounting_contro
 $route['accounting/customers/print-transaction/(:any)/(:any)'] = 'accounting_controllers/customers/print_transaction/$1/$2';
 $route['accounting/customers/send-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/customers/send_transaction/$1/$2';
 $route['accounting/customers/update_multi_customers_status'] = 'accounting_controllers/customers/update_multi_customers_status';
+$route['accounting/customers/update_single_customers_status'] = 'accounting_controllers/customers/update_single_customers_status';
 
 $route['accounting/deposits'] = 'accounting_controllers/deposits/index';
 
@@ -1692,3 +1693,7 @@ $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
 
 //Wdigets
 $route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
+$route['dashboard/_recent_leads'] = 'Dashboard/ajax_recent_leads';
+$route['dashboard/_create_news_feeds'] = 'Dashboard/sendFeed';
+$route['dashboard/_create_newsletter'] = 'Newsletter/saveNewsBulletin';
+$route['dashboard/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';

@@ -191,9 +191,7 @@
                             <td data-name="Customer">CUSTOMER</td>
                             <td data-name="Memo">MEMO</td>
                             <td data-name="Total">TOTAL</td>
-                            <td data-name="Last Delivered">LAST DELIVERED</td>
                             <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="P.O. Number">P.O. Number</td>
                             <td data-name="Sales Rep">SALES REP</td>
@@ -209,19 +207,17 @@
                                     <input class="form-check-input select-one table-select" name="creditNotes[]" type="checkbox" value="<?=$note['id']?>">
                                 </div>
                             </td>
-                            <td><?=$note['date']?></td>
-                            <td><?=$note['type']?></td>
-                            <td><?=$note['no']?></td>
-                            <td><?=$note['customer']?></td>
-                            <td><?=$note['memo']?></td>
-                            <td><?=$note['total']?></td>
-                            <td><?=$note['last_delivered']?></td>
-                            <td><?=$note['email']?></td>
-                            <td><?=$note['attachments']?></td>
-                            <td><?=$note['status']?></td>
-                            <td><?=$note['po_number']?></td>
-                            <td><?=$note['sales_rep']?></td>
-                            <td><?=$note['manage']?></td>
+                            <td><?= $note['date']?></td>
+                            <td><?= $note['type']?></td>
+                            <td><?= $note['no'] != '' ? $note['no'] : '---'; ?></td>
+                            <td><?= $note['customer']; ?></td>
+                            <td><?= $note['memo'] != '' ? $note['memo'] : 'Not Specified'; ?></td>
+                            <td><?= $note['total']?></td>
+                            <td><?= $note['email'] != '' ? $note['email'] : 'Not Specified'; ?></td>
+                            <td><?= $note['status']?></td>
+                            <td><?= $note['po_number'] != '' ? $note['po_number'] : '---'; ?></td>
+                            <td><?= $note['sales_rep'] != '' ? $note['sales_rep'] : 'Not Specified'; ?></td>
+                            <td><?= $note['manage']?></td>
                         </tr>
                         <?php endforeach; ?>
 						<?php else : ?>

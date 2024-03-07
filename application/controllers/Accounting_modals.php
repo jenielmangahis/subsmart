@@ -7206,13 +7206,17 @@ class Accounting_modals extends MY_Controller
             }else{
                 $return['data'] = null;
                 $return['success'] = false;
-                $return['message'] = 'Error';
+                $return['message'] = 'Please add an item';
             }
             
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
+        }elseif( !isset($data['sales_rep']) ){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select sales representative.';
         } else {
             $salesRep = $this->Users_model->getById($data['sales_rep']);
 
@@ -7223,6 +7227,7 @@ class Accounting_modals extends MY_Controller
                 'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
                 'credit_memo_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['credit_memo_date'])) : null,
                 'billing_address' => nl2br($data['billing_address']),
+                'ref_no' => $data['ref_no'],
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
                 'sales_rep' => $salesRep->FName . ' ' . $salesRep->LName,
