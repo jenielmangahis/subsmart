@@ -44,7 +44,19 @@ class Feeds_model extends MY_Model {
         $this->db->select('*');
         $this->db->from($this->bulletin);        
         $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', "DESC");
+        
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getNewsById($id)
+    {
+        $this->db->from($this->bulletin);
+        $this->db->select('*');
+        $this->db->where("id", $id);
+        
+        $query = $this->db->get();
+        return $query->row();
     }
 }
