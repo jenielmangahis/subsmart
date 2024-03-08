@@ -3989,20 +3989,21 @@ class Customers extends MY_Controller {
 
     public function update_single_customers_status()
     {
-        $success = 0;
+        $is_success = 0;
+        $msg = "";
         $prof_id = $this->input->post('customer_prof_ids');
         if($prof_id) {
             $updated = $this->AcsProfile_model->update_customer_status($prof_id);        
-            $success = 1;         
+            $is_success = 1;    
+            $msg = "Customer has been updated to inactive.";     
         } else {
-            echo json_encode([
-                'success' => 0
-            ]);
-            exit;
+            $is_success = 0;
+            $msg = "Error updating customer to inactive.";
         }
 
         echo json_encode([
-            'success' => $success
-        ]);        
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]);         
     }    
 }
