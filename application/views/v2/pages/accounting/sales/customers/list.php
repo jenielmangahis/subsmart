@@ -5,6 +5,18 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
 <style>
+    #search_field {
+        width: 250px;
+    }
+
+    #customerListPagination {
+        height: 34px;
+    }
+
+    #customers-table > tfoot {
+        display: none !important; 
+    }
+
     .customerViewInfo {
         cursor: pointer;
         text-decoration: none;
@@ -349,7 +361,15 @@
                     <div class="col-12 col-md-4 grid-mb">
                         <form action="<?php echo base_url('accounting/customers') ?>" method="get">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search by customer info." value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                <div class="input-group">
+                                    <input type="text" class="form-control mb-2" id="search_field" name="search" placeholder="Search by customer info.">
+                                    <select id="customerListPagination" class="form-select">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -575,10 +595,13 @@
             // "order": [[0, 'desc'] ],
         });
 
-        $('#search_field').keyup(function() {
+        $(document).on('keyup', '#search_field', function () {
             customers_table.search($(this).val()).draw();
-        }); 
-
-        $('#customers-table').find('tfoot').remove();
+        });
+        
+        $(document).on('change', '#customerListPagination', function () {
+            const paginationValue = $(this).val();
+            customers_table.page.len(paginationValue).draw();
+        });
     });
 </script>

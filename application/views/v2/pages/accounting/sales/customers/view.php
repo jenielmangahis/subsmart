@@ -43,7 +43,7 @@
                                                     <a href="#" class="dropdown-item edit-customer">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="dropdown-item" id="make-inactive">Make inactive</a>
+                                                    <a href="#" class="dropdown-item" id="make-inactive" customer-id="<?php echo $customer->prof_id; ?>">Make inactive</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" class="dropdown-item" id="merge-contacts">Merge contacts</a>
@@ -524,11 +524,11 @@
                                         <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
                                             <div class="row g-2">
                                                 <div class="col-12 grid-mb text-end">
-                                                    <div class="nsm-page-buttons page-button-container">
+                                                    <!-- <div class="nsm-page-buttons page-button-container">
                                                         <button type="button" class="nsm-button edit-customer">
                                                             <i class='bx bx-fw bx-pencil'></i> Edit
                                                         </button>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <table class="nsm-table">
@@ -616,6 +616,10 @@
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Customer language</td>
                                                                 <td>English</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="fw-bold nsm-text-primary">Business Name</td>
+                                                                <td><?php echo $customer->business_name; ?></td>
                                                             </tr>
                                                             <!-- <tr>
                                                                 <td class="fw-bold nsm-text-primary">Tax reg. no.</td>

@@ -45,12 +45,17 @@
                         <td style="width:90%;">
                             <ul class="list-description">
                                 <li>
+                                    <?php if( $e->user_docfile_generated_pdfs_id > 0 ){ ?>
                                     <div class="form-check">
                                       <input class="form-check-input" type="checkbox" name="esignPdf[]"  value="<?= $e->id; ?>" id="">                      
                                     </div>
+                                    <?php } ?>
                                 </li>
                                 <li>
-                                    <span class="row-details">Doc Name : <b><?= $e->docfile_name; ?></b></span>
+                                    <?php if( $e->user_docfile_generated_pdfs_id > 0 ){ ?>
+                                    
+                                    <?php } ?>
+                                    <span class="row-details">Doc Name : <b><?= $e->docfile_name != '' ? $e->docfile_name : 'Docfile name not specified'; ?></b></span>
                                     <span class="row-details">Date Created : <?= date("F j, Y g:i A", strtotime($e->date_created)); ?></span>
                                     <hr />
                                     <span class="row-details">eSign ID : <b><?= $e->docusign_envelope_id; ?></b></span>
@@ -59,9 +64,9 @@
                         </td>
                         <td>
                             <?php if( $e->user_docfile_generated_pdfs_id > 0 ){ ?>
-                                <label class="badge badge-success">Verified</label>                       
+                                <label class="badge badge-success status-verified-popover">Verified</label>                       
                             <?php }else{ ?>
-                                <label class="badge badge-danger">Not Verified</label>                       
+                                <label class="badge badge-danger status-not-verified-popover">Not Verified</label>                       
                             <?php } ?>
                         </td>
                         <td style="width:5%;">
@@ -80,6 +85,24 @@
 <script>
 $(function(){
     $("#customer-esign-doc").nsmPagination({itemsPerPage:5});
+
+    $('.status-not-verified-popover').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'eSign Document not yet completed';
+        } 
+    });
+
+    $('.status-verified-popover').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'eSign Document Completed and ready for download';
+        } 
+    });
 
     $('.btn-view-pdf').on('click', function(){        
         var pid = $(this).attr('data-pid');

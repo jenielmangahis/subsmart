@@ -13286,8 +13286,7 @@ const clearForm = () => {
     $('#check_no, #permit_number').val(null).change();
     $("#print_later").prop("checked", false).change();
     $('#account-balance').text('$0.00');
-    $('.delete-row').click();
-    alert('modal' + modalName);
+    $('.delete-row').click();    
     if( modalName == 'creditMemoModal' ){
         $('#sales-rep').empty().change();
         $('#billing-address').val('');

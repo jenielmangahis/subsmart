@@ -6,8 +6,49 @@ const customerEmail = $('span#customer-email').text().trim();
 import("/assets/js/customer/components/FieldCustomName.js");
 $('.edit-customer, .notes-container').on('click', function(e) {
     e.preventDefault();
-
     $('#edit-customer-modal').modal('show');
+});
+
+$('#make-inactive').on('click', function(e) {
+    //bryann
+    Swal.fire({
+        title: 'Inactive Customer',
+        text: 'Are you sure you want to set customer to inactive?',
+        icon: 'question',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        confirmButtonColor: '#2ca01c',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            var customer_prof_ids = $("#make-inactive").attr("customer-id");
+            var update_url = base_url + 'accounting/customers/update_single_customers_status';
+            $.ajax({
+                url: update_url,
+                method: "POST",
+                data: {customer_prof_ids:customer_prof_ids},
+                success: function(data) {
+                    console.log(data);
+                    if(data.success == 1) {
+                        Swal.fire(
+                            'Updated!',
+                            'Customer has been updated to inactive.',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Updated!',
+                            'Error updating customer to inactive.',
+                            'warning'
+                        );
+                    }
+
+                }
+            });     
+        }          
+    });    
 });
 
 $('#edit-customer-modal [data-type="customer_sales_area"').select2({
@@ -442,7 +483,7 @@ $(document).on('click', '#edit-customer-modal #btn-notify-customer-new-pw', func
 });
 
 $('#new-invoice').on('click', function() {
-    $.get('/accounting/get-other-modals/invoice_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/invoice_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -463,7 +504,7 @@ $('#new-invoice').on('click', function() {
 });
 
 $('#new-payment').on('click', function() {
-    $.get('/accounting/get-other-modals/receive_payment_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/receive_payment_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -484,7 +525,7 @@ $('#new-payment').on('click', function() {
 });
 
 $('#new-sales-receipt').on('click', function() {
-    $.get('/accounting/get-other-modals/sales_receipt_modal', function(res) {
+    $.get(base_url +'accounting/get-other-modals/sales_receipt_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -505,7 +546,7 @@ $('#new-sales-receipt').on('click', function() {
 });
 
 $('#new-credit-memo').on('click', function() {
-    $.get('/accounting/get-other-modals/credit_memo_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/credit_memo_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -526,7 +567,7 @@ $('#new-credit-memo').on('click', function() {
 });
 
 $('#new-delayed-charge').on('click', function() {
-    $.get('/accounting/get-other-modals/delayed_charge_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/delayed_charge_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -547,7 +588,7 @@ $('#new-delayed-charge').on('click', function() {
 });
 
 $('#new-time-activity').on('click', function() {
-    $.get('/accounting/get-other-modals/single_time_activity_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/single_time_activity_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -568,7 +609,8 @@ $('#new-time-activity').on('click', function() {
 });
 
 $('#new-standard-estimate').on('click', function() {
-    $.get('/accounting/get-other-modals/standard_estimate_modal', function(res) {
+    
+    $.get(base_url + 'accounting/get-other-modals/standard_estimate_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -589,7 +631,7 @@ $('#new-standard-estimate').on('click', function() {
 });
 
 $('#new-options-estimate').on('click', function() {
-    $.get('/accounting/get-other-modals/options_estimate_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/options_estimate_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -610,7 +652,7 @@ $('#new-options-estimate').on('click', function() {
 });
 
 $('#new-bundle-estimate').on('click', function() {
-    $.get('/accounting/get-other-modals/bundle_estimate_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/bundle_estimate_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -769,7 +811,7 @@ $(document).on('click', '#transactions-table .view-edit-time-charge', function(e
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/time-activity/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/time-activity/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -797,7 +839,7 @@ $(document).on('click', '#transactions-table .view-edit-billable-expense', funct
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/billable-expense/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/billable-expense/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -825,7 +867,7 @@ $(document).on('click', '#transactions-table .view-edit-invoice', function(e) {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/invoice/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/invoice/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -853,7 +895,7 @@ $(document).on('click', '#transactions-table .view-edit-estimate', function(e) {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/estimate/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/estimate/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -895,7 +937,7 @@ $(document).on('click', '#transactions-table .view-edit-credit-memo', function(e
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/credit-memo/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/credit-memo/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -923,7 +965,7 @@ $(document).on('click', '#transactions-table .view-edit-sales-receipt', function
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/sales-receipt/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/sales-receipt/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1035,7 +1077,7 @@ $(document).on('click', '#transactions-table .view-edit-payment', function(e) {
         type: 'Receive Payment'
     };
 
-    $.get('/accounting/view-transaction/receive-payment/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/receive-payment/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
