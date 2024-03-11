@@ -95,6 +95,8 @@ function Signing(hash) {
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
 
     const {  inv_monthly_monitoring, inv_program_setup, inv_installation_cost, inv_taxes, inv_subtotal, inv_equipment_cost } = window.__esigndata.auto_populate_data.invoices;
+
+    const {  business_name } = window.__esigndata.auto_populate_data.business_profile;
     
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
@@ -348,6 +350,18 @@ function Signing(hash) {
         }
       }else{
         return access_password;
+      }
+    }
+
+    if( field_name == "Company" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return business_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return business_name;
       }
     }
 
@@ -1122,7 +1136,7 @@ function Signing(hash) {
     if (
       field_name === "Text" ||
       field_name === "TextString" ||
-      text === undefined
+      text === undefined || field_name === "City"
     ) {
       let { value } = fieldValue || { value: "" };
       const { specs: fieldSpecs, unique_key } = field;
@@ -1403,9 +1417,9 @@ function Signing(hash) {
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
-      if (field_name === "TextString") {
+      if (field_name === "TextString" && (field_name !== 'City')) {
         // $element.addClass("completed");
-        $input.prop("required", false);
+        //$input.prop("required", false);
         // $input.prop("readonly", true);
       }
 
