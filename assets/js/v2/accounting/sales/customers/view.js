@@ -10,7 +10,6 @@ $('.edit-customer, .notes-container').on('click', function(e) {
 });
 
 $('#make-inactive').on('click', function(e) {
-    //bryann
     Swal.fire({
         title: 'Inactive Customer',
         text: 'Are you sure you want to set customer to inactive?',
@@ -24,29 +23,56 @@ $('#make-inactive').on('click', function(e) {
         if(result.isConfirmed) {
             var customer_prof_ids = $("#make-inactive").attr("customer-id");
             var update_url = base_url + 'accounting/customers/update_single_customers_status';
+            /*
+                $.ajax({
+                    url: update_url,
+                    method: "POST",
+                    data: {customer_prof_ids:customer_prof_ids},
+                    success: function(data) {
+                        console.log(data);
+                        if(data.is_success == 1) {
+                            Swal.fire(
+                                'Updated!',
+                                'Customer has been updated to inactive.',
+                                'success'
+                            );
+                            location.reload();
+                        } else {
+                            Swal.fire(
+                                'Warning!',
+                                'Error updating customer to inactive.',
+                                'warning'
+                            );
+                        }
+
+                    }
+                });
+            */  
+
             $.ajax({
+                type: 'POST',
                 url: update_url,
-                method: "POST",
+                dataType: 'json',
                 data: {customer_prof_ids:customer_prof_ids},
-                success: function(data) {
-                    console.log(data);
-                    if(data.success == 1) {
+                success: function(o) {
+                    console.log(o);
+                    if( o.is_success == 1 ){   
                         Swal.fire(
                             'Updated!',
                             'Customer has been updated to inactive.',
                             'success'
                         );
-                        location.reload();
-                    } else {
+                        //location.reload();
+                    }else{
                         Swal.fire(
-                            'Updated!',
+                            'Warning!',
                             'Error updating customer to inactive.',
                             'warning'
                         );
                     }
+                },
+            });
 
-                }
-            });     
         }          
     });    
 });

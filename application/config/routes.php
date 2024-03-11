@@ -1697,3 +1697,4 @@ $route['dashboard/_recent_leads'] = 'Dashboard/ajax_recent_leads';
 $route['dashboard/_create_news_feeds'] = 'Dashboard/sendFeed';
 $route['dashboard/_create_newsletter'] = 'Newsletter/saveNewsBulletin';
 $route['dashboard/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';
+$route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';

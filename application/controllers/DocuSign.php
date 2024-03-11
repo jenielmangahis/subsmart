@@ -48,6 +48,100 @@ class DocuSign extends MYF_Controller
             $this->db->where('user_docfile_recipients_id', $recipientId);
         }
         $fields = $this->db->get('user_docfile_fields')->result();
+        foreach( $fields as $f ){
+            if( $f->field_name == 'Subscriber Name' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Subscriber Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Company' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Dealer Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Primary Contact' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Primary Contact","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Secondary Contact' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Secondary Contact","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'City' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"City","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'State' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"State","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'ZIP' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"ZIP","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'CS Account Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"CS Account Number","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'County' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"County","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'date_not_later' ){
+                $default_date = date("m/d/Y");
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"'.$default_date.'","placeholder":"Date","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'Date of Birth' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Date of Birth","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'Social Security Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Social Security #","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'Abort Code' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Password","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Address' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Address","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Primary Contact Last Name' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Primary Contact Last Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Primary Contact First Name' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Primary Contact First Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Primary Contact Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Primary Contact Number","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Secondary Contact Last Name' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Secondary Contact Last Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Secondary Contact First Name' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Secondary Contact First Name","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Secondary Contact Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Secondary Contact Number","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'ABA' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"ABA","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Checking Account Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Checking Account Number","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Account Number' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Account Number","auto_populate_with":"","width":191}';
+            }
+        }
 
         foreach ($fields as $field) {
             $this->db->where('recipient_id', $field->user_docfile_recipients_id);
@@ -233,14 +327,33 @@ class DocuSign extends MYF_Controller
         $this->db->where('prof_id', $customer_id);
         //$this->db->where('prof_id', 20797);
         $acs_client = $this->db->get('acs_profile')->row();
+        if( $acs_client ){
+            $acs_clientKeys = [
+                'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name', 'date_of_birth', 'ssn'
+            ];
 
-        $acs_clientKeys = [
-            'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name', 'date_of_birth', 'ssn'
-        ];
+            $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
+                return in_array($v, $acs_clientKeys);
+            }, ARRAY_FILTER_USE_KEY);
 
-        $filteredClient = array_filter( (array)$acs_client , function($v) use ($acs_clientKeys) {
-            return in_array($v, $acs_clientKeys);
-        }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredClient = [
+                'first_name' => '', 
+                'last_name' => '',
+                'mail_add' => '', 
+                'city' => '',
+                'state' => '',
+                'zip_code' => '',
+                'email' => '',
+                'phone_h' => '',
+                'phone_m' => '',
+                'country' => '', 
+                'county_name' => '',
+                'date_of_birth' => '',
+                'ssn' => ''
+            ];
+        }
+
         $autoPopulateData['client'] = $filteredClient;
 
         #custom service ticket location
@@ -341,21 +454,24 @@ class DocuSign extends MYF_Controller
         $this->db->where('customer_id', $customer_id);
         $this->db->order_by('id', 'ASC');
         $emergencyPrimaryContact = $this->db->get('contacts')->row();
-
-        $contacts_accessKeys = [
-            'emergency_primary_contact_fname',
-            'emergency_primary_contact_lname',
-            'emergency_primary_contact_phone'
-        ];
-
-        /*$primary_econtact_id = 0;
         if( $emergencyPrimaryContact ){
-            $primary_econtact_id = $contact->id;
-        }*/
+            $contacts_accessKeys = [
+                'emergency_primary_contact_fname',
+                'emergency_primary_contact_lname',
+                'emergency_primary_contact_phone'
+            ];
+
+            $filteredContacts = array_filter( (array)$emergencyPrimaryContact , function($v) use ($contacts_accessKeys) {
+                return in_array($v, $contacts_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredContacts = [
+                'emergency_primary_contact_fname' => '',
+                'emergency_primary_contact_lname' => '',
+                'emergency_primary_contact_phone' => '',                
+            ];
+        }
         
-        $filteredContacts = array_filter( (array)$emergencyPrimaryContact , function($v) use ($contacts_accessKeys) {
-            return in_array($v, $contacts_accessKeys);
-        }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['primary_emergency_contacts'] = $filteredContacts;
 
         #emergency secondary contact
@@ -363,30 +479,74 @@ class DocuSign extends MYF_Controller
         $this->db->where('customer_id', $customer_id);        
         $this->db->order_by('id', 'DESC');
         $emergencySecondaryContact = $this->db->get('contacts')->row();
-
-        $contacts_accessKeys = [
-            'emergency_secondary_contact_fname',
-            'emergency_secondary_contact_lname',
-            'emergency_secondary_contact_phone'
-        ];
         
-        $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
-            return in_array($v, $contacts_accessKeys);
-        }, ARRAY_FILTER_USE_KEY);
+        if( $emergencySecondaryContact ){
+            $contacts_accessKeys = [
+                'emergency_secondary_contact_fname',
+                'emergency_secondary_contact_lname',
+                'emergency_secondary_contact_phone'
+            ];
+            
+            $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
+                return in_array($v, $contacts_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredContacts = [
+                'emergency_secondary_contact_fname' => '',
+                'emergency_secondary_contact_lname' => '',
+                'emergency_secondary_contact_phone' => '',                
+            ];
+        }
+        
         $autoPopulateData['secondary_emergency_contacts'] = $filteredContacts;
 
         #password
         $this->db->where('fk_prof_id', $customer_id);
         $acs_access = $this->db->get('acs_access')->row();
-
-        $acs_accessKeys = [
-            'access_password'
-        ];
+        if( $acs_access ){
+            // $acs_accessKeys = [
+            //     'access_password'
+            // ];
+            
+            // $filteredAcs_access = array_filter( (array)$acs_access , function($v) use ($acs_accessKeys) {
+            //     return in_array($v, $acs_accessKeys);
+            // }, ARRAY_FILTER_USE_KEY);
+            $filteredAcs_access = [
+                'access_password' => ''
+            ];
+        }else{
+            $filteredAcs_access = [
+                'access_password' => ''
+            ];
+        }
         
-        $filteredAcs_access = array_filter( (array)$acs_access , function($v) use ($acs_accessKeys) {
-            return in_array($v, $acs_accessKeys);
-        }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_access'] = $filteredAcs_access;
+
+        #company name
+        $this->db->where('id', $document->user_id);
+        $user = $this->db->get('users')->row();
+        if( $user ){
+            $this->db->where('company_id', $user->company_id);
+            $business_profile = $this->db->get('business_profile')->row();
+            if( $business_profile ){
+                $businessprofile_Keys = [
+                    'business_name'
+                ];
+                $filteredCompany = array_filter( (array)$business_profile , function($v) use ($businessprofile_Keys) {
+                    return in_array($v, $businessprofile_Keys);
+                }, ARRAY_FILTER_USE_KEY);
+            }else{
+                $filteredCompany = [
+                    'company_name' => ''
+                ];
+            }
+        }else{
+            $filteredCompany = [
+                'company_name' => ''
+            ];
+        }
+
+        $autoPopulateData['business_profile'] = $filteredCompany;
         
         #billing
         $this->db->where('fk_prof_id', $customer_id);
@@ -402,15 +562,31 @@ class DocuSign extends MYF_Controller
         *   Equipment cost: Equiment Cost
         *   One Time Activation: Initial Dep
         *   1st Month Monitoring: Rate Plan
-        */        
-        $billingKeys = [
-            'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
-        ];
-
-        $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
-            return in_array($v, $billingKeys);
-        }, ARRAY_FILTER_USE_KEY);
+        */    
         
+        if( $billing ){
+            $billingKeys = [
+                'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+            ];
+    
+            $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
+                return in_array($v, $billingKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredBilling = [
+                'bill_method' => '', 
+                'check_num' => '', 
+                'routing_num' => '', 
+                'card_fname' => '', 
+                'card_lname' => '', 
+                'acct_num' => '', 
+                'credit_card_num' => '', 
+                'equipment' => '', 
+                'credit_card_exp' => '', 
+                'credit_card_exp_mm_yyyy' => ''
+            ];
+        }
+
         $autoPopulateData['billing'] = $filteredBilling;
 
         #cost due at signing
@@ -1058,12 +1234,18 @@ class DocuSign extends MYF_Controller
         $this->db->select('*');
         $this->db->where('id', $envelope['id']);        
         $docFile = $this->db->get('user_docfile')->row();
+
+        //Customer
+        $this->db->select('*');
+        $this->db->where('prof_id', $docFile->customer_id);        
+        $customer = $this->db->get('acs_profile')->row();
         
         //$companyId = logged('company_id');
         $companyId = $docFile->company_id;
         $this->db->where('company_id', $companyId);
         $this->db->select('business_name, address, business_phone, business_email');
         $company = $this->db->get('business_profile')->row();
+
 
         $mail = email__getInstance(['subject' => 'Your document has been completed', 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
@@ -1087,8 +1269,14 @@ class DocuSign extends MYF_Controller
             ]);
             $hash = encrypt($message, $this->password);
 
+            if( $customer ){
+                $heading = '<h1 style="margin-bottom:0;font-size:3em;">Completed: ' . $envelope['name'] . ' ' . $customer->first_name . ' ' . $customer->last_name .'</h1>';
+            }else{
+                $heading = '<h1 style="margin-bottom:0;font-size:3em;">Completed: ' . $envelope['name'] . '</h1>';
+            }
+
             $data = [
-                '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Completed: ' . $envelope['name'] . '</h1>',
+                '%heading%' => $heading,
                 '%business_name%' => $company->business_name,
                 '%business_address%' => $company->address,
                 '%business_phone%' => formatPhoneNumber($company->business_phone),
@@ -2110,6 +2298,11 @@ SQL;
         $this->db->select('business_name, business_address');
         $company = $this->db->get('clients')->row();*/
 
+        //Customer
+        $this->db->select('*');
+        $this->db->where('prof_id', $envelope['customer_id']);        
+        $customer = $this->db->get('acs_profile')->row();
+
         $mail = email__getInstance(['subject' => $envelope['subject'], 'from_name' => $company->business_name]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
@@ -2126,8 +2319,14 @@ SQL;
         $hash = encrypt($message, $this->password);
         $companyLogo = $this->getCompanyProfile();
 
+        if( $customer ){
+            $heading = '<h1 style="margin-bottom:0;font-size:3em;">Review: ' . $envelope['name'] . ' ' . $customer->first_name . ' ' . $customer->last_name . '</h1>';
+        }else{
+            $heading = '<h1 style="margin-bottom:0;font-size:3em;">Review: ' . $envelope['name'] . '</h1>';
+        }
+
         $data = [
-            '%heading%' => '<h1 style="margin-bottom:0;font-size:3em;">Review: ' . $envelope['name'] . '</h1>',
+            '%heading%' => $heading,
             '%business_name%' => $company->business_name,
             //'%business_address%' => $company->business_address,            
             '%business_address%' => '',

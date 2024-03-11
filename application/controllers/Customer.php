@@ -7304,5 +7304,52 @@ class Customer extends MY_Controller
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
         echo json_encode($json_data);
     }
+
+    public function ajax_get_lead_data()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $lead_id = $this->input->post('lead_id');
+        $company_id  = logged('company_id');
+
+        $lead = $this->Customer_advance_model->getLeadByLeadId($lead_id); 
+        if( $lead->phome_cell != '' && $lead->phone_cell != 'NULL' ){
+            $lead->phome_cell = formatPhoneNumber($lead->phome_cell);
+        }else{
+            $lead->phone_m = 'Not Specified';
+        }          
+
+        if( $lead->phone_home != '' && $lead->phone_home != 'NULL' ){
+            $lead->phone_home = formatPhoneNumber($lead->phone_home);
+        }else{
+            $lead->phone_home = 'Not Specified';
+        } 
+        
+        if( $lead->date_of_birth == '' || $lead->date_of_birth == 'NULL' ){
+            $lead->date_of_birth = date("m/d/Y");
+        } 
+
+        if( $lead->sss_num == '' || $lead->sss_num == 'NULL' ){
+            $lead->sss_num = 'Not Specified';
+        } 
+        
+        if( $lead->state == '' || $lead->state == 'NULL' ){
+            $lead->state = '';
+        }
+
+        if( $lead->country == '' || $lead->country == 'NULL' ){
+            $lead->country = 'Not Specified';
+        }
+
+        if( $lead->county == '' || $customleader->county == 'NULL' ){
+            $lead->county = 'Not Specified';
+        }
+
+        if( $lead->address == '' || $lead->address == 'NULL' ){
+            $lead->lead = '';
+        }
+
+        echo json_encode($lead);
+    }
     
 }
