@@ -47,7 +47,7 @@ else :
     ?>
     <div class="nsm-empty">
         <i class="bx bx-meh-blank"></i>
-        <span>There is currently no leaderboard recorded.</span>
+        <span>There is currently no tasks recorded.</span>
     </div>
 <?php
 endif;

@@ -187,45 +187,6 @@
     </div>
 </div>
 
-<div class="row nsm-tickertape mb-3 page-content g-0">
-    <div class="col-12">
-        <div class="nsm-card pb-1 pt-2">
-            <div class="tradingview-widget-container">
-                <div class="tradingview-widget-container__widget"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-                    {
-                        "symbols": [{
-                                "proName": "FOREXCOM:SPXUSD",
-                                "title": "S&P 500"
-                            },
-                            {
-                                "proName": "FOREXCOM:NSXUSD",
-                                "title": "Nasdaq 100"
-                            },
-                            {
-                                "proName": "FX_IDC:EURUSD",
-                                "title": "EUR/USD"
-                            },
-                            {
-                                "proName": "BITSTAMP:BTCUSD",
-                                "title": "BTC/USD"
-                            },
-                            {
-                                "proName": "BITSTAMP:ETHUSD",
-                                "title": "ETH/USD"
-                            }
-                        ],
-                        "colorTheme": "light",
-                        "isTransparent": true,
-                        "showSymbolLogo": true,
-                        "locale": "en"
-                    }
-                </script>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="row h-100 g-3">
@@ -299,6 +260,45 @@
     </div>
 </div>
 
+<div class="row nsm-tickertape mb-3 page-content g-0">
+    <div class="col-12">
+        <div class="nsm-card pb-1 pt-2">
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                    {
+                        "symbols": [{
+                                "proName": "FOREXCOM:SPXUSD",
+                                "title": "S&P 500"
+                            },
+                            {
+                                "proName": "FOREXCOM:NSXUSD",
+                                "title": "Nasdaq 100"
+                            },
+                            {
+                                "proName": "FX_IDC:EURUSD",
+                                "title": "EUR/USD"
+                            },
+                            {
+                                "proName": "BITSTAMP:BTCUSD",
+                                "title": "BTC/USD"
+                            },
+                            {
+                                "proName": "BITSTAMP:ETHUSD",
+                                "title": "ETH/USD"
+                            }
+                        ],
+                        "colorTheme": "light",
+                        "isTransparent": true,
+                        "showSymbolLogo": true,
+                        "locale": "en"
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="drw--modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -346,12 +346,13 @@
 <?php //include viewPath('tickets/add_modal'); ?>
 <script>
     $(function(){
-        $("#dashboard-feeds").nsmPagination({itemsPerPage:5});    
+        $("#dashboard-feeds").nsmPagination({itemsPerPage:5});  
+        load_company_newsletter();  
     });
 
     function load_company_newsletter(){
         $.ajax({
-            url: base_url + 'widgets/_company_newsletter',
+            url: base_url + 'dashboard/_company_newsletter',
             method: 'post',            
             success: function (response) {
                 $('#dashboard-newsletter').html(response);
@@ -361,6 +362,24 @@
             },
         });
     }
+
+    $(document).on('click', '.view-newsletter-details', function(){
+        var newsid = $(this).attr('data-id');
+
+        $('#modalViewNewsLetter').modal('show');        
+        $.ajax({
+            url: base_url + 'dashboard/_view_newsletter',
+            method: 'post',   
+            data:{newsid:newsid},         
+            success: function (response) {
+                $('#modal-view-newsletter-container').html(response);
+            },
+            beforeSend: function() {
+                showLoader($("#modal-view-newsletter-container"));  
+            },
+        });
+    });
+
     
     $(document).on('click', '#btn-quick-add-service-ticket', function(){
        var url = base_url + "ticket/_quick_add_service_ticket_form";

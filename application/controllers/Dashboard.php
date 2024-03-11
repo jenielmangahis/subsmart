@@ -120,7 +120,7 @@ class Dashboard extends Widgets {
     public function getWidgetList(){
         $this->load->model('widgets_model');
         $user_id = logged('id');
-        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList($user_id);
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList();
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 

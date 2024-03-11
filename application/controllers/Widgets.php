@@ -157,9 +157,9 @@ class Widgets extends MY_Controller
     public function removeWidget()
     {
         $this->load->model('widgets_model');
-        $id = post('id');
-        $user_id = logged('id');
-        echo $this->widgets_model->removeWidget($id, $user_id);
+        $id  = post('id');
+        $cid = logged('company_id');
+        echo $this->widgets_model->removeCompanyWidget($id, $cid);
     }
 
     public function changeOrder()
@@ -246,14 +246,54 @@ class Widgets extends MY_Controller
 
     public function addV2Widget()
     {
+        $this->load->library('wizardlib');
+        $this->load->model('widgets_model');
+
+        $id = post('id');
+        $isGlobal = post('isGlobal');
+        $isMain   = post('isMain');
+        $user_id  = logged('id');
+        $cid = logged('company_id');
+
+        $idCount = count($this->widgets_model->getWidgetsByCompanyId($cid));
+
+
+        $details = array(
+            'wu_user_id' => $user_id,
+            'wu_widget_id' => $id,
+            'wu_company_id' => $cid,
+            'wu_order' => $idCount + 1,
+            'wu_is_main' => 0
+        );
+
+        $isExists = $this->wizardlib->isWidgetUsedByCompany($id, $cid);        
+        if (!$isExists) :
+            if ($this->widgets_model->addWidgets($details, $user_id, $id)) :
+                $widget = $this->widgets_model->getWidgetByID($id);
+
+                $data['class'] = 'nsm-card nsm-grid';
+                $data['id'] = $id;
+                $data['dynamic_load'] = true;
+
+                if ($widget->w_name === 'Expense') {
+                    $data = set_expense_graph_data($data);
+                }
+
+                return $this->load->view("v2/" . $widget->w_view_link, $data);
+            endif;
+        endif;
+    }
+
+    public function addV2Widget_old()
+    {
 
         $this->load->library('wizardlib');
         $this->load->model('widgets_model');
 
         $id = post('id');
         $isGlobal = post('isGlobal');
-        $isMain = post('isMain');
-        $user_id = logged('id');
+        $isMain   = post('isMain');
+        $user_id  = logged('id');
 
         $idCount = count($this->widgets_model->getWidgetListPerUser($user_id));
 
