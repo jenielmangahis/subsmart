@@ -1019,7 +1019,7 @@ $(document).on('click', '#transactions-table .view-edit-refund-receipt', functio
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/refund-receipt/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/refund-receipt/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1047,7 +1047,7 @@ $(document).on('click', '#transactions-table .view-edit-delayed-credit', functio
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/delayed-credit/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/delayed-credit/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1075,7 +1075,7 @@ $(document).on('click', '#transactions-table .view-edit-delayed-charge', functio
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get('/accounting/view-transaction/delayed-charge/'+id, function(res) {
+    $.get(base_url + 'accounting/view-transaction/delayed-charge/'+id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1180,7 +1180,7 @@ $('#transactions-table .copy-transaction').on('click', function(e) {
         type: row.find('td:nth-child(3)').text().trim()
     };
 
-    $.get(`/accounting/copy-transaction/${transactionType}/${id}`, function(res) {
+    $.get(base_url + `accounting/copy-transaction/${transactionType}/${id}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1275,7 +1275,7 @@ $('#transactions-table .create-invoice').on('click', function (e) {
     var id = $(this).closest('tr').find('.select-one').val();
     var type = $(this).closest('tr').find('td:nth-child(3)').text().trim();
     
-    $.get(`/accounting/customers/create-invoice/${type.toLowerCase().replaceAll(' ', '-')}/${id}`, function(res) {
+    $.get(base_url + `accounting/customers/create-invoice/${type.toLowerCase().replaceAll(' ', '-')}/${id}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1365,7 +1365,7 @@ $('#transactions-table .void-invoice').on('click', function(e) {
         cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
-            $.get('/accounting/void-transaction/invoice/'+id, function(res) {
+            $.get(base_url + 'accounting/void-transaction/invoice/'+id, function(res) {
                 location.reload();
             });
         }
@@ -1389,7 +1389,7 @@ $('#transactions-table .void-credit-memo').on('click', function(e) {
         cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
-            $.get('/accounting/void-transaction/credit-memo/'+id, function(res) {
+            $.get(base_url + 'accounting/void-transaction/credit-memo/'+id, function(res) {
                 location.reload();
             });
         }
@@ -1439,7 +1439,7 @@ $('#transactions-table .void-sales-receipt').on('click', function(e) {
         cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
-            $.get('/accounting/void-transaction/sales-receipt/'+id, function(res) {
+            $.get(base_url + 'accounting/void-transaction/sales-receipt/'+id, function(res) {
                 location.reload();
             });
         }
@@ -1655,7 +1655,7 @@ $('#transactions-table .edit-recurring-transaction').on('click', function(e) {
         type: transactionType
     };
 
-    $.get(`/accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
+    $.get(base_url + `accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1747,7 +1747,7 @@ $('#transactions-table .use-recurring-transaction').on('click', function(e) {
         type: transactionType
     };
 
-    $.get(`/accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
+    $.get(base_url + `accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1939,7 +1939,7 @@ $('#send-reminders').on('click', function(e) {
 
 function getRowData(id, modalName)
 {
-    $.get(`/accounting/recurring-transactions/get-details/${id}`, function(res) {
+    $.get(base_url + `accounting/recurring-transactions/get-details/${id}`, function(res) {
         var result = JSON.parse(res);
 
         if(result.success === false) {
