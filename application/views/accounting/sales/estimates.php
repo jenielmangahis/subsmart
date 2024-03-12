@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="accounting-estimates">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
@@ -314,6 +314,15 @@
     </div>
 </div>
 
-<script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js">
+<!-- <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"> -->
 <?php //include viewPath('includes/footer_accounting'); ?>
+<script>
+$(function(){
+    $("#accounting-estimates").nsmPagination({itemsPerPage:10});  
+
+    $(".select-all").click(function(){
+        $('.form-check-input').not(this).prop('checked', this.checked);        
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

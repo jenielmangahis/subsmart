@@ -41,7 +41,7 @@
                 <div class="nsm-callout error d-none"></div>
 
                 <div class="upload-wrapper">
-                    <!-- <div class="col-12" data-document-type="client_agreement">
+                    <div class="col-12" data-document-type="client_agreement">
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
@@ -63,9 +63,9 @@
                                 </button>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
 
-                    <!-- <div class="col-12" data-document-type="photo_id_copy">
+                    <div class="col-12" data-document-type="photo_id_copy">
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
@@ -135,11 +135,11 @@
                                 </button>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
 
-                    <!-- <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
+                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
                         <div class="spinner-border" role="status"></div>
-                    </div> -->
+                    </div>
 
                     <template>
                         <div class="col-12">
@@ -180,34 +180,32 @@
                         </div>                
                         <div class="mt-4" id="esign-container"></div>
                     </div>
-
-    <!--                 <div class="col-12 col-12 col-md-6">
-                        <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
-                            <i class='bx bx-fw bx-list-minus'></i> Customize List
-                        </button>
-                    </div> -->
                     <div class="row mt-5">
-                        <div class="col-6 col-md-6">
+                        <div class="col-6 col-md-6 mb-2">
+                            <button type="button" class="nsm-button primary w-100 ms-0" id="managecustomerdocumentsbtn">
+                                <i class='bx bx-fw bx-list-minus'></i> Customize List
+                            </button>                            
+                        </div>
+
+                        <div class="col-6 col-md-6 mb-2">
                             <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
                                 <i class='bx bx-fw bx-import'></i> Download Selected
                             </button>
                         </div>
-
                         <div class="col-6 col-md-6">
                             <button type="button" class="nsm-button w-100 ms-0 btn-delete-selected" id="managecustomerdocumentsbtn--delete">
                                 <i class='bx bx-fw bx-trash'></i>
                                 <span class="text">Delete Selected</span>
                             </button>
                         </div>
+                        <div class="col-6 col-6 col-md-6">
+                            <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
+                                <i class='bx bx-fw bx-import'></i>
+                                <span class="text">Import eSign</span>
+                            </button>
+                        </div>
                     </div>
-                </form>
-
-<!--                 <div class="col-12 col-12 col-md-6">
-                    <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
-                        <i class='bx bx-fw bx-import'></i>
-                        <span class="text">Import eSign</span>
-                    </button>
-                </div> -->
+                </form>                
             </div>
         </div>
     </div>
@@ -271,7 +269,7 @@
                     </div>
                 </div>
 
-                <!-- <div class="nsm-card mb-2 h-auto" data-document-type="photo_id_copy">
+                <div class="nsm-card mb-2 h-auto" data-document-type="photo_id_copy">
                     <div class="nsm-card-content">
                         <div class="d-flex">
                             <div>
@@ -320,7 +318,7 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="documents-loader d-flex align-items-center justify-content-center" style="padding: 1rem 0;">
                     <div class="spinner-border" role="status"></div>

@@ -11,10 +11,10 @@ foreach ($widgets as $widget):
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <div class="form-check form-switch">
-                    <input class="form-check-input ms-0" type="checkbox"  onclick="manipulateWidget(this,'<?= $widget->w_id ?>')" <?= $this->wizardlib->isWidgetUsed($widget->w_id) ? 'checked' : '' ?> data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ">
+                    <input class="form-check-input ms-0" type="checkbox"  onclick="manipulateWidget(this,'<?= $widget->w_id ?>')" <?= $this->wizardlib->isWidgetGlobal($widget->w_id) ? 'checked' : '' ?> data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ">
                 </div>
             </div>
-            <div class="col-12 mt-2">
+            <!-- <div class="col-12 mt-2">
                 <div class="form-check d-inline-block me-2 mb-0">
                     <input class="form-check-input" type="checkbox" value="" id="widgetGlobal_<?= $widget->w_id ?>" <?= $this->wizardlib->isWidgetGlobal($widget->w_id) ? 'checked' : '' ?>>
                     <label class="form-check-label content-subtitle" for="widgetGlobal_<?= $widget->w_id ?>">
@@ -27,7 +27,7 @@ foreach ($widgets as $widget):
                         Add to Main Widget
                     </label>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

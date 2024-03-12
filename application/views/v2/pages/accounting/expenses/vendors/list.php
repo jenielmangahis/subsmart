@@ -542,7 +542,6 @@
 </div>
 <script>
 $(function(){   
-
     $(".select-all").click(function(){
         var count_vendor_list_check = $('.select-all').filter(':checked').length;
         if(count_vendor_list_check > 0) {
@@ -552,7 +551,7 @@ $(function(){
             $(".dropdown-make-inactive").addClass("disabled");
             $(".dropdown-email").addClass("disabled");
         }             
-    }) 
+    }); 
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

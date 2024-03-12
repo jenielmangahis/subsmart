@@ -1056,7 +1056,7 @@ class Customer extends MY_Controller
     }
 
     public function settingStatus()
-    {
+    {        
         $this->page_data['page']->title = 'Customer Status';
         $this->page_data['page']->parent = 'Customers';
         $this->hasAccessModule(9); 
@@ -1072,7 +1072,8 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+        $default_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id, $default_ids);
 
         $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
     }
@@ -1963,19 +1964,7 @@ class Customer extends MY_Controller
             'select' => '*',
         );
 
-        // $get_customer_status = array(
-        //     'where' => array(
-        //             'company_id' => logged('company_id')
-        //     ),
-        //     'or_where' => array(
-        //         'company_id' => 0,
-        //     ),
-        //     'table' => 'acs_cust_status',
-        //     'select' => '*',
-        // );
-
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
 
         if(logged('company_id') == 58 || logged('company_id') == 1){
             $solar_info_settings_query = array(
@@ -1999,8 +1988,9 @@ class Customer extends MY_Controller
         $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
     
         // fetch customer statuses
-        // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-        // $this->page_data['customer_status'] = $this->general->get_data_with_param($get_customer_status);
+        //$this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
