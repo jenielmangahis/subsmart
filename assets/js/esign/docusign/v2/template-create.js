@@ -1,7 +1,7 @@
 function TemplateCreate() {
   const PDFJS = pdfjsLib;
 
-  const prefixURL = "";
+  const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
   const validFileExtensions = ["pdf"];
 
   const maxRecipients = 10;
@@ -27,7 +27,7 @@ function TemplateCreate() {
     PREPARE: "PREPARE",
   };
 
-  async function createFilePreview(event, file) {
+  async function createFilePreview(event, file, docfile) {
     // await sleep(1000);
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -37,7 +37,7 @@ function TemplateCreate() {
     }
 
     let document = null;
-    const documentUrl = URL.createObjectURL(file);
+    const documentUrl = URL.createObjectURL(file);    
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
@@ -46,7 +46,7 @@ function TemplateCreate() {
       alert(error);
       return;
     }
-
+    
     const html = `
       <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
         <div class="esignBuilder__docPreviewHover"></div>
@@ -71,6 +71,7 @@ function TemplateCreate() {
 
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" data-action="preview" href="#">Preview</a>
+                <a class="dropdown-item" data-action="download_file" data-id="${docfile.id}" href="#">Download</a>
                 <a class="dropdown-item" data-action="delete" href="#">Delete</a>
               </div>
             </div>
@@ -139,6 +140,7 @@ function TemplateCreate() {
 
     const actions = {
       preview: showDocument,
+      download_file: downloadDocument,
       delete: function (event) {
         const _file = files.find((f) => f.name == file.name);
 
@@ -198,6 +200,7 @@ function TemplateCreate() {
 
   async function onChangeFile(event) {
     const { files: eventFiles } = event.target;
+    const { files: docFiles } = event.template;
 
     if (files && files.length) {
       for (let index = 0; index < eventFiles.length; index++) {
@@ -212,8 +215,9 @@ function TemplateCreate() {
     // We could use Promise.all, but that wont display
     // previews in order, but a lot faster.
     for (let index = 0; index < eventFiles.length; index++) {
-      const file = eventFiles[index];
-      await createFilePreview(event, file);
+      const file = eventFiles[index]; 
+      const docfile = docFiles[index];
+      await createFilePreview(event, file, docfile);
     }
   }
 
@@ -246,6 +250,21 @@ function TemplateCreate() {
     $saveAndClose.addClass("d-flex");
     $discardChanges.removeClass("d-none");
     $submitBtnText.text("Next");
+  }
+
+  async function downloadDocument(event){       
+    const fileId = event.target.attributes["data-id"].value;    
+    const endpoint = `${prefixURL}/eSign_v2/_download_document?fileid=${fileId}`;
+    const response = await fetch(endpoint);
+    docfile = await response.json();
+
+    var link = document.createElement("a");
+    link.setAttribute("download", "");
+    link.setAttribute("target", "_blank");
+    link.href = docfile.path;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 
   async function showDocument(event) {
@@ -531,6 +550,7 @@ function TemplateCreate() {
     }
 
     const {
+      id,
       name,
       description,
       subject,
@@ -539,9 +559,8 @@ function TemplateCreate() {
       recipients,
       files = [],
     } = template;
-
     let templateFiles = files.map(async (file) => {
-      const { path: filePath, name: fileName } = file;
+      const { path: filePath, name: fileName, id:fileId } = file;
 
       const fileResponse = await fetch(`${prefixURL}${filePath}`);
       const blob = await fileResponse.blob();
@@ -564,7 +583,7 @@ function TemplateCreate() {
     $completedMessage.val(completed_message);
     $file.removeAttr("required");
 
-    const fakeEvent = { target: { files: templateFiles } };
+    const fakeEvent = { target: { files: templateFiles }, template:template };
     await onChangeFile(fakeEvent);
 
     let _recipients = recipients.map((r) => {
