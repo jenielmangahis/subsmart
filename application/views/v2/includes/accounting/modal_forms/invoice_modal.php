@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <span class="modal-title content-title">
-                                Invoice <span><?=isset($invoice) ? '#'.str_replace($invoice_prefix, '', $invoice->invoice_number) : ''?></span>
+                                Invoice <span><?=isset($invoice) ? '#'.str_replace($invoice_prefix, '', $invoice->invoice_number) : ''?></span> 
                             </span>
                         </div>
                     </div>
@@ -218,16 +218,13 @@
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
-                                    <label for="job-location" style="font-size: 13px;">Job location (optional, select, or add new one)</label>
+                                    <label for="job-location" style="font-size: 10px;">Job location (optional, select, or add new one)</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="job-location" name="job_location" value="<?=isset($invoice) ? $invoice->job_location : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="job-name">Job name (optional)</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="job-name" name="job_name" value="<?=isset($invoice) ? $invoice->job_name : ''?>">
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-12 col-md-2">
                                     <label for="term">Terms</label>
                                     <select name="term" id="term" class="form-control nsm-field">
@@ -237,7 +234,7 @@
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </select>
-                                </div>
+                                </div>  
                                 <div class="col-12 col-md-2">
                                     <label for="customer-email">Customer email</label>
                                     <input type="email" name="customer_email" id="customer-email" class="form-control nsm-field mb-2" value="<?=isset($invoice) ? $invoice->customer_email : ''?>">
@@ -245,7 +242,11 @@
                                         <input type="checkbox" name="send_later" value="1" class="form-check-input" id="send-later" <?=isset($invoice) && $invoice->send_later === "1" ? 'checked' : ''?>>
                                         <label class="form-check-label" for="send-later">Send later</label>
                                     </div>
-                                </div>
+                                </div>                              
+                            </div>
+
+                            <div class="row">
+                                
                                 <div class="col-12 col-md-2">
                                     <label for="location-of-sale">Location of sale</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="location-of-sale" name="location_of_sale" value="<?=isset($invoice) ? $invoice->location_scale : ''?>">
@@ -254,9 +255,7 @@
                                     <label for="tracking-no">Tracking no.</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="tracking-no" name="tracking_no" value="<?=isset($invoice) ? $invoice->tracking_number : ''?>">
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-12 col-md-2">
                                     <label for="ship-via">Ship via</label>
                                     <input type="text" class="form-control nsm-field mb-2" id="ship-via" name="ship_via" value="<?=isset($invoice) ? $invoice->ship_via : ''?>">
@@ -266,7 +265,30 @@
                                     <div class="nsm-field-group calendar">
                                         <input type="text" class="form-control nsm-field mb-2 date" id="shipping-date" name="shipping_date" value="<?=isset($invoice) && $invoice->shipping_date !== '' ? date("m/d/Y", strtotime($invoice->shipping_date)) : ''?>">
                                     </div>
+                                </div>                                
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-12 col-md-2">
+                                    <label for="invoice-no">Invoice #</label>
+                                    <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="<?=isset($invoice) ? $invoice->invoice_number : "$invoice_prefix".str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
                                 </div>
+                                <div class="col-12 col-md-2">
+                                    <label for="job-no">Job # (optional) 
+                                        <span id="modal-popover-job-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
+                                        <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Field is auto-populated on create invoice from a Work Order."></span> -->
+                                    </label>
+                                    <input type="text" class="form-control nsm-field mb-2" id="job-no" name="job_no" value="<?=isset($invoice) ? $invoice->work_order_number : ''?>">
+                                </div>
+                                <div class="col-12 col-md-2">
+                                    <label for="purchase-order-no">Purchase order # (optional) 
+                                        <span id="modal-popover-purchase-order-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
+                                        <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional if you want to display the purchase order number on invoice."></span> -->
+                                    </label>
+                                    <input type="text" class="form-control nsm-field mb-2" id="purchase-order-no" name="purchase_order_no" value="<?=isset($invoice) ? $invoice->po_number : ''?>">
+                                </div>                            
+
                                 <div class="col-12 col-md-2">
                                     <label for="billing-address">Billing address</label>
                                     <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2"><?=isset($invoice) ? str_replace("<br />", "", $invoice->billing_address) : ''?></textarea>
@@ -274,25 +296,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-2">
-                                    <label for="invoice-no">Invoice #</label>
-                                    <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="<?=isset($invoice) ? $invoice->invoice_number : "$invoice_prefix".str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="job-no">Job # (optional) <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Field is auto-populated on create invoice from a Work Order."></span></label>
-                                    <input type="text" class="form-control nsm-field mb-2" id="job-no" name="job_no" value="<?=isset($invoice) ? $invoice->work_order_number : ''?>">
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="purchase-order-no">Purchase order # (optional) <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional if you want to display the purchase order number on invoice."></span></label>
-                                    <input type="text" class="form-control nsm-field mb-2" id="purchase-order-no" name="purchase_order_no" value="<?=isset($invoice) ? $invoice->po_number : ''?>">
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="shipping-to">Shipping to</label>
-                                    <textarea name="shipping_to" id="shipping-to" class="form-control nsm-field mb-2"><?=isset($invoice) ? str_replace("<br />", "", $invoice->shipping_to_address) : ''?></textarea>
-                                </div>
-                            </div>
 
-                            <div class="row date-row">
                                 <div class="col-12 col-md-2">
                                     <label for="date-issued">Date issued <span class="text-danger">*</span></label>
                                     <div class="nsm-field-group calendar">
@@ -318,11 +322,20 @@
                                         <option value="Declined" <?=isset($invoice) && $invoice->status === 'Declined' ? 'selected' : ''?>>Declined</option>
                                         <option value="Schedule" <?=isset($invoice) && $invoice->status === 'Schedule' ? 'selected' : ''?>>Schedule</option>
                                     </select>
+                                </div>                            
+
+                                <div class="col-12 col-md-2">
+                                    <label for="shipping-to">Shipping to</label>
+                                    <textarea name="shipping_to" id="shipping-to" class="form-control nsm-field mb-2"><?=isset($invoice) ? str_replace("<br />", "", $invoice->shipping_to_address) : ''?></textarea>
                                 </div>
                             </div>
 
+                            <div class="row date-row">
+
+                            </div>
+
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
+                                <div class="col-12 col-md-8 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
                                         <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
@@ -935,5 +948,23 @@
                 return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
             } 
         });     
+
+        $('#modal-popover-job-optional').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Field is auto-populated on create invoice from a Work Order.';
+            } 
+        });  
+
+        $('#modal-popover-purchase-order-optional').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional if you want to display the purchase order number on invoice.';
+            } 
+        });  
     });
 </script>
