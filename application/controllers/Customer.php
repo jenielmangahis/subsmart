@@ -1966,7 +1966,6 @@ class Customer extends MY_Controller
 
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
-
         if(logged('company_id') == 58 || logged('company_id') == 1){
             $solar_info_settings_query = array(
                 'table' => 'acs_solar_info_settings',

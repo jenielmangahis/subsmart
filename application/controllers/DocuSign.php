@@ -373,6 +373,7 @@ class DocuSign extends MYF_Controller
         #acs alarm details
         $this->db->where('fk_prof_id', $customer_id);
         $acs_alarm = $this->db->get('acs_alarm')->row();
+        $acs_alarm->passcode = '';
 
         $acs_alarm_accessKeys = [
             'alarm_cs_account',
