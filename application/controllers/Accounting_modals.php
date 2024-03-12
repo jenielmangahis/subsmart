@@ -7209,6 +7209,10 @@ class Accounting_modals extends MY_Controller
                 $return['message'] = 'Please add an item';
             }
             
+        }elseif( $data['adjustment_value'] > 0 && $data['adjustment_name'] == '' ){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please specify adjustment name';
         }elseif( $data['customer'] == '' ){
             $return['data'] = null;
             $return['success'] = false;

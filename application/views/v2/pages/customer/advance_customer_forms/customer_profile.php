@@ -17,7 +17,7 @@
                         <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
                     <?php endforeach; ?>
                 </select>
-                <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/settings/customerStatus') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Status</a>&nbsp;&nbsp;
+                <a href="<?= base_url('customer/status'); ?>" target="_new" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Status</a>&nbsp;&nbsp;
             </div>
         </div>
         <div class="row form_line">

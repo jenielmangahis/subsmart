@@ -582,7 +582,7 @@ class Estimate_model extends MY_Model
 
             $this->db->where('estimates.user_id', getLoggedUserID());
         }*/
-
+        $this->db->order_by('estimate_date', 'desc');
         $query = $this->db->get();
         $results = $query->result();
         $estimate_costs = array();

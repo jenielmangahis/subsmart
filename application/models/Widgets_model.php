@@ -171,6 +171,25 @@ class Widgets_model extends MY_Model {
         return json_encode($details);
     }
 
+    function removeCompanyWidget($id, $company_id)
+    {
+        $this->db->where('wu_widget_id', $id);
+        $this->db->where('wu_company_id', $company_id);
+        if($this->db->delete('widgets_users')){
+            $details = array(
+                'success' => true,
+                'message' => 'Successfully removed'
+            );
+        }else{
+            $details = array(
+                'success' => false,
+                'message' => 'Cannot find widget'
+            );
+        }
+
+        return json_encode($details);
+    }
+
     function addWidgets($details)
     {
         if($this->db->insert('widgets_users', $details)):
@@ -180,7 +199,7 @@ class Widgets_model extends MY_Model {
         endif;
     }
     
-    function getWidgetsList($user_id)
+    function getWidgetsList()
     {
 //        $query = "Select * FROM widgets WHERE NOT EXISTS(SELECT * FROM widgets_users WHERE widgets.w_id = widgets_users.wu_widget_id AND wu_user_id = $user_id)";
 //        return $this->db->query($query)->result();

@@ -5214,6 +5214,19 @@ function formatSmSNumber($to_number, $extension = '+1')
     return $to_number;
 }
 
+function defaultCompanyCustomerStatusIds()
+{
+    if( logged('company_id') == 31 ){
+        $status_ids = [30,29,28,27,26,23,19,9,6,5,36,35,44,45];
+    }elseif( logged('company_id') == 24 || logged('company_id') == 58 || logged('company_id') == 52 || logged('company_id') == 85 ){
+        $status_ids = [2,3,4,5,6,9,19,32,33,34,39,40,41,42,43,44,45];
+    }else{
+        $status_ids = [44,45];
+    }
+
+    return $status_ids;
+}
+
 if (!function_exists('getAcsProfileCustomerName')) {
 
     function getAcsProfileCustomerName($prof_id)
