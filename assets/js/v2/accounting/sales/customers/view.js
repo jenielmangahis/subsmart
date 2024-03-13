@@ -739,7 +739,7 @@ $('#edit-customer-form').on('submit', async function(e) {
         success: function(data)
         {
             if(data.success){
-                sucess("Customer Updated Successfully!",data.profile_id);
+                sucess("Customer Updated Successfully!",data.profile_id); 
             }else{
                 error(data.message);
             }
