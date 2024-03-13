@@ -260,21 +260,23 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td style="float: right;">
                                                         <div class="row">
-                                                            <div class="col-8">
+                                                            <div class="col-10" style="float: right;">
                                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($estimate) ? $estimate->adjustment_name : ''?>">
                                                             </div>
-                                                            <div class="col-3">
+                                                            <!-- <div class="col-3">
                                                                 <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($estimate) ? number_format(floatval($estimate->adjustment_value), 2, '.', ',') : ''?>">
-                                                            </div>
-                                                            <div class="col-1 d-flex align-items-center">
-                                                                <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
+                                                            </div> -->
+                                                            <div class="col-1 d-flex align-items-center" style="padding-left: 0 !important;">
+                                                                <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
+                                                                <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span> -->
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <span class="transaction-adjustment">
+                                                        <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($estimate) ? number_format(floatval($estimate->adjustment_value), 2, '.', ',') : ''?>">
+                                                        <!-- <span class="transaction-adjustment">
                                                             <?php if(isset($estimate)) : ?>
                                                                 <?php
                                                                 $amount = '$'.number_format(floatval($estimate->adjustment_value), 2, '.', ',');
@@ -284,7 +286,7 @@
                                                             <?php else : ?>
                                                                 $0.00
                                                             <?php endif; ?>
-                                                        </span>
+                                                        </span> -->
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -414,3 +416,16 @@
         <!--end of modal-->
     </form>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#modal-help-popover-adjustment').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+            } 
+        });     
+    });
+</script>
