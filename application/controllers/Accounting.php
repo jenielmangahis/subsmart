@@ -8811,7 +8811,7 @@ class Accounting extends MY_Controller
     }
 
     public function newEstimateList($tab = '')
-    {
+    {        
         $is_allowed = $this->isAllowedModuleAccess(18);
         if (!$is_allowed) {
             $this->page_data['module'] = 'estimate';
@@ -8819,12 +8819,8 @@ class Accounting extends MY_Controller
             die();
         }
         $role = logged('role');
-        if ($role == 2 || $role == 3 || $role == 1) {
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
-        } else {
-            $company_id = logged('company_id');
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
-        }
+        $company_id = logged('company_id');
+        $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
         if (!empty($tab)) {
             $query_tab = $tab;
             if ($tab == 'declined%20by%20customer') {
@@ -8842,11 +8838,7 @@ class Accounting extends MY_Controller
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
             } else {
-                if ($role == 1 || $role == 2) {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
-                } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
-                }
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
             }
         }
 

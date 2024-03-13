@@ -27,6 +27,41 @@ class DocuSign_v2 extends MYF_Controller
         echo json_encode(['path' => $docpath]);
     }
 
+    public function ajax_replace_docfile()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $this->db->where('id', $post['docid']);
+        $userDocfileDocument = $this->db->get('user_docfile_templates_documents')->row();
+        if( $userDocfileDocument ){
+            $tempName = $_FILES['template_doc_file']['tmp_name'];
+            $filepath = FCPATH . 'uploads/docusigntemplates/';
+            $filename = $_FILES['template_doc_file']['name'];
+            $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+
+            $payload = [
+                'name' => $filename,
+                'path' => str_replace(FCPATH, '/', $filepath . $filename)
+            ];           
+            $this->db->where('id', $post['docid']);
+            $this->db->update('user_docfile_templates_documents', $payload);
+
+            move_uploaded_file($tempName, $filepath . $filename);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success, 
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function apiSigning()
     {
         $decrypted = decrypt($this->input->get('hash', true), $this->password);

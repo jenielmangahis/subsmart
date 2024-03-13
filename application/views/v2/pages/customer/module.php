@@ -24,8 +24,8 @@
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container" style="width:250px;">
-                            <select class="" id="search-customer" style="width: 100%"></select>
+                        <div class="nsm-page-buttons page-button-container" style="width:450px;">
+                            <select class="" id="search-customer"></select>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
@@ -117,24 +117,22 @@
             location.href = base_url + 'customer/module/' + selected;
         });
 
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
         function formatRepoCustomer(repo) {
             if (repo.loading) {
                 return repo.text;
             }
-
             var $container = $(
-                '<div>' + repo.first_name + ' ' + repo.last_name + '</div>'
+                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
             );
-
             return $container;
-        }
-
-        function formatRepoCustomerSelection(repo) {
-            if (repo.first_name != null) {
-                return repo.first_name + ' ' + repo.last_name;
-            } else {
-                return repo.text;
-            }
         }
     });
 
