@@ -1393,6 +1393,7 @@ $route['eSign_v2/templateEdit'] = 'DocuSign_v2/templateEdit';
 $route['eSign_v2/signing'] = 'DocuSign_v2/signing';
 $route['eSign_v2/manage'] = 'DocuSign_v2/manage';
 $route['eSign_v2/manager'] = 'DocuSign_v2/manager';
+$route['eSign_v2/_download_document'] = 'DocuSign_v2/ajax_download_document';
 
 // Cron Payment
 $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';

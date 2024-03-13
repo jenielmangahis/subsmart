@@ -16,6 +16,17 @@ class DocuSign_v2 extends MYF_Controller
         $this->load->view('esign/docusign/signing', $this->page_data);
     }
 
+    public function ajax_download_document()
+    {
+        $fileid = $this->input->get('fileid');
+        $this->db->where('id', $fileid);
+        $docfile = $this->db->get('user_docfile_templates_documents')->row();
+        $docpath = base_url($docfile->path);
+
+        header('content-type: application/json');
+        echo json_encode(['path' => $docpath]);
+    }
+
     public function apiSigning()
     {
         $decrypted = decrypt($this->input->get('hash', true), $this->password);

@@ -605,7 +605,7 @@ $(document).on('click', '#customers-table .receive-payment', function(e) {
     var lastName = customerName[0];
     customerName = firstName+' '+lastName;
 
-    $.get('/accounting/get-other-modals/receive_payment_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/receive_payment_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -659,7 +659,7 @@ $(document).on('click', '#customers-table .create-sales-receipt', function(e) {
     var lastName = customerName[0];
     customerName = firstName+' '+lastName;
 
-    $.get('/accounting/get-other-modals/sales_receipt_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/sales_receipt_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {

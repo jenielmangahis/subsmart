@@ -2504,7 +2504,7 @@ $(function() {
                     });
                 break;
                 case 'customer':
-                    $.get('/accounting/get-customer-details/' + split[1], function(res) {
+                    $.get(base_url + 'accounting/get-customer-details/' + split[1], function(res) {
                         var customer = JSON.parse(res);
 
                         var customerName = '';
@@ -2582,7 +2582,7 @@ $(function() {
     });
 
     $(document).on('change', '#purchaseOrderModal #customer', function() {
-        $.get('/accounting/get-customer-details/' + $(this).val(), function(res) {
+        $.get(base_url + 'accounting/get-customer-details/' + $(this).val(), function(res) {
             var customer = JSON.parse(res);
 
             var customerName = '';
@@ -5319,8 +5319,11 @@ $(function() {
             processData: false,
             contentType: false,
             success: function(result) {
+                // Increment Starting Check after Print
+                var currentStartingNo = parseInt($('#starting-check-no').val());
+                $('#starting-check-no').val(currentStartingNo + 1);
+                
                 $('#successPrintCheck').modal('hide');
-
                 $('#printChecksModal #payment_account').trigger('change');
             }
         });
@@ -8068,7 +8071,7 @@ $(function() {
 
     $(document).on('change', '#invoiceModal #customer', function() {
         if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new') {
-            $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+            $.get(base_url + `accounting/get-customer-details/${$(this).val()}`, function(result) {
                 var customer = JSON.parse(result);
     
                 if (customer.business_name !== "" && customer.business_name !== null) {
@@ -8703,7 +8706,7 @@ $(function() {
     });
 
     $(document).on('change', '#creditMemoModal #customer', function() {
-        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+        $.get(base_url + `accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
             if (customer.business_name !== "" && customer.business_name !== null) {
@@ -9284,7 +9287,7 @@ $(function() {
     });
 
     $(document).on('change', '#salesReceiptModal #customer', function() {
-        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+        $.get(base_url + `accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
             if (customer.business_name !== "" && customer.business_name !== null) {
@@ -9341,7 +9344,7 @@ $(function() {
     });
 
     $(document).on('change', '#refundReceiptModal #customer', function() {
-        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+        $.get(base_url + `accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
             if (customer.business_name !== "" && customer.business_name !== null) {
@@ -9370,7 +9373,7 @@ $(function() {
     });
 
     $(document).on('change', '#standard-estimate-modal #customer, #options-estimate-modal #customer, #bundle-estimate-modal #customer', function() {
-        $.get('/accounting/get-customer-details/' + $(this).val(), function(res) {
+        $.get(base_url + 'accounting/get-customer-details/' + $(this).val(), function(res) {
             var customer = JSON.parse(res);
 
             var jobLoc = '';

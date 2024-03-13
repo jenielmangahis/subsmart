@@ -936,7 +936,7 @@ $('#new-invoice').on('click', function() {
 });
 
 $('#new-payment').on('click', function() {
-    $.get('/accounting/get-other-modals/receive_payment_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/receive_payment_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -955,7 +955,7 @@ $('#new-payment').on('click', function() {
 });
 
 $('#new-sales-receipt').on('click', function() {
-    $.get('/accounting/get-other-modals/sales_receipt_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/sales_receipt_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
