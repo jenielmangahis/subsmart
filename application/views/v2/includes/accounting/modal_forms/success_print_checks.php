@@ -3,7 +3,7 @@
     <div id="successPrintCheck" class="modal fade modal-fluid d-flex nsm-modal" role="dialog">
         <div class="modal-dialog" style="width: 30%; height: 30%; margin: auto">
             <!-- Modal content-->
-            <form id="print-success-form">
+            <form id="print-success-form" style="border: 1px solid lightgray;">
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header">
                     <span class="modal-title content-title">Did your checks print OK?</span>
@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-ok" value="ok" checked>
+                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-ok" value="ok">
                                         <label class="form-check-label" for="print-ok">Yes, they all printed correctly</label>
                                     </div>
                                 </div>
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-no" value="no">
+                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-no" value="no" checked>
                                         <label class="form-check-label" for="print-no">No, keep all checks in the Print Checks list</label>
                                     </div>
                                 </div>

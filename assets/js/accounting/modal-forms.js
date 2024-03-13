@@ -5319,8 +5319,11 @@ $(function() {
             processData: false,
             contentType: false,
             success: function(result) {
+                // Increment Starting Check after Print
+                var currentStartingNo = parseInt($('#starting-check-no').val());
+                $('#starting-check-no').val(currentStartingNo + 1);
+                
                 $('#successPrintCheck').modal('hide');
-
                 $('#printChecksModal #payment_account').trigger('change');
             }
         });
