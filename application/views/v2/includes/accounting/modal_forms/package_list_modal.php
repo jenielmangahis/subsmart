@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <nav>
-                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                <div class="nav nav-tabs nsm-nav-pills nsm-nav-pill2" id="nav-tab" role="tablist">
                                     <a class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Package</a>
                                     <a class="nav-item nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Create Package</a>
                                 </div>
@@ -106,11 +106,11 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <label for="package_price">Total Price</label>
-                                            <input type="text" class="form-control nsm-field mb-2" name="package_price" id="package_price">
+                                            <input type="number" class="form-control nsm-field mb-2" name="package_price" id="package_price">
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label for="package_price_set">Set Package Price</label>
-                                            <input type="text" class="form-control nsm-field mb-2" name="package_price_set" id="package_price_set">
+                                            <input type="number" class="form-control nsm-field mb-2" name="package_price_set" id="package_price_set">
                                         </div>
                                         <div class="col-12">
                                             <button type="button" class="nsm-button success float-end" id="create-package">Create/Add Package</button>
