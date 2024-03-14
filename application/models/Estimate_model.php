@@ -10,10 +10,11 @@ class Estimate_model extends MY_Model
     public function getAllByCompany($company_id, $sort = '', $filter = array())
     {
 
-        $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name');
+        $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name, users.FName AS user_firstname, users.LName AS user_lastname');
         $this->db->from($this->table);
         $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
-        $this->db->join('ac_leads', "estimates.lead_id = ac_leads.leads_id", 'left');
+        $this->db->join('ac_leads', "estimates.lead_id = ac_leads.leads_id", 'left');   
+        $this->db->join('users', "estimates.user_id = users.id", 'left');
         $this->db->where('estimates.company_id', $company_id);  
         $this->db->where('estimates.view_flag', 0);  
         
@@ -510,9 +511,10 @@ class Estimate_model extends MY_Model
      */
     public function filterBy($filters = array(), $company_id = 0, $role_id = 0)
     {
-
-        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id,estimates.estimate_type, estimates.company_id, estimates.status');
+        
+        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id,estimates.estimate_type, estimates.company_id, estimates.status, users.FName AS user_firstname, users.LName AS user_lastname');
         $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
+        $this->db->join('users', "estimates.user_id = users.id", 'left');
 
 //        $this->db->select("*");
         $this->db->from($this->table);

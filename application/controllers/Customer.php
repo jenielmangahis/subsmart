@@ -992,7 +992,7 @@ class Customer extends MY_Controller
             );
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
-
+        
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
 
     }
@@ -5533,7 +5533,7 @@ class Customer extends MY_Controller
     }
 
     public function customer_subscriptions()
-    {
+    {        
         $this->page_data['page']->title = 'Customer Subscriptions';
         $this->page_data['page']->parent = 'Customers';
         

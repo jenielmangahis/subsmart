@@ -71,9 +71,10 @@ function TemplateCreate() {
               </button>
 
               <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" data-action="preview" href="#">Preview</a>
-                <a class="dropdown-item" data-action="download_file" data-id="${docfile.id}" href="#">Download</a>
-                <a class="dropdown-item" data-action="delete" href="#">Delete</a>
+                <a class="dropdown-item" data-action="replace_file" data-id="${docfile.id}" href="#"><i class='bx bx-file'></i> Replace</a>
+                <a class="dropdown-item" data-action="preview" href="#"><i class='bx bx-search-alt-2'></i> Preview</a>
+                <a class="dropdown-item" data-action="download_file" data-id="${docfile.id}" href="#"><i class='bx bx-download'></i> Download</a>
+                <a class="dropdown-item" data-action="delete" href="#"><i class='bx bx-trash'></i> Delete</a>
               </div>
             </div>
         </div>
@@ -142,6 +143,7 @@ function TemplateCreate() {
     const actions = {
       preview: showDocument,
       download_file: downloadDocument,
+      replace_file: replaceFile,
       delete: function (event) {
         const _file = files.find((f) => f.name == file.name);
 
@@ -266,6 +268,12 @@ function TemplateCreate() {
     document.body.appendChild(link);
     link.click();
     link.remove();
+  }
+
+  async function replaceFile(event){       
+    const fileId = event.target.attributes["data-id"].value; 
+    $('#docfile-id').val(fileId);
+    $('#modalReplaceFile').modal('show');
   }
 
   async function showDocument(event) {

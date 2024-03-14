@@ -32,9 +32,9 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send">Send</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print">Print</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete">Delete</a></li>
+                                <li><a class="dropdown-item disabled dropdown-send" href="javascript:void(0);" id="send">Send</a></li>
+                                <li><a class="dropdown-item disabled dropdown-print" href="javascript:void(0);" id="print">Print</a></li>
+                                <li><a class="dropdown-item disabled dropdown-delete" href="javascript:void(0);" id="delete">Delete</a></li>
                             </ul>
                         </div>
 
@@ -44,9 +44,35 @@
                                     Filter
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3">
+                            <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-4">
+                                        <label for="filter-date">Date</label>
+                                        <select class="nsm-field form-select" name="filter_date" id="filter-date-credit-notes">
+                                            <option value="last-365-days" <?= $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
+                                            <option value="custom" <?=$date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="today" <?= empty($date) || $date === 'today' ? 'selected' : ''?>>Today</option>
+                                            <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
+                                            <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
+                                            <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
+                                            <option value="this-quarter" <?=$date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
+                                            <option value="this-year" <?=$date === 'this-year' ? 'selected' : ''?>>This year</option>
+                                            <option value="last-week" <?=$date === 'last-week' ? 'selected' : ''?>>Last week</option>
+                                            <option value="last-month" <?=$date === 'last-month' ? 'selected' : ''?>>Last month</option>
+                                            <option value="last-quarter" <?=$date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
+                                            <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
+                                            <option value="all-dates" <?=$date === 'all-dates' ? 'selected' : ''?>>All dates</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="filter-from">From</label>
+                                        <input type="date" id="filter-from" class="nsm-field form-control date" value="<?=empty($from_date) ? date("Y-m-d") : $from_date?>" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="filter-to">To</label>
+                                        <input type="date" id="filter-to" class="nsm-field form-control date"value="<?=empty($to_date) ? date("Y-m-d") : $to_date?>" required>
+                                    </div>
+                                    <div class="col-4">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
                                             <option value="all" selected>All</option>
@@ -56,26 +82,17 @@
                                             <option value="closed-converted">Closed, converted</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="filter-date">Date</label>
-                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                            <option value="this-month">This month</option>
-                                            <option value="last-month">Last month</option>
-                                            <option value="last-3-months">Last 3 months</option>
-                                            <option value="last-6-months">Last 6 months</option>
-                                            <option value="last-12-months" selected>Last 12 months</option>
-                                            <option value="year-to-date">Year-to-date</option>
-                                            <option value="2021">2021</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                            <option value="2014">2014</option>
-                                        </select>
+                                </div>                                
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button" id="reset-button">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                            Apply
+                                        </button>
                                     </div>
                                 </div>
                             </ul>
@@ -91,19 +108,19 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_estimate_num" id="chk_estimate_num" class="form-check-input">
-                                    <label for="chk_estimate_num" class="form-check-label">Estimate number</label>
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_estimate_num" class="form-check-input">
+                                    <label for="chk_estimate_num" class="form-check-label">Estimate Number</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_expiration_date" id="chk_expiration_date" class="form-check-input">
-                                    <label for="chk_expiration_date" class="form-check-label">Expiration date</label>
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_expiration_date" class="form-check-input">
+                                    <label for="chk_expiration_date" class="form-check-label">Expiration Date</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_po_number" id="chk_po_number" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
                                     <label for="chk_po_number" class="form-check-label">P.O. Number</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_sales_rep" id="chk_sales_rep" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                     <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                 </div>
                             </ul>
@@ -117,10 +134,10 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Date">DATE</td>
-                            <td data-name="No.">NO.</td>
+                            <td data-name="Estimate Number">ESTIMATE NUMBER</td>
                             <td data-name="Customer">CUSTOMER</td>
                             <td data-name="Expiration Date">EXPIRATION DATE</td>
-                            <td data-name="PO Number">P.O. NUMBER</td>
+                            <td data-name="P.O. Number">P.O. NUMBER</td>
                             <td data-name="Sales Rep">SALES REP</td>
                             <td data-name="Amount">AMOUNT</td>
                             <td data-name="Status">STATUS</td>
@@ -144,26 +161,28 @@
                                 echo $customer->last_name.', '.$customer->first_name;
                                 ?>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><?= date("m/d/Y", strtotime($estimate->expiry_date)); ?></td>
+                            <td><?= $estimate->purchase_order_number != '' ? $estimate->purchase_order_number : 'Not Specified'; ?></td>
+                            <td><?= $estimate->user_firstname . ' ' . $estimate->user_lastname; ?></td>
                             <td>
-                                <?php
+                                $<?php
                                     $total1 = floatval($estimate->option1_total) + floatval($estimate->option2_total);
                                     $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
 
                                     if($estimate->estimate_type == 'Option')
                                     {
-                                        echo '$ '.$total1;
+                                        $grand_total = $total1;
                                     }
                                     elseif($estimate->estimate_type == 'Bundle')
                                     {
-                                        echo '$ '.$total2;
+                                        $grand_total = $total2;
                                     }
                                     else
                                     {
-                                        echo '$ '.$estimate->grand_total; 
+                                        $grand_total = $estimate->grand_total; 
                                     }
+
+                                    echo $grand_total > 0 ? $grand_total : '0.00';
                                 ?>
                             </td>
                             <td><?=$estimate->status?></td>
@@ -321,7 +340,45 @@ $(function(){
     $("#accounting-estimates").nsmPagination({itemsPerPage:10});  
 
     $(".select-all").click(function(){
-        $('.form-check-input').not(this).prop('checked', this.checked);        
+        $('.form-check-input').not(this).prop('checked', this.checked);
+
+        var count_rows_list_check = $('.select-all').filter(':checked').length;
+        if(count_rows_list_check > 0) {
+            $(".dropdown-send").removeClass("disabled");
+            $(".dropdown-print").removeClass("disabled");
+            $(".dropdown-delete").removeClass("disabled");
+        } else {
+            $(".dropdown-send").addClass("disabled");
+            $(".dropdown-delete").addClass("disabled");
+            $(".dropdown-print").addClass("disabled");
+        }           
+    });
+
+    $(".select-one").click(function(){
+        var count_rows_list_check = $('.select-one').filter(':checked').length;
+        if(count_rows_list_check > 0) {
+            $(".dropdown-send").removeClass("disabled");
+            $(".dropdown-print").removeClass("disabled");
+            $(".dropdown-delete").removeClass("disabled");
+        } else {
+            $(".dropdown-send").addClass("disabled");
+            $(".dropdown-delete").addClass("disabled");
+            $(".dropdown-print").addClass("disabled");
+        }            
+    });
+
+    $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
+        var chk = $(this);
+        var dataName = $(this).next().text();
+
+        var index = $(`#accounting-estimates thead td[data-name="${dataName}"]`).index();
+        $(`#accounting-estimates tr`).each(function() {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index]).show();
+            } else {
+                $($(this).find('td')[index]).hide();
+            }
+        });
     });
 });
 </script>

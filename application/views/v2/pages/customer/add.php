@@ -14,6 +14,12 @@
         justify-content: center;
         margin: auto;
     }
+    .search-customer-container{
+        display:block;
+        float:right;
+        margin-top:10px;
+        margin-bottom:10px;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -39,6 +45,9 @@
                             <button><i class='bx bx-x'></i></button>
                             This powerful module widget will help you gather and customized each field information you like to gather from each customer. 
                             Each fields can be group into categories to smoothly log the entries of each customer.
+                        </div>
+                        <div class="search-customer-container" style="width:450px;">
+                            <select class="" id="search-customer" style="width: 100%"></select>
                         </div>
                     </div>
                 </div>
@@ -169,6 +178,56 @@
             const headerRect = $header.getBoundingClientRect();
             window.scroll({top: ((sectionRect.top + window.scrollY) - headerRect.height * 2), behavior: "smooth"});
             $section.classList.add("active-section");
+        }
+    });
+
+    $(function(){
+        $('#search-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data,
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Search Customer',            
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        });
+
+        $('#search-customer').on('change', function(){
+            var selected = $(this).val();
+            location.href = base_url + 'customer/module/' + selected;
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            var $container = $(
+                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
+            );
+            return $container;
         }
     });
 </script>
