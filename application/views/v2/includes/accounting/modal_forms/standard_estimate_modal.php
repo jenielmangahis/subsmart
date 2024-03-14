@@ -167,9 +167,9 @@
                                                         <tr>
                                                             <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                             <td><?=ucfirst($itemDetails->type)?></td>
-                                                            <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->qty?>"></td>
-                                                            <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->costing), 2, '.', ',')?>"></td>
-                                                            <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                            <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?=$item->qty?>" min="0"></td>
+                                                            <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="<?=number_format(floatval($item->costing), 2, '.', ',')?>"></td>
+                                                            <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                             <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                             <td>
                                                                 <span class="row-total">
