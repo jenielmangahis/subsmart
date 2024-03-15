@@ -90,18 +90,20 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" <?=isset($estimate) ? 'disabled' : ''?>>
+                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" <?=isset($estimate) ? 'readonly' : 'readonly'?>>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->estimate_date)) : ''?>">
+                                            
+                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->estimate_date)) : date('m/d/Y'); ?>">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="expiry-date">Expiry Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : ''?>">
+                                            <?php $default_expiry_date = date('m/d/Y', strtotime(date('m/d/Y') . ' +5 day')); ?>
+                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : $default_expiry_date; ?>">
                                         </div>
                                     </div>
                                 </div>
