@@ -167,21 +167,21 @@
                     <div class="offset-md-8 col-md-4">
                         <?php 
                             $installation_cost = 0;
-                            if (isset($workorder) && $workorder->installation_cost) {
+                            if (isset($workorder) && $workorder->installation_cost > 0) {
                                 $installation_cost = $workorder->installation_cost;
                             }elseif( $jobPayments && $jobPayments->installation_cost > 0 ){
                                 $installation_cost = $jobPayments->installation_cost;
                             }
 
                             $otp_setup = 0;
-                            if (isset($workorder) && $workorder->otp_setup) {
+                            if (isset($workorder) && $workorder->otp_setup > 0) {
                                 $otp_setup = $workorder->otp_setup;
                             }elseif( $jobPayments && $jobPayments->program_setup > 0 ){
                                 $otp_setup = $jobPayments->program_setup;
                             }
 
                             $monthly_monitoring = 0;
-                            if (isset($workorder) && $workorder->monthly_monitoring){
+                            if (isset($workorder) && $workorder->monthly_monitoring > 0){
                                 $monthly_monitoring = $workorder->monthly_monitoring;
                             }elseif( $jobPayments && $jobPayments->monthly_monitoring > 0 ){
                                 $monthly_monitoring = $jobPayments->monthly_monitoring;

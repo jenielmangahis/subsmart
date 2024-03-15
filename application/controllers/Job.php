@@ -2739,25 +2739,16 @@ class Job extends MY_Controller
                 $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
                 
                 // Update payments
-                if( in_array($comp_id, adi_company_ids()) ){
-                    $job_payment_query = [
-                        'amount' =>  $input['total_amount'],
-                        'program_setup' => $input['otps'],
-                        'monthly_monitoring' => $input['monthly_monitoring'],
-                        'installation_cost' => $input['installation_cost'],
-                        'equipment_cost' => $total_equipment_cost,
-                        'tax' => $input['tax'],
-                    ];
-                }else{
-                    $job_payment_query = [
-                        'amount' =>  $input['total_amount'],
-                        'equipment_cost' => $total_equipment_cost,
-                        'tax' => $input['tax']            
-                    ]; 
-                }
+                $job_payment_query = [
+                    'amount' =>  $input['total_amount'],
+                    'program_setup' => $input['otps'],
+                    'monthly_monitoring' => $input['monthly_monitoring'],
+                    'installation_cost' => $input['installation_cost'],
+                    'equipment_cost' => $total_equipment_cost,
+                    'tax' => $input['tax'],
+                ];
                 
                 $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
-
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
             }
 
@@ -4887,32 +4878,39 @@ class Job extends MY_Controller
             }
         }
 
-        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
 
-        $monthly_monitoring = 0;
-        $program_setup = 0;
-        $installation_cost = 0;
-        $grand_total = 0;
-        $sub_total   = 0;
-        $tax = 0;
+        $monthly_monitoring = $jobPayments->monthly_monitoring;
+        $program_setup      = $jobPayments->program_setup;
+        $installation_cost = $jobPayments->installation_cost;
 
-        if( $job->work_order_id > 0 && !empty($workorder) ){
-            $monthly_monitoring = $workorder->monthly_monitoring;
-            $program_setup = $workorder->otp_setup;
-            $installation_cost = $workorder->installation_cost;
+        $grand_total = $jobPayments->amount;
+        $sub_total   = $jobPayments->equipment_cost;
+        $tax         = $jobPayments->tax;
 
-            $grand_total = $workorder->grand_total;
-            $sub_total   = $workorder->subtotal;
-            $tax         = $workorder->taxes;
-        }elseif( !empty($jobPayments) ){
-            $monthly_monitoring = $jobPayments->monthly_monitoring;
-            $program_setup = $jobPayments->program_setup;
-            $installation_cost = $jobPayments->installation_cost;
+        // $monthly_monitoring = 0;
+        // $program_setup = 0;
+        // $installation_cost = 0;
+        // $grand_total = 0;
+        // $sub_total   = 0;
+        // $tax = 0;
+        // if( $job->work_order_id > 0 && !empty($workorder) ){
+        //     $monthly_monitoring = $workorder->monthly_monitoring;
+        //     $program_setup = $workorder->otp_setup;
+        //     $installation_cost = $workorder->installation_cost;
 
-            $grand_total = $jobPayments->amount;
-            $sub_total   = $jobPayments->equipment_cost;
-            $tax         = $jobPayments->tax;
-        }
+        //     $grand_total = $workorder->grand_total;
+        //     $sub_total   = $workorder->subtotal;
+        //     $tax         = $workorder->taxes;
+        // }elseif( !empty($jobPayments) ){
+        //     $monthly_monitoring = $jobPayments->monthly_monitoring;
+        //     $program_setup = $jobPayments->program_setup;
+        //     $installation_cost = $jobPayments->installation_cost;
+
+        //     $grand_total = $jobPayments->amount;
+        //     $sub_total   = $jobPayments->equipment_cost;
+        //     $tax         = $jobPayments->tax;
+        // }
 
         $new_data = array(
             'customer_id'               => $job->customer_id,

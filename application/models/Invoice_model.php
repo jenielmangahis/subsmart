@@ -98,6 +98,9 @@ class Invoice_model extends MY_Model
             'adjustment_name'           => $adjustment_name,
             'adjustment_value'          => $adjustment_value,
             'grand_total'               => $grand_total,
+            'monthly_monitoring'        => $monthly_monitoring,
+            'installation_cost'         => $installation_cost,
+            'program_setup'             => $program_setup,
             'date_updated'              => $date_updated,
             
         ));

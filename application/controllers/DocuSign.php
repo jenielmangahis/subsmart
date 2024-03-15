@@ -53,6 +53,10 @@ class DocuSign extends MYF_Controller
                 $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Subscriber Name","auto_populate_with":"","width":191}';
             }
 
+            if( $f->field_name == 'Name' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Subscriber Name","auto_populate_with":""}';
+            }
+
             if( $f->field_name == 'Company' ){
                 $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"Dealer Name","auto_populate_with":"","width":191}';
             }
@@ -66,15 +70,15 @@ class DocuSign extends MYF_Controller
             }
 
             if( $f->field_name == 'City' ){
-                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"City","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"test","placeholder":"City","auto_populate_with":"","width":191}';
             }
 
             if( $f->field_name == 'State' ){
-                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"State","auto_populate_with":""}';
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"State","auto_populate_with":"","width":100}';
             }
 
             if( $f->field_name == 'ZIP' ){
-                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"ZIP","auto_populate_with":""}';
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"ZIP","auto_populate_with":"","width":80}';
             }
 
             if( $f->field_name == 'CS Account Number' ){
@@ -424,19 +428,56 @@ class DocuSign extends MYF_Controller
             $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost');
             $this->db->where('ticket_id', $document->ticket_id);
             $invoces = $this->db->get('invoices')->row();
+            if( $invoices ){
+                $invoices_accessKeys = [
+                    'inv_monthly_monitoring',                
+                    'inv_program_setup',
+                    'inv_installation_cost',
+                    'inv_subtotal',
+                    'inv_equipment_cost',
+                    'taxes'
+                ];
+                
+                $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
+                    return in_array($v, $invoices_accessKeys);
+                }, ARRAY_FILTER_USE_KEY);
+            }else{
+                //If not invoice data manual fetch total equipment cost from ticket_items
+                $this->db->select('total,ticket_id,tax');
+                $this->db->from('ticket_items');
+                $this->db->where('ticket_id', $document->ticket_id);
+                $itemsQuery = $this->db->get();
+                $items = $itemsQuery->result();
 
-            $invoices_accessKeys = [
-                'inv_monthly_monitoring',                
-                'inv_program_setup',
-                'inv_installation_cost',
-                'inv_subtotal',
-                'inv_equipment_cost',
-                'taxes'
-            ];
+                $total_equipment_cost = 0;
+                $total_tax = 0;
+                if( $items ){
+                    foreach($items as $item){
+                        $total_equipment_cost += $item->total;
+                        $total_tax += $item->tax;
+                    }
+
+                    $filtered_invoice = [
+                        'inv_monthly_monitoring' => 0,
+                        'inv_program_setup' => 0,
+                        'inv_installation_cost' => 0,
+                        'inv_subtotal' => 0,
+                        'inv_equipment_cost' => $total_equipment_cost,
+                        'inv_taxes' => $total_tax
+                    ];
+
+                }else{
+                    $filtered_invoice = [
+                        'inv_monthly_monitoring' => 0,
+                        'inv_program_setup' => 0,
+                        'inv_installation_cost' => 0,
+                        'inv_subtotal' => 0,
+                        'inv_equipment_cost' => 0,
+                        'inv_taxes' => 0
+                    ];
+                }
+            }
             
-            $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
-                return in_array($v, $invoices_accessKeys);
-            }, ARRAY_FILTER_USE_KEY);
         }else{
            $filtered_invoice = [
             'inv_monthly_monitoring' => 0,
@@ -2773,14 +2814,15 @@ SQL;
         $default_timezone   = 'America/New_York';
 
         $jid = $this->input->get('jid');
-        $job = $this->Jobs_model->get_specific_job($jid);
-        if( $job ){
-            $calender_settings  = $this->CalendarSettings_model->getByCompanyId($job->company_id); 
-            if( $calender_settings ){
-                $default_timezone = $calender_settings->timezone;
+        if( $jid > 0 ){
+            $job = $this->Jobs_model->get_specific_job($jid);
+            if( $job ){
+                $calender_settings  = $this->CalendarSettings_model->getByCompanyId($job->company_id); 
+                if( $calender_settings ){
+                    $default_timezone = $calender_settings->timezone;
+                }
             }
         }
-        
 
         date_default_timezone_set($default_timezone);
         $current_date_time = date("Y-m-d g:i A");
