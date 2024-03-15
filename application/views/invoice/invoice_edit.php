@@ -637,16 +637,32 @@ input:checked + .slider:before {
                                                 </tr>
                                                 <tr>
                                                     <td>Taxes</td>
-                                                    <!-- <td></td> -->
                                                     <td colspan="2" align="right">$ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                    <td align="center">
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($invoice->adjustment_value)){ echo "0"; }else{echo $invoice->adjustment_value; } ?>" class="form-control adjustment_input" style="width:50%;display:inline;">
-                                                        <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                    <td>Installation Cost</td>                                                    
+                                                    <td colspan="2" align="right">
+                                                        <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= $invoice->installation_cost > 0 ? number_format($invoice->installation_cost, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
-                                                    <td>$ <span id="adjustmentText"><?php echo $invoice->adjustment_value; ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>One time (Program and Setup)</td>                                                    
+                                                    <td colspan="2" align="right">
+                                                        <input type="number" step="any" min="0" class="form-control" id="program_setup" name="program_setup" value="<?= $invoice->program_setup > 0 ? number_format($invoice->program_setup, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Monthly Monitoring</td>                                                    
+                                                    <td colspan="2" align="right">
+                                                        <input type="number" step="any" min="0" class="form-control" id="monthly_monitoring" name="monthly_monitoring" value="<?= $invoice->monthly_monitoring > 0 ? number_format($invoice->monthly_monitoring, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"><span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span></td>
+                                                    <td colspan="2" align="right">
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($invoice->adjustment_value)){ echo "0"; }else{echo $invoice->adjustment_value; } ?>" class="form-control adjustment_input" style="width:50%;text-align:right;">                                                        
+                                                        <span id="adjustmentText" style="display:none;"><?php echo $invoice->adjustment_value; ?></span>
+                                                    </td>
                                                 </tr>
                                                 <!-- <tr>
                                                     <td>Markup $<span id="span_markup"></td> -->

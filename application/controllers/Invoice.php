@@ -1056,10 +1056,12 @@ class Invoice extends MY_Controller
             'taxes'                     => $this->input->post('taxes'),
             'adjustment_name'           => $this->input->post('adjustment_name'),
             'adjustment_value'          => $this->input->post('adjustment_value'),
+            'monthly_monitoring'        => $this->input->post('monthly_monitoring'),
+            'installation_cost'         => $this->input->post('installation_cost'),
+            'program_setup'             => $this->input->post('program_setup'),
             'grand_total'               => $this->input->post('grand_total'),
             'date_updated'              => date("Y-m-d H:i:s"),
         );
-
         $addQuery = $this->invoice_model->update_invoice_data($update_data);
         $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
 
