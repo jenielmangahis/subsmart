@@ -89,8 +89,8 @@ class DocuSign extends MYF_Controller
                 $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"County","auto_populate_with":"","width":191}';
             }
 
-            if( $f->field_name == 'date_not_later' ){
-                $default_date = date("m/d/Y");
+            if( $f->field_name == 'date_not_later_a' ){
+                $default_date = date('m/d/Y',strtotime('+3 days'));
                 $f->specs = '{"is_required":true,"is_read_only":false,"value":"'.$default_date.'","placeholder":"Date","auto_populate_with":""}';
             }
 
@@ -104,6 +104,12 @@ class DocuSign extends MYF_Controller
 
             if( $f->field_name == 'Abort Code' ){
                 $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Password","auto_populate_with":"","width":191}';
+            }
+
+            
+            if( $f->field_name == 'date_not_later_b' ){
+                $default_date = date('m/d/Y',strtotime('+3 days'));
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"'.$default_date.'","placeholder":"Password","auto_populate_with":"","width":191}';
             }
 
             if( $f->field_name == 'Address' ){
@@ -144,6 +150,14 @@ class DocuSign extends MYF_Controller
 
             if( $f->field_name == 'Account Number' ){
                 $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Account Number","auto_populate_with":"","width":191}';
+            }
+
+            if( $f->field_name == 'Panel Type' ){
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Panel Type","auto_populate_with":""}';
+            }
+
+            if( $f->field_name == 'sales_tax' ){
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"0.00","placeholder":"Sales Tax","auto_populate_with":"","width":100}';
             }
         }
 
@@ -377,19 +391,29 @@ class DocuSign extends MYF_Controller
         #acs alarm details
         $this->db->where('fk_prof_id', $customer_id);
         $acs_alarm = $this->db->get('acs_alarm')->row();
-        $acs_alarm->passcode = '';
-
-        $acs_alarm_accessKeys = [
-            'alarm_cs_account',
-            'monthly_monitoring',
-            'panel_type',
-            'otps',
-            'passcode'
-        ];
+        if( $acs_alarm ){
+            $acs_alarm->passcode = '';
+            $acs_alarm_accessKeys = [
+                'alarm_cs_account',
+                'monthly_monitoring',
+                'panel_type',
+                'otps',
+                'passcode'
+            ];
+            
+            $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
+                return in_array($v, $acs_alarm_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredAcs_alarm = [
+                'alarm_cs_account' => '', 
+                'monthly_monitoring' => '0.00',
+                'panel_type' => '', 
+                'otps' => '0.00',
+                'passcode' => ''
+            ];
+        }
         
-        $filteredAcs_alarm = array_filter( (array)$acs_alarm , function($v) use ($acs_alarm_accessKeys) {
-            return in_array($v, $acs_alarm_accessKeys);
-        }, ARRAY_FILTER_USE_KEY);
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
 
         #acs solar
