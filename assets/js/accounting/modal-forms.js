@@ -8775,9 +8775,9 @@ $(function() {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${item.price}"></td>
-                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="0.00"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="${item.price}"></td>
+                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
                 <td>
@@ -8825,7 +8825,7 @@ $(function() {
         e.preventDefault();
 
         if ($('#modal-container #item_category_list.modal').length === 0) {
-            $.get('/accounting/get-items-categories-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-items-categories-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #item_category_list table').nsmPagination({
@@ -8843,7 +8843,7 @@ $(function() {
         e.preventDefault();
 
         if ($('#modal-container #package_list.modal').length === 0) {
-            $.get('/accounting/get-package-list-modal', function(res) {
+            $.get(base_url + 'accounting/get-package-list-modal', function(res) {
                 $('#modal-container').append(res);
 
                 $('#modal-container #package_list').modal('show');
@@ -8857,7 +8857,7 @@ $(function() {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
 
-        $.get('/accounting/get-category-items/' + id, function(res) {
+        $.get(base_url + 'accounting/get-category-items/' + id, function(res) {
             var items = JSON.parse(res);
 
             for(var i in items) {
@@ -8909,7 +8909,7 @@ $(function() {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
 
-        $.get('/accounting/get-package-details/' + id, function(res) {
+        $.get(base_url + 'accounting/get-package-details/' + id, function(res) {
             var result = JSON.parse(res);
             var details = result.package;
             var items = result.items;
@@ -9057,7 +9057,7 @@ $(function() {
         });
 
         $.ajax({
-            url: '/accounting/add-package',
+            url: base_url + 'accounting/add-package',
             data: data,
             type: 'post',
             processData: false,

@@ -2124,8 +2124,7 @@ span.select2-selection {
 
 .nsm-nav-pills .nav-link.active{
 	background-color: #dad1e0 !important;
-    color: #6a4a86 !important; 
-	
+    color: #6a4a86 !important; 	
 }
 
 /*Custom*/
@@ -2185,6 +2184,7 @@ span.select2-selection {
 }
 .select2-results__group{
 	padding:0px !important;
+	margin-left: 6px !important;
 }
 .select2-container--default .select2-results__option .select2-results__option .select2-results__option {    
     padding-left: 0.5em !important;

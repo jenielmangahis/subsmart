@@ -122,6 +122,18 @@ function Signing(hash) {
       }          
     }
 
+    if( field_name == "Panel Type" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return panel_type;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return panel_type;
+      }          
+    }
+
     if( field_name == "State" ) {
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
@@ -482,36 +494,49 @@ function Signing(hash) {
     if( field_name == "Equipment Cost" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return equipment_cost > 0 ? equipment_cost : 0;
+          return inv_equipment_cost > 0 ? inv_equipment_cost : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return equipment_cost > 0 ? equipment_cost : 0;
+        return inv_equipment_cost > 0 ? inv_equipment_cost : 0;
       }
     }
 
     if( field_name == "One Time Activation (OTP)" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return otps > 0 ? otps : 0;
+          return inv_program_setup > 0 ? inv_program_setup : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return otps > 0 ? otps : 0;
+        return inv_program_setup > 0 ? inv_program_setup : 0;
       }
     }
 
     if( field_name == "Monthly Monitoring Rate" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return monthly_monitoring > 0 ? monthly_monitoring : 0;
+          return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : 0;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return monthly_monitoring > 0 ? monthly_monitoring : 0;
+        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : 0;
+      }      
+      
+    }
+
+    if( field_name == "Installation Cost" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return inv_installation_cost > 0 ? inv_installation_cost : 0;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return inv_installation_cost > 0 ? inv_installation_cost : 0;
       }      
       
     }
@@ -591,6 +616,22 @@ function Signing(hash) {
         //return jp_tax_equipment_cost;
         //return equipment_cost;
         return inv_equipment_cost > 0 ? inv_equipment_cost : '0.00';
+      }
+
+      if( specs_field_name.name === "date_not_later_a" ) {
+        const today = new Date();
+        const nextThreeDays = new Date(today.setDate(today.getDate() + 3));
+        return nextThreeDays.toLocaleDateString("en-US");
+      }
+
+      if( specs_field_name.name === "date_not_later_b" ) {
+        const today = new Date();
+        const nextThreeDays = new Date(today.setDate(today.getDate() + 3));
+        return nextThreeDays.toLocaleDateString("en-US");
+      }
+
+      if( specs_field_name.name === "installation_cost" ) {
+        return inv_installation_cost > 0 ? inv_installation_cost : '0.00';
       }
 
       if( specs_field_name.name === "one_time_activation" ) {

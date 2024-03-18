@@ -153,6 +153,14 @@ class Accounting extends MY_Controller
         redirect('/accounting/sales-overview', 'refresh');
     }
 
+    // Get the option selected on the last check transaction
+    function getDefaultAccount() 
+    {
+        $company_id = logged('company_id');
+        $accountData = $this->account_model->getLastCheckAccount($company_id);
+        echo json_encode($accountData);
+    }
+
     public function banking()
     {
         $this->page_data['page_title'] = "Banking";

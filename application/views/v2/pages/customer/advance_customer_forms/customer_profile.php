@@ -85,8 +85,8 @@
                 Sales Area
             </div>
             <div class="col-md-8">
-                <select name="fk_sa_id" data-type="customer_sales_area" class="form-control" >
-                    <option value="<?=$profile_info->fk_sa_id?>"><?=$profile_info->fk_sa_text?></option>
+                <select name="fk_sa_id" data-type="customer_sales_area" class="form-control">
+                    <option value="<?=$sales_area->sa_id?>"><?=$sales_area->sa_name?></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>
