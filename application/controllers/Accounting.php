@@ -7953,6 +7953,11 @@ class Accounting extends MY_Controller
     public function addNewEstimate($customer_id = 0)
     {
         $this->load->model('AcsProfile_model');
+        
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js'            
+        ));
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -7968,47 +7973,29 @@ class Accounting extends MY_Controller
         }
 
         $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $company_id = logged('company_id');        
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
 
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        // }
-
-        $company_id = logged('company_id');
-        $role = logged('role');
-        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if ($role == 1 || $role == 2) {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        } else {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        $default_customer_id = 0;
+        $default_customer_name = '';
+        if( $customer_id > 0 ){
+            $customer = $this->AcsProfile_model->getByProfId($customer_id);
+            if ($customer) {
+                $default_customer_id = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;                
+            }
         }
+        
+
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['default_customer_name'] = $default_customer_name;
         $this->page_data['customer_id'] = $customer_id;
-        // $this->page_data['items'] = $this->items_model->getItemlist();
-        // $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
-
-        // print_r($this->page_data['number']);
-
-        // $get_items = array(
-        //     'where' => array(
-        //         'items.company_id' => logged('company_id'),
-        //         'is_active' => 1,
-        //     ),
-        //     'table' => 'items',
-        //     'select' => 'items.id,title,price',
-        // );
-        // $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-
-        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('accounting/addnewEstimate', $this->page_data);
     }
 
