@@ -1,7 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -99,7 +98,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-toggle="modal" data-target="#newEstimateModal">
+                            <button type="button" class="nsm-button new-estimate" data-toggle="modal">
                                 <i class='bx bx-fw bx-list-plus'></i> New Estimate
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -240,24 +239,13 @@
                                                     <?php } ?>
 
                                                     <li role="separator" class="divider"></li>
-                                                    <li role="presentation"><a class="dropdown-item" role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="#"
-                                                                               data-toggle="modal"
-                                                                               data-target="#modalCloneEstimate"
-                                                                               data-id="<?php echo $estimate->id ?>"
-                                                                               data-wo_num="<?php echo $estimate->estimate_number ?>"
-                                                                               data-name="WO-00433" class="clone-estimate"><span
-                                                                    class="fa fa-files-o icon">
-
-                                                        </span> Clone Estimate</a>
+                                                    <li role="presentation">
+                                                        <a class="dropdown-item clone-estimate" role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>">
+                                                            <span class="fa fa-files-o icon"></span> Clone Estimate
+                                                        </a>
                                                     </li>
-                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('invoice') ?>"
-                                                                               data-convert-to-invoice-modal="open"
-                                                                               data-id="161983"
-                                                                               data-name="WO-00433"><span
-                                                                    class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                    <li role="presentation">
+                                                        <a class="dropdown-item" role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>"><span class="fa fa-money icon"></span> Convert to Invoice</a>
                                                     </li>
                                                     <li role="presentation">
                                                         <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
@@ -268,11 +256,10 @@
                                                     <li role="presentation">
                                                         <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
-                                                        <a class="dropdown-item" href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
+                                                        <a class="dropdown-item send_to_customer" href="javascript:void(0);" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
                                                     <li><div class="dropdown-divider"></div></li>
                                                     <li role="presentation">
-                                                        <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
-                                                        <a class="dropdown-item" href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-trash-o icon"></span> Delete </a>
                                                     </li>
                                                     <li role="presentation">
                                                         <a class="dropdown-item" role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
@@ -299,42 +286,37 @@
     </div>
 </div>
 
-
-  
-<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body text-center">
-        <p class="text-lg margin-bottom">
-            What type of estimate you want to create
-        </p><center>
-        <div class="margin-bottom text-center" style="width:60%;">
-            <div class="help help-sm">Create a regular estimate with items</div>
-            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimate') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
-        </div>
-        <div class="margin-bottom" style="width:60%;">
-            <div class="help help-sm">Customers can select all <br>or only certain options</div>
-            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimateOptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
-        </div>
-        <div  class="margin-bottom" style="width:60%;">
-            <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
-            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('accounting/addNewEstimateBundle?type=3') ?>"><span class="fa fa-cubes"></span> Bundle Estimate</a>
-        </div></center>
-      </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<div class="modal fade nsm-modal fade" id="newEstimateModal" tabindex="-1" aria-labelledby="newEstimateModal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="newEstimateModal_label">New Estimate</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row text-center gy-3">
+                    <div class="col-12">
+                        <label class="content-title">What type of estimate you want to create</label>
+                    </div>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('accounting/addNewEstimate') ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Standard Estimate</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('accounting/addNewEstimateOptions?type=2') ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Options Estimate</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('accounting/addNewEstimateBundle?type=3') ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Bundle Estimate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
         </div>
     </div>
 </div>
-
-<!-- <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"> -->
-<?php //include viewPath('includes/footer_accounting'); ?>
 <script>
 $(function(){
     $("#accounting-estimates").nsmPagination({itemsPerPage:10});  
@@ -377,6 +359,108 @@ $(function(){
                 $($(this).find('td')[index]).show();
             } else {
                 $($(this).find('td')[index]).hide();
+            }
+        });
+    });
+
+    $(document).on("click", ".clone-estimate", function() {
+        var num = $(this).attr("data-wo_num");
+        var id = $(this).attr("data-id");
+        var _modal = $("#clone_estimate_modal");
+
+        _modal.find(".work_order_no").text(num);
+        _modal.find("#wo_id").val(id);
+        _modal.modal('show');
+    });
+
+    $(document).on('click', '.send_to_customer', function(){
+        var id = $(this).attr('acs-id');
+        var est_id = $(this).attr('est-id');
+
+        Swal.fire({
+            title: 'Send Estimate',
+            text: "Send this to customer?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
+                    data: {
+                        id: id,
+                        est_id: est_id
+                    },
+                    success: function(result) {
+                        Swal.fire({
+                            //title: 'Good job!',
+                            text: "Estimate waa successfully sent to customer",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                //location.reload();
+                            }
+                        });
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Something went wrong, please try again later.",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                //location.reload();
+                            }
+                        });
+                    },
+
+                });
+            }
+        });
+    });
+    
+    $('.new-estimate').on('click', function(){
+        $('#newEstimateModal').modal('show');
+    });
+
+    $(document).on("click", ".delete-item", function() {
+        var id = $(this).attr('est-id');
+
+        Swal.fire({
+            title: 'Delete Estimate',
+            text: "Are you sure you want to delete this Estimate?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>estimate/delete_estimate",
+                    data: {
+                        id: id
+                    },
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Good job!',
+                            text: "Data Deleted Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    },
+                });
             }
         });
     });

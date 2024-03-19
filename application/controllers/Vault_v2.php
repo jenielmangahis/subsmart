@@ -30,11 +30,11 @@ class Vault_v2 extends MY_Controller
     }
 
     public function mylibrary()
-    {
+    {        
         $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, true);
         $this->page_data['page']->title = 'My Library';
-
+        
         add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
         $this->load->view('v2/pages/vault/view', $this->page_data);
     }

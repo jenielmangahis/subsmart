@@ -203,8 +203,7 @@ class Esign_v2 extends MY_Controller
     }
 
     public function Files()
-    {
-
+    {        
         $this->load->model('User_docflies_model', 'User_docflies_model');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['file_id'] = $this->input->get('id');
