@@ -56,7 +56,8 @@ class Customer extends MY_Controller
     }
 
     public function index()
-    {        
+    {     
+        $company_id = logged('company_id');   
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
         
@@ -82,6 +83,28 @@ class Customer extends MY_Controller
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
+
+        $getCustomerStatus = array(
+            'select' => '*',
+            'table' => 'acs_cust_status',
+            'where' => array('company_id' => $company_id,),
+        );
+
+        $getCustomerGroup = array(
+            'select' => '*',
+            'table' => 'customer_groups',
+            'where' => array('company_id' => $company_id,),
+        );
+
+        $getSalesArea = array(
+            'select' => '*',
+            'table' => 'ac_salesarea',
+            'where' => array('fk_comp_id' => $company_id,),
+        );
+
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
+        $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
+        $this->page_data['sales_area'] = $this->general->get_data_with_param($getSalesArea);
 
         $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
@@ -2218,44 +2241,228 @@ class Customer extends MY_Controller
         die(json_encode($data_arr));
     }
 
-    public function getDuplicateList() {
+    public function getDuplicateList() 
+    {
         $company_id = logged('company_id');
-        $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, "customer_with_count");
-        $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer");
+        $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, "customer_with_count", false, null, null, null, null);
+        $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", false, null, null, null, null);
 
         $html = "";
 
         foreach ($customerWithCount as $customerWithCountData) {
             $i = 0;
+            $customerUniqueID = md5($customerWithCountData->prof_id);
             $customerName1 = "$customerWithCountData->first_name $customerWithCountData->last_name";
+            $businessName1 = "$customerWithCountData->business_name";
             $total = "$customerWithCountData->total";
             
-            $html .= "<tr onclick='$(`.UNIQUE_$customerWithCountData->prof_id`).toggle()'>";
-            $html .= "<td>⯈</td>";
-            $html .= "<td><strong>$customerName1 ($total)</strong></td>";
-            $html .= "<td></td>";
-            $html .= "</tr>";
+            if ($customerWithCountData->customer_type == "Residential") {
+                $html .= "<tr onclick='$(`.row_$customerUniqueID`).toggle()'>";
+                $html .= "<td><i class='fas fa-caret-right'></i>&emsp;<strong>$customerName1 ($total)</strong></td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td><button class='nsm-button primary small' onclick='mergeEntry(`$customerWithCountData->first_name`, `$customerWithCountData->last_name`, ``, `Residential`)'><i class='fas fa-copy'></i> Compare</button></td>";
+                $html .= "</tr>";
+                foreach ($allDuplicatedCustomer as $allDuplicatedCustomerData) {
+                    $customerName2 = "$allDuplicatedCustomerData->first_name $allDuplicatedCustomerData->last_name";
+                    $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs</strong> activity logs!" : "0 activity logs";
+                    if ($customerName1 == $customerName2 && $allDuplicatedCustomerData->customer_type == "Residential") {
+                        $i++;
+                        $html .= "<tr class='row_$customerUniqueID' style='display: none;'>";
+                        $html .= "<td>&emsp; └╴<span>$customerName2 <small class='text-muted'>(#$i)</small></span></td>";
+                        $html .= "<td>Residential</td>";
+                        $html .= "<td>$allDuplicatedCustomerData->address</td>";
+                        $html .= "<td>$activityLogs</td>";
+                        $html .= "<td><button class='nsm-button small border-0' onclick='viewEntry($allDuplicatedCustomerData->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small border-0' onclick='removeEntry($allDuplicatedCustomerData->prof_id, `$customerName2`, $i)'><i class='fas fa-trash'></i> Remove</button></td>";
+                        $html .= "</tr>";
+                    }
+                }
 
-            foreach ($allDuplicatedCustomer as $allDuplicatedCustomerData) {
-                $customerName2 = "$allDuplicatedCustomerData->first_name $allDuplicatedCustomerData->last_name";
-                $businessName = ($allDuplicatedCustomerData->business_name != "") ? $allDuplicatedCustomerData->business_name : "Commercial: Not Specified";
-                $customer_type = ($allDuplicatedCustomerData->customer_type == "Residential") ? "Residential" : "<u>$businessName</u>";
+            } else if ($customerWithCountData->customer_type == "Business" || $customerWithCountData->customer_type == "Commercial") {
+                $html .= "<tr onclick='$(`.row_$customerUniqueID`).toggle()'>";
+                $html .= "<td><i class='fas fa-caret-right'></i>&emsp;<strong>$businessName1 ($total)</strong></td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td>&emsp;</td>";
+                $html .= "<td><button class='nsm-button primary small' onclick='mergeEntry(``, ``, `$customerWithCountData->business_name`, `Commercial`)'><i class='fas fa-copy'></i> Compare</button></td>";
+                $html .= "</tr>";
 
-                if ($customerName1 == $customerName2) {
-                    $i++;
-                    $html .= "<tr class='UNIQUE_$customerWithCountData->prof_id' style='display: none;'>";
-                    $html .= "<td></td>";
-                    $html .= "<td><span>$customerName2 ($customer_type)</span></td>";
-                    $html .= "<td><button class='nsm-button small' onclick='viewCustomer($allDuplicatedCustomerData->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small' onclick='removeCustomer($allDuplicatedCustomerData->prof_id, `$customerName2`, $i)'><i class='fas fa-trash'></i> Remove</button></td>";
-                    $html .= "</tr>";
+                foreach ($allDuplicatedCustomer as $allDuplicatedCustomerData) {
+                    $businessName2 = "$allDuplicatedCustomerData->business_name";
+                    $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs activity logs!</strong>" : "0 activity logs";
+                    if ($businessName1 == $businessName2 && $allDuplicatedCustomerData->customer_type != "Residential") {
+                        $i++;
+                        $html .= "<tr class='row_$customerUniqueID' style='display: none;'>";
+                        $html .= "<td>&emsp; └╴<span>$businessName2 <small class='text-muted'>(#$i)</small></span></td>";
+                        $html .= "<td>Commercial</td>";
+                        $html .= "<td>$allDuplicatedCustomerData->address</td>";
+                        $html .= "<td>$activityLogs</td>";
+                        $html .= "<td><button class='nsm-button small border-0' onclick='viewEntry($allDuplicatedCustomerData->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small border-0' onclick='removeEntry($allDuplicatedCustomerData->prof_id, `$businessName2`, $i)'><i class='fas fa-trash'></i> Remove</button></td>";
+                        $html .= "</tr>";
+                    }
                 }
             }
-        }
 
+        }
         echo $html;
     }
     
-    public function checkCustomerDuplicate() {
+    public function getSpecificDuplicatesToMerge() 
+    {
+        $company_id = logged('company_id');
+        $data = $this->input->post();
+
+        $html = "";
+        if ($data['entryType'] == "Residential") {
+            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", true, "Residential", null, $data['entryFName'], $data['entryLName']);
+            foreach ($fetchData as $fetchDatas) {
+                $customer_logs = ($fetchDatas->customer_logs == 0) ? 0 : $fetchDatas->customer_logs;
+                $status = ($fetchDatas->status) ? $fetchDatas->status : "—";
+                $customer_type = ($fetchDatas->customer_type) ? $fetchDatas->customer_type : "—";
+                $business_name = ($fetchDatas->business_name) ? $fetchDatas->business_name : "—";
+                $title = ($fetchDatas->title) ? $fetchDatas->title : "—";
+                $sa_name = ($fetchDatas->sa_name) ? $fetchDatas->sa_name : "—";
+                $first_name = ($fetchDatas->first_name) ? $fetchDatas->first_name : "—";
+                $middle_name = ($fetchDatas->middle_name) ? $fetchDatas->middle_name : "—";
+                $last_name = ($fetchDatas->last_name) ? $fetchDatas->last_name : "—";
+                $prefix = ($fetchDatas->prefix) ? $fetchDatas->prefix : "None";
+                $suffix = ($fetchDatas->suffix) ? $fetchDatas->suffix : "None";
+                $country = ($fetchDatas->country) ? $fetchDatas->country : "—";
+                $mail_add = ($fetchDatas->mail_add) ? $fetchDatas->mail_add : "—";
+                $city = ($fetchDatas->city) ? $fetchDatas->city : "—";
+                $county = ($fetchDatas->county) ? $fetchDatas->county : "—";
+                $state = ($fetchDatas->state) ? $fetchDatas->state : "—";
+                $zip_code = ($fetchDatas->zip_code) ? $fetchDatas->zip_code : "—";
+                $cross_street = ($fetchDatas->cross_street) ? $fetchDatas->cross_street : "—";
+                $subdivision = ($fetchDatas->subdivision) ? $fetchDatas->subdivision : "—";
+                $ssn = ($fetchDatas->ssn) ? $fetchDatas->ssn : "000-00-0000";
+                $date_of_birth = ($fetchDatas->date_of_birth) ? $fetchDatas->date_of_birth : "—";
+                $email = ($fetchDatas->email) ? $fetchDatas->email : "—";
+                $phone_h = ($fetchDatas->phone_h) ? $fetchDatas->phone_h : "000-000-0000";
+                $phone_m = ($fetchDatas->phone_m) ? $fetchDatas->phone_m : "000-000-0000";
+
+                $html .= "
+                <div class='col-lg-1 w-auto entryDuplicateData'>
+                    <table class='table table-hover'>
+                        <tbody>
+                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small></td></tr>
+                            <tr><td class='align-middle profileData' data-logscount='$customer_logs activity logs'>
+                                    <div class='float-start'>
+                                        <div class='nsm-profile'><span class='entryDuplicateInitials'>".$first_name[0].' '.$last_name[0]."</span></div>
+                                    </div>
+                                    <div class='mergeProfile'>
+                                        <label class='nsm-link default d-block fw-bold'><span class='entryDuplicateName'>$first_name $last_name</span><small class='text-muted float-end entryDuplicateID'>#$fetchDatas->prof_id</small></label>
+                                        <label class='nsm-link default content-subtitle fst-italic d-block'><span class='entryDuplicateEmail'>$email</span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><td class='align-middle fw-xnormal statusField'><span>$status</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal customerTypeField'><span>$customer_type</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal businessNameField'><span>$business_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal customerGroupField'><span>$title</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal salesAreaField'><span>$sa_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal firstNameField'><span>$first_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal middleNameField'><span>$middle_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal lastNameField'><span>$last_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal namePrefixField'><span>$prefix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal suffixField'><span>$suffix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal countryField'><span>$country</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add Clayton Road</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal cityField'><span>$city</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal countyField'><span>$county</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal stateField'><span>$state</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal zipCodeField'><span>$zip_code</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal crossStreetField'><span>$cross_street</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal subDivisionField'><span>$subdivision</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal socialSecurityNoField'><span>$ssn</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal birthDateField'><span>$date_of_birth</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal emailField'><span>$email</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal phoneField'><span>$phone_h</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal mobileField'><span>$phone_m</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                ";
+            }
+        } 
+        else if ($data['entryType'] == "Commercial" || $data['entryType'] == "Business") {
+            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", true, "Commercial", $data['entryBusinessName'], null, null);
+            foreach ($fetchData as $fetchDatas) {
+                $customer_logs = ($fetchDatas->customer_logs == 0) ? 0 : $fetchDatas->customer_logs;
+                $status = ($fetchDatas->status) ? $fetchDatas->status : "—";
+                $customer_type = ($fetchDatas->customer_type) ? $fetchDatas->customer_type : "—";
+                $business_name = ($fetchDatas->business_name) ? $fetchDatas->business_name : "—";
+                $title = ($fetchDatas->title) ? $fetchDatas->title : "—";
+                $sa_name = ($fetchDatas->sa_name) ? $fetchDatas->sa_name : "—";
+                $first_name = ($fetchDatas->first_name) ? $fetchDatas->first_name : "—";
+                $middle_name = ($fetchDatas->middle_name) ? $fetchDatas->middle_name : "—";
+                $last_name = ($fetchDatas->last_name) ? $fetchDatas->last_name : "—";
+                $prefix = ($fetchDatas->prefix) ? $fetchDatas->prefix : "None";
+                $suffix = ($fetchDatas->suffix) ? $fetchDatas->suffix : "None";
+                $country = ($fetchDatas->country) ? $fetchDatas->country : "—";
+                $mail_add = ($fetchDatas->mail_add) ? $fetchDatas->mail_add : "—";
+                $city = ($fetchDatas->city) ? $fetchDatas->city : "—";
+                $county = ($fetchDatas->county) ? $fetchDatas->county : "—";
+                $state = ($fetchDatas->state) ? $fetchDatas->state : "—";
+                $zip_code = ($fetchDatas->zip_code) ? $fetchDatas->zip_code : "—";
+                $cross_street = ($fetchDatas->cross_street) ? $fetchDatas->cross_street : "—";
+                $subdivision = ($fetchDatas->subdivision) ? $fetchDatas->subdivision : "—";
+                $ssn = ($fetchDatas->ssn) ? $fetchDatas->ssn : "000-00-0000";
+                $date_of_birth = ($fetchDatas->date_of_birth) ? $fetchDatas->date_of_birth : "—";
+                $email = ($fetchDatas->email) ? $fetchDatas->email : "—";
+                $phone_h = ($fetchDatas->phone_h) ? $fetchDatas->phone_h : "000-000-0000";
+                $phone_m = ($fetchDatas->phone_m) ? $fetchDatas->phone_m : "000-000-0000";
+
+                $html .= "
+                <div class='col-lg-1 w-auto entryDuplicateData'>
+                    <table class='table table-hover'>
+                        <tbody>
+                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small></td></tr>
+                            <tr><td class='align-middle profileData' data-logscount='$customer_logs activity logs'>
+                                    <div class='float-start'>
+                                        <div class='nsm-profile'><span class='entryDuplicateInitials'>".$first_name[0].' '.$last_name[0]."</span></div>
+                                    </div>
+                                    <div class='mergeProfile'>
+                                        <label class='nsm-link default d-block fw-bold'><span class='entryDuplicateName'>$first_name $last_name</span><small class='text-muted float-end entryDuplicateID'>#$fetchDatas->prof_id</small></label>
+                                        <label class='nsm-link default content-subtitle fst-italic d-block'><span class='entryDuplicateEmail'>$email</span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><td class='align-middle fw-xnormal statusField'><span>$status</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal customerTypeField'><span>$customer_type</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal businessNameField'><span>$business_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal customerGroupField'><span>$title</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal salesAreaField'><span>$sa_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal firstNameField'><span>$first_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal middleNameField'><span>$middle_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal lastNameField'><span>$last_name</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal namePrefixField'><span>$prefix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal suffixField'><span>$suffix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal countryField'><span>$country</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add Clayton Road</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal cityField'><span>$city</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal countyField'><span>$county</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal stateField'><span>$state</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal zipCodeField'><span>$zip_code</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal crossStreetField'><span>$cross_street</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal subDivisionField'><span>$subdivision</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal socialSecurityNoField'><span>$ssn</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal birthDateField'><span>$date_of_birth</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal emailField'><span>$email</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal phoneField'><span>$phone_h</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal mobileField'><span>$phone_m</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                ";
+            }
+        }
+        echo $html;
+    }
+
+    public function checkCustomerDuplicate() 
+    {
         $company_id = logged('company_id');
         
         $data = array (

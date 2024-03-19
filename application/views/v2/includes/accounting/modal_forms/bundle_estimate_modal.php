@@ -105,18 +105,19 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" <?=isset($estimate) ? 'disabled' : ''?>>
+                                        <input type="text" name="estimate_no" id="estimate-no" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" <?=isset($estimate) ? 'readonly' : 'readonly'?>>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->estimate_date)) : ''?>">
+                                            <input type="text" name="estimate_date" id="estimate-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->estimate_date)) :  date('m/d/Y'); ?>">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="expiry-date">Expiry Date <span class="text-danger">*</span></label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : ''?>">
+                                            <?php $default_expiry_date = date('m/d/Y', strtotime(date('m/d/Y') . ' +5 day')); ?>
+                                            <input type="text" name="expiry_date" id="expiry-date" class="form-control date nsm-field mb-2" value="<?=isset($estimate) ? date("m/d/Y", strtotime($estimate->expiry_date)) : $default_expiry_date ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -489,12 +490,12 @@
                                     <div class="col-12 col-md-6">
                                         <label for="message-to-customer">Message to Customer</label>
                                         <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->customer_message : 'I would be happy to have an opportunity to work with you.'?></textarea>
+                                        <textarea name="customer_message" id="estimate-message-to-customer" cols="40" rows="5" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->customer_message : 'I would be happy to have an opportunity to work with you.'?></textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="terms-and-conditions">Terms &amp; Conditions</label>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
-                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="2" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->terms_conditions : ''?></textarea>
+                                        <textarea name="terms_conditions" id="estimate-terms-and-conditions" cols="40" rows="5" class="form-control nsm-field mb-2"><?=isset($estimate) ? $estimate->terms_conditions : ''?></textarea>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="attachments">

@@ -146,129 +146,137 @@
                     <tbody>
                         <?php if(count($estimates) > 0) : ?>
 						<?php foreach($estimates as $estimate) : ?>
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
-                                </div>
-                            </td>
-                            <td><?=date("m/d/Y", strtotime($estimate->estimate_date))?></td>
-                            <td><?=$estimate->estimate_number?></td>
-                            <td>
-                                <?php
-                                $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
-                                echo $customer->last_name.', '.$customer->first_name;
-                                ?>
-                            </td>
-                            <td><?= date("m/d/Y", strtotime($estimate->expiry_date)); ?></td>
-                            <td><?= $estimate->purchase_order_number != '' ? $estimate->purchase_order_number : 'Not Specified'; ?></td>
-                            <td><?= $estimate->user_firstname . ' ' . $estimate->user_lastname; ?></td>
-                            <td>
-                                $<?php
-                                    $total1 = floatval($estimate->option1_total) + floatval($estimate->option2_total);
-                                    $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
+                        <?php  $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id); ?>
+                        <?php if( $customer){ ?>
+                            <tr>
+                                <td>
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select" type="checkbox">
+                                    </div>
+                                </td>
+                                <td><?=date("m/d/Y", strtotime($estimate->estimate_date))?></td>
+                                <td><?=$estimate->estimate_number?></td>
+                                <td>
+                                    <?php echo $customer->last_name.', '.$customer->first_name; ?>
+                                </td>
+                                <td><?= date("m/d/Y", strtotime($estimate->expiry_date)); ?></td>
+                                <td><?= $estimate->purchase_order_number != '' ? $estimate->purchase_order_number : 'Not Specified'; ?></td>
+                                <td>
+                                    <?php 
+                                        if( $estimate->user_firstname != '' ){
+                                            echo $estimate->user_firstname . ' ' . $estimate->user_lastname;
+                                        }else{
+                                            echo 'User not found';
+                                        }
+                                    ?>                                    
+                                </td>
+                                <td>
+                                    $<?php
+                                        $total1 = floatval($estimate->option1_total) + floatval($estimate->option2_total);
+                                        $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
 
-                                    if($estimate->estimate_type == 'Option')
-                                    {
-                                        $grand_total = $total1;
-                                    }
-                                    elseif($estimate->estimate_type == 'Bundle')
-                                    {
-                                        $grand_total = $total2;
-                                    }
-                                    else
-                                    {
-                                        $grand_total = $estimate->grand_total; 
-                                    }
+                                        if($estimate->estimate_type == 'Option')
+                                        {
+                                            $grand_total = $total1;
+                                        }
+                                        elseif($estimate->estimate_type == 'Bundle')
+                                        {
+                                            $grand_total = $total2;
+                                        }
+                                        else
+                                        {
+                                            $grand_total = $estimate->grand_total; 
+                                        }
 
-                                    echo $grand_total > 0 ? $grand_total : '0.00';
-                                ?>
-                            </td>
-                            <td><?=$estimate->status?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <!-- <li>
-                                            <a class="dropdown-item" href="#">Send</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Convert to invoice</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Mark accepted</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">View/Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Duplicate</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Print</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Update status</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
-                                        </li> -->
-                                        <li role="presentation">
-                                            <a class="dropdown-item" role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View Estimate</a>
-                                        </li>
+                                        echo $grand_total > 0 ? $grand_total : '0.00';
+                                    ?>
+                                </td>
+                                <td><?=$estimate->status?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <!-- <li>
+                                                <a class="dropdown-item" href="#">Send</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Convert to invoice</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Mark accepted</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">View/Edit</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Duplicate</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Print</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Update status</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#">Delete</a>
+                                            </li> -->
+                                            <li role="presentation">
+                                                <a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a>
+                                            </li>
 
-                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
-                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
-                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <?php }else{ ?>
-                                                    <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <?php } ?>
+                                                        <?php if($estimate->estimate_type == 'Standard'){ ?>
+                                                        <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <?php }elseif($estimate->estimate_type == 'Option'){ ?>
+                                                        <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <?php }else{ ?>
+                                                        <li role="presentation"><a class="dropdown-item" role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <?php } ?>
 
-                                                    <li role="separator" class="divider"></li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item clone-estimate" role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>">
-                                                            <span class="fa fa-files-o icon"></span> Clone Estimate
-                                                        </a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item" role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>"><span class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                        <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                        <span class="fa fa-print icon"></span>  Print</a></li>
-                                                    <li role="presentation">
-                                                        <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
-                                                        <a class="dropdown-item send_to_customer" href="javascript:void(0);" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
-                                                    <li><div class="dropdown-divider"></div></li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-trash-o icon"></span> Delete </a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item" role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
-                                                            <span class="fa fa-briefcase icon"></span> Convert to Job</a>
-                                                    </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item clone-estimate" role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="<?php echo $estimate->id ?>" data-wo_num="<?php echo $estimate->estimate_number ?>">
+                                                                <span class="fa fa-files-o icon"></span> Clone Estimate
+                                                            </a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item" role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>"><span class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item" role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-print icon"></span>  Print</a></li>
+                                                        <li role="presentation">
+                                                            <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
+                                                            <a class="dropdown-item send_to_customer" href="javascript:void(0);" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
+                                                        <li><div class="dropdown-divider"></div></li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-trash-o icon"></span> Delete </a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item" role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
+                                                                <span class="fa fa-briefcase icon"></span> Convert to Job</a>
+                                                        </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>
