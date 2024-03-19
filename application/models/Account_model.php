@@ -86,4 +86,16 @@ class Account_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function getLastCheckAccount($company_id) {
+		$this->db->select('accounting_chart_of_accounts.id AS account_id, accounting_chart_of_accounts.name AS account_name');
+		$this->db->from('accounting_check');
+		$this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_check.bank_account_id');
+		$this->db->where('accounting_check.company_id', $company_id);
+		$this->db->order_by('accounting_check.created_at', 'DESC');
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$result = $query->row();
+		return $result;
+	}
 }

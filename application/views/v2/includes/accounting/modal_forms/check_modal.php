@@ -683,6 +683,20 @@
 </div>
 <script>
 $(function(){
+
+    //  Override script, Select the last used bank account option
+    $.ajax({
+        type: "POST",
+        url: window.origin + "/accounting/getDefaultAccount",
+        data: "data",
+        dataType: "JSON",
+        success: function (response) {
+            var newOption = new Option(response.account_name, response.account_id, false, false);
+            $('#bank_account').append(newOption).trigger('change');
+            console.log(response);
+        }
+    });
+
     $('.btn-recent-checks-print').on('click', function(){
         $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
             if ($('div#modal-container').length > 0) {

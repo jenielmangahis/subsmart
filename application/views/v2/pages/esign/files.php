@@ -631,6 +631,15 @@ echo put_header_assets();
                                                             <span class="u-ellipsis ng-binding">Equipment</span>
                                                         </div>
                                                     </li>
+
+                                                    <li class="menu_listItem">
+                                                        <div class="fields menu_item">
+                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-panel_type"></i></span>
+                                                            <i class="esign-fa fas fa-map-marker-alt"></i>
+                                                            <span class="u-ellipsis ng-binding">Panel Type</span>
+                                                        </div>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -782,7 +791,7 @@ echo put_header_assets();
                                         </div>
 
                                         <div>
-                                            <p class="fw-bold"><small>Billing</small></p>
+                                            <p class="fw-bold"><small>Invoice</small></p>
                                         </div>
                                         <div class="sidebar_item">
                                             <div class="menu-fields">
@@ -815,6 +824,14 @@ echo put_header_assets();
                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-one_time_activation"></i></span>
                                                             <i class="esign-fa fas fa-business-time"></i>
                                                             <span class="u-ellipsis ng-binding">One Time Activation (OTP)</span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li class="menu_listItem">
+                                                        <div class="fields menu_item">
+                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-installation_cost"></i></span>
+                                                            <i class="esign-fa fas fa-dollar-sign"></i>
+                                                            <span class="u-ellipsis ng-binding">Installation Cost</span>
                                                         </div>
                                                     </li>
 
