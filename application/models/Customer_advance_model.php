@@ -754,31 +754,6 @@ class Customer_advance_model extends MY_Model {
         return $returnData;    
     }
 
-    public function getTotalDuplicatedEntry($company_id) {
-        $this->db->select('COUNT(*) AS residential');
-        $this->db->from("
-            (SELECT COUNT(*) AS duplicate_count
-            FROM acs_profile
-            WHERE company_id = $company_id AND customer_type = 'Residential'
-            GROUP BY first_name, last_name
-            HAVING COUNT(*) > 1) AS subquery
-         ");
-        $query = $this->db->get();
-        $residential = $query->row()->residential;
-        // ============
-        $this->db->select('COUNT(*) AS business');
-        $this->db->from("
-            (SELECT COUNT(*) AS duplicate_count
-            FROM acs_profile
-            WHERE company_id = $company_id AND customer_type = 'Business'
-            GROUP BY business_name
-            HAVING COUNT(*) > 1) AS subquery
-         ");
-        $query = $this->db->get();
-        $business = $query->row()->residential;
-        return $residential + $business;
-    }
-
     public function createLead($data)
     {
         $this->db->insert('ac_leads', $data);
@@ -820,7 +795,8 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
-    public function customerDuplicateLookup($data) {
+    public function customerDuplicateLookup($data) 
+    {
         $this->db->select('acs_profile.prof_id,  acs_profile.first_name,  acs_profile.last_name,  acs_profile.customer_type,  COUNT(DISTINCT invoices.id) AS Invoices, COUNT(DISTINCT jobs.id) AS Jobs,  COUNT(DISTINCT estimates.id) AS Estimates, COUNT(DISTINCT events.id) AS events, COUNT(DISTINCT tickets.id) AS tickets, COUNT(DISTINCT payment_records.id) AS Payment');
         $this->db->from('acs_profile');
         $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
@@ -838,31 +814,76 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-    public function getDuplicateListData($company_id, $type) {
-        if ($type == "customer_with_count") {
+    public function getDuplicateListData($company_id, $customerData, $searchMode, $searchType, $businessNameSearch, $firstNameSearch, $lastNameSearch) 
+    {
+        if ($customerData == "customer_with_count") {
             $this->db->select('acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, acs_profile.business_name, acs_profile.first_name, acs_profile.last_name, COUNT(*) AS total');
             $this->db->from('acs_profile');
             $this->db->where('acs_profile.company_id', $company_id);
-            $this->db->group_by('acs_profile.first_name, acs_profile.last_name');
+            $this->db->group_by('acs_profile.first_name, acs_profile.last_name, acs_profile.business_name');
             $this->db->having('COUNT(*) > 1');
             $this->db->order_by('acs_profile.first_name, acs_profile.last_name');
             $query = $this->db->get();
-        } else if ($type == "all_duplicated_customer") {
+        } else if ($customerData == "all_duplicated_customer") {
             $subquery = $this->db->select("CONCAT(acs_profile.first_name, ', ', acs_profile.last_name) AS full_name")
                 ->from('acs_profile')
                 ->group_by('acs_profile.first_name, acs_profile.last_name')
                 ->having('COUNT(*) > 1')
                 ->get_compiled_select();
-
-            $this->db->select('acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, acs_profile.business_name, acs_profile.first_name, acs_profile.last_name');
+            $this->db->select('acs_profile.prof_id, acs_profile.company_id,  acs_profile.status, acs_profile.customer_type, acs_profile.business_name, customer_groups.title, ac_salesarea.sa_name, acs_profile.first_name, acs_profile.middle_name, acs_profile.last_name, acs_profile.prefix, acs_profile.suffix, acs_profile.country, acs_profile.mail_add, acs_profile.city, acs_profile.county, acs_profile.state, acs_profile.zip_code, acs_profile.cross_street, acs_profile.subdivision, acs_profile.ssn, acs_profile.date_of_birth, acs_profile.email, acs_profile.phone_h, acs_profile.phone_m, CONCAT(mail_add, " ", city, ", ", state, " ", zip_code) AS address, COUNT(customer_activity_logs.logs) AS customer_logs');
             $this->db->from('acs_profile');
+            $this->db->join('customer_activity_logs', 'customer_activity_logs.customer_id = acs_profile.prof_id', 'left');
+            $this->db->join('customer_groups', 'customer_groups.id = acs_profile.customer_group_id', 'left');
+            $this->db->join('ac_salesarea', 'ac_salesarea.sa_id = acs_profile.fk_sa_id', 'left');
             $this->db->where("CONCAT(acs_profile.first_name, ', ', acs_profile.last_name) IN ($subquery)", NULL, FALSE);
             $this->db->where('acs_profile.company_id', $company_id);
+
+            if ($searchMode == true) {
+                if ($searchType == "Commercial" || $searchType == "Business") {
+                    $this->db->where('acs_profile.business_name', $businessNameSearch);
+                    $this->db->where('acs_profile.customer_type', "Commercial");
+                    $this->db->or_where('acs_profile.customer_type', "Business");
+                } else if ($searchType == "Residential") {
+                    $this->db->where('acs_profile.first_name', $firstNameSearch);
+                    $this->db->where('acs_profile.last_name', $lastNameSearch);
+                    $this->db->where('acs_profile.customer_type', "Residential");
+                }
+            }
+
+            $this->db->group_by('acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, acs_profile.business_name, acs_profile.first_name, acs_profile.last_name');
             $this->db->order_by('acs_profile.first_name, acs_profile.last_name');
             $query = $this->db->get();
+
         }
-        
         return $result = $query->result();
+    }
+
+    public function getTotalDuplicatedEntry($company_id) {
+        // Residential Duplicates
+        $this->db->select('COUNT(*) AS residential');
+        $this->db->from("
+            (SELECT COUNT(*) AS duplicate_count
+            FROM acs_profile
+            WHERE company_id = $company_id AND customer_type = 'Residential'
+            GROUP BY first_name, last_name
+            HAVING COUNT(*) > 1) AS subquery
+         ");
+        $query = $this->db->get();
+        $residential = $query->row()->residential;
+    
+        // Business Duplicates
+        $this->db->select('COUNT(*) AS business');
+        $this->db->from("
+            (SELECT COUNT(*) AS duplicate_count
+            FROM acs_profile
+            WHERE company_id = $company_id AND (customer_type = 'Commercial' OR customer_type = 'Business')
+            GROUP BY business_name
+            HAVING COUNT(*) > 1) AS subquery
+         ");
+        $query = $this->db->get();
+        $business = $query->row()->business;
+    
+        return $residential + $business;
     }
 
     public function getAllRecentLeadsByCompanyId($company_id, $limit = 10)
