@@ -2092,26 +2092,26 @@ $(document).ready(function(){
   
       switch (ext) {
         case 'pdf':
-          fIcon = 'fa fa-file-pdf-o';
+          fIcon = 'bx bxs-file-pdf';
           fColor = 'text-danger';
           break;
         case 'doc':
         case 'docx':
-          fIcon = 'fa fa-file-word-o';
+          fIcon = 'bx bxs-file-doc';
           fColor = 'text-primary';
           break;
         case 'rtf':
-          fIcon = 'fa fa-file-text-o';
+          fIcon = 'bx bxs-file-txt';
           break;
         case 'png':
         case 'jpg':
         case 'gif':
-          fIcon = 'fa fa-file-image-o';
+          fIcon = 'bx bx-image';
           fColor = 'text-warning';
           fIsImage = true;
           break;
         default:
-          fIcon = 'fa fa-file-o';
+          fIcon = 'bx bxs-file-txt';
           fColor = 'text-secondary';
           break;
       }
@@ -3112,6 +3112,7 @@ $(document).ready(function(){
   }
   
   function createDocusignTemplate(file, options = {}) {
+      //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
       const prefixURL = "";
   
       const { id, name, created_at, is_shared } = file;
@@ -3155,7 +3156,7 @@ $(document).ready(function(){
                         <div class="dropdown-menu dropdown-menu-right">
                           <a class="dropdown-item" href="#" data-action="use">Use</a>
                           <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
-                          <a class="dropdown-item" href="#" data-action="copy">Copy</a>
+                          <a class="dropdown-item" href="javascript:void(0);" data-action="copy">Duplicate</a>
                           <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="makedefault">Set as default</a>
                           <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="delete">Delete</a>
                           <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="share">Share with users</a>
@@ -3209,16 +3210,24 @@ $(document).ready(function(){
           }
         },
         copy: async function () {
-          const response = await fetch(`${prefixURL}/DocuSign/apiCopyTemplate/${id}`, {
-            method: "POST",
-            headers: {
-              accepts: "application/json",
-              "content-type": "application/json",
-            },
-          });
-  
-          const { data } = await response.json();
-          window.location = `${prefixURL}/eSign_v2/templateEdit?id=${data.id}`;
+          Swal.fire({            
+              html: "Proceed with duplicating selected template?",
+              icon: 'question',
+              confirmButtonText: 'Proceed',
+              showCancelButton: true,
+              cancelButtonText: "Cancel"
+          }).then((result) => {
+              if (result.value) { 
+                $.ajax({
+                  url: `${prefixURL}/DocuSign/apiCopyTemplate/${id}`,
+                  type: "POST",
+                  dataType:'json',
+                  success: function (response) {
+                    window.location = `${prefixURL}/eSign_v2/templateEdit?id=${response.data.id}`;
+                  },
+                });
+              }
+          });          
         },
         share: function () {
           showUsersModal(id);
@@ -3625,6 +3634,7 @@ $(document).ready(function(){
   
   
   function showDeleteTemplateModal(templateId) {
+    //const urlPrefix = "http://127.0.0.1/ci/nsmart_v2";
     const urlPrefix = "";
   
     const $modal = $("#deleteTemplateModal");
