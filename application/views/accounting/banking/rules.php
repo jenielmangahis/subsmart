@@ -53,7 +53,7 @@
                             <button type="button" class="nsm-button" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
                                 <i class='bx bx-fw bx-list-plus'></i> New Rule
                             </button>
-                            <button type="button" class="nsm-button" id="exportRules">
+                            <button type="button" class="nsm-button" id="exportButton">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <!-- <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -213,7 +213,7 @@
 
         $('#rulesTable tbody tr').each(function() {
             var rowData = [];
-            $(this).find('td:not(:first-child)').each(function(index) { // Exclude the first column (checkbox column)
+            $(this).find('td:not(:first-child)').each(function(index) {
                 if (index < headers.length) {
                     rowData.push($(this).text().trim());
                 }
@@ -244,7 +244,7 @@
     }
 
     $(document).ready(function() {
-        $('#exportRules').on('click', function() {
+        $('#exportButton').on('click', function() {
             var csvContent = exportTableToCSV();
             if (csvContent) {
                 downloadCSV(csvContent);

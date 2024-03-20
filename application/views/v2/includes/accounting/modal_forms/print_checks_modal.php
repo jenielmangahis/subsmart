@@ -57,9 +57,9 @@
                                         <label for="sort-by" class="float-start">Sort by</label>
                                         <select id="sort-by" class="nsm-field form-select" required>
                                             <option value="payee">Sort by Payee</option>
-                                            <option value="order-created">Sort by Order created</option>
+                                            <option selected value="order-created">Sort by Order created</option>
                                             <option value="date-payee">Sort by Date / Payee</option>
-                                            <option value="date-order-created" selected>Sort by Date / Order created</option>
+                                            <option value="date-order-created">Sort by Date / Order created</option>
                                         </select>
                                     </div>
                                     <div class="dropdown d-inline-block">

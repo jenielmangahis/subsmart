@@ -741,7 +741,8 @@ class Expenses_model extends MY_Model
 
     public function get_company_check_transactions($filters = [])
     {
-        $this->db->where('company_id', $filters['company_id']);
+        $this->db->select('accounting_check.id, accounting_check.company_id, accounting_check.payee_type, accounting_check.payee_id, accounting_check.bank_account_id, accounting_chart_of_accounts.name, accounting_check.mailing_address, accounting_check.payment_date, accounting_check.check_no, accounting_check.to_print, accounting_check.permit_no, accounting_check.tags, accounting_check.memo, accounting_check.total_amount, accounting_check.recurring, accounting_check.status, accounting_check.created_at, accounting_check.updated_at');
+        $this->db->where('accounting_check.company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
         $this->db->where('recurring', null);
 
@@ -762,7 +763,7 @@ class Expenses_model extends MY_Model
             $this->db->where('to_print', 1);
             $this->db->where('check_no', null);
         }
-
+        $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_check.bank_account_id', 'left');
         $query = $this->db->get('accounting_check');
         return $query->result();
     }
@@ -1005,6 +1006,7 @@ class Expenses_model extends MY_Model
         $this->db->where('to_print', 1);
         //$this->db->where('check_no', null);
         $this->db->where('bank_account_id', $filters['payment_account']);
+        $this->db->order_by('created_at', 'desc');
         $query = $this->db->get('accounting_check');
         return $query->result();
     }
@@ -1016,6 +1018,7 @@ class Expenses_model extends MY_Model
         $this->db->where('to_print_check_no', 1);
         $this->db->where('check_no', null);
         $this->db->where('payment_account_id', $filters['payment_account']);
+        $this->db->order_by('created_at', 'desc');
         $query = $this->db->get('accounting_bill_payments');
         return $query->result();
     }

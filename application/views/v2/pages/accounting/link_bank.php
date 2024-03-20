@@ -1,34 +1,43 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('v2/includes/accounting/link_bank_modals'); ?>
 <style>
     tr.hide-table-padding td {
         padding: 0;
     }
+
     svg#svg-sprite-menu-close {
-      position: relative;
-      bottom: 178px !important;
+        position: relative;
+        bottom: 178px !important;
     }
+
     .nav-close {
         margin-top: 52% !important;
     }
-	.bank-img-container img{
-		width:auto !important;
-	}
+
+    .bank-img-container img {
+        width: auto !important;
+    }
+
     .btn {
         border-radius: 0 !important;
     }
-    .card{
+
+    .card {
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+
     label>input {
         visibility: visible !important;
         position: inherit !important;
     }
+
     .fdx-entity-container {
         display: flex;
         flex: 1 1 auto;
         justify-content: center;
         max-width: 98%;
     }
+
     .fdx-recommended-entity-desc-container {
         height: 40px;
         display: flex;
@@ -42,6 +51,7 @@
         overflow: hidden;
         flex: 1 1;
     }
+
     .fdx-recommended-entity-name {
         width: 100%;
         height: 24px;
@@ -60,6 +70,7 @@
         white-space: nowrap;
         box-sizing: border-box;
     }
+
     .fdx-recommended-entity-desc {
         min-height: 18px;
         font-size: 12px;
@@ -75,21 +86,26 @@
         font-weight: 400;
         cursor: inherit;
     }
+
     .fdx-provider-logo {
         width: 100%;
         height: auto;
     }
+
     .fdx img {
         border: 0;
     }
+
     .fdx img {
         background: transparent !important;
     }
+
     .fdx-provider-logo-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
     }
+
     #overlay {
         display: none;
         background: rgba(255, 255, 255, 0.7);
@@ -129,8 +145,8 @@ add_css(array(
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            When you connect an account, accounting will automatically downloads and categorizes bank and credit card transactions for you. 
-                            It enters the details so you don't have to enter transactions manually. All you have to do is approve the work
+                            When you connect an account, accounting will automatically downloads and categorizes bank and credit card transactions for you.
+                            It enters the details so you don't have to enter transactions manually. All you have to do is approve the work.
                         </div>
                     </div>
                 </div>
@@ -156,13 +172,13 @@ add_css(array(
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                        <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="importRulesLink">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button">
+                            <button type="button" class="nsm-button" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
                                 <i class='bx bx-fw bx-list-plus'></i> New Rule
                             </button>
-                            <button type="button" class="nsm-button export-items">
+                            <button type="button" class="nsm-button" id="exportButton">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -224,58 +240,117 @@ add_css(array(
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count([]) > 0) : ?>
-						<?php foreach([] as $rule) : ?>
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
-                                </div>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item" href="#">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Copy</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Disable</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="19">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
+                        <?php if (count([]) > 0) : ?>
+                            <?php foreach ([] as $rule) : ?>
+                                <tr>
+                                    <td>
+                                        <div class="table-row-icon table-checkbox">
+                                            <input class="form-check-input select-one table-select" type="checkbox">
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">Disable</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="19">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $('#importRulesLink').on('click', function() {
+            $('#importRules').modal('show');
+        });
+    });
 
+    function exportTableToCSV() {
+        var tableData = [];
+
+        var headers = ['PRIORITY', 'RULE NAME', 'APPLIED TO', 'Conditions', 'SETTINGS', 'AUTO ADD', 'STATUS'];
+
+        tableData.push(headers);
+
+        $('table.nsm-table tbody tr').each(function() {
+            var rowData = [];
+            $(this).find('td:not(:first-child)').each(function(index) {
+                if (index < headers.length) {
+                    rowData.push($(this).text().trim());
+                }
+            });
+            tableData.push(rowData);
+        });
+
+        if (tableData.length <= 1) {
+            alert("No data to export.");
+            return null;
+        }
+
+        var csvContent = "data:text/csv;charset=utf-8,";
+        tableData.forEach(function(rowArray) {
+            var row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+
+        return encodeURI(csvContent);
+    }
+
+    function downloadCSV(csvContent) {
+        var link = document.createElement("a");
+        link.setAttribute("href", csvContent);
+        link.setAttribute("download", "link_bank_data.csv");
+        document.body.appendChild(link);
+        link.click();
+    }
+
+    $(document).ready(function() {
+        $('#exportButton').on('click', function() {
+            var csvContent = exportTableToCSV();
+            if (csvContent) {
+                downloadCSV(csvContent);
+            }
+        });
+    });
+    document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+        input.addEventListener('change', function() {
+            console.log(this.name + " is now " + (this.checked ? "checked" : "unchecked") + " with value: " + this.value);
+        });
+    });
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

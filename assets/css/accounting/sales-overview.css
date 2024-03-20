@@ -70,7 +70,15 @@
 .overview-widget .filter-section .compare-prev-year {
     padding: 0 10px;
 }
-
+.nsm-card-header  .compare-prev-year {
+    display: flex;
+}
+.nsm-card-header  .compare-prev-year .form-group{
+    display: flex;
+    justify-content: center;
+    padding-left: 5px;
+    padding-top: 2px;
+}
 .custom-control-label {
     cursor: pointer;
 }

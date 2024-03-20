@@ -8845,7 +8845,7 @@ class Accounting extends MY_Controller
             } elseif (!empty(get('order'))) {
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
-            } else {
+            } else {                
                 $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
             }
         }
