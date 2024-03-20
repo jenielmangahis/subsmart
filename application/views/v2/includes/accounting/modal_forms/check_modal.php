@@ -28,7 +28,15 @@
                                 <div class="dropdown-menu p-3" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Checks</h5>
                                     <!-- <a class="nsm btn-recent-checks-print text-decoration-none" href="javascript:void(0);"><i class='bx bx-printer'></i> Print Checks</a> -->
-                                    <table class="cursor-pointer recent-transactions-table" id="recent-checks">
+                                    <table class="table table-hover cursor-pointer recent-transactions-table" id="recent-checks">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Date</th>
+                                                <th>Total Amount</th>
+                                                <th>Payee</th>
+                                            </tr>
+                                        </thead>
                                         <tbody></tbody>
                                     </table>
                                 </div>
@@ -693,7 +701,6 @@ $(function(){
         success: function (response) {
             var newOption = new Option(response.account_name, response.account_id, false, false);
             $('#bank_account').append(newOption).trigger('change');
-            console.log(response);
         }
     });
 

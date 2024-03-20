@@ -758,8 +758,8 @@ class Job extends MY_Controller
                 $installTimeArray = explode('-', $workorder->install_time);
                 $startTime = ($installTimeArray[0] . ':00 ') . $getMeridiem($installTimeArray[0]);
                 $endTime = ($installTimeArray[1] . ':00 ') . $getMeridiem($installTimeArray[1]);
-                $this->page_data['jobs_data']->start_time = $startTime;
-                $this->page_data['jobs_data']->end_time = $endTime;
+                //$this->page_data['jobs_data']->start_time = $startTime;
+                //$this->page_data['jobs_data']->end_time = $endTime;
             }
 
             if ($workorder && !is_numeric($workorder->job_tags)) {

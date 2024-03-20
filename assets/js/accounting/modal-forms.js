@@ -5020,6 +5020,9 @@ $(function() {
         }
     });
 
+    // do not remove
+    var checkID;
+
     $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort-by, #printChecksModal #check-type', function() {
         var data = new FormData();
 
@@ -5097,6 +5100,8 @@ $(function() {
                 $('#printChecksModal #checks-table').nsmPagination({
                     itemsPerPage: parseInt($('#printChecksModal #checks-table-rows li a.dropdown-item.active').html().trim())
                 });
+
+                $('.table-checkbox > input[value="'+window.checkID+'"]').click();
             }
         });
     });
@@ -7822,7 +7827,7 @@ $(function() {
             } else {
                 table.children('tbody').html('');
                 $.each(transactions, function(key, transaction) {
-                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(this, event)">
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(${transaction.id}, ${transaction.bank_account_id}, '${transaction.bank_account}')">
                         <td>${transaction.type}</td>
                         <td>${transaction.date}</td>
                         <td>${transaction.amount}</td>
@@ -7832,7 +7837,6 @@ $(function() {
             }
         });
     });
-
     // $(document).on('show.bs.dropdown', '#modal-container .modal .modal-header .dropdown', function() {
     //     var tableId = $(this).find('table').attr('id');
     //     if($.fn.DataTable.isDataTable(`#${tableId}`)) {
@@ -14128,8 +14132,8 @@ const billTableRows = (el) => {
     });
 }
 
-const printcheck = () => {
-	$.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
+const printcheck = (checkID, bankAccountID, bankAccount) => {
+ 	$.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
 		if ($('div#modal-container').length > 0) {
 			$('div#modal-container').html(res);
 		} else {
@@ -14193,6 +14197,9 @@ const printcheck = () => {
 		});
 
 		$('#printChecksModal').modal('show');
+        const newOption = new Option(bankAccount, bankAccountID, false, false);
+        $('#payment_account').append(newOption).val(bankAccountID).change();
+        window.checkID = checkID;
 	});
 }
 

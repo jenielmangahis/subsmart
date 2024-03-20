@@ -10441,7 +10441,7 @@ class Accounting_modals extends MY_Controller
                     return strcmp($b['payee'], $a['payee']);
                 break;
                 case 'order-created':
-                    return $a['order_created'] > $b['order_created'];
+                    // return $a['order_created'] > $b['order_created'];
                 break;
                 case 'date-payee':
                     return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && strcmp($b['payee'], $a['payee']);
@@ -20282,6 +20282,8 @@ class Accounting_modals extends MY_Controller
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $check->id,
+                            'bank_account_id' => $check->bank_account_id,
+                            'bank_account' => $check->name,
                             'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
                             'date' => date("m/d/Y", strtotime($check->payment_date)),
                             'amount' => str_replace('$-', '-$', $amount),
