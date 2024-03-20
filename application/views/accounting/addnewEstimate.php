@@ -340,6 +340,7 @@ echo put_header_assets();
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('estimate/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <input type="hidden" name="module" value="accounting" />
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
@@ -488,12 +489,12 @@ echo put_header_assets();
                                 </div>
                                 <div class="col-md-6">
                                 </div>
-                                <div class="col-md-3" align="right">
+                                <!-- <div class="col-md-3" align="right">
                                     <b>Show qty as: </b>
                                     <select class="dropdown">
                                         <option>Quantity</option>
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="row mb-3" id="plansItemDiv" style="background-color:white;">
@@ -669,9 +670,7 @@ echo put_header_assets();
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button" style="color: black;">Cancel</a>
-
-                                    <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button>
-
+                                    <!-- <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button> -->
                                     <button type="button" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                 </div>
