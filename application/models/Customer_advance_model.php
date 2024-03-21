@@ -888,7 +888,6 @@ class Customer_advance_model extends MY_Model {
 
     public function getAllRecentLeadsByCompanyId($company_id, $limit = 10)
     {
-
         $this->db->select('*');
         $this->db->from('ac_leads');
         $this->db->where('company_id', $company_id);        
@@ -897,5 +896,15 @@ class Customer_advance_model extends MY_Model {
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getCustomerAlarmData($prof_id)
+    {
+        $this->db->select('*');
+        $this->db->from('acs_alarm');
+        $this->db->where('fk_prof_id', $prof_id);
+        
+        $query = $this->db->get();
+        return $query->row();
     }
 }

@@ -37,6 +37,23 @@ class Contacts_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCustomerId($customer_id, $limit = 0)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id', 'ASC');
+        
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $user_id = logged('id');
@@ -54,6 +71,42 @@ class Contacts_model extends MY_Model
         $user_id = logged('id');
         $this->db->delete($this->table, array('id' => $id));
     } 
+
+    public function optionRelations(){
+        $relationships = [
+            "Mother",
+            "Father",
+            "Daughter",
+            "Son",
+            "Sister",
+            "Spouse",
+            "Brother",
+            "Aunt",
+            "Uncle",
+            "Niece",
+            "Nephew",
+            "Cousin",
+            "Grandmother",
+            "Grandfather",
+            "Granddaughter",
+            "Grandson",
+            "Stepsister",
+            "Stepbrother",
+            "Stepmother",
+            "Stepfather",
+            "Stepdaughter",
+            "Stepson",
+            "Sister-in-law",
+            "Brother-in-law",
+            "Mother-in-law",
+            "Father-in-law",
+            "Daughter-in-law",
+            "Son-in-law",
+            "Coworker",
+          ];
+
+          return $relationships;
+    }
 }
 
 /* End of file Contacts_model.php */
