@@ -907,4 +907,14 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getCustomerOfficeData($prof_id)
+    {
+        $this->db->select('*');
+        $this->db->from('acs_office');
+        $this->db->where('fk_prof_id', $prof_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
