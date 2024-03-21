@@ -8779,8 +8779,8 @@ $(function() {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0"></td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="${item.price}"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
@@ -8881,9 +8881,9 @@ $(function() {
                     <td>${items[i].title}<input type="hidden" name="item[]" value="${items[i].id}"></td>
                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                     <td>${locs}</td>
-                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${items[i].price}"></td>
-                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="0.00"></td>
+                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" value="${items[i].price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
                     <td>
@@ -8922,7 +8922,7 @@ $(function() {
                 <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
                 <td>Package</td>
                 <td></td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
                 <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
                 <td></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
@@ -9314,6 +9314,7 @@ $(function() {
             address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
             address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
+            $('#salesReceiptModal #billing-address').html("");
             $('#salesReceiptModal #billing-address').append(address.trim());
             $('#salesReceiptModal #email').val(customer.email);
         });
