@@ -50,8 +50,8 @@
                                             </select>
                                         </div>
                                         <div class="col-12 col-md-3">
-                                            <label for="email">Email</label>
-                                            <input type="email" name="email" id="email" class="form-control nsm-field mb-2" placeholder="Email (Separate emails with a comma)" value="<?=isset($receipt) ? $receipt->email : ''?>">
+                                            <label for="email">Email <i class="invalid-email-warning" style="color: red; display: none;">Invalid email address</i></label>
+                                            <input type="email" name="email" id="email" class="form-control nsm-field mb-2 sales-receipt-email" placeholder="Please enter your email" value="<?=isset($receipt) ? $receipt->email : ''?>" required>
                                             <div class="form-check">
                                                 <div class="checkbox checkbox-sec">
                                                     <input type="checkbox" name="send_later" value="1" class="form-check-input" id="send-later" <?=isset($receipt) && $receipt->send_later === "1" ? 'checked' : ''?>>
@@ -116,11 +116,14 @@
                                 <div class="col-12 col-md-2">
                                     <label for="sales-rep">Sales Rep</label>
                                     <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>">
+
+                                    <label for="location-of-sale">Location of sale</label>
+                                    <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">                                    
                                 </div>
-                                <div class="col-12 col-md-2 offset-md-4">
+                                <!-- <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
                                     <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="row">
@@ -495,6 +498,19 @@
 
 <script>
     $(document).ready(function() {
+
+        $(".sales-receipt-email").change(function(){
+            
+            var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+            var sales_receipt_email = $(".sales-receipt-email").val();
+            if (testEmail.test(sales_receipt_email)) {
+                $(".invalid-email-warning").hide();
+            } else {
+                $(".invalid-email-warning").show();
+            }                
+
+        });        
+
         $('#modal-help-popover-adjustment').popover({
             placement: 'top',
             html : true, 
@@ -502,6 +518,7 @@
             content: function() {
                 return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
             } 
-        });     
+        });    
+
     });
 </script>
