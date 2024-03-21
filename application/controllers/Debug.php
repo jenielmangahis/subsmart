@@ -2532,6 +2532,20 @@ class Debug extends MY_Controller {
 
         echo $query;
     }
+
+    public function generateEsignPreview()
+    {
+        $documentId = '1269';
+        $this->db->where('docfile_id', $documentId);
+        $this->db->order_by('id', 'asc');
+        $allRecipients = $this->db->get('user_docfile_recipients')->result_array();
+        $esign_password = 'Riwb5moQi%S@$c8ZM3dq'; //Refer to DocuSign private $password = 'Riwb5moQi%S@$c8ZM3dq';
+        foreach($allRecipients as $r){
+            $hash = encrypt($message, $esign_password);
+            $url = base_url('eSign/signing?hash='.$hash);
+            echo $url;exit;
+        }
+    }
     
     public function fixCustomerRecords()
     {

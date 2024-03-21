@@ -1730,6 +1730,9 @@ class Job extends MY_Controller
 
     public function get_customer_selected()
     {
+        $this->load->model('Contacts_model');
+        $this->load->model('Customer_advance_model');
+
         $input = $this->input->post();
         $id = $input['id'];
         $get_customer = array(
@@ -1740,7 +1743,47 @@ class Job extends MY_Controller
             'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,phone_m,city,state,mail_add,cross_street,zip_code,mail_add,country,business_name',
         );
         $data = $this->general->get_data_with_param($get_customer, false);
-        $data_arr = array("success" => true, "data" => $data);
+
+        $contacts = $this->Contacts_model->getAllByCustomerId($id,3);
+
+        $emergency_contact_a = ['firstname' => '', 'lastname' => '', 'relationship' => 'Father', 'phone' => ''];
+        $emergency_contact_b = ['firstname' => '', 'lastname' => '', 'relationship' => 'Father', 'phone' => ''];
+        $emergency_contact_c = ['firstname' => '', 'lastname' => '', 'relationship' => 'Father', 'phone' => ''];
+        $rows = 1;
+        foreach( $contacts as $c ){
+            if( $rows == 1 ){
+                $emergency_contact_a = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }elseif( $rows == 2 ){
+                $emergency_contact_b = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }elseif( $rows == 3 ){
+                $emergency_contact_c = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }
+            $rows++;
+        }
+
+        $acsAlarm = $this->Customer_advance_model->getCustomerAlarmData($id);
+        if( $acsAlarm ){
+            $alarmInfo = ['panel_type' => $acsAlarm->panel_type, 'acct_type' => $acsAlarm->acct_type];
+        }else{
+            $alarmInfo = ['panel_type' => '', 'acct_type' => ''];
+        }  
+
+        $data_arr = array("success" => true, "data" => $data, 'emergency_contact_a' => $emergency_contact_a, 'emergency_contact_b' => $emergency_contact_b, 'emergency_contact_c' => $emergency_contact_c, 'alarmInfo' => $alarmInfo);
         die(json_encode($data_arr));
         //echo json_encode($this->general->get_data_with_param($get_customer, false), true);
     }

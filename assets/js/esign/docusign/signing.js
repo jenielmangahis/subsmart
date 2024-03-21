@@ -466,17 +466,17 @@ function Signing(hash) {
     }
 
     if( field_name == "Abort Code" ){
-      // if( fieldValue ){
-      //   if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-      //     //return passcode;
-      //     return '';
-      //   }else{
-      //     return fieldValue['value'];
-      //   }
-      // }else{
-      //   return passcode;
-      // }
-      return '';
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return passcode;
+          //return '';
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return passcode;
+      }
+      //return '';
     }
 
     if( field_name == 'Account Number' ){

@@ -103,7 +103,7 @@ class DocuSign extends MYF_Controller
             }
 
             if( $f->field_name == 'Abort Code' ){
-                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Password","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Abort Code","auto_populate_with":"","width":191}';
             }
 
             
@@ -141,15 +141,15 @@ class DocuSign extends MYF_Controller
             }
 
             if( $f->field_name == 'ABA' ){
-                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"ABA","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"ABA","auto_populate_with":""}';
             }
 
             if( $f->field_name == 'Checking Account Number' ){
-                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Checking Account Number","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Checking Account Number","auto_populate_with":""}';
             }
 
             if( $f->field_name == 'Account Number' ){
-                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Account Number","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":false,"is_read_only":false,"value":"","placeholder":"Account Number","auto_populate_with":""}';
             }
 
             if( $f->field_name == 'Panel Type' ){
@@ -392,7 +392,7 @@ class DocuSign extends MYF_Controller
         $this->db->where('fk_prof_id', $customer_id);
         $acs_alarm = $this->db->get('acs_alarm')->row();
         if( $acs_alarm ){
-            $acs_alarm->passcode = '';
+            //$acs_alarm->passcode = '';
             $acs_alarm_accessKeys = [
                 'alarm_cs_account',
                 'monthly_monitoring',
@@ -1881,7 +1881,12 @@ SQL;
         $coordinates = json_encode($payload['coordinates']);
         $specs = $payload['specs'] ? json_encode($payload['specs']) : null;
         $docPage = $payload['doc_page'];
-        $field = $payload['field'];
+        if( $payload['specs']['name'] == 'panel_location' ){
+          $field = 'panel_location';  
+        }else{
+            $field = $payload['field'];
+        }
+        
         $recipientId = $payload['recipient_id'];
         $userId = logged('id');
         $docfileDocumentId = $payload['docfile_document_id'];
